@@ -1,0 +1,28 @@
+Rechaza una propuesta de enmienda pendiente. El daemon mueve el ADR
+a docs/decisions/rejected/, registra DoctrineAmendmentSuppressed con
+decision=deny + razón en el eventlog Plan 5, e impone una ventana de
+supresión de cooldown (Plan 5 Q10 C). Una vez denegada, el
+TelemetrySubscriber respeta el cooldown antes de re-proponer la
+misma regla.
+
+--reason es obligatorio: la razón queda registrada para trazabilidad
+histórica.
+
+Usage:
+  doctrine deny <adr_id> [flags]
+
+Examples:
+  zen doctrine deny ADR-0050 --reason "propuesta agresiva; revisitar tras Plan 9 cost-degradation"
+
+Flags:
+  -h, --help            help for deny
+      --reason string   Razón obligatoria del rechazo (queda en eventlog y ADR para auditoría)
+
+Global Flags:
+      --filter string   Namespace-specific post-fetch filter
+      --format string   Output format: table | json | yaml (default "table")
+      --json            Equivalent to --format=json
+      --limit int       Cap result rows (default 100)
+      --quiet           Suppress headers and decorative output
+      --since string    Time-bound filter (24h, 7d, 2025-01-01)
+      --verbose         Print debug info (URLs, latencies)

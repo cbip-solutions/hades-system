@@ -1,0 +1,6 @@
+schema_version: 1
+services:
+  - base_url: http://auth-svc
+    base_url_env: AUTH_SVC_URL
+    target_repo: auth-svc
+unresolved_policy: surface

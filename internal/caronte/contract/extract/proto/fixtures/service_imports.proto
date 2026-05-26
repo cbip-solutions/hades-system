@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package mixed.v1;
+
+import "common/types.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/zen-swarm/example/mixed/v1;mixedv1";
+
+service MixedService {
+  rpc DoThing (DoThingRequest) returns (DoThingResponse);
+}
+
+message DoThingRequest  { common.v1.Id id = 1; }
+message DoThingResponse { google.protobuf.Timestamp at = 1; }

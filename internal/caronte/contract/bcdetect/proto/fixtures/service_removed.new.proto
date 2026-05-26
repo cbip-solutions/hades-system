@@ -1,0 +1,9 @@
+syntax = "proto3";
+package fixtures.service_removed;
+
+message GetRequest { string id = 1; }
+message GetResponse { string value = 1; }
+
+service Cache {
+  rpc Get(GetRequest) returns (GetResponse);
+}

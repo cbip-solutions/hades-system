@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: MIT
+// Package cli — adr_reject.go (Plan 9 Phase I Task I-7).
+//
+// `zen adr reject <id> --reason <X>` calls POST /v1/adr/reject.
+// --reason is mandatory per inv-zen-146 (mirrors adr_accept.go pattern).
+package cli
+
+import (
+	"context"
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/spf13/cobra"
+
+	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+)
+
+func adrRejectCmd() *cobra.Command {
+	var reason string
+	cmd := &cobra.Command{
+		Use:   "reject <id>",
+		Short: "Mark ADR as rejected (--reason mandatory; inv-zen-146)",
+		Args:  cobra.ExactArgs(1),
+		Long: `reject transitions the ADR from proposed → rejected.
+Emits an adr.rejected event anchored on the Plan 9 audit chain.
+--reason is mandatory per inv-zen-146 (cannot be empty or whitespace-only).`,
+		Example: `  zen adr reject ADR-0070 --reason "superseded by simpler design"`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if strings.TrimSpace(reason) == "" {
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason must not be empty (inv-zen-146)"))
+			}
+			ctx, cancel := context.WithTimeout(cmd.Context(), 10*time.Second)
+			defer cancel()
+
+			if err := newClientFromCmd(cmd).ADRReject(ctx, args[0], reason); err != nil {
+				return err
+			}
+			fmt.Fprintf(cmd.OutOrStdout(), "id=%s status=rejected\n", args[0])
+			return nil
+		},
+	}
+	cmd.Flags().StringVar(&reason, "reason", "", "Rationale for rejection (mandatory; inv-zen-146)")
+	_ = cmd.MarkFlagRequired("reason")
+	return cmd
+}

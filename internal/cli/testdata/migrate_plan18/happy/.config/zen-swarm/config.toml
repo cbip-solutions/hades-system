@@ -1,0 +1,4 @@
+# plan-18 fixture
+[aliases]
+start = "/zen-swarm:start"
+install = "/zen-swarm:install-mcps"

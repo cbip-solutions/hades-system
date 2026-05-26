@@ -1,0 +1,28 @@
+# default doctrine: balanced cost; cadence relaxed vs max-scope.
+# Refs spec §1 Q4 B + Plan 9 Phase J-5.
+
+[audit.tessera]
+batch_max_age = "30s"
+batch_max_size = 1000
+
+[audit.backup]
+litestream = "hourly"
+tessera_rsync = "weekly"
+cold_archive_immutable = false
+
+[audit.tamper_response]
+mode = "log-continue"
+
+[audit.witness]
+rotation_cadence_days = 365
+
+[research.cache]
+revalidation = "background-daily"
+cryptographic_attribution = false
+
+[knowledge.aggregator]
+promote_required_reason = true
+
+[knowledge.embed]
+model = "mpnet-base-v2"
+backend = "auto"

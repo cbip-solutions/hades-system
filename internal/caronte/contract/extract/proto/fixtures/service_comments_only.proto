@@ -1,0 +1,11 @@
+// This file is intentionally service-free. Comment-only files appear in
+// proto repos as headers, license blocks, and placeholders. The extractor
+// must degrade gracefully (zero endpoints + no panic).
+
+syntax = "proto3";
+
+// TODO(future) — flesh out the service set; for now the file is a stub.
+
+package comments_only.v1;
+
+option go_package = "github.com/zen-swarm/example/co/v1;cov1";

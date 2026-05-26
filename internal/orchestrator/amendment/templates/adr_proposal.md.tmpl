@@ -1,0 +1,94 @@
+{{/* Go text/template ADR proposal template. Canonical 10 sections per
+   Plan 5 spec §1 Q10 C + §6.3 inv-zen-094. Fields available:
+     .ADRID, .Date, .Title, .Doctrine, .TriggerClass, .Pattern,
+     .WindowHours, .Count, .Threshold, .ProjectID,
+     .ContextNarrative, .DecisionStatement, .Alternatives, .SOTARefs,
+     .Samples ([]struct{Type, TimestampRFC3339}).
+*/ -}}
+# ADR {{printf "%04d" .ADRID}}: {{.Title}}
+
+**Status**: Proposed
+**Date**: {{.Date}}
+**Decision-maker**: orchestrator (L4 reviewer) — pending operator confirmation
+
+## Context
+
+{{.ContextNarrative}}
+
+## Decision
+
+{{.DecisionStatement}}
+
+## Consequences
+
+### Positive
+
+- Doctrine `{{.Doctrine}}` adapts to the empirical pattern observed
+  ({{.Count}} events of class `{{.TriggerClass}}` in {{.WindowHours}}h
+  window — threshold was {{.Threshold}}).
+
+### Negative
+
+- Doctrine TOML changes require operator confirmation; orchestrator
+  state stays in `WAITING_FOR_CONFIRMATION` until ack/deny.
+
+### Risks
+
+- If the L4 narrative misreads the pattern, the amendment may codify a
+  transient drift. Mitigation: revertible via `zen doctrine revert
+  ADR-{{printf "%04d" .ADRID}}` (atomic `git revert` + reload).
+
+## Doctrine alignment
+
+This proposal targets doctrine `{{.Doctrine}}`. The change is
+operator-gated (Q10 C); the amendment NEVER auto-applies. The cooldown
+window suppresses re-proposal of the same trigger pattern for the
+doctrine's `proposal_cooldown_hours`.
+
+## SOTA References
+
+{{- if .SOTARefs}}
+{{range .SOTARefs}}- {{.}}
+{{end -}}
+{{- else -}}
+- (none cited by L4 reviewer)
+{{- end}}
+
+## Plan impact
+
+Affects Plan 5 doctrine TOML schema (no code change required if the
+amendment only re-tunes thresholds). If the amendment introduces new
+TOML fields, Plan 4 Phase A schema must be amended in coordination
+(per `docs/operations/parallel-execution-coordination.md`).
+
+## Related ADRs
+
+- ADR-0001 (substrate-pivot-to-openclaude)
+- ADR-0006 (research-sota-always-integrated)
+- Plan 5 reserved range: ADR-0020..ADR-0029 (inv-zen-103)
+
+## Evidence
+
+```
+doctrine={{.Doctrine}}
+trigger_class={{.TriggerClass}}
+pattern={{.Pattern}}
+window_hours={{.WindowHours}}
+count={{.Count}}
+threshold={{.Threshold}}
+project_id={{.ProjectID}}
+```
+
+Sample events ({{len .Samples}} shown; up to 16 retained):
+
+{{range .Samples}}- `{{.Type}}` @ {{.TimestampRFC3339}}
+{{end}}
+
+## Alternatives considered
+
+{{- if .Alternatives}}
+{{range .Alternatives}}- {{.}}
+{{end -}}
+{{- else -}}
+- (none enumerated by L4 reviewer)
+{{- end}}

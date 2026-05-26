@@ -1,0 +1,49 @@
+Crea una propuesta de enmienda manual. El daemon ejecuta el flujo
+Plan 5 Proposer (mismo path que el TelemetrySubscriber autónomo):
+redacta el ADR markdown en docs/decisions/proposed/NNNN-*.md desde el
+rango ADR-0050..0059 reservado para Plan 8 (inv-zen-103), entra al
+estado 'proposed' y queda visible vía 'zen doctrine propose-list'.
+Desde ahí sigue el ciclo estándar ack/deny/revert.
+
+Reglas de cooldown (Plan 5 Q10 C): cada regla tiene un cooldown
+configurable por doctrina (max-scope=24h, default=72h,
+capa-firewall=1week) tras la última enmienda aplicada. Si la regla
+aún está en cooldown, el daemon devuelve 429 con info estructurada
+del tiempo restante; pasa --cooldown-override para forzar (útil cuando
+el operador conoce contexto que el Proposer autónomo no puede inferir).
+
+--justify es obligatorio (queda como cuerpo del ADR markdown para
+auditoría).
+--category es obligatorio (cost|merge|recovery; Plan 8 Q13 C aggregator
+categories) — determina qué aggregator monitorea esta regla para
+revert-attribution (inv-zen-141).
+
+Usage:
+  doctrine propose <rule_path> <new_value> [flags]
+
+Examples:
+  # Propuesta manual con justificación
+  zen doctrine propose amendment.cooldown_hours 12 \
+      --justify "Reducir cooldown basado en telemetría P50 operator-ack" \
+      --category merge
+
+  # Forzar override de cooldown (operador conoce contexto)
+  zen doctrine propose amendment.threshold_pct 0.04 \
+      --justify "Tightening preemptivo antes de Plan 9 cost-degradation" \
+      --category cost \
+      --cooldown-override
+
+Flags:
+      --category string     Categoría aggregator: cost|merge|recovery (obligatorio; Plan 8 Q13 C)
+      --cooldown-override   Forzar override del cooldown per-regla (Plan 5 Q10 C escape hatch)
+  -h, --help                help for propose
+      --justify string      Justificación operador (obligatorio; queda como cuerpo del ADR markdown)
+
+Global Flags:
+      --filter string   Namespace-specific post-fetch filter
+      --format string   Output format: table | json | yaml (default "table")
+      --json            Equivalent to --format=json
+      --limit int       Cap result rows (default 100)
+      --quiet           Suppress headers and decorative output
+      --since string    Time-bound filter (24h, 7d, 2025-01-01)
+      --verbose         Print debug info (URLs, latencies)

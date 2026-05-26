@@ -1,0 +1,23 @@
+# Hermes plugin manifest for {{.ProjectName}} (plugin + companion daemon shape).
+name: {{.ProjectName}}
+version: 0.1.0
+description: |
+  {{.ProjectName}} — Hermes plugin + Go daemon scaffolded by zen-swarm.
+  Doctrine: {{.Doctrine}}.
+
+license: MIT
+
+provides_hooks:
+  - on_session_start
+  - on_session_end
+  - pre_tool_call
+  - post_tool_call
+
+provides_tools: []
+
+metadata:
+  zen-swarm:
+    doctrine: {{.Doctrine}}
+    scaffolded-by: zen-swarm
+    scaffolded-version: "0.13.0"
+    shape: plugin-with-daemon

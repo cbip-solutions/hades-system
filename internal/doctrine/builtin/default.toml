@@ -1,0 +1,243 @@
+# internal/doctrine/builtin/default.toml
+#
+# zen-swarm built-in doctrine: default.
+#
+# Doctrine principle: balanced — tighter bounds than max-scope, more
+# cost-aware (degrades earlier), but permissive enough for most autonomous
+# work. The default doctrine is the recommended starting point for projects
+# that have not opted into max-scope's full-coverage discipline.
+#
+# Phase 0 R1-R5 ack values for default come from
+# docs/superpowers/plans/2026-05-03-plan-8-phase-0-acks.md (operator-acked
+# 2026-05-08, locked into tests/doctrine/reconciliation_test.go).
+#
+# Edits to this file MUST be accompanied by an updated
+# tests/doctrine/reconciliation_test.go entry AND an ADR per Plan 5 Q10 C
+# amendment proposal flow.
+
+schema_version = "1.0"
+doctrine_version = "1.0.0"
+auto_upgrade = "patch"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Doctrine transverse axioms — Q3 C Tier 1 + inv-zen-135
+# Hardcoded operator-only.
+# ──────────────────────────────────────────────────────────────────────────
+
+[doctrine_transverse]
+no_tech_debt = true
+no_stubs = true
+build_final_product = true
+no_defer = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Workforce — tighter than max-scope (system-design §7.2)
+# default: depth 1..2 (orchestrator + worker); width 4.
+# ──────────────────────────────────────────────────────────────────────────
+
+[workforce]
+min_depth = 1
+max_depth = 2
+max_width_per_layer = 4
+
+[workforce.recovery]
+transient_retry_budget = 3
+permanent_infra_escalate = "operator-notify"
+doctrine_retry_budget = 2
+
+# ──────────────────────────────────────────────────────────────────────────
+# HRA — fewer layers active by default; relaxed cadence; 1:2 ratio
+# ──────────────────────────────────────────────────────────────────────────
+
+[hra]
+layers_enabled = [1, 2]
+cadence_tactical_min = 15
+cadence_strategic_min = 60
+cadence_architectural_min = 480
+reviewer_to_worker_ratio = 2
+
+# ──────────────────────────────────────────────────────────────────────────
+# Research — moderate budget; SOTA enforcement on
+# ──────────────────────────────────────────────────────────────────────────
+
+[research]
+enabled = true
+max_budget_per_session_usd = 20
+sota_orchestrator_enforced = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Gates — minimum-viable test coverage
+# Phase 0 R3 ack — default: 4-tier minimum (unit + integration + compliance
+# + analysistest).
+# ──────────────────────────────────────────────────────────────────────────
+
+[gates]
+coverage_min_pct = 85
+
+[gates.test_tiers]
+enabled = ["unit", "integration", "compliance", "analysistest"]
+
+# ──────────────────────────────────────────────────────────────────────────
+# Review — relaxed Hive cadence; rotate every 3 PRs; dual review off
+# ──────────────────────────────────────────────────────────────────────────
+
+[review]
+hive_cadence_min = 60
+rotate_reviewer_every_pr = 3
+require_dual_review = false
+
+# ──────────────────────────────────────────────────────────────────────────
+# Autonomy — Plan 5 Q11 C: default=assisted (operator gates many decisions)
+# ──────────────────────────────────────────────────────────────────────────
+
+[autonomy]
+mode = "assisted"
+check_mode = "permissive"
+amendment_cooldown_hours = 72
+
+[autonomy.confirmation_policy]
+# Phase 0 R1 ack — default: balanced (medium × 4).
+budget_breach_threshold = "medium"
+spec_amendment_proposal = "medium"
+invariant_violation = "medium"
+architectural_review_escalation = "medium"
+
+[autonomy.voting]
+# Phase 0 R2 ack — default: plurality only (FMV disabled to save cost).
+plurality_threshold_pct = 50
+fmv_enable = false
+ems_enable = true
+
+[autonomy.cost_degradation]
+# default: tighter cost bounds than max-scope; downshift-tier preferred.
+soft_check_usd = 10
+hard_stop_usd = 40
+degrade_strategy = "downshift-tier"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Merge — same scoring shape but tighter candidates + balanced mode
+# ──────────────────────────────────────────────────────────────────────────
+
+[merge]
+mode = "balanced"
+anomaly_threshold_pct = 25
+anomaly_window_min = 90
+max_candidates = 3
+
+[merge.scoring_weights]
+# Sum MUST equal 100 (CFI invariant).
+test_pass = 35
+lint_pass = 20
+coverage = 25
+diff_size = 10
+duration = 10
+
+# ──────────────────────────────────────────────────────────────────────────
+# Caronte — Plan 19 in-daemon code-graph engine; balanced branch policy
+# ──────────────────────────────────────────────────────────────────────────
+
+[caronte]
+branch_policy = "balanced"
+hra_review_enabled = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Notifications — Plan 7 Q12 B (R4)
+# default: standard quiet hours (Slack-DND pattern).
+# ──────────────────────────────────────────────────────────────────────────
+
+[notifications]
+quiet_hours_start = "22:00"
+quiet_hours_end = "07:00"
+
+[notifications.severity_per_doctrine]
+# Phase 0 R4 ack — default: standard quiet hours respected.
+action_needed_promotes_to_urgent = false
+urgent_bypasses_quiet_hours = true
+info_immediate_during_quiet = "queue"
+
+# ──────────────────────────────────────────────────────────────────────────
+# zen day cadence — Plan 7 Q13 C verbatim (R5)
+# default: 0 8/18 * * 1-5 + if_within_hours 2/4 (asymmetric morning/EOD).
+# ──────────────────────────────────────────────────────────────────────────
+
+[zen_day_cadence]
+# Phase 0 R5 ack — default: Plan 7 Q13 C verbatim.
+morning_brief_cron = "0 8 * * 1-5"
+morning_brief_if_within_hours = 2
+eod_digest_cron = "0 18 * * 1-5"
+eod_digest_if_within_hours = 4
+
+# ──────────────────────────────────────────────────────────────────────────
+# Quota — Plan 7 Q4 C: tighter than max-scope; 8 max concurrent (within
+# 2*4=8 Workforce capacity ceiling).
+# ──────────────────────────────────────────────────────────────────────────
+
+[quota]
+max_concurrent_tasks = 8
+max_daily_budget_usd = 50
+max_storage_gb = 25
+
+# ──────────────────────────────────────────────────────────────────────────
+# Tmux — Plan 7 Q7 D: default = 8h idle TTL.
+# ──────────────────────────────────────────────────────────────────────────
+
+[tmux]
+idle_ttl_min = 480
+auto_reap = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Scheduling — Plan 7 Q9 C: default = skip missed runs.
+# ──────────────────────────────────────────────────────────────────────────
+
+[scheduling]
+miss_policy = "skip"
+miss_catchup_max_jobs = 0
+
+# ──────────────────────────────────────────────────────────────────────────
+# WFQ — Plan 7 Q10 D: default project weight 50 (baseline).
+# ──────────────────────────────────────────────────────────────────────────
+
+[wfq]
+project_weight_default = 50
+starvation_guard_sec = 300
+overcommit_policy = "queue"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Knowledge — daily Hive doc cadence; cross-project aggregator off
+# ──────────────────────────────────────────────────────────────────────────
+
+[knowledge]
+hive_doc_cadence_hours = 24
+obsidian_vault_path = "~/Obsidian/zen-swarm-default"
+cross_project_aggregator_enabled = false
+
+# ──────────────────────────────────────────────────────────────────────────
+# Gateway — Plan 11 Phase A mcpgateway RBAC deny list (Q1=B + inv-zen-084)
+# default: no tools disabled — balanced posture allows full surface.
+# ──────────────────────────────────────────────────────────────────────────
+
+[gateway]
+disabled_tools = []
+
+# ──────────────────────────────────────────────────────────────────────────
+# Augmentation — Plan 11 Phase C 5-lane RRF knobs (Q2=C + Q3=C + Q8=C)
+# default: enable + moderate 10k tokens + 1s timeout + opt-in cross-project.
+# ──────────────────────────────────────────────────────────────────────────
+
+[augmentation]
+enable = true
+max_kg_tokens = 10000
+timeout_ms = 1000
+on_timeout = "graceful_truncate"
+cross_project_scope = "opt-in"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Renderers — Plan 12 Phase E M-5 platform-renderer enable matrix.
+# default: all 7 platforms enabled (mirror of max-scope; balanced doctrine
+# does not restrict surface). Replaces hardcoded _DOCTRINE_ENABLED matrix
+# in plugin/zen-swarm/renderers/__init__.py.
+# ──────────────────────────────────────────────────────────────────────────
+
+[renderers]
+enabled_platforms = ["ink", "telegram", "slack", "email", "voice", "web", "markdown_fallback"]
+voice_tts_enabled = true

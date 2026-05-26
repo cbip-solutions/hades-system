@@ -1,0 +1,35 @@
+{
+  "coreness": {
+    "pkg/x.A": 2,
+    "pkg/x.B": 2,
+    "pkg/x.C": 2,
+    "pkg/x.D": 1,
+    "pkg/y.E": 1,
+    "pkg/y.F": 1,
+    "pkg/y.Lonely": 0
+  },
+  "scc_id": {
+    "pkg/x.A": 0,
+    "pkg/x.B": 0,
+    "pkg/x.C": 0,
+    "pkg/x.D": 1,
+    "pkg/y.E": 2,
+    "pkg/y.F": 2,
+    "pkg/y.Lonely": 3
+  },
+  "package_id": {
+    "pkg/x.A": "pkg/x",
+    "pkg/x.B": "pkg/x",
+    "pkg/x.C": "pkg/x",
+    "pkg/x.D": "pkg/x",
+    "pkg/y.E": "pkg/y",
+    "pkg/y.F": "pkg/y",
+    "pkg/y.Lonely": "pkg/y"
+  },
+  "scc_size": {
+    "0": 3,
+    "1": 1,
+    "2": 2,
+    "3": 1
+  }
+}

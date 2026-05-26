@@ -1,0 +1,32 @@
+# Hermes plugin manifest — agentskills.io PluginManifest schema (canonical
+# post-SOTA-5 per spec §8.5). Field set: name/version/description required;
+# license/compatibility/metadata/author/requires_env/optional_env optional.
+# `kind` is auto-detected by Hermes; do NOT set manually.
+
+name: {{.ProjectName}}
+version: 0.1.0
+description: |
+  {{.ProjectName}} — Hermes plugin scaffolded by zen-swarm.
+  Doctrine: {{.Doctrine}}.
+
+license: MIT
+
+# Hermes runtime hooks this plugin wires via register(ctx). Edit to suit;
+# canonical hook list per spec §8.4 VALID_HOOKS table.
+provides_hooks:
+  - on_session_start
+  - on_session_end
+  - pre_tool_call
+  - post_tool_call
+
+# Hermes tool surface (additive to the Hermes core registry). Empty by
+# default; populate when adding tools.
+provides_tools: []
+
+# zen-swarm namespaced metadata; survives across Hermes versions per
+# spec §8.5 metadata.zen-swarm.* convention.
+metadata:
+  zen-swarm:
+    doctrine: {{.Doctrine}}
+    scaffolded-by: zen-swarm
+    scaffolded-version: "0.13.0"

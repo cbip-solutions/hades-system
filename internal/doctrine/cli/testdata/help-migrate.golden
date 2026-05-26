@@ -1,0 +1,29 @@
+Lee un archivo TOML local, lo envía al daemon para migración
+in-memory al esquema actual, y muestra el resultado.
+
+Sin --confirm: dry-run; el archivo no se modifica.
+Con --confirm: el archivo se reescribe con la versión migrada y el
+original se preserva como <ruta>.v<MAJOR>.bak (donde <MAJOR> es la
+componente major del schema_version FROM).
+
+El daemon NUNCA reescribe archivos automáticamente (inv-zen-137); este
+comando es la única ruta sancionada para persistir migraciones.
+
+Workflow B en spec §6.5 (Schema migration).
+
+Usage:
+  zen doctrine-v2 migrate <ruta> [flags]
+
+Flags:
+      --confirm   Persistir el cambio (de lo contrario es dry-run)
+  -h, --help      help for migrate
+
+Global Flags:
+      --filter string   Namespace-specific post-fetch filter
+      --format string   Output format: table | json | yaml (default "table")
+      --json            Equivalent to --format=json
+      --limit int       Cap result rows (default 100)
+      --quiet           Suppress headers and decorative output
+      --since string    Time-bound filter (24h, 7d, 2025-01-01)
+      --uds string      Daemon UDS path (default "/tmp/zen-swarm.sock")
+      --verbose         Print debug info (URLs, latencies)

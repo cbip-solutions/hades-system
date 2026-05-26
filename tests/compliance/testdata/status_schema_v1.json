@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "fields": {
+    "daemon": {
+      "state": "ok",
+      "pid": 84821,
+      "uds_path": "/tmp/zen-swarm.sock"
+    },
+    "model": {
+      "state": "ok",
+      "active_model": "opus-4-7"
+    },
+    "cascade": {
+      "state": "ok",
+      "active_tier": 1,
+      "tier_name": "anthropic-paygo",
+      "provider_count": 12
+    },
+    "bypass": {
+      "state": "ok",
+      "status": "live",
+      "success_rate_24h": 1.0
+    },
+    "cost_24h": {
+      "state": "ok",
+      "spend_24h_usd": 0.043,
+      "spend_session_usd": 0.041
+    },
+    "context": {
+      "state": "ok",
+      "used_tokens": 24200,
+      "max_tokens": 100000
+    },
+    "profile": {
+      "state": "ok",
+      "profile_name": "max-scope",
+      "kind": "doctrine"
+    },
+    "cwd": {
+      "state": "ok",
+      "cwd": "/path/to/projects/hades-system"
+    }
+  }
+}

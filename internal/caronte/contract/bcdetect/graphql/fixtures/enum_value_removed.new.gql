@@ -1,0 +1,8 @@
+enum Status {
+  ACTIVE
+  PENDING
+}
+
+type Query {
+  status: Status
+}

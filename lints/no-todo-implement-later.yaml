@@ -1,0 +1,22 @@
+id: no-todo-implement-later
+language: go
+rule:
+  kind: comment
+  any:
+    - regex: '(?i)^//\s*TODO\s+implement\s+later\s*$'
+    - regex: '(?i)^//\s*TODO:\s*implement\s+later\s*$'
+    - regex: '(?i)^//\s*TODO\s+implement\s*$'
+    - regex: '(?i)^//\s*FIXME:\s*implement\s+later\s*$'
+    - regex: '(?i)^//\s*XXX\s+implement\s+later\s*$'
+message: |
+  TODO/FIXME/XXX implement later is a deferred-stub marker per
+  CLAUDE.md "No stubs, código completo" doctrine. Replace with real
+  implementation OR document why deferral is acceptable via an ADR
+  reference (ADR-NNNN). Subsumed at AST level by nostub analyzer;
+  this textual rule provides Layer A scan-time defense.
+severity: error
+files:
+  - "**/*.go"
+ignores:
+  - "**/*_test.go"
+  - "**/testdata/**"

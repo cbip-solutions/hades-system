@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [],
+    "deny": [
+      "Write(.env)",
+      "Bash(sudo:*)",
+      "filesystem.write(/etc/passwd)"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+id: no-fixme-without-ref
+language: go
+rule:
+  kind: comment
+  all:
+    - regex: '(?i)^//\s*FIXME\b'
+    - not:
+        any:
+          - regex: '#\d+'
+          - regex: 'ADR-\d+'
+          - regex: 'inv-zen-\d+'
+          - regex: '(?i)plan\s*\d+'
+          - regex: '(?i)phase-[a-z0-9]+'
+message: |
+  FIXME comment without issue/ADR/inv-zen reference indicates a known
+  bug with broken tracking. Either:
+    1. Fix it now (preferred — bugs compound), OR
+    2. Add #ISSUE reference (#NNN), OR
+    3. Add ADR-NNNN reference if the fix needs design first, OR
+    4. Add inv-zen-NNN reference if the FIXME tracks an invariant violation
+  Acceptable forms:
+    // FIXME bypass cert-pin race condition #142
+    // FIXME(ADR-0058) channel-based experimental doctrine deferred
+severity: error
+files:
+  - "**/*.go"
+ignores:
+  - "**/*_test.go"
+  - "**/testdata/**"

@@ -1,0 +1,11 @@
+# Happy-path fixture: minimal valid max-scope doctrine TOML.
+# Used by Task B-1 (ExtractSchemaVersion) and Task B-2 (full ParseStrict).
+#
+# DEVIATION FROM PLAN: the plan's fixture included `name = "max-scope"` but
+# Phase A's v1.Schema struct does NOT declare a top-level `name` field
+# (the doctrine name is established at the named-doctrine layer in
+# internal/doctrine/builtin Phase D, not at Schema layer). Including it
+# here would fail B-3's strict-mode unknown-key check; we omit it so the
+# fixture is genuinely minimal AND survives strict parsing.
+schema_version = "1.0"
+doctrine_version = "1.0.0"

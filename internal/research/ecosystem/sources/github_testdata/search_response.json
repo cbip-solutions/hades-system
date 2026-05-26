@@ -1,0 +1,36 @@
+{
+  "total_count": 3,
+  "incomplete_results": false,
+  "items": [
+    {
+      "id": 1,
+      "name": "go",
+      "full_name": "golang/go",
+      "html_url": "https://github.com/golang/go",
+      "default_branch": "master",
+      "stargazers_count": 122000,
+      "language": "Go",
+      "updated_at": "2026-05-10T12:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "kubernetes",
+      "full_name": "kubernetes/kubernetes",
+      "html_url": "https://github.com/kubernetes/kubernetes",
+      "default_branch": "master",
+      "stargazers_count": 110000,
+      "language": "Go",
+      "updated_at": "2026-05-09T08:30:00Z"
+    },
+    {
+      "id": 3,
+      "name": "ollama",
+      "full_name": "ollama/ollama",
+      "html_url": "https://github.com/ollama/ollama",
+      "default_branch": "main",
+      "stargazers_count": 100000,
+      "language": "Go",
+      "updated_at": "2026-05-08T15:45:00Z"
+    }
+  ]
+}

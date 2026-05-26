@@ -1,0 +1,22 @@
+Lee un archivo TOML local y lo valida contra el esquema actual
+del daemon. Con --against-baseline <doctrina>, valida también que el
+archivo sea tighten-only respecto a la doctrina baseline (inv-zen-136).
+
+Útil antes de copiar a ~/.config/zen-swarm/doctrines/ para evitar que
+el watcher rechace la recarga.
+
+Usage:
+  doctrine validate <ruta> [flags]
+
+Flags:
+      --against-baseline string   Valida tighten-only contra <doctrina> baseline
+  -h, --help                      help for validate
+
+Global Flags:
+      --filter string   Namespace-specific post-fetch filter
+      --format string   Output format: table | json | yaml (default "table")
+      --json            Equivalent to --format=json
+      --limit int       Cap result rows (default 100)
+      --quiet           Suppress headers and decorative output
+      --since string    Time-bound filter (24h, 7d, 2025-01-01)
+      --verbose         Print debug info (URLs, latencies)

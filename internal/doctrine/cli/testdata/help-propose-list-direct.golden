@@ -1,0 +1,35 @@
+Muestra todas las propuestas de enmienda con su estado actual,
+título, enfriamiento restante y marca de tiempo de la propuesta.
+
+Las propuestas son generadas por el TelemetrySubscriber (autónomas)
+o por el operador (manuales, vía 'zen doctrine propose'). Cada
+propuesta atraviesa el ciclo: proposed → applied | denied → reverted.
+
+Use 'zen doctrine ack ADR-NNNN' o 'zen doctrine deny ADR-NNNN
+--reason ...' para resolver propuestas pendientes.
+
+Usage:
+  doctrine propose-list [flags]
+
+Examples:
+  # Listar todas las propuestas (cualquier estado)
+  zen doctrine propose-list
+
+  # Solo propuestas pendientes
+  zen doctrine propose-list --status proposed
+
+  # Salida JSON para piping a jq
+  zen doctrine propose-list --json | jq '.proposals[] | select(.status == "proposed")'
+
+Flags:
+  -h, --help            help for propose-list
+      --since string    Filtra por antigüedad (p.ej. 24h, 7d, 30m)
+      --status string   Filtra por estado: proposed|applied|denied|reverted
+
+Global Flags:
+      --filter string   Namespace-specific post-fetch filter
+      --format string   Output format: table | json | yaml (default "table")
+      --json            Equivalent to --format=json
+      --limit int       Cap result rows (default 100)
+      --quiet           Suppress headers and decorative output
+      --verbose         Print debug info (URLs, latencies)

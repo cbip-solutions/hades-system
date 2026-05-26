@@ -1,0 +1,97 @@
+# plugin/hades/pyproject.toml — Plan 12 Phase A coverage + lint anchor.
+#
+# This file does NOT replace the parent ``plugin/pyproject.toml``
+# (which sets pytest rootdir for the entire plugin tree). It is a
+# **renderers-scoped** config consumed by:
+#
+#   pytest plugin/hades/tests/renderers/ \
+#     --cov=plugin/hades/renderers \
+#     --cov-config=plugin/hades/pyproject.toml \
+#     --cov-report=term-missing \
+#     --cov-fail-under=85
+#
+# ruff + mypy may load lint/type-check settings from here when invoked
+# directly within the plugin sub-tree.
+
+[project]
+name = "hades-plugin-renderers"
+version = "0.12.0-dev"
+description = "Hermes plugin for HADES system: 6 platform citation renderers + RendererRegistry"
+requires-python = ">=3.11"
+dependencies = [
+  "markupsafe>=3.0",
+  "httpx>=0.27",
+  "pyyaml>=6.0.3",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "hypothesis>=6.100",
+  "pytest-asyncio>=0.23",
+  "freezegun>=1.4",
+]
+
+[tool.coverage.run]
+source = ["plugin/hades/renderers"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 85
+exclude_lines = [
+  "pragma: no cover",
+  "raise NotImplementedError",
+  "if TYPE_CHECKING:",
+  "@abstractmethod",
+]
+
+[tool.ruff]
+line-length = 90
+target-version = "py311"
+# Plan 12 Phase E I-3 scope expansion: hooks/ + commands/ are now lint
+# targets alongside renderers/ + afk/. providers/ + transports/ remain
+# excluded (pre-Plan-12-A typing/lint debt that the legacy modules
+# carry; Plan 13 'zen migrate' owns the rewrite + lint widening).
+extend-exclude = [
+  "providers/",
+  "transports/",
+  ".venv/",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "B", "UP", "C4", "RET", "SIM"]
+ignore = [
+  "B008",  # function-call-in-default-argument: idiomatic for httpx.Client
+  "N999",  # hyphenated module name `hades` is Hermes plugin convention
+  "UP042", # `str + Enum` inheritance is the Plan 11 substrate parity idiom
+  "UP017", # `timezone.utc` retained for Python 3.11 compat (datetime.UTC is 3.12+)
+  "E501",  # long lines in HTML template literals (email/web renderers) accepted
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+  "E501",  # tests may exceed 90-char line length for clarity
+  "UP017", # tests may use `timezone.utc` instead of `datetime.UTC` alias
+  "N806",  # tests use UPPER_CASE local constants (VALID_HOOKS, _NS_PARENT)
+  "SIM117",# tests use nested with-statements for readability of mock layers
+  "SIM118",# tests sometimes use .keys() for explicitness
+  "C416",  # tests sometimes use dict comprehensions for clarity
+]
+"commands/**" = [
+  # Prompt-template handlers may use UPPER_CASE locals for env reads.
+  "N806",
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_configs = true
+disallow_untyped_decorators = false
+
+[dependency-groups]
+dev = [
+    "mypy>=2.1.0",
+    "ruff>=0.15.14",
+]

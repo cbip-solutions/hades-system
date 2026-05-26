@@ -1,0 +1,27 @@
+{
+  "info": {
+    "name": "numpy",
+    "version": "1.26.0",
+    "summary": "Fundamental package for array computing in Python",
+    "description": "NumPy is the fundamental package for scientific computing with Python.\n\n## Features\n\n- Powerful N-dimensional array object\n- Sophisticated (broadcasting) functions\n- Tools for integrating C/C++ and Fortran code\n",
+    "description_content_type": "text/markdown",
+    "author": "Travis E. Oliphant et al.",
+    "license": "BSD-3-Clause",
+    "requires_python": ">=3.9",
+    "classifiers": [
+      "Programming Language :: Python :: 3",
+      "License :: OSI Approved :: BSD License"
+    ],
+    "requires_dist": [],
+    "project_urls": {
+      "Homepage": "https://numpy.org",
+      "Source": "https://github.com/numpy/numpy",
+      "Bug Tracker": "https://github.com/numpy/numpy/issues"
+    }
+  },
+  "urls": [],
+  "releases": {
+    "1.26.0": [],
+    "1.25.0": []
+  }
+}

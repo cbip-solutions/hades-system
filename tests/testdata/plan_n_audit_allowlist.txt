@@ -1,0 +1,13 @@
+# Plan 15 Phase I-8 (inv-zen-327) — Plan-N body audit allowlist.
+#
+# Each line is either:
+#   - a full ref `<doc>:Plan-<N>` (specific ref allowed in that doc)
+#   - a doc path (all Plan-N refs allowed in that doc; use sparingly)
+#   - a literal match string (e.g. "Plan 17" for historical context)
+#
+# Lines starting with # are comments.
+#
+# Current allowlist: empty (no plans formally retired; per
+# isRetiredPlanNumberHygiene in inv_zen_329_canonical_docs_hygiene_test.go,
+# the retired-plan map is empty). Reserved for future expansion when
+# plans are removed from the live roadmap.

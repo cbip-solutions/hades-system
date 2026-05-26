@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.example.deeply.nested.auth.v1;
+
+option go_package = "github.com/zen-swarm/example/deep/auth/v1;authv1";
+
+service UserService {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+}
+
+message GetUserRequest { string id = 1; }
+message GetUserResponse { string id = 1; }

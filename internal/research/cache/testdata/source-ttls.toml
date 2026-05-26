@@ -1,0 +1,22 @@
+# Plan 14 Phase A Task A-10 canonical reference per spec §2.8 Q8=A.
+#
+# Operator copies this file to ~/.config/zen-swarm/research/source-ttls.toml
+# at install time (Phase F F-8 provider configs).
+#
+# Duration formats accepted by the loader:
+#   "<N>d"      → N * 24h  (e.g., "7d" = one week)
+#   "permanent" → TTLPermanent (math.MaxInt64 nanoseconds; never revalidated)
+#   stdlib      → time.ParseDuration formats (h/m/s/ms/µs/ns)
+#
+# Hosts are exact-match; sub-domain matching is not performed.
+# Add sub-domain entries explicitly if needed.
+
+[sources]
+"pkg.go.dev"                = "7d"
+"pypi.org"                  = "1d"
+"registry.npmjs.org"        = "1d"
+"crates.io"                 = "7d"
+"developer.mozilla.org"     = "30d"
+"arxiv.org"                 = "permanent"
+"raw.githubusercontent.com" = "1d"
+"api.github.com"            = "1d"

@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/zen-swarm/example/api/v1;apiv1";
+
+service WidgetService {
+  // GET — get one
+  rpc GetWidget (GetWidgetRequest) returns (Widget) {
+    option (google.api.http) = { get: "/v1/widgets/{id}" };
+  }
+  // POST — create
+  rpc CreateWidget (CreateWidgetRequest) returns (Widget) {
+    option (google.api.http) = { post: "/v1/widgets", body: "*" };
+  }
+  // PUT — replace
+  rpc ReplaceWidget (ReplaceWidgetRequest) returns (Widget) {
+    option (google.api.http) = { put: "/v1/widgets/{id}", body: "*" };
+  }
+  // DELETE — remove
+  rpc DeleteWidget (DeleteWidgetRequest) returns (DeleteWidgetResponse) {
+    option (google.api.http) = { delete: "/v1/widgets/{id}" };
+  }
+  // PATCH — partial update
+  rpc PatchWidget (PatchWidgetRequest) returns (Widget) {
+    option (google.api.http) = { patch: "/v1/widgets/{id}", body: "*" };
+  }
+  // CUSTOM verb — grpc only, no sibling HTTP row
+  rpc CustomOp (CustomOpRequest) returns (CustomOpResponse) {
+    option (google.api.http) = {
+      custom: { kind: "WEBSOCKET", path: "/v1/widgets/{id}:custom" }
+    };
+  }
+}
+
+message GetWidgetRequest     { string id = 1; }
+message Widget                { string id = 1; string name = 2; }
+message CreateWidgetRequest   { string name = 1; }
+message ReplaceWidgetRequest  { string id = 1; Widget widget = 2; }
+message DeleteWidgetRequest   { string id = 1; }
+message DeleteWidgetResponse  { bool ok = 1; }
+message PatchWidgetRequest    { string id = 1; Widget widget = 2; }
+message CustomOpRequest       { string id = 1; }
+message CustomOpResponse      { bool ok = 1; }

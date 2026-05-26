@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: MIT
+// Package spikes provides the Phase 0 spike registry + execution substrate
+// for Plan 15 Phase A A-4 (release-gate spike re-execution).
+//
+// Per amendment §2.4 D-4: 8 Phase 0 spikes verify Hermes substrate ABCs +
+// hook contracts + MCP envelope shapes + renderer feasibility. Spike
+// vigencia ≤14d (Q10=B Hermes evolution velocity); CATASTROPHIC severity
+// blocks releases unconditionally (inv-zen-274).
+//
+// Spike harness files live under docs/spikes/spike_NN_*.go (build tag
+// spikes; isolated from production binaries). Each harness exposes a
+// Spike01...Spike08 factory returning a Result.
+//
+// Doctrine hard parts are where value lives — re-running spikes at
+// release is the gate that earns release confidence; no defer.
+package spikes

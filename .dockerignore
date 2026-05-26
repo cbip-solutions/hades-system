@@ -1,0 +1,60 @@
+# .dockerignore — Plan 15 Phase D-9
+#
+# Excludes large/unneeded files from the Docker build context so the
+# multi-stage build is fast and the resulting image stays minimal.
+
+# Build outputs (regenerated inside the builder stage)
+bin/
+dist/
+
+# Test fixtures + golden corpora (not consumed by the production image)
+tests/integration/fixtures/
+tests/realworld/fixtures/
+tests/compliance/testdata/
+tests/chaos/network/recordings/
+tests/chaos/dst/golden/
+tests/replay/
+
+# Plugin Python source — the production image runs only the Go daemon;
+# the Hermes plugin lives outside the container.
+plugin/hades/__pycache__/
+plugin/hades/bin/
+
+# Coverage + lint artifacts
+*.test
+*.out
+coverage.txt
+coverage.html
+.golangci-cache/
+
+# macOS metadata
+.DS_Store
+
+# Git (multi-stage build receives commit + date via --build-arg, not
+# from .git/ inside the context).
+.git/
+.github/
+
+# Documentation source — the image carries only LICENSE + README.md.
+# Everything else under docs/ stays out of the build context.
+docs/
+*.md.bak
+HANDOFF.md
+NEXT_SESSION.md
+CHANGELOG.md.bak
+
+# Editor + IDE caches
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local config + secrets — never enter the build context.
+.env
+.env.*
+.secrets/
+.zen/
+.hades/
+**/*.key
+**/*.pem

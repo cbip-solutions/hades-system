@@ -1,0 +1,118 @@
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "mitmproxy",
+      "version": "12.2.2",
+      "comment": ""
+    },
+    "pages": [],
+    "entries": [
+      {
+        "startedDateTime": "2026-05-20T12:00:00.000+00:00",
+        "time": 100,
+        "request": {
+          "method": "POST",
+          "url": "https://api.anthropic.com/v1/messages",
+          "httpVersion": "HTTP/2",
+          "cookies": [],
+          "headers": [
+            {"name": "User-Agent", "value": "Claude-Code/2.1.115 (darwin; arm64)"},
+            {"name": "X-Claude-Version", "value": "2.1.115"},
+            {"name": "X-Claude-Client", "value": "claude-code"},
+            {"name": "Authorization", "value": "Bearer sk-ant-redacted"},
+            {"name": "Content-Type", "value": "application/json"}
+          ],
+          "queryString": [],
+          "postData": {
+            "mimeType": "application/json",
+            "text": "{\"model\":\"claude-opus-4-6\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}],\"tools\":[{\"name\":\"ReadFile\"}]}"
+          },
+          "headersSize": -1,
+          "bodySize": -1
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "httpVersion": "HTTP/2",
+          "cookies": [],
+          "headers": [
+            {"name": "Content-Type", "value": "text/event-stream"}
+          ],
+          "content": {
+            "mimeType": "text/event-stream",
+            "text": "",
+            "size": 0
+          },
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "cache": {},
+        "timings": {"send": 0, "wait": 50, "receive": 50}
+      },
+      {
+        "startedDateTime": "2026-05-20T12:00:01.000+00:00",
+        "time": 100,
+        "request": {
+          "method": "POST",
+          "url": "https://api.anthropic.com/v1/messages",
+          "httpVersion": "HTTP/2",
+          "cookies": [],
+          "headers": [
+            {"name": "User-Agent", "value": "Claude-Code/2.1.115 (darwin; arm64)"},
+            {"name": "X-Claude-Version", "value": "2.1.115"},
+            {"name": "X-Claude-Client", "value": "claude-code"}
+          ],
+          "queryString": [],
+          "postData": {
+            "mimeType": "application/json",
+            "text": "{\"model\":\"claude-opus-4-6\",\"stream\":true}"
+          },
+          "headersSize": -1,
+          "bodySize": -1
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "httpVersion": "HTTP/2",
+          "cookies": [],
+          "headers": [],
+          "content": {"mimeType": "", "text": "", "size": 0},
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "cache": {},
+        "timings": {"send": 0, "wait": 50, "receive": 50}
+      },
+      {
+        "startedDateTime": "2026-05-20T12:00:02.000+00:00",
+        "time": 20,
+        "request": {
+          "method": "POST",
+          "url": "https://telemetry.example.com/log",
+          "httpVersion": "HTTP/2",
+          "cookies": [],
+          "headers": [],
+          "queryString": [],
+          "headersSize": -1,
+          "bodySize": -1
+        },
+        "response": {
+          "status": 204,
+          "statusText": "No Content",
+          "httpVersion": "HTTP/2",
+          "cookies": [],
+          "headers": [],
+          "content": {"mimeType": "", "text": "", "size": 0},
+          "redirectURL": "",
+          "headersSize": -1,
+          "bodySize": 0
+        },
+        "cache": {},
+        "timings": {"send": 0, "wait": 10, "receive": 10}
+      }
+    ]
+  }
+}

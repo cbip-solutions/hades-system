@@ -1,0 +1,9 @@
+{
+  "dependents": [
+    {"versionKey": {"system": "GO", "name": "google.golang.org/grpc", "version": "v1.60.0"}, "dependentCount": 42583, "directDependentCount": 28104},
+    {"versionKey": {"system": "GO", "name": "github.com/spf13/cobra", "version": "v1.10.0"}, "dependentCount": 31204, "directDependentCount": 19500},
+    {"versionKey": {"system": "GO", "name": "github.com/stretchr/testify", "version": "v1.8.4"}, "dependentCount": 27801, "directDependentCount": 17200},
+    {"versionKey": {"system": "GO", "name": "github.com/sirupsen/logrus", "version": "v1.9.3"}, "dependentCount": 19204, "directDependentCount": 12100},
+    {"versionKey": {"system": "GO", "name": "github.com/pkg/errors", "version": "v0.9.1"}, "dependentCount": 18750, "directDependentCount": 11800}
+  ]
+}

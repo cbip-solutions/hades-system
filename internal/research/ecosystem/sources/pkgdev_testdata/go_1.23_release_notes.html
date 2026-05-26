@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html><head><title>Go 1.23 Release Notes - The Go Programming Language</title></head>
+<body>
+<main>
+<h1>Go 1.23 Release Notes</h1>
+<h2 id="language">Changes to the language</h2>
+<p>Go 1.23 makes the (Go 1.22) "range-over-func" experiment a standard part of the language. The "range" clause in a "for-range" loop now accepts iterator functions of the following types as range expressions.</p>
+<h2 id="tools">Tools</h2>
+<h3 id="go-telemetry">Go telemetry</h3>
+<p>Starting in Go 1.23, the Go toolchain can collect usage and breakage statistics that help the Go team understand how the toolchain is used and how well it is working.</p>
+<h3 id="go-command">Go command</h3>
+<p>Setting the GOROOT_FINAL environment variable no longer has an effect. Distributions that install the go command to a location other than $GOROOT/bin/go should install a symlink instead of relocating or copying the go binary.</p>
+<h2 id="runtime">Runtime</h2>
+<p>The runtime now contains experimental support for cooperative goroutine cancellation and improved scheduling of concurrent operations. The traceback printer has been improved to format inlined frames more clearly.</p>
+<h2 id="compiler">Compiler</h2>
+<p>The build time overhead to building with Profile Guided Optimization has been reduced significantly.</p>
+<h2 id="library">Standard library</h2>
+<h3 id="iter">New iter package</h3>
+<p>The new iter package provides the basic definitions for working with user-defined iterators.</p>
+<h3 id="structs">New structs package</h3>
+<p>The new structs package provides types for struct fields that modify properties of the containing struct type such as memory layout.</p>
+<h3 id="unique">New unique package</h3>
+<p>The new unique package provides facilities for canonicalizing values (like "interning" or "hash-consing").</p>
+<h3 id="minor_library_changes">Minor changes to the library</h3>
+<p>The following packages have been deprecated: archive/tar's experimental Format. Several APIs have been removed in favor of generic alternatives.</p>
+</main>
+</body></html>

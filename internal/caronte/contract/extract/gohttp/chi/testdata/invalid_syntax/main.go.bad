@@ -1,0 +1,13 @@
+package main
+
+import (
+	"github.com/go-chi/chi/v5"
+)
+
+// Intentionally malformed Go — missing function body brace + trailing
+// garbage. go/parser must return an error; the extractor surfaces it via
+// fmt.Errorf wrap.
+func main() {
+	r := chi.NewRouter(
+	r.Get("/x", nil
+}

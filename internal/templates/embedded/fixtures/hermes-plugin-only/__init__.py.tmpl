@@ -1,0 +1,38 @@
+"""{{.ProjectName}} — Hermes plugin.
+
+Scaffolded by zen-swarm with doctrine={{.Doctrine}}. Per ADR-0080, Hermes
+is the canonical UX substrate; zen-swarm orchestrates the lifecycle.
+
+Hermes discovers this plugin via:
+- User scope:    ~/.hermes/plugins/{{.ProjectName}}/
+- Project scope: ./.hermes/plugins/{{.ProjectName}}/  (Q13=D opt-in)
+
+The sole required entry point is ``register(ctx)`` below.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any
+
+
+def register(ctx: Any) -> None:
+    """Wire skills, commands, and hooks into the Hermes context."""
+    from .hooks.session_handlers import on_session_start, on_session_end
+    from .hooks.tool_handlers import pre_tool_call, post_tool_call
+
+    ctx.hooks.register("on_session_start", on_session_start)
+    ctx.hooks.register("on_session_end", on_session_end)
+    ctx.hooks.register("pre_tool_call", pre_tool_call)
+    ctx.hooks.register("post_tool_call", post_tool_call)
+
+    skills_dir = Path(__file__).parent / "skills"
+    for skill in skills_dir.glob("*.md"):
+        ctx.skills.register_from_file(skill)
+
+    commands_dir = Path(__file__).parent / "commands"
+    for command in commands_dir.glob("*.py"):
+        ctx.commands.register_from_module(command)
+
+
+__all__ = ["register"]

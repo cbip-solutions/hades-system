@@ -1,0 +1,6 @@
+{"kind":"header","version":1,"session_id":"sess-happy-min","captured_at":"2026-04-30T12:00:00Z","redacted":true,"metadata_sha256":"cab809a151dd629e5851498fa1c236aee7cac318bf42f7ed6291e4d8873aa05e"}
+{"kind":"event","event_id":1,"timestamp":"2026-04-30T12:00:00.100Z","event_type":"OrchestratorStarted","payload":{"session_id":"sess-happy-min","project_id":"proj-min","autonomy_mode":"semi"}}
+{"kind":"event","event_id":2,"timestamp":"2026-04-30T12:00:00.200Z","event_type":"DepthWidthDecided","payload":{"depth":2,"width":3,"rationale":"min(doctrine,parallel,machine,cost,reviewer)"}}
+{"kind":"event","event_id":3,"timestamp":"2026-04-30T12:00:00.300Z","event_type":"WorkerDispatched","payload":{"worker_id":"W1","task_id":"T-1","tier":"t1_bypass"}}
+{"kind":"event","event_id":4,"timestamp":"2026-04-30T12:00:00.400Z","event_type":"OrchestratorStopped","payload":{"outcome":"success"}}
+{"kind":"footer","event_count":4,"first_event_id":1,"last_event_id":4}

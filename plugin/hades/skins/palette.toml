@@ -1,0 +1,20 @@
+# Plan 18a Phase B — HADES palette (spec §Q2)
+# 8 color keys. Mapped to Hermes-equivalent keys at _build_hades_yaml time.
+# Tagline + agent_name are rendered into banner_text + branding.welcome.
+
+bg          = "#0d0d0d"
+text        = "#e0e0e0"
+accent      = "#c41e3a"
+meta        = "#999999"
+status_ok   = "#10b981"
+status_warn = "#ffa726"
+divider     = "#555555"
+shadow      = "#3a2d5c"
+
+[branding]
+agent_name     = "HADES Agent"
+tagline        = "agent orchestrator · on the Hermes substrate"
+prompt_symbol  = "╨"
+goodbye        = "Vale. ╨"
+response_label = " ╨ HADES "
+help_header    = "(╨) Available Commands"

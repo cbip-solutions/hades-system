@@ -1,0 +1,3 @@
+# DST regression seeds — append one canonical line per regression.
+# Format: seed=<int64> steps=<int> mix=sleep:S,yield:Y,inject:I,recover:R max_sleep=<duration>
+# Sorted by seed ascending. No live entries yet — added per bug-find.

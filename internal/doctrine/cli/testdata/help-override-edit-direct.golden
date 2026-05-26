@@ -1,0 +1,27 @@
+Resuelve la ruta del proyecto:
+  1. --path <ruta>   sobreescribe la resolución
+  2. --project <ali> resuelve el alias en ~/.config/zen-swarm/projects.toml
+                     (Plan 7; fallback a --path si no está disponible)
+  3. cwd             asume que es la raíz del proyecto
+
+Si el archivo no existe, lo crea con un stub que recuerda la regla
+tighten-only (inv-zen-136). Tras editar, valida el contenido contra
+el daemon (saltable con --no-validate).
+
+Usage:
+  doctrine override edit [flags]
+
+Flags:
+  -h, --help             help for edit
+      --no-validate      Saltar validación post-edición
+      --path string      Ruta absoluta del proyecto (override de la resolución)
+      --project string   Alias del proyecto en ~/.config/zen-swarm/projects.toml
+
+Global Flags:
+      --filter string   Namespace-specific post-fetch filter
+      --format string   Output format: table | json | yaml (default "table")
+      --json            Equivalent to --format=json
+      --limit int       Cap result rows (default 100)
+      --quiet           Suppress headers and decorative output
+      --since string    Time-bound filter (24h, 7d, 2025-01-01)
+      --verbose         Print debug info (URLs, latencies)

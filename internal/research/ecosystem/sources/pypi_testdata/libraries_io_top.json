@@ -1,0 +1,5 @@
+[
+  {"name": "requests", "platform": "PyPI", "stars": 51290, "latest_release_number": "2.31.0"},
+  {"name": "numpy", "platform": "PyPI", "stars": 27000, "latest_release_number": "1.26.0"},
+  {"name": "pandas", "platform": "PyPI", "stars": 42000, "latest_release_number": "2.1.0"}
+]

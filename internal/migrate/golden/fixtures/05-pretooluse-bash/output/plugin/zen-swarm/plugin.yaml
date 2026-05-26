@@ -1,0 +1,9 @@
+name: zen-swarm
+version: 0.0.1
+description: Imported from a Claude Code installation via `zen migrate claude-code`.
+license: imported
+metadata:
+  zen-swarm:
+    imported_skill_count: 0
+    imported_command_count: 0
+    imported_hook_count: 1

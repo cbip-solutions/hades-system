@@ -1,0 +1,22 @@
+Muestra la doctrina actualmente activa, marca de tiempo de la
+última recarga, salud del file-watcher, y cualquier cambio pendiente
+que el operador haya editado pero aún no recargado.
+
+Use --project <alias> para inspeccionar un proyecto específico (por
+defecto: el proyecto del cwd actual).
+
+Usage:
+  doctrine status [flags]
+
+Flags:
+  -h, --help             help for status
+      --project string   Alias del proyecto (default: cwd)
+
+Global Flags:
+      --filter string   Namespace-specific post-fetch filter
+      --format string   Output format: table | json | yaml (default "table")
+      --json            Equivalent to --format=json
+      --limit int       Cap result rows (default 100)
+      --quiet           Suppress headers and decorative output
+      --since string    Time-bound filter (24h, 7d, 2025-01-01)
+      --verbose         Print debug info (URLs, latencies)

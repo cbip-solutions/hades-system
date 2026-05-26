@@ -1,0 +1,19 @@
+Lista las doctrinas conocidas por el daemon. Por defecto incluye
+todas las fuentes; filtre con --source para ver solo built-in, user,
+o per-project.
+
+Usage:
+  doctrine list [flags]
+
+Flags:
+  -h, --help            help for list
+      --source string   Filtra por fuente: built-in|user|project|all (default "all")
+
+Global Flags:
+      --filter string   Namespace-specific post-fetch filter
+      --format string   Output format: table | json | yaml (default "table")
+      --json            Equivalent to --format=json
+      --limit int       Cap result rows (default 100)
+      --quiet           Suppress headers and decorative output
+      --since string    Time-bound filter (24h, 7d, 2025-01-01)
+      --verbose         Print debug info (URLs, latencies)

@@ -1,0 +1,59 @@
+# Zen-Swarm codegen MCP — provider catalog and routing policy.
+# Edit prices and model ids as the ecosystem evolves.
+
+[providers.deepseek]
+kind = "cloud"
+base_url = "https://api.deepseek.com/v1"
+model = "deepseek-coder"
+api_key_env = "DEEPSEEK_API_KEY"
+price_in_per_million = 0.14
+price_out_per_million = 0.28
+timeout_s = 180
+
+[providers.glm]
+kind = "cloud"
+base_url = "https://open.bigmodel.cn/api/paas/v4"
+model = "glm-4.6-coder"
+api_key_env = "GLM_API_KEY"
+price_in_per_million = 0.30
+price_out_per_million = 0.60
+timeout_s = 180
+
+[providers.kimi]
+kind = "cloud"
+base_url = "https://api.moonshot.cn/v1"
+model = "moonshot-v1-128k"
+api_key_env = "KIMI_API_KEY"
+price_in_per_million = 1.00
+price_out_per_million = 2.00
+timeout_s = 240
+
+[providers.local-32b]
+kind = "local"
+base_url = "http://localhost:8080/v1"
+model = "qwen3-coder-32b"
+api_key_env = ""
+price_in_per_million = 0.0
+price_out_per_million = 0.0
+timeout_s = 300
+
+[providers.local-14b]
+kind = "local"
+base_url = "http://localhost:8080/v1"
+model = "qwen3-coder-14b"
+api_key_env = ""
+price_in_per_million = 0.0
+price_out_per_million = 0.0
+timeout_s = 180
+
+[routing]
+default = "deepseek"
+high_complexity = "glm"
+long_context_threshold = 50000
+
+[routing.fallbacks]
+deepseek  = ["glm", "kimi", "local-32b"]
+glm       = ["deepseek", "kimi", "local-32b"]
+kimi      = ["glm", "deepseek", "local-32b"]
+"local-32b" = ["local-14b", "deepseek"]
+"local-14b" = ["local-32b", "deepseek"]

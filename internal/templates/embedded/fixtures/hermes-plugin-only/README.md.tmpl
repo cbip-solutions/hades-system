@@ -1,0 +1,33 @@
+# {{.ProjectName}}
+
+Hermes plugin scaffolded by [zen-swarm](https://github.com/cbip-solutions/hades-system).
+
+- Doctrine: `{{.Doctrine}}`
+- Scaffolded for: `{{.AuthorName}} <{{.AuthorEmail}}>`
+
+## Quick start
+
+```bash
+# Install into user-scope Hermes plugin tree:
+ln -s "$(pwd)" ~/.hermes/plugins/{{.ProjectName}}
+
+# Or use project-scope (Q13=D opt-in):
+mkdir -p .hermes/plugins
+ln -s "$(pwd)" .hermes/plugins/{{.ProjectName}}
+```
+
+## Layout
+
+```
+{{.ProjectName}}/
+├── plugin.yaml         # Hermes plugin manifest (agentskills.io schema)
+├── __init__.py         # Hermes register(ctx) entry point
+├── skills/             # Skill markdown files (auto-registered)
+├── commands/           # Slash commands (auto-registered)
+└── hooks/              # Lifecycle hook handlers
+```
+
+## Doctrine
+
+This project's profile is `{{.Doctrine}}`. See `docs/operations/doctrine.md`
+for the full taxonomy.

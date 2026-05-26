@@ -1,0 +1,8 @@
+{
+  "results": [
+    {"package": {"name": "express", "version": "4.18.2", "description": "Fast web framework", "links": {"npm": "https://npmjs.com/package/express"}}},
+    {"package": {"name": "react", "version": "18.2.0", "description": "React core", "links": {"npm": "https://npmjs.com/package/react"}}},
+    {"package": {"name": "vue", "version": "3.3.4", "description": "Vue.js framework", "links": {"npm": "https://npmjs.com/package/vue"}}}
+  ],
+  "total": 3
+}

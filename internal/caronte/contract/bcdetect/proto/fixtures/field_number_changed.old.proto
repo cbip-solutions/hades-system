@@ -1,0 +1,8 @@
+syntax = "proto3";
+package fixtures.field_number_changed;
+
+message User {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+}

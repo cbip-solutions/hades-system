@@ -1,0 +1,14 @@
+{
+    "model": "opus[1m]",
+    "mcpServers": {
+        "playwright": {
+            "command": "npx",
+            "args": ["@playwright/mcp"],
+            "env": {}
+        }
+    },
+    "permissions": {
+        "allow": ["Read(*)"],
+        "deny": []
+    }
+}

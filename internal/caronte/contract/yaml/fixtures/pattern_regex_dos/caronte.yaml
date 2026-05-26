@@ -1,0 +1,5 @@
+schema_version: 1
+services:
+  - base_url_pattern: '^(a+)+(b+)+(c+)+(d+)+$'
+    target_repo: auth-svc
+unresolved_policy: surface

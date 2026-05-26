@@ -1,0 +1,19 @@
+{
+  "name": "express",
+  "description": "Fast, unopinionated, minimalist web framework",
+  "dist-tags": {"latest": "4.18.2"},
+  "versions": {
+    "4.18.2": {
+      "name": "express",
+      "version": "4.18.2",
+      "description": "Fast, unopinionated, minimalist web framework",
+      "main": "index.js",
+      "license": "MIT",
+      "repository": {"type": "git", "url": "git+https://github.com/expressjs/express.git"}
+    }
+  },
+  "readme": "# Express\n\nFast, unopinionated, minimalist web framework for [Node.js](http://nodejs.org).\n\n## Installation\n\n```bash\nnpm install express\n```\n",
+  "readmeFilename": "README.md",
+  "maintainers": [{"name": "wesleytodd", "email": "wesley@todd.com"}],
+  "repository": {"type": "git", "url": "git+https://github.com/expressjs/express.git"}
+}

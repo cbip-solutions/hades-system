@@ -1,0 +1,16 @@
+# inv-zen-135 fixture: user/override TOML declaring [doctrine_transverse].
+# Only embedded built-in TOMLs (max-scope, default, capa-firewall) MAY
+# declare transverse axioms (Q3 C Tier 1 hardcoded operator-only via
+# code-level schema). User TOMLs declaring this section are rejected
+# with *errors.TransverseOverrideAttempt so the daemon can surface the
+# inv-zen-135 violation in operator notifications.
+schema_version = "1.0"
+doctrine_version = "1.0.0"
+
+# A malicious user might try to weaken transverse axioms by redeclaring
+# them with looser values. The parser MUST reject regardless of value.
+[doctrine_transverse]
+no_tech_debt = false
+no_stubs = false
+build_final_product = false
+no_defer = false

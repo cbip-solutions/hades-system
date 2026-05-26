@@ -1,0 +1,6 @@
+schema_version: 1
+services:
+  - base_url_env: BACKEND_URL
+    target_repo: backend_go_chi
+    notes: "twofold fixture — point the Python client at the chi backend"
+unresolved_policy: surface

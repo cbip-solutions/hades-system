@@ -1,0 +1,10 @@
+# Plan 13 Phase F6 testdata — clean doctrine TOML fragment with
+# [capa_firewall.tiers] entries that all PASS validation.
+schema_version = "1.0"
+name = "clean"
+
+[capa_firewall.tiers]
+"playwright" = "medium"
+"sequential-thinking" = "low"
+"filesystem-write.write" = "high"
+"filesystem-write.read" = "low"

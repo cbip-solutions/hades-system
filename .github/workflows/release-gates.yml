@@ -1,0 +1,455 @@
+
+name: release-gates
+
+"on":
+  workflow_call:
+    inputs:
+      ref:
+        description: "Git ref to gate (default: GITHUB_REF)"
+        required: false
+        type: string
+        default: ""
+      gate-mode:
+        description: "Flip-aware gate mode per Modelo B (decisión 14): 'strict' (default; public cbip-solutions/hades-system enforcement) or 'lenient' (private dev operator velocity)"
+        required: false
+        type: string
+        default: "strict"
+    outputs:
+      ready:
+        description: "true if all 26 gates pass + aggregate succeeds (post Stage-0 enumeration)"
+        value: ${{ jobs.aggregate.outputs.ready }}
+  pull_request:
+    branches: [main]
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+
+env:
+  ZEN_BYPASS_DISABLE_KEYCHAIN: "1"
+  GATE_MODE: ${{ inputs.gate-mode || 'strict' }}
+
+jobs:
+
+
+  verify-brew-formula:
+    name: verify-brew-formula (A-1)
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Verify brew formula multi-deps + caveats
+        run: make verify-brew-formula
+
+  verify-hermes:
+    name: verify-hermes (A-2)
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build
+        run: make build
+      - name: Verify Hermes binary + version pin + plugin discovery + MCP probe
+        run: make verify-hermes
+
+  smoke-hermes-plugin:
+    name: smoke-hermes-plugin (A-3 Tier 2)
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build
+        run: make build
+      - name: Hermes plugin smoke (FakeHermes httptest Tier 2)
+        run: make smoke-hermes-plugin
+
+  smoke-hermes-plugin-real:
+    name: smoke-hermes-plugin-real (A-3 Tier 3)
+    runs-on: macos-14
+    timeout-minutes: 15
+    env:
+      ZEN_REALWORLD_HERMES: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build
+        run: make build
+      - name: Install real Hermes binary
+        run: |
+          if [ -f .hermes-version ]; then
+            HERMES_VERSION=$(cat .hermes-version)
+            echo "Installing Hermes v${HERMES_VERSION}"
+            brew tap hermes-agent/tap || true
+            brew install hermes-agent || echo "::warning::brew install hermes-agent failed; smoke-hermes-plugin-real may degrade"
+          else
+            echo "::warning::.hermes-version pin missing; Tier 3 smoke will degrade"
+          fi
+      - name: Hermes plugin smoke (real binary Tier 3)
+        run: make smoke-hermes-plugin-real
+
+  verify-spikes-rerun:
+    name: verify-spikes-rerun (A-4)
+    runs-on: macos-14
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build
+        run: make build
+      - name: Re-execute 8 spike harnesses (≤14d vigencia; CATASTROPHIC blocks)
+        run: make verify-spikes-rerun
+
+  verify-30-ci-green:
+    name: verify-30-ci-green (A-5)
+    runs-on: macos-14
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100  # 50-commit rolling window evaluation
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build cmd/verify-30-ci-green
+        run: go build -o bin/verify-30-ci-green ./cmd/verify-30-ci-green/
+      - name: Verify 30-CI-green rolling window 50/45/2 with classification
+        run: make verify-30-ci-green
+
+  verify-license-disclosure:
+    name: verify-license-disclosure (A-6)
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify license disclosure 4-redundant (README + INSTALL + THIRD_PARTY + brew caveats; MIT-canonical surface count)
+        run: make verify-license-disclosure
+
+
+  verify-changelog-completeness:
+    name: verify-changelog-completeness (A-12)
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # need full history for v* tag enumeration
+      - name: Verify every v* git tag has CHANGELOG entry or allowlist row
+        env:
+          GATE_MODE: ${{ env.GATE_MODE }}
+        run: make verify-changelog-completeness
+
+
+  verify-bypass-sidecar:
+    name: verify-bypass-sidecar (B-3..B-4)
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build
+        run: make build
+      - name: Verify bypass sidecar HTTP localhost registration probe
+        run: make verify-bypass-sidecar
+
+  verify-no-bypass-references:
+    name: verify-no-bypass-references (B-6)
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify no in-tree bypass references (boundary lint scan)
+        run: make verify-no-bypass-references
+
+  verify-sidecar-capability-negotiation:
+    name: verify-sidecar-capability-negotiation (B-15)
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Verify sidecar /v1/sidecar/info capability-vector forward-compat
+        run: make verify-sidecar-capability-negotiation
+
+
+  verify-license-compliance:
+    name: verify-license-compliance (C-7..C-8)
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify LICENSE + per-file SPDX header presence (MIT canonical)
+        run: make verify-license-compliance
+
+  verify-dco-signoff:
+    name: verify-dco-signoff (C-14)
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history for per-commit Signed-off-by scan
+      - name: Verify every commit has Signed-off-by line (DCO per MIT community norm)
+        env:
+          GATE_MODE: ${{ env.GATE_MODE }}
+        run: make verify-dco-signoff
+
+
+  verify-multi-arch:
+    name: verify-multi-arch (D-10)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Verify 3-platform matrix builds (darwin-arm64 + linux-amd64 + linux-arm64)
+        run: make verify-multi-arch
+
+  verify-signatures:
+    name: verify-signatures (D-10)
+    runs-on: macos-14
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Verify ad-hoc codesign + sigstore-keyless attestation chain
+        run: make verify-signatures
+
+  verify-release-artifacts:
+    name: verify-release-artifacts (D-10/E-5)
+    runs-on: macos-14
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build cmd/verify-release-artifacts
+        run: go build -o bin/verify-release-artifacts ./cmd/verify-release-artifacts/
+      - name: Verify release artifacts (binaries + SBOMs + attestations + signatures)
+        run: make verify-release-artifacts
+
+
+  verify-cgo-supplement:
+    name: verify-cgo-supplement (E-6)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build cmd/verify-cgo-supplement
+        run: go build -o bin/verify-cgo-supplement ./cmd/verify-cgo-supplement/
+      - name: Verify CGO supplement drift (configs/cgo-supplement.cdx.json vs go.mod + vendor)
+        run: make verify-cgo-supplement
+
+
+  verify-chaos-suite:
+    name: verify-chaos-suite (F-13)
+    runs-on: macos-14
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build
+        run: make build
+      - name: Verify chaos suite (Toxiproxy + gofail + DST testing/synctest seed budget)
+        run: make verify-chaos-suite
+
+
+  verify-cross-workflow-freshness:
+    name: verify-cross-workflow-freshness (G-4)
+    runs-on: macos-14
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify chaos.yml + doctrine-pre-release.yml + nightly-bypass-probe.yml freshness
+        run: make verify-cross-workflow-freshness
+
+
+  verify-docs-maturity:
+    name: verify-docs-maturity (H-7)
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify H-full doc components present + valid (LICENSE + README + CHANGELOG + SECURITY + CONTRIBUTING + CoC; NOTICE optional under MIT)
+        run: make verify-docs-maturity
+
+  verify-hermes-boundary:
+    name: verify-hermes-boundary (H-12)
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Verify no direct hermes_cli/hermes_agent imports outside internal/hermes/boundary/
+        run: make verify-hermes-boundary
+
+
+  verify-canonical-docs-hygiene:
+    name: verify-canonical-docs-hygiene (I-8)
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Verify canonical docs hygiene (frontmatter + Plan-N audit + _index.json parity + gitnexus-ux.md absence)
+        env:
+          GATE_MODE: ${{ env.GATE_MODE }}
+        run: make verify-canonical-docs-hygiene
+
+
+  verify-no-personal-references:
+    name: verify-no-personal-references (J-9)
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ripgrep
+        run: brew install ripgrep || true  # usually preinstalled on GHA macos-14
+      - name: Verify no personal references (denied patterns scan with YAML allowlist)
+        env:
+          GATE_MODE: ${{ env.GATE_MODE }}
+        run: make verify-no-personal-references
+
+
+  verify-no-task-context-comments:
+    name: verify-no-task-context-comments (K-9)
+    runs-on: macos-14
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ripgrep
+        run: brew install ripgrep || true
+      - name: Verify no task-context rot in comments (Plan-N rot + v0.x rot + TODO-without-owner)
+        run: make verify-no-task-context-comments
+
+  verify-godoc-clean:
+    name: verify-godoc-clean (K-9)
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Install golangci-lint (revive `exported` rule strict)
+        run: |
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
+      - name: Verify godoc clean (exported Go identifier doc-comment presence)
+        run: make verify-godoc-clean
+
+
+  verify-invariants:
+    name: verify-invariants (existing)
+    runs-on: macos-14
+    timeout-minutes: 30
+    env:
+      ZEN_BYPASS_DISABLE_KEYCHAIN: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Build
+        run: make build
+      - name: Verify all compile-checked + runtime invariants (Plans 1-15)
+        run: make verify-invariants
+
+  test-tiers:
+    name: test-tiers (existing)
+    runs-on: macos-14
+    timeout-minutes: 60
+    env:
+      ZEN_BYPASS_DISABLE_KEYCHAIN: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - name: Install ast-grep
+        run: npm install -g @ast-grep/cli
+      - name: Build
+        run: make build
+      - name: Install git hooks
+        run: make install-git-hooks || true
+      - name: Test tier suite (unit + integration + compliance + chaos)
+        run: make test-tiers
+
+
+  aggregate:
+    name: aggregate (Phase G G-1 release-gate composite; post Stage-0 + B-15 = 27 gates rolled up)
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs:
+      - verify-brew-formula
+      - verify-hermes
+      - smoke-hermes-plugin
+      - smoke-hermes-plugin-real
+      - verify-spikes-rerun
+      - verify-30-ci-green
+      - verify-license-disclosure
+      - verify-bypass-sidecar
+      - verify-no-bypass-references
+      - verify-license-compliance
+      - verify-multi-arch
+      - verify-signatures
+      - verify-release-artifacts
+      - verify-cgo-supplement
+      - verify-chaos-suite
+      - verify-cross-workflow-freshness
+      - verify-docs-maturity
+      - verify-invariants
+      - test-tiers
+      - verify-changelog-completeness        # A-12 (decisión 8)
+      - verify-dco-signoff                   # C-14 (decisión 15-2)
+      - verify-canonical-docs-hygiene        # I-8 (decisión 9)
+      - verify-no-personal-references        # J-9 (decisión 10)
+      - verify-no-task-context-comments      # K-9 (decisión 12)
+      - verify-godoc-clean                   # K-9 (decisión 12)
+      - verify-hermes-boundary               # H-12 (decisión 7-b)
+      - verify-sidecar-capability-negotiation # B-15 (inv-zen-284)
+    outputs:
+      ready: ${{ steps.aggregate.outputs.ready }}
+    steps:
+      - name: Aggregate gate decision
+        id: aggregate
+        run: |
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+          echo "::notice::ALL 27 RELEASE GATES PASSED (post Stage-0 + Phase B-15) — v1.0 tag promotable"

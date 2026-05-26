@@ -1,0 +1,5 @@
+directive @cost(value: Int!) on FIELD_DEFINITION
+
+type Query {
+  expensive: String @cost(value: 100)
+}

@@ -1,0 +1,33 @@
+id: no-todo-without-adr-ref
+language: go
+rule:
+  kind: comment
+  all:
+    - regex: '(?i)^//\s*TODO\b'
+    - not:
+        any:
+          - regex: 'ADR-\d+'
+          - regex: 'adr-\d+'
+          - regex: 'inv-zen-\d+'
+          - regex: '(?i)plan\s*\d+'
+          - regex: '(?i)phase-[a-z0-9]+'
+          - regex: '#\d+'
+message: |
+  TODO comment without ADR/inv-zen/plan/issue reference is deferred work
+  without justification — violates CLAUDE.md "No defer" doctrine.
+  Either:
+    1. Implement now (preferred per max-scope doctrine), OR
+    2. Add ADR-NNNN reference explaining why deferral is acceptable, OR
+    3. Add inv-zen-NNN reference if the TODO tracks an invariant gap, OR
+    4. Add `Plan N` reference if the TODO is genuinely future-plan scope
+  Acceptable forms:
+    // TODO add metric here later (ADR-0050)
+    // TODO(ADR-0055) cross-doctrine evaluation framework
+    // TODO inv-zen-200 future invariant
+    // TODO Plan 9 audit + persistence — out of Plan 8 scope
+severity: error
+files:
+  - "**/*.go"
+ignores:
+  - "**/*_test.go"
+  - "**/testdata/**"

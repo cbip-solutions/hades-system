@@ -1,0 +1,56 @@
+# Build artifacts
+/bin/
+/dist/
+docs/
+*.exe
+*.so
+*.dylib
+
+# Test and coverage artifacts
+*.test
+*.out
+coverage.txt
+coverage.html
+.coverage
+.coverage.*
+
+# Runtime state
+/data/
+/.local/
+.zen/
+.caronte/
+*.sock
+*.pid
+*.log
+
+# Python and plugin local state
+mcp/**/.venv/
+mcp/**/__pycache__/
+plugin/**/.venv/
+plugin/**/__pycache__/
+plugin/**/.pytest_cache/
+plugin/**/bin/
+*.pyc
+*.pyo
+
+# Go workspace
+go.work
+go.work.sum
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Environment and credential-shaped local files
+.env
+.env.local
+*.pem
+*.key
+*credentials*
+*token*
+
+# Local brainstorming artifacts
+.superpowers/

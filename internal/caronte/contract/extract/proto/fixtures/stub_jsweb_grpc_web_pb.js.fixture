@@ -1,0 +1,37 @@
+/**
+ * @fileoverview gRPC-Web generated client stub for auth.v1
+ * @enhanceable
+ * @public
+ */
+
+// GENERATED CODE -- DO NOT EDIT!
+
+/* eslint-disable */
+// @ts-nocheck
+
+const grpc = {};
+grpc.web = require('grpc-web');
+
+var proto = require('./auth_pb.js');
+
+/**
+ * @param {string} hostname
+ * @param {?Object} credentials
+ * @param {?Object} options
+ * @constructor
+ */
+proto.auth.v1.UserServiceClient = function(hostname, credentials, options) {
+  this.hostname_ = hostname;
+};
+
+UserServiceClient.prototype.getUser = function(request, metadata, callback) {
+  return this.client_.rpcCall('/auth.v1.UserService/GetUser', request, metadata || {}, methodDescriptor_UserService_GetUser, callback);
+};
+
+UserServiceClient.prototype.updateUser = function(request, metadata, callback) {
+  return this.client_.rpcCall('/auth.v1.UserService/UpdateUser', request, metadata || {}, methodDescriptor_UserService_UpdateUser, callback);
+};
+
+AdminServiceClient.prototype.promote = function(request, metadata, callback) {
+  return this.client_.rpcCall('/auth.v1.AdminService/Promote', request, metadata || {}, methodDescriptor_AdminService_Promote, callback);
+};

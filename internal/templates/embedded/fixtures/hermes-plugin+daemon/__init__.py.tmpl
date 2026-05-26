@@ -1,0 +1,19 @@
+"""{{.ProjectName}} — Hermes plugin with companion daemon.
+
+Doctrine: {{.Doctrine}}. The daemon source lives in `cmd/{{.ProjectName}}-ctld/`;
+build it with `make build` and start with `bin/{{.ProjectName}}-ctld`.
+"""
+
+from __future__ import annotations
+from typing import Any
+
+
+def register(ctx: Any) -> None:
+    """Wire skills, commands, and hooks into Hermes."""
+    from .hooks.session_handlers import on_session_start, on_session_end
+
+    ctx.hooks.register("on_session_start", on_session_start)
+    ctx.hooks.register("on_session_end", on_session_end)
+
+
+__all__ = ["register"]

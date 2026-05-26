@@ -1,0 +1,19 @@
+// Companion daemon for {{.ProjectName}}.
+package main
+
+import (
+	"flag"
+	"log"
+	"os"
+)
+
+func main() {
+	var addr string
+	flag.StringVar(&addr, "addr", "127.0.0.1:0", "listen address")
+	flag.Parse()
+
+	log.SetOutput(os.Stderr)
+	log.Printf("{{.ProjectName}}-ctld starting on %s", addr)
+	// Wire daemon main loop here.
+	log.Printf("{{.ProjectName}}-ctld stopped")
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>arXiv Query: cat:cs.PL OR cat:cs.SE</title>
+<entry>
+  <id>http://arxiv.org/abs/2506.15655v1</id>
+  <updated>2025-06-20T00:00:00Z</updated>
+  <published>2025-06-18T00:00:00Z</published>
+  <title>cAST: AST-Aware Chunking for Code Retrieval</title>
+  <summary>We propose cAST, an algorithm for AST-aware chunking that produces high-quality retrieval units.</summary>
+  <author><name>Author A</name></author>
+  <author><name>Author B</name></author>
+  <category term="cs.PL"/>
+</entry>
+<entry>
+  <id>http://arxiv.org/abs/2401.00396v1</id>
+  <updated>2024-01-01T00:00:00Z</updated>
+  <published>2024-01-01T00:00:00Z</published>
+  <title>RAGTruth: A Hallucination Corpus for RAG</title>
+  <summary>RAGTruth provides 18000 annotated examples for hallucination evaluation.</summary>
+  <author><name>Author X</name></author>
+  <category term="cs.CL"/>
+</entry>
+</feed>

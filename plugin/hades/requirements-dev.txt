@@ -1,0 +1,18 @@
+# plugin/zen-swarm/requirements-dev.txt
+#
+# Development-time dependencies for the Hermes plugin test suite. Installed
+# into a local venv via:
+#
+#   python3 -m venv .venv
+#   .venv/bin/pip install -r requirements-dev.txt
+#
+# These deps are NOT runtime deps — Hermes loads the plugin via importlib at
+# runtime without needing pip-installed packages from this list. They only
+# back the pytest test runner used by H'-2..H'-14.
+#
+# Phase H'-12 will wire ``make test-plugin`` to create the venv + install +
+# run pytest automatically. For now, this file documents the dependency so
+# operator can ``pip install -r requirements-dev.txt`` reproducibly.
+
+pytest>=8.0
+pyyaml>=6.0

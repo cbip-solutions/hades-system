@@ -1,0 +1,10 @@
+# Plan 13 Phase F6 testdata — malformed key entries.
+#   ".dangling" — empty MCP name component
+#   "mcp." — empty tool name after dot
+# Should surface SeverityError for each.
+schema_version = "1.0"
+name = "violation-malformed"
+
+[capa_firewall.tiers]
+".dangling" = "low"
+"playwright." = "low"

@@ -1,0 +1,17 @@
+[project]
+name = "{{.ProjectName}}"
+version = "0.1.0"
+description = "{{.ProjectName}} ML pipeline"
+requires-python = ">=3.11"
+dependencies = [
+    "jupyter>=1.0",
+    "numpy>=1.26",
+    "pandas>=2.2",
+]
+
+[tool.uv]
+dev-dependencies = ["ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

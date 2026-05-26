@@ -1,0 +1,280 @@
+# internal/doctrine/builtin/capa-firewall.toml
+#
+# zen-swarm built-in doctrine: capa-firewall.
+#
+# Doctrine principle: Pulido-strict. The most conservative doctrine —
+# optimized for high-stakes work where false-negatives are catastrophic
+# (e.g., security-critical paths, irreversible production changes,
+# documents-don't-decide research workflows). Every hard guard enforced.
+#
+# Hard guards (cannot be relaxed without operator amendment + ADR):
+# - auto_upgrade = "none" (inv-zen-100 generalized — capa-firewall NEVER
+#   auto-upgrades; only the operator may bump versions via explicit
+#   `zen doctrine migrate --confirm`)
+# - autonomy.mode = "assisted" (operator gates ALL substantive decisions)
+# - autonomy.voting.plurality_threshold_pct = 100 (full consensus required;
+#   no early-stop)
+# - notifications: action-needed promoted to urgent (interrupts always);
+#   info-immediate delivered during quiet (Pulido visibility-mandated)
+#
+# Phase 0 R1-R5 ack values for capa-firewall come from
+# docs/superpowers/plans/2026-05-03-plan-8-phase-0-acks.md (operator-acked
+# 2026-05-08, locked into tests/doctrine/reconciliation_test.go).
+#
+# Edits to this file MUST be accompanied by an updated
+# tests/doctrine/reconciliation_test.go entry AND an ADR per Plan 5 Q10 C
+# amendment proposal flow.
+
+schema_version = "1.0"
+doctrine_version = "1.0.0"
+auto_upgrade = "none"     # HARD GUARD — inv-zen-100 generalized
+
+# ──────────────────────────────────────────────────────────────────────────
+# Doctrine transverse axioms — Q3 C Tier 1 + inv-zen-135
+# ──────────────────────────────────────────────────────────────────────────
+
+[doctrine_transverse]
+no_tech_debt = true
+no_stubs = true
+build_final_product = true
+no_defer = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Workforce — narrowest bounds (Pulido scoped-context)
+# capa-firewall: depth 1..2; width 2 (tightest).
+# ──────────────────────────────────────────────────────────────────────────
+
+[workforce]
+min_depth = 1
+max_depth = 2
+max_width_per_layer = 2
+
+[workforce.recovery]
+# Pulido strict: no transient retries; escalate immediately.
+transient_retry_budget = 0
+permanent_infra_escalate = "abort"
+doctrine_retry_budget = 0
+
+# ──────────────────────────────────────────────────────────────────────────
+# HRA — full layers active; tightest cadence; 1:1 reviewer:worker ratio
+# (capa-firewall pays the cost for full reviewer coverage).
+# ──────────────────────────────────────────────────────────────────────────
+
+[hra]
+layers_enabled = [1, 2, 3]
+cadence_tactical_min = 1
+cadence_strategic_min = 15
+cadence_architectural_min = 60
+reviewer_to_worker_ratio = 1
+
+# ──────────────────────────────────────────────────────────────────────────
+# Research — always; max sources required (Pulido §3.5 directive)
+# ──────────────────────────────────────────────────────────────────────────
+
+[research]
+enabled = true
+max_budget_per_session_usd = 10
+sota_orchestrator_enforced = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Gates — Pulido strict but no LLM cost (skip realworld/replay/timeaccel/
+# orchestrator_chaos per Pulido §3.5: zero LLM-cost gates for capa-firewall)
+# Phase 0 R3 ack — capa-firewall: 6 tiers.
+# ──────────────────────────────────────────────────────────────────────────
+
+[gates]
+coverage_min_pct = 95
+
+[gates.test_tiers]
+# Phase 0 R3 ack — capa-firewall: Pulido strict but no LLM cost.
+enabled = ["unit", "integration", "compliance", "adversarial", "chaos",
+           "analysistest"]
+
+# ──────────────────────────────────────────────────────────────────────────
+# Review — every layer required; tight Hive cadence; rotate every PR;
+# dual review mandatory.
+# ──────────────────────────────────────────────────────────────────────────
+
+[review]
+hive_cadence_min = 15
+rotate_reviewer_every_pr = 1
+require_dual_review = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Autonomy — Plan 5 Q11 C HARD GUARDS
+# capa-firewall: assisted mode mandatory (operator confirmation required
+# for ALL substantive decisions); strict --check.
+# ──────────────────────────────────────────────────────────────────────────
+
+[autonomy]
+mode = "assisted"
+check_mode = "strict"
+amendment_cooldown_hours = 168
+
+[autonomy.confirmation_policy]
+# Phase 0 R1 ack — capa-firewall: high×3 + low for architectural escalation
+# (capa-firewall escalates eagerly per Pulido §3.5; low threshold = more
+# frequent confirmation).
+budget_breach_threshold = "high"
+spec_amendment_proposal = "high"
+invariant_violation = "high"
+architectural_review_escalation = "low"
+
+[autonomy.voting]
+# Phase 0 R2 ack — capa-firewall: 100% consensus; never early-stop.
+plurality_threshold_pct = 100
+fmv_enable = true
+ems_enable = false
+
+[autonomy.cost_degradation]
+# capa-firewall: tightest cost bounds; abort on hard stop (no fallback).
+soft_check_usd = 5
+hard_stop_usd = 20
+degrade_strategy = "abort"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Merge — single-candidate preferred (no merge complexity); strict mode
+# ──────────────────────────────────────────────────────────────────────────
+
+[merge]
+mode = "strict"
+anomaly_threshold_pct = 10
+anomaly_window_min = 30
+max_candidates = 2
+
+[merge.scoring_weights]
+# Sum MUST equal 100 (CFI invariant). capa-firewall weights signal-quality
+# axes higher (test_pass + coverage) and treats diff-size penalty heavier.
+test_pass = 45
+lint_pass = 20
+coverage = 25
+diff_size = 5
+duration = 5
+
+# ──────────────────────────────────────────────────────────────────────────
+# Caronte — Plan 19 in-daemon code-graph engine; strict branch policy;
+# HRA review on.
+# ──────────────────────────────────────────────────────────────────────────
+
+[caronte]
+branch_policy = "strict"
+hra_review_enabled = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Notifications — Plan 7 Q12 B (R4)
+# Pulido demands explicit re-trigger; action-needed treated as urgent;
+# info-immediate delivered during quiet.
+# ──────────────────────────────────────────────────────────────────────────
+
+[notifications]
+quiet_hours_start = "23:00"
+quiet_hours_end = "06:00"
+
+[notifications.severity_per_doctrine]
+# Phase 0 R4 ack — capa-firewall: action-needed promoted to urgent;
+# info-immediate delivered during quiet.
+action_needed_promotes_to_urgent = true
+urgent_bypasses_quiet_hours = true
+info_immediate_during_quiet = "deliver"
+
+# ──────────────────────────────────────────────────────────────────────────
+# zen day cadence — Plan 7 Q13 C (R5)
+# capa-firewall: daily 7-day; tight 1h catch-up reflects scoped-context
+# philosophy (every workday + weekend gets brief; 1h catch-up enforces
+# fresh-state).
+# ──────────────────────────────────────────────────────────────────────────
+
+[zen_day_cadence]
+# Phase 0 R5 ack — capa-firewall: daily 7-day; tight 1h catch-up.
+morning_brief_cron = "0 9 * * 1-7"
+morning_brief_if_within_hours = 1
+eod_digest_cron = "0 17 * * 1-7"
+eod_digest_if_within_hours = 1
+
+# ──────────────────────────────────────────────────────────────────────────
+# Quota — Plan 7 Q4 C: capa-firewall tightest bounds (4 max concurrent
+# within 2*2=4 Workforce capacity ceiling).
+# ──────────────────────────────────────────────────────────────────────────
+
+[quota]
+max_concurrent_tasks = 4
+max_daily_budget_usd = 20
+max_storage_gb = 10
+
+# ──────────────────────────────────────────────────────────────────────────
+# Tmux — Plan 7 Q7 D: capa-firewall = 4h idle TTL (short).
+# ──────────────────────────────────────────────────────────────────────────
+
+[tmux]
+idle_ttl_min = 240
+auto_reap = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Scheduling — Plan 7 Q9 C: capa-firewall = skip (notify via Plan 7 Q12 B
+# severity escalation; capa-firewall promotes action_needed → urgent so the
+# operator sees missed runs immediately).
+# ──────────────────────────────────────────────────────────────────────────
+
+[scheduling]
+miss_policy = "skip"
+miss_catchup_max_jobs = 0
+
+# ──────────────────────────────────────────────────────────────────────────
+# WFQ — Plan 7 Q10 D: capa-firewall project weight 30 (below default).
+# Reject overcommit so quota cap is hard.
+# ──────────────────────────────────────────────────────────────────────────
+
+[wfq]
+project_weight_default = 30
+starvation_guard_sec = 180
+overcommit_policy = "reject"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Knowledge — Pulido tighter currency: 6h Hive doc cadence; cross-project
+# aggregator on (visibility-mandated).
+# ──────────────────────────────────────────────────────────────────────────
+
+[knowledge]
+hive_doc_cadence_hours = 6
+obsidian_vault_path = "~/Obsidian/zen-swarm-capa-firewall"
+cross_project_aggregator_enabled = true
+
+# ──────────────────────────────────────────────────────────────────────────
+# Gateway — Plan 11 Phase A mcpgateway RBAC deny list (Q1=B + inv-zen-084)
+# capa-firewall: caronte code-graph tools + research_agentic denied per spec
+# §1 Q3 (capa-firewall augmentation disabled). Operator-tunable extension.
+# ──────────────────────────────────────────────────────────────────────────
+
+[gateway]
+disabled_tools = [
+    "mcp_zen-swarm_caronte_query",
+    "mcp_zen-swarm_caronte_context",
+    "mcp_zen-swarm_caronte_impact",
+    "mcp_zen-swarm_research_agentic",
+]
+
+# ──────────────────────────────────────────────────────────────────────────
+# Augmentation — Plan 11 Phase C HARD GUARD per inv-zen-170.
+# capa-firewall: augmentation DISABLED by default; max_kg_tokens=0.
+# 500ms timeout (lowest); forbidden cross-project scope.
+# ──────────────────────────────────────────────────────────────────────────
+
+[augmentation]
+enable = false
+max_kg_tokens = 0
+timeout_ms = 500
+on_timeout = "graceful_truncate"
+cross_project_scope = "forbidden"
+
+# ──────────────────────────────────────────────────────────────────────────
+# Renderers — Plan 12 Phase E M-5 platform-renderer enable matrix.
+# capa-firewall: ink + email + markdown_fallback only. Telegram, slack,
+# voice, web all DISABLED (third-party leak risk + audible exposure).
+# voice_tts_enabled=false is the fast-path guard for audit-chain rejection.
+# Replaces hardcoded _DOCTRINE_ENABLED matrix in
+# plugin/zen-swarm/renderers/__init__.py.
+# ──────────────────────────────────────────────────────────────────────────
+
+[renderers]
+enabled_platforms = ["ink", "email", "markdown_fallback"]
+voice_tts_enabled = false

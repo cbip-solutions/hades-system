@@ -1,0 +1,2 @@
+[plugin]
+slash_command = "/zen-swarm:install-mcps"

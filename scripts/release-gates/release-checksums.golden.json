@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "notes": "Plan 15 Phase D-6 golden manifest. Pins the canonical 3-platform release artifact-name templates expected from .goreleaser.yml's archives: block, plus the regex schema for the buildinfo Summary() line. Drift surfaces via cmd/verify-release-checksums when this file is out of sync with .goreleaser.yml file_name_template. inv-zen-297 (reproducibility metadata).",
+  "platforms": [
+    {
+      "platform": "darwin-arm64",
+      "name_template": "zen-swarm-{{VERSION}}-darwin-arm64.tar.gz"
+    },
+    {
+      "platform": "linux-amd64",
+      "name_template": "zen-swarm-{{VERSION}}-linux-amd64.tar.gz"
+    },
+    {
+      "platform": "linux-arm64",
+      "name_template": "zen-swarm-{{VERSION}}-linux-arm64.tar.gz"
+    }
+  ],
+  "version_summary_regex": "^zen-swarm\\s+\\S+\\s+commit:\\S+\\s+date:\\S+\\s+go:\\S+\\s+platform:\\S+$"
+}

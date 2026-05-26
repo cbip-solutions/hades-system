@@ -1,0 +1,11 @@
+
+default_provider:
+  name: anthropic
+  model: claude-opus-4-7-1m
+
+mcp_servers:
+  zen-swarm:
+    transport: http
+    url: http://unix/v1/mcpgateway
+    socket: /tmp/zen-swarm.sock
+

@@ -1,0 +1,380 @@
+[
+  {
+    "query": "How do I use useAtom from React core for state management?",
+    "fake_symbol": "react.useAtom",
+    "expected_outcome": "abstain",
+    "justification": "useAtom is from Jotai (jotai package), not React core. React core has useState, useReducer. Classic ecosystem attribution error.",
+    "category": "wrong_package_attribution"
+  },
+  {
+    "query": "Show me how Promise.allSettledMap works in TypeScript",
+    "fake_symbol": "Promise.allSettledMap",
+    "expected_outcome": "abstain",
+    "justification": "Promise.allSettled returns PromiseSettledResult[]. No allSettledMap variant. Hallucinated combination of allSettled + map.",
+    "category": "fake_variant_of_real_method"
+  },
+  {
+    "query": "How does Array.prototype.flatGroup work?",
+    "fake_symbol": "Array.prototype.flatGroup",
+    "expected_outcome": "abstain",
+    "justification": "Array has flat(), flatMap(), but not flatGroup. Object.groupBy was added in ES2024 (not on Array prototype). Hallucination.",
+    "category": "fake_prototype_method"
+  },
+  {
+    "query": "How do I use TypeScript's type.narrow() helper?",
+    "fake_symbol": "type.narrow",
+    "expected_outcome": "abstain",
+    "justification": "TypeScript has type narrowing (control flow analysis) but no type.narrow() runtime function. Confusion between type system concept and runtime API.",
+    "category": "type_system_confusion"
+  },
+  {
+    "query": "Show me how Map.prototype.filter works in modern JavaScript",
+    "fake_symbol": "Map.prototype.filter",
+    "expected_outcome": "abstain",
+    "justification": "Map has has, get, set, delete, forEach, entries, keys, values — no filter(). Correct pattern: [...map.entries()].filter(...) or new Map([...map].filter(...)).",
+    "category": "fake_prototype_method"
+  },
+  {
+    "query": "How do I use fetch.interceptors like in axios?",
+    "fake_symbol": "fetch.interceptors",
+    "expected_outcome": "abstain",
+    "justification": "Native fetch has no interceptors property. axios has axios.interceptors. Confusion between native API and library.",
+    "category": "wrong_package_attribution"
+  },
+  {
+    "query": "How does React.useState.derived work for computed state?",
+    "fake_symbol": "React.useState.derived",
+    "expected_outcome": "abstain",
+    "justification": "React.useState returns [state, setState]. No .derived chained call. useMemo() is the correct pattern for derived state.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "Show me how to use TypeScript's infer.from<T>() utility",
+    "fake_symbol": "infer.from",
+    "expected_outcome": "abstain",
+    "justification": "TypeScript's infer keyword is type-level only. No runtime infer.from() function exists.",
+    "category": "type_system_confusion"
+  },
+  {
+    "query": "How do I use document.querySelector.all for multiple selectors?",
+    "fake_symbol": "document.querySelector.all",
+    "expected_outcome": "abstain",
+    "justification": "document.querySelectorAll(selector) is the correct API. No querySelector.all chained method.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How does EventEmitter.on.once work as a combined handler?",
+    "fake_symbol": "EventEmitter.on.once",
+    "expected_outcome": "abstain",
+    "justification": "Node.js EventEmitter has on() and once() as separate methods. No on.once chained variant.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "Show me how Zod.z.string.email.min works for chained validation",
+    "fake_symbol": "zod.z.string.email.min",
+    "expected_outcome": "unknown",
+    "justification": "Zod supports z.string().email().min(5) — all chained on ZodString. z.string.email.min (without parentheses) is property-chain confusion. May be valid query about method chaining.",
+    "category": "method_vs_property_confusion"
+  },
+  {
+    "query": "How do I use Prisma.findManyWhere for complex queries?",
+    "fake_symbol": "prisma.findManyWhere",
+    "expected_outcome": "abstain",
+    "justification": "Prisma uses findMany({ where: {...} }). findManyWhere as a single method does not exist.",
+    "category": "fake_method_merging_real_parts"
+  },
+  {
+    "query": "Show me how tRPC.createRouter.withAuth works",
+    "fake_symbol": "trpc.createRouter.withAuth",
+    "expected_outcome": "abstain",
+    "justification": "tRPC authentication uses middleware: t.middleware() + t.procedure.use(). createRouter.withAuth does not exist.",
+    "category": "fake_fluent_api"
+  },
+  {
+    "query": "How does next/router.useRouter.push.shallow work?",
+    "fake_symbol": "next/router.useRouter.push.shallow",
+    "expected_outcome": "abstain",
+    "justification": "useRouter().push(url, undefined, { shallow: true }) is correct. push.shallow is a chained property hallucination.",
+    "category": "fake_chained_property"
+  },
+  {
+    "query": "How do I use React.Suspense.timeout prop?",
+    "fake_symbol": "React.Suspense.timeout",
+    "expected_outcome": "abstain",
+    "justification": "React.Suspense accepts fallback prop only. timeout was an experimental prop removed before stable release.",
+    "category": "removed_experimental_api"
+  },
+  {
+    "query": "Show me localStorage.getItem.parsed for auto-JSON parsing",
+    "fake_symbol": "localStorage.getItem.parsed",
+    "expected_outcome": "abstain",
+    "justification": "localStorage.getItem() returns a string. No .parsed chained property. Correct: JSON.parse(localStorage.getItem(key)).",
+    "category": "fake_chained_property"
+  },
+  {
+    "query": "How does AbortController.signal.timeout work?",
+    "fake_symbol": "AbortController.signal.timeout",
+    "expected_outcome": "unknown",
+    "justification": "AbortSignal.timeout(ms) (static method) was added in modern browsers. This may be a valid query about a recent API addition — system should cite version/browser support.",
+    "category": "recent_api_addition"
+  },
+  {
+    "query": "How do I use Object.structuredClone.deep?",
+    "fake_symbol": "Object.structuredClone.deep",
+    "expected_outcome": "abstain",
+    "justification": "structuredClone() (global function, not Object.structuredClone) performs deep cloning. No .deep qualifier.",
+    "category": "wrong_namespace_and_fake_qualifier"
+  },
+  {
+    "query": "Show me how to use vue.ref.watch for reactive watching",
+    "fake_symbol": "vue.ref.watch",
+    "expected_outcome": "abstain",
+    "justification": "Vue uses ref() + watch(ref, handler) as separate APIs. ref().watch() chained method does not exist.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How does @angular/core.Injectable.scope work for scoping?",
+    "fake_symbol": "@angular/core.Injectable.scope",
+    "expected_outcome": "abstain",
+    "justification": "Angular Injectable({ providedIn: 'root' }) is the pattern. .scope property does not exist on the decorator or result.",
+    "category": "fake_property_on_decorator"
+  },
+  {
+    "query": "Show me how svelte.writable.subscribe.filter works",
+    "fake_symbol": "svelte.writable.subscribe.filter",
+    "expected_outcome": "abstain",
+    "justification": "Svelte writable().subscribe(callback) returns unsubscribe function. No .filter on subscribe return value.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How do I use ReadableStream.pipeThrough.transform?",
+    "fake_symbol": "ReadableStream.pipeThrough.transform",
+    "expected_outcome": "abstain",
+    "justification": "ReadableStream.pipeThrough(transformStream) accepts a TransformStream object. No .transform chained property.",
+    "category": "fake_chained_property"
+  },
+  {
+    "query": "How does TextDecoder.decode.streaming work?",
+    "fake_symbol": "TextDecoder.decode.streaming",
+    "expected_outcome": "abstain",
+    "justification": "TextDecoder.decode(buffer, { stream: true }) is the correct API. decode.streaming is a property-chain hallucination.",
+    "category": "fake_chained_property"
+  },
+  {
+    "query": "Show me how to use Intl.DateTimeFormat.formatToParts.grouped",
+    "fake_symbol": "Intl.DateTimeFormat.formatToParts.grouped",
+    "expected_outcome": "abstain",
+    "justification": "Intl.DateTimeFormat().formatToParts(date) returns array of {type, value}. No .grouped chained method.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How do I use TypeScript's Awaited<T>.resolve helper?",
+    "fake_symbol": "Awaited.resolve",
+    "expected_outcome": "abstain",
+    "justification": "Awaited<T> is a utility type (compile-time only). No runtime Awaited.resolve() function.",
+    "category": "type_system_confusion"
+  },
+  {
+    "query": "How does Array.from.map work as a chained method?",
+    "fake_symbol": "Array.from.map",
+    "expected_outcome": "abstain",
+    "justification": "Array.from(iter, mapFn) accepts mapFn as second argument. Array.from.map chained does not exist — Array.from is a static method.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How do I use JSON.parse.safe for safe JSON parsing?",
+    "fake_symbol": "JSON.parse.safe",
+    "expected_outcome": "abstain",
+    "justification": "JSON.parse throws on invalid input. Safe parsing wraps in try/catch or uses libraries (zod, valibot). No .safe variant on native JSON.parse.",
+    "category": "fake_safety_variant"
+  },
+  {
+    "query": "Show me Object.keys.deep for nested object keys",
+    "fake_symbol": "Object.keys.deep",
+    "expected_outcome": "abstain",
+    "justification": "Object.keys returns own enumerable property names. No .deep variant — recursion is manual. Hallucinated convenience.",
+    "category": "fake_deep_variant"
+  },
+  {
+    "query": "How do I use Set.prototype.intersection in modern JS?",
+    "fake_symbol": "Set.prototype.intersection",
+    "expected_outcome": "unknown",
+    "justification": "Set methods (intersection, union, difference, symmetricDifference) shipped in ES2025 / Set Methods proposal. May be a legitimate query for recent runtimes — system should cite browser/Node support.",
+    "category": "recent_api_addition"
+  },
+  {
+    "query": "How does fetch.json shortcut work?",
+    "fake_symbol": "fetch.json",
+    "expected_outcome": "abstain",
+    "justification": "fetch(url).then(r => r.json()) — json() is on the Response, not fetch itself. fetch.json static shortcut does not exist.",
+    "category": "fake_static_shortcut"
+  },
+  {
+    "query": "Show me React.useEffect.cleanup for explicit cleanup",
+    "fake_symbol": "React.useEffect.cleanup",
+    "expected_outcome": "abstain",
+    "justification": "useEffect cleanup is the returned function inside the effect callback. .cleanup chained property does not exist on useEffect.",
+    "category": "fake_chained_property"
+  },
+  {
+    "query": "How do I use Promise.race.timeout for built-in timeout?",
+    "fake_symbol": "Promise.race.timeout",
+    "expected_outcome": "abstain",
+    "justification": "Pattern: Promise.race([promise, new Promise((_, r) => setTimeout(() => r('timeout'), ms))]). No .timeout chained method on Promise.race.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How does next/image.Image.lazy work?",
+    "fake_symbol": "next/image.Image.lazy",
+    "expected_outcome": "abstain",
+    "justification": "Next.js Image accepts loading='lazy' prop (default). No <Image.lazy> sub-component. Hallucinated dot-notation.",
+    "category": "fake_subcomponent"
+  },
+  {
+    "query": "Show me how axios.create.withRetry sets up retry on instance",
+    "fake_symbol": "axios.create.withRetry",
+    "expected_outcome": "abstain",
+    "justification": "axios-retry plugin adds retry: axiosRetry(axiosInstance, {retries: 3}). No built-in axios.create.withRetry chained method.",
+    "category": "fake_plugin_method"
+  },
+  {
+    "query": "How do I use String.prototype.replaceAll.regex for regex replaceAll?",
+    "fake_symbol": "String.prototype.replaceAll.regex",
+    "expected_outcome": "abstain",
+    "justification": "String.replaceAll already accepts regex IF it has g-flag (throws otherwise). No .regex chained variant — semantic difference is the global flag.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How does Number.toFixed.parse work to reparse a fixed number?",
+    "fake_symbol": "Number.toFixed.parse",
+    "expected_outcome": "abstain",
+    "justification": "Number.toFixed(n) returns a string. parseFloat(num.toFixed(n)) is the manual reparse. No .parse chained method.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "Show me crypto.randomUUID.v7 for UUIDv7 support",
+    "fake_symbol": "crypto.randomUUID.v7",
+    "expected_outcome": "abstain",
+    "justification": "crypto.randomUUID() (Web Crypto API) returns v4 only. v7 requires polyfill (uuid package). No .v7 chained variant on native API.",
+    "category": "fake_version_chained_method"
+  },
+  {
+    "query": "How do I use URL.searchParams.toObject for URL params as object?",
+    "fake_symbol": "URL.searchParams.toObject",
+    "expected_outcome": "abstain",
+    "justification": "URLSearchParams has entries(), forEach, toString. toObject is a hallucination — pattern is Object.fromEntries(url.searchParams).",
+    "category": "fake_convenience_method"
+  },
+  {
+    "query": "How does WebSocket.send.binary differ from .send?",
+    "fake_symbol": "WebSocket.send.binary",
+    "expected_outcome": "abstain",
+    "justification": "WebSocket.send(data) accepts string, ArrayBuffer, Blob, or ArrayBufferView. Binary inferred from type. No .binary chained variant.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "Show me how to use Element.scrollIntoView.smooth chained",
+    "fake_symbol": "Element.scrollIntoView.smooth",
+    "expected_outcome": "abstain",
+    "justification": "element.scrollIntoView({behavior: 'smooth'}) — options object. .smooth chained property does not exist.",
+    "category": "fake_chained_method_for_option"
+  },
+  {
+    "query": "How do I use React.memo.shallow for shallow comparison?",
+    "fake_symbol": "React.memo.shallow",
+    "expected_outcome": "abstain",
+    "justification": "React.memo(Component) uses shallow compare by default. React.memo(Component, areEqual) for custom. No .shallow chained variant on React.memo itself.",
+    "category": "fake_chained_default_variant"
+  },
+  {
+    "query": "How does fetch.abort cancel an in-flight request?",
+    "fake_symbol": "fetch.abort",
+    "expected_outcome": "abstain",
+    "justification": "Cancellation uses AbortController + signal passed to fetch options. fetch.abort directly does not exist — abortion is via controller.abort().",
+    "category": "fake_method_on_global"
+  },
+  {
+    "query": "Show me Array.prototype.unique to dedupe an array",
+    "fake_symbol": "Array.prototype.unique",
+    "expected_outcome": "abstain",
+    "justification": "JavaScript Array has no .unique() method. Idioms: [...new Set(arr)] or arr.filter((v,i,a) => a.indexOf(v)===i). Common Lodash _.uniq confusion.",
+    "category": "wrong_package_attribution"
+  },
+  {
+    "query": "How do I use TypeScript's keyof.values to iterate keyof?",
+    "fake_symbol": "keyof.values",
+    "expected_outcome": "abstain",
+    "justification": "keyof T is a type operator producing a union of keys. No runtime .values method — type-level only. Object.values is the runtime equivalent.",
+    "category": "type_system_confusion"
+  },
+  {
+    "query": "How does node.fs.promises.readJson work for direct JSON?",
+    "fake_symbol": "node.fs.promises.readJson",
+    "expected_outcome": "abstain",
+    "justification": "fs.promises has readFile, writeFile, etc. JSON convenience is manual: JSON.parse(await fs.readFile(p, 'utf8')). readJson is fs-extra (third-party), not stdlib.",
+    "category": "wrong_package_attribution"
+  },
+  {
+    "query": "Show me React.createContext.useValue chained access",
+    "fake_symbol": "React.createContext.useValue",
+    "expected_outcome": "abstain",
+    "justification": "React pattern: const C = createContext(default); const val = useContext(C). No createContext.useValue chained API.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How do I use JSON.stringify.pretty for pretty-printed JSON?",
+    "fake_symbol": "JSON.stringify.pretty",
+    "expected_outcome": "abstain",
+    "justification": "JSON.stringify(obj, null, 2) — third argument is indent. No .pretty chained method or property.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How does Date.now.iso return ISO string?",
+    "fake_symbol": "Date.now.iso",
+    "expected_outcome": "abstain",
+    "justification": "Date.now() returns number (ms since epoch). For ISO: new Date().toISOString(). No .iso chained on Date.now.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "Show me Symbol.for.async to make async-scoped symbols",
+    "fake_symbol": "Symbol.for.async",
+    "expected_outcome": "abstain",
+    "justification": "Symbol.for(key) creates/looks up symbol in global registry. No .async variant. Async scoping uses Symbol.asyncIterator (well-known symbol, different concept).",
+    "category": "fake_async_variant"
+  },
+  {
+    "query": "How do I use Element.shadowRoot.open for explicit open shadow?",
+    "fake_symbol": "Element.shadowRoot.open",
+    "expected_outcome": "abstain",
+    "justification": "element.attachShadow({mode: 'open'}) creates shadow root. Element.shadowRoot is the existing root accessor. No .open method on shadowRoot.",
+    "category": "fake_method_on_real_property"
+  },
+  {
+    "query": "How does WeakMap.prototype.entries iterate weakmap?",
+    "fake_symbol": "WeakMap.prototype.entries",
+    "expected_outcome": "abstain",
+    "justification": "WeakMap is intentionally non-iterable (entries not enumerable for GC safety). No entries() method exists. Common Map/WeakMap conflation.",
+    "category": "wrong_type_method_confusion"
+  },
+  {
+    "query": "Show me how Number.parseIntStrict avoids leading-number coercion",
+    "fake_symbol": "Number.parseIntStrict",
+    "expected_outcome": "abstain",
+    "justification": "Number.parseInt is same as global parseInt. Strict parsing uses regex validation + parseInt. No parseIntStrict variant.",
+    "category": "fake_strict_variant"
+  },
+  {
+    "query": "How do I use Array.prototype.zip to zip two arrays?",
+    "fake_symbol": "Array.prototype.zip",
+    "expected_outcome": "abstain",
+    "justification": "JavaScript Array has no .zip(). Idiom: arr1.map((v, i) => [v, arr2[i]]). Lodash _.zip exists — common ecosystem confusion.",
+    "category": "wrong_package_attribution"
+  },
+  {
+    "query": "How does React.lazy.preload work for component preloading?",
+    "fake_symbol": "React.lazy.preload",
+    "expected_outcome": "abstain",
+    "justification": "React.lazy(() => import('./X')) is the lazy loader. Preloading is via the import promise itself or webpack magic comments. No .preload chained method.",
+    "category": "fake_chained_method"
+  }
+]

@@ -1,0 +1,5 @@
+directive @custom(weight: Int = 5) on FIELD_DEFINITION
+
+type Query {
+  weighted: String @custom(weight: 3)
+}

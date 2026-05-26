@@ -1,0 +1,205 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write       # GH Release create + attach assets
+  id-token: write       # GitHub OIDC for sigstore-keyless Fulcio cert
+  packages: write       # GHCR push (docker job)
+  attestations: write   # actions/attest-build-provenance@v2
+
+env:
+  GO_VERSION: '1.26.0'           # matches go.mod release baseline
+  GORELEASER_VERSION: 'v2.4.5'   # OSS; pinned per supply-chain hardening
+  COSIGN_VERSION: 'v2.4.1'       # sigstore.dev releases pinned
+
+jobs:
+  release:
+    name: 'release (${{ matrix.runner }})'
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-latest
+            goos: darwin
+            goarch: arm64
+            cgo_setup: 'macos'
+          - runner: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            cgo_setup: 'linux'
+          - runner: ubuntu-22.04-arm
+            goos: linux
+            goarch: arm64
+            cgo_setup: 'linux'
+    env:
+      ZEN_BYPASS_DISABLE_KEYCHAIN: '1'
+      HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # GoReleaser needs full history for changelog generation
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Install Linux build tooling
+        if: matrix.cgo_setup == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config
+
+      - name: Install syft (SBOM generation)
+        uses: anchore/sbom-action/download-syft@v0.17.7
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
+
+      - name: Install GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: ${{ env.GORELEASER_VERSION }}
+          install-only: true
+
+      - name: Verify GoReleaser config
+        run: goreleaser check -f .goreleaser.yml
+
+      - name: GoReleaser release (${{ matrix.goos }}/${{ matrix.goarch }})
+        run: |
+          goreleaser release \
+            --clean \
+            --skip=docker \
+            --skip=announce
+        env:
+          GORELEASER_PLATFORMS: '${{ matrix.goos }}/${{ matrix.goarch }}'
+
+
+      - name: Attest binaries
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'dist/zen-swarm-*-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz'
+
+      - name: Attest SBOMs (CycloneDX)
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'dist/zen-swarm-*-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz.cdx.json'
+
+      - name: Attest SBOMs (SPDX)
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'dist/zen-swarm-*-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz.spdx.json'
+
+      - name: Attest Linux packages
+        if: matrix.goos == 'linux'
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            dist/zen-swarm-*-${{ matrix.goos }}-${{ matrix.goarch }}.deb
+            dist/zen-swarm-*-${{ matrix.goos }}-${{ matrix.goarch }}.rpm
+
+      - name: Upload artifacts for Docker job
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/
+          retention-days: 7
+
+  docker:
+    name: docker (ghcr.io)
+    runs-on: ubuntu-latest
+    needs: [release]
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+      attestations: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go (for verify-release-artifacts; D-10)
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
+
+      - name: Set up QEMU (for cross-arch buildx)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute image tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/cbip-solutions/hades-system
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push (multi-arch)
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: true
+          sbom: true
+          build-args: |
+            VERSION=${{ github.ref_name }}
+            COMMIT=${{ github.sha }}
+
+      - name: Cosign sign image (keyless)
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+          COSIGN_EXPERIMENTAL: '1'
+        run: |
+          cosign sign --yes \
+            ghcr.io/cbip-solutions/hades-system@${DIGEST}
+
+      - name: Attest Docker image
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/cbip-solutions/hades-system
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
+      - name: Verify Docker image signature self-check
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          cosign verify \
+            --certificate-identity-regexp "https://github.com/cbip-solutions/hades-system/.github/workflows/release.yml@.*" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            ghcr.io/cbip-solutions/hades-system@${DIGEST}

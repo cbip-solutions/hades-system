@@ -1,0 +1,391 @@
+[
+  {
+    "query": "How do I use net/http.AwaitResponse to wait for a response?",
+    "fake_symbol": "net/http.AwaitResponse",
+    "expected_outcome": "abstain",
+    "justification": "AwaitResponse does not exist in net/http. Real API: http.Response from http.Get/Do. LLM hallucination of an async-flavored method that was never added to stdlib.",
+    "category": "fake_stdlib_method"
+  },
+  {
+    "query": "Show me how to use context.WithCancelCause in Go 1.19",
+    "fake_symbol": "context.WithCancelCause",
+    "version_context": "1.19",
+    "expected_outcome": "abstain",
+    "justification": "context.WithCancelCause was added in Go 1.20. Querying 1.19 should abstain or note version unavailability.",
+    "category": "version_mismatch"
+  },
+  {
+    "query": "How do I use sync.Map.LoadOrCompute?",
+    "fake_symbol": "sync.Map.LoadOrCompute",
+    "expected_outcome": "abstain",
+    "justification": "sync.Map has LoadOrStore, not LoadOrCompute. Common hallucination of a plausible-sounding variant.",
+    "category": "fake_method_on_real_type"
+  },
+  {
+    "query": "What is the signature of os.ReadDir.WithFilter?",
+    "fake_symbol": "os.ReadDir.WithFilter",
+    "expected_outcome": "abstain",
+    "justification": "os.ReadDir returns []DirEntry; no WithFilter chained method exists. Hallucinated fluent-API pattern.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How do I use errors.Join in Go 1.18?",
+    "fake_symbol": "errors.Join",
+    "version_context": "1.18",
+    "expected_outcome": "abstain",
+    "justification": "errors.Join added in Go 1.20. Must abstain or note version unavailability for 1.18.",
+    "category": "version_mismatch"
+  },
+  {
+    "query": "Show me how to use io.ReadAtLeast.WithContext",
+    "fake_symbol": "io.ReadAtLeast.WithContext",
+    "expected_outcome": "abstain",
+    "justification": "io.ReadAtLeast is a function, not a type with methods. Hallucinated fluent API.",
+    "category": "fake_method_on_real_function"
+  },
+  {
+    "query": "How does golang.org/x/exp/maps.TransformValues work?",
+    "fake_symbol": "golang.org/x/exp/maps.TransformValues",
+    "expected_outcome": "abstain",
+    "justification": "golang.org/x/exp/maps has Keys, Values, Clone, Copy — not TransformValues. Plausible hallucination.",
+    "category": "fake_function_in_real_package"
+  },
+  {
+    "query": "Can I use time.ParseDurationHuman to parse '2 hours'?",
+    "fake_symbol": "time.ParseDurationHuman",
+    "expected_outcome": "abstain",
+    "justification": "time.ParseDuration exists but parses '2h0m0s' format, not human-readable '2 hours'. ParseDurationHuman is a hallucination.",
+    "category": "fake_stdlib_variant"
+  },
+  {
+    "query": "How do I use strings.SplitN.At to split and access by index?",
+    "fake_symbol": "strings.SplitN.At",
+    "expected_outcome": "abstain",
+    "justification": "strings.SplitN returns []string; no .At method. Hallucinated indexed-access API.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "Show me how fmt.Errorf.Wrap works",
+    "fake_symbol": "fmt.Errorf.Wrap",
+    "expected_outcome": "abstain",
+    "justification": "fmt.Errorf is a function returning error; no .Wrap method. errors.Wrap is in pkg/errors (third-party). Classic hallucination mixing packages.",
+    "category": "package_confusion"
+  },
+  {
+    "query": "How do I use github.com/google/uuid.NewV7?",
+    "fake_symbol": "github.com/google/uuid.NewV7",
+    "expected_outcome": "unknown",
+    "justification": "uuid.NewV7 may have been added in a recent version of google/uuid — legitimate query, potentially version-gated. System should either cite the version it was added or abstain if not in corpus.",
+    "category": "version_gated_real"
+  },
+  {
+    "query": "How does crypto/sha256.SumStream work for streaming hashing?",
+    "fake_symbol": "crypto/sha256.SumStream",
+    "expected_outcome": "abstain",
+    "justification": "crypto/sha256 has Sum256([]byte) and New() (io.Writer). SumStream is a hallucination — correct pattern is New() + Write + Sum(nil).",
+    "category": "fake_stdlib_method"
+  },
+  {
+    "query": "What is the signature of http.ResponseWriter.WriteJSON?",
+    "fake_symbol": "http.ResponseWriter.WriteJSON",
+    "expected_outcome": "abstain",
+    "justification": "http.ResponseWriter interface has Write([]byte), Header(), WriteHeader(int). WriteJSON is not in stdlib — belongs to third-party wrappers.",
+    "category": "fake_method_on_interface"
+  },
+  {
+    "query": "How do I use encoding/json.Unmarshal.Strict?",
+    "fake_symbol": "encoding/json.Unmarshal.Strict",
+    "expected_outcome": "abstain",
+    "justification": "json.Unmarshal is a function. Strict decoding is via json.Decoder.DisallowUnknownFields(). Hallucinated fluent-strict variant.",
+    "category": "fake_fluent_variant"
+  },
+  {
+    "query": "Can I use goroutine.Wait() to wait for a goroutine to finish?",
+    "fake_symbol": "goroutine.Wait",
+    "expected_outcome": "abstain",
+    "justification": "No goroutine package in stdlib. Correct pattern: sync.WaitGroup or errgroup.Go. 'goroutine' as a package name is a hallucination of the keyword.",
+    "category": "fake_package_from_keyword"
+  },
+  {
+    "query": "How do I use sync.Mutex.TryLock in Go 1.17?",
+    "fake_symbol": "sync.Mutex.TryLock",
+    "version_context": "1.17",
+    "expected_outcome": "abstain",
+    "justification": "sync.Mutex.TryLock was added in Go 1.18. Must abstain for 1.17.",
+    "category": "version_mismatch"
+  },
+  {
+    "query": "Show me how to use reflect.TypeOf.Fields to iterate struct fields",
+    "fake_symbol": "reflect.TypeOf.Fields",
+    "expected_outcome": "abstain",
+    "justification": "reflect.TypeOf returns reflect.Type. To iterate fields: reflect.Type.NumField() + Field(i). No .Fields() slice method exists.",
+    "category": "fake_method_on_real_type"
+  },
+  {
+    "query": "How does math/rand.Shuffle.Deterministic work?",
+    "fake_symbol": "math/rand.Shuffle.Deterministic",
+    "expected_outcome": "abstain",
+    "justification": "math/rand.Shuffle exists; .Deterministic variant does not. Seeded source via rand.New(rand.NewSource(seed)) is the correct pattern.",
+    "category": "fake_variant_of_real_function"
+  },
+  {
+    "query": "How do I use bufio.Scanner.ForEachLine?",
+    "fake_symbol": "bufio.Scanner.ForEachLine",
+    "expected_outcome": "abstain",
+    "justification": "bufio.Scanner uses Scan()+Text() iterator pattern. No ForEachLine callback method exists.",
+    "category": "fake_callback_api"
+  },
+  {
+    "query": "Can I use path/filepath.Glob.Recursive to find files recursively?",
+    "fake_symbol": "path/filepath.Glob.Recursive",
+    "expected_outcome": "abstain",
+    "justification": "filepath.Glob does NOT recurse. Correct pattern: filepath.WalkDir or os.ReadDir recursive. Glob.Recursive is a hallucination.",
+    "category": "fake_modifier_on_real_function"
+  },
+  {
+    "query": "How do I use slices.GroupBy in Go 1.21?",
+    "fake_symbol": "slices.GroupBy",
+    "version_context": "1.21",
+    "expected_outcome": "abstain",
+    "justification": "Go 1.21 slices package includes Contains, Index, Sort, etc. GroupBy is not included — hallucination of a functional-style API.",
+    "category": "fake_function_in_real_package"
+  },
+  {
+    "query": "How does maps.Merge work in the Go stdlib?",
+    "fake_symbol": "maps.Merge",
+    "expected_outcome": "unknown",
+    "justification": "maps.Copy exists in Go 1.21. Merge-like semantics vary — system should cite maps.Copy or abstain if Merge not found.",
+    "category": "plausible_alias"
+  },
+  {
+    "query": "Show me os.File.ReadAllLines",
+    "fake_symbol": "os.File.ReadAllLines",
+    "expected_outcome": "abstain",
+    "justification": "No ReadAllLines on *os.File. Correct pattern: bufio.Scanner or os.ReadFile + strings.Split.",
+    "category": "fake_convenience_method"
+  },
+  {
+    "query": "How do I use net.Conn.SetDeadlineRelative?",
+    "fake_symbol": "net.Conn.SetDeadlineRelative",
+    "expected_outcome": "abstain",
+    "justification": "net.Conn has SetDeadline(time.Time), SetReadDeadline, SetWriteDeadline — all take absolute time. No relative-duration variant.",
+    "category": "fake_relative_variant"
+  },
+  {
+    "query": "What is context.Background.WithValue shorthand?",
+    "fake_symbol": "context.Background.WithValue",
+    "expected_outcome": "abstain",
+    "justification": "context.Background() returns a Context; context.WithValue(ctx, key, val) is a separate function. No .WithValue method on the Background value.",
+    "category": "fake_method_on_return_value"
+  },
+  {
+    "query": "How do I use context.Cancel to cancel a context?",
+    "fake_symbol": "context.Cancel",
+    "expected_outcome": "abstain",
+    "justification": "context.WithCancel returns (Context, CancelFunc); cancellation happens via the returned CancelFunc. context.Cancel as a top-level function does not exist — common confusion with the cancel callback.",
+    "category": "fake_stdlib_function"
+  },
+  {
+    "query": "Show me how to use channels.Range to iterate a channel",
+    "fake_symbol": "channels.Range",
+    "expected_outcome": "abstain",
+    "justification": "No channels package in stdlib. Range over channels uses the language keyword: for v := range ch {}. 'channels' as a package is a hallucination of the keyword.",
+    "category": "fake_package_from_keyword"
+  },
+  {
+    "query": "How does sync.WaitGroup.WaitTimeout work for bounded wait?",
+    "fake_symbol": "sync.WaitGroup.WaitTimeout",
+    "expected_outcome": "abstain",
+    "justification": "sync.WaitGroup.Wait() blocks unbounded. No WaitTimeout. Correct pattern: combine WaitGroup with a select + time.After in a separate goroutine, or use errgroup with context.",
+    "category": "fake_timeout_variant"
+  },
+  {
+    "query": "How do I use sort.Slice.Stable.Reverse for stable reverse sort?",
+    "fake_symbol": "sort.Slice.Stable.Reverse",
+    "expected_outcome": "abstain",
+    "justification": "sort.SliceStable + custom less-function with reverse logic is the pattern. sort.Slice.Stable.Reverse is a chained-method hallucination — Slice is a function, not a type.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "Show me how http.Client.GetWithRetry works",
+    "fake_symbol": "http.Client.GetWithRetry",
+    "expected_outcome": "abstain",
+    "justification": "http.Client has Get, Post, Do — no built-in retry. Retry policies require third-party libraries (e.g., hashicorp/go-retryablehttp) or manual loops. Hallucinated stdlib convenience.",
+    "category": "fake_convenience_method"
+  },
+  {
+    "query": "How does context.WithDeadlineCause work?",
+    "fake_symbol": "context.WithDeadlineCause",
+    "expected_outcome": "unknown",
+    "justification": "context.WithDeadlineCause was added in Go 1.21. Legitimate query for 1.21+; should be cited with version. Before 1.21, abstain.",
+    "category": "version_gated_real"
+  },
+  {
+    "query": "How do I use os.Stdin.ReadLine to read a line?",
+    "fake_symbol": "os.Stdin.ReadLine",
+    "expected_outcome": "abstain",
+    "justification": "os.Stdin is an *os.File. No ReadLine method. Correct pattern: bufio.NewReader(os.Stdin).ReadString('\\n') or bufio.NewScanner(os.Stdin).Scan().",
+    "category": "fake_method_on_real_type"
+  },
+  {
+    "query": "Show me runtime.GoroutineID to get the current goroutine ID",
+    "fake_symbol": "runtime.GoroutineID",
+    "expected_outcome": "abstain",
+    "justification": "Go intentionally does not expose goroutine IDs. runtime.GoroutineID does not exist. Workarounds parse runtime.Stack output — fragile and discouraged. Common hallucination from threading APIs in other languages.",
+    "category": "intentionally_absent_stdlib_api"
+  },
+  {
+    "query": "How do I use atomic.Int64.AddIfLess for conditional add?",
+    "fake_symbol": "atomic.Int64.AddIfLess",
+    "expected_outcome": "abstain",
+    "justification": "sync/atomic.Int64 has Add, Load, Store, CompareAndSwap, Swap. AddIfLess is a hallucination — implementation uses CompareAndSwap in a loop.",
+    "category": "fake_method_on_real_type"
+  },
+  {
+    "query": "How does database/sql.DB.QueryAsync work for async queries?",
+    "fake_symbol": "database/sql.DB.QueryAsync",
+    "expected_outcome": "abstain",
+    "justification": "database/sql is sync-API; concurrency comes from goroutines + connection pool. No QueryAsync method. Common hallucination from JS/C# async-await idioms.",
+    "category": "sync_async_confusion"
+  },
+  {
+    "query": "Show me how to use unsafe.Sizeof.Of for runtime size lookup",
+    "fake_symbol": "unsafe.Sizeof.Of",
+    "expected_outcome": "abstain",
+    "justification": "unsafe.Sizeof(v) is a compile-time operator returning uintptr. No .Of chained method. Sizeof is operator-syntax not a normal function.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How do I use encoding/json.Encoder.WriteString shortcut?",
+    "fake_symbol": "encoding/json.Encoder.WriteString",
+    "expected_outcome": "abstain",
+    "justification": "json.Encoder has Encode(v interface{}) error and SetIndent/SetEscapeHTML setters. No WriteString — that's bufio.Writer.WriteString. Type confusion.",
+    "category": "wrong_type_method_confusion"
+  },
+  {
+    "query": "How does net/http.Server.GracefulShutdown work?",
+    "fake_symbol": "net/http.Server.GracefulShutdown",
+    "expected_outcome": "abstain",
+    "justification": "http.Server has Shutdown(ctx) and Close(). The graceful shutdown IS Shutdown — no separate GracefulShutdown method exists. Hallucinated alias.",
+    "category": "fake_method_name_variant"
+  },
+  {
+    "query": "Show me how to use strings.ReplaceAllRegex for regex-based replace",
+    "fake_symbol": "strings.ReplaceAllRegex",
+    "expected_outcome": "abstain",
+    "justification": "strings.ReplaceAll uses literal substring; regex replacement uses regexp.MustCompile(...).ReplaceAllString. strings.ReplaceAllRegex is a hallucinated cross-package shortcut.",
+    "category": "package_confusion"
+  },
+  {
+    "query": "How do I use json.Marshal.Pretty for pretty-printed JSON?",
+    "fake_symbol": "json.Marshal.Pretty",
+    "expected_outcome": "abstain",
+    "justification": "json.Marshal returns minified output. Pretty-printing uses json.MarshalIndent(v, '', '  '). No .Pretty chained method.",
+    "category": "fake_convenience_method"
+  },
+  {
+    "query": "How does errors.Is.Any work to check multiple targets?",
+    "fake_symbol": "errors.Is.Any",
+    "expected_outcome": "abstain",
+    "justification": "errors.Is(err, target) checks one target. For multiple: chain errors.Is calls or use errors.Join with errors.Is on each. No .Any chained method.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "Show me how to use strconv.ParseIntSafe for non-panicking parse",
+    "fake_symbol": "strconv.ParseIntSafe",
+    "expected_outcome": "abstain",
+    "justification": "strconv.ParseInt already returns (int64, error) — does not panic. ParseIntSafe is a hallucinated 'safe' variant of an already-safe function.",
+    "category": "fake_safety_variant"
+  },
+  {
+    "query": "How do I use os/exec.Cmd.RunWithTimeout?",
+    "fake_symbol": "os/exec.Cmd.RunWithTimeout",
+    "expected_outcome": "abstain",
+    "justification": "os/exec.Cmd has Run, Start, Wait, Output. Timeout via exec.CommandContext(ctx, ...) with context.WithTimeout. No RunWithTimeout direct method.",
+    "category": "fake_timeout_variant"
+  },
+  {
+    "query": "How does container/list.List.Filter work?",
+    "fake_symbol": "container/list.List.Filter",
+    "expected_outcome": "abstain",
+    "justification": "container/list.List provides Front/Back/PushFront/PushBack/Remove/MoveToFront iteration. No Filter method. Functional filter is manual via iteration.",
+    "category": "fake_functional_method"
+  },
+  {
+    "query": "How do I use sort.IntSlice.Reverse to sort descending?",
+    "fake_symbol": "sort.IntSlice.Reverse",
+    "expected_outcome": "abstain",
+    "justification": "sort.Reverse wraps a sort.Interface to invert Less. Use sort.Sort(sort.Reverse(sort.IntSlice(s))). IntSlice itself has no .Reverse method.",
+    "category": "fake_method_on_real_type"
+  },
+  {
+    "query": "Show me how net.Listen.WithBacklog sets the listen backlog",
+    "fake_symbol": "net.Listen.WithBacklog",
+    "expected_outcome": "abstain",
+    "justification": "net.Listen(network, addr) accepts only network + addr; backlog is OS-controlled (SOMAXCONN). No WithBacklog option. Hallucination from sockopt-style configuration in other languages.",
+    "category": "fake_option_setter"
+  },
+  {
+    "query": "How does crypto/rand.Reader.Read.Secure work for secure random bytes?",
+    "fake_symbol": "crypto/rand.Reader.Read.Secure",
+    "expected_outcome": "abstain",
+    "justification": "crypto/rand.Reader IS the secure source — Reader.Read(buf) is already cryptographically secure. No .Secure suffix exists or is needed.",
+    "category": "fake_redundant_qualifier"
+  },
+  {
+    "query": "How do I use sync.Once.DoIf for conditional one-time init?",
+    "fake_symbol": "sync.Once.DoIf",
+    "expected_outcome": "abstain",
+    "justification": "sync.Once.Do(f) runs f exactly once. Conditional init via wrapper function inside f. DoIf is a hallucinated convenience variant.",
+    "category": "fake_conditional_variant"
+  },
+  {
+    "query": "Show me how to use http.Cookie.Validate for cookie validation",
+    "fake_symbol": "http.Cookie.Validate",
+    "expected_outcome": "abstain",
+    "justification": "http.Cookie has fields and String() for serialization. No Validate method — validation is implicit when setting via http.SetCookie. Hallucinated explicit validator.",
+    "category": "fake_method_on_real_type"
+  },
+  {
+    "query": "How does log.Logger.WithContext set context-aware logging?",
+    "fake_symbol": "log.Logger.WithContext",
+    "expected_outcome": "abstain",
+    "justification": "Standard log.Logger is context-unaware. Context-aware logging requires log/slog (Go 1.21+) Logger.With or LogAttrs. log.Logger.WithContext is a hallucination, often confused with logr/zerolog.",
+    "category": "package_confusion"
+  },
+  {
+    "query": "How do I use os.Args.Parse for argument parsing?",
+    "fake_symbol": "os.Args.Parse",
+    "expected_outcome": "abstain",
+    "justification": "os.Args is []string — no methods. Argument parsing via flag.Parse() or cobra/urfave-cli. os.Args.Parse is a hallucinated method on a primitive slice.",
+    "category": "fake_method_on_slice"
+  },
+  {
+    "query": "Show me how time.Sleep.Cancellable works for cancellable sleeps",
+    "fake_symbol": "time.Sleep.Cancellable",
+    "expected_outcome": "abstain",
+    "justification": "time.Sleep(d) is a blocking function with no cancellation. Cancellable wait via select{case <-ctx.Done(): ; case <-time.After(d):}. No Cancellable chained method.",
+    "category": "fake_chained_method"
+  },
+  {
+    "query": "How does encoding/gob.Encoder.Stream work for streaming encode?",
+    "fake_symbol": "encoding/gob.Encoder.Stream",
+    "expected_outcome": "abstain",
+    "justification": "gob.Encoder.Encode(v) IS streaming — writes to the underlying io.Writer. No separate Stream method exists.",
+    "category": "fake_streaming_variant"
+  },
+  {
+    "query": "How do I use os.Chdir.Temporary for scoped directory change?",
+    "fake_symbol": "os.Chdir.Temporary",
+    "expected_outcome": "abstain",
+    "justification": "os.Chdir(dir) changes process-global working directory. No scoped/temporary variant in stdlib. Pattern: save Getwd, defer restore. Hallucinated convenience.",
+    "category": "fake_scoped_variant"
+  },
+  {
+    "query": "How does sync.RWMutex.RTryLock work for non-blocking read lock?",
+    "fake_symbol": "sync.RWMutex.RTryLock",
+    "expected_outcome": "abstain",
+    "justification": "sync.RWMutex has RLock/RUnlock/Lock/Unlock/TryLock/TryRLock. RTryLock is a hallucinated naming variant — actual is TryRLock (added Go 1.18).",
+    "category": "fake_method_name_variant"
+  }
+]

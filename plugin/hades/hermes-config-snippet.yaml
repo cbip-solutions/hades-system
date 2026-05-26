@@ -1,0 +1,40 @@
+
+mcp_servers:
+  zen-mcp-research:
+    command: zen-mcp-research
+    args: []
+    description: |
+      HADES research MCP: fan-out parallel search + agentic_deep_research
+      + caronte engine code-graph (in-process; Plan 19 sovereignty).
+    env:
+      ZEN_DAEMON_SOCKET: "${ZEN_DAEMON_SOCKET:-/tmp/zen-swarm.sock}"
+
+  zen-mcp-budget:
+    command: zen-mcp-budget
+    args: []
+    description: |
+      HADES budget MCP: 4-axis attribution (caller/project/agent/
+      augmentation) + z-score anomaly + hierarchical hard-pause cascade
+      (per Plan 4 Q6=C).
+    env:
+      ZEN_DAEMON_SOCKET: "${ZEN_DAEMON_SOCKET:-/tmp/zen-swarm.sock}"
+
+  zen-mcp-audit:
+    command: zen-mcp-audit
+    args: []
+    description: |
+      HADES audit MCP: audit_review with cross-provider family-disjoint
+      reviewer enforcement + Tessera-anchored audit chain integration
+      (per Plan 4 Q7=D, Plan 9).
+    env:
+      ZEN_DAEMON_SOCKET: "${ZEN_DAEMON_SOCKET:-/tmp/zen-swarm.sock}"
+
+  zen-mcp-sshexec:
+    command: zen-mcp-sshexec
+    args: []
+    description: |
+      HADES ssh-exec MCP: production-grade remote execution with
+      per-project allowlist + streaming logs + idempotency token registry
+      (per Plan 4 Q8=C).
+    env:
+      ZEN_DAEMON_SOCKET: "${ZEN_DAEMON_SOCKET:-/tmp/zen-swarm.sock}"

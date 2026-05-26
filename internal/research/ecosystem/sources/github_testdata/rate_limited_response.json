@@ -1,0 +1,4 @@
+{
+  "message": "API rate limit exceeded for unauthenticated user. (But here's the good news: Authenticated requests get a higher rate limit.)",
+  "documentation_url": "https://docs.github.com/free-pro-team@latest/rest/overview/resources-in-the-rest-api#rate-limiting"
+}

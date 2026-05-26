@@ -1,0 +1,14 @@
+
+default_provider:
+  name: anthropic
+  model: "opus[1m]"
+
+mcp_servers:
+  playwright:
+    command: npx
+    args: ["@playwright/mcp"]
+  zen-swarm:
+    transport: http
+    url: http://unix/v1/mcpgateway
+    socket: /tmp/zen-swarm.sock
+

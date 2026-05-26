@@ -1,0 +1,7 @@
+# Phase C migrate dispatch fixture: shape parses as N-1.
+# When ExtractSchemaVersion returns "0.9" the dispatcher routes to
+# migrate.MigrateV0_9ToV1_0 (Phase C placeholder), which then returns the
+# upgraded V1 Schema and the daemon proceeds with full validation.
+# Phase B test only verifies the version extraction; migration is Phase C.
+schema_version = "0.9"
+doctrine_version = "0.9.0"

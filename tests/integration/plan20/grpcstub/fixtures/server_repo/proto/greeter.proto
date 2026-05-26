@@ -1,0 +1,22 @@
+// Plan 20 Phase K grpcstub fixture — proto file for the server repo.
+// The client repo's hand-written stub references this package
+// (greeter.v1) via the protoc-gen-go-grpc-emitted server-interface
+// declaration — Phase D's StubArtifacts scan resolves the link from
+// stub → proto.
+syntax = "proto3";
+
+package greeter.v1;
+
+option go_package = "server_repo/proto;greeterv1";
+
+service Greeter {
+  rpc Hello(GreeterRequest) returns (GreeterReply);
+}
+
+message GreeterRequest {
+  string name = 1;
+}
+
+message GreeterReply {
+  string message = 1;
+}

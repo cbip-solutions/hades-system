@@ -1,0 +1,5 @@
+schema_version: 1
+services:
+  - base_url_env: AUTH_SVC_URL
+    target_repo: intruder
+unresolved_policy: surface

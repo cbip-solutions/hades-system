@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html><head><title>sha256 package - crypto/sha256 - Go Packages</title></head>
+<body>
+<main class="UnitMain">
+<section class="UnitHeader">
+<h1>Package sha256</h1>
+<p>Package sha256 implements the SHA224 and SHA256 hash algorithms as defined in FIPS 180-4.</p>
+</section>
+<section class="Documentation-section">
+<h3 id="Sum256" class="Documentation-functionHeader">
+<span class="Documentation-functionTitle">func <a href="#Sum256">Sum256</a></span>
+</h3>
+<pre class="Documentation-declaration">func Sum256(data []byte) [Size]byte</pre>
+<p>Sum256 returns the SHA256 checksum of the data.</p>
+</section>
+<section class="Documentation-section">
+<h3 id="Sum224" class="Documentation-functionHeader">
+<span class="Documentation-functionTitle">func <a href="#Sum224">Sum224</a></span>
+</h3>
+<pre class="Documentation-declaration">func Sum224(data []byte) [Size224]byte</pre>
+<p>Sum224 returns the SHA224 checksum of the data.</p>
+</section>
+<section class="Documentation-section">
+<h3 id="New" class="Documentation-functionHeader">
+<span class="Documentation-functionTitle">func <a href="#New">New</a></span>
+</h3>
+<pre class="Documentation-declaration">func New() hash.Hash</pre>
+<p>New returns a new hash.Hash computing the SHA256 checksum. The Hash also implements encoding.BinaryMarshaler and encoding.BinaryUnmarshaler to marshal and unmarshal the internal state of the hash.</p>
+</section>
+<section class="Documentation-section">
+<h3 id="New224" class="Documentation-functionHeader">
+<span class="Documentation-functionTitle">func <a href="#New224">New224</a></span>
+</h3>
+<pre class="Documentation-declaration">func New224() hash.Hash</pre>
+<p>New224 returns a new hash.Hash computing the SHA224 checksum.</p>
+</section>
+<section class="Documentation-section">
+<h3 id="Size" class="Documentation-typeHeader">
+<span class="Documentation-typeTitle">type <a href="#Size">Size</a></span>
+</h3>
+<pre class="Documentation-declaration">const Size = 32</pre>
+<p>The size of a SHA256 checksum in bytes.</p>
+</section>
+</main>
+</body></html>

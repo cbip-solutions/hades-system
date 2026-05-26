@@ -1,0 +1,7 @@
+# Plan 13 Phase F6 testdata — references an MCP name that is NOT in the
+# curated catalog. Should surface SeverityError "unknown MCP name".
+schema_version = "1.0"
+name = "violation-unknown-mcp"
+
+[capa_firewall.tiers]
+"not-in-catalog" = "high"

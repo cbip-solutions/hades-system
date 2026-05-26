@@ -1,0 +1,10 @@
+schema_version: 1
+services:
+  - base_url_env: AUTH_SVC_URL
+    target_repo: auth-svc
+    notes: "personal-account auth gateway"
+  - base_url: http://billing-svc
+    target_repo: billing-svc
+  - base_url_pattern: '^https?://shipping-[a-z0-9]+\.internal/'
+    target_repo: shipping-svc
+unresolved_policy: surface

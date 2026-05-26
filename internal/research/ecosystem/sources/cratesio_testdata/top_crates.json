@@ -1,0 +1,8 @@
+{
+  "crates": [
+    {"name": "serde", "max_version": "1.0.193", "description": "Serde framework", "recent_downloads": 12000000, "repository": "https://github.com/serde-rs/serde"},
+    {"name": "tokio", "max_version": "1.35.0", "description": "Async runtime", "recent_downloads": 8500000, "repository": "https://github.com/tokio-rs/tokio"},
+    {"name": "clap", "max_version": "4.4.7", "description": "CLI parser", "recent_downloads": 7800000, "repository": "https://github.com/clap-rs/clap"}
+  ],
+  "meta": {"total": 3}
+}

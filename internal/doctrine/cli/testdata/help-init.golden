@@ -1,0 +1,27 @@
+Copia el TOML de una doctrina built-in (max-scope, default,
+capa-firewall) a ~/.config/zen-swarm/doctrines/<nombre>.toml para que
+el operador pueda editarla. El file-watcher del daemon detectará el nuevo
+archivo y lo cargará automáticamente.
+
+Use --output <ruta> para escribir a una ruta diferente (útil para gestión
+en repos dotfiles). Use --force para sobrescribir un archivo existente.
+
+Workflow A en spec §6.5 (Tightening exploration).
+
+Usage:
+  zen doctrine-v2 init <nombre> [flags]
+
+Flags:
+      --force           Sobrescribir archivo existente
+  -h, --help            help for init
+      --output string   Ruta de salida (default: ~/.config/zen-swarm/doctrines/<nombre>.toml)
+
+Global Flags:
+      --filter string   Namespace-specific post-fetch filter
+      --format string   Output format: table | json | yaml (default "table")
+      --json            Equivalent to --format=json
+      --limit int       Cap result rows (default 100)
+      --quiet           Suppress headers and decorative output
+      --since string    Time-bound filter (24h, 7d, 2025-01-01)
+      --uds string      Daemon UDS path (default "/tmp/zen-swarm.sock")
+      --verbose         Print debug info (URLs, latencies)

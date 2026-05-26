@@ -1,0 +1,15 @@
+{
+  "crate": {
+    "id": "serde",
+    "name": "serde",
+    "max_version": "1.0.193",
+    "description": "A generic serialization/deserialization framework",
+    "homepage": "https://serde.rs",
+    "documentation": "https://docs.rs/serde",
+    "repository": "https://github.com/serde-rs/serde",
+    "readme": "# Serde\n\nSerde is a framework for serializing and deserializing Rust data structures."
+  },
+  "versions": [
+    {"num": "1.0.193", "license": "MIT OR Apache-2.0", "created_at": "2024-01-01T00:00:00Z"}
+  ]
+}

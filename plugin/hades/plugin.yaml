@@ -1,0 +1,21 @@
+
+name: hades
+version: 0.12.0
+description: |
+  HADES system Hermes plugin (formerly zen-swarm; renamed in Plan 18b A-2) —
+  operator UX, citation rendering, caronte code-graph augmentation. Wires lifecycle
+  hooks (on_session_start/on_session_end/pre_tool_call/post_tool_call/
+  pre_llm_call), 13 skills (hades, start, handoff + 10 Plan-12 workflow/
+  doctrine/KG/knowledge skills), and 22 slash commands ALL registered under
+  the ``hades:`` namespace per spec §Q4 (recovery + workflow + doctrine +
+  amendment + KG + knowledge + AFK + OpenSpec). See ADR-0080 for substrate
+  pivot rationale and Plan 18 spec for the HADES rebrand.
+
+provides_tools: []
+
+provides_hooks:
+  - on_session_start
+  - on_session_end
+  - pre_tool_call
+  - post_tool_call
+  - pre_llm_call
