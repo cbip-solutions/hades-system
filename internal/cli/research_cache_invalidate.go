@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — research_cache_invalidate.go.
 //
-// NEW release leaf: `zen research cache invalidate <query>` — operator
+// NEW release leaf: `hades research cache invalidate <query>` — operator
 // force-stale. Marks cache entries matching the query string as stale so the
 // next dispatch repopulates from source (T9 mitigation).
 //
@@ -29,7 +29,7 @@ func researchCacheInvalidateCmd() *cobra.Command {
 		Long: `invalidate marks cache entries matching <query> as stale; the
 next research dispatch repopulates from source. Use when upstream
 sources have changed but TTL has not yet elapsed.`,
-		Example: `  zen research cache invalidate "audit chain integrity"`,
+		Example: `  hades research cache invalidate "audit chain integrity"`,
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx, cancel := context.WithTimeout(cmd.Context(), 5*time.Second)

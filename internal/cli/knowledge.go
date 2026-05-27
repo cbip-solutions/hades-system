@@ -1,31 +1,31 @@
 // SPDX-License-Identifier: MIT
 // Package cli — knowledge.go.
 //
-// `zen knowledge <subcommand>` is the operator-facing entry point for
+// `hades knowledge <subcommand>` is the operator-facing entry point for
 // the cross-project knowledge aggregator (spec §6.6). Three leaves
 // under one root:
 //
-// zen knowledge query <free-text> [--type X] [--project Y]
+// hades knowledge query <free-text> [--type X] [--project Y]
 // [--since 7d] [--limit N]
 // [--format text|json|md]
 // [--remote] [--audit-chain]
 // [--code-symbol foo]
-// zen knowledge reindex [--full] [--project alias]
-// zen knowledge stats [--schema]
+// hades knowledge reindex [--full] [--project alias]
+// hades knowledge stats [--schema]
 //
-// invariant boundary: --remote SHORT-CIRCUITS at this CLI layer
+// inv-hades-129 boundary: --remote SHORT-CIRCUITS at this CLI layer
 // BEFORE the daemon round-trip. The deferred-message text + roadmap
 // pointer is rendered locally; the daemon never sees the flag. The
 // knowledge.NoRemoteSentinel() anchor is invoked from the production
 // path so the G-16 compliance test asserts production-reachability.
 //
-// invariant boundary (symmetric): --audit-chain SHORT-CIRCUITS at
+// inv-hades-129 boundary (symmetric): --audit-chain SHORT-CIRCUITS at
 // this CLI layer with a release deferred-message pointer. Same anchor
 // pattern via knowledge.NoAuditChainSentinel().
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
 // newClientFromCmd (mirrors the release C-12 attach/sessions/layout +
-// D-13 schedule + E-12 inbox + F-10 zen-day patterns). Tests inject a
+// D-13 schedule + E-12 inbox + F-10 hades-day patterns). Tests inject a
 // fake client via the KnowledgeClientFactory parameter to NewKnowledgeCmd;
 // production wires through NewKnowledgeCmdProd which adapts *client.Client
 // → KnowledgeClient.
@@ -36,7 +36,7 @@
 // - 1 operator-recoverable: invalid --since, malformed --type,
 // malformed --format, daemon 422 (validation rejected).
 // - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
-// (until SetKnowledgeIndex wires; mirrors the inbox/quiet/zen-day
+// (until SetKnowledgeIndex wires; mirrors the inbox/quiet/hades-day
 // graceful-degradation pattern).
 package cli
 
@@ -130,19 +130,19 @@ Three subcommands:
   reindex   cold-rebuild the index from sources
   stats     print index statistics
 
-Privacy boundary (inv-zen-129): the aggregator NEVER queries web
+Privacy boundary (inv-hades-129): the aggregator NEVER queries web
 sources directly. The --remote flag is reserved for Plan 14 ecosystem
 RAG and short-circuits with a deferred-message pointer until then.
 The --audit-chain flag is reserved for Plan 9 hash-chain output and
 short-circuits identically.`,
 		Example: `  # Search for a string across all indexed docs
-  zen knowledge query "WFQ saturation"
+  hades knowledge query "WFQ saturation"
 
   # Refresh the index after a doc edit (full rebuild)
-  zen knowledge reindex
+  hades knowledge reindex
 
   # Inspect index health
-  zen knowledge stats`,
+  hades knowledge stats`,
 	}
 	root.AddCommand(newKnowledgeQueryCmd(factory))
 	root.AddCommand(newKnowledgeReindexCmd(factory))
@@ -213,16 +213,16 @@ Flags:
   --remote             Plan 14 ecosystem RAG (not yet shipped; see roadmap).
   --audit-chain        Plan 9 hash-chain (not yet shipped; see roadmap).`,
 		Example: `  # Free-text search across the whole index
-  zen knowledge query "tmux drift"
+  hades knowledge query "tmux drift"
 
   # Limit to memory + adr files in internal-platform-x
-  zen knowledge query "max scope" --project internal-platform-x --type memory --type adr
+  hades knowledge query "max scope" --project internal-platform-x --type memory --type adr
 
   # JSON output for jq pipelines
-  zen knowledge query "WFQ" --format json | jq '.[].Title'
+  hades knowledge query "WFQ" --format json | jq '.[].Title'
 
   # Recent edits only
-  zen knowledge query "scheduler" --since 7d`,
+  hades knowledge query "scheduler" --since 7d`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			flags.FreeText = strings.Join(args, " ")
 			c := factory(cmd)
@@ -265,7 +265,7 @@ func RunKnowledgeQuery(ctx context.Context, c KnowledgeClient, flags KnowledgeQu
 		_ = knowledge.NoAuditChainSentinel()
 		fmt.Fprintln(w,
 			"--audit-chain: Plan 9 hash-chain not yet shipped (Plan 9 deliverable). "+
-				"See docs/superpowers/specs/2026-04-30-zen-swarm-system-design.md §12 "+
+				"See docs/superpowers/specs/2026-04-30-hades-system-system-design.md §12 "+
 				"for roadmap.")
 		return nil
 	}
@@ -381,13 +381,13 @@ or after a daemon migration that touched the index schema. Output
 reports rows indexed + per-row error count; non-zero error count is
 not a failure (some files may be invalid markdown).`,
 		Example: `  # Full rebuild across all projects
-  zen knowledge reindex
+  hades knowledge reindex
 
   # Single-project rebuild
-  zen knowledge reindex --project internal-platform-x
+  hades knowledge reindex --project internal-platform-x
 
   # Explicit full flag (same as bare invocation)
-  zen knowledge reindex --full`,
+  hades knowledge reindex --full`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
 			ctx, cancel := context.WithTimeout(cmd.Context(), knowledgeReindexTimeout)
@@ -435,10 +435,10 @@ extension-hook columns (audit_chain_anchor, ecosystem_join_keys,
 caronte_symbol_refs). Useful when verifying that a recent migration
 landed before debugging Plan 9 / Plan 14 hook wiring.`,
 		Example: `  # Default stats output
-  zen knowledge stats
+  hades knowledge stats
 
   # Include the schema migration filename
-  zen knowledge stats --schema`,
+  hades knowledge stats --schema`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
 			ctx, cancel := context.WithTimeout(cmd.Context(), knowledgeStatsTimeout)
@@ -494,10 +494,10 @@ scope. Doctrine governs cross-project visibility (per spec §3.4
   - capa-firewall: hidden from all others (daemon returns 422)
 
 The Plan 9 D aggregator persists the promoted row in the global memory
-table; subsequent ` + "`zen knowledge query --cross-project`" + ` calls from
+table; subsequent ` + "`hades knowledge query --cross-project`" + ` calls from
 peer projects can match it.`,
-		Example: `  zen knowledge promote internal-platform-x:memory:reference_session_continuity
-  zen knowledge promote <id> --global`,
+		Example: `  hades knowledge promote internal-platform-x:memory:reference_session_continuity
+  hades knowledge promote <id> --global`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -545,12 +545,12 @@ substrate). Use after a fsnotify watcher gap or a schema migration.
 Without --project sweeps every configured project; with --project
 rebuilds one only.
 
-` + "`zen knowledge sync`" + ` differs from ` + "`zen knowledge reindex`" + `: reindex
+` + "`hades knowledge sync`" + ` differs from ` + "`hades knowledge reindex`" + `: reindex
 operates against the FTS5 knowledge index (Plan 7), sync operates against
 the Plan 9 D aggregator.db (vector + FTS + graph + audit-chain anchors).`,
-		Example: `  zen knowledge sync
-  zen knowledge sync --project internal-platform-x
-  zen knowledge sync --verify`,
+		Example: `  hades knowledge sync
+  hades knowledge sync --project internal-platform-x
+  hades knowledge sync --verify`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
 			ctx, cancel := context.WithTimeout(cmd.Context(), knowledgeSyncTimeout)
@@ -602,9 +602,9 @@ specific point in time (RFC3339).
 
 Restore is destructive: the existing aggregator.db is replaced. Use
 --dry-run to preview without mutating the on-disk file.`,
-		Example: `  zen knowledge restore --project internal-platform-x
-  zen knowledge restore --project internal-platform-x --timestamp 2026-05-08T12:00:00Z
-  zen knowledge restore --project internal-platform-x --dry-run`,
+		Example: `  hades knowledge restore --project internal-platform-x
+  hades knowledge restore --project internal-platform-x --timestamp 2026-05-08T12:00:00Z
+  hades knowledge restore --project internal-platform-x --dry-run`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
 			ctx, cancel := context.WithTimeout(cmd.Context(), knowledgeRestoreTimeout)

@@ -105,7 +105,7 @@ func (w *WorkspaceFederationDB) RemoveWorkspace(ctx context.Context, workspaceID
 // JSON-encoded doctrine snapshot) for an existing workspace. Distinct
 // from the registration-time policy_locked snapshot (which STAYS
 // immutable for forensic continuity); SetWorkspacePolicy is the
-// mutation path `zen workspace policy set` CLI / MCP surfaces.
+// mutation path `hades workspace policy set` CLI / MCP surfaces.
 // Emits a Tessera audit row (EvtWorkspacePolicySet) on every successful
 // set so the doctrine-history trail is forensic.
 //
@@ -122,7 +122,7 @@ func (w *WorkspaceFederationDB) RemoveWorkspace(ctx context.Context, workspaceID
 // transact across an arbitrary persistence layer. The chain
 // integrity is verified out-of-band Tessera STH; a
 // missing leaf surfaces as a chain-recovery event in the next
-// zen-day cycle.
+// hades-day cycle.
 // - Callers that need transactional ordering across the policy
 // mutation AND its audit leaf should wrap SetWorkspacePolicy in
 // a saga — outside this method's contract.

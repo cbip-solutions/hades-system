@@ -43,7 +43,7 @@
 // JSON request body into a request struct, validates, dispatches to the
 // EcosystemHandler interface, and encodes the response.
 //
-// invariant boundary: this handler MAY import
+// inv-hades-031 boundary: this handler MAY import
 // internal/research/ecosystem for the wire-side ecosystem name constants
 // (`Ecosystem`, `AllEcosystems`) — the boundary applies to
 // `internal/store`, not `internal/research`. The EcosystemHandler

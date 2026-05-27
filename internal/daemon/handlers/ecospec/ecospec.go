@@ -7,7 +7,7 @@
 //
 // Why this package exists:
 //
-// The cmd/zen-swarm-ctld/ecosystemwiring adapter that implements
+// The cmd/hades-ctld/ecosystemwiring adapter that implements
 // EcosystemHandler in production lives in a sub-package whose test
 // binary CANNOT pull internal/daemon/handlers transitively — that
 // import chain brings in internal/store + internal/knowledge which

@@ -23,7 +23,7 @@ import (
 // driven, runs only via the public PruneOrphans API.
 //
 // gcLoop drives Layer A every tick. Layer B is invoked synchronously from
-// PruneOrphans (operator-driven via `zen doctor worktree-pool prune` →
+// PruneOrphans (operator-driven via `hades doctor worktree-pool prune` →
 // orchestrator adapter, ). On a Layer-A failure, gcLoop emits
 // EvtWorktreePoolDegraded with reason=gc-prune-failed so HRA Q8
 // cost-pressure downgrade can react. Success is silent (the norm).
@@ -83,7 +83,7 @@ func (p *concretePool) runLayerA(ctx context.Context) error {
 // Safety guards (defense-in-depth Q4 C):
 //
 // - Pool-prefix filter: only dirs named `{PoolID}-...` or
-// `zen-pool-{PoolID}-...` are candidates. WorktreeDir may legitimately
+// `hades-pool-{PoolID}-...` are candidates. WorktreeDir may legitimately
 // host dirs from other pools or operator artefacts (rare but
 // possible) — we do NOT touch them.
 // - leased + warm membership: a dir with the right prefix that
@@ -117,7 +117,7 @@ func (p *concretePool) runLayerB(ctx context.Context, report *PruneReport) {
 		report.Errors = append(report.Errors, fmt.Sprintf("layerB-readdir: %v", err))
 		return
 	}
-	zenPrefix := "zen-pool-" + p.cfg.PoolID + "-"
+	zenPrefix := "hades-pool-" + p.cfg.PoolID + "-"
 	bareprefix := p.cfg.PoolID + "-"
 	for _, de := range dirEntries {
 		if !de.IsDir() {

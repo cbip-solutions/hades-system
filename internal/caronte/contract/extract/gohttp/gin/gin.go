@@ -21,7 +21,7 @@
 // Composition `g := r.Group("/v1")` pushes "/v1" onto g's prefix; a
 // subsequent `g.GET("/users", h)` is emitted with `/v1/users`.
 //
-// Boundary: imports only
+// Boundary (inv-hades-230 + inv-hades-271): imports only
 // `internal/caronte/store` + `internal/caronte/contract/extract` + std
 // library. Does NOT import `internal/store` (daemon store) nor
 // `golang.org/x/tools/go/packages`.

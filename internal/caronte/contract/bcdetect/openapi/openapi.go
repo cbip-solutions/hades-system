@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package openapi — release OpenAPI breaking-change detector wrapping
 // oasdiff/oasdiff (Go SDK; Apache-2.0). The sole library used here per
-// invariant; the imports scan asserts no other diff library is imported
+// inv-hades-267; the imports scan asserts no other diff library is imported
 // in this file.
 //
 // AS-BUILT divergence from the plan: the upstream Go module path
@@ -32,7 +32,7 @@
 // Severity mapping rationale: oasdiff has a comprehensive 450+ rule
 // classification; INSUFFICIENT (SevInsufficient) is never produced here
 // (the Go path classifies every change), so the Node fallback gate
-// never fires for OpenAPI — only for GraphQL when the
+// (inv-hades-272) never fires for OpenAPI — only for GraphQL when the
 // Go SDL diff hits a rule outside the canonical six.
 //
 // Concurrency Detect is safe to call concurrently from multiple goroutines

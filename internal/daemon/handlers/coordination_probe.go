@@ -2,7 +2,7 @@
 // Package handlers — coordination_probe.go.
 //
 // GET /v1/coordination/probe?check=<name> — diagnostic probe surface for
-// the `zen doctor coordination` CLI section.
+// the `hades doctor coordination` CLI section.
 //
 // Background — release substrate gap closure (mirrors hermes_probe.go):
 //
@@ -21,23 +21,23 @@
 // internal/knowledge/aggregator/aggregator.go exists at the resolved
 // repo root. Surfaces the release aggregator-substrate
 // installation step; absence implies an incomplete checkout or
-// misconfigured ZEN_SWARM_REPO_ROOT.
+// misconfigured HADES_SYSTEM_REPO_ROOT.
 //
-// RETIRED: "release-h-prime-executed" probe was
+// RETIRED (v0.20.7, inv-hades-290): "release-h-prime-executed" probe was
 // retired because the underlying landing test (presence of
-// plugin/zen-swarm/plugin.yaml + Hermes markers) is obsolete per ADR-0080.
+// plugin/hades-system/plugin.yaml + Hermes markers) is obsolete per ADR-0080.
 // replaced that path with the Hermes plugin at plugin/hades/ (different
-// canonical location + format). The probe-target plugin/zen-swarm/plugin.yaml
+// canonical location + format). The probe-target plugin/hades-system/plugin.yaml
 // never existed at HEAD and always reported "fail" — a misleading active
-// signal in `zen doctor coordination` output. Q1 substrate decision +
+// signal in `hades doctor coordination` output. Q1 substrate decision +
 // ADR-0080 supersede release H'; no Claude-Code-plugin conversion is
 // planned, so the probe has no underlying behaviour to assert.
 //
 // Unknown probe names return status=ok with a hint string — same posture
 // as AugmentProbeHandler/BypassDoctor. 405 on non-GET.
 //
-// Repo root resolution: ZEN_SWARM_REPO_ROOT env override → os.Getwd()
-// fallback. Mirrors the pattern in cmd/zen-swarm-ctld/main.go:403-410
+// Repo root resolution: HADES_SYSTEM_REPO_ROOT env override → os.Getwd()
+// fallback. Mirrors the pattern in cmd/hades-ctld/main.go:403-410
 // (OrchestratorPlan5Service repoRoot); kept self-contained per-handler
 // so the handler stays testable without a full Server fixture.
 
@@ -66,7 +66,7 @@ func CoordinationProbeHandler() http.HandlerFunc {
 		check := r.URL.Query().Get("check")
 		resp := CoordinationProbeResp{Status: "ok"}
 
-		repoRoot := os.Getenv("ZEN_SWARM_REPO_ROOT")
+		repoRoot := os.Getenv("HADES_SYSTEM_REPO_ROOT")
 		if repoRoot == "" {
 			if cwd, err := os.Getwd(); err == nil {
 				repoRoot = cwd

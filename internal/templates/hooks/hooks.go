@@ -6,7 +6,7 @@
 //
 // 1. pre_prompt.{sh,py} — validate host env (BEFORE the wizard runs).
 // In the entry-point flow, this hook is invoked BY THE CLI
-// (zen new / zen init) BEFORE calling onboard.Wizard.Run via a
+// (hades new / hades init) BEFORE calling onboard.Wizard.Run via a
 // separate hooks.RunPreflight() function so the wizard never sees a
 // host that fails preflight.
 // 2. pre_gen.{sh,py} — validate wizard answers (BEFORE materialize).
@@ -49,7 +49,7 @@ func Run(ctx context.Context, tmpl t.Template, dst string, answers t.Answers) er
 		return err
 	}
 
-	tmp, err := os.MkdirTemp("", "zen-scaffold-"+sanitizeID(tmpl.Name())+"-*")
+	tmp, err := os.MkdirTemp("", "hades-scaffold-"+sanitizeID(tmpl.Name())+"-*")
 	if err != nil {
 		return fmt.Errorf("mkdir temp: %w", err)
 	}
@@ -103,7 +103,7 @@ func runHook(ctx context.Context, tmpl t.Template, scriptPath string, answers t.
 		return fmt.Errorf("read hook %q: %w", scriptPath, err)
 	}
 
-	tmpFile, err := os.CreateTemp("", "zen-hook-*"+filepath.Ext(scriptPath))
+	tmpFile, err := os.CreateTemp("", "hades-hook-*"+filepath.Ext(scriptPath))
 	if err != nil {
 		return fmt.Errorf("create hook tmp: %w", err)
 	}

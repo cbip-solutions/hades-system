@@ -53,7 +53,7 @@ func checkResearchCacheSize(ctx context.Context, c *client.Client) CheckResult {
 	if stats.TotalBytes > 500*mb {
 		return CheckResult{Name: "research.cache.size", Status: "warn",
 			Detail: fmt.Sprintf("%d bytes (%d MiB) > 500 MiB", stats.TotalBytes, stats.TotalBytes/mb),
-			Hint:   "consider zen research cache clear --older-than=7d"}
+			Hint:   "consider hades research cache clear --older-than=7d"}
 	}
 	return CheckResult{Name: "research.cache.size", Status: "ok",
 		Detail: fmt.Sprintf("%d entries / %d MiB", stats.TotalEntries, stats.TotalBytes/mb)}

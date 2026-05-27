@@ -61,7 +61,7 @@ func (a *Aggregator) Query(ctx context.Context, req QueryRequest) ([]QueryResult
 		topKs = tk
 
 	default:
-		return nil, fmt.Errorf("aggregator: Query: unknown scope %q (inv-zen-152)", req.Scope)
+		return nil, fmt.Errorf("aggregator: Query: unknown scope %q (inv-hades-152)", req.Scope)
 	}
 
 	fused := Fuse(topKs, rrfDefaultK, req.Limit)

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — cochange.go.
 //
-// `zen cochange <file>` lists files historically co-changed with <file>
+// `hades cochange <file>` lists files historically co-changed with <file>
 // (code-maat coupling). Surfaces invisible coupling so a worker does not
 // break it before the compiler catches it (spec §8). Routes via the daemon
 // /v1/mcpgateway/cochange route → engine GetCoChange.
@@ -48,9 +48,9 @@ func NewCochangeCmd(factory func(cmd *cobra.Command) CaronteCochangeClient) *cob
 (code-maat coupling_degree). High coupling means editing one likely needs the
 other — surfaced before the compiler catches the break (spec §8). Below the
 cold-start gate (insufficient history) the engine returns no peers. Routes via
-the daemon (single-egress, inv-zen-088).`,
-		Example: `  zen cochange internal/orchestrator/merge/engine.go
-  zen cochange internal/daemon/server.go --format json`,
+the daemon (single-egress, inv-hades-088).`,
+		Example: `  hades cochange internal/orchestrator/merge/engine.go
+  hades cochange internal/daemon/server.go --format json`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

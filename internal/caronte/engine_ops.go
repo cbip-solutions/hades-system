@@ -43,7 +43,7 @@ func (pe *projectEngine) decomposition(ctx context.Context) (structure.Decomposi
 
 // indexSkipDirs is the closed set of directory base names the IndexProject
 // walker MUST NOT descend into. The list mirrors the plan §C-1:
-// `.git`, `node_modules`, `.zen` (Caronte's own caronte.db lives there),
+// `.git`, `node_modules`, `.hades` (Caronte's own caronte.db lives there),
 // `vendor`, `target`. Hidden directories (any name starting with ".") are
 // also skipped — the dot-prefix check is applied in addition to this set so
 // `.git` is rejected by both rules (defense in depth).
@@ -54,7 +54,7 @@ func (pe *projectEngine) decomposition(ctx context.Context) (structure.Decomposi
 var indexSkipDirs = map[string]struct{}{
 	".git":         {},
 	"node_modules": {},
-	".zen":         {},
+	".hades":       {},
 	"vendor":       {},
 	"target":       {},
 }
@@ -89,14 +89,14 @@ func extToLanguageLabel(ext string) string {
 // and Completed=false (NOT a panic).
 //
 // Walker skip-list (indexSkipDirs + dot-prefix): `.git`, `node_modules`,
-// `.zen`, `vendor`, `target`, hidden dirs. Files whose extension is not
+// `.hades`, `vendor`, `target`, hidden dirs. Files whose extension is not
 // registered with the parser registry are silently ignored (extToLanguage
 // returns ""). Errors during a per-file parse are wrapped + propagated;
 // Completed stays false in that case so callers can distinguish a partial
 // walk from a clean empty pass.
 //
 // Returns IndexReport with totals, per-language file counts, duration, and
-// Completed=true on a clean walk. invariant.
+// Completed=true on a clean walk. inv-hades-273.
 func (e *Engine) IndexProject(ctx context.Context, projectID string) (IndexReport, error) {
 	started := time.Now()
 	rep := IndexReport{

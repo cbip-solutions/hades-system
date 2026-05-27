@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// extract-bypass-config bootstraps zen-swarm's bypass-config.json v1.0.
+// extract-bypass-config bootstraps hades-system's bypass-config.json v1.0.
 // Three modes: capture (mitmproxy + CC), extract (flows -> JSON),
 // cross-validate (diff vs community plugin). Implements spec §2 Q1-C
 // and Q10-B+b.

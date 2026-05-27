@@ -15,10 +15,10 @@
 // (caller decides; this adapter never blocks the CLI surface).
 //
 // Why one file (not four per-surface adapters): the four surfaces
-// (`zen doctor full`, `zen state cleanup`, `zen doctor restore`, and
-// the daemon-side eval boundary via cmd/zen-swarm-ctld) all want the
+// (`hades doctor full`, `hades state cleanup`, `hades doctor restore`, and
+// the daemon-side eval boundary via cmd/hades-ctld) all want the
 // same daemon round-trip behaviour: marshal once, POST to /v1/audit/emit,
-// return the resulting audit hash. The boundary is
+// return the resulting audit hash. The boundary (inv-hades-031) is
 // preserved: this is a CLI-layer adapter that consumes the daemon
 // client — it does NOT touch internal/store.
 package cli

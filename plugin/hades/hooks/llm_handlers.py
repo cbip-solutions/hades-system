@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-# plugin/zen-swarm/hooks/llm_handlers.py
-"""Hermes pre_llm_call callback for zen-swarm (release track' baseline + the release design"""
+# plugin/hades-system/hooks/llm_handlers.py
+"""Hermes pre_llm_call callback for hades-system (release track' baseline + the release design"""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ import httpx
 
 from ._common import invoke_event_poster
 
-_log = logging.getLogger("zen-swarm.hooks.pre_llm_call")
+_log = logging.getLogger("hades-system.hooks.pre_llm_call")
 
 # Module-level daemon client; lazy-initialised on first use; replaceable by
 # tests via _set_client_for_testing.
@@ -28,7 +28,7 @@ def _get_client() -> httpx.Client:
     """
     global _DAEMON_CLIENT
     if _DAEMON_CLIENT is None:
-        socket_path = os.environ.get("ZEN_DAEMON_SOCKET", "/tmp/zen-swarm.sock")
+        socket_path = os.environ.get("HADES_DAEMON_SOCKET", "/tmp/hades-system.sock")
         unix_transport = httpx.HTTPTransport(uds=socket_path)
         _DAEMON_CLIENT = httpx.Client(
             transport=unix_transport,
@@ -65,7 +65,7 @@ def pre_llm_call(
         cwd: current working directory
         messages: list of message dicts in the current turn
         model: requested LLM model name
-        project_id: zen-swarm project alias (from .zen-swarm.toml or session
+        project_id: hades-system project alias (from .hades-system.toml or session
             context); empty falls back to "default"
         conversation_id: Hermes conversation correlation key
         **kwargs: forward-compatible extras (e.g. task_id, doctrine)
@@ -122,7 +122,7 @@ def pre_llm_call(
         return None
 
     if response.status_code == 204:
-        # invariant: doctrine veto. Operator-visible: Hermes chats normally.
+        # inv-hades-170: doctrine veto. Operator-visible: Hermes chats normally.
         return None
     if response.status_code != 200:
         _log.debug(

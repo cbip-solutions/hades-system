@@ -7,8 +7,8 @@
 // FederationListRecentBreakingChanges + FederationRecentDispatches —
 // the latter two are client extensions that this adapter calls).
 //
-// invariant enforced: this file uses ONLY *client.Client methods —
-// never net/http directly. invariant single-egress preserved: every
+// inv-hades-129 enforced: this file uses ONLY *client.Client methods —
+// never net/http directly. inv-hades-088 single-egress preserved: every
 // round-trip proxies through the daemon.
 package views
 

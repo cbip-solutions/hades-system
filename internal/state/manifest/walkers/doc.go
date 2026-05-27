@@ -5,7 +5,7 @@
 // + a MissingSources slice for failure-mode #12 partial-result
 // handling spec §4.1.
 //
-// invariant: walkers NEVER import internal/store. Doctrine walker
+// inv-hades-031: walkers NEVER import internal/store. Doctrine walker
 // receives the registry name list via a callback function; autonomy
 // walker reads a filesystem stamp file written by the autonomy
 // engine. NO direct DB access.

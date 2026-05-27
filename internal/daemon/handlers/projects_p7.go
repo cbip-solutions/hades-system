@@ -9,7 +9,7 @@
 //
 // These operate on the projects_alias / path_history substrate (release
 // migration 057) via projectctx.ProjectStore (the daemon-side adapter
-// is internal/daemon/projectctxadapter.Adapter — invariant: this
+// is internal/daemon/projectctxadapter.Adapter — inv-hades-031: this
 // package never imports internal/store directly).
 //
 // File name uses the `_p7` suffix to avoid colliding with the legacy
@@ -17,7 +17,7 @@
 // older /v1/projects/{id}, /v1/projects, agents-md, and sync routes
 // (those operate on the original `projects` table — distinct schema).
 //
-// invariant boundary: the only projectctx-side import is the
+// inv-hades-031 boundary: the only projectctx-side import is the
 // ProjectStore interface + value types (Alias, ProjectID, Project,
 // PathHistoryEntry, MvDetection, Activate, FindProjectRoot,
 // CanonicalPath). No internal/store, no projectctxadapter direct
@@ -138,7 +138,7 @@ func ProjectDoctor(s any) http.HandlerFunc {
 }
 
 func isAliasResolutionError(err error) bool {
-	return errors.Is(err, projectctx.ErrZenswarmTOMLMalformed) ||
+	return errors.Is(err, projectctx.ErrHadesSystemTOMLMalformed) ||
 		errors.Is(err, projectctx.ErrAliasInvalid) ||
 		errors.Is(err, projectctx.ErrAliasEmpty) ||
 		errors.Is(err, projectctx.ErrAliasInvalidChar) ||
@@ -193,8 +193,8 @@ func writeDoctorOK(w http.ResponseWriter, p *projectctx.Project, mv *projectctx.
 			NewIDShort: mv.NewID.Short(),
 		}
 
-		resp.Hint = "To rebind: zen project doctor " + string(mv.Alias) + " --rebind\n" +
-			"To register as a new project: rename in zenswarm.toml [project] id"
+		resp.Hint = "To rebind: hades project doctor " + string(mv.Alias) + " --rebind\n" +
+			"To register as a new project: rename in hadessystem.toml [project] id"
 	}
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(resp)

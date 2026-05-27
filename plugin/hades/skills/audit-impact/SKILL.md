@@ -31,7 +31,7 @@ knowledge graph augmentation context. Triggered by `/hades:audit-impact <event-i
 ### 1. Resolve event via daemon
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock -s \
+curl --unix-socket /tmp/hades-system.sock -s \
      "http://unix/v1/audit/event/<event_id>" | jq '.'
 ```
 
@@ -48,7 +48,7 @@ Returns full 5-lane RRF context:
 
 ### 3. Privacy filter
 
-Per invariant: capa-firewall events filtered from non-capa-firewall sessions.
+Per inv-hades-163: capa-firewall events filtered from non-capa-firewall sessions.
 
 ### 4. Navigation
 
@@ -59,6 +59,6 @@ Operator can recurse: `/hades:audit-impact <prior_event_id>` to navigate the cha
 - spec §4.2 slash command flow
 - spec §4.6 audit chain integration
 - spec §1 Q9 citation envelope structure
-- invariant privacy boundary
-- invariant zen://audit URL handler auth check
+- inv-hades-163 privacy boundary
+- inv-hades-172 hades://audit URL handler auth check
 - /hades:audit-impact slash command handler

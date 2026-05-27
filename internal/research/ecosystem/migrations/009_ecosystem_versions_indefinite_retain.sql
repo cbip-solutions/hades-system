@@ -2,10 +2,10 @@
 --
 -- the release design release track Task G-5. Per spec §2.9 Q9=A.
 --
--- Operator-confirmed retention: `zen docs pin --ecosystem X --version Y`
+-- Operator-confirmed retention: `hades docs pin --ecosystem X --version Y`
 -- sets indefinite_retain=true so the version is excluded from the
 -- 2-prior-stable retention window (Q9=A "Pinned: ... never archived
--- nor pruned"). `zen docs prune --confirm` consults this column before
+-- nor pruned"). `hades docs prune --confirm` consults this column before
 -- deleting; pinned versions are refused.
 --
 -- Default 0 (false): newly ingested versions follow the standard

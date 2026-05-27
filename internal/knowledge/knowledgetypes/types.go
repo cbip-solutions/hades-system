@@ -20,11 +20,11 @@
 //
 // internal/knowledge/aggregator → knowledgetypes (no CGO)
 // internal/daemon/knowledgeadapter → knowledgetypes (no CGO)
-// cmd/zen-swarm-ctld → aggregator (mattn) + daemon (ncruces)
+// cmd/hades-ctld → aggregator (mattn) + daemon (ncruces)
 // mattn wins init() race; ncruces skips
 //
-// invariant: this package does NOT import internal/store.
-// invariant: this package does NOT import net/http.
+// inv-hades-031: this package does NOT import internal/store.
+// inv-hades-129: this package does NOT import net/http.
 package knowledgetypes
 
 import "context"

@@ -27,27 +27,27 @@ const MigrateClaudeCodeAuditEventType = "evt.migrate.claude_code.run"
 const MigrateClaudeCodePermissionUnmappedEventType = "evt.migrate.claude_code.permission.unmapped"
 
 type claudeCodeFlags struct {
-	source       string
-	targetHermes string
-	targetConfig string
-	targetZenCfg string
-	preset       string
-	include      string
-	exclude      string
-	dryRun       bool
-	planOutput   string
-	applyPlan    string
-	force        bool
-	backupTarget bool
-	verify       bool
-	jsonOutput   bool
+	source         string
+	targetHermes   string
+	targetConfig   string
+	targetHadesCfg string
+	preset         string
+	include        string
+	exclude        string
+	dryRun         bool
+	planOutput     string
+	applyPlan      string
+	force          bool
+	backupTarget   bool
+	verify         bool
+	jsonOutput     bool
 }
 
 func newMigrateClaudeCodeCommand() *cobra.Command {
 	f := &claudeCodeFlags{}
 	cmd := &cobra.Command{
 		Use:   "claude-code",
-		Short: "Import a Claude Code installation (~/.claude/) into Hermes plugin format + zen doctrine",
+		Short: "Import a Claude Code installation (~/.claude/) into Hermes plugin format + hades doctrine",
 		Long: `Imports an existing Claude Code installation (~/.claude/ + project-local
 .claude/) into HADES's Hermes substrate format. Spec §2.4 mapping table.
 
@@ -57,15 +57,15 @@ Modes:
   --apply-plan PATH          Apply a previously generated plan.
   --preset {strict|lenient}  Strict halts on unmapped surfaces; lenient skips + warns.
   --force                    Overwrite existing target files.
-  --backup-target            Create tar.gz backup before mutating (inv-zen-177).
+  --backup-target            Create tar.gz backup before mutating (inv-hades-177).
   --json                     Emit structured JSON summary.
 
-  (--verify lands in Phase F when "zen doctor hermes" integrates.)
+  (--verify lands in Phase F when "hades doctor hermes" integrates.)
 
 Surfaces imported (spec §2.4 mapping table):
-  ~/.claude/skills/<name>/SKILL.md           → plugin/zen-swarm/skills/<name>/SKILL.md
-  ~/.claude/commands/<name>.md               → plugin/zen-swarm/commands/<name>.py
-  ~/.claude/hooks/<event>.{sh,py}            → plugin/zen-swarm/hooks/<hermes-event>.py
+  ~/.claude/skills/<name>/SKILL.md           → plugin/hades-system/skills/<name>/SKILL.md
+  ~/.claude/commands/<name>.md               → plugin/hades-system/commands/<name>.py
+  ~/.claude/hooks/<event>.{sh,py}            → plugin/hades-system/hooks/<hermes-event>.py
   ~/.claude/settings.json#permissions        → doctrines/imported-from-claude-code.toml
   ~/.claude/settings.json#model+mcpServers   → config.yaml
   ~/.claude/projects/<slug>/memory/*.md      → projects/<slug>/memory/*.md
@@ -75,9 +75,9 @@ Surfaces imported (spec §2.4 mapping table):
 		},
 	}
 	cmd.Flags().StringVar(&f.source, "source", defaultSource(), "Source directory to read from")
-	cmd.Flags().StringVar(&f.targetHermes, "target-hermes", "", "Hermes plugin destination (default: $CWD/plugin/zen-swarm)")
+	cmd.Flags().StringVar(&f.targetHermes, "target-hermes", "", "Hermes plugin destination (default: $CWD/plugin/hades-system)")
 	cmd.Flags().StringVar(&f.targetConfig, "target-config", "", "Hermes config destination (default: ~/.hermes/config.yaml)")
-	cmd.Flags().StringVar(&f.targetZenCfg, "target-zen-config", "", "HADES doctrine + project TOML destination (default: ~/.config/zen-swarm)")
+	cmd.Flags().StringVar(&f.targetHadesCfg, "target-hades-config", "", "HADES doctrine + project TOML destination (default: ~/.config/hades-system)")
 	cmd.Flags().StringVar(&f.preset, "preset", "lenient", "Mapping preset: strict | lenient | preview")
 	cmd.Flags().StringVar(&f.include, "include", "", "Restrict surfaces (CSV: skills,commands,hooks,settings,memory,mcp-servers)")
 	cmd.Flags().StringVar(&f.exclude, "exclude", "", "Skip surfaces (CSV)")
@@ -85,7 +85,7 @@ Surfaces imported (spec §2.4 mapping table):
 	cmd.Flags().StringVar(&f.planOutput, "plan-output", "", "Write JSON migration plan to PATH")
 	cmd.Flags().StringVar(&f.applyPlan, "apply-plan", "", "Apply previously generated plan from PATH")
 	cmd.Flags().BoolVar(&f.force, "force", false, "Overwrite existing target files")
-	cmd.Flags().BoolVar(&f.backupTarget, "backup-target", false, "Tar target dirs before write (inv-zen-177)")
+	cmd.Flags().BoolVar(&f.backupTarget, "backup-target", false, "Tar target dirs before write (inv-hades-177)")
 
 	cmd.Flags().BoolVar(&f.verify, "verify", false, "(reserved for Phase F)")
 	if err := cmd.Flags().MarkHidden("verify"); err != nil {
@@ -106,7 +106,7 @@ func defaultSource() string {
 
 func defaultTargetHermes() string {
 	cwd, _ := os.Getwd()
-	return filepath.Join(cwd, "plugin", "zen-swarm")
+	return filepath.Join(cwd, "plugin", "hades-system")
 }
 
 func defaultTargetConfig() string {
@@ -114,14 +114,14 @@ func defaultTargetConfig() string {
 	return filepath.Join(home, ".hermes", "config.yaml")
 }
 
-func defaultTargetZenConfig() string {
+func defaultTargetHadesConfig() string {
 	home, _ := os.UserHomeDir()
-	return filepath.Join(home, ".config", "zen-swarm")
+	return filepath.Join(home, ".config", "hades-system")
 }
 
 func defaultBackupRoot() string {
 	home, _ := os.UserHomeDir()
-	return filepath.Join(home, ".local", "state", "zen-swarm", "migrate-backups")
+	return filepath.Join(home, ".local", "state", "hades-system", "migrate-backups")
 }
 
 func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
@@ -139,8 +139,8 @@ func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
 	if f.targetConfig == "" {
 		f.targetConfig = defaultTargetConfig()
 	}
-	if f.targetZenCfg == "" {
-		f.targetZenCfg = defaultTargetZenConfig()
+	if f.targetHadesCfg == "" {
+		f.targetHadesCfg = defaultTargetHadesConfig()
 	}
 
 	var plan *mapping.Plan
@@ -197,7 +197,7 @@ func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
 	w := writer.New(writer.WriterConfig{
 		HermesPluginRoot: f.targetHermes,
 		HermesConfigPath: f.targetConfig,
-		ZenConfigRoot:    f.targetZenCfg,
+		HadesConfigRoot:  f.targetHadesCfg,
 		BackupRoot:       backupRoot,
 		ForceOverwrite:   f.force,
 	})
@@ -217,7 +217,7 @@ func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
 			"target": map[string]string{
 				"hermes":      f.targetHermes,
 				"hermes_cfg":  f.targetConfig,
-				"zen_config":  f.targetZenCfg,
+				"zen_config":  f.targetHadesCfg,
 				"backup_root": backupRoot,
 			},
 		}
@@ -228,7 +228,7 @@ func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
 	}
 	if f.verify {
 
-		fmt.Fprintln(cmd.OutOrStdout(), "Verify: deferred to Phase F (run `zen doctor hermes` after Phase F lands).")
+		fmt.Fprintln(cmd.OutOrStdout(), "Verify: deferred to Phase F (run `hades doctor hermes` after Phase F lands).")
 	}
 	return nil
 }
@@ -277,7 +277,7 @@ func rehydrateBodyBytes(plan *mapping.Plan, inv *source.Inventory) error {
 	return nil
 }
 
-var ErrPlanHashMismatch = errors.New("migrate: plan hash mismatch (source file tampered between plan and apply; TOCTOU guard inv-zen-183)")
+var ErrPlanHashMismatch = errors.New("migrate: plan hash mismatch (source file tampered between plan and apply; TOCTOU guard inv-hades-183)")
 
 func verifyPlanHashes(plan *mapping.Plan) error {
 	for _, e := range plan.Entries {
@@ -389,7 +389,7 @@ func parseCSV(s string) map[string]bool {
 }
 
 // emitMigrateClaudeCodeAudit fires the canonical release audit events for
-// a successful `zen migrate claude-code` apply: one
+// a successful `hades migrate claude-code` apply: one
 // evt.migrate.claude_code.run summarising the migration + one
 // evt.migrate.claude_code.permission.unmapped per unrecognised permission
 // under lenient preset (none under strict — strict halts Apply before this
@@ -444,7 +444,7 @@ func emitMigrateClaudeCodeAudit(cmd *cobra.Command, plan *mapping.Plan, f *claud
 			"source":              plan.Source,
 			"target_hermes":       f.targetHermes,
 			"target_hermes_cfg":   f.targetConfig,
-			"target_zen_config":   f.targetZenCfg,
+			"target_zen_config":   f.targetHadesCfg,
 			"backup_root":         backupRoot,
 			"preset":              string(plan.Preset),
 			"mode":                mode,

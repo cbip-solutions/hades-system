@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// specs_diff.go — release Task F-5 subcommand `zen specs diff <id>`.
+// specs_diff.go — release Task F-5 subcommand `hades specs diff <id>`.
 //
 // Renders OpenSpec deltas for a change directory. In OpenSpec's canonical
 // layout (openspec/changes/<id>/), the deltas/ subdirectory IS the diff —
 // each *.md file describes "what changes" against the corresponding
 // openspec/specs/<area>.md when archived.
 //
-// `zen specs diff <change-id>` walks openspec/changes/<id>/deltas/ and
+// `hades specs diff <change-id>` walks openspec/changes/<id>/deltas/ and
 // concatenates each delta with a header. This is the read-only "what's
 // pending" view of an in-flight change. Pure filesystem — no daemon call.
 //
@@ -120,8 +120,8 @@ the diff (what changes against openspec/specs/<area>.md when archived).
 
 The --v <from>..<to> flag is reserved for a future revision that taps
 git history; until then it returns exit 1 with a roadmap pointer.`,
-		Example: `  zen specs diff zen-swarm-bootstrap
-  zen specs diff feature-x`,
+		Example: `  hades specs diff hades-system-bootstrap
+  hades specs diff feature-x`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return RunSpecsDiff(getDir(cmd), args[0], flags, cmd.OutOrStdout())

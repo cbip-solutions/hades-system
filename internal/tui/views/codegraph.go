@@ -19,7 +19,7 @@
 // [C] cross-project cone
 //
 // Live data wiring routes via internal/client typed methods (Task
-// C-4) — never net/http directly.
+// C-4) — never net/http directly (inv-hades-129).
 //
 // C-1 ships skeleton, C-2 adds full layout per spec §7.3 example,
 // C-3 adds key handling + sub-panel state machine.

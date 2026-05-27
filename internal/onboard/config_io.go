@@ -12,13 +12,13 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/onboard/prefs"
 )
 
-// GlobalConfig is the on-disk shape of $XDG_CONFIG_HOME/zen-swarm/config.toml,
-// authored by WriteGlobalConfig at the end of `zen config init`. The shape
+// GlobalConfig is the on-disk shape of $XDG_CONFIG_HOME/hades-system/config.toml,
+// authored by WriteGlobalConfig at the end of `hades config init`. The shape
 // mirrors the release doctrine TOML pattern (schema-versioned per
 // ADR-0050). All non-mandatory fields are `omitempty` so unselected
 // answers do not pollute the file.
 //
-// Per invariant (schema_version required), task C-2 always
+// Per inv-hades-188 (schema_version required), task C-2 always
 // populates SchemaVersion = CurrentConfigSchemaVersion before calling
 // WriteGlobalConfig.
 type GlobalConfig struct {
@@ -95,7 +95,7 @@ func CloneBuiltinDoctrine(name string) error {
 // fields from prefs are copied into the result so the caller may mutate
 // without aliasing the prefs cache.
 //
-// task C-2 calls this after parsing `zen config init` flags and
+// task C-2 calls this after parsing `hades config init` flags and
 // loading prefs via `prefs.Load(onboard.OnboardPrefsPath())`.
 //
 // Builtin defaults source: `GetDefaults(WizardKindGlobal)` (single
@@ -147,7 +147,7 @@ func DefaultsFromFlagsAndPrefs(flags map[string]string, p *prefs.Prefs) WizardDe
 // 4. os.Rename to final path (atomic on POSIX + NTFS).
 // 5. On any failure: remove the.tmp and return wrapped error.
 //
-// Per invariant: callers do not pass arbitrary writer fns — the
+// Per inv-hades-031: callers do not pass arbitrary writer fns — the
 // signature is `(path, v)` so the call site cannot accidentally smuggle
 // a non-TOML encoder in.
 func writeAtomicTOML(path string, v any) error {

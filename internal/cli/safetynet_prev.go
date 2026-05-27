@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package cli — safetynet_prev.go.
 //
-// `zen safetynet prev {install,show,exec}` manages the pinned-prior
-// bin/zen-prev binary (Q2 C element 1). The exec sub-command pipes a
-// one-shot argv through bin/zen-prev so operators can validate that
+// `hades safetynet prev {install,show,exec}` manages the pinned-prior
+// bin/hades-prev binary (Q2 C element 1). The exec sub-command pipes a
+// one-shot argv through bin/hades-prev so operators can validate that
 // substrate regressions don't reproduce on the prior known-good build.
 package cli
 
@@ -19,7 +19,7 @@ import (
 func safetynetPrevCmd() *cobra.Command {
 	prev := &cobra.Command{
 		Use:   "prev",
-		Short: "Manage bin/zen-prev (pinned-prior binary)",
+		Short: "Manage bin/hades-prev (pinned-prior binary)",
 	}
 	prev.AddCommand(safetynetPrevInstallCmd())
 	prev.AddCommand(safetynetPrevShowCmd())
@@ -30,7 +30,7 @@ func safetynetPrevCmd() *cobra.Command {
 func safetynetPrevInstallCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "install",
-		Short: "Install bin/zen-prev from the pinned-prior release tarball",
+		Short: "Install bin/hades-prev from the pinned-prior release tarball",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
@@ -64,7 +64,7 @@ func safetynetPrevShowCmd() *cobra.Command {
 func safetynetPrevExecCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "exec <cmd> [args...]",
-		Short: "Run a one-shot command through bin/zen-prev",
+		Short: "Run a one-shot command through bin/hades-prev",
 
 		DisableFlagParsing: true,
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS aggregation_windows (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     layer       INTEGER NOT NULL,   -- 2=L2, 3=L3, 4=L4 (Layer enum)
     status      TEXT    NOT NULL CHECK(status IN ('open','closed')),
-    opened_at   INTEGER NOT NULL,   -- UTC unix seconds (invariant)
+    opened_at   INTEGER NOT NULL,   -- UTC unix seconds (inv-hades-005)
     closed_at   INTEGER,            -- NULL while open
     event_count INTEGER NOT NULL DEFAULT 0
 );

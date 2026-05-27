@@ -44,7 +44,7 @@ func ResolveLocation(spikeOutcome bool) (Location, error) {
 
 	if spikeOutcome {
 		return Location{
-			Path: filepath.Join(repoRoot, ".hermes", "plugins", "zen-swarm"),
+			Path: filepath.Join(repoRoot, ".hermes", "plugins", "hades-system"),
 			Kind: LocationKindProjectScope,
 		}, nil
 	}
@@ -55,13 +55,13 @@ func ResolveLocation(spikeOutcome bool) (Location, error) {
 	}
 	slug := Slug(repoRoot)
 	return Location{
-		Path: filepath.Join(home, ".hermes", "plugins", "zen-swarm-"+slug),
+		Path: filepath.Join(home, ".hermes", "plugins", "hades-system-"+slug),
 		Kind: LocationKindUserScope,
 	}, nil
 }
 
 func repoRootDir() (string, error) {
-	if override := os.Getenv("ZEN_REPO_ROOT_OVERRIDE"); override != "" {
+	if override := os.Getenv("HADES_REPO_ROOT_OVERRIDE"); override != "" {
 		return override, nil
 	}
 	cwd, err := os.Getwd()

@@ -48,7 +48,7 @@ func NewColdArchiveWorker(
 		endpoint:   endpoint,
 		tesseraDirFor: func(projectID string) string {
 			home, _ := os.UserHomeDir()
-			return filepath.Join(home, ".local", "share", "zen-swarm", "projects", projectID, "audit", "tessera")
+			return filepath.Join(home, ".local", "share", "hades-system", "projects", projectID, "audit", "tessera")
 		},
 		doctrineFor: func(string) string { return "max-scope" },
 		onFailure:   func(string, string, error) {},
@@ -97,7 +97,7 @@ func (w *ColdArchiveWorker) processOne(ctx context.Context, ev SealEvent) error 
 	}
 
 	if strings.EqualFold(w.doctrineFor(ev.ProjectID), "capa-firewall") {
-		bucket := "zen-swarm-audit-" + ev.ProjectID
+		bucket := "hades-system-audit-" + ev.ProjectID
 		key := "cold-archive/" + TarballNameFor(ev.PartitionID)
 		retentionArgs := []string{
 			"s3api", "put-object-retention",
@@ -182,5 +182,5 @@ func TarballNameFor(partitionID string) string {
 }
 
 func S3KeyForColdArchive(projectID, partitionID string) string {
-	return "s3://zen-swarm-audit-" + projectID + "/cold-archive/" + TarballNameFor(partitionID)
+	return "s3://hades-system-audit-" + projectID + "/cold-archive/" + TarballNameFor(partitionID)
 }

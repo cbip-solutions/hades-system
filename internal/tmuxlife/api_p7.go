@@ -4,7 +4,7 @@
 // This file extends the C-1..C-13 production API with aliases and
 // alias-typed convenience wrappers consumed by:
 // - HTTP handlers (internal/daemon/handlers/sessions_p7.go)
-// - daemon bootstrap (cmd/zen-swarm-ctld/main.go)
+// - daemon bootstrap (cmd/hades-ctld/main.go)
 // - chaos tests (tests/chaos/tmux_health_*_test.go)
 //
 // review CRITICAL #5 reconciliation (2026-05-01): and
@@ -16,7 +16,7 @@
 // remain authoritative implementations; this file is the consumption-
 // side facade.
 //
-// Boundary: this file imports only
+// Boundary (inv-hades-031, inv-hades-122): this file imports only
 // internal/doctrine + standard library. NO internal/store import; the
 // in-memory SessionStore implementation here is for chaos tests +
 // daemon-bootstrap fallback when the persistence-backed store is not

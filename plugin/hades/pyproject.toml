@@ -53,7 +53,7 @@ target-version = "py311"
 # the release design release track I-3 scope expansion: hooks/ + commands/ are now lint
 # targets alongside renderers/ + afk/. providers/ + transports/ remain
 # excluded (pre-the release design typing/lint debt that the legacy modules
-# carry; the release design 'zen migrate' owns the rewrite + lint widening).
+# carry; the release design 'hades migrate' owns the rewrite + lint widening).
 extend-exclude = [
   "providers/",
   "transports/",

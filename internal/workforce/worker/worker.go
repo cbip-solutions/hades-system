@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrNilWorktreePath = errors.New("worker: worktreePath must be non-empty (inv-zen-087: Plan 5 WorktreePool owns allocation; Plan 4 is consumer-only)")
+	ErrNilWorktreePath = errors.New("worker: worktreePath must be non-empty (inv-hades-087: Plan 5 WorktreePool owns allocation; Plan 4 is consumer-only)")
 
 	// ErrNilSession is returned (and panicked) by Worker constructors when
 	// the subprocess.Session is nil. SubprocessManager.SpawnEphemeral

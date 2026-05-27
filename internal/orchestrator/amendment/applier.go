@@ -49,14 +49,14 @@ func (execGitRunner) Run(ctx context.Context, dir string, args ...string) error 
 }
 
 // ApplierConfig wires the AmendmentApplier. RepoRoot must be the
-// project root containing zenswarm.toml + architecture records
+// project root containing hadessystem.toml + architecture records
 //
 // ReloadAwaiter is OPTIONAL. When non-nil,
 // ApplyWithValidation calls NotifyForceAndWait(path, ReloadWaitTimeout)
 // after the inner Apply commit lands and synchronously awaits the
 // matching DoctrineReloaded event. On timeout, emits
 // DoctrineWatcherStalled and returns nil (the apply itself succeeded;
-// reload-wait is operator-visibility per invariant atomicity).
+// reload-wait is operator-visibility per inv-hades-094 atomicity).
 //
 // When nil, ApplyWithValidation falls through to the existing
 // fire-and-forget ReloadSignal.Reload(ctx) path ( semantics
@@ -148,10 +148,10 @@ func (a *AmendmentApplier) Apply(ctx context.Context, adrID int, operator string
 		_ = a.rejectADR(ctx, adrID, proposed, "validate_failed", err.Error())
 		return fmt.Errorf("ADR-%04d validate: %w", adrID, err)
 	}
-	tomlPath := filepath.Join(a.cfg.RepoRoot, "zenswarm.toml")
+	tomlPath := filepath.Join(a.cfg.RepoRoot, "hadessystem.toml")
 	pre, err := os.ReadFile(tomlPath)
 	if err != nil {
-		return fmt.Errorf("read zenswarm.toml: %w", err)
+		return fmt.Errorf("read hadessystem.toml: %w", err)
 	}
 	preHash := sha256Hex(pre)
 
@@ -171,7 +171,7 @@ func (a *AmendmentApplier) Apply(ctx context.Context, adrID int, operator string
 	commitMsg := fmt.Sprintf(
 		"doctrine(amendment): apply ADR-%04d (operator=%s)\n\nADR=%s\npre_toml_sha256=%s",
 		adrID, operator, filepath.Base(acceptedPath), preHash)
-	if err := a.cfg.Git.Run(ctx, a.cfg.RepoRoot, "add", "zenswarm.toml", "docs/decisions"); err != nil {
+	if err := a.cfg.Git.Run(ctx, a.cfg.RepoRoot, "add", "hadessystem.toml", "docs/decisions"); err != nil {
 		_ = os.WriteFile(tomlPath, pre, 0o644)
 		_ = os.Rename(acceptedPath, proposed)
 		return fmt.Errorf("git add: %w", err)
@@ -213,10 +213,10 @@ func (a *AmendmentApplier) ApplyTransacted(ctx context.Context, adrID int, opera
 		_ = a.rejectADR(ctx, adrID, proposed, "validate_failed", err.Error())
 		return fmt.Errorf("ADR-%04d validate: %w", adrID, err)
 	}
-	tomlPath := filepath.Join(a.cfg.RepoRoot, "zenswarm.toml")
+	tomlPath := filepath.Join(a.cfg.RepoRoot, "hadessystem.toml")
 	pre, err := os.ReadFile(tomlPath)
 	if err != nil {
-		return fmt.Errorf("read zenswarm.toml: %w", err)
+		return fmt.Errorf("read hadessystem.toml: %w", err)
 	}
 	preHash := sha256Hex(pre)
 
@@ -234,7 +234,7 @@ func (a *AmendmentApplier) ApplyTransacted(ctx context.Context, adrID int, opera
 	commitMsg := fmt.Sprintf(
 		"doctrine(amendment): apply ADR-%04d (operator=%s)\n\nADR=%s\npre_toml_sha256=%s",
 		adrID, operator, filepath.Base(acceptedPath), preHash)
-	if err := a.cfg.Git.Run(ctx, a.cfg.RepoRoot, "add", "zenswarm.toml", "docs/decisions"); err != nil {
+	if err := a.cfg.Git.Run(ctx, a.cfg.RepoRoot, "add", "hadessystem.toml", "docs/decisions"); err != nil {
 		_ = os.WriteFile(tomlPath, pre, 0o644)
 		_ = os.Rename(acceptedPath, proposed)
 		return fmt.Errorf("git add: %w", err)

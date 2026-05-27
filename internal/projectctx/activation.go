@@ -6,7 +6,7 @@
 // canonical project_id from canonicalPath, looks up the alias in the
 // store, detects mv if applicable, and INSERTs or UPDATEs as needed.
 //
-// invariant + invariant: Activate operates against the
+// inv-hades-031 + inv-hades-122: Activate operates against the
 // ProjectStore interface; the concrete adapter (internal/daemon/
 // projectctxadapter) is the ONLY package crossing the projectctx /
 // store boundary.

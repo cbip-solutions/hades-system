@@ -10,8 +10,8 @@ The runtime model below is the supported architecture for HADES v1.0.
 
 | Layer | Component | Responsibility |
 | --- | --- | --- |
-| Operator entry points | `hades`, `zen`, TUI, Hermes plugin | Human-facing command, status, task-flow, and review surfaces. |
-| Local control plane | `zen-swarm-ctld` daemon | Queue ownership, auth, subsystem lifecycle, local HTTP, audit emission, and recovery hooks. |
+| Operator entry points | `hades`, TUI, Hermes plugin | Human-facing command, status, task-flow, and review surfaces. |
+| Local control plane | `hades-ctld` daemon | Queue ownership, auth, subsystem lifecycle, local HTTP, audit emission, and recovery hooks. |
 | Tool boundary | MCP servers | Narrow tool contracts for research, budget, audit review, and SSH execution. |
 | Execution engine | Orchestrator packages | Worktree leases, task dispatch, review flow, merge decisions, scheduling, and autonomy controls. |
 | Model routing | Provider registry and profiles | Provider selection, fallback cascades, rate-card metadata, budget controls, and optional sidecar registration. |
@@ -57,8 +57,7 @@ they do not own durable orchestration state.
 ## Primary Interfaces
 
 - `hades`: preferred operator-facing entry point.
-- `zen`: compatibility CLI with the full command surface.
-- `zen-swarm-ctld`: daemon binary.
+- `hades-ctld`: daemon binary.
 - `plugin/hades`: Hermes plugin, slash-command handlers, hooks, and renderers.
 - `mcp/*`: MCP server implementations.
 - `configs/*`: runtime configuration examples.

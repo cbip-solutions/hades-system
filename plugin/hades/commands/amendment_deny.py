@@ -14,8 +14,8 @@ The reason arg is required. Denial is a doctrinal NO; the rationale is load-bear
 ## 2. POST to daemon
 
 ```bash
-# pending endpoint registration: amendment deny (POST) anchored via invariant
-curl --unix-socket /tmp/zen-swarm.sock \\
+# pending endpoint registration: amendment deny (POST) anchored via inv-hades-072
+curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
      -d '{{"reason":"{reason}"}}' \\
@@ -32,7 +32,7 @@ Expected response:
 ```
 Amendment {amendment_id} DENIED.
 Reason: {reason}
-Audit event: zen://audit/<audit_event_id>
+Audit event: hades://audit/<audit_event_id>
 Denied at: <denied_at>
 ```
 
@@ -49,7 +49,7 @@ Same as /amendment-ack — operator's reason MUST NOT contain Claude/Anthropic/A
 ## Cross-references
 
 - the release design + the release design amendment lifecycle
-- invariant amendment audit chain anchor
+- inv-hades-072 amendment audit chain anchor
 - /amendment-list, /amendment-show, /amendment-ack
 """
 

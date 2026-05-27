@@ -2,7 +2,7 @@
 // Package ecosystem — reranker_bge.go
 //
 // BGE-reranker-v2-m3 cross-encoder reranker (release Task D-3 per
-// spec §2.6 Q6=A + invariant).
+// spec §2.6 Q6=A + inv-hades-198).
 //
 // # Model
 //
@@ -31,7 +31,7 @@
 //
 // # Latency invariants
 //
-// invariant: p95 ≤300ms for 100 candidates on M4 MPS. Enforced via
+// inv-hades-198: p95 ≤300ms for 100 candidates on M4 MPS. Enforced via
 // reranker_bge_bench_integration_test.go (build tag `integration`).
 //
 // # Goroutine safety
@@ -279,7 +279,7 @@ func jaccardSet(a, b map[string]struct{}) float64 {
 }
 
 func bgeModelPathFromEnv() (string, bool) {
-	v := os.Getenv("ZEN_BGE_MODEL_PATH")
+	v := os.Getenv("HADES_BGE_MODEL_PATH")
 	return v, v != ""
 }
 
@@ -308,14 +308,14 @@ func resolveBGEModelPath(explicit string) string {
 	if explicit != "" {
 		return explicit
 	}
-	if env := os.Getenv("ZEN_BGE_MODEL_PATH"); env != "" {
+	if env := os.Getenv("HADES_BGE_MODEL_PATH"); env != "" {
 		return env
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return ""
 	}
-	return filepath.Join(home, ".local", "share", "zen-swarm", "models", "bge-reranker-v2-m3.onnx")
+	return filepath.Join(home, ".local", "share", "hades-system", "models", "bge-reranker-v2-m3.onnx")
 }
 
 func ResolveBGEModelPath(explicit string) string {

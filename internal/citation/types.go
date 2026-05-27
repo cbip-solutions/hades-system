@@ -1,4 +1,4 @@
-// Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
+// Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
 package citation
 
@@ -131,7 +131,7 @@ func (e *Envelope) Validate() error {
 		return errors.New("envelope.Lane required")
 	}
 	if e.AuditEventID == "" {
-		return errors.New("envelope.AuditEventID required (zen://audit/<id> deep-link)")
+		return errors.New("envelope.AuditEventID required (hades://audit/<id> deep-link)")
 	}
 
 	if isNonFinite(e.Confidence) {
@@ -171,7 +171,7 @@ func isNonFinite(f float64) bool {
 }
 
 func (e *Envelope) AuditEventURL() string {
-	return "zen://audit/" + e.AuditEventID
+	return "hades://audit/" + e.AuditEventID
 }
 
 // Renderer is the substrate interface implemented by markdown_fallback.go

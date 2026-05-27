@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// specs_sync.go — release Task F-5 subcommand `zen specs sync`.
+// specs_sync.go — release Task F-5 subcommand `hades specs sync`.
 //
 // Calls POST /v1/knowledge/ecosystem/specs-sync to re-index openspec/specs/
 // into the ecosystem.db RAG store. Renders the daemon's chunks/specs
 // counts + elapsed-ms summary.
 //
 // The daemon-side handler is wired in ; ships the CLI
-// surface so operators can plug into the unified `zen specs *` family
+// surface so operators can plug into the unified `hades specs *` family
 // before the route lands. Calling against a daemon that does not yet
 // register the route returns 404 — classifySpecsError maps that to
 // ErrRecoverable with an operator-facing hint.
@@ -79,8 +79,8 @@ changed-only); --full forces a complete rebuild.
 Phase F ships the CLI surface; the daemon-side handler is wired in
 Phase G. Against a daemon without the route, sync returns exit 1 with
 a roadmap pointer (operator-recoverable).`,
-		Example: `  zen specs sync
-  zen specs sync --full`,
+		Example: `  hades specs sync
+  hades specs sync --full`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
 			ctx, cancel := context.WithTimeout(cmd.Context(), specsSyncTimeout)

@@ -105,10 +105,10 @@ func (r *Router) RouteCall(ctx context.Context, req RouteRequest) (Verdict, erro
 		r.daemonBaseURL+"/v1/messages", bytes.NewReader(bodyBytes))
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Authorization", "Bearer "+r.authToken)
-	httpReq.Header.Set("X-Zen-Profile", "audit-reviewer")
-	httpReq.Header.Set("X-Zen-Family-Constraint", req.ReviewerFamily)
+	httpReq.Header.Set("X-HADES-Profile", "audit-reviewer")
+	httpReq.Header.Set("X-HADES-Family-Constraint", req.ReviewerFamily)
 
-	httpReq.Header.Set("X-Zen-Model-Hint", req.ReviewerModel)
+	httpReq.Header.Set("X-HADES-Model-Hint", req.ReviewerModel)
 
 	resp, err := r.httpClient.Do(httpReq)
 	if err != nil {

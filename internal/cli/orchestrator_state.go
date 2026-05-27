@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — orchestrator_state.go.
 //
-// `zen orchestrator state` shows the current state-machine snapshot
+// `hades orchestrator state` shows the current state-machine snapshot
 // (session id, state, mode, background goroutine count, recent
 // transitions). Routes via the daemon HTTP surface from
 // internal/daemon/handlers/orchestrator_plan5.go.

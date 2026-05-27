@@ -28,7 +28,7 @@ var ErrPythonHookManualMigration = errors.New(
 		"Hermes plugin format requires Python callbacks of signature fn(**kwargs) -> dict | None; " +
 		"the migration tool cannot safely transform arbitrary Python hook bodies (mismatched control flow, " +
 		"missing entry-point detection). Operator options: (a) re-implement the hook as bash and re-run migrate, " +
-		"or (b) port to the Hermes callback shape manually and drop the resulting .py into plugin/zen-swarm/hooks/")
+		"or (b) port to the Hermes callback shape manually and drop the resulting .py into plugin/hades-system/hooks/")
 
 func writeHook(path string, e mapping.PlanEntry) error {
 	if len(e.BodyBytes) == 0 {
@@ -62,7 +62,7 @@ func renderHookWrapper(event, sidecarBasename string) string {
 	ident := pyIdentFromCommandName(event)
 	sb := strings.Builder{}
 	sb.WriteString("# SPDX-License-Identifier: MIT\n")
-	sb.WriteString("# Imported by `zen migrate claude-code`.\n")
+	sb.WriteString("# Imported by `hades migrate claude-code`.\n")
 	sb.WriteString("# Event: ")
 	sb.WriteString(event)
 	sb.WriteString(" (Hermes VALID_HOOKS canonical, post-SOTA-5).\n")

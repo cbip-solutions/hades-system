@@ -26,7 +26,7 @@
 // both surfaces (dispatched-without-checkpoint AND worker-died-with-
 // no-recovery) is redispatched once.
 //
-// invariant corruption budget (N=5): if the replay scan encounters
+// inv-hades-095 corruption budget (N=5): if the replay scan encounters
 // more than 5 records whose payload fails to Decode, the whole replay
 // fails closed with HardPause=true and the OrchestratorRestoreFromReplay
 // audit row records the breach. The bound is per-call (Option B from
@@ -104,7 +104,7 @@ func (r *RecoveryEngine) ReconstructInFlight(ctx context.Context, sessionID stri
 
 	if corruptCount > corruptionBudget {
 		plan.HardPause = true
-		plan.Reason = fmt.Sprintf("inv-zen-095 corruption budget breached: %d decode failures", corruptCount)
+		plan.Reason = fmt.Sprintf("inv-hades-095 corruption budget breached: %d decode failures", corruptCount)
 		r.emitRestoreFromReplay(ctx, plan, len(records), corruptCount)
 		return plan, nil
 	}

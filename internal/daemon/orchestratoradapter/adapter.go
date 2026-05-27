@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package orchestratoradapter is the invariant boundary bridge between
+// Package orchestratoradapter is the inv-hades-089 boundary bridge between
 // internal/orchestrator/* and internal/store. It is the ONLY package in
 // the daemon binary that imports BOTH internal/orchestrator/... AND
 // internal/store. The orchestrator subsystems consume small persistence-
@@ -31,10 +31,10 @@
 // - worktreepool.LeaseStore — there is NO such interface;
 // leases are in-memory only (warm slice + leased map).
 //
-// Inv-zen-102 cost-ledger isolation: this adapter MUST NOT write the
+// Inv-hades-102 cost-ledger isolation: this adapter MUST NOT write the
 // cost_ledger table directly. All cost-ledger writes flow through release
 // dispatcher → internal/daemon/dispatcheradapter. Compliance test in
-// tests/compliance/inv_zen_102_cost_ledger_isolation_test.go.
+// tests/compliance/inv_hades_102_cost_ledger_isolation_test.go.
 //
 // Concurrency every public method takes ctx; the adapter holds a
 // per-session counter behind a sync.Mutex for the int64 event_id

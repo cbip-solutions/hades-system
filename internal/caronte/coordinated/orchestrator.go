@@ -5,7 +5,7 @@
 //
 // 1. capa-firewall gate: b.Workspace.AuthorizeProjects(scope) → on
 // err, emit EvtFederatedQueryDenied audit row + return the error
-// (wrapped). The chokepoint invariant boundary: even denied
+// (wrapped). The chokepoint inv-hades-269 boundary: even denied
 // access produces exactly ONE audit leaf (the denial trail).
 //
 // 2. oracle decision: c.Autonomy.Decision(b) → DispatchMode.
@@ -30,7 +30,7 @@
 // 4b. Surface branch: build the structured recommendation via
 // buildSurfaceMessage (modes.go); DispatchedRepos remains empty.
 //
-// 5. audit emit: emitAuditFn(ctx,
+// 5. audit emit (the chokepoint — inv-hades-269): emitAuditFn(ctx,
 // c.Audit, federation.Event{Type: EvtCoordinatedDispatch,
 // WorkspaceID b.Change.WorkspaceID, Payload: <canonical-json>,
 // OccurredAt now}) → on err, RETURN err (defense-in-depth: a
@@ -46,7 +46,7 @@
 // 7. assemble + return DispatchResult{Mode, DispatchedRepos,
 // SurfaceMessage, AuditID}.
 //
-// Boundary discipline: this file imports
+// Boundary discipline (inv-hades-270): this file imports
 // - context, encoding/json, errors, fmt, sort, sync, time (stdlib)
 // - github.com/cbip-solutions/hades-system/internal/audit/tessera (LeafID type
 // + *Adapter field type)
@@ -56,11 +56,11 @@
 // ContractFixAutonomyOracle interface — NOT
 // hra/merge/confirmation_policy)
 // - github.com/cbip-solutions/hades-system/internal/orchestrator/worktreepool
-// (Pool interface — the SOLE release/6 bridge per invariant's
+// (Pool interface — the SOLE release/6 bridge per inv-hades-270's
 // capability-detect carve-out)
 // It does NOT import internal/orchestrator/hra,
 // internal/orchestrator/merge, internal/orchestrator/confirmation_policy
-// — the invariant AST scan asserts this for the WHOLE coordinated/
+// — the inv-hades-270 AST scan asserts this for the WHOLE coordinated/
 // package import set.
 
 package coordinated
@@ -90,7 +90,7 @@ var ErrCoordinatorNoOracle = errors.New("coordinated: Autonomy oracle not wired"
 
 // ErrCoordinatorNoAudit indicates the Coordinator was constructed
 // without an Audit adapter. Dispatch returns this error before any side
-// effect — every dispatch MUST emit an audit row per invariant (the
+// effect — every dispatch MUST emit an audit row per inv-hades-269 (the
 // single-call-site chokepoint guarantee), so a nil Audit is a wiring
 // bug.
 //

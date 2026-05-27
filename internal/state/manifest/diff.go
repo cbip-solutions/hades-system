@@ -72,7 +72,7 @@ func (d *Differ) Verify(
 
 			report.AutoDriftPaths = []string{"<file-missing>"}
 			report.Recommendations = append(report.Recommendations,
-				"docs/system-state.toml is missing; run `zen state regenerate` to create it.")
+				"docs/system-state.toml is missing; run `hades state regenerate` to create it.")
 			return report, nil
 		}
 		return report, fmt.Errorf("differ read manifest: %w", err)
@@ -83,7 +83,7 @@ func (d *Differ) Verify(
 
 		report.AutoDriftPaths = []string{"<malformed-toml>"}
 		report.Recommendations = append(report.Recommendations,
-			"docs/system-state.toml fails TOML decode; restore from VCS or run `zen state regenerate`.")
+			"docs/system-state.toml fails TOML decode; restore from VCS or run `hades state regenerate`.")
 		return report, nil
 	}
 
@@ -99,7 +99,7 @@ func (d *Differ) Verify(
 	sort.Strings(report.AutoDriftPaths)
 	if len(report.AutoDriftPaths) > 0 {
 		report.Recommendations = append(report.Recommendations,
-			fmt.Sprintf("auto-derive drift detected on paths: %s; run `zen state regenerate`.",
+			fmt.Sprintf("auto-derive drift detected on paths: %s; run `hades state regenerate`.",
 				strings.Join(report.AutoDriftPaths, ", ")))
 	}
 
@@ -109,7 +109,7 @@ func (d *Differ) Verify(
 			report.FreshnessExceeded = true
 			report.Recommendations = append(report.Recommendations,
 				fmt.Sprintf(
-					"docs/system-state.toml is %s old (threshold %s); run `zen state regenerate` or pin a manual field with --reason to extend the freshness lease.",
+					"docs/system-state.toml is %s old (threshold %s); run `hades state regenerate` or pin a manual field with --reason to extend the freshness lease.",
 					report.StoredAge.Truncate(time.Hour),
 					FreshnessThreshold,
 				))

@@ -14,7 +14,7 @@
 //
 // Persistence is decoupled via the StreamPersist interface so unit tests
 // run without SQLite. The production adapter lives in
-// internal/daemon/workforceadapter/stream_adapter.go.
+// internal/daemon/workforceadapter/stream_adapter.go (inv-hades-031).
 //
 // Background goroutines (per spec §3.6):
 // - One ticker per layer pair (L2→L3, L3→L4) for window-flush.
@@ -116,7 +116,7 @@
 // Persistence errors are best-effort: they do NOT cause Publish to
 // fail (the event remains in w.events and is carried by the next
 // flush). They DO surface via OnPersistError so operators see
-// degradation. invariant (durability via WAL + flush) is satisfied
+// degradation. inv-hades-073 (durability via WAL + flush) is satisfied
 // because the in-memory slice + flush batch path is the authoritative
 // delivery channel.
 package stream

@@ -52,7 +52,7 @@ func AllFileTypes() []FileType {
 // Extension-hook fields (AuditChainAnchor, EcosystemJoinKeys,
 // CaronteSymbolRefs) ship as sql.NullString so "release / release /
 // caronte has not yet filled this" is structurally distinct from "filled
-// with the empty string". Per invariant: release INSERT statements MUST
+// with the empty string". Per inv-hades-130: release INSERT statements MUST
 // NEVER populate these three fields. Compliance test enforces.
 type Doc struct {
 	FilePath        string
@@ -70,7 +70,7 @@ type Doc struct {
 	CaronteSymbolRefs sql.NullString
 }
 
-const IndexPath = "~/.cache/zen-swarm/knowledge-index/index.db"
+const IndexPath = "~/.cache/hades-system/knowledge-index/index.db"
 
 var userHomeDirFn = os.UserHomeDir
 
@@ -82,7 +82,7 @@ func ResolveIndexPath() (string, error) {
 	if home == "" {
 		return "", errors.New("knowledge: empty home dir")
 	}
-	return filepath.Join(home, ".cache", "zen-swarm", "knowledge-index", "index.db"), nil
+	return filepath.Join(home, ".cache", "hades-system", "knowledge-index", "index.db"), nil
 }
 
 const KnowledgeIndexedEventName = "KnowledgeIndexed"

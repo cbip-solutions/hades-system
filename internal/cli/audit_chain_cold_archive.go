@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain_cold_archive.go.
 //
-// `zen audit-chain cold-archive` manages the cold storage tier for archived
+// `hades audit-chain cold-archive` manages the cold storage tier for archived
 // Tessera partitions (spec §6.1 Q5 A). Two leaf commands:
 //
 // ls List archived partitions (per-project, table by default)
@@ -66,8 +66,8 @@ for the specified project. Output columns: PARTITION (YYYY_MM), BYTES,
 ARCHIVED_AT (RFC3339), and CONTENT_HASH (for integrity spot-check).
 
 Endpoint: GET /v1/audit-chain/cold-archive/list`,
-		Example: `  zen audit-chain cold-archive ls --project zen-swarm
-  zen audit-chain cold-archive ls --project zen-swarm --json`,
+		Example: `  hades audit-chain cold-archive ls --project hades-system
+  hades audit-chain cold-archive ls --project hades-system --json`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if err := format.ValidateExclusive(cmd); err != nil {
 				return err
@@ -117,7 +117,7 @@ spec §6.5 privacy-by-default). Confirm only after verifying the partition
 tag and project ID are correct.
 
 Both --partition (format YYYY_MM) and --project are required.`,
-		Example: `  zen audit-chain cold-archive restore --partition 2026_05 --project zen-swarm`,
+		Example: `  hades audit-chain cold-archive restore --partition 2026_05 --project hades-system`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			partition, _ := cmd.Flags().GetString("partition")
 			project, _ := cmd.Flags().GetString("project")

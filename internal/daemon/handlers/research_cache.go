@@ -20,8 +20,8 @@
 // unboundedly (post-review C-3 fix). The goroutine is stopped on
 // daemon shutdown via Stop().
 //
-// invariant: Unix socket only — enforced at server.go listener level.
-// invariant: This file never imports internal/store directly.
+// inv-hades-001: Unix socket only — enforced at server.go listener level.
+// inv-hades-031: This file never imports internal/store directly.
 package handlers
 
 import (

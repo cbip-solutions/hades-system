@@ -4,15 +4,15 @@
 //
 // dispatches via the orchestrator → dispatcher → Tier 1 (bypass) /
 // Tier 2+ (OpenClaude) chain. release functionality preserved end-to-end:
-// Idempotency-Key auto-generation, X-Zen-Conversation-Id
+// Idempotency-Key auto-generation (inv-hades-058), X-HADES-Conversation-Id
 // extraction, multi-value header preservation (Anthropic-Beta etc).
 //
-// invariant (single-egress-point): this file MUST NOT call
+// inv-hades-080 (single-egress-point): this file MUST NOT call
 // bypass.Client.Forward directly. ALL LLM traffic flows through the
 // orchestrator. The dispatcher then chooses tier 1 vs tier 2+ and emits
 // CostEvents for the ledger.
 //
-// invariant (boundary): this file imports daemon/orchestrator (for
+// inv-hades-031 (boundary): this file imports daemon/orchestrator (for
 // the Call type) and providers (for TierResponse) but NOT internal/store
 // — persistence concerns sit on the dispatcher side via dispatcheradapter.
 package daemon
@@ -77,22 +77,22 @@ var hopByHopHeaders = map[string]struct{}{
 // - Constructs an orchestrator.Call:
 // Method=POST, Path=/v1/messages, Body=[]byte slurp,
 // IdempotencyKey=Idempotency-Key header or uuid.NewString(),
-// ConversationID=X-Zen-Conversation-Id (may be empty),
+// ConversationID=X-HADES-Conversation-Id (may be empty),
 // Model=parsed JSON "model" field (may be empty if unparseable —
 // non-fatal; backends fall back to req.Model when upstream omits it).
 // - Headers are flattened to map[string]string. Single-value headers
 // take v[0]; known multi-value headers (Anthropic-Beta, X-Forwarded-For,
 // etc. — see multiValueHeaders) are comma-joined per RFC 7230 §3.2.2.
-// Hop-by-hop and control-plane (Idempotency-Key, X-Zen-Conversation-Id)
+// Hop-by-hop and control-plane (Idempotency-Key, X-HADES-Conversation-Id)
 // headers are dropped — they live in the typed Call fields above.
-// - Forwards via the orchestrator which stamps X-Zen-* correlation
+// - Forwards via the orchestrator which stamps X-HADES-* correlation
 // headers, resolves the routing profile, and dispatches to Tier 1 /
 // Tier 2+ via the dispatcher. Per ADR-0008: release dispatcher chooses
 // tier-of-tier (in-house bypass vs OpenClaude substrate); provider-
 // level routing within Tier 2+ is OpenClaude's responsibility.
 // - Mirrors upstream status + headers verbatim, drops hop-by-hop on
 // the response side, echoes the resolved Idempotency-Key, and stamps
-// X-Zen-Tier-Used so clients (zen doctor, observability dashboards)
+// X-HADES-Tier-Used so clients (hades doctor, observability dashboards)
 // can see which tier handled the call.
 // - On orchestrator/dispatcher error: writes 502 Bad Gateway except
 // for ErrAllTiersUnavailable which writes 503 (graceful-degradation
@@ -103,7 +103,7 @@ var hopByHopHeaders = map[string]struct{}{
 // credentials at emission. redact module (internal/redact)
 // confirms zero-secret leakage on this path.
 //
-// invariant: this handler is the single egress point for /v1/messages.
+// inv-hades-080: this handler is the single egress point for /v1/messages.
 // It MUST NOT call bypass.Client.Forward directly — all LLM traffic flows
 // via the orchestrator → dispatcher chain.
 func NewAnthropicProxy(forwarder OrchestratorForwarder) http.HandlerFunc {
@@ -124,9 +124,9 @@ func NewAnthropicProxy(forwarder OrchestratorForwarder) http.HandlerFunc {
 		if idemKey == "" {
 			idemKey = uuid.NewString()
 		}
-		convID := r.Header.Get("X-Zen-Conversation-Id")
+		convID := r.Header.Get("X-HADES-Conversation-Id")
 
-		profile := r.Header.Get("X-Zen-Profile")
+		profile := r.Header.Get("X-HADES-Profile")
 
 		// Extract the requested model from the JSON body for cost-ledger
 		// attribution. Best-effort: a body that fails to parse
@@ -142,7 +142,7 @@ func NewAnthropicProxy(forwarder OrchestratorForwarder) http.HandlerFunc {
 			if _, hop := hopByHopHeaders[k]; hop {
 				continue
 			}
-			if k == "Idempotency-Key" || k == "X-Zen-Conversation-Id" || k == "X-Zen-Profile" {
+			if k == "Idempotency-Key" || k == "X-HADES-Conversation-Id" || k == "X-HADES-Profile" {
 				continue
 			}
 			if len(v) == 0 {
@@ -191,7 +191,7 @@ func NewAnthropicProxy(forwarder OrchestratorForwarder) http.HandlerFunc {
 		w.Header().Set("Idempotency-Key", idemKey)
 
 		if resp.TierUsed.String() != "" {
-			w.Header().Set("X-Zen-Tier-Used", resp.TierUsed.String())
+			w.Header().Set("X-HADES-Tier-Used", resp.TierUsed.String())
 		}
 		w.WriteHeader(resp.Status)
 

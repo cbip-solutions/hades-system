@@ -24,8 +24,8 @@ Wait for operator response before proceeding.
 ```bash
 REASON="{reason}"
 
-# pending endpoint registration: amendment ack (POST) anchored via invariant
-curl --unix-socket /tmp/zen-swarm.sock \\
+# pending endpoint registration: amendment ack (POST) anchored via inv-hades-072
+curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
      -d '{{"reason":"'"$REASON"'"}}' \\
@@ -44,9 +44,9 @@ After 200 OK:
 
 ```
 Amendment {amendment_id} acknowledged and applied.
-Audit event: zen://audit/<audit_event_id>
+Audit event: hades://audit/<audit_event_id>
 Applied at: <applied_at>
-Affected invariants: <inv-zen-XXX list>
+Affected invariants: <inv-hades-XXX list>
 ```
 
 If 422 with dependent amendments:
@@ -63,7 +63,7 @@ The reason text becomes part of audit chain. Operator's reason MUST NOT contain 
 ## Cross-references
 
 - the release design + the release design amendment lifecycle
-- invariant amendment audit chain anchor
+- inv-hades-072 amendment audit chain anchor
 - /amendment-list, /amendment-show, /amendment-deny
 """
 

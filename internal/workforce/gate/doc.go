@@ -18,7 +18,7 @@
 // a valid auth token (enforcement is in daemon/handlers, not here).
 // wires /v1/workforce/gate/{pause,resume} endpoints.
 //
-// Persistence is decoupled via GatePersist (invariant: gate/* never
+// Persistence is decoupled via GatePersist (inv-hades-031: gate/* never
 // imports internal/store). Production adapter: workforceadapter.GateAdapter.
 //
 // Consulted at three points (spec §2.2 + §3.3):

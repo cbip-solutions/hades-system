@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package cli — recap.go.
 //
-// `zen recap --since <duration>` walks past zen day archives in
-// `~/.config/zen-swarm/zen-day-*.md` (and `-eod.md`) within the
+// `hades recap --since <duration>` walks past hades day archives in
+// `~/.config/hades-system/hades-day-*.md` (and `-eod.md`) within the
 // supplied duration window and concatenates them into a single
 // chronological view. Useful for catching up after a vacation or
 // audit lookback per spec §6.1.
 //
 // Recap is filesystem-only: no daemon dependency, no network, no
 // HTTP transport. The command stands on its own so an operator can
-// run `zen recap --since 7d` even when the daemon is down (for
+// run `hades recap --since 7d` even when the daemon is down (for
 // post-incident audits, in particular). This is the same posture
 // described in spec lines 3635-3636 ("Lives standalone (no daemon
 // dependency) — recap reads filesystem archives directly").
@@ -30,14 +30,14 @@
 //
 // Filename grammar:
 //
-// Two shapes match the glob `zen-day-*.md`:
+// Two shapes match the glob `hades-day-*.md`:
 //
-// - `zen-day-YYYY-MM-DD.md` (morning brief)
-// - `zen-day-YYYY-MM-DD-eod.md` (EOD digest)
+// - `hades-day-YYYY-MM-DD.md` (morning brief)
+// - `hades-day-YYYY-MM-DD-eod.md` (EOD digest)
 //
 // Both are parsed via `time.Parse("2006-01-02",...)` against the
-// `YYYY-MM-DD` slice. Anything else (`zen-day-bogus.md`,
-// `zen-day-2026-13-99.md`, `zen-day-archive-foo.md`) is silently
+// `YYYY-MM-DD` slice. Anything else (`hades-day-bogus.md`,
+// `hades-day-2026-13-99.md`, `hades-day-archive-foo.md`) is silently
 // skipped.
 //
 // Sort chronological by parsed date primary; for same-date pairs
@@ -112,9 +112,9 @@ func NewRecapCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "recap",
-		Short: "Walk past zen day briefs in chronological order",
-		Long: `zen recap --since <duration> concatenates past zen day archives
-(~/.config/zen-swarm/zen-day-*.md) within the supplied window into a
+		Short: "Walk past hades day briefs in chronological order",
+		Long: `hades recap --since <duration> concatenates past hades day archives
+(~/.config/hades-system/hades-day-*.md) within the supplied window into a
 single chronological view. Default --since 24h.
 
 Duration grammar:
@@ -126,13 +126,13 @@ Recap is filesystem-only: no daemon required. Use this for vacation
 catch-up, post-incident audits, or sprint retrospectives where you
 need the rolled-up sequence of daily briefs without re-running them.`,
 		Example: `  # Default 24h window
-  zen recap
+  hades recap
 
   # Last week
-  zen recap --since 7d
+  hades recap --since 7d
 
   # Last 2 weeks
-  zen recap --since 2w`,
+  hades recap --since 2w`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			dur, err := parseRecapSince(since)
 			if err != nil {
@@ -142,7 +142,7 @@ need the rolled-up sequence of daily briefs without re-running them.`,
 			if err != nil {
 				return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("home dir: %w", err))
 			}
-			archiveDir := filepath.Join(home, ".config", "zen-swarm")
+			archiveDir := filepath.Join(home, ".config", "hades-system")
 			return runRecap(archiveDir, dur, time.Now, cmd.OutOrStdout())
 		},
 	}
@@ -158,7 +158,7 @@ type recapEntry struct {
 }
 
 func runRecap(archiveDir string, since time.Duration, nowFn func() time.Time, out io.Writer) error {
-	pattern := filepath.Join(archiveDir, "zen-day-*.md")
+	pattern := filepath.Join(archiveDir, "hades-day-*.md")
 	paths, err := filepath.Glob(pattern)
 	if err != nil {
 		return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("glob %q: %w", pattern, err))
@@ -199,7 +199,7 @@ func runRecap(archiveDir string, since time.Duration, nowFn func() time.Time, ou
 
 func filterAndParse(paths []string, cutoff time.Time) []recapEntry {
 	keep := make([]recapEntry, 0, len(paths))
-	const prefix = "zen-day-"
+	const prefix = "hades-day-"
 	for _, p := range paths {
 
 		base := filepath.Base(p)

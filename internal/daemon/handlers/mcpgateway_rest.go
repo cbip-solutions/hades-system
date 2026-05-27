@@ -42,7 +42,7 @@
 // callGatewayRaw (which returns the raw content-text bytes) rather than
 // callGateway (which parses the {hits} shape).
 //
-// invariant boundary: this file imports only stdlib. It does NOT import
+// inv-hades-031 boundary: this file imports only stdlib. It does NOT import
 // internal/caronte or internal/daemon/mcpgateway — the payload structs are
 // local anonymous types parsed from the JSON the gateway returns. The gateway
 // is consumed via the http.Handler interface threaded through
@@ -179,7 +179,7 @@ func CodegraphQueryREST(ctx MCPGatewayCtx) http.HandlerFunc {
 		if req.ProjectAlias != "" {
 			args["project_id"] = req.ProjectAlias
 		}
-		payload, status, err := callGateway(r.Context(), gw, "mcp_zen-swarm_caronte_query", args, r.Header)
+		payload, status, err := callGateway(r.Context(), gw, "mcp_hades-system_caronte_query", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -229,7 +229,7 @@ func ImpactREST(ctx MCPGatewayCtx) http.HandlerFunc {
 			args["project_id"] = req.ProjectAlias
 		}
 
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_impact", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_impact", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -278,7 +278,7 @@ func Context360REST(ctx MCPGatewayCtx) http.HandlerFunc {
 			args["project_id"] = req.ProjectAlias
 		}
 
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_context", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_context", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -333,7 +333,7 @@ func WikiREST(ctx MCPGatewayCtx) http.HandlerFunc {
 			args["regenerate"] = true
 		}
 
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_wiki", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_wiki", args, r.Header)
 		if err != nil {
 			if status == http.StatusNotImplemented || strings.Contains(err.Error(), "method not found") || strings.Contains(err.Error(), "not registered") {
 				http.Error(w, "wiki tool not registered in caronte subsystem", http.StatusServiceUnavailable)
@@ -379,7 +379,7 @@ func callGateway(
 		return caronteToolPayload{}, http.StatusInternalServerError, fmt.Errorf("new request: %w", err)
 	}
 	innerReq.Header.Set("Content-Type", "application/json")
-	for _, h := range []string{"X-Zen-Doctrine", "X-Zen-Mode", "X-Zen-Session-ID", "X-Zen-Project-ID"} {
+	for _, h := range []string{"X-HADES-Doctrine", "X-HADES-Mode", "X-HADES-Session-ID", "X-HADES-Project-ID"} {
 		if v := headers.Get(h); v != "" {
 			innerReq.Header.Set(h, v)
 		}
@@ -437,7 +437,7 @@ func callGatewayRaw(
 		return nil, http.StatusInternalServerError, fmt.Errorf("new request: %w", err)
 	}
 	innerReq.Header.Set("Content-Type", "application/json")
-	for _, h := range []string{"X-Zen-Doctrine", "X-Zen-Mode", "X-Zen-Session-ID", "X-Zen-Project-ID"} {
+	for _, h := range []string{"X-HADES-Doctrine", "X-HADES-Mode", "X-HADES-Session-ID", "X-HADES-Project-ID"} {
 		if v := headers.Get(h); v != "" {
 			innerReq.Header.Set(h, v)
 		}
@@ -646,7 +646,7 @@ func WhyREST(ctx MCPGatewayCtx) http.HandlerFunc {
 			args["project_id"] = req.ProjectAlias
 		}
 
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_get_why", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_get_why", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -728,7 +728,7 @@ func RiskREST(ctx MCPGatewayCtx) http.HandlerFunc {
 			args["project_id"] = req.ProjectAlias
 		}
 
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_get_risk", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_get_risk", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -779,7 +779,7 @@ func CochangeREST(ctx MCPGatewayCtx) http.HandlerFunc {
 			args["project_id"] = req.ProjectAlias
 		}
 
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_get_cochange", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_get_cochange", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -833,7 +833,7 @@ func ImplREST(ctx MCPGatewayCtx) http.HandlerFunc {
 			args["project_id"] = req.ProjectAlias
 		}
 
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_get_implementations", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_get_implementations", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -883,7 +883,7 @@ func HealthREST(ctx MCPGatewayCtx) http.HandlerFunc {
 			args["project_id"] = req.ProjectAlias
 		}
 
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_get_health", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_get_health", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return

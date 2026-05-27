@@ -263,10 +263,10 @@ func CapaFirewallBuiltin() Schema {
 		Gateway: GatewayAxis{
 
 			DisabledTools: []string{
-				"mcp_zen-swarm_caronte_query",
-				"mcp_zen-swarm_caronte_context",
-				"mcp_zen-swarm_caronte_impact",
-				"mcp_zen-swarm_research_agentic",
+				"mcp_hades-system_caronte_query",
+				"mcp_hades-system_caronte_context",
+				"mcp_hades-system_caronte_impact",
+				"mcp_hades-system_research_agentic",
 			},
 		},
 		SSHExec: SSHExecAxis{

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// specs_list.go — release Task F-5 subcommand `zen specs list`.
+// specs_list.go — release Task F-5 subcommand `hades specs list`.
 //
 // Pure filesystem read of openspec/specs/ — no daemon call. Walks the
 // directory for *.md files, extracts the first non-empty title-line,
@@ -123,8 +123,8 @@ func newSpecsListCmd(getDir specsDirResolver) *cobra.Command {
 Pure filesystem read — no daemon call (read-only boundary per spec §0.2).
 Missing directory prints "(no specs directory found)" without error so
 the command is safe to run on a fresh repo.`,
-		Example: `  zen specs list
-  zen specs list --format json | jq '.[].id'`,
+		Example: `  hades specs list
+  hades specs list --format json | jq '.[].id'`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return RunSpecsList(getDir(cmd), flags.Format, cmd.OutOrStdout())
 		},

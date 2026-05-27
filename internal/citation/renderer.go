@@ -1,4 +1,4 @@
-// Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
+// Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
 package citation
 
@@ -11,7 +11,7 @@ import (
 // ErrNoRendererMatch is returned by Dispatch when no platform-specific
 // renderer matches AND no markdown fallback is registered. Substrate
 // callers MUST register MarkdownFallback at init time to avoid this
-// (daemon bootstrap does so via cmd/zen-swarm-ctld).
+// (daemon bootstrap does so via cmd/hades-ctld).
 var ErrNoRendererMatch = errors.New("citation: no renderer registered (register MarkdownFallback as fallback)")
 
 type Registry struct {

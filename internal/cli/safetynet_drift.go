@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — safetynet_drift.go.
 //
-// `zen safetynet drift {run,history}` triggers and inspects the
+// `hades safetynet drift {run,history}` triggers and inspects the
 // doctrine-drift detector.
 package cli
 

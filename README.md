@@ -21,7 +21,7 @@ evaluate the system.
   review controls, and merge orchestration.
 - Tracks doctrine, confirmations, budgets, audit events, notifications, and
   recovery paths as first-class runtime surfaces.
-- Provides a terminal UX through `hades`, `zen`, `zen-swarm-ctld`, the TUI, and
+- Provides a terminal UX through `hades`, `hades-ctld`, the TUI, and
   the Hermes plugin.
 - Embeds Caronte for code-graph queries, blast-radius scoring, design-intent
   lookup, co-change analysis, and API-contract federation.
@@ -42,15 +42,15 @@ make test
 Start the daemon:
 
 ```bash
-bin/zen-swarm-ctld
+bin/hades-ctld
 ```
 
 Use the CLI:
 
 ```bash
 bin/hades status
-bin/zen doctor
-bin/zen doctor caronte
+bin/hades doctor
+bin/hades doctor caronte
 ```
 
 See [INSTALL.md](INSTALL.md) for platform prerequisites and packaging notes.
@@ -58,8 +58,7 @@ See [INSTALL.md](INSTALL.md) for platform prerequisites and packaging notes.
 ## Main Surfaces
 
 - `cmd/hades` - operator-facing command entry point.
-- `cmd/zen` - compatibility CLI with the full command surface.
-- `cmd/zen-swarm-ctld` - local daemon.
+- `cmd/hades-ctld` - local daemon.
 - `internal/daemon` - HTTP API, subsystem wiring, auth, and adapters.
 - `internal/orchestrator` - autonomous execution, worktree, review, and merge
   control.

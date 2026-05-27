@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package daemon is the zen-swarm-ctld HTTP server.
+// Package daemon is the hades-ctld HTTP server.
 //
-// The API contract is versioned at /v1/ and stays stable
+// The API contract is versioned at /v1/ (inv-hades-024) and stays stable
 // across plans 1-15. Handlers for endpoints whose behaviour is filled in
-// by later plans return 501 Not Implemented with an X-Zen-Plan header
+// by later plans return 501 Not Implemented with an X-HADES-Plan header
 // indicating which plan implements them. Every endpoint that exists in
 // the final product exists from day 1.
 package daemon
@@ -68,7 +68,7 @@ type Server struct {
 	// bypassFwd is the bypass-tier admin handle used ONLY by the
 	// /v1/bypass/* admin endpoints (status / probe / certs / pin /
 	// purge / etc.). It MUST NOT be consulted by /v1/messages — that
-	// route uses orchestratorFwd above per invariant. The handlers
+	// route uses orchestratorFwd above per inv-hades-080. The handlers
 	// package (handlers/bypass.go) consumes this via the Bypass()
 	// accessor + a structurally-typed local interface.
 	bypassFwd BypassAdmin
@@ -91,7 +91,7 @@ type Server struct {
 	paygResetCancel context.CancelFunc
 	paygResetDone   <-chan struct{}
 
-	// `zen orchestrator status / probe / history` commands. The breaker
+	// `hades orchestrator status / probe / history` commands. The breaker
 	// itself is constructed inside buildOrchestrator and is
 	// the SAME instance the dispatcher consults via PermitTier /
 	// RecordSuccess / RecordFailure. The Server holds a reference for
@@ -154,8 +154,8 @@ type Server struct {
 	// daemon-bearer auth (currently /v1/events/handoff_posted; future
 	// I-3..I-9 routes when plugin / external callers reach them).
 	// Constructed from the cleartext token persisted to
-	// ~/.config/zen-swarm/daemon-bearer.txt (mode 0600) by
-	// cmd/zen-swarm-ctld at Start; the cleartext is hashed once and
+	// ~/.config/hades-system/daemon-bearer.txt (mode 0600) by
+	// cmd/hades-ctld at Start; the cleartext is hashed once and
 	// discarded inside *auth.DaemonBearer (defense in depth).
 	//
 	// nil-safety: when SetDaemonBearer has not been called the
@@ -166,7 +166,7 @@ type Server struct {
 	// a Server can run without setting up the auth pipeline. Production
 	// MUST call SetDaemonBearer before Start() — the daemon main.go
 	// enforces this ordering and refuses to bind listeners otherwise
-	// .
+	// (inv-hades-131).
 	daemonBearer       *auth.DaemonBearer
 	bearerAuditEmitter auth.AuditEmitter
 
@@ -421,13 +421,13 @@ func (s *Server) registerRoutes() {
 	// POST /v1/events/handoff_posted — plugin-emitted HandoffPostedEvent
 	// consumed by EOD digest.
 	// Wrapped under requireDaemonBearer so the bearer middleware
-	// (Task I-1) gates the route at the invariant boundary; when
+	// (Task I-1) gates the route at the inv-hades-131 boundary; when
 	// daemonBearer is unset (test bring-up path) the helper falls
 	// open with a logged warning (production main.go enforces ordering).
 	//
 	// The functional handler factory + HandoffEmitter() accessor pattern
 	// makes the emitter-readiness gate at request-time (not
-	// registration-time), so cmd/zen-swarm-ctld can wire the emitter
+	// registration-time), so cmd/hades-ctld can wire the emitter
 	// AFTER s.New runs — mirrors the release accessor gate
 	// pattern.
 	s.mux.Handle("POST /v1/events/handoff_posted",
@@ -437,9 +437,9 @@ func (s *Server) registerRoutes() {
 	s.mux.HandleFunc("POST /v1/quiet/urgent-pause", handlers.QuietUrgentPauseHandler(s))
 	s.mux.HandleFunc("POST /v1/quiet/cancel", handlers.QuietCancelHandler(s))
 
-	s.mux.HandleFunc("POST /v1/zen-day/morning", handlers.DayMorningHandler(s))
-	s.mux.HandleFunc("POST /v1/zen-day/eod", handlers.DayEODHandler(s))
-	s.mux.HandleFunc("POST /v1/zen-day/check-pending", handlers.DayCheckPendingHandler(s))
+	s.mux.HandleFunc("POST /v1/hades-day/morning", handlers.DayMorningHandler(s))
+	s.mux.HandleFunc("POST /v1/hades-day/eod", handlers.DayEODHandler(s))
+	s.mux.HandleFunc("POST /v1/hades-day/check-pending", handlers.DayCheckPendingHandler(s))
 
 	s.mux.HandleFunc("POST /v1/knowledge/query", handlers.KnowledgeQueryHandler(s))
 	s.mux.HandleFunc("POST /v1/knowledge/reindex", handlers.KnowledgeReindexHandler(s))
@@ -611,7 +611,7 @@ func (s *Server) Bypass() any {
 }
 
 // SetCostCounters injects the in-memory cost counters cache (release Phase
-// C F-7). Called once at daemon boot in cmd/zen-swarm-ctld AFTER
+// C F-7). Called once at daemon boot in cmd/hades-ctld AFTER
 // buildOrchestrator has returned the dispatcheradapter.Adapter and the
 // caller has rebuilt counters from the ledger (RebuildFromLedger) +
 // started the hourly maintenance goroutine (StartHourlyMaintenance).
@@ -622,7 +622,7 @@ func (s *Server) Bypass() any {
 // before the daemon process exits. Nil is acceptable for tests that do
 // not exercise the cost-counters path.
 //
-// invariant contract: this MUST be called BEFORE the dispatcher
+// inv-hades-065 contract: this MUST be called BEFORE the dispatcher
 // accepts requests. If the daemon ever serves /v1/messages with a nil
 // costCounters, every WouldExceedCap call returns false regardless of
 // historical spend — caps would silently leak. Main.go enforces the
@@ -637,7 +637,7 @@ func (s *Server) SetCostCounters(cc *orchestrator.CostCounters, maintCancel cont
 }
 
 // SetRecoveryScheduler injects the circuit-breaker recovery scheduler
-// . Called once at daemon boot in cmd/zen-swarm-ctld
+// . Called once at daemon boot in cmd/hades-ctld
 // AFTER buildOrchestrator has returned the *RecoveryScheduler and main.go
 // has spawned its background goroutine via scheduler.Run(ctx).
 //
@@ -698,7 +698,7 @@ func (s *Server) OperatorGate() *gate.OperatorGate {
 }
 
 // SetPinOverrides injects the operator-facing pin override resolver
-// . Called once at daemon boot in cmd/zen-swarm-ctld
+// . Called once at daemon boot in cmd/hades-ctld
 // AFTER buildOrchestrator has returned the *PinOverrides and main.go has
 // spawned its TTL-sweep background goroutine via StartTTLSweep(ctx).
 //
@@ -709,7 +709,7 @@ func (s *Server) OperatorGate() *gate.OperatorGate {
 // the pin path.
 //
 // (CLI integration) consumes PinOverrides() to back the operator-
-// facing `zen orchestrator pin / unpin / list` commands; that wiring is
+// facing `hades orchestrator pin / unpin / list` commands; that wiring is
 // independent of this lifecycle setter.
 func (s *Server) SetPinOverrides(p *orchestrator.PinOverrides, cancel context.CancelFunc, done <-chan struct{}) {
 	s.mu.Lock()
@@ -762,7 +762,7 @@ func (s *Server) PaygSafety() *orchestrator.PaygSafety {
 
 // SetCircuitBreaker injects the per-provider circuit breaker (release
 // K-3 / release re-key). Called once at daemon boot in
-// cmd/zen-swarm-ctld AFTER buildOrchestrator has constructed and wired
+// cmd/hades-ctld AFTER buildOrchestrator has constructed and wired
 // the breaker into the dispatcher. The breaker decides at
 // Backend.Name() granularity (NOT the broad providers.Tier enum), so
 // two backends sharing one Tier (e.g. deepseek-direct +
@@ -800,7 +800,7 @@ func (s *Server) CircuitBreaker() *orchestrator.CircuitBreaker {
 
 // SetTiers injects the ordered list of providers.TierBackend the
 // dispatcher knows about. Called once at daemon
-// boot in cmd/zen-swarm-ctld AFTER buildOrchestrator returns. The order
+// boot in cmd/hades-ctld AFTER buildOrchestrator returns. The order
 // matches the dispatcher's failover order (Tier 1 first). The slice is
 // stored by reference; callers MUST NOT mutate it after handing it over.
 //
@@ -872,7 +872,7 @@ type CaronteEngineForDaemon interface {
 	// projectID MUST be canonical id_sha256 (alias→canonical resolution
 	// happens upstream — at the HTTP layer in handlers/caronte.go).
 	// Returns the handler-facing CaronteReindexReport for direct JSON
-	// round-trip. invariant.
+	// round-trip. inv-hades-273.
 	IndexProject(ctx context.Context, projectID string) (handlers.CaronteReindexReport, error)
 
 	Close() error
@@ -891,7 +891,7 @@ func (s *Server) SetCaronteEngine(e CaronteEngineForDaemon) {
 // CaronteEngine returns the injected CaronteEngineForDaemon or nil (mirrors
 // MCPGateway()). nil before SetCaronteEngine has been called; callers MUST
 // guard for nil and degrade gracefully ( augment-lane repoint +
-// zen doctor caronte health are the canonical consumers).
+// hades doctor caronte health are the canonical consumers).
 func (s *Server) CaronteEngine() CaronteEngineForDaemon {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -1296,8 +1296,8 @@ func (s *Server) EcosystemHandler() handlers.EcosystemHandler {
 
 // SetDaemonBearer injects the daemon-bearer validator + audit emitter
 // . Called
-// once at daemon boot in cmd/zen-swarm-ctld AFTER the cleartext token
-// has been read from ~/.config/zen-swarm/daemon-bearer.txt (mode 0600);
+// once at daemon boot in cmd/hades-ctld AFTER the cleartext token
+// has been read from ~/.config/hades-system/daemon-bearer.txt (mode 0600);
 // tests that need to exercise the auth middleware inject a paired
 // (DaemonBearer, AuditEmitter) directly via the same setter.
 //
@@ -1306,8 +1306,8 @@ func (s *Server) EcosystemHandler() handlers.EcosystemHandler {
 // warning. This deterministic "boot race" posture matters for
 // integration tests + handler-level unit tests that don't want to
 // drag in the release audit pipeline. Production main.go MUST call
-// SetDaemonBearer BEFORE Start() per invariant; production paths
-// fail-closed at daemon-startup (see cmd/zen-swarm-ctld/main.go).
+// SetDaemonBearer BEFORE Start() per inv-hades-131; production paths
+// fail-closed at daemon-startup (see cmd/hades-ctld/main.go).
 //
 // The DaemonBearer hashes the cleartext once at construction
 // (auth.NewDaemonBearer) and discards the cleartext — defense in
@@ -1323,18 +1323,18 @@ func (s *Server) SetDaemonBearer(b *auth.DaemonBearer, emitter auth.AuditEmitter
 // middleware when SetDaemonBearer has been called; falls open
 // (handler runs unauthenticated) with a logged warning otherwise.
 //
-// The dynamic read (vs registration-time wrap) lets cmd/zen-swarm-ctld
+// The dynamic read (vs registration-time wrap) lets cmd/hades-ctld
 // inject the bearer AFTER s.New runs without route-registration
 // ordering tricks (mirrors the per-handler accessor gate pattern used
 // by ProjectStore / InboxStore / etc.).
 //
-// invariant contract: production main.go MUST call SetDaemonBearer
+// inv-hades-131 contract: production main.go MUST call SetDaemonBearer
 // BEFORE Start. The fall-open path exists ONLY for the test fixture
 // shape (httptest harnesses that don't want to construct a release
 // audit pipeline) and emits a single-line stderr warning so accidental
 // production deployment is loud, not silent.
 //
-// Inv-zen-031 boundary preserved: this helper imports
+// Inv-hades-031 boundary preserved: this helper imports
 // internal/daemon/auth which itself imports only
 // stdlib + golang.org/x/sys/unix; no internal/store import.
 func (s *Server) requireDaemonBearer(next http.Handler) http.Handler {
@@ -1411,7 +1411,7 @@ func (s *Server) Start() error {
 		// - internal/daemon/auth/unix_peer.go:78-79 (the contract)
 		// - internal/daemon/server_session_doctrine.go:122-126
 		// (the consumer)
-		// - invariant (peer-cred OR loopback gating)
+		// - inv-hades-131 (peer-cred OR loopback gating)
 		ConnContext: connContextWithPeerCred,
 	}
 	s.mu.Unlock()

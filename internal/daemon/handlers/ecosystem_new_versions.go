@@ -6,7 +6,7 @@
 // Queries the upstream registry for the named ecosystem (via
 // internal/research/cache.Revalidator-backed Source.FetchManifest on the
 // daemon side) and returns the versions newly published since the last
-// successful poll. The cron worker (cmd/zen-docs-cron) calls this every
+// successful poll. The cron worker (cmd/hades-docs-cron) calls this every
 // 6 hours; an empty list (no new versions) is a normal no-op return.
 //
 // Path parameter:

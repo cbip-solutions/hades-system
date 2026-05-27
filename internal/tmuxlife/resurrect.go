@@ -37,7 +37,7 @@ func (s Snapshot) IsValid() bool {
 // recent / latest.
 //
 // Operator-facing forensics: the path encodes the alias + timestamp so
-// `ls -1 ~/.config/zen-swarm/tmux-snapshots/` yields a chronological
+// `ls -1 ~/.config/hades-system/tmux-snapshots/` yields a chronological
 // browseable history. Stable across phases; do NOT change format
 // without a migration path for old snapshots.
 func SnapshotPath(dir, alias string, ts time.Time) string {

@@ -23,7 +23,7 @@ func runPreCommitDriftTo(ctx context.Context, d *Drift, n int, w io.Writer) int 
 			string(f.Severity), f.CommitSHA, f.Rule, f.Detail)
 	}
 	if rep.MaxSeverity == SeverityHard {
-		fmt.Fprintln(w, "drift hook: BLOCKED (inv-zen-096 — substrate drift severity=hard)")
+		fmt.Fprintln(w, "drift hook: BLOCKED (inv-hades-096 — substrate drift severity=hard)")
 		return 1
 	}
 	return 0

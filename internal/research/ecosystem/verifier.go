@@ -30,10 +30,10 @@
 // (sub-μs); LRU absorbs repeated cold-misses; live cmd is the cold-start
 // path with strict 24h TTL.
 //
-// invariant partial: Verify(symbols) hot path on stage-A is O(1) per
+// inv-hades-195 partial: Verify(symbols) hot path on stage-A is O(1) per
 // ref; goroutine-safe; bench in covers the symbol_index leaf.
 //
-// invariant (D-13): doctrine-knob can downgrade verify (default
+// inv-hades-205 (D-13): doctrine-knob can downgrade verify (default
 // doctrine skips stage C on cold misses) — see VerifierConfig.SkipStageC.
 //
 // Concurrency Verifier.Verify is goroutine-safe. A single mutex
@@ -137,14 +137,14 @@ type lruEntry struct {
 // Allowed shapes (D-5 fix-cycle 2):
 //
 // go "crypto/sha256.Sum256" "encoding/json.Marshal"
-// go modules "github.com/zen-swarm/zen" "k8s.io/api/core/v1.Pod"
+// go modules "github.com/hades-system/hades" "k8s.io/api/core/v1.Pod"
 // python "functools.partial" "asyncio"
 // typescript "react.useState"
 // rust "tokio::spawn" "std::async::spawn"
 //
 // Each segment starts with [A-Za-z_] and may contain [A-Za-z0-9_-]
 // thereafter. Hyphens are allowed mid-segment (npm + go-module names
-// commonly contain them, e.g., "zen-swarm") but never leading, so
+// commonly contain them, e.g., "hades-system") but never leading, so
 // argv-flag injection ("-x", "--registry=evil") is still rejected
 // structurally.
 //

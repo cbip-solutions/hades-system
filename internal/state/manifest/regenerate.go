@@ -43,7 +43,7 @@ func (r *Regenerator) Regenerate(ctx context.Context, fresh Manifest, existingPa
 	var existing Manifest
 	if _, decErr := toml.NewDecoder(bytes.NewReader(body)).Decode(&existing); decErr != nil {
 		// Existing TOML malformed: return ErrManifestInvalid.
-		// The regenerate-and-diff CI gate will surface
+		// The regenerate-and-diff CI gate (inv-hades-151) will surface
 		// the problem; we do NOT silently fall back to fresh-only values
 		// because that would constitute a T10 threat (silent manual-field loss).
 		return Manifest{}, fmt.Errorf("%w: parse %s: %v", ErrManifestInvalid, existingPath, decErr)
@@ -99,7 +99,7 @@ func (r *Regenerator) cachedManualPaths() ([]ManualFieldPath, error) {
 }
 
 type emitManifest struct {
-	ZenSwarm       ZenSwarmSection       `toml:"zen-swarm"`
+	HadesSystem    HadesSystemSection    `toml:"hades-system"`
 	Plans          PlansSection          `toml:"plans"`
 	Invariants     InvariantsSection     `toml:"invariants"`
 	Doctrines      DoctrinesSection      `toml:"doctrines"`
@@ -124,7 +124,7 @@ func stableManifest(m Manifest) emitManifest {
 		entries[k] = m.MCPs.Entries[k]
 	}
 	return emitManifest{
-		ZenSwarm:       m.ZenSwarm,
+		HadesSystem:    m.HadesSystem,
 		Plans:          m.Plans,
 		Invariants:     m.Invariants,
 		Doctrines:      m.Doctrines,

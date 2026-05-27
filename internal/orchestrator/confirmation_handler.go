@@ -10,7 +10,7 @@
 // downstream operator UI + release hash-chain replay can observe the
 // pause.
 //
-// Race-safety: all three side effects (state
+// Race-safety (inv-hades-093 spirit): all three side effects (state
 // transition, gate Pause, eventlog Append) execute under h.mu so that
 // concurrent RequestConfirmation calls see a single pendingRequest at a
 // time. Subsequent callers that arrive while a request is pending
@@ -26,9 +26,9 @@
 // so a cancelled caller-ctx does not block cleanup.
 //
 // Invariants
-// - invariant (race-safety): single pending request guarded by
+// - inv-hades-093 (race-safety): single pending request guarded by
 // h.pending under h.mu (full enforcement in F-3 ack/deny).
-// - invariant (boundary): this file does NOT import internal/store;
+// - inv-hades-031 (boundary): this file does NOT import internal/store;
 // it depends only on eventlog + workforce/gate.
 // - Privacy IMP-3 carry-forward: Summary + Alternatives strings are
 // emitted verbatim into the audit-trail event payload; callers MUST

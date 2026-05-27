@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — orchestrator_capture.go.
 //
-// `zen orchestrator capture` writes a deterministic JSONL of one
+// `hades orchestrator capture` writes a deterministic JSONL of one
 // session's events for offline replay (consumed by replay
 // tier + future debugging). Both --session-id and --output are
 // required; the daemon performs the actual streaming write.

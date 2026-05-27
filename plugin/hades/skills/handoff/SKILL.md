@@ -42,7 +42,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
    - Active plan/phase (if executing a plan)
    - Background subagents in flight (CRITICAL: non-recoverable across
      session ends — list them so operator can re-dispatch in next session)
-   - Pending operator actions (e.g., "operator must run `bin/zen bypass
+   - Pending operator actions (e.g., "operator must run `bin/hades bypass
      extract-config` interactively")
    - Suggested first-message for next session (specific, actionable;
      ideally a single-letter approval like `procede` or `y`)
@@ -97,7 +97,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
    docs(handoff): refresh post <brief-context>
    ```
 
-   Conventional commit, NO AI attribution. invariant gate enforces
+   Conventional commit, NO AI attribution. inv-hades-004 gate enforces
    automatically (pre_tool_call callback blocks if violated).
 
 5. **Operator decides**:

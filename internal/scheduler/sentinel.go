@@ -7,7 +7,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/doctrine"
 )
 
-// jitterDeterministicSentinel anchors invariant: Scheduler jitter
+// jitterDeterministicSentinel anchors inv-hades-120: Scheduler jitter
 // offset MUST be deterministic — hash(routine_id) % (10% × period),
 // capped at 15min recurring / 90s one-shot.
 //
@@ -19,10 +19,10 @@ import (
 // that ComputeJitter exists and matches its declared signature. Removing
 // or renaming ComputeJitter breaks the build at this site.
 func jitterDeterministicSentinel() bool {
-	return ComputeJitter("inv-zen-120-anchor", time.Hour) <= jitterRecurringCap
+	return ComputeJitter("inv-hades-120-anchor", time.Hour) <= jitterRecurringCap
 }
 
-// missPolicyDoctrineSentinel anchors invariant: Per-doctrine miss
+// missPolicyDoctrineSentinel anchors inv-hades-121: Per-doctrine miss
 // policy MUST map max-scope=CatchUpBounded, default=Skip,
 // capa-firewall=NotifyOnly; rate-limit 1/30s/project enforced.
 //
@@ -37,7 +37,7 @@ func jitterDeterministicSentinel() bool {
 // e.g. max-scope -> Skip would be caught both here at init time
 // (this var declaration short-circuits to false, the package-level
 // _sentinelsReferenced var is then false, but more importantly the
-// compliance test in tests/compliance/inv_zen_121_*.go also greps
+// compliance test in tests/compliance/inv_hades_121_*.go also greps
 // the call site).
 func missPolicyDoctrineSentinel() bool {
 	return DoctrineMissPolicy(doctrine.NameDefault) == MissPolicySkip &&
@@ -45,7 +45,7 @@ func missPolicyDoctrineSentinel() bool {
 		DoctrineMissPolicy(doctrine.NameCapaFirewall) == MissPolicyNotifyOnly
 }
 
-// dispatcherSingleEgressSentinel anchors invariant / invariant
+// dispatcherSingleEgressSentinel anchors inv-hades-123 / inv-hades-080
 // (scheduler slice): scheduler.Fire MUST dispatch via the Dispatcher
 // interface only; never imports internal/providers or
 // private-tier1-module.

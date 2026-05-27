@@ -3,7 +3,7 @@
 //
 // Six methods + supporting wire types for the daemon's
 // /v1/schedules/* surface backing the operator-facing
-// `zen schedule {routine, task, loop, history, queue}` CLI:
+// `hades schedule {routine, task, loop, history, queue}` CLI:
 //
 // ScheduleCreate POST /v1/schedules — create routine
 // ScheduleList GET /v1/schedules — list (filter by alias / all)

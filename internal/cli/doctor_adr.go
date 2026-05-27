@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_adr.go
 //
-// `zen doctor adr index` delegates to ADRProber declared in probe.go;
+// `hades doctor adr index` delegates to ADRProber declared in probe.go;
 // 3 results:
 //
 // - adr.index.dual_manifest_freshness
@@ -12,14 +12,14 @@
 //
 // ADRProber interface declared in probe.go (CLI side).
 // Substrate prober.go files (internal/adr/) are NOT modified per J-1 pattern.
-// Production wiring in cmd/zen-swarm-ctld/main.go.
+// Production wiring in cmd/hades-ctld/main.go.
 //
 // # Naming
 //
 // doctor_adr.go is a new file — release's doctor_audit.go covers audit events;
 // there is no prior Plan doctor_adr.go. No _p9 suffix needed.
 //
-// Boundary:
+// Boundary (inv-hades-031):
 //
 // This file imports only cli-internal types + cobra + context + stdlib.
 // Does NOT import internal/adr concrete types.
@@ -71,7 +71,7 @@ Each check returns OK / WARN / FAIL severity with doctrine-tuned thresholds.
 Use --strict (inherited from parent) to promote WARN to FAIL-equivalent for CI gating.
 
 ADRProber interface declared in internal/cli/probe.go; production wiring in
-cmd/zen-swarm-ctld/main.go. Until wired, invoking a sub-command returns an error.`,
+cmd/hades-ctld/main.go. Until wired, invoking a sub-command returns an error.`,
 	}
 	cmd.AddCommand(newDoctorAdrIndexCmd())
 	return cmd

@@ -227,7 +227,7 @@ func (s *Plan5OrchestratorService) DoctrinePropose(req client.DoctrineProposeReq
 		}
 	}
 	if allocated == 0 {
-		return client.DoctrineProposeResponse{}, fmt.Errorf("invalid_rule_path: Plan 8 ADR range %04d-%04d exhausted (inv-zen-103); operator should triage existing proposals before allocating new",
+		return client.DoctrineProposeResponse{}, fmt.Errorf("invalid_rule_path: Plan 8 ADR range %04d-%04d exhausted (inv-hades-103); operator should triage existing proposals before allocating new",
 			plan8ADRRangeMin, plan8ADRRangeMax)
 	}
 
@@ -261,13 +261,13 @@ func (s *Plan5OrchestratorService) DoctrinePropose(req client.DoctrineProposeReq
 ## Lifecycle
 
 This proposal entered the doctrine amendment lifecycle (proposed → applied
-| denied → reverted) via 'zen doctrine propose'. Use 'zen doctrine ack
-ADR-%04d' to accept or 'zen doctrine deny ADR-%04d --reason ...' to reject.
+| denied → reverted) via 'hades doctrine propose'. Use 'hades doctrine ack
+ADR-%04d' to accept or 'hades doctrine deny ADR-%04d --reason ...' to reject.
 On accept, Plan 5 Applier (extended by Plan 8 Phase H ApplyWithValidation
-hook) validates tighten-only direction (inv-zen-140) before mutating the
+hook) validates tighten-only direction (inv-hades-140) before mutating the
 on-disk doctrine TOML.
 
-inv-zen-103: this ADR ID is allocated from Plan 8's reserved range
+inv-hades-103: this ADR ID is allocated from Plan 8's reserved range
 (0050-0059) for operator-initiated manual proposals. Telemetry-driven
 proposals from Plan 5's TelemetrySubscriber use range 0020-0029.
 `,
@@ -403,7 +403,7 @@ func (s *Plan5OrchestratorService) SafetynetPrevInstall() (map[string]string, er
 	}
 	manifestPath := ""
 	if s.repoRoot != "" {
-		manifestPath = filepath.Join(s.repoRoot, "bin", "zen-prev-manifest.json")
+		manifestPath = filepath.Join(s.repoRoot, "bin", "hades-prev-manifest.json")
 	}
 	if manifestPath == "" {
 		return nil, errors.New("safetynet prev install: RepoRoot not configured")
@@ -481,12 +481,12 @@ func (s *Plan5OrchestratorService) SafetynetDivergenceRun() (client.DivergenceRe
 	if s.repoRoot == "" {
 		return client.DivergenceReport{}, errors.New("safetynet divergence run: RepoRoot not configured")
 	}
-	pathA := filepath.Join(s.repoRoot, "zenswarm.json")
+	pathA := filepath.Join(s.repoRoot, "hadessystem.json")
 	if _, err := os.Stat(pathA); os.IsNotExist(err) {
 
 		return client.DivergenceReport{}, fmt.Errorf("safetynet divergence run: %s not found", pathA)
 	}
-	pathB := filepath.Join(s.repoRoot, ".zen-swarm", "captured.json")
+	pathB := filepath.Join(s.repoRoot, ".hades-system", "captured.json")
 	if _, err := os.Stat(pathB); err != nil {
 		return client.DivergenceReport{}, fmt.Errorf("safetynet divergence run: substrate snapshot %s missing: %w", pathB, err)
 	}

@@ -13,7 +13,7 @@
 // QueryRequest if audit-chain filters need additional fields; extend here,
 // never in the method files.
 //
-// invariant: ScopePinnedOnly is the widest scope this aggregator honours.
+// inv-hades-152: ScopePinnedOnly is the widest scope this aggregator honours.
 // Ecosystem-wide RAG (cross-project web + external-source search) is release
 // territory. Any call-site that passes Scope("ecosystem-rag") will receive an
 // explicit error message pointing at release — never a silent default.
@@ -79,7 +79,7 @@ func (r *QueryRequest) Validate() error {
 
 	default:
 		return errors.New("aggregator: QueryRequest.Scope must be global|project|pinned-only " +
-			"(ecosystem RAG is Plan 14 territory; see inv-zen-152)")
+			"(ecosystem RAG is Plan 14 territory; see inv-hades-152)")
 	}
 	if r.Scope == ScopeProject && r.ProjectID == "" {
 		return errors.New("aggregator: QueryRequest.ProjectID required when Scope=project")

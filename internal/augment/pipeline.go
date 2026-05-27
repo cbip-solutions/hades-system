@@ -23,7 +23,7 @@
 //
 // Partial-failure tolerance: errored lanes contribute empty TopK; pipeline continues.
 //
-// Inv-zen-088: ZERO direct LLM calls from this file.
+// Inv-hades-088: ZERO direct LLM calls from this file.
 
 package augment
 
@@ -42,11 +42,11 @@ import (
 )
 
 const (
-	ToolCaronteQuery = "mcp_zen-swarm_caronte_query"
+	ToolCaronteQuery = "mcp_hades-system_caronte_query"
 
-	ToolCaronteContext = "mcp_zen-swarm_caronte_context"
+	ToolCaronteContext = "mcp_hades-system_caronte_context"
 
-	ToolCaronteCoChange = "mcp_zen-swarm_caronte_get_cochange"
+	ToolCaronteCoChange = "mcp_hades-system_caronte_get_cochange"
 )
 
 func (r *pipelineRuntime) tryAcquire(maxInflight, maxQueue int) (string, error) {
@@ -151,7 +151,7 @@ func (p *Pipeline) Run(ctx context.Context, req AugmentRequest) (AugmentResponse
 		return AugmentResponse{}, fmt.Errorf("augment: doctrine_gate: %w", err)
 	}
 	if !allowed {
-		// propagate. invariant "every augmentation event MUST anchor"
+		// propagate. inv-hades-088 "every augmentation event MUST anchor"
 		// is breached if the skip emit silently fails — operators see a
 		// skipped outcome but no chain anchor row.
 		eventID, emitErr := p.auditAnchor.Emit(ctx, EventAugmentationSkipped,
@@ -331,7 +331,7 @@ func (p *Pipeline) Run(ctx context.Context, req AugmentRequest) (AugmentResponse
 //
 // auditAnchor.Emit error any lane goroutine produces (alongside the
 // usual lane TopK list). The orchestrator surfaces this error to the
-// caller — invariant "every augmentation event MUST anchor" is
+// caller — inv-hades-088 "every augmentation event MUST anchor" is
 // load-bearing; silently swallowing lane emit errors leaves the chain
 // with no record of gateway-call failures.
 func (p *Pipeline) runFiveLanes(ctx context.Context, req AugmentRequest, schema *DoctrineSchema) ([]TopK, error) {

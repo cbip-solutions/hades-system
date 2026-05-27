@@ -62,7 +62,7 @@ func (n *Notifier) fireOSNotification(severity, title, body string) {
 		return
 	}
 	esc := func(s string) string { return strings.ReplaceAll(s, `"`, `\"`) }
-	subtitle := "zen-swarm — " + severity
+	subtitle := "hades-system — " + severity
 	script := fmt.Sprintf(
 		`display notification "%s" with title "%s" subtitle "%s"`,
 		esc(body), esc(title), esc(subtitle))
@@ -123,7 +123,7 @@ func (n *Notifier) OnRefreshPermanentFail(reason string) {
 	defer cancel()
 	_, _ = n.Dispatch(ctx, "CRITICAL",
 		"HADES: bypass OAuth refresh failing",
-		"Reason: "+reason+"\nThe refresher retries automatically; if it persists, run `zen bypass refresh-now` or re-login Claude Code.",
+		"Reason: "+reason+"\nThe refresher retries automatically; if it persists, run `hades bypass refresh-now` or re-login Claude Code.",
 		"bypass.refresh")
 }
 

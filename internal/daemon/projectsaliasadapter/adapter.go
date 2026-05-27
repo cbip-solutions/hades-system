@@ -2,7 +2,7 @@
 // Package projectsaliasadapter bridges *store.Store → mcpgateway.ProjectsAliasResolver.
 //
 // This package exists outside internal/daemon/mcpgateway on purpose:
-// invariant forbids the mcpgateway package from importing internal/store
+// inv-hades-031 forbids the mcpgateway package from importing internal/store
 // directly. The adapter is the explicit boundary-crosser that owns the
 // SQL queries against projects_alias and exposes a single-method
 // interface (mcpgateway.ProjectsAliasResolver) to the gateway.
@@ -26,8 +26,8 @@
 // ever needs to support >1000 projects, the map can be swapped for a
 // container/list LRU without changing the public surface.
 //
-// invariant: alias resolver returns canonical id_sha256 OR ErrAliasNotFound.
-// invariant: this package crosses the mcpgateway↔store boundary on
+// inv-hades-277: alias resolver returns canonical id_sha256 OR ErrAliasNotFound.
+// inv-hades-031: this package crosses the mcpgateway↔store boundary on
 // mcpgateway's behalf (sanctioned bridge).
 package projectsaliasadapter
 

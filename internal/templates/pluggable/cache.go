@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // pluggable/cache.go — LRU 7-day cache at
-// ~/.cache/zen-swarm/templates/<sha256-of-url-plus-ref>/.
+// ~/.cache/hades-system/templates/<sha256-of-url-plus-ref>/.
 //
 // Per Q12=D persistence policy (spec §2.12): cache directories with
 // retention 7 days, eviction LRU on access. The cache is operator-
@@ -31,7 +31,7 @@ func DefaultCache() (*Cache, error) {
 		}
 		xdg = filepath.Join(home, ".cache")
 	}
-	root := filepath.Join(xdg, "zen-swarm", "templates")
+	root := filepath.Join(xdg, "hades-system", "templates")
 	if err := os.MkdirAll(root, 0o755); err != nil {
 		return nil, fmt.Errorf("mkdir cache root: %w", err)
 	}

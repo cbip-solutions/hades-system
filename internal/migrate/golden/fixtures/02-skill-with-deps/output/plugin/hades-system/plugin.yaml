@@ -1,0 +1,9 @@
+name: hades-system
+version: 0.0.1
+description: Imported from a legacy coding assistant installation via `hades migrate claude-code`.
+license: imported
+metadata:
+  hades-system:
+    imported_skill_count: 1
+    imported_command_count: 0
+    imported_hook_count: 0

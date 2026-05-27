@@ -1,4 +1,4 @@
-// Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
+// Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 //
 // Darwin peer-credential lookup for the F-5 RequireOperatorIdentity
 // middleware. Reads LOCAL_PEERCRED via golang.org/x/sys/unix.

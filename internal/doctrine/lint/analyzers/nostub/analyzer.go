@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package nostub implements noStubAnalyzer for zen-swarm release (spec §1 Q4 B).
+// Package nostub implements noStubAnalyzer for hades-system release (spec §1 Q4 B).
 //
 // Detects production-code stubs that violate project instructions project doctrine
 // "No stubs, código completo":

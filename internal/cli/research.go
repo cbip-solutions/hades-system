@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package cli — research.go.
 //
-// `zen research` exposes the research-cache admin surface to operators.
+// `hades research` exposes the research-cache admin surface to operators.
 //
 // Cobra layout (7 leaves):
 //
-// zen research cache get <hash>
-// zen research cache set --hash --body --ttl
-// zen research cache list --limit --offset
-// zen research cache clear --older-than <duration>
-// zen research cache stats
-// zen research show <hash>
-// zen research sources (synthetic; reports doctrine-configured sources)
+// hades research cache get <hash>
+// hades research cache set --hash --body --ttl
+// hades research cache list --limit --offset
+// hades research cache clear --older-than <duration>
+// hades research cache stats
+// hades research show <hash>
+// hades research sources (synthetic; reports doctrine-configured sources)
 //
 // Option A adaptation: the plan-doc enumerates streaming `dispatch` and
 // `agentic-deep` subcommands plus a `findings/{id}` show route. Those

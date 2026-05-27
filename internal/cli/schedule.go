@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package cli — schedule.go.
 //
-// `zen schedule <subcommand>` is the operator-facing entry point for
+// `hades schedule <subcommand>` is the operator-facing entry point for
 // the 3-tier scheduler (Routine / Task / Loop) per spec §1 Q8 D + §6.2.
 //
 // Cobra layout (8 leaves under 1 root):
 //
-// zen schedule
+// hades schedule
 // routine
 // create --project --action --trigger --cron --repo --branch
 // --miss-policy --miss-lookback
@@ -34,7 +34,7 @@
 // .
 //
 // gap: until the daemon mounts the Run dispatch substrate in
-// , `zen schedule routine run <id>` surfaces 503 → exit 2
+// , `hades schedule routine run <id>` surfaces 503 → exit 2
 // (infra-issue, not operator-typo). Mirrors the release /v1/messages
 // graceful-degradation pattern.
 package cli
@@ -87,19 +87,19 @@ func NewScheduleCmd(factory ScheduleClientFactory) *cobra.Command {
   history    fire history for a schedule
   queue      next-24h fire queue across all projects
 
-The scheduler runs inside the HADES daemon (zen-swarm-ctld); this command is a thin
+The scheduler runs inside the HADES daemon (hades-ctld); this command is a thin
 HTTP client. All real logic lives in internal/scheduler +
 internal/daemon/scheduleradapter. The 3-tier split (routine / task /
 loop) lets operator pick the right durability + binding for each
 need without re-implementing cron logic per use case.`,
 		Example: `  # List every routine across every project
-  zen schedule routine list --all
+  hades schedule routine list --all
 
   # Inspect the next 24h of scheduled fires
-  zen schedule queue
+  hades schedule queue
 
   # See history for one routine
-  zen schedule history --id <id> --since 7d`,
+  hades schedule history --id <id> --since 7d`,
 	}
 	root.AddCommand(newScheduleRoutineCmd(factory))
 	root.AddCommand(newScheduleTaskCmd(factory))
@@ -168,14 +168,14 @@ Subcommands:
   delete   soft-delete (Disabled then DELETE)
   run      manually trigger a routine (Phase I substrate)`,
 		Example: `  # Daily 8am cron routine
-  zen schedule routine create --project internal-platform-x --action morning-brief \
+  hades schedule routine create --project internal-platform-x --action morning-brief \
       --trigger cron --cron "0 8 * * 1-5"
 
   # List routines for one project
-  zen schedule routine list --project internal-platform-x
+  hades schedule routine list --project internal-platform-x
 
   # Delete a routine by id
-  zen schedule routine delete <id>`,
+  hades schedule routine delete <id>`,
 	}
 	root.AddCommand(newScheduleRoutineCreateCmd(factory))
 	root.AddCommand(newScheduleRoutineListCmd(factory))
@@ -205,13 +205,13 @@ func newScheduleRoutineCreateCmd(factory ScheduleClientFactory) *cobra.Command {
   git-poll  local 'gh' CLI poll of repo/branch (privacy-by-default)
 
 Examples:
-    zen schedule routine create --project internal-platform-x --action morning-brief \
+    hades schedule routine create --project internal-platform-x --action morning-brief \
         --trigger cron --cron "0 8 * * 1-5"
 
-    zen schedule routine create --project internal-platform-x --action webhook \
+    hades schedule routine create --project internal-platform-x --action webhook \
         --trigger http       # surfaces raw bearer token ONCE
 
-    zen schedule routine create --project internal-platform-x --action git-watcher \
+    hades schedule routine create --project internal-platform-x --action git-watcher \
         --trigger git-poll --repo https://github.com/owner/repo --branch main`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -365,10 +365,10 @@ Exit codes:
   1  validation reject (missing --project, missing --in, --in <= 0)
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Fire after 30 minutes
-  zen schedule task --project internal-platform-x --in 30m send daily report
+  hades schedule task --project internal-platform-x --in 30m send daily report
 
   # Fire 4 hours from now
-  zen schedule task --project internal-platform-x --in 4h check ci status`,
+  hades schedule task --project internal-platform-x --in 4h check ci status`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if strings.TrimSpace(project) == "" {
@@ -424,10 +424,10 @@ Exit codes:
   1  validation reject (missing --project, --interval below 1min floor)
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Poll every 5 minutes (default interval)
-  zen schedule loop --project internal-platform-x watch ci builds
+  hades schedule loop --project internal-platform-x watch ci builds
 
   # Poll every 2 minutes for an active monitoring window
-  zen schedule loop --project internal-platform-x --interval 2m tail logs`,
+  hades schedule loop --project internal-platform-x --interval 2m tail logs`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if strings.TrimSpace(project) == "" {
@@ -490,10 +490,10 @@ Exit codes:
   1  --id missing OR id not found in schedules table
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Default 24h history
-  zen schedule history --id <id>
+  hades schedule history --id <id>
 
   # Widen to 7 days
-  zen schedule history --id <id> --since 7d`,
+  hades schedule history --id <id> --since 7d`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if strings.TrimSpace(id) == "" {
@@ -538,7 +538,7 @@ Exit codes:
   0  queue rendered (zero rows is success)
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Inspect the next-24h horizon
-  zen schedule queue`,
+  hades schedule queue`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

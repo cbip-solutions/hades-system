@@ -3,7 +3,7 @@
 // (query surface) + aggregator.Embedder (DI'd at New(opts) time) <->
 // internal/augment's KnowledgeIndex + Embedder interfaces.
 //
-// invariant boundary: this package lives in internal/daemon/ (NOT under
+// inv-hades-031 boundary: this package lives in internal/daemon/ (NOT under
 // internal/augment/). The daemon owns the release D lifecycle; the augment
 // package consumes the augment.KnowledgeIndex / augment.Embedder interfaces
 // only. Compliance test sentinel `aggregatorAdapterBoundarySentinel`

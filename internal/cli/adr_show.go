@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr_show.go.
 //
-// `zen adr show <id>` calls GET /v1/adr/show?id=... and renders the ADR
+// `hades adr show <id>` calls GET /v1/adr/show?id=... and renders the ADR
 // frontmatter as a table plus the markdown body. Wire type: client.ADR.
 package cli
 
@@ -21,7 +21,7 @@ func adrShowCmd() *cobra.Command {
 		Use:     "show <id>",
 		Short:   "Render frontmatter as table + body",
 		Args:    cobra.ExactArgs(1),
-		Example: `  zen adr show ADR-0042`,
+		Example: `  hades adr show ADR-0042`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx, cancel := context.WithTimeout(cmd.Context(), 10*time.Second)
 			defer cancel()

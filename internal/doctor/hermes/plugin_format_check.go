@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package hermes — plugin_format_check.go ships the `hermes.plugin-format`
-// doctor check. Validates plugin directory
+// doctor check (inv-hades-176 + inv-hades-190). Validates plugin directory
 // shape matches canonical Hermes plugin format; rejects CC
 // remnants + OpenClaude (legacy) markers.
 //
-// Boundary: consumes ONLY internal/doctor/check + the
+// Boundary (inv-hades-031): consumes ONLY internal/doctor/check + the
 // PluginPathResolver injection seam; MUST NOT import internal/store.
 package hermes
 
@@ -52,7 +52,7 @@ func (c *PluginFormatCheck) Name() string { return "hermes.plugin-format" }
 func (c *PluginFormatCheck) Category() check.Category { return check.CategoryPreflight }
 
 func (c *PluginFormatCheck) Description() string {
-	return "Hermes plugin format match + reject CC/OpenClaude remnants (inv-zen-176 + 190)"
+	return "Hermes plugin format match + reject CC/OpenClaude remnants (inv-hades-176 + 190)"
 }
 
 func (c *PluginFormatCheck) IsDestructive() bool { return true }
@@ -73,8 +73,8 @@ var canonicalFiles = []string{
 
 // remnantMarkers signal CC (Claude-Code legacy) or OpenClaude scaffolds
 // that have NOT been migrated to Hermes plugin format. Their presence is
-// invariant violation; the check returns StatusFail with hint to run
-// `zen migrate claude-code` first.
+// inv-hades-176 violation; the check returns StatusFail with hint to run
+// `hades migrate claude-code` first.
 //
 // SECURITY this slice is the canonical taxonomy of legacy markers;
 // additions require ADR amendment + matching update to
@@ -92,8 +92,8 @@ var remnantMarkers = []string{
 // 2. Resolver error → StatusSkip + scaffold hint
 // 3. Directory missing → StatusFail + config-init hint
 // 4. Path not directory → StatusFail
-// 5. Remnant marker present → StatusFail + migrate hint
-// 6. Canonical file missing → StatusFail + scaffold hint
+// 5. Remnant marker present → StatusFail + migrate hint (inv-hades-176)
+// 6. Canonical file missing → StatusFail + scaffold hint (inv-hades-190)
 // 7. All checks pass → StatusPass
 //
 // Context cancellation: per spec §3.3 + check.go:47-48 godoc contract,
@@ -107,27 +107,27 @@ func (c *PluginFormatCheck) Run(ctx context.Context) check.DiagnosticResult {
 	if err := ctx.Err(); err != nil {
 		d.Status = check.StatusSkip
 		d.Message = "context cancelled before plugin format probe"
-		d.Hint = "rerun `zen doctor full` without cancellation"
+		d.Hint = "rerun `hades doctor full` without cancellation"
 		return d
 	}
 	if c.resolver == nil {
 		d.Status = check.StatusSkip
 		d.Message = "no plugin path resolver wired"
-		d.Hint = "run `zen config init` or `zen migrate claude-code` to scaffold plugin"
+		d.Hint = "run `hades config init` or `hades migrate claude-code` to scaffold plugin"
 		return d
 	}
 	pluginPath, scope, err := c.resolver.ResolvePluginPath(ctx, "")
 	if err != nil {
 		d.Status = check.StatusSkip
 		d.Message = fmt.Sprintf("plugin path resolver failed: %v", err)
-		d.Hint = "run `zen config init` or `zen migrate claude-code` to scaffold plugin"
+		d.Hint = "run `hades config init` or `hades migrate claude-code` to scaffold plugin"
 		return d
 	}
 	info, err := os.Stat(pluginPath)
 	if errors.Is(err, fs.ErrNotExist) {
 		d.Status = check.StatusFail
 		d.Message = fmt.Sprintf("plugin directory missing: %s (scope=%s)", pluginPath, scope)
-		d.Hint = "run `zen config init` to scaffold Hermes plugin"
+		d.Hint = "run `hades config init` to scaffold Hermes plugin"
 		return d
 	}
 	if err != nil {
@@ -145,14 +145,14 @@ func (c *PluginFormatCheck) Run(ctx context.Context) check.DiagnosticResult {
 		if err := ctx.Err(); err != nil {
 			d.Status = check.StatusSkip
 			d.Message = "context cancelled during remnant scan"
-			d.Hint = "rerun `zen doctor full` without cancellation"
+			d.Hint = "rerun `hades doctor full` without cancellation"
 			return d
 		}
 		markerPath := filepath.Join(pluginPath, marker)
 		if _, err := os.Stat(markerPath); err == nil {
 			d.Status = check.StatusFail
 			d.Message = fmt.Sprintf("plugin remnant detected: %s (CC/OpenClaude legacy)", marker)
-			d.Hint = "run `zen migrate claude-code --backup-target ~/.local/state/zen-swarm/migrate-backups/$(date +%Y%m%dT%H%M%S)/` then re-run doctor"
+			d.Hint = "run `hades migrate claude-code --backup-target ~/.local/state/hades-system/migrate-backups/$(date +%Y%m%dT%H%M%S)/` then re-run doctor"
 			return d
 		}
 	}
@@ -162,7 +162,7 @@ func (c *PluginFormatCheck) Run(ctx context.Context) check.DiagnosticResult {
 		if err := ctx.Err(); err != nil {
 			d.Status = check.StatusSkip
 			d.Message = "context cancelled during canonical-file scan"
-			d.Hint = "rerun `zen doctor full` without cancellation"
+			d.Hint = "rerun `hades doctor full` without cancellation"
 			return d
 		}
 		fpath := filepath.Join(pluginPath, fname)
@@ -173,7 +173,7 @@ func (c *PluginFormatCheck) Run(ctx context.Context) check.DiagnosticResult {
 	if len(missing) > 0 {
 		d.Status = check.StatusFail
 		d.Message = fmt.Sprintf("plugin missing canonical files at %s: %s", pluginPath, strings.Join(missing, ", "))
-		d.Hint = "run `zen config init` to scaffold Hermes plugin format"
+		d.Hint = "run `hades config init` to scaffold Hermes plugin format"
 		return d
 	}
 

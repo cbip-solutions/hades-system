@@ -15,7 +15,7 @@
 --   UNIQUE = (ecosystem, name). release track indexer-writer code reads from
 --   PackageRef.Ecosystem and writes here directly without translation.
 --
---   invariant unaffected (this package does not import internal/store);
+--   inv-hades-031 unaffected (this package does not import internal/store);
 --   spec §3.4 column-name drift is reconciled here at the SQL layer.
 
 CREATE TABLE IF NOT EXISTS ecosystem_packages (

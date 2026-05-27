@@ -79,7 +79,7 @@ func NewStateAdapter(deps StateAdapterDeps) (*StateAdapter, error) {
 			GoModPath:          filepath.Join(deps.RepoRoot, "go.mod"),
 			InvariantGrepRoot:  deps.RepoRoot,
 			AutonomyStampPath:  deps.AutonomyStampPath,
-			ZenSwarmVersion:    deps.Version,
+			HadesSystemVersion: deps.Version,
 			DoctrineRegistryFn: deps.DoctrineRegistryFn,
 		})
 	}

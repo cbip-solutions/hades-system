@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package budget implements the daemon-side budget engine
-// of zen-swarm.
+// of hades-system.
 //
 // # Architecture
 //
@@ -13,7 +13,7 @@
 // - anomaly: per-scope z-score sliding window using Welford's online algorithm (epsilon-stable, permutation-invariant). Triggers pause when |z| > threshold (default 4.0, doctrine-tunable).
 // - pause: 4-scope state machine + auto-resume scheduler. Durable in budget_pauses. Goroutine-driven cooldown clear.
 //
-// # Boundary
+// # Boundary (inv-hades-031)
 //
 // This package never imports internal/store directly. All storage access
 // goes through the BudgetStore interface declared in axes.go; the
@@ -22,7 +22,7 @@
 // import both internal/store and internal/budget. The dispatcher
 // (internal/daemon/dispatcher) calls only the adapter's PreCall / PostCall
 // methods; an AST-grep compliance test
-// (tests/compliance/inv_zen_076_test.go) enforces this boundary once
+// (tests/compliance/inv_hades_076_test.go) enforces this boundary once
 //
 // # Concurrency contract
 //
@@ -47,30 +47,30 @@
 //
 // Compile-time anchors for the four budget invariants:
 //
-// invariant: preCallEnforcedBeforeUpstream (enforce.go)
+// inv-hades-076: preCallEnforcedBeforeUpstream (enforce.go)
 // Every dispatch path goes through Gate.Check before
 // backend.Forward(...). AST-grep enforced via
-// tests/compliance/inv_zen_076_test.go (skip-with-reason
+// tests/compliance/inv_hades_076_test.go (skip-with-reason
 // pre ; full assertion post ).
 //
-// invariant: axisTagCompleteness (axes.go)
+// inv-hades-077: axisTagCompleteness (axes.go)
 // Every cost row ends with all four axis tags present
 // OR an axis_tag_loss event recorded. Compliance test
-// in tests/compliance/inv_zen_077_test.go drives 1k
+// in tests/compliance/inv_hades_077_test.go drives 1k
 // synthetic cost_ids with 5%-strip and asserts
 // len(present_axes) + len(loss_events) == 4 forEach.
 //
-// invariant: anomalyDeterministic (anomaly.go)
+// inv-hades-078: anomalyDeterministic (anomaly.go)
 // ComputeZScore is permutation-invariant + bit-equal
 // across calls with the same input. Golden dataset in
-// tests/compliance/inv_zen_078_test.go (LCG seed=12345,
+// tests/compliance/inv_hades_078_test.go (LCG seed=12345,
 // 200 samples; 4 reproducibility cases + 5-shuffle
 // stability at 5000 samples).
 //
-// invariant: hierarchicalPrecedence (enforce.go)
+// inv-hades-079: hierarchicalPrecedence (enforce.go)
 // BlockedScopes is sorted most-restrictive first
 // (worker_id < stage < doctrine < project). Compliance
-// test in tests/compliance/inv_zen_079_test.go covers
+// test in tests/compliance/inv_hades_079_test.go covers
 // 4 scenarios (all-blocked, mixed pause+cap, single
 // scope, none-blocked).
 //

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package qna implements the release hybrid wizard engine.
 //
-// Per spec §2.3 Q3=D: shared engine consumed by `zen config init` +
-// `zen new` + `zen init` with WizardKind discriminator. Q0 three-way
+// Per spec §2.3 Q3=D: shared engine consumed by `hades config init` +
+// `hades new` + `hades init` with WizardKind discriminator. Q0 three-way
 // prompt (create-next-app 16.x precedent per SOTA-1 #1):
 //
 // ? How would you like to start?
 // ▸ Use recommended defaults
-// Use previous preferences (~/.config/zen-swarm/onboard-prefs.toml)
+// Use previous preferences (~/.config/hades-system/onboard-prefs.toml)
 // Customize
 //
 // Path 1 (Recommended) + Path 2 (Reuse): 0 follow-up Qs; emit

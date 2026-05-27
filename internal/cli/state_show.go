@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — state_show.go.
 //
-// `zen state show` calls GET /v1/state/show and renders the StateManifest.
+// `hades state show` calls GET /v1/state/show and renders the StateManifest.
 // The manifest exposes TomlContent (raw TOML) plus convenience scalars:
 // LastRegenerateUnix, ManualFieldCount, MissingSourceCount.
 //
@@ -25,7 +25,7 @@ func newStateShowCmd() *cobra.Command {
 		Long: `show calls GET /v1/state/show and renders the StateManifest.
 Metadata header (last regenerate, manual field count) is printed above the
 raw TOML body for quick inspection.`,
-		Example: "  zen state show",
+		Example: "  hades state show",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(cmd.Context(), 5*time.Second)
 			defer cancel()

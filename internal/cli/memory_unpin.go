@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package cli — memory_unpin.go.
 //
-// `zen memory unpin <note-id>` reverses a prior pin/promote by calling
+// `hades memory unpin <note-id>` reverses a prior pin/promote by calling
 // MemoryUnpin (aggregator unpromote endpoint).
 //
-// invariant historically applies; the daemon-side handler enforces a
+// inv-hades-146 historically applies; the daemon-side handler enforces a
 // non-empty --reason. The CLI passes the operator's reason through so
 // the audit chain captures the cause of removal.
 package cli
@@ -35,11 +35,11 @@ func newMemoryUnpinCmd() *cobra.Command {
 operator's reason is anchored on the Plan 9 audit chain so the removal is
 traceable.
 
-inv-zen-146 (daemon-side): the aggregator unpromote endpoint may reject
+inv-hades-146 (daemon-side): the aggregator unpromote endpoint may reject
 empty reasons. The CLI does NOT cobra-force --reason for unpin (some
 operator workflows un-pin programmatically without rationale) — pass
 --reason explicitly when audit clarity matters.`,
-		Example: `  zen memory unpin internal-platform-x/M0-doctrine \
+		Example: `  hades memory unpin internal-platform-x/M0-doctrine \
     --reason "superseded by N0-revision-2026-05"`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

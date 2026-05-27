@@ -12,14 +12,14 @@
 // gain; the boundary that matters (handlers → handoff_emitter →
 // eventlog.Log) is preserved at the *Server* method-call layer.
 //
-// invariant boundary preserved: this file imports
+// inv-hades-031 boundary preserved: this file imports
 // internal/orchestrator/eventlog (value types only — Event, EvtHandoffPosted
 // constant, *Log via dependency injection) and internal/daemon/handlers
 // (the satisfying interface). It NEVER imports internal/store.
 //
 // Synthesised SessionID rationale (handler invariant):
 // eventlog.Log.Append rejects empty SessionID (it is the audit-trail
-// grouping key invariant). HandoffPostedEvent does not
+// grouping key inv-hades-008). HandoffPostedEvent does not
 // carry a session_id field by design — the plugin /handoff command runs
 // outside any orchestrator session — so the daemon-side emitter must
 // supply one. We use the constant "daemon-handoff" to identify the

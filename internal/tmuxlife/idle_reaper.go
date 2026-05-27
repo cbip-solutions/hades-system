@@ -55,7 +55,7 @@ func NewIdleReaper(manager *Manager, doctrineFor func(alias string) doctrine.Nam
 // 2. None of HasOperatorAttach / HasAutonomousWorker / HasScheduledJob
 // (any one is a hard veto; spec §1 Q7 D activity-veto contract).
 // 3. doctrineFor(alias) is NOT max-scope (max-scope = never reap;
-// IdleTTLIsInfinity short-circuit; invariant carrier).
+// IdleTTLIsInfinity short-circuit; inv-hades-119 carrier).
 // 4. time.Since(effective LastAttachAt) > DoctrineIdleTTL(doctrine).
 //
 // Effective-LastAttachAt failsafe ladder:
@@ -71,7 +71,7 @@ func NewIdleReaper(manager *Manager, doctrineFor func(alias string) doctrine.Nam
 // the only consumer that needs Duration arithmetic — keeping conversion
 // at the boundary preserves the integer-hours contract for TOML round-trip.
 //
-// invariant: the doctrine TTL matrix is the load-bearing rule; tests
+// inv-hades-119: the doctrine TTL matrix is the load-bearing rule; tests
 // TestIsIdleMaxScopeNeverReaped + TestIsIdleDefault24h +
 // TestIsIdleCapaFirewall4h each verify one cell.
 func (r *IdleReaper) IsIdle(s *Session, deps IdleDeps) bool {

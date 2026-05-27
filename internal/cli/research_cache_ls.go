@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — research_cache_ls.go.
 //
-// NEW release leaf: `zen research cache ls` — browse cache entries with release
+// NEW release leaf: `hades research cache ls` — browse cache entries with release
 // filters (--source URL prefix, --project). Distinct's
 // `cache list` which is project-agnostic and pagination-oriented.
 //
@@ -35,10 +35,10 @@ URL prefix or project. Distinct from Plan 4's cache list (which uses
 limit/offset pagination); ls uses Plan 9 semantic filters.
 
 Route: GET /v1/research/cache/list with project_id and source query params.`,
-		Example: `  zen research cache ls
-  zen research cache ls --project zen-swarm
-  zen research cache ls --source https://arxiv.org/
-  zen research cache ls --project zen-swarm --source https://arxiv.org/ --format json`,
+		Example: `  hades research cache ls
+  hades research cache ls --project hades-system
+  hades research cache ls --source https://arxiv.org/
+  hades research cache ls --project hades-system --source https://arxiv.org/ --format json`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if err := format.ValidateExclusive(cmd); err != nil {
 				return err

@@ -10,14 +10,14 @@
 //
 // Decision cache key is ClassifierVersion (string) NOT a separate
 // integer CacheVersion. The G-6 compliance test
-// (TestInvZenG2_ClassifierVersionConstantExists) + spec §G.2.3
+// (TestInvHadesG2_ClassifierVersionConstantExists) + spec §G.2.3
 // ("Classifier version: stamped in cache entries") demand the cache
 // invalidate on ClassifierVersion change directly. A separate
 // CacheVersion int would be redundant and risk drift (deviation from
 // plan-file A-5 Step 3 CacheVersion=1; documented in commit message).
 //
-// Cache path migration: pre- location was ~/.cache/zen-swarm/ci/
-// (legacy "zen-swarm" project name). policy + master §2.6 C4
+// Cache path migration: pre- location was ~/.cache/hades-system/ci/
+// (legacy "hades-system" project name). policy + master §2.6 C4
 // fix: renamed to ~/.cache/hades/ci/ during release No
 // migration script needed — operators with stale entries will get a
 // cold cache on first run (gracefully repopulates).

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package mcpgateway implements the zen-swarm-ctld single HTTP MCP endpoint
+// Package mcpgateway implements the hades-ctld single HTTP MCP endpoint
 // (Q1=B gateway aggregator pattern, spec §1). Hermes consumes ONE MCP
 // endpoint URL; this gateway multiplexes internal Go MCPs (research /
 // budget / audit / sshexec / codegen / caronte in-process engine).
@@ -8,27 +8,27 @@
 //
 // Boundaries (lint + compliance enforced):
 //
-// invariant Gateway aggregator dedupes tool registrations. If two
+// inv-hades-165 Gateway aggregator dedupes tool registrations. If two
 // downstream MCPs register the same canonical tool name
 // (e.g. both budget + research export `cap_status`), the
 // ToolRegistry rejects with ErrToolNameCollision. Compile
 // anchor: AssertToolRegistryDedup. Runtime test:
 // TestGatewayDedupOnConflict. Compliance test:
-// tests/compliance/inv_zen_165_gateway_dedup_test.go.
+// tests/compliance/inv_hades_165_gateway_dedup_test.go.
 //
-// invariant Gitnexus subprocess restart
+// inv-hades-168 Gitnexus subprocess restart
 // rate-limited (3 in 5min). No longer applies: the gitnexus
 // subprocess is replaced by the in-process caronte engine
 // (no restart needed). The invariant check file is preserved
 // as historical record.
 //
-// invariant internal/daemon/mcpgateway/* MUST NOT import
+// inv-hades-031 internal/daemon/mcpgateway/* MUST NOT import
 // internal/store. State access is bridged through the
 // daemon storeadapter pattern ( requires no store
 // access; if future phases need it, the bridge is added
 // via internal/daemon/mcpgateway/storeadapter/).
 //
-// Tool name canonical form: "mcp_zen-swarm_<subsystem>_<tool>". Subsystem
+// Tool name canonical form: "mcp_hades-system_<subsystem>_<tool>". Subsystem
 // is one of: research, budget, audit, sshexec, codegen, caronte. Tool
 // is the underlying tool name as the downstream MCP exposes it. The
 // gateway DOES NOT mutate tool names beyond prefixing; downstream MCPs
@@ -48,7 +48,7 @@
 // - downstream MCP not yet wired → 503 + Retry-After header
 //
 // The sentinel.go file carries compile-time anchors that, if accidentally
-// removed by a future contributor, cause the invariant / invariant
+// removed by a future contributor, cause the inv-hades-165 / inv-hades-031
 // compliance tests to FAIL — making structural drift loud rather than
 // silent.
 package mcpgateway
@@ -56,7 +56,7 @@ package mcpgateway
 // substrateSeparated is a compile-time marker that this package compiles
 // without importing internal/store. Removing the line MUST NOT cause a
 // missing import; if a future contributor accidentally imports
-// internal/store, the invariant compliance test fails.
+// internal/store, the inv-hades-031 compliance test fails.
 var _ = substrateSeparated()
 
 func substrateSeparated() bool { return true }

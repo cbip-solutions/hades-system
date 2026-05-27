@@ -43,7 +43,7 @@ func (a *Accessor) SetRegistry(registry map[string]*v1.Schema) {
 // 2. registry["max-scope"] hardcoded last-resort fallback → return it.
 //
 // 3. If both unset → panic with init-order diagnostic. This is the
-// invariant init-order guard: daemon startup MUST call
+// inv-hades-134 init-order guard: daemon startup MUST call
 // SetRegistry before any consumer reads. The panic surfaces a
 // build-bug (likely circular import or missed init) immediately.
 //
@@ -61,7 +61,7 @@ func (a *Accessor) Active() *v1.Schema {
 	panic(fmt.Sprintf(
 		"doctrine/active: Accessor.Active() called before SetRegistry "+
 			"or registry missing built-in \"max-scope\" entry; "+
-			"this is an inv-zen-134 init-order violation. Daemon startup "+
+			"this is an inv-hades-134 init-order violation. Daemon startup "+
 			"MUST call SetRegistry(builtin.LoadAll()) before any consumer "+
 			"reads. registry=%v", a.registry.Load()))
 }
@@ -102,7 +102,7 @@ func SetUserDefault(name string) error {
 // entries are replaced via atomic.Pointer.Store on the wrapping
 // *atomic.Pointer (ONE indirection layer). In-flight For() callers
 // observing the prior schema continue to see their pointer's data
-// intact.
+// intact (Go atomic guarantee, inv-hades-092 contract).
 //
 // Programmer errors panic immediately (nil schema, empty projectID) so
 // bugs surface at the SetForProject call site rather than downstream
@@ -111,7 +111,7 @@ func SetUserDefault(name string) error {
 // Called by:
 //
 // - daemon startup per spec §3.1 step 4 (one call per project with a
-// `<project>/.zen/doctrine-override.toml` file present).
+// `<project>/.hades/doctrine-override.toml` file present).
 //
 // - reload after file-watcher detects override file change
 // and the re-merge succeeds + ValidateTighten passes.
@@ -163,7 +163,7 @@ func (a *Accessor) For(projectID string) *v1.Schema {
 	panic(fmt.Sprintf(
 		"doctrine/active: Accessor.For(%q) called before SetRegistry "+
 			"or registry missing built-in \"max-scope\" entry; "+
-			"this is an inv-zen-134 init-order violation",
+			"this is an inv-hades-134 init-order violation",
 		projectID))
 }
 
@@ -185,7 +185,7 @@ func ClearForProject(projectID string) {
 
 // ByName resolves the registry entry for the given doctrine name (e.g.
 // "max-scope", "default", "capa-firewall", or any custom doctrine name
-// loaded from ~/.config/zen-swarm/doctrines/). Returns the registered
+// loaded from ~/.config/hades-system/doctrines/). Returns the registered
 // *v1.Schema or doctrineerrors.ErrDoctrineNotFound (wrapped) on miss.
 //
 // opaque doctrine name (the augment.Pipeline reads req.Doctrine then
@@ -200,7 +200,7 @@ func ClearForProject(projectID string) {
 //
 // - Active() / For(projectID) — Q7 C hybrid resolution: per-project
 // override → userDefault → registry["max-scope"] fallback. PANICS
-// on init-order violation.
+// on init-order violation (inv-hades-134 guard).
 //
 // - SetUserDefault(name) — installs a doctrine by name as the
 // userDefault. Returns ErrDoctrineNotFound on miss.

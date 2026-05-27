@@ -27,12 +27,12 @@
 //
 // # Invariants
 //
-// - inv-zen-F4-01: InlineThresholdBytes == 102400 (100 KiB). Do not change
+// - inv-hades-F4-01: InlineThresholdBytes == 102400 (100 KiB). Do not change
 // without a schema migration and ADR, because existing inline blobs in
 // research_findings.body_inline_blob were stored under this contract.
-// - inv-zen-F4-02: ContentHash is always a 64-char lowercase hex SHA-256.
+// - inv-hades-F4-02: ContentHash is always a 64-char lowercase hex SHA-256.
 // An empty ContentHash means StoreBody was never called on this Finding.
-// - inv-zen-F4-03: BodyInlineBlob != nil XOR BodyPath != "" (after StoreBody).
+// - inv-hades-F4-03: BodyInlineBlob != nil XOR BodyPath != "" (after StoreBody).
 // Both empty means no body; both set simultaneously is a data corruption
 // indicator and must never be produced by this package.
 package cache

@@ -804,7 +804,7 @@ func computeSelfHashHex(seq int64, evt int, payload []byte, parentHash string) s
 // vector + BM25 retrieval) and returns the resulting []ChangeNode as
 // the answer surface.
 //
-// invariant (Change-node graph consistency): every ecosystem_changes
+// inv-hades-193 (Change-node graph consistency): every ecosystem_changes
 // row's (version_from, version_to) MUST correspond to ecosystem_versions
 // rows via FK chain. QueryCrossVersion is a READ-only operation; the
 // invariant is enforced at WRITE time ( + indexer
@@ -865,7 +865,7 @@ func IsCrossVersionQuery(query string) (matched bool, versionFrom, versionTo str
 // E-phase extension consumed via a dispatcher-side cross-version
 // router).
 //
-// invariant (Change-node graph consistency): every row's
+// inv-hades-193 (Change-node graph consistency): every row's
 // (version_from, version_to) MUST correspond to ecosystem_versions rows
 // via FK chain. QueryCrossVersion is a READ-only operation; the
 // invariant is enforced at WRITE time ( + indexer

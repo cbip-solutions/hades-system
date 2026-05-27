@@ -12,7 +12,7 @@
 // ClassifierVersion is bumped on any classification-rule change. Cache
 // entries embed this version; classifier rejects stale-version entries
 // (forces re-classification when rules evolve). Referenced by
-// G-6 compliance tests.
+// G-6 compliance tests (inv-hades-311 versioning semantics).
 //
 // Coverage target ≥90% per project instructions security/correctness-critical list.
 package ci
@@ -164,7 +164,7 @@ func LoadFlakeQuarantine(path string) (*FlakeQuarantine, error) {
 		}
 		age := now.Sub(ts)
 		if age >= FlakeQuarantineMaxAge {
-			return nil, fmt.Errorf("ci: quarantine %s line %d: entry %q is %v old (≥ %v cap; auto-expire policy inv-zen-313)", path, lineNo, toks[0], age.Round(time.Hour), FlakeQuarantineMaxAge)
+			return nil, fmt.Errorf("ci: quarantine %s line %d: entry %q is %v old (≥ %v cap; auto-expire policy inv-hades-313)", path, lineNo, toks[0], age.Round(time.Hour), FlakeQuarantineMaxAge)
 		}
 
 		reason := strings.Join(toks[2:], " ")

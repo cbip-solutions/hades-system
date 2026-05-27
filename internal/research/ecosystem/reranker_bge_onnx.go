@@ -18,7 +18,7 @@ import (
 	"sync"
 )
 
-var ErrONNXRuntimeNotProvisioned = errors.New("ecosystem: no ONNX runner factory registered; run `zen docs reindex --bootstrap-models` or install onnxruntime shared library")
+var ErrONNXRuntimeNotProvisioned = errors.New("ecosystem: no ONNX runner factory registered; run `hades docs reindex --bootstrap-models` or install onnxruntime shared library")
 
 // ONNXRunner is the narrow ONNX Runtime interface BGEReRankerV2M3 depends
 // on. The daemon registers a factory that constructs a concrete
@@ -72,7 +72,7 @@ type onnxBGEBackend struct {
 func newONNXBackendImpl(cfg BGEConfig, device string) (bgeBackend, error) {
 	modelPath := resolveBGEModelPath(cfg.ModelPath)
 	if modelPath == "" {
-		return nil, errors.New("bge onnx: ModelPath unresolved; set BGEConfig.ModelPath, ZEN_BGE_MODEL_PATH env, or place model at ~/.local/share/zen-swarm/models/bge-reranker-v2-m3.onnx")
+		return nil, errors.New("bge onnx: ModelPath unresolved; set BGEConfig.ModelPath, HADES_BGE_MODEL_PATH env, or place model at ~/.local/share/hades-system/models/bge-reranker-v2-m3.onnx")
 	}
 	if _, err := os.Stat(modelPath); err != nil {
 		return nil, fmt.Errorf("bge onnx: model file unreadable at %q: %w", modelPath, err)

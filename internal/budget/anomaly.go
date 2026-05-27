@@ -4,7 +4,7 @@
 // stored window samples on every Update call. Recomputation is cheap
 // (window default 60; bound 1440) and eliminates floating-point drift
 // that an incremental running-state approach would accumulate over
-// thousands of updates. invariant demands determinism; the cost of an
+// thousands of updates. inv-hades-078 demands determinism; the cost of an
 // extra O(N) pass per call is negligible against the dispatch latency
 // (sub-microsecond compared to network round-trips).
 //

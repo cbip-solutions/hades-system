@@ -3,7 +3,7 @@
 //
 // Task J-3 adapter: exposes a slim Prober implementation that the
 // cli/doctor_knowledge.go layer consumes (cli.KnowledgeProber). The split
-// keeps invariant clean (internal/cli imports internal/knowledge; this
+// keeps inv-hades-031 clean (internal/cli imports internal/knowledge; this
 // package does NOT import internal/store; the daemon assembles the
 // runtime via the projectctxadapter pattern).
 //
@@ -40,7 +40,7 @@ import (
 // failed; daemon downgraded to cron-only mode).
 //
 // MUST be safe for concurrent use — multiple operators may run
-// `zen doctor knowledge` concurrently.
+// `hades doctor knowledge` concurrently.
 type HeartbeatFn func() time.Time
 
 // BudgetSnapshotFn returns (used, warn, fail) for the indexer CPU budget,
@@ -72,7 +72,7 @@ var ErrProberNilArg = errors.New("knowledge.NewProber: nil argument")
 //
 // Caller MUST NOT call Close on the Prober — there is no Close. The
 // underlying components own their cleanup. The closures MUST be
-// goroutine-safe (multiple operators may run `zen doctor` concurrently).
+// goroutine-safe (multiple operators may run `hades doctor` concurrently).
 //
 // Panics on nil db, nil heartbeat, or nil budget — these are programmer
 // errors at boot, not recoverable runtime conditions. The daemon's main

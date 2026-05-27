@@ -2,7 +2,7 @@
 // Package cli — doctor_full_adapters.go.
 //
 // Constructs the release-9 subsystem doctor check.Check instances that
-// `zen doctor full` composes alongside the 4 NEW release checks per
+// `hades doctor full` composes alongside the 4 NEW release checks per
 // spec §2.5 line 229 ("Composing aggregator over Plans 1-9 per-flag
 // checks (--knowledge/--scheduler/--inbox/--tmux/--merge/--hermes) plus
 // 4 new release checks").
@@ -14,7 +14,7 @@
 // minimal check.Check impl that wraps an inline ProbeFunc returning
 // []ProbeResult and collapses to a composite DiagnosticResult by
 // selecting the worst Status. Semantics match cliadapter.CLIProbeAdapter;
-// the duplication is the cost of preserving invariant's package
+// the duplication is the cost of preserving inv-hades-031's package
 // boundaries without restructuring the whole adapter chain.
 //
 // Adapter wiring contract per plan F-tail F-imp:
@@ -25,7 +25,7 @@
 // - The adapter func builds a fresh client per invocation (lazy daemon
 // dial) so doctor full never panics on daemon-down — the per-probe
 // defensive paths surface daemon-down as one ProbeFail row each
-// (operator-actionable; first remediation: `zen daemon start`).
+// (operator-actionable; first remediation: `hades daemon start`).
 // - Categories are assigned per spec §3.3 enum: Configuration for
 // subsystem-config probes; Connectivity for daemon-reachability;
 // Hints for info-only.

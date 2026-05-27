@@ -23,7 +23,7 @@
 // and the resolved override path is confined to overrideDir — see
 // validateOverridePath for the CWE-22 defense-in-depth.
 //
-// Boundary discipline: imports stdlib + internal/doctrine/schema/v1
+// Boundary discipline (inv-hades-133): imports stdlib + internal/doctrine/schema/v1
 // + internal/doctrine/errors only. No internal/store, no internal/orchestrator,
 // no internal/daemon, no internal/redact, no private-tier1-module.
 //

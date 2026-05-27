@@ -170,7 +170,7 @@ type ResearchSource struct {
 
 // researchSourceDescriptions maps a source name to its operator-visible
 // description. New sources MUST be registered here so they surface in
-// `zen research sources` with a meaningful description.
+// `hades research sources` with a meaningful description.
 var researchSourceDescriptions = map[string]string{
 	"web_search":     "Generic web search (doctrine-configurable backend)",
 	"arxiv":          "arXiv academic paper search",

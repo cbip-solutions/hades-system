@@ -8,9 +8,9 @@
 // because the release wire shape is a strict superset (additive fields
 // only; older clients deserialise without breakage).
 //
-// invariant: handlers consume ResearchStoreP9 interface only — no direct
+// inv-hades-031: handlers consume ResearchStoreP9 interface only — no direct
 // import of internal/research/cache or internal/store.
-// invariant: no fresh LLM dispatch from these handlers; cache reads only.
+// inv-hades-088: no fresh LLM dispatch from these handlers; cache reads only.
 // wires *daemon.Server to satisfy ResearchStoreP9 via the
 // production research/cache.Store; during development the 503 makes
 // intent explicit.
@@ -27,8 +27,8 @@
 //
 // Boundary invariants:
 //
-// invariant: handler never imports internal/store directly.
-// invariant: research dispatch goes through dispatcheradapter;
+// inv-hades-031: handler never imports internal/store directly.
+// inv-hades-088: research dispatch goes through dispatcheradapter;
 // H-4 reads cache only, never dispatches fresh research.
 package handlers
 

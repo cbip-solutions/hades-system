@@ -21,12 +21,12 @@
 // The /v1/knowledge/... pin+prune paths are retired; daemon-side handlers
 // land under /v1/ecosystem/... in a later task.
 //
-// These power `zen docs reindex / pin / prune / status / sources /
+// These power `hades docs reindex / pin / prune / status / sources /
 // router-retrain` (internal/cli/docs_*.go). The daemon-side handlers land
 // in — until then the endpoints surface as 503 and the CLI layer
 // classifies that as unrecoverable (exit 2).
 //
-// Boundary stdlib only. No internal/research/ecosystem import;
+// Boundary stdlib only. No internal/research/ecosystem import (inv-hades-031);
 // the daemon-side handler is responsible for invoking the trainer (Q15-Q20
 // orchestrator-enforced — see ADR-0067) and for ingester/pruner orchestration.
 //
@@ -148,7 +148,7 @@ func (c *Client) EcosystemPrunePreview(ctx context.Context, ecosystem, version s
 //
 // Hard-removes the (ecosystem, version) row and cascades to chunks,
 // chunks_fp32, symbols, changes, and FTS5 entries. Pinned versions are
-// refused with 409 Conflict; the operator must `zen docs unpin` first.
+// refused with 409 Conflict; the operator must `hades docs unpin` first.
 //
 // CLI safety: the docs_prune.go RunE path enforces a promptYN gate before
 // dialing; this method is the unguarded transport. Callers MUST NOT bypass

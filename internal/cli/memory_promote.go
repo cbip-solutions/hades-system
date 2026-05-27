@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package cli — memory_promote.go.
 //
-// `zen memory promote <note-id>` pins a note to the global aggregator pin
-// index. promote is the release D canonical term; `zen memory pin` is the
+// `hades memory promote <note-id>` pins a note to the global aggregator pin
+// index. promote is the release D canonical term; `hades memory pin` is the
 // CLI-ergonomic alias for the same daemon endpoint.
 //
-// invariant gates (same as pin):
+// inv-hades-146 gates (same as pin):
 // 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
 // 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 package cli
@@ -40,10 +40,10 @@ promote and pin are aliases at the CLI surface; both call the same daemon
 endpoint (POST /v1/knowledge/aggregator/promote). promote is the Plan 9 D
 term; pin is the operator-ergonomics shorthand.
 
-inv-zen-146: --reason MANDATORY. Empty or whitespace-only reasons are rejected
+inv-hades-146: --reason MANDATORY. Empty or whitespace-only reasons are rejected
 before any network call. The promotion event is anchored on the Plan 9 audit
-chain and visible via ` + "`zen audit-chain history`" + `.`,
-		Example: `  zen memory promote internal-platform-x/M0-doctrine \
+chain and visible via ` + "`hades audit-chain history`" + `.`,
+		Example: `  hades memory promote internal-platform-x/M0-doctrine \
     --reason "applies to all max-scope projects"`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -54,7 +54,7 @@ chain and visible via ` + "`zen audit-chain history`" + `.`,
 			return RunMemoryPromote(ctx, c, flags, cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&flags.Reason, "reason", "", "operator rationale (required; inv-zen-146)")
+	cmd.Flags().StringVar(&flags.Reason, "reason", "", "operator rationale (required; inv-hades-146)")
 	cmd.Flags().StringVar(&flags.OperatorID, "operator", "", "operator identifier (default: daemon-resolved)")
 	_ = cmd.MarkFlagRequired("reason")
 	return cmd
@@ -65,7 +65,7 @@ func RunMemoryPromote(ctx context.Context, c MemoryClient, flags MemoryPromoteFl
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory promote: <note-id> is required"))
 	}
 	if strings.TrimSpace(flags.Reason) == "" {
-		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory promote: --reason required (inv-zen-146)"))
+		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory promote: --reason required (inv-hades-146)"))
 	}
 	req := client.AggPromoteRequest{
 		NoteID:     flags.NoteID,

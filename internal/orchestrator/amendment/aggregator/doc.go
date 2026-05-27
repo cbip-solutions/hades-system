@@ -21,7 +21,7 @@
 //
 // - release events live in internal/orchestrator/merge as a separate
 // package-local enum. avoids cross-importing merge directly
-// by accepting any PayloadEncoder
+// (boundary inv-hades-104) by accepting any PayloadEncoder
 // implementation. Bridge code at the release N adapter layer translates
 // merge.Event → eventlog.PayloadEncoder if the merge aggregator needs
 // to subscribe to anomaly events outside the eventlog package's own
@@ -29,19 +29,19 @@
 //
 // # Boundaries
 //
-// - aggregator ⊥ internal/store
+// - aggregator ⊥ internal/store (inv-hades-133 generalized)
 // - aggregator ⊥ internal/orchestrator/hra (uses eventlog payloads only;
 // never imports HRA)
 // - aggregator ⊥ internal/doctrine/parser (reads only via the
-// TelemetrySubscriber's accessor; enforces invariant)
+// TelemetrySubscriber's accessor; enforces inv-hades-134)
 //
 // Invariants enforced via aggregator:
 //
-// - invariant — per-rule revert cooldown is enforced by the
+// - inv-hades-139 — per-rule revert cooldown is enforced by the
 // TelemetrySubscriber dispatch (cost/merge/recovery aggregators are
 // pure / stateless wrt time-keeping; cooldown lives in
 // telemetry_subscriber.go + cooldown.go).
-// - invariant — attribution: Evaluate returns the SourceADR of the
+// - inv-hades-141 — attribution: Evaluate returns the SourceADR of the
 // LAST DoctrineAmendmentApplied for the rule's category within the
 // rolling window; if none, "" sentinel signals "no revert
 // candidate".

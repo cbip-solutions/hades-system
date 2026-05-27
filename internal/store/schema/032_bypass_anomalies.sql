@@ -1,15 +1,15 @@
--- Migration v2 — bypass_anomalies (the release design release track, invariant)
+-- Migration v2 — bypass_anomalies (the release design release track, inv-hades-060)
 --
 -- Records every unknown field path observed in Anthropic /v1/messages
 -- responses (Layer 5 stratified validation per spec §22.2 + the release design
 -- spec §2 Q6-C). One row per distinct field_path; count is the rolling
 -- count of observations; first_seen/last_seen bound the lifetime;
 -- total_responses_in_window + percentage are denormalised cache columns
--- updated by AnomalyTracker.RecordAndCheck so `zen bypass anomalies`
+-- updated by AnomalyTracker.RecordAndCheck so `hades bypass anomalies`
 -- can render the table without recomputing from raw audit data.
 --
 -- acknowledged=1 means the operator has reviewed this anomaly via
--- `zen bypass anomalies --acknowledge <field>`; acknowledged anomalies
+-- `hades bypass anomalies --acknowledge <field>`; acknowledged anomalies
 -- still record observations (count keeps incrementing) but no longer
 -- fire the INFO threshold notification.
 

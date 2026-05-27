@@ -1,5 +1,5 @@
 {{/* Go text/template ADR proposal template. Canonical 10 sections per
-   the release design spec §1 Q10 C + §6.3 invariant. Fields available:
+   the release design spec §1 Q10 C + §6.3 inv-hades-094. Fields available:
      .ADRID, .Date, .Title, .Doctrine, .TriggerClass, .Pattern,
      .WindowHours, .Count, .Threshold, .ProjectID,
      .ContextNarrative, .DecisionStatement, .Alternatives, .SOTARefs,
@@ -35,7 +35,7 @@
 ### Risks
 
 - If the L4 narrative misreads the pattern, the amendment may codify a
-  transient drift. Mitigation: revertible via `zen doctrine revert
+  transient drift. Mitigation: revertible via `hades doctrine revert
   ADR-{{printf "%04d" .ADRID}}` (atomic `git revert` + reload).
 
 ## Doctrine alignment
@@ -65,7 +65,7 @@ TOML fields, the release design release track schema must be amended in coordina
 
 - ADR-0001 (substrate-pivot-to-openclaude)
 - ADR-0006 (research-sota-always-integrated)
-- the release design reserved range: ADR-0020..ADR-0029 (invariant)
+- the release design reserved range: ADR-0020..ADR-0029 (inv-hades-103)
 
 ## Evidence
 

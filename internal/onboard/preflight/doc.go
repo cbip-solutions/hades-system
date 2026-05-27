@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package preflight implements release preflight gates.
 //
-// Per spec §3.10 + §5.2 + §8.1: every onboarding surface (zen config
-// init / zen new / zen init / zen migrate claude-code) runs preflight
+// Per spec §3.10 + §5.2 + §8.1: every onboarding surface (hades config
+// init / hades new / hades init / hades migrate claude-code) runs preflight
 // BEFORE accepting operator input. Preflight failure exits 3 (distinct
 // from generic I/O 1 / user error 2 / conflict 4).
 //
 // ships three checks (release DECISION L-4: gitnexus removed; caronte
 // is in-process):
-// - Hermes binary + version
-// - Plugin format remnants
+// - Hermes binary + version (inv-hades-175 ≥0.13.0)
+// - Plugin format remnants (inv-hades-176; legacy CC/OpenClaude format halts)
 // - Daemon socket (optional; Status=skip if absent per Q5=C+)
 //
 // Surface forms (per master plan §"Cross-phase type sharing" + Phase
@@ -28,7 +28,7 @@
 // checks with the simpler error-or-nil + bool signatures the CLI
 // callers want.
 //
-// Per spec §3.4 boundary discipline: this package does
+// Per spec §3.4 boundary discipline (inv-hades-031): this package does
 // NOT import `internal/store`. Audit emit lives in CLI
 // wrappers which call `internal/audit/chain/` after preflight pass.
 //

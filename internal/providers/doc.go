@@ -8,7 +8,7 @@
 // (operator-extensible Tier 4 slot), or the PauseBackend sentinel
 // (Tier 5, returns a descriptive error so the operator can act).
 //
-// # Compile-time interface guard
+// # Compile-time interface guard (inv-hades-067)
 //
 // Every concrete backend in Phases B-D and MUST include a
 // compile-time guard at package scope:
@@ -21,12 +21,12 @@
 // this pattern across every file in internal/providers/ and the
 // bypass adapter.
 //
-// # Credential routing
+// # Credential routing (inv-hades-068)
 //
 // TierRequest carries credentials in two shapes:
 //
 // - Headers map[string]string — for non-secret HTTP headers
-// (Content-Type, X-Zen-Profile, X-Zen-Project, etc.).
+// (Content-Type, X-HADES-Profile, X-HADES-Project, etc.).
 // - Credentials map[string]redact.Secret — for any header whose
 // value is a token, API key, or refresh credential. Backends
 // unwrap with.Reveal() at the exact moment of HTTP transmission
@@ -34,7 +34,7 @@
 // intercepts every Format verb to emit "[REDACTED]" instead of
 // plaintext (see internal/redact/secret.go).
 //
-// # Provider extensibility
+// # Provider extensibility (inv-hades-070)
 //
 // Operator-declared providers (providers.toml) flow through
 // Registry.RegisterFromConfig, which validates the schema (required
@@ -42,7 +42,7 @@
 // extends validation with endpoint reachability + rate card presence
 // checks at startup.
 //
-// # Boundary
+// # Boundary (inv-hades-031)
 //
 // This package does NOT import internal/store. Cost ledger writes
 // flow via internal/daemon/dispatcheradapter. The package

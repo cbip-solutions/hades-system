@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Package client is the typed HTTP client for talking to zen-swarm-ctld
-// over its UDS socket. Used by the zen CLI and TUI.
+// Package client is the typed HTTP client for talking to hades-ctld
+// over its UDS socket. Used by the hades CLI and TUI.
 //
 // Task L-2 extends this surface with /v1/bypass/* helpers in
 // bypass.go and a base-URL constructor for tests.
@@ -121,7 +121,7 @@ func (c *Client) getJSON(ctx context.Context, path string, out any) error {
 // response into out. Pass nil for headers when no extra headers are
 // required (getJSON is the nil-headers wrapper).
 //
-// send `X-Zen-Project-ID: <alias>` so the daemon mcpgateway dispatcher
+// send `X-HADES-Project-ID: <alias>` so the daemon mcpgateway dispatcher
 // can resolve the alias canonically (header) instead of pulling it
 // from request body args.
 //
@@ -165,7 +165,7 @@ func (c *Client) postJSON(ctx context.Context, path string, body any, out any) e
 // the response into out (out may be nil). Pass nil for headers when no
 // extra headers are required (postJSON is the nil-headers wrapper).
 //
-// `X-Zen-Project-ID: <alias>` through this surface so the daemon
+// `X-HADES-Project-ID: <alias>` through this surface so the daemon
 // mcpgateway dispatcher resolves the alias canonically per the MCP
 // protocol convention.
 //

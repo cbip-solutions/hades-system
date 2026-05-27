@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const DefaultDaemonSocketPath = "/tmp/zen-swarm.sock"
+const DefaultDaemonSocketPath = "/tmp/hades-system.sock"
 
 const daemonDialTimeout = 500 * time.Millisecond
 
@@ -45,7 +45,7 @@ func (c *DaemonCheck) Run(ctx context.Context) Result {
 		return Result{
 			Name:    c.Name(),
 			Status:  StatusSkip,
-			Summary: "zen-swarm-ctld daemon not running (auto-starts on first need)",
+			Summary: "hades-ctld daemon not running (auto-starts on first need)",
 			Details: "Q5=C+ severity matrix treats absent daemon as skip; Phase A onboarding works daemon-less. The CLI auto-starts the daemon when needed (Plan 1).",
 		}
 	}
@@ -73,7 +73,7 @@ func (c *DaemonCheck) Run(ctx context.Context) Result {
 	return Result{
 		Name:    c.Name(),
 		Status:  StatusPass,
-		Summary: "zen-swarm-ctld daemon reachable at " + c.socketPath,
+		Summary: "hades-ctld daemon reachable at " + c.socketPath,
 	}
 }
 

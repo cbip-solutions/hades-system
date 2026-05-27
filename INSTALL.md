@@ -33,20 +33,19 @@ make test
 The primary binaries are:
 
 - `bin/hades`
-- `bin/zen`
-- `bin/zen-swarm-ctld`
+- `bin/hades-ctld`
 
 ## Run The Daemon
 
 ```bash
-bin/zen-swarm-ctld
+bin/hades-ctld
 ```
 
 Then inspect local health:
 
 ```bash
 bin/hades status
-bin/zen doctor
+bin/hades doctor
 ```
 
 ## SSH Exec Host Verification
@@ -55,10 +54,10 @@ The SSH MCP uses `golang.org/x/crypto/ssh` directly. Credentials come only from
 `SSH_AUTH_SOCK`; HADES does not read private keys from disk. Host keys are
 verified with `known_hosts`:
 
-- set `ZEN_SSH_KNOWN_HOSTS=/path/to/known_hosts` to use an explicit trust file;
+- set `HADES_SSH_KNOWN_HOSTS=/path/to/known_hosts` to use an explicit trust file;
 - otherwise HADES reads `~/.ssh/known_hosts` and `~/.ssh/known_hosts2` when
   present;
-- `ZEN_SSH_INSECURE_TEST=1` is reserved for deterministic fake-SSH tests and
+- `HADES_SSH_INSECURE_TEST=1` is reserved for deterministic fake-SSH tests and
   should not be used for real hosts.
 
 ## Install The Hermes Plugin

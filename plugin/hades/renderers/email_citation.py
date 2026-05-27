@@ -28,7 +28,7 @@ class EmailCitationRenderer(Renderer):
         *,
         daemon_url: str | None = None,
     ) -> None:
-        """``web_fallback_audit_url``: substitute ``zen://audit/<id>`` with https form.
+        """``web_fallback_audit_url``: substitute ``hades://audit/<id>`` with https form.
 
         ``audit_web_base_url``: base URL for the fallback (default
         ``https://hades.local`` per the release design phase D brand pass).
@@ -135,7 +135,7 @@ class EmailCitationRenderer(Renderer):
         """Return the canonical or HTTPS-fallback audit URL for a citation.
 
         Default (``web_fallback_audit_url=False``) returns the canonical
-        zen:// deep-link via ``Envelope.audit_event_url()`` (the
+        hades:// deep-link via ``Envelope.audit_event_url()`` (the
         cross-language helper that mirrors Go's ``AuditEventURL``).
         Cross-renderer consistency check: web + ink also
         use this helper.
@@ -145,7 +145,7 @@ class EmailCitationRenderer(Renderer):
         for older email clients that strip non-``http(s)`` /``mailto:``
         schemes. The HTTPS substitute exists because email is the only
         renderer whose downstream surface (an MUA / webmail client) may
-        not register the ``zen://`` URL handler.
+        not register the ``hades://`` URL handler.
 
         the release design+ may add a daemon-side HTTPS audit redirector that
         consumes the same path; the email HTTPS form is a forward-

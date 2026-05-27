@@ -39,7 +39,7 @@ config. With --capture-only the second step is skipped (debugging).`,
 				return ierrors.Wrap(ierrors.Code("wizard.mcp-spawn-fail"), fmt.Errorf("extract: %w", err))
 			}
 			fmt.Printf("bypass-config written to %s\n", outPath)
-			fmt.Printf("next: zen bypass cross-validate --plugin meridian --config %s\n", outPath)
+			fmt.Printf("next: hades bypass cross-validate --plugin meridian --config %s\n", outPath)
 			return nil
 		},
 	}
@@ -53,13 +53,13 @@ config. With --capture-only the second step is skipped (debugging).`,
 func runToolBinary(mode string, extra ...string) error {
 	args := append([]string{mode}, extra...)
 	var c *exec.Cmd
-	if os.Getenv("ZEN_DEV_TOOLS") == "1" {
+	if os.Getenv("HADES_DEV_TOOLS") == "1" {
 		if _, err := exec.LookPath("go"); err != nil {
-			return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("ZEN_DEV_TOOLS=1 requires `go` on PATH for `go run`: %w", err))
+			return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("HADES_DEV_TOOLS=1 requires `go` on PATH for `go run`: %w", err))
 		}
 		if _, err := os.Stat(filepath.Join("tools", "extract-bypass-config", "main.go")); err != nil {
 			cwd, _ := os.Getwd()
-			return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("ZEN_DEV_TOOLS=1 requires cwd at the zen-swarm repo root (cwd=%s): %w", cwd, err))
+			return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("HADES_DEV_TOOLS=1 requires cwd at the hades-system repo root (cwd=%s): %w", cwd, err))
 		}
 		c = exec.Command("go", append([]string{"run", "./tools/extract-bypass-config/"}, args...)...)
 	} else {

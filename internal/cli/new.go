@@ -4,7 +4,7 @@
 // Surface greenfield scaffold from embedded or pluggable template. Consumes
 // onboard.Wizard with WizardKindGreenfield discriminator +
 // preflight + release audit emit (via daemon HTTP audit client per
-// invariant — internal/cli MUST NOT import internal/store) +
+// inv-hades-031 — internal/cli MUST NOT import internal/store) +
 // D1/D2/D3 templates+hooks.
 //
 // drift adjustments vs the master plan §"Tech Stack" assumption:
@@ -20,7 +20,7 @@
 // are surfaced as warnings, not blockers.
 // - Plan invented `errExit(code, msg)` typed errors. Actual exit-code
 // dispatch uses `ErrRecoverable` (exit 1) + `ErrPreflightFailure`
-// (exit 3); unknown errors default to exit 2 (cmd/zen/main.go). Plan's
+// (exit 3); unknown errors default to exit 2 (cmd/hades/main.go). Plan's
 // conflict (exit 4) and SIGINT (exit 130) collapse into:
 // - non-interactive missing required flag → ErrRecoverable (exit 1)
 // - target exists + non-empty → ErrRecoverable (exit 1)
@@ -75,9 +75,9 @@ func NewNewCmd() *cobra.Command {
 		Short: "Scaffold a new project (greenfield)",
 		Long: `Scaffold a new project from an embedded or pluggable template.
 
-zen new is the greenfield entry point: it creates a project from scratch.
-For brownfield (existing code), use ` + "`zen init`" + `. To import an
-existing claude-code install, use ` + "`zen migrate claude-code`" + `.
+hades new is the greenfield entry point: it creates a project from scratch.
+For brownfield (existing code), use ` + "`hades init`" + `. To import an
+existing claude-code install, use ` + "`hades migrate claude-code`" + `.
 
 Templates:
   Embedded (no network):  hermes-plugin-only, hermes-plugin+daemon,
@@ -95,13 +95,13 @@ EXIT CODES:
   3  preflight failure (Hermes missing, plugin format remnant)
 `,
 		Example: `  # Recommended defaults, embedded plugin template:
-  zen new --template hermes-plugin-only --project-name my-plugin
+  hades new --template hermes-plugin-only --project-name my-plugin
 
   # Pluggable from GitHub:
-  zen new --template gh:foo/bar --template-version v1.0.0 --project-name my-app
+  hades new --template gh:foo/bar --template-version v1.0.0 --project-name my-app
 
   # Non-interactive in CI:
-  zen new --non-interactive --template go-cli --project-name svc --yes`,
+  hades new --non-interactive --template go-cli --project-name svc --yes`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 			if ctx == nil {
@@ -196,7 +196,7 @@ func runNew(ctx context.Context, cmd *cobra.Command, args newArgs) error {
 	}
 
 	if present, _, _ := preflight.CCDetect(); present {
-		fmt.Fprintln(stdout, "Detected ~/.claude/ — consider running `zen migrate claude-code` first")
+		fmt.Fprintln(stdout, "Detected ~/.claude/ — consider running `hades migrate claude-code` first")
 		fmt.Fprintln(stdout, "to import your existing config + skills + commands into Hermes plugin format.")
 		fmt.Fprintln(stdout, "(Continuing with greenfield scaffold; pass --yes to suppress this hint.)")
 	}
@@ -314,7 +314,7 @@ func runNew(ctx context.Context, cmd *cobra.Command, args newArgs) error {
 
 // emitOnboardNew posts evt.onboard.new.run to the daemon audit endpoint.
 // Best-effort: failure prints a warning but never blocks scaffold success.
-// Daemon may be down (zen new is operable without daemon); audit-pending
+// Daemon may be down (hades new is operable without daemon); audit-pending
 // queue catches up later.
 func emitOnboardNew(ctx context.Context, cmd *cobra.Command, stderr io.Writer, a onboard.WizardAnswers, target, template string) {
 	auditClient := newClientFromCmd(cmd)
@@ -335,7 +335,7 @@ func emitOnboardNew(ctx context.Context, cmd *cobra.Command, stderr io.Writer, a
 
 func resolveTemplate(ctx context.Context, name, version string) (templates.Template, error) {
 	if name == "" {
-		return nil, errors.New("--template required (run `zen new --list-templates` for embedded options)")
+		return nil, errors.New("--template required (run `hades new --list-templates` for embedded options)")
 	}
 
 	if t, err := embedded.Template(name); err == nil {

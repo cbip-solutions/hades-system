@@ -6,7 +6,7 @@
 // repos OR a structured
 // surface recommendation (ModeSurface — surfaced via §10 MCP +
 // F7 TUI panel). Every dispatch emits a release Tessera audit row via
-// the C-11 federation.EmitAudit helper.
+// the C-11 federation.EmitAudit helper (inv-hades-269 chokepoint).
 //
 // is the production owner of the Coordinator behavioural surface
 // (master C-8, ADR-0115). + seeded the ConsumerRef value
@@ -14,7 +14,7 @@
 // (*link.Linker).ConsumersFor returning []coordinated.ConsumerRef +
 // emits ContractBreakage events for to dispatch on.
 //
-// Boundary invariant / invariant / invariant: this package MUST
+// Boundary inv-hades-031 / inv-hades-270 / inv-hades-271: this package MUST
 // NOT import internal/orchestrator/{hra,merge,confirmation_policy} (the
 // F.7 hook packages — release N-4 verified those are seam-for-future,
 // the D5 decoupling); MUST NOT import internal/store (the daemon store);
@@ -117,7 +117,7 @@ type Coordinator interface {
 // preserves the master C-9 naming ( production adapter is
 // constructed via orchestrator.ContractFixAutonomyOracle; tests in
 // coordinated use coordinated.AutonomyOracle) AND preserves the
-// invariant boundary (coordinated does NOT import orchestrator;
+// inv-hades-270 boundary (coordinated does NOT import orchestrator;
 // orchestrator only imports coordinated for the value-types parameter).
 //
 // Decision returns ModeAutonomy iff ALL THREE hold (single-method seam;

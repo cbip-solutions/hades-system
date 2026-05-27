@@ -3,9 +3,9 @@
 //
 // - citation.envelope.serialize-roundtrip
 // - citation.renderers (7 platforms tested)
-// - citation.audit-chain.zen://audit-handler-functional
+// - citation.audit-chain.hades://audit-handler-functional
 //
-// ships the daemon-side citation envelope + zen://audit handler
+// ships the daemon-side citation envelope + hades://audit handler
 // + markdown_fallback renderer. The "7 platforms tested" check counts
 // the markdown_fallback renderer + 6 platform renderers
 // — at release ship time the count is 1; reading 1/7 is
@@ -59,8 +59,8 @@ func runCitationChecksWith(ctx context.Context, p CitationProber) []CheckResult 
 		},
 		{
 			probe: "audit-handler-functional",
-			name:  "citation.audit-chain.zen://audit-handler-functional",
-			hint:  "/v1/audit/event/* unreachable; verify daemon health: zen daemon status",
+			name:  "citation.audit-chain.hades://audit-handler-functional",
+			hint:  "/v1/audit/event/* unreachable; verify daemon health: hades daemon status",
 		},
 	}
 	out := make([]CheckResult, 0, 3)

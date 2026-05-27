@@ -6,7 +6,7 @@
 // dispatcher.bound). RunSchedulerProbe is delegate-only; impl in
 // internal/scheduler/prober.go.
 //
-// invariant + invariant anchor: the dispatcher.bound aspect probes
+// inv-hades-080 + inv-hades-123 anchor: the dispatcher.bound aspect probes
 // that the scheduler can reach the release dispatcher at runtime — a
 // non-nil "scheduler.fire dispatched directly" path would surface here.
 package cli
@@ -66,10 +66,10 @@ func runSchedulerQueueDepth(ctx context.Context, p SchedulerProber) ProbeResult 
 	switch {
 	case total >= schedulerQueueFailAt:
 		r.Status = ProbeFail
-		r.Hint = "WFQ saturated; some project may be starved. Inspect: zen schedule queue. Mitigate via per-project priority boost: zen project priority --boost <alias> --duration 1h"
+		r.Hint = "WFQ saturated; some project may be starved. Inspect: hades schedule queue. Mitigate via per-project priority boost: hades project priority --boost <alias> --duration 1h"
 	case total >= schedulerQueueWarnAt:
 		r.Status = ProbeWarn
-		r.Hint = "approaching WFQ saturation threshold (10); inspect: zen schedule queue"
+		r.Hint = "approaching WFQ saturation threshold (10); inspect: hades schedule queue"
 	default:
 		r.Status = ProbeOK
 	}
@@ -92,10 +92,10 @@ func runSchedulerMissedFires(ctx context.Context, p SchedulerProber) ProbeResult
 	switch {
 	case total >= schedulerMissedFailAt:
 		r.Status = ProbeFail
-		r.Hint = "high miss rate suggests cron daemon down or system suspended; inspect: zen schedule history --since 24h"
+		r.Hint = "high miss rate suggests cron daemon down or system suspended; inspect: hades schedule history --since 24h"
 	case total >= schedulerMissedWarnAt:
 		r.Status = ProbeWarn
-		r.Hint = "occasional misses are normal under doctrine 'catch-up-bounded'; inspect: zen schedule history --since 24h"
+		r.Hint = "occasional misses are normal under doctrine 'catch-up-bounded'; inspect: hades schedule history --since 24h"
 	default:
 		r.Status = ProbeOK
 	}
@@ -120,7 +120,7 @@ func runSchedulerWfqSaturation(ctx context.Context, p SchedulerProber) ProbeResu
 	switch {
 	case maxPct >= schedulerWfqFailPct:
 		r.Status = ProbeFail
-		r.Hint = fmt.Sprintf("project %s saturating WFQ tokens; consider operator override: zen project priority --boost %s --duration 30m", maxAlias, maxAlias)
+		r.Hint = fmt.Sprintf("project %s saturating WFQ tokens; consider operator override: hades project priority --boost %s --duration 30m", maxAlias, maxAlias)
 	case maxPct >= schedulerWfqWarnPct:
 		r.Status = ProbeWarn
 	default:
@@ -135,7 +135,7 @@ func runSchedulerDispatcherBound(ctx context.Context, p SchedulerProber) ProbeRe
 		r.Status = ProbeFail
 		r.Message = "dispatcher unreachable"
 		r.Detail = err.Error()
-		r.Hint = "inv-zen-080 + inv-zen-123: scheduler.fire MUST dispatch via Plan 3 dispatcher. Check: zen orchestrator status; restart daemon if dispatcher process died"
+		r.Hint = "inv-hades-080 + inv-hades-123: scheduler.fire MUST dispatch via Plan 3 dispatcher. Check: hades orchestrator status; restart daemon if dispatcher process died"
 		return r
 	}
 	r.Status = ProbeOK

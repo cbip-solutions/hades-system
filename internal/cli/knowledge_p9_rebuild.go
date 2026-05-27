@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — knowledge_p9_rebuild.go.
 //
-// `zen knowledge-p9 rebuild` — re-embed + re-index one project's promoted pins.
+// `hades knowledge-p9 rebuild` — re-embed + re-index one project's promoted pins.
 //
 // The daemon refreshes the release global pin index synchronously and returns
 // 202 Accepted with a receipt for wire compatibility. --project is required;
@@ -32,8 +32,8 @@ returns 202 Accepted with a receipt after the promoted-pin FTS and vector rows
 have been rewritten.
 
 --project is required.`,
-		Example: `  zen knowledge-p9 rebuild --project zen-swarm
-  zen knowledge-p9 rebuild --project internal-platform-x`,
+		Example: `  hades knowledge-p9 rebuild --project hades-system
+  hades knowledge-p9 rebuild --project internal-platform-x`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if project == "" {
 				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--project required"))

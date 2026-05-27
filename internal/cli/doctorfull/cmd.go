@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package doctorfull ships the `zen doctor full` Cobra subcommand
+// Package doctorfull ships the `hades doctor full` Cobra subcommand
 // .
 //
 // Lives in its own sub-package to avoid an import cycle: internal/cli →
@@ -88,7 +88,7 @@ func NewDoctorFullCmd(cfg Config) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "full",
 		Short: "Run the full Plan 13 doctor aggregator (4 Plan-13 checks + adapter-wrapped Plan 1-9)",
-		Long: `zen doctor full
+		Long: `hades doctor full
 
 Runs the Plan 13 composing aggregator over the 4 NEW Plan 13 checks
 (hermes-install, plugin-format, claude-code-install-detected,
@@ -118,7 +118,7 @@ if any fix fails. --auto-safe restricts to non-destructive ops only.
 --yes skips all prompts (requires explicit operator authorization for
 CI). --non-interactive errors loudly if a prompt would arise.
 
-Cache: ` + "`~/.cache/zen-swarm/doctor/last-run.json`" + ` per-project; --quick
+Cache: ` + "`~/.cache/hades-system/doctor/last-run.json`" + ` per-project; --quick
 re-uses cached output ≤5min old; --fix invalidates cache.
 
 Audit chain emits evt.doctor.full.run per invocation (Tessera-anchored

@@ -23,7 +23,7 @@
 // server-side canonicalisation).
 //
 // Validate reads TOML from disk and posts to daemon /v1/doctrine/validate;
-// --against-baseline triggers tighten-only check.
+// --against-baseline triggers tighten-only check (inv-hades-136 surface).
 package cli
 
 import (
@@ -341,9 +341,9 @@ func validateCmd() *cobra.Command {
 		Short:   "Valida un archivo TOML contra el esquema actual",
 		Long: `Lee un archivo TOML local y lo valida contra el esquema actual
 del daemon. Con --against-baseline <doctrina>, valida también que el
-archivo sea tighten-only respecto a la doctrina baseline (inv-zen-136).
+archivo sea tighten-only respecto a la doctrina baseline (inv-hades-136).
 
-Útil antes de copiar a ~/.config/zen-swarm/doctrines/ para evitar que
+Útil antes de copiar a ~/.config/hades-system/doctrines/ para evitar que
 el watcher rechace la recarga.`,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {

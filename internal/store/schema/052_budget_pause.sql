@@ -1,5 +1,5 @@
 -- Migration 052: budget_pauses + budget_anomalies + budget_anomaly_samples
--- (the release design release track, Q6 C, invariant + invariant).
+-- (the release design release track, Q6 C, inv-hades-078 + inv-hades-079).
 --
 -- budget_pauses: durable 4-scope state machine. (scope, scope_value)
 -- is the natural key; UPSERT replaces the row on Trigger if the same
@@ -27,7 +27,7 @@ CREATE INDEX IF NOT EXISTS idx_budget_pauses_auto_resume
     ON budget_pauses(auto_resume_at);
 
 -- budget_anomalies: append-only event log of every z-score trigger.
--- Used by `zen budget anomalies` and morning-brief.
+-- Used by `hades budget anomalies` and morning-brief.
 CREATE TABLE IF NOT EXISTS budget_anomalies (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     scope        TEXT    NOT NULL,

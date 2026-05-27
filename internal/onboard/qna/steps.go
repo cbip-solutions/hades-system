@@ -32,7 +32,7 @@ func stepsForKind(k onboard.WizardKind) []step {
 		}
 	case onboard.WizardKindBrownfield:
 		return []step{
-			{Key: "recognize_accepted", Prompt: "Accept zen recognize inference? (Y/n)", Options: []string{"y", "n"}},
+			{Key: "recognize_accepted", Prompt: "Accept hades recognize inference? (Y/n)", Options: []string{"y", "n"}},
 			{Key: "doctrine_profile", Prompt: "Doctrine profile (inherits from global if blank)", Options: []string{"", "max-scope", "default", "capa-firewall"}},
 			{Key: "mcps", Prompt: "MCP overrides (default = recognize-derived smart set)", Options: nil},
 			{Key: "install_plugin", Prompt: "Install Hermes plugin? (Y/n)", Options: []string{"y", "n"}},

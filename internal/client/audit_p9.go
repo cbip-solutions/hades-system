@@ -19,7 +19,7 @@
 //
 // All 10 methods compile against the *Client plumbing in client.go
 // (getJSON / postJSON / NewWithBaseURL). No dependency on internal/daemon
-// or internal/store.
+// or internal/store (inv-hades-031 boundary respected at the client layer).
 package client
 
 import (

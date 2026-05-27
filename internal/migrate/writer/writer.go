@@ -27,7 +27,7 @@ var (
 type WriterConfig struct {
 	HermesPluginRoot string
 	HermesConfigPath string
-	ZenConfigRoot    string
+	HadesConfigRoot  string
 	BackupRoot       string
 	ForceOverwrite   bool
 }
@@ -125,7 +125,7 @@ func (w *Writer) routeTarget(e mapping.PlanEntry) (root string, joinAsIs bool, e
 	case mapping.EntryKindHermesConfig:
 		return filepath.Dir(w.cfg.HermesConfigPath), false, nil
 	case mapping.EntryKindDoctrine, mapping.EntryKindMemory:
-		return w.cfg.ZenConfigRoot, true, nil
+		return w.cfg.HadesConfigRoot, true, nil
 	case mapping.EntryKindMCPServer:
 
 		return filepath.Dir(w.cfg.HermesConfigPath), false, nil
@@ -178,16 +178,16 @@ func (w *Writer) applyEntry(e mapping.PlanEntry) error {
 		}
 		return writeHermesConfig(w.cfg.HermesConfigPath, e)
 	case mapping.EntryKindDoctrine:
-		if w.cfg.ZenConfigRoot == "" {
+		if w.cfg.HadesConfigRoot == "" {
 			return nil
 		}
-		path := filepath.Join(w.cfg.ZenConfigRoot, filepath.FromSlash(e.TargetPath))
+		path := filepath.Join(w.cfg.HadesConfigRoot, filepath.FromSlash(e.TargetPath))
 		return writeDoctrineTOML(path, e)
 	case mapping.EntryKindMemory:
-		if w.cfg.ZenConfigRoot == "" {
+		if w.cfg.HadesConfigRoot == "" {
 			return nil
 		}
-		path := filepath.Join(w.cfg.ZenConfigRoot, filepath.FromSlash(e.TargetPath))
+		path := filepath.Join(w.cfg.HadesConfigRoot, filepath.FromSlash(e.TargetPath))
 		return writeMemory(path, e)
 	case mapping.EntryKindMCPServer:
 
@@ -215,7 +215,7 @@ func stripPluginPrefix(p string) string {
 	if after, ok := strings.CutPrefix(p, "plugin/hades/"); ok {
 		return after
 	}
-	return strings.TrimPrefix(p, "plugin/zen-swarm/")
+	return strings.TrimPrefix(p, "plugin/hades-system/")
 }
 
 func (w *Writer) emitInitPy() error {

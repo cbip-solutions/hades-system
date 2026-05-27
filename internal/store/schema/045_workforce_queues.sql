@@ -6,7 +6,7 @@
 -- project_id on every row for logical isolation (spec §7.1).
 -- schemaVersion bumped to 11 by internal/store/schema.go.
 --
--- PRAGMA WAL + busy_timeout MUST be set by the adapter constructor (invariant).
+-- PRAGMA WAL + busy_timeout MUST be set by the adapter constructor (inv-hades-073).
 
 -- SharedTaskList: Kanban board.
 -- UNIQUE on (project_id, task_id) enforces idempotent Enqueue per spec §7.1.
@@ -35,7 +35,7 @@ CREATE INDEX IF NOT EXISTS idx_workforce_tasks_priority
 
 -- CheckpointQueue: async durable channel Worker → L2 Reviewer.
 -- thread_id is the LangGraph-style stable key (Q3 C).
--- deadline_at is Unix seconds for invariant hook (the release design measures).
+-- deadline_at is Unix seconds for inv-hades-050 hook (the release design measures).
 -- consumed = 0 (unconsumed) | 1 (consumed by the release design orchestrator).
 CREATE TABLE IF NOT EXISTS workforce_checkpoints (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,

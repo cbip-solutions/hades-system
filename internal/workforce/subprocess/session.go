@@ -98,7 +98,7 @@ type Message struct {
 // Receive return ErrSessionClosed. Subsequent Close calls return the
 // same error value as the first call (see I-1).
 //
-// invariant: stdio is the canonical transport; this interface is the
+// inv-hades-086: stdio is the canonical transport; this interface is the
 // only entry point for talking to the OpenClaude subprocess. There is
 // no HTTP equivalent in this package (the absence of any HTTP server
 // constructor is the structural enforcement).

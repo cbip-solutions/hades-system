@@ -12,11 +12,11 @@
 // I composes the *internal/knowledge index DB + scanner + parser into a
 // KnowledgeIndex satisfying interface and hands it to SetKnowledgeIndex).
 // Until lands the routes return 503 — the operator surface is
-// final-shape day 1 (`zen knowledge query` reaches a real route) but the
+// final-shape day 1 (`hades knowledge query` reaches a real route) but the
 // substrate ships in bootstrap (mirrors the release D-13 schedule
-// + E-12 inbox + F-10 zen-day patterns).
+// + E-12 inbox + F-10 hades-day patterns).
 //
-// Status-code mapping (mirrors the inbox_p7 + zenday patterns):
+// Status-code mapping (mirrors the inbox_p7 + hadesday patterns):
 //
 // 503 — KnowledgeIndex() not yet wired ( bootstrap will
 // register the façade at boot; tests inject fakes via
@@ -27,17 +27,17 @@
 // error count > threshold, etc).
 // 200 — success; bodies documented per route below.
 //
-// invariant boundary: this handler imports internal/knowledge value
+// inv-hades-031 boundary: this handler imports internal/knowledge value
 // types only (Query / Result / Doc / FileType / sentinel errors). No
 // internal/store imports — the KnowledgeIndex interface is structural
 // and the daemon-side accessor returns it as the same interface, keeping
 // the boundary at the interface layer (mirrors handlers.InboxStore +
 // handlers.ScheduleStore + handlers.DayGenerator gate patterns). The
 // knowledge package owns its own DB at
-// `~/.cache/zen-swarm/knowledge-index/index.db` (per the invariant
+// `~/.cache/hades-system/knowledge-index/index.db` (per the inv-hades-031
 // documented exception in docs/operations/knowledge-aggregator-boundary.md).
 //
-// invariant boundary: the handler does NOT process q.Remote=true /
+// inv-hades-129 boundary: the handler does NOT process q.Remote=true /
 // q.AuditChain=true even though the underlying knowledge.Execute returns
 // distinct sentinel errors for both. The CLI layer intercepts both flags
 // BEFORE the round-trip per spec §1 Q17 + the G-12/G-13 sentinel-anchor
@@ -47,9 +47,9 @@
 //
 // CLI surface (handled in internal/cli/knowledge.go):
 //
-// zen knowledge query <text> [--type X] [--project Y] [--since 7d] [--limit N] [--format text|json|md] [--code-symbol foo]
-// zen knowledge reindex [--full] [--project alias]
-// zen knowledge stats
+// hades knowledge query <text> [--type X] [--project Y] [--since 7d] [--limit N] [--format text|json|md] [--code-symbol foo]
+// hades knowledge reindex [--full] [--project alias]
+// hades knowledge stats
 package handlers
 
 import (

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package budget implements the zen-swarm budget MCP server.
+// Package budget implements the hades-system budget MCP server.
 //
 // The server exposes seven stdio tools wrapping the daemon /v1/budget/* HTTP
 // endpoints via the internal/mcp/client typed wrapper. All budget
@@ -9,10 +9,10 @@
 // state).
 //
 // Boundary invariants:
-// - invariant: this package NEVER imports internal/store, internal/budget/,
+// - inv-hades-031: this package NEVER imports internal/store, internal/budget/,
 // or internal/daemon/. Only internal/mcp/client/ and stdlib.
-// - invariant: no HTTP server code in this package; go-sdk stdio canonical.
-// - invariant: the HTTP client enforces daemon-socket-only egress.
+// - inv-hades-086: no HTTP server code in this package; go-sdk stdio canonical.
+// - inv-hades-085: the HTTP client enforces daemon-socket-only egress.
 //
 // (internal/store/cost_ledger.go) is the single write-path for cost rows.
 // never inserts cost rows; the tag tool uses /v1/budget/record to

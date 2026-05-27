@@ -4,22 +4,22 @@
 // the underlying SQLite tables introduced in migration 045 (workforce
 // durable queues, release ).
 //
-// # Boundary
+// # Boundary (inv-hades-031)
 //
 // internal/workforce/queue MUST NOT import internal/store. This package
 // is the single bridge: workforceadapter imports both. The boundary is
 // enforced at compile-time by the noStoreImportAnalyzer in
 // internal/doctrine/lint/analyzers/nostore (release Q16 D
 // migration); analysistest fixtures in
-// internal/doctrine/lint/analysistest/inv_zen_031_test.go pin the
+// internal/doctrine/lint/analysistest/inv_hades_031_test.go pin the
 // enforcement mechanism. The lint wrappers run the analyzer in
 // CI; see project instructions "Boundary" rule.
 //
-// # Durability
+// # Durability (inv-hades-073)
 //
 // Every constructor calls configureDurableConn on the *sql.DB to ensure
 // PRAGMA journal_mode=WAL, synchronous=NORMAL, busy_timeout=5000. The
-// compliance test in tests/compliance/inv_zen_073_test.go verifies that
+// compliance test in tests/compliance/inv_hades_073_test.go verifies that
 // committed rows survive a hard-kill (os.Exit(2) without Close).
 //
 // # project_id isolation

@@ -13,22 +13,22 @@
 // fight that contract and require distributed-transaction primitives
 // SQLite cannot provide.
 //
-// Boundary: this package imports NO internal/store. The
+// Boundary (inv-hades-031): this package imports NO internal/store. The
 // PerProjectKnowledgeStore interface is satisfied at daemon-boot time
 // by internal/daemon/knowledgeadapter, the only package that
 // legitimately imports both internal/store AND this aggregator
-// package. Compliance test in tests/compliance/inv_zen_031_*.go enforces.
+// package. Compliance test in tests/compliance/inv_hades_031_*.go enforces.
 //
 // Phase ownership:
 // - D-2 (this file): struct + constructor + DI seams + sentinels
 // - D-3..D-7: Promote / Search / Embed / wikilink resolver methods
 // - D-8: PerProjectKnowledgeStore real implementation in
 // internal/daemon/knowledgeadapter
-// - D-9: invariant Promote runtime enforcement
-// - D-10: invariant search-no-remote runtime check
+// - D-9: inv-hades-146 Promote runtime enforcement
+// - D-10: inv-hades-129 search-no-remote runtime check
 // - D-11: ChainAnchorComputer real wiring to
 // - D-12: PerProjectKnowledgeStore daemon glue
-// - D-13: zen-CLI wiring + audit-anchor reverse lookup
+// - D-13: hades-CLI wiring + audit-anchor reverse lookup
 package aggregator
 
 import (
@@ -128,7 +128,7 @@ func (a *Aggregator) Close() error {
 // degraded-mode toggle continue to use the same a.db field they always
 // did.
 //
-// Boundary note: this exposes the read-side
+// Boundary note (inv-hades-031 spirit): this exposes the read-side
 // handle intentionally; release Indexer is the SOLE intended caller.
 // A compliance test (tests/compliance/) enforces that no other
 // importer reads DB() without an explicit allowlist entry. The

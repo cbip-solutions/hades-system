@@ -14,7 +14,7 @@
 // exposes citations, verification, abstention, provenance, audit-chain seq).
 // - When Dispatcher is nil,
 // both methods return zero results without error (graceful degradation,
-// invariant contract).
+// inv-hades-202 contract).
 //
 // Plan-file F-1 deviation — narrow-interface seam (ecosystemQueryer):
 //
@@ -32,7 +32,7 @@
 // narrow-interface pattern proven at scale in D-4 (CohereForwarder),
 // D-7 (AnswerGenerator), D-8 (JudgeBackend) — see HANDOFF lesson #5.
 //
-// Boundary: this file imports
+// Boundary (spec §3.5 + inv-hades-031): this file imports
 // internal/research/ecosystem only. It never accesses ecosystem.db directly,
 // never imports net/http, never imports internal/store. Confirmed by grep CI gate.
 package research

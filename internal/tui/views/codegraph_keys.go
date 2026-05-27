@@ -5,7 +5,7 @@
 // Graph panel. Split from codegraph.go to keep render + key paths
 // readable independently. Both files compile as one package.
 //
-// Privacy / invariant: the [C] cross-project key checks
+// Privacy / inv-hades-163: the [C] cross-project key checks
 // doctrineMode; "capa-firewall" disables the federated query
 // (daemon-side enforcement double-anchored at retrieval boundary).
 package views

@@ -1,4 +1,4 @@
-// Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
+// Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
 package citation
 
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// envelopeJSONSchemaSentinel anchors invariant: every Envelope field
+// envelopeJSONSchemaSentinel anchors inv-hades-166: every Envelope field
 // MUST be referenced here. Adding/removing/renaming a field without
 // updating serialization fails compilation.
 //
@@ -15,7 +15,7 @@ import (
 // field name listed below is reachable from Envelope. The runtime
 // guarantee (round-trip preservation across 10000 random envelopes) is
 // enforced by TestEnvelopeRoundtripPreserves (envelope_test.go) +
-// tests/compliance/inv_zen_166_citation_serialize_test.go.
+// tests/compliance/inv_hades_166_citation_serialize_test.go.
 func envelopeJSONSchemaSentinel() {
 	var e Envelope
 	_ = e.ID
@@ -35,7 +35,7 @@ func envelopeJSONSchemaSentinel() {
 	_, _ = json.Marshal(&e)
 }
 
-// auditEventHandlerAuthSentinel anchors invariant: the zen://audit URL
+// auditEventHandlerAuthSentinel anchors inv-hades-172: the hades://audit URL
 // handler signature is fixed at the auth-required shape (handler must
 // accept request bound to an authenticated session context; doctrine
 // filter applies before serving the audit row).

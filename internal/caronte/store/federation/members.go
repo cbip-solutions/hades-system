@@ -11,7 +11,7 @@ import (
 
 // MemberRow is the on-disk row shape for caronte_workspace_members. The
 // PK on (workspace_id, project_id) makes a re-add of the same pair fail at
-// the SQL layer; callers MUST use the release §10.2 zen workspace link CLI
+// the SQL layer; callers MUST use the release §10.2 hades workspace link CLI
 // to grow a roster (which validates ordering + capa-firewall + audit).
 type MemberRow struct {
 	WorkspaceID  string

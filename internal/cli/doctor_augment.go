@@ -51,7 +51,7 @@ func runAugmentChecksWith(ctx context.Context, p AugmentProber) []CheckResult {
 		{
 			probeName:  "endpoint-reachable",
 			resultName: "augment.endpoint-reachable",
-			hint:       "daemon /v1/augment unreachable; check zen daemon status",
+			hint:       "daemon /v1/augment unreachable; check hades daemon status",
 		},
 		{
 			probeName:  "budget-headroom",

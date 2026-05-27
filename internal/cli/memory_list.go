@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — memory_list.go.
 //
-// `zen memory list` enumerates pinned notes from the global pin index
+// `hades memory list` enumerates pinned notes from the global pin index
 // . Render as text|json.
 package cli
 
@@ -40,8 +40,8 @@ func newMemoryListCmd() *cobra.Command {
 Output formats:
   text  (default) — tabwriter table with note-id / PROJECT / TITLE / PROMOTED-BY / PROMOTED-AT
   json            — array of AggPinNote objects (wire-faithful)`,
-		Example: `  zen memory list
-  zen memory list --limit 50 --format json | jq '.[] | .note_id'`,
+		Example: `  hades memory list
+  hades memory list --limit 50 --format json | jq '.[] | .note_id'`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := memoryClientFactory(cmd)
 			ctx, cancel := context.WithTimeout(cmd.Context(), memoryListTimeout)

@@ -2,4 +2,4 @@ syntax = "proto3";
 
 package empty.v1;
 
-option go_package = "github.com/zen-swarm/example/empty/v1;emptyv1";
+option go_package = "github.com/hades-system/example/empty/v1;emptyv1";

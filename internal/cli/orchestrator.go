@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — orchestrator.go.
 //
-// `zen orchestrator` exposes six subcommands backed by the daemon's
+// `hades orchestrator` exposes six subcommands backed by the daemon's
 // /v1/orchestrator/* RESTful surface:
 //
 // - status — per-tier breaker state + active pins + 30d cost summary

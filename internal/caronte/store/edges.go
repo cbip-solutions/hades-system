@@ -11,7 +11,7 @@ import (
 	"fmt"
 )
 
-// UpsertEdge inserts or updates a relation row. Enforces invariant:
+// UpsertEdge inserts or updates a relation row. Enforces inv-hades-233:
 // e.Confidence MUST be Valid() (one of the frozen C-3 tiers) — an invalid
 // confidence is rejected before any write, so no graph_edges row can carry
 // an unknown confidence. PK is (source_id,target_id,kind,site_line); a
@@ -20,7 +20,7 @@ import (
 // reachable is a *bool → NULL when nil (CHA/SCIP, not pruned), else 1/0.
 func (s *Store) UpsertEdge(ctx context.Context, e Edge) error {
 	if !e.Confidence.Valid() {
-		return fmt.Errorf("caronte/store: UpsertEdge: invalid confidence %q (inv-zen-233)", e.Confidence)
+		return fmt.Errorf("caronte/store: UpsertEdge: invalid confidence %q (inv-hades-233)", e.Confidence)
 	}
 	var reachable sql.NullInt64
 	if e.Reachable != nil {

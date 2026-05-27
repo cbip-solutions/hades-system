@@ -1,51 +1,51 @@
 // SPDX-License-Identifier: MIT
-// Package tmuxlife orchestrates per-project tmux sessions for zen-swarm.
+// Package tmuxlife orchestrates per-project tmux sessions for hades-system.
 //
 // Each registered project gets a dedicated tmux session named
-// "zen-<alias>-<sha8>" on a separate socket /tmp/zen-swarm.sock (NEVER the
+// "hades-<alias>-<sha8>" on a separate socket /tmp/hades-system.sock (NEVER the
 // default /tmp/tmux-<uid> socket). Sessions contain 6 windows: 5
 // daemon-owned (orch, leads, workers, hra, logs) and 1 operator-owned
 // (scratch). Lifecycle is hybrid lazy: spawned on cwd-activation, explicit
-// `zen attach`, scheduled-job firing, or autonomous-mode resume. Idle
+// `hades attach`, scheduled-job firing, or autonomous-mode resume. Idle
 // sessions are reaped per doctrine TTL (max-scope=∞, default=24h,
 // capa-firewall=4h) after a tmux-resurrect snapshot (excluding scratch).
 //
 // Drift detection is forensic, NOT enforcing: a 5-second poller compares
 // daemon-owned panes against the expected set in daemon.db and emits
 // TmuxLayoutDriftDetected events but never auto-reverts. Recovery is
-// operator-invoked via `zen layout repaint <alias>`.
+// operator-invoked via `hades layout repaint <alias>`.
 //
-// Boundary: tmuxlife does NOT import internal/store. Storage
+// Boundary (inv-hades-031): tmuxlife does NOT import internal/store. Storage
 // access flows through the SessionStore interface (declared in session.go,
 // added in C-2..C-4) implemented by internal/daemon/handlers/sessions.go
 // . The package depends only on the Go standard library.
 //
 // Invariants enforced:
-// - invariant: every tmux invocation includes -S /tmp/zen-swarm.sock.
+// - inv-hades-117: every tmux invocation includes -S /tmp/hades-system.sock.
 // ExecTmux panics on -S absence; SocketPath const is the single source.
-// - invariant: scratch window contents NEVER serialized to snapshot.
+// - inv-hades-118: scratch window contents NEVER serialized to snapshot.
 // Save() writes tmux-resurrect config excluding :scratch and validates
 // post-tar that no scratch sentinel surfaced (added in C-9).
-// - invariant: idle TTL applied per doctrine. DoctrineIdleTTL maps the
-// three standard doctrines; per-project override via zenswarm.toml is
+// - inv-hades-119: idle TTL applied per doctrine. DoctrineIdleTTL maps the
+// three standard doctrines; per-project override via hadessystem.toml is
 // read at activation time and threaded through
 // the IdleReaper.doctrineFor callback (added in C-10).
 package tmuxlife
 
 import "errors"
 
-// SocketPath is the canonical zen-swarm tmux socket path.
+// SocketPath is the canonical hades-system tmux socket path.
 //
-// invariant: every tmux invocation MUST include -S SocketPath; the default
+// inv-hades-117: every tmux invocation MUST include -S SocketPath; the default
 // tmux socket /tmp/tmux-<uid> is forbidden because it would contaminate the
-// operator's regular tmux namespace with zen-spawned sessions.
+// operator's regular tmux namespace with hades-spawned sessions.
 //
 // File permissions are 0600 owner-only after first creation (set by tmux
 // itself; daemon does NOT chmod). release spec §7.3 "Tmux contamination
 // prevention Layer 3" documents the permission model.
-const SocketPath = "/tmp/zen-swarm.sock"
+const SocketPath = "/tmp/hades-system.sock"
 
-const SnapshotDirSubpath = ".config/zen-swarm/tmux-snapshots"
+const SnapshotDirSubpath = ".config/hades-system/tmux-snapshots"
 
 const IdleTTLInfinity = -1
 
@@ -62,4 +62,4 @@ var ErrTmuxVersionTooOld = errors.New("tmuxlife: tmux version below 3.4; snapsho
 
 var ErrSnapshotCorrupt = errors.New("tmuxlife: snapshot archive corrupt; preserved at *.corrupted-<ts>; spawn fresh session")
 
-var ErrScratchExclusionViolated = errors.New("tmuxlife: scratch window content detected in snapshot; inv-zen-118 violated; aborted")
+var ErrScratchExclusionViolated = errors.New("tmuxlife: scratch window content detected in snapshot; inv-hades-118 violated; aborted")

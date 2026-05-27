@@ -41,7 +41,7 @@ import (
 // than TTLPermanent, and IsExpired's `now.Sub(anchor) > ttl` comparison
 // always returns false for permanent sources.
 //
-// Invariant (inv-zen-F8-001): TTLPermanent must equal math.MaxInt64
+// Invariant (inv-hades-F8-001): TTLPermanent must equal math.MaxInt64
 // nanoseconds. Changing this value would silently break IsExpired for
 // all permanent sources. Do not substitute with a large finite constant.
 const TTLPermanent = time.Duration(math.MaxInt64)

@@ -58,7 +58,7 @@ func BuildConfig(projectID, doctrine, dbPath string) Config {
 				Replicas: []ReplicaConfig{
 					{
 						Type:             "s3",
-						Bucket:           "zen-swarm-audit-" + projectID,
+						Bucket:           "hades-system-audit-" + projectID,
 						Path:             "wal",
 						AccessKey:        "$LITESTREAM_ACCESS_KEY_ID",
 						SecretKey:        "$LITESTREAM_SECRET_ACCESS_KEY",

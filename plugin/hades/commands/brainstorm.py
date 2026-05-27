@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 """/hades:brainstorm handler — research-first brainstorming workflow.
 
-Per invariant + spec §1 Q9, Hermes is discover-then-call (not auto-trigger); this handler
+Per inv-hades-015 + spec §1 Q9, Hermes is discover-then-call (not auto-trigger); this handler
 returns a prompt that explicitly invokes superpowers:brainstorming after the project-doctrine
 override pass (research SOTA dispatch per ADR-0006 + memoria feedback_research_first_brainstorm.md).
 """
@@ -18,7 +18,7 @@ You are starting a design brainstorm session for HADES. This command applies the
 skill_load("superpowers:brainstorming")
 ```
 
-Per invariant + spec §1 Q9, Hermes is discover-then-call (not auto-trigger). Explicit invocation required.
+Per inv-hades-015 + spec §1 Q9, Hermes is discover-then-call (not auto-trigger). Explicit invocation required.
 
 ## 2. Apply HADES project-doctrine override
 

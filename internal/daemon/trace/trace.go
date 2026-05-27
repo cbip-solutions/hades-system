@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package trace renders feature execution timelines (`zen trace <feature>`).
+// Package trace renders feature execution timelines (`hades trace <feature>`).
 // Reads from SQLite events, llm_calls, decisions, doc_versions tables.
 package trace
 

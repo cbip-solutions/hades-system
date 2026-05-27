@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_cross_project_at_tessera.go
 //
-// Task J-9: custom go vet analyzer enforcing invariant
+// Task J-9: custom go vet analyzer enforcing inv-hades-144
 // (per-project Tessera tile-log isolation; *Adapter exported methods
 // MUST key tile reads by a.projectID).
 //
@@ -15,7 +15,7 @@
 // tessera.ErrCrossProject when tile keys do not match a.projectID.
 //
 // Pattern golang.org/x/tools/go/analysis.Analyzer + analysistest.
-// Loaded via cmd/zen-doctrine-lint module plugin.
+// Loaded via cmd/hades-doctrine-lint module plugin.
 package lint
 
 import (
@@ -27,7 +27,7 @@ import (
 
 var NoCrossProjectAtTesseraAnalyzer = &analysis.Analyzer{
 	Name: "noCrossProjectAtTessera",
-	Doc: `Enforces inv-zen-144: *Adapter exported methods in internal/audit/tessera
+	Doc: `Enforces inv-hades-144: *Adapter exported methods in internal/audit/tessera
 MUST key tile reads by constructor-bound a.projectID. Methods accepting an
 external projectID parameter (otherProjectID, targetProjectID, etc.) are
 forbidden — they enable cross-project blast radius.`,
@@ -58,7 +58,7 @@ func runNoCrossProjectAtTessera(pass *analysis.Pass) (any, error) {
 			for _, param := range fn.Type.Params.List {
 				if isExternalProjectIDParam(param) {
 					pass.Reportf(fn.Pos(),
-						"inv-zen-144: *Adapter exported method reads tiles NOT keyed by a.projectID; param %s shadows receiver project_id",
+						"inv-hades-144: *Adapter exported method reads tiles NOT keyed by a.projectID; param %s shadows receiver project_id",
 						joinParamNames(param))
 					break
 				}

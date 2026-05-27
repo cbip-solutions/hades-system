@@ -19,7 +19,7 @@
 // structurally without an explicit `var _ cacheClient =...` at the
 // impl site.
 //
-// Boundary note: nothing in this file
+// Boundary note (inv-hades-031 / inv-hades-104): nothing in this file
 // imports internal/store. talks to release only via the
 // EventEmitter interface declared in events.go.
 

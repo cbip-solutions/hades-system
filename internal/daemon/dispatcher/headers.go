@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/daemon/dispatcher/headers.go
 //
-// Header injection for X-Zen-Profile/Project/Session. Context-keyed values
+// Header injection for X-HADES-Profile/Project/Session. Context-keyed values
 // flow from the daemon entry point (anthropic_proxy / orchestrator) down to
 // dispatcher.Forward, which merges them with explicit per-request headers
 // before tier dispatch.
@@ -12,7 +12,7 @@
 // need to filter zero-value headers before forwarding to the upstream tier.
 // - MergeHeaders: explicit wins on conflict, including explicit empty string —
 // the caller's deliberate choice always overrides the ambient context default.
-// - Boundary: this file only imports "context" from stdlib.
+// - Boundary (inv-hades-031): this file only imports "context" from stdlib.
 // It MUST NOT import internal/store or any other internal package.
 
 package dispatcher
@@ -42,13 +42,13 @@ func WithProfile(ctx context.Context, profile string) context.Context {
 func HeadersFromContext(ctx context.Context) map[string]string {
 	out := make(map[string]string)
 	if v, ok := ctx.Value(ctxProjectKey).(string); ok && v != "" {
-		out["X-Zen-Project"] = v
+		out["X-HADES-Project"] = v
 	}
 	if v, ok := ctx.Value(ctxSessionKey).(string); ok && v != "" {
-		out["X-Zen-Session"] = v
+		out["X-HADES-Session"] = v
 	}
 	if v, ok := ctx.Value(ctxProfileKey).(string); ok && v != "" {
-		out["X-Zen-Profile"] = v
+		out["X-HADES-Profile"] = v
 	}
 	return out
 }

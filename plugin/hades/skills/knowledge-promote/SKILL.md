@@ -32,13 +32,13 @@ memory via the release design D's `aggregator.Promote()`. Triggered by `/hades:k
 
 Verify item exists + operator can see it:
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock -s "http://unix/v1/knowledge/<id>" | jq '.'
+curl --unix-socket /tmp/hades-system.sock -s "http://unix/v1/knowledge/<id>" | jq '.'
 ```
 
 ### 2. POST promote to daemon
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock \
+curl --unix-socket /tmp/hades-system.sock \
      -X POST \
      -d '{"reason":"<reason>"}' \
      "http://unix/v1/knowledge/<id>/promote"
@@ -50,13 +50,13 @@ the release design Tessera audit chain with operator identity from keychain.
 ### 3. Invariants
 
 - Reason REQUIRED (load-bearing for audit chain readability)
-- Reason MUST NOT contain Claude/Anthropic/AI attribution (invariant)
+- Reason MUST NOT contain Claude/Anthropic/AI attribution (inv-hades-004)
 - 409 if already promoted; 422 if capa-firewall project (needs explicit override)
 
 ### 4. Reverse: unpromote
 
 ```bash
-zen knowledge unpromote <id> --reason "..."
+hades knowledge unpromote <id> --reason "..."
 ```
 
 CLI only (no slash; demoting is rare + less time-critical).
@@ -65,5 +65,5 @@ CLI only (no slash; demoting is rare + less time-critical).
 
 - spec §9.1 the release design D aggregator.Promote
 - spec §4.6 audit chain integration
-- invariant privacy boundary (promotion crosses it)
+- inv-hades-163 privacy boundary (promotion crosses it)
 - /hades:knowledge-promote slash command handler

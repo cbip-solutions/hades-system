@@ -14,9 +14,9 @@ import (
 // Witness manages the daemon's ECDSA P-256 transparency-log witness
 // keypair. Per spec §1 Q2 A, on darwin the private key resides en
 // the macOS Keychain (kSecClassGenericPassword); on linux/non-darwin
-// it lives en a 0600 file under ~/.config/zen-swarm/.
+// it lives en a 0600 file under ~/.config/hades-system/.
 //
-// Per invariant, the only externally observable signing surface is
+// Per inv-hades-145, the only externally observable signing surface is
 // Sign(digest) → []byte; there is no unsigned pass-through. Per T2,
 // the private key is never returned from any method (only the public
 // key is); callers MUST go through Sign to use it.

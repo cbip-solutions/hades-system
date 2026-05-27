@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	ErrPrevNotInstalled = errors.New("safetynet/prev: zen-prev binary not installed")
+	ErrPrevNotInstalled = errors.New("safetynet/prev: hades-prev binary not installed")
 	ErrPrevHashMismatch = errors.New("safetynet/prev: sha256 mismatch — refusing install")
 	ErrPrevManifest     = errors.New("safetynet/prev: invalid manifest")
 )

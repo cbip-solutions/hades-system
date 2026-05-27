@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package reload implements doctrine-TOML hot-reload via fsnotify.
 //
-// The Watcher monitors per-doctrine TOML files (~/.config/zen-swarm/doctrines/*.toml
-// for user defaults; <project>/.zen/doctrine-override.toml for per-project tighten
+// The Watcher monitors per-doctrine TOML files (~/.config/hades-system/doctrines/*.toml
+// for user defaults; <project>/.hades/doctrine-override.toml for per-project tighten
 // overrides). On a write event, after a 2-second debounce window, the Watcher runs
 // the validate-then-swap pipeline (parser.ParseStrict → schema.Validate →
 // schema.ValidateTighten if per-project → atomic swap via active.Set*). Validation
@@ -14,11 +14,11 @@
 // Reuses release Q16 + Qx-2 D file-watcher infrastructure (fsnotify wrapper +
 // 25% CPU pool + debounce reset-on-event pattern); zero new infra.
 //
-// Boundary: zero imports of internal/store;
+// Boundary (inv-hades-031 / inv-hades-133): zero imports of internal/store;
 // reload package is downstream of parser + schema + active + errors only, plus
 // fsnotify + eventlog interface.
 //
-// Atomicity: Watcher does NOT mutate active.Accessor's sync.Pointer
+// Atomicity (inv-hades-138): Watcher does NOT mutate active.Accessor's sync.Pointer
 // directly; delegates to active.SetForProject + active.SetUserDefault, which own
 // the Store call. Watcher concurrency contract: AddPath, NotifyForce,
 // SubscribeReloadEvents safe for concurrent callers; Start runs in a single

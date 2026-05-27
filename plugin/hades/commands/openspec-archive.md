@@ -20,8 +20,8 @@ Per spec §3.3 (Modo C híbrido):
      audit flag, test failure operator wants to ship anyway)
 3. Operator confirms each tier-decision item.
 4. Apply deltas to `openspec/specs/<area>.md`.
-5. Commit with trailers: `Zen-Trace-Id`, `Zen-Provider`, `Zen-Audit-Passed`.
-6. **NEVER add Claude/Anthropic/AI attribution** (invariant — the
+5. Commit with trailers: `HADES-Trace-Id`, `HADES-Provider`, `HADES-Audit-Passed`.
+6. **NEVER add Claude/Anthropic/AI attribution** (inv-hades-004 — the
    plugin's `tool.execute.before` hook regex-rejects).
 7. Cleanup worktrees + branches per project's archive strategy.
 

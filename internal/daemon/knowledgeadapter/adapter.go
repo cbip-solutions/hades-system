@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package knowledgeadapter is the invariant bridge between
+// Package knowledgeadapter is the inv-hades-031 bridge between
 // internal/daemon/knowledgeadapter and internal/knowledge/aggregator.
 //
 // The aggregator package (internal/knowledge/aggregator) must NOT import
@@ -7,7 +7,7 @@
 // interface using the daemon's daemon-store *sql.DB (obtained via
 // NewAdapterFromDB or the daemon-level convenience wrapper NewAdapter).
 //
-// Compliance tests/compliance/inv_zen_031_boundary_test.go enforces that
+// Compliance tests/compliance/inv_hades_031_boundary_test.go enforces that
 // the aggregator package never imports internal/store.
 //
 // The Adapter satisfies the aggregator.PerProjectKnowledgeStore interface:
@@ -20,7 +20,7 @@
 // future migration that adds per-project ACL.
 // OpenProjectVault — opens (or returns cached) a *sql.DB for the
 // per-project vault.db at
-// <canonical_path>/.zen/vault.db. The DB is
+// <canonical_path>/.hades/vault.db. The DB is
 // opened with WAL + FKs + FTS5. Cache is
 // mutex-protected; second call to the same
 // projectID returns the existing handle.
@@ -35,7 +35,7 @@
 // Close drains the vault DB cache; callers (daemon Stop) MUST call Close
 // after the aggregator is no longer in use to avoid fd leaks.
 //
-// Driver note:
+// Driver note (inv-hades-031 + driver conflict):
 // This package imports aggregator (which via db.go pulls in mattn/go-sqlite3,
 // a CGO driver). The production daemon binary also uses ncruces/go-sqlite3
 // (via internal/store), but this package does NOT import internal/store
@@ -48,12 +48,12 @@
 // - NewAdapterFromDB(db *sql.DB) — used by tests and by the daemon glue
 // in server_knowledge_aggregator.go (passes s.store.DB()).
 //
-// invariant: this package imports internal/knowledge/aggregator but NOT
+// inv-hades-031: this package imports internal/knowledge/aggregator but NOT
 //
 // internal/store. The daemon glue file is the only place that calls
 // s.store.DB() and forwards the *sql.DB here.
 //
-// invariant: this package does NOT import net/http.
+// inv-hades-129: this package does NOT import net/http.
 package knowledgeadapter
 
 import (
@@ -107,7 +107,7 @@ func (a *Adapter) ListAuthorizedProjects(ctx context.Context) ([]knowledgetypes.
 
 			return nil, fmt.Errorf("knowledgeadapter: ListAuthorizedProjects scan: %w", err)
 		}
-		h.VaultPath = filepath.Join(canonicalPath, ".zen", "vault.db")
+		h.VaultPath = filepath.Join(canonicalPath, ".hades", "vault.db")
 		handles = append(handles, h)
 	}
 	if err := rows.Err(); err != nil {
@@ -229,7 +229,7 @@ func (a *Adapter) resolveVaultPath(ctx context.Context, projectID string) (strin
 	if err != nil {
 		return "", fmt.Errorf("knowledgeadapter: resolveVaultPath %q: %w", projectID, err)
 	}
-	return filepath.Join(canonicalPath, ".zen", "vault.db"), nil
+	return filepath.Join(canonicalPath, ".hades", "vault.db"), nil
 }
 
 func ensureVaultSchema(ctx context.Context, db *sql.DB) error {

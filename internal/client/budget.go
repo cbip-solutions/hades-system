@@ -9,7 +9,7 @@
 // events, axes, pause-modes
 //
 // read-only spend-rollup over CostCounters; release retains the call site
-// because zen day + zen doctor still consume it.
+// because hades day + hades doctor still consume it.
 package client
 
 import (
@@ -28,7 +28,7 @@ import (
 // reused that name for the morning-brief summary endpoint
 // (release_summary.go), so this release read-rollup has been renamed to
 // `BudgetSummaryRollup` to keep both surfaces compilable. The wire
-// path (`GET /v1/budget?range=`) is unchanged. Callers: zen doctor
+// path (`GET /v1/budget?range=`) is unchanged. Callers: hades doctor
 // orchestrator checks.
 func (c *Client) BudgetSummaryRollup(ctx context.Context, rng string) (*BudgetSummaryResp, error) {
 	path := "/v1/budget"
@@ -187,7 +187,7 @@ func (c *Client) BudgetResumeCall(ctx context.Context, req BudgetResumeReq) (*Bu
 // `pause_mode` field accepted by the doctrine schema (see
 // internal/doctrine/builtin.go: max-scope=descriptive, default=quiet,
 // capa-firewall=fail_loud). Operators copy these names into
-// `[budget].pause_mode` in zenswarm.toml; the doctrine validator only
+// `[budget].pause_mode` in hadessystem.toml; the doctrine validator only
 // accepts these three canonical strings, so the CLI surface MUST match.
 //
 // `Default: true` is set on `descriptive` because that is the
@@ -195,7 +195,7 @@ func (c *Client) BudgetResumeCall(ctx context.Context, req BudgetResumeReq) (*Bu
 //
 // Plan I may surface a daemon route if the doctrine schema gains
 // additional modes; until then this CLI-side list is the source of truth
-// for `zen budget pause-modes` output.
+// for `hades budget pause-modes` output.
 func PauseModes() []PauseMode {
 	return []PauseMode{
 		{Name: "descriptive", Description: "Visible pause; emits notification (max-scope OOTB).", Default: true},

@@ -1,4 +1,4 @@
--- Migration 051: cost_axis_tags + axis_tag_loss_events (the release design release track, Q6 C, invariant).
+-- Migration 051: cost_axis_tags + axis_tag_loss_events (the release design release track, Q6 C, inv-hades-077).
 --
 -- The 4-axis attribution table holds one row per (cost_id, axis_name) pair.
 -- Idempotency is achieved via UNIQUE (cost_id, axis_name) + INSERT OR IGNORE in
@@ -17,7 +17,7 @@
 -- idempotency guarantee, not the FK.
 --
 -- The axis_tag_loss_events table records every missing-axis incident so the
--- daemon morning brief and `zen budget axes --losses` surface drift the
+-- daemon morning brief and `hades budget axes --losses` surface drift the
 -- moment it appears (rather than silently allowing axis_tag_completeness to
 -- drop below 100%).
 

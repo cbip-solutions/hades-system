@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package prefs persists the operator's prior onboarding answers to
-// $XDG_CONFIG_HOME/zen-swarm/onboard-prefs.toml so the hybrid wizard's
+// $XDG_CONFIG_HOME/hades-system/onboard-prefs.toml so the hybrid wizard's
 // Reuse path (Q3=D Path 2) can short-circuit follow-up Qs on the next
-// `zen config init` / `zen new` / `zen init`.
+// `hades config init` / `hades new` / `hades init`.
 //
 // # Cross-phase canonical (C3 reconciliation 2026-05-14)
 //
-// (`zen config init`) and (`zen new` / `zen init`)
+// (`hades config init`) and (`hades new` / `hades init`)
 // invoke prefs.Load(prefs.Path()) at engine entry and prefs.Save when
 // the wizard ends with SavePreferences=true. The subpackage owns the
 // persisted shape AND the Path() resolver; parent package onboard
@@ -30,7 +30,7 @@
 // of the input value.
 // - MAJOR bump in the file (e.g. "2.0") → Load returns
 // onboard.ErrUnsupportedSchemaVersion; operator runs
-// `zen migrate config` to upgrade.
+// `hades migrate config` to upgrade.
 // - MINOR bump (e.g. "1.99") → Load auto-migrates by tolerating the
 // higher version; the next Save normalises to CurrentSchemaVersion.
 // - Empty schema_version (legacy / first run) → tolerated; treated
@@ -73,7 +73,7 @@
 // Save persists with mode 0600 (operator-private). Mirrors release +
 // hints or provider URLs leaking on a shared host.
 //
-// # Boundary discipline
+// # Boundary discipline (inv-hades-031)
 //
 // This subpackage NEVER imports internal/store. The prefs shape is a
 // pure TOML round-trip; persistence beyond a single file is the

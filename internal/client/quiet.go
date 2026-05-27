@@ -3,7 +3,7 @@
 //
 // Three methods + supporting wire types for the daemon's
 // /v1/quiet/* surface backing the operator-facing
-// `zen quiet` CLI:
+// `hades quiet` CLI:
 //
 // QuietGet GET /v1/quiet — decode QuietGetResponse
 // QuietUrgentPause POST /v1/quiet/urgent-pause — set UrgentPauseUntil

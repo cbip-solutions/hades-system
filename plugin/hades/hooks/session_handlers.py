@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-# plugin/zen-swarm/hooks/session_handlers.py
-"""Hermes on_session_start + on_session_end callbacks for zen-swarm."""
+# plugin/hades-system/hooks/session_handlers.py
+"""Hermes on_session_start + on_session_end callbacks for hades-system."""
 
 from __future__ import annotations
 
@@ -34,7 +34,7 @@ def extract_tldr(handoff_path: Path) -> str:
     try:
         body = handoff_path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as exc:
-        logger.debug("zen-swarm: .hades/session.md read failed at %s: %s", handoff_path, exc)
+        logger.debug("hades-system: .hades/session.md read failed at %s: %s", handoff_path, exc)
         return ""
     match = _TLDR_PATTERN.search(body)
     if not match:
@@ -57,9 +57,9 @@ def extract_tldr(handoff_path: Path) -> str:
 def _build_session_resume_text(cwd: str, tldr: str) -> str:
     """Compose the operator-facing session-resume blurb."""
     return (
-        "## zen-swarm session resume — .hades/session.md TL;DR\n\n"
+        "## hades-system session resume — .hades/session.md TL;DR\n\n"
         f"{tldr}\n\n"
-        f"_Auto-loaded by zen-swarm Hermes plugin (on_session_start hook). "
+        f"_Auto-loaded by hades-system Hermes plugin (on_session_start hook). "
         f"Project root: {cwd}._"
     )
 

@@ -2,7 +2,7 @@
 // axis_tag_loss_events. The internal/budget engine never imports this
 // package; the adapter in internal/daemon/dispatcheradapter/budget_hooks.go
 // satisfies the BudgetStore interface declared in internal/budget/axes.go
-// by calling these functions. invariant boundary preserved.
+// by calling these functions. inv-hades-031 boundary preserved.
 //
 // Option A coordination (METHODOLOGY.md §4.7.5): cost_axis_tags has no FK
 // to cost_ledger because release F-1 (which creates cost_ledger via

@@ -38,17 +38,17 @@
 // 14. audit.Emit(EvtRAGAnswer, 97) → return QueryResult.
 //
 // Owned invariants:
-// - invariant partial: 4-goroutine fan-out result merge is deterministic
+// - inv-hades-200 partial: 4-goroutine fan-out result merge is deterministic
 // given fixed embedder / fixed classifier (verified by
-// TestDispatcher_FanOut_Determinism_InvZen200). Full enforcement at
-// - invariant partial: 6 query-side events emit in canonical order
+// TestDispatcher_FanOut_Determinism_InvHades200). Full enforcement at
+// - inv-hades-197 partial: 6 query-side events emit in canonical order
 // (Query → Retrieval → Citation → Verify → Abstain → Answer). Full
 // chain-consistency property test at
-// - invariant partial: live-fallback hook surface present (full impl D-11).
-// - invariant partial: doctrine strictness knob (LLMJudgeEnabled +
+// - inv-hades-203 partial: live-fallback hook surface present (full impl D-11).
+// - inv-hades-205 partial: doctrine strictness knob (LLMJudgeEnabled +
 // RefuseOnUnverified + AuditEmissionLevel + CitationMode) applied per-call.
 //
-// invariant boundary: this file does NOT import internal/store; it consumes
+// inv-hades-031 boundary: this file does NOT import internal/store; it consumes
 // per-ecosystem retrieval via the aggregatorAdapter interface (concrete impl
 // lives at indexer.go in, IndexerQueryAdapter satisfied by *Indexer).
 

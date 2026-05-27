@@ -2,7 +2,7 @@
 name: hades
 version: 0.12.0
 description: |
-  HADES system Hermes plugin (formerly zen-swarm; renamed in the release design A-2) —
+  HADES system Hermes plugin (formerly hades-system; renamed in the release design A-2) —
   operator UX, citation rendering, caronte code-graph augmentation. Wires lifecycle
   hooks (on_session_start/on_session_end/pre_tool_call/post_tool_call/
   pre_llm_call), 13 skills (hades, start, handoff + 10 the release design workflow/

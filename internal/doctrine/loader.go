@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// ~/.config/zen-swarm/doctrines/<name>.toml and per-project
-// zenswarm.toml; emits Loaded{Schema, Provenance}. Provenance maps
+// ~/.config/hades-system/doctrines/<name>.toml and per-project
+// hadessystem.toml; emits Loaded{Schema, Provenance}. Provenance maps
 // field-paths to the source file that contributed each value;
 // undefined fields are absent from the map (the resolver chain in
 // resolver.go consults provenance to track which layer of the chain

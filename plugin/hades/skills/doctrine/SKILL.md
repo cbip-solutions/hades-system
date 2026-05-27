@@ -32,7 +32,7 @@ directly.
 ### Show mode (no argument)
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock -s \
+curl --unix-socket /tmp/hades-system.sock -s \
      "http://unix/v1/doctrine/show?project=$PROJECT&session=$SESSION" \
      | jq '.'
 ```
@@ -44,7 +44,7 @@ Format result as operator-friendly summary.
 Validate name is in `{max-scope, default, capa-firewall}`.
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock \
+curl --unix-socket /tmp/hades-system.sock \
      -X POST \
      -H "Content-Type: application/json" \
      -d '{"project":"...","session":"...","doctrine":"<name>","reason":"..."}' \
@@ -52,7 +52,7 @@ curl --unix-socket /tmp/zen-swarm.sock \
 ```
 
 Override is **audit-logged via the release design chain** (Tessera-anchored `DoctrineOverridden` event).
-Per invariant: can only TIGHTEN beyond project ceiling, never loosen.
+Per inv-hades-084: can only TIGHTEN beyond project ceiling, never loosen.
 
 ## Doctrine values
 
@@ -65,6 +65,6 @@ Per invariant: can only TIGHTEN beyond project ceiling, never loosen.
 ## Cross-references
 
 - spec §3.4 Doctrine schema extensions
-- invariant doctrine ceiling enforcement (the release design)
-- invariant amendment audit chain anchor
+- inv-hades-084 doctrine ceiling enforcement (the release design)
+- inv-hades-072 amendment audit chain anchor
 - /hades:doctrine slash command handler

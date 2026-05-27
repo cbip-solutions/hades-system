@@ -2,14 +2,14 @@
 // Package handlers — citation_probe.go.
 //
 // GET /v1/citation/probe?check=<name> — diagnostic probe surface for
-// the `zen doctor citation` CLI section.
+// the `hades doctor citation` CLI section.
 //
 // Background — release substrate gap closure (mirrors hermes_probe.go):
 //
 // (internal/client/citation.go::CitationProbe) + CLI dispatch in
 // internal/cli/doctor_citation.go, but never registered the daemon-side
 // route. `make smoke` therefore surfaces 404 → "fail" for the audit
-// chain handler check (zen://audit-handler-functional). This file
+// chain handler check (hades://audit-handler-functional). This file
 // closes the gap.
 //
 // Probe checks (closed enum on ?check=):

@@ -445,7 +445,7 @@ func (p *concretePool) leaseSlowPath(ctx context.Context) (*Worktree, error) {
 // accounting: leaseSlowPath increments before calling and decrements on
 // error so the slot reservation race is closed.
 //
-// Branch naming convention: zen-pool-{PoolID}-{leaseID}. PoolID is set by
+// Branch naming convention: hades-pool-{PoolID}-{leaseID}. PoolID is set by
 // PoolConfig (defaults to "p"). leaseID is allocated atomically from
 // nextID so concurrent spawns never collide.
 //
@@ -458,7 +458,7 @@ func (p *concretePool) leaseSlowPath(ctx context.Context) (*Worktree, error) {
 // Timeout, Signal, Panic, Other.
 func (p *concretePool) spawnOne(ctx context.Context) (*Worktree, error) {
 	id := p.nextID.Add(1)
-	branch := fmt.Sprintf("zen-pool-%s-%d", p.cfg.PoolID, id)
+	branch := fmt.Sprintf("hades-pool-%s-%d", p.cfg.PoolID, id)
 	dir := filepath.Join(p.cfg.WorktreeDir, fmt.Sprintf("%s-%d", p.cfg.PoolID, id))
 	if err := gitWorktreeAdd(ctx, p.exec, p.cfg.RepoRoot, dir, branch, p.cfg.BranchBase); err != nil {
 		return nil, err

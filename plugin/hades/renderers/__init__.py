@@ -29,10 +29,10 @@ __all__ = [
 _log = logging.getLogger(__name__)
 
 
-# Canonical daemon TCP URL. Source-of-truth: cmd/zen-mcp-budget/main.go:15
-# and cmd/zen-mcp-audit/main.go:16 — both document
+# Canonical daemon TCP URL. Source-of-truth: cmd/hades-mcp-budget/main.go:15
+# and cmd/hades-mcp-audit/main.go:16 — both document
 # ``http://localhost:4471`` as the daemon's documented TCP listen address
-# for MCP / plugin clients. Production zen-swarm-ctld listens here when
+# for MCP / plugin clients. Production hades-ctld listens here when
 # ``--http 127.0.0.1:4471`` is passed; the renderer audit-anchor
 # side-channel is a TCP-only path.
 #
@@ -45,7 +45,7 @@ _log = logging.getLogger(__name__)
 # ``AuditEventIn{ProjectID, Type, Payload}`` wire shape. The release track
 # AFK module (``plugin/hades/afk/audit.py``) already conforms; the
 # C-1 fix-cycle ports the renderers' ``audit_anchor`` to the same
-# canonical contract so invariant (Tessera anchor chain unbroken) is
+# canonical contract so inv-hades-051 (Tessera anchor chain unbroken) is
 # preserved for every Python-rendered citation.
 #
 # Non-default operator-configured URLs flow through
@@ -87,14 +87,14 @@ def _derive_audit_endpoint(daemon_url: str | None) -> str:
 # ``[renderers]`` block in each builtin TOML
 # (``internal/doctrine/builtin/{max-scope,default,capa-firewall}.toml``).
 # The migration test ``internal/doctrine/builtin/renderers_matrix_test.go``
-# pins the matrix shape (invariant additive-only contract).
+# pins the matrix shape (inv-hades-084 additive-only contract).
 #
 # This Python dict is the runtime fallback the renderers consult when the
 # daemon is unreachable (e.g., during plugin load before the daemon binds,
 # or during chaos rotation). It MUST stay in lockstep with the TOML
 # matrix; the Go-side migration test fails loud if the doctrine config
-# drifts. Operator may override per-project via zenswarm.toml tighten-only
-# (per the release design invariant).
+# drifts. Operator may override per-project via hadessystem.toml tighten-only
+# (per the release design inv-hades-084).
 #
 # Layout: {doctrine_name -> frozenset[Platform]} → enabled platforms.
 # Voice intentionally disabled in capa-firewall: TTS surfaces sensitive
@@ -275,7 +275,7 @@ class Renderer(ABC):
               "payload": {
                 "citation_id":      "<citation.id>",
                 "platform":         "<self.PLATFORM.value>",
-                "audit_event_link": "zen://audit/<event-id>",
+                "audit_event_link": "hades://audit/<event-id>",
                 "rendered_at":      "<RFC 3339 Z>",
                 "doctrine":         "<session doctrine>"
               }
@@ -290,7 +290,7 @@ class Renderer(ABC):
             The rendered ``Envelope``. ``project_id`` comes from the
             envelope (load-bearing — the audit row is project-scoped per
             spec §3.1) and ``audit_event_link`` from
-            ``citation.audit_event_url()`` (the ``zen://audit/<id>``
+            ``citation.audit_event_url()`` (the ``hades://audit/<id>``
             deep-link form, NOT the raw event id).
         doctrine:
             The session doctrine (one of ``max-scope``, ``default``,
@@ -310,12 +310,12 @@ class Renderer(ABC):
 
         Failure mode: log a warning and return an empty string. Audit
         anchoring is a side channel; rendering is non-fatal under audit
-        failure to preserve operator-visible output (invariant).
+        failure to preserve operator-visible output (inv-hades-166).
 
         Subclasses may override to add platform-specific payload fields
         (e.g., voice may attach ``duration_ms``); the canonical contract
         keys must remain present so the daemon's hash-chain stays
-        well-formed (invariant).
+        well-formed (inv-hades-051).
         """
         endpoint = audit_endpoint if audit_endpoint is not None else self._audit_endpoint
         # Lazy httpx import to keep types module lightweight; httpx is in
@@ -368,7 +368,7 @@ class RendererRegistry:
     falls back to markdown on failure.
 
     The Hermes plugin loader invokes ``dispatch()`` per AugmentationResult
-    reaching the rendering pipeline (via zen-side hook callbacks). Doctrine
+    reaching the rendering pipeline (via hades-side hook callbacks). Doctrine
     filter applied first; then renderer lookup; then exception-safe wrapper.
     """
 
@@ -429,7 +429,7 @@ class RendererRegistry:
         Per-citation footnote (matches Go renderFootnote byte-for-byte):
 
             ``[^<citation_id>]\\n\\n[^<citation_id>]: <payload> ``
-            ``([zen://audit/<event-id>](zen://audit/<event-id>); ``
+            ``([hades://audit/<event-id>](hades://audit/<event-id>); ``
             ``project=<p>; doctrine=<d>; lane=<l>; conf=<conf:.2f>``
             ``[; expires=<RFC3339>])``
 
@@ -444,7 +444,7 @@ class RendererRegistry:
         plus a parenthesised single-line metadata suffix. Cross-language
         parity is verified by
         ``tests/renderers/test_markdown_fallback_go_parity.py`` (golden
-        oracle: ``bin/zen-markdown-fallback-golden``).
+        oracle: ``bin/hades-markdown-fallback-golden``).
         """
         if not result.citations:
             return RenderResult(
@@ -530,7 +530,7 @@ def register_default_renderers(
     ``daemon_url`` (optional): non-default daemon TCP URL to thread
     through every concrete renderer's ``__init__``. ``None`` → each
     renderer keeps the canonical ``DEFAULT_DAEMON_URL`` default
-    (``http://localhost:4471``) per the cmd/zen-mcp-{budget,audit} doc
+    (``http://localhost:4471``) per the cmd/hades-mcp-{budget,audit} doc
     contract. The plugin's ``register(ctx)`` typically reads the
     operator-configured URL from ``ctx.config`` (Hermes plugin context
     surface) and forwards it here so audit-anchor side-channel calls

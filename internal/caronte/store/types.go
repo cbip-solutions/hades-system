@@ -107,7 +107,7 @@ type Node struct {
 // Edge is a relation between two nodes. C-4 frozen field set; mirrors the
 // graph_edges columns (spec §4.2). Reachable is a *bool: nil ⇒ NULL
 // (CHA/SCIP, not pruned); &true/&false ⇒ VTA/RTA reachable-set result.
-// Confidence MUST be Valid().
+// Confidence MUST be Valid() (inv-hades-233).
 type Edge struct {
 	SourceID, TargetID, Kind string
 	Confidence               Confidence
@@ -145,9 +145,9 @@ type LoreTrailer struct {
 // (Phases C extractor-registry, D/E concrete extractors); persisted as the
 // bare string.
 //
-// invariant: every api_endpoints.kind value in storage MUST be one of
+// inv-hades-263: every api_endpoints.kind value in storage MUST be one of
 // these; the schema.go CHECK clause references these literals + the
-// compliance test tests/compliance/inv_zen_263_*.go asserts both halves
+// compliance test tests/compliance/inv_hades_263_*.go asserts both halves
 // (schema-side + Go-side) stay in sync.
 type APIEndpointKind string
 

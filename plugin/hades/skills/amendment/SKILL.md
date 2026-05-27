@@ -32,14 +32,14 @@ Each is a separate registered command (Hermes has no subcommand syntax per spike
 ### List
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock -s \
+curl --unix-socket /tmp/hades-system.sock -s \
      "http://unix/v1/amendment/list?project=$PROJECT&status=pending" | jq '.'
 ```
 
 ### Show
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock -s \
+curl --unix-socket /tmp/hades-system.sock -s \
      "http://unix/v1/amendment/<id>" | jq '.'
 ```
 
@@ -48,7 +48,7 @@ curl --unix-socket /tmp/zen-swarm.sock -s \
 Requires: amendment id (+ optional reason).
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock \
+curl --unix-socket /tmp/hades-system.sock \
      -X POST \
      -d '{"reason":"..."}' \
      "http://unix/v1/amendment/<id>/ack"
@@ -61,7 +61,7 @@ Tessera-anchored `AmendmentAcknowledged` event. Dependent amendments blocked unt
 Requires: amendment id + reason (REQUIRED for denial).
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock \
+curl --unix-socket /tmp/hades-system.sock \
      -X POST \
      -d '{"reason":"..."}' \
      "http://unix/v1/amendment/<id>/deny"
@@ -71,11 +71,11 @@ Tessera-anchored `AmendmentDenied` event. Downstream dependents auto-transition 
 
 ## Invariants
 
-- Reason text MUST NOT contain Claude/Anthropic/AI attribution (invariant; daemon regex-rejects)
+- Reason text MUST NOT contain Claude/Anthropic/AI attribution (inv-hades-004; daemon regex-rejects)
 - Denial reason is REQUIRED (load-bearing for audit chain readability)
 
 ## Cross-references
 
 - the release design + the release design doctrine-amendment lifecycle
-- invariant amendment audit chain anchor
+- inv-hades-072 amendment audit chain anchor
 - /hades:amendment-list, /hades:amendment-show, /hades:amendment-ack, /hades:amendment-deny slash command handlers

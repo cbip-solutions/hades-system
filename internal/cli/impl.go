@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — impl.go.
 //
-// `zen impl <interface>` lists the concrete implementations of an interface
+// `hades impl <interface>` lists the concrete implementations of an interface
 // (static polymorphism resolution: VTA/CHA + types.Implements), each with a
 // confidence tier + reachability flag. Routes via the daemon
 // /v1/mcpgateway/impl route → engine GetImplementations (spec §11).
@@ -47,9 +47,9 @@ func NewImplCmd(factory func(cmd *cobra.Command) CaronteImplClient) *cobra.Comma
 		Long: `List the concrete types that implement <interface>, resolved by static
 analysis (go/types Implements + VTA/CHA call graph). Each carries a confidence
 tier (exact_vta / exact_cha / scip_impl / heuristic_name) and a reachability
-flag. Routes via the daemon (single-egress, inv-zen-088).`,
-		Example: `  zen impl io.Writer
-  zen impl internal/providers.Backend --format json`,
+flag. Routes via the daemon (single-egress, inv-hades-088).`,
+		Example: `  hades impl io.Writer
+  hades impl internal/providers.Backend --format json`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

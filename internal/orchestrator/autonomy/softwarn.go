@@ -18,7 +18,7 @@ import (
 // soft-tier check failure to be bypassed instead of warning-only. One
 // event per bypassed check.
 // - EventAutonomyOverrideRejected — emitted when Resolve's capa-firewall
-// hard guard suppressed a non-manual override.
+// hard guard suppressed a non-manual override (inv-hades-100).
 // wires the emission at the CLI entry point when
 // Resolution.RejectedOverride != nil.
 type AutonomyEventKind uint8

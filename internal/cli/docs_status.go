@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — docs_status.go.
 //
-// `zen docs status` renders the per-ecosystem corpus snapshot:
+// `hades docs status` renders the per-ecosystem corpus snapshot:
 //
 // ECOSYSTEM CHUNKS SYMBOLS STORAGE LAST_POLLED LAST_INDEXED
 // go 1234 567 10.0 MB 2025-01-09T... 2025-01-09T...
@@ -43,7 +43,7 @@ timestamp.
 
 Surfaces enough information to drive operator decisions about pruning
 candidates, stale sources, and retention-window adherence.`,
-		Example: `  zen docs status`,
+		Example: `  hades docs status`,
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

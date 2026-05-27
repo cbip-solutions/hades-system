@@ -18,7 +18,7 @@
 // Write/admin endpoints:
 // POST /v1/doctrine/validate body: {against_baseline, toml_content}; response: {valid, errors[]}
 // POST /v1/doctrine/reload body: {path}; trigger reload.NotifyForce + wait DoctrineReloaded
-// POST /v1/doctrine/migrate body: {toml_content, from_schema_version}; IN-MEMORY ONLY
+// POST /v1/doctrine/migrate body: {toml_content, from_schema_version}; IN-MEMORY ONLY (inv-hades-137)
 // POST /v1/doctrine/reinforce body: {task_kind, project_alias, stage, phase, plan_id}; response: {rendered}
 //
 // Wire shapes follow client DTOs at internal/client/doctrine_v2.go
@@ -29,7 +29,7 @@
 // parser.ParseStrict, etc.). Defined here to avoid the daemon→handlers→daemon
 // import cycle (mirrors orchestratorAccessor pattern at handlers/orchestrator.go).
 //
-// Boundary discipline:
+// Boundary discipline (inv-hades-031 generalized as inv-hades-133):
 //
 // handlers consume internal/doctrine/{errors,reload,schema/v1} +
 // internal/client (DTO-only package; no orchestrator/store transitive
@@ -38,11 +38,11 @@
 // *Server accessor methods, NOT through direct package imports here —
 // the *Server lives in package daemon and IS allowed to import them.
 //
-// Atomicity: the /reload handler does NOT mutate active.Accessor
+// Atomicity (inv-hades-138): the /reload handler does NOT mutate active.Accessor
 // directly — it delegates to ctx.DoctrineReload which forwards to
 // reload.Watcher.NotifyForce, going through the same atomic-Store path the
-// file-watcher uses. /migrate is in-memory ONLY; the daemon
-// never auto-writes; only the CLI's `zen doctrine-v2 migrate <path> --confirm`
+// file-watcher uses. /migrate (inv-hades-137) is in-memory ONLY; the daemon
+// never auto-writes; only the CLI's `hades doctrine-v2 migrate <path> --confirm`
 // writes back via os.Rename AFTER consuming this handler's response.
 //
 // Error discrimination: discriminateDoctrineError walks the sentinel-error
@@ -557,7 +557,7 @@ func DoctrineReinforce(s any) http.HandlerFunc {
 //
 // Body (JSON): client.DoctrineV2ReloadReq{Path: string} (empty = reload-all)
 //
-// Flow:
+// Flow (inv-hades-138 atomic via reload.NotifyForce → sync.Pointer.Store path):
 // 1. Decode body.path
 // 2. Subscribe to DoctrineReloaded + DoctrineReloadFailed events BEFORE
 // NotifyForce (avoid losing fast-publisher events;
@@ -638,7 +638,7 @@ func DoctrineReload(s any) http.HandlerFunc {
 		if timeout <= 0 {
 			timeout = 5 * time.Second
 		}
-		// invariant strictly: when two operators reload distinct files
+		// inv-hades-138 strictly: when two operators reload distinct files
 		// concurrently, both subscribers see both events on the per-Watcher
 		// fan-out channels. The handler MUST consume only events whose
 		// Path matches the request body — otherwise concurrent /reload

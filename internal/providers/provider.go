@@ -43,7 +43,7 @@ const (
 	// constant is KEPT, not deleted: its String() value "openclaude"
 	// is persisted in cost_ledger.tier for pre-release historical rows,
 	// and Tier String() values MUST NOT change across releases. No
-	// backend reports Tier() == TierOpenClaude anymore. invariant
+	// backend reports Tier() == TierOpenClaude anymore. inv-hades-212
 	// enforces the backend's removal while permitting this enum remnant.
 	// (The substrate-layer OpenClaude in internal/workforce/ is an
 	// unrelated concern — ADR-0080 territory — not governed here.)
@@ -137,7 +137,7 @@ func (e *RateLimitedError) Error() string {
 //
 // Credentials carries values whose printed form would expose secrets.
 // Backends call cred.Reveal() at the exact moment of HTTP header
-// injection and never store the unwrapped value. invariant.
+// injection and never store the unwrapped value. inv-hades-068.
 type TierRequest struct {
 	Method  string
 	Path    string
@@ -191,7 +191,7 @@ type TierCapabilities struct {
 //
 // var _ TierBackend = (*MyBackend)(nil)
 //
-// invariant (compliance test scans for this pattern).
+// inv-hades-067 (compliance test scans for this pattern).
 //
 // Forward MUST be safe for concurrent invocation (the dispatcher fans
 // out up to 200 in-flight requests). Backends use their own mutexes
@@ -199,7 +199,7 @@ type TierCapabilities struct {
 //
 // Probe is called by the active probe scheduler every ~10min
 // for tiers idle ≥30min. It executes a 1-token canonical "hi" request
-// . On success it returns nil; on
+// (inv-hades-071: never user content). On success it returns nil; on
 // failure it returns the wrapped error so the scheduler can record it
 // in tier_health_samples.
 //

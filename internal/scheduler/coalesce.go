@@ -49,10 +49,10 @@ import (
 // cron that was accepted by the row's original parse (max-scope is
 // the loosest of the three doctrines for granularity).
 //
-// Boundary: stdlib + internal/doctrine only. No
+// Boundary (inv-hades-031): stdlib + internal/doctrine only. No
 // internal/store, internal/providers, or private-tier1-module.
 //
-// Inv-zen-121 contract.
+// Inv-hades-121 contract.
 func ComputeMissed(s *Schedule, now time.Time) MissedFire {
 	out := MissedFire{ScheduleID: s.ID}
 	if s.LastRunAt.IsZero() {
@@ -136,10 +136,10 @@ func ComputeMissed(s *Schedule, now time.Time) MissedFire {
 // whether to emit a single Fire(BackfillWindow) call or a loop of
 // Fire() calls clamped by the rate-limiter.
 //
-// Boundary: stdlib only at this site (Schedule and
+// Boundary (inv-hades-031): stdlib only at this site (Schedule and
 // MissedFire are in-package types).
 //
-// Inv-zen-121 contract.
+// Inv-hades-121 contract.
 func Coalesce(s *Schedule, missed MissedFire) (BackfillWindow, bool) {
 	if s == nil || s.MissPolicy != MissPolicyCoalesce {
 		return BackfillWindow{}, false

@@ -4,13 +4,13 @@
 // internal/doctrine/schema/v1/. These namespaces register via init()
 // into the open-extension schema registry.
 //
-// Tighten direction enforced per invariant: per-project overrides
+// Tighten direction enforced per inv-hades-136: per-project overrides
 // MAY tighten the doctrine baseline; loosening is rejected at parse.
 //
-// invariant (knowledge.aggregator.promote_required_reason): LOCKED IN to
+// inv-hades-146 (knowledge.aggregator.promote_required_reason): LOCKED IN to
 // true — operator override CANNOT set to false; validator REJECTS at parse.
 //
-// Boundary: this file imports only stdlib + BurntSushi
+// Boundary (inv-hades-133 pattern): this file imports only stdlib + BurntSushi
 // toml. No imports of internal/store, internal/orchestrator, etc.
 package doctrine
 
@@ -52,7 +52,7 @@ type ResearchCacheConfig struct {
 }
 
 type KnowledgeAggregatorConfig struct {
-	// PromoteRequiredReason is LOCKED IN per invariant: operator-gated promote
+	// PromoteRequiredReason is LOCKED IN per inv-hades-146: operator-gated promote
 	// REQUIRES a reason field. MUST be true. Validator rejects false at parse.
 	PromoteRequiredReason bool `toml:"promote_required_reason"`
 }
@@ -131,7 +131,7 @@ func ParseFullDoctrine(src string) (*DoctrineSchemaP9, error) {
 		return nil, fmt.Errorf("ParseFullDoctrine: %w", err)
 	}
 
-	// invariant: knowledge.aggregator.promote_required_reason MUST be true.
+	// inv-hades-146: knowledge.aggregator.promote_required_reason MUST be true.
 	if err := ValidateKnowledgeAggregatorConfig(wrapper.Knowledge.Aggregator); err != nil {
 		return nil, fmt.Errorf("ParseFullDoctrine: %w", err)
 	}
@@ -145,11 +145,11 @@ func ParseFullDoctrine(src string) (*DoctrineSchemaP9, error) {
 
 func ValidateAuditTesseraTighten(baseline, override AuditTesseraConfig) error {
 	if override.BatchMaxAgeMs > 0 && override.BatchMaxAgeMs > baseline.BatchMaxAgeMs {
-		return fmt.Errorf("inv-zen-136: audit.tessera.batch_max_age=%dms loosens doctrine baseline %dms",
+		return fmt.Errorf("inv-hades-136: audit.tessera.batch_max_age=%dms loosens doctrine baseline %dms",
 			override.BatchMaxAgeMs, baseline.BatchMaxAgeMs)
 	}
 	if override.BatchMaxSize > 0 && override.BatchMaxSize > baseline.BatchMaxSize {
-		return fmt.Errorf("inv-zen-136: audit.tessera.batch_max_size=%d loosens doctrine baseline %d",
+		return fmt.Errorf("inv-hades-136: audit.tessera.batch_max_size=%d loosens doctrine baseline %d",
 			override.BatchMaxSize, baseline.BatchMaxSize)
 	}
 	return nil
@@ -177,7 +177,7 @@ func ValidateAuditBackupTighten(baseline, override AuditBackupConfig) error {
 		oRank, oOK := litestreamRank[override.Litestream]
 		bRank, bOK := litestreamRank[baseline.Litestream]
 		if oOK && bOK && oRank < bRank {
-			return fmt.Errorf("inv-zen-136: audit.backup.litestream=%q looser than doctrine baseline %q",
+			return fmt.Errorf("inv-hades-136: audit.backup.litestream=%q looser than doctrine baseline %q",
 				override.Litestream, baseline.Litestream)
 		}
 	}
@@ -187,13 +187,13 @@ func ValidateAuditBackupTighten(baseline, override AuditBackupConfig) error {
 		oRank, oOK := rsyncRank[override.TesseraRsync]
 		bRank, bOK := rsyncRank[baseline.TesseraRsync]
 		if oOK && bOK && oRank < bRank {
-			return fmt.Errorf("inv-zen-136: audit.backup.tessera_rsync=%q looser than doctrine baseline %q",
+			return fmt.Errorf("inv-hades-136: audit.backup.tessera_rsync=%q looser than doctrine baseline %q",
 				override.TesseraRsync, baseline.TesseraRsync)
 		}
 	}
 
 	if baseline.ColdArchiveImmutable && !override.ColdArchiveImmutable {
-		return fmt.Errorf("inv-zen-136: audit.backup.cold_archive_immutable=false loosens doctrine baseline true")
+		return fmt.Errorf("inv-hades-136: audit.backup.cold_archive_immutable=false loosens doctrine baseline true")
 	}
 	return nil
 }
@@ -221,7 +221,7 @@ func ValidateAuditTamperResponseTighten(baseline, override AuditTamperResponseCo
 			baseline.Mode, override.Mode)
 	}
 	if oRank < bRank {
-		return fmt.Errorf("inv-zen-136: audit.tamper_response.mode=%q looser than doctrine baseline %q",
+		return fmt.Errorf("inv-hades-136: audit.tamper_response.mode=%q looser than doctrine baseline %q",
 			override.Mode, baseline.Mode)
 	}
 	return nil
@@ -229,7 +229,7 @@ func ValidateAuditTamperResponseTighten(baseline, override AuditTamperResponseCo
 
 func ValidateAuditWitnessTighten(baseline, override AuditWitnessConfig) error {
 	if override.RotationCadenceDays > 0 && override.RotationCadenceDays > baseline.RotationCadenceDays {
-		return fmt.Errorf("inv-zen-136: audit.witness.rotation_cadence_days=%d loosens doctrine baseline %d",
+		return fmt.Errorf("inv-hades-136: audit.witness.rotation_cadence_days=%d loosens doctrine baseline %d",
 			override.RotationCadenceDays, baseline.RotationCadenceDays)
 	}
 	return nil
@@ -251,22 +251,22 @@ func ValidateResearchCacheTighten(baseline, override ResearchCacheConfig) error 
 		oRank, oOK := revalRank[override.Revalidation]
 		bRank, bOK := revalRank[baseline.Revalidation]
 		if oOK && bOK && oRank < bRank {
-			return fmt.Errorf("inv-zen-136: research.cache.revalidation=%q looser than doctrine baseline %q",
+			return fmt.Errorf("inv-hades-136: research.cache.revalidation=%q looser than doctrine baseline %q",
 				override.Revalidation, baseline.Revalidation)
 		}
 	}
 
 	if baseline.CryptographicAttribution && !override.CryptographicAttribution {
-		return fmt.Errorf("inv-zen-136: research.cache.cryptographic_attribution=false loosens doctrine baseline true")
+		return fmt.Errorf("inv-hades-136: research.cache.cryptographic_attribution=false loosens doctrine baseline true")
 	}
 	return nil
 }
 
-// ValidateKnowledgeAggregatorConfig enforces invariant:
+// ValidateKnowledgeAggregatorConfig enforces inv-hades-146:
 // promote_required_reason MUST be true. Returns error if false.
 func ValidateKnowledgeAggregatorConfig(cfg KnowledgeAggregatorConfig) error {
 	if !cfg.PromoteRequiredReason {
-		return fmt.Errorf("inv-zen-146 locked: knowledge.aggregator.promote_required_reason MUST be true (operator-gated promote mandatory)")
+		return fmt.Errorf("inv-hades-146 locked: knowledge.aggregator.promote_required_reason MUST be true (operator-gated promote mandatory)")
 	}
 	return nil
 }

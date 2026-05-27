@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package cli — workforce.go.
 //
-// `zen workforce` exposes the in-flight workforce surface: live status,
+// `hades workforce` exposes the in-flight workforce surface: live status,
 // the OperatorGate state machine (pause/resume — security-grade), worker
 // inspection, durable Kanban (checkpoints), fix-prompt queue, and the
 // static spec catalog.
 //
 // Cobra layout (8 §6.1 entries; 9 cobra leaves):
 //
-// zen workforce
+// hades workforce
 // status
 // gate
 // state

@@ -8,15 +8,15 @@ import (
 )
 
 func GlobalConfigPath() string {
-	return filepath.Join(xdgConfigHome(), "zen-swarm", "config.toml")
+	return filepath.Join(xdgConfigHome(), "hades-system", "config.toml")
 }
 
 func GlobalDoctrinesDir() string {
-	return filepath.Join(xdgConfigHome(), "zen-swarm", "doctrines")
+	return filepath.Join(xdgConfigHome(), "hades-system", "doctrines")
 }
 
 func GlobalProvidersDir() string {
-	return filepath.Join(xdgConfigHome(), "zen-swarm", "providers")
+	return filepath.Join(xdgConfigHome(), "hades-system", "providers")
 }
 
 // OnboardPrefsPath returns the onboard prefs path, mirroring
@@ -26,7 +26,7 @@ func GlobalProvidersDir() string {
 // resolvers MUST agree byte-for-byte under any XDG_CONFIG_HOME +
 // HOME / USERPROFILE configuration.
 func OnboardPrefsPath() string {
-	return filepath.Join(xdgConfigHome(), "zen-swarm", "onboard-prefs.toml")
+	return filepath.Join(xdgConfigHome(), "hades-system", "onboard-prefs.toml")
 }
 
 func xdgConfigHome() string {

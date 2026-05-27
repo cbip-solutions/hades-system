@@ -7,7 +7,7 @@ import (
 )
 
 type Manifest struct {
-	ZenSwarm       ZenSwarmSection       `toml:"zen-swarm"`
+	HadesSystem    HadesSystemSection    `toml:"hades-system"`
 	Plans          PlansSection          `toml:"plans"`
 	Invariants     InvariantsSection     `toml:"invariants"`
 	Doctrines      DoctrinesSection      `toml:"doctrines"`
@@ -17,7 +17,7 @@ type Manifest struct {
 	Provenance     Provenance            `toml:"provenance"`
 }
 
-type ZenSwarmSection struct {
+type HadesSystemSection struct {
 	Version string `toml:"version"`
 
 	Substrate string `toml:"substrate"`

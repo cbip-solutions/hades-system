@@ -1,4 +1,4 @@
-# plugin/zen-swarm/requirements-dev.txt
+# plugin/hades-system/requirements-dev.txt
 #
 # Development-time dependencies for the Hermes plugin test suite. Installed
 # into a local venv via:

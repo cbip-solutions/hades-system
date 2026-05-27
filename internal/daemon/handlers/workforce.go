@@ -10,9 +10,9 @@
 // GET /v1/workforce/aggregations — list AggregationStream windows
 //
 // All endpoints support limit/offset pagination and type-specific filter params.
-// These endpoints serve operator inspection (zen workforce status) and
+// These endpoints serve operator inspection (hades workforce status) and
 //
-// invariant: never imports internal/workforce directly; WorkforceCtx is the bridge.
+// inv-hades-031: never imports internal/workforce directly; WorkforceCtx is the bridge.
 package handlers
 
 import (

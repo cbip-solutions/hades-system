@@ -12,7 +12,7 @@ if [ "$INIT_GIT" = "True" ] || [ "$INIT_GIT" = "true" ]; then
   if [ ! -d .git ]; then
     git init -q
     git add -A
-    git -c commit.gpgsign=false commit -q -m "chore(scaffold): initialize $NAME via zen new"
+    git -c commit.gpgsign=false commit -q -m "chore(scaffold): initialize $NAME via hades new"
   fi
 fi
 
@@ -26,8 +26,8 @@ if [ "$LINK_PLUGIN" = "True" ] || [ "$LINK_PLUGIN" = "true" ]; then
   fi
 fi
 
-if curl -s -o /dev/null -w '%{http_code}' --unix-socket /tmp/zen-swarm.sock http://localhost/healthz 2>/dev/null | grep -q '^200$'; then
-  echo "zen-swarm-ctld reachable: scaffold registered."
+if curl -s -o /dev/null -w '%{http_code}' --unix-socket /tmp/hades-system.sock http://localhost/healthz 2>/dev/null | grep -q '^200$'; then
+  echo "hades-ctld reachable: scaffold registered."
 fi
 
 exit 0

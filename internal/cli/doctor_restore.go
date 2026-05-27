@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_restore.go ships `zen doctor restore <ID>` Cobra
+// Package cli — doctor_restore.go ships `hades doctor restore <ID>` Cobra
 // subcommand.
 //
 // Operator UX:
 //
-// zen doctor restore 20260514T120000Z [--overwrite]
+// hades doctor restore 20260514T120000Z [--overwrite]
 //
 // Halts on conflict by default; --overwrite forces replacement.
 //
-// Exit codes (per spec §5.2 + cmd/zen/main.go):
+// Exit codes (per spec §5.2 + cmd/hades/main.go):
 // - 0 — restore succeeded
 // - 1 — recoverable error (conflict halt; operator should re-run with --overwrite)
 // - 2 — unrecoverable error (missing manifest, tarball corrupt, etc.)
@@ -37,7 +37,7 @@ func NewDoctorRestoreCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "restore <backup-id>",
 		Short: "Restore a doctor backup by ID",
-		Long: `Restore the contents of a backup created by ` + "`zen doctor full --fix`" + `.
+		Long: `Restore the contents of a backup created by ` + "`hades doctor full --fix`" + `.
 
 The backup ID is the ISO8601 UTC timestamp printed alongside any
 destructive fix output, e.g. "20260514T120000Z". Restoration extracts
@@ -45,9 +45,9 @@ the tarball back into the original source path; conflicts halt unless
 --overwrite is supplied.
 
 The restore command emits evt.doctor.restore.applied for forensic trace
-(see ` + "`zen audit show <hash>`" + ` for the chain leaf).`,
-		Example: `  zen doctor restore 20260514T120000Z
-  zen doctor restore 20260514T120000Z --overwrite`,
+(see ` + "`hades audit show <hash>`" + ` for the chain leaf).`,
+		Example: `  hades doctor restore 20260514T120000Z
+  hades doctor restore 20260514T120000Z --overwrite`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			id := args[0]
@@ -57,7 +57,7 @@ The restore command emits evt.doctor.restore.applied for forensic trace
 			manifest, err := b.LoadManifestByID(ctx, id)
 			if err != nil {
 				if errors.Is(err, backup.ErrNotFound) {
-					return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, fmt.Sprintf("restore: no backup with ID %s; check `zen state list` for available backups", id)))
+					return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, fmt.Sprintf("restore: no backup with ID %s; check `hades state list` for available backups", id)))
 				}
 				return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("restore: load manifest %s: %w", id, err))
 			}

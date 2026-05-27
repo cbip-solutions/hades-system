@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — memory_query.go.
 //
-// `zen memory query` cross-corpus retrieval with RRF k=60 fusion.
+// `hades memory query` cross-corpus retrieval with RRF k=60 fusion.
 //
 // Without --remote: only the release D aggregator is queried (single source).
 // With --remote: both the aggregator + the release ecosystem RAG dispatcher
@@ -73,13 +73,13 @@ Failure modes:
   - one source errors      → soft-fail: render what the other returned
   - both sources error     → exit 2 (unrecoverable transport / decode)`,
 		Example: `  # Aggregator-only (default)
-  zen memory query "max-scope doctrine"
+  hades memory query "max-scope doctrine"
 
   # Cross-corpus fusion with Plan 14 ecosystem
-  zen memory query "context cancellation" --remote --limit 20
+  hades memory query "context cancellation" --remote --limit 20
 
   # JSON for jq pipelines
-  zen memory query "tessera" --remote --format json | jq '.[].title'`,
+  hades memory query "tessera" --remote --format json | jq '.[].title'`,
 		Args: cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			flags.FreeText = strings.Join(args, " ")

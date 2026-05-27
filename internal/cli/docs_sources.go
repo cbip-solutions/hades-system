@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 // Package cli — docs_sources.go.
 //
-// `zen docs sources --list` renders the per-source corpus health table:
+// `hades docs sources --list` renders the per-source corpus health table:
 //
 // NAME ECOSYSTEM TYPE URL TTL LAST_INDEXED STATUS
 // pkg.go.dev go registry https://pkg.go.dev/ 24h 2025-01-09T13... ok
 // pypi python registry https://pypi.org/ 24h 2025-01-08T22... stale
 //
-// Why an explicit --list flag: keeps the bare `zen docs sources`
+// Why an explicit --list flag: keeps the bare `hades docs sources`
 // invocation safely no-op-ish (prints a usage hint) so a typo doesn't
 // trigger a potentially large API call. The flag also leaves room for
-// future subcommands like `zen docs sources add/remove` without
+// future subcommands like `hades docs sources add/remove` without
 // reshuffling the verb semantics.
 //
 // Status values are daemon-supplied strings: "ok" (last index within
@@ -48,9 +48,9 @@ func NewDocsSourcesCmd(factory DocsClientFactory) *cobra.Command {
 		Long: `Show every registered docs source with its URL, TTL, last-indexed
 timestamp, and status (ok | stale | error).
 
-Requires --list for explicit invocation; bare 'zen docs sources' prints
+Requires --list for explicit invocation; bare 'hades docs sources' prints
 a usage hint so a typo doesn't trigger an unintended API call.`,
-		Example: `  zen docs sources --list`,
+		Example: `  hades docs sources --list`,
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

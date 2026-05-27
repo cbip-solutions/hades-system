@@ -57,10 +57,10 @@
 // Per-source TTL = 1d (already configured in source-ttls.toml from A-10).
 //
 // All HTTP egress routes via the narrow FetchClient interface declared in
-// pkgdev.go (invariant + invariant — single egress point for the
+// pkgdev.go (inv-hades-152 + inv-hades-191 — single egress point for the
 // research data plane; no direct net/http imports in this package).
 //
-// Boundary: this file MAY import internal/research/cache +
+// Boundary (inv-hades-031): this file MAY import internal/research/cache +
 // internal/research/ecosystem (parent) + encoding/json (stdlib). It MUST
 // NOT import internal/store, internal/providers, internal/daemon, or any
 // net/http symbols.

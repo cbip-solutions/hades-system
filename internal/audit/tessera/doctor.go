@@ -54,7 +54,7 @@ func (d WitnessDoctor) Check(ctx context.Context) (DoctorResult, error) {
 		if errors.Is(err, ErrWitnessKeyMissing) {
 			return DoctorResult{
 				Severity: SeverityFail,
-				Message:  "no witness key (run `zen audit witness rotate --reason \"first-run bootstrap\"`)",
+				Message:  "no witness key (run `hades audit witness rotate --reason \"first-run bootstrap\"`)",
 			}, nil
 		}
 		return DoctorResult{}, err

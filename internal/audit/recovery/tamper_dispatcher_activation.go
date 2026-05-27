@@ -19,7 +19,7 @@
 // audit.tamper_detected (one per affected project); emit
 // once (for the originating project).
 //
-// invariant enforced: empty ProjectID REJECTED at Dispatch() entry.
+// inv-hades-150 enforced: empty ProjectID REJECTED at Dispatch() entry.
 // Per-project blast radius preserved unless mode=cascade-halt-all (capa-firewall
 // opt-in only).
 //
@@ -28,7 +28,7 @@
 // MUST emit events synchronously to ensure ordering:
 // detection → tamper_detected → recovery_initiated (if applicable).
 //
-// cmd/zen-swarm-ctld/main.go wiring is deferred to operator/ops boot path
+// cmd/hades-ctld/main.go wiring is deferred to operator/ops boot path
 // post- (TODO comment in main.go).
 package recovery
 
@@ -68,7 +68,7 @@ type DoctrineDispatcher struct {
 
 func NewDoctrineDispatcher(active DoctrineActive, evlog EventAppender, ibx InboxNotifier) (*DoctrineDispatcher, error) {
 	if active == nil {
-		return nil, errors.New("recovery.NewDoctrineDispatcher: nil DoctrineActive (inv-zen-150: doctrine mode required for routing)")
+		return nil, errors.New("recovery.NewDoctrineDispatcher: nil DoctrineActive (inv-hades-150: doctrine mode required for routing)")
 	}
 	if evlog == nil {
 		return nil, errors.New("recovery.NewDoctrineDispatcher: nil EventAppender (chain-anchor events must not be dropped)")
@@ -86,7 +86,7 @@ func NewDoctrineDispatcher(active DoctrineActive, evlog EventAppender, ibx Inbox
 
 func (d *DoctrineDispatcher) Dispatch(ctx context.Context, ev TamperEvent) error {
 	if ev.ProjectID == "" {
-		return errors.New("recovery.DoctrineDispatcher.Dispatch: empty project_id (inv-zen-150)")
+		return errors.New("recovery.DoctrineDispatcher.Dispatch: empty project_id (inv-hades-150)")
 	}
 	if ev.Timestamp.IsZero() {
 		ev.Timestamp = time.Now()

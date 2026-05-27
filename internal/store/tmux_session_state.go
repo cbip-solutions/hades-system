@@ -11,14 +11,14 @@ package store
 // for the knowledge-index database, which lives on a separate
 // SQLite file and does not contribute to daemon.db schemaVersion.)
 //
-// invariant boundary: internal/tmuxlife MUST NOT import internal/store.
+// inv-hades-031 boundary: internal/tmuxlife MUST NOT import internal/store.
 // The interface tmuxlife.SessionStore declares the daemon-side contract;
 // internal/daemon/handlers/sessions.go is the only package
 // permitted to bridge tmuxlife.SessionStore to *store.Store via these
 // CRUD primitives.
 //
 // Time handling:
-// - INTEGER columns store UTC unix seconds.
+// - INTEGER columns store UTC unix seconds (per inv-hades-005).
 // - The Go-side TmuxSessionStateRow uses time.Time (matches Session
 // value-type in internal/tmuxlife/session.go).
 // - last_attach_at = 0 sentinel means "never attached"; the Go layer

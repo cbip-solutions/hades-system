@@ -6,9 +6,9 @@
 // per spec §6.7. Implementation delegates to KnowledgeProber interface;
 // fakes in tests, real adapter in internal/knowledge/prober.go.
 //
-// invariant: NEVER issues HTTP request; --remote handling is daemon-side
+// inv-hades-129: NEVER issues HTTP request; --remote handling is daemon-side
 // . RunKnowledgeProbe stays local.
-// invariant: probe surface includes a sanity check that extension hook
+// inv-hades-130: probe surface includes a sanity check that extension hook
 // columns are NULL by default in release.
 package cli
 
@@ -70,7 +70,7 @@ func runKnowledgeIntegrity(ctx context.Context, p KnowledgeProber) ProbeResult {
 	r.Status = ProbeFail
 	r.Message = "PRAGMA integrity_check reported corruption"
 	r.Detail = out
-	r.Hint = "run: zen knowledge reindex --full (offline-safe; rebuilds from per-project sources)"
+	r.Hint = "run: hades knowledge reindex --full (offline-safe; rebuilds from per-project sources)"
 	return r
 }
 
@@ -86,7 +86,7 @@ func runKnowledgeLastIndexed(ctx context.Context, p KnowledgeProber) ProbeResult
 	if t.IsZero() {
 		r.Status = ProbeWarn
 		r.Message = "no rows indexed yet (fresh install?)"
-		r.Hint = "run: zen knowledge reindex"
+		r.Hint = "run: hades knowledge reindex"
 		return r
 	}
 	age := time.Since(t)
@@ -94,11 +94,11 @@ func runKnowledgeLastIndexed(ctx context.Context, p KnowledgeProber) ProbeResult
 	case age >= knowledgeStaleFailAfter:
 		r.Status = ProbeFail
 		r.Message = fmt.Sprintf("last update %s ago (>%s)", age.Round(time.Second), knowledgeStaleFailAfter)
-		r.Hint = "run: zen knowledge reindex; check fsnotify watcher status (watcher.status probe)"
+		r.Hint = "run: hades knowledge reindex; check fsnotify watcher status (watcher.status probe)"
 	case age >= knowledgeStaleWarnAfter:
 		r.Status = ProbeWarn
 		r.Message = fmt.Sprintf("last update %s ago (>%s)", age.Round(time.Second), knowledgeStaleWarnAfter)
-		r.Hint = "if persistent: zen knowledge reindex"
+		r.Hint = "if persistent: hades knowledge reindex"
 	default:
 		r.Status = ProbeOK
 		r.Message = fmt.Sprintf("last update %s ago", age.Round(time.Second))
@@ -119,7 +119,7 @@ func runKnowledgeCPUBudget(ctx context.Context, p KnowledgeProber) ProbeResult {
 	switch {
 	case fail > 0 && used >= fail:
 		r.Status = ProbeFail
-		r.Hint = "indexer is saturating CPU budget; consider lowering watcher debounce or pausing reindex via: zen knowledge reindex --pause"
+		r.Hint = "indexer is saturating CPU budget; consider lowering watcher debounce or pausing reindex via: hades knowledge reindex --pause"
 	case warn > 0 && used >= warn:
 		r.Status = ProbeWarn
 	default:
@@ -135,20 +135,20 @@ func runKnowledgeWatcher(ctx context.Context, p KnowledgeProber) ProbeResult {
 		r.Status = ProbeFail
 		r.Message = "watcher heartbeat query failed"
 		r.Detail = err.Error()
-		r.Hint = "restart daemon: zen daemon restart"
+		r.Hint = "restart daemon: hades daemon restart"
 		return r
 	}
 	if t.IsZero() {
 		r.Status = ProbeFail
 		r.Message = "watcher never started"
-		r.Hint = "restart daemon: zen daemon restart"
+		r.Hint = "restart daemon: hades daemon restart"
 		return r
 	}
 	age := time.Since(t)
 	if age >= knowledgeWatcherDeadAfter {
 		r.Status = ProbeFail
 		r.Message = fmt.Sprintf("watcher heartbeat stale (%s)", age.Round(time.Second))
-		r.Hint = "restart daemon to revive fsnotify goroutine: zen daemon restart"
+		r.Hint = "restart daemon to revive fsnotify goroutine: hades daemon restart"
 		return r
 	}
 	r.Status = ProbeOK

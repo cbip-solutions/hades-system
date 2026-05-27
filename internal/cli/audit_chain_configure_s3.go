@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain_configure_s3.go.
 //
-// `zen audit-chain configure-s3 --project <id>` walks the operator through
+// `hades audit-chain configure-s3 --project <id>` walks the operator through
 // interactively configuring per-project S3 backup credentials (endpoint,
 // bucket, region, access key, secret key). Credentials are transmitted over
 // the local UDS socket; the daemon adapter rotates them into macOS Keychain
@@ -12,7 +12,7 @@
 // stderr. If an error message from the daemon inadvertently contains the
 // secret, it is redacted before printing.
 //
-// invariant boundary: the CLI calls the daemon endpoint
+// inv-hades-031 boundary: the CLI calls the daemon endpoint
 // POST /v1/audit-chain/configure-s3 (client.AuditConfigureS3); the CLI
 // NEVER touches Keychain directly.
 //
@@ -49,14 +49,14 @@ endpoint URL, bucket name, region, access key, and secret key.
 
 Credentials are transmitted over the local daemon UDS socket; the daemon
 adapter stores them in macOS Keychain (darwin) or
-~/.config/zen-swarm/s3-credentials.json mode 0600 (non-darwin).
+~/.config/hades-system/s3-credentials.json mode 0600 (non-darwin).
 
 The secret is NEVER echoed back to stdout or stderr (privacy-by-default;
 Plan 2 pattern). The success message confirms project ID, bucket, and
 endpoint only.
 
 Required: --project.`,
-		Example: `  zen audit-chain configure-s3 --project zen-swarm`,
+		Example: `  hades audit-chain configure-s3 --project hades-system`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			project, _ := cmd.Flags().GetString("project")
 			if strings.TrimSpace(project) == "" {

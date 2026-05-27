@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package cli — state_verify.go.
 //
-// `zen state verify` calls POST /v1/state/verify and is the CI gate for
+// `hades state verify` calls POST /v1/state/verify and is the CI gate for
 // docs/system-state.toml freshness. On drift (Match=false) the command
 // exits non-zero so `make verify-invariants` fails the build.
 //
-// invariant boundary: verify is read-only (no --reason required); only
-// `pin` modifies state and enforces invariant.
+// inv-hades-146 boundary: verify is read-only (no --reason required); only
+// `pin` modifies state and enforces inv-hades-146.
 package cli
 
 import (
@@ -29,8 +29,8 @@ StateDiff.Match=true  → exit 0, prints "no drift"
 StateDiff.Match=false → exit non-zero, prints diff + error message
 
 Integrated with ` + "`make verify-invariants`" + ` for CI-time freshness enforcement.
-Run ` + "`zen state regenerate`" + ` to resolve drift.`,
-		Example: "  zen state verify",
+Run ` + "`hades state regenerate`" + ` to resolve drift.`,
+		Example: "  hades state verify",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(cmd.Context(), 60*time.Second)
 			defer cancel()
@@ -44,7 +44,7 @@ Run ` + "`zen state regenerate`" + ` to resolve drift.`,
 				if diff.Diff != "" {
 					fmt.Fprintln(out, diff.Diff)
 				}
-				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("system-state.toml drift detected (CI gate); run 'zen state regenerate'"))
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("system-state.toml drift detected (CI gate); run 'hades state regenerate'"))
 			}
 			fmt.Fprintln(out, "no drift")
 			return nil

@@ -48,7 +48,7 @@ func DoctrineMissPolicy(d doctrine.Name) MissPolicy {
 // adapter paths that may construct a Schedule from a partial
 // daemon.db row do not panic.
 //
-// Inv-zen-121 contract.
+// Inv-hades-121 contract.
 func EffectiveMissPolicy(s *Schedule, d doctrine.Name) MissPolicy {
 	if s == nil {
 		return DoctrineMissPolicy(d)

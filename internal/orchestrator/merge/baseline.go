@@ -92,7 +92,7 @@ type BaselineFailedPayload struct {
 // ModeDegraded80, ModeEmergencyOnly → suite.Smoke
 //
 // SmokeFailFast tier (EmergencyOnly mode) sets the env var
-// ZEN_MERGE_FAIL_FAST=1 so test runners can opt into fail-fast.
+// HADES_MERGE_FAIL_FAST=1 so test runners can opt into fail-fast.
 //
 // Returns wrapped ErrBaselineFailed on:
 // - Non-zero exit code
@@ -100,7 +100,7 @@ type BaselineFailedPayload struct {
 // - Test stdout malformed / unparseable
 // - Context cancellation mid-run
 //
-// invariant atomicity: callers MUST NOT proceed to
+// inv-hades-106 atomicity: callers MUST NOT proceed to
 // candidate execution after this method returns a wrapped ErrBaselineFailed;
 // the engine state-machine guard surfaces the constraint as a runtime panic
 // in development builds.
@@ -189,7 +189,7 @@ func (b *concreteBaseline) selectCommand(tier TestTier, suite TestSuite) (cmd []
 	case TestTierSmoke:
 		return suite.Smoke, nil
 	case TestTierSmokeFailFast:
-		return suite.Smoke, []string{"ZEN_MERGE_FAIL_FAST=1"}
+		return suite.Smoke, []string{"HADES_MERGE_FAIL_FAST=1"}
 	default:
 		return nil, nil
 	}

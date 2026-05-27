@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package quota implements zen-swarm's 3-layer quota system
+// Package quota implements hades-system's 3-layer quota system
 // design spec §1 Q4 + §1 Q10:
 //
 // Layer 1 — Hierarchical budgets (per-project + global daemon + per-tier)
@@ -7,13 +7,13 @@
 // Layer 3 — Operator override (boost weight ×N for TTL window)
 //
 // All thresholds are doctrine-tunable: per-doctrine defaults live in
-// DoctrineDefaults; per-project overrides come via zenswarm.toml at
+// DoctrineDefaults; per-project overrides come via hadessystem.toml at
 // activation time and flow into ResolveThresholds ( subsequent
 // tasks).
 //
 // # Boundary contract
 //
-// Per invariant generalised (spec §2.8): this package imports stdlib
+// Per inv-hades-031 generalised (spec §2.8): this package imports stdlib
 // + internal/doctrine only. Storage access (the priority_overrides
 // table that backs Layer 3) flows via the OverrideStore interface; the
 // concrete implementation lives in internal/daemon/quotaadapter/ which
@@ -21,7 +21,7 @@
 //
 // # LLM dispatch contract
 //
-// Per invariant: PreFlight returns a decision only — never invokes a
+// Per inv-hades-080: PreFlight returns a decision only — never invokes a
 // provider. The dispatcher consumes the decision and proceeds
 // or denies; this preserves the single-egress-point invariant.
 //
@@ -53,7 +53,7 @@ const (
 
 // String returns a stable human label for logs. Downstream observability
 // (audit events, status responses) depend on these exact strings; do not
-// rename without coordinating an invariant update.
+// rename without coordinating an inv-hades-115 update.
 func (m Mode) String() string {
 	switch m {
 	case ModeWarnOnly:
@@ -102,7 +102,7 @@ func DoctrineDefaults(d doctrine.Name) Thresholds {
 	}
 }
 
-var ErrDoctrineMatrixAnchor = errors.New("quota: doctrine matrix anchor (inv-zen-115)")
+var ErrDoctrineMatrixAnchor = errors.New("quota: doctrine matrix anchor (inv-hades-115)")
 
 type ProjectQuotaOverride struct {
 	SoftCapPct int
@@ -167,7 +167,7 @@ const (
 
 // String returns a stable label for logs / audit trail. Downstream
 // observability (audit events, status responses) depends on these exact
-// strings; do not rename without coordinating an invariant update.
+// strings; do not rename without coordinating an inv-hades-115 update.
 func (s CapStatus) String() string {
 	switch s {
 	case CapStatusOK:

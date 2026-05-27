@@ -12,11 +12,11 @@ import (
 
 // Migrator is a registered V→V+1 converter for doctrine schema migration.
 //
-// Per Q15 A + invariant: every Migrator MUST return *v1.Schema only.
+// Per Q15 A + inv-hades-137: every Migrator MUST return *v1.Schema only.
 // No Migrator may write to disk; persistent write-back is operator-explicit
-// via the CLI (`zen doctrine migrate <path> --confirm`).
+// via the CLI (`hades doctrine migrate <path> --confirm`).
 //
-// Per invariant defence-in-depth: the dispatcher (MigrateChain) verifies
+// Per inv-hades-142 defence-in-depth: the dispatcher (MigrateChain) verifies
 // the returned schema's SchemaVersion >= the source version and returns
 // ErrSchemaVersionDowngradeRejected if a Migrator misbehaves. Migrator
 // authors should still set SchemaVersion to the target version in their
@@ -41,7 +41,7 @@ func MigrateChain(data []byte, fromVersion string) (*v1.Schema, error) {
 
 	if isTooOld(fromVersion) {
 		return nil, fmt.Errorf(
-			"migrate: source schema_version %q is older than supported range [%s, %s]; run `zen doctrine migrate <path>` for manual chain migration: %w",
+			"migrate: source schema_version %q is older than supported range [%s, %s]; run `hades doctrine migrate <path>` for manual chain migration: %w",
 			fromVersion, previousSupportedVersion(), schema.CurrentSchemaVersion, doctrineerrors.ErrSchemaVersionTooOld,
 		)
 	}
@@ -88,7 +88,7 @@ func MigrateChain(data []byte, fromVersion string) (*v1.Schema, error) {
 // signature is opts-free by design (see doc.go "Trust-tier delegation note").
 // Callers that need transverse-rejection enforcement ( reload of
 // user-edited files) MUST handle that concern separately. Passthrough cares
-// only about structural decode-ability; invariant transverse policy is
+// only about structural decode-ability; inv-hades-135 transverse policy is
 // adjacent, not core, to the migrate package.
 func passthrough(data []byte) (*v1.Schema, error) {
 	var target v1.Schema

@@ -4,7 +4,7 @@
 // This file exposes two server-level methods for knowledge aggregator wiring:
 //
 // 1. NewAdapterForKnowledge — returns a *knowledgeadapter.Adapter backed
-// by the daemon's *sql.DB (s.store.DB()). Used by cmd/zen-swarm-ctld
+// by the daemon's *sql.DB (s.store.DB()). Used by cmd/hades-ctld
 // main.go to wire the aggregator.PerProjectKnowledgeStore seam.
 //
 // 2. RegisterKnowledgeAggregator — mounts the five D-12 HTTP routes on the
@@ -15,16 +15,16 @@
 // import would bring mattn/go-sqlite3 (CGO) into the daemon test binary
 // alongside ncruces/go-sqlite3 (from internal/store), causing a
 // double-registration panic on "sqlite3" driver name. Placing the bridge in
-// its own sub-package keeps daemon tests clean; cmd/zen-swarm-ctld main.go
+// its own sub-package keeps daemon tests clean; cmd/hades-ctld main.go
 // is the binary-level import point where both drivers coexist.
 //
 // Driver-conflict context: internal/knowledge/aggregator imports
 // mattn/go-sqlite3 (CGO) for sqlite-vec. internal/store imports
 // ncruces/go-sqlite3 (pure-Go). Both register the "sqlite3" SQL driver.
-// The cmd/zen-swarm-ctld binary links both once; only mattn's init() registers
+// The cmd/hades-ctld binary links both once; only mattn's init() registers
 // first, ncruces silently skips its second registration.
 //
-// Wiring in production (cmd/zen-swarm-ctld main.go):
+// Wiring in production (cmd/hades-ctld main.go):
 //
 // adapter := srv.NewAdapterForKnowledge()
 // agg, _ := aggregator.New(aggregator.Options{DB: aggDB, Embedder: emb, Store: adapter})
@@ -35,9 +35,9 @@
 // deferred until fsWatcher is available. Until then, AggEnqueueRebuild
 // returns ErrAggWorkerNotStarted and the handler degrades to HTTP 202.
 //
-// invariant: this file does NOT import internal/knowledge/aggregator.
+// inv-hades-031: this file does NOT import internal/knowledge/aggregator.
 //
-// The daemon package is invariant compliant: it imports internal/store
+// The daemon package is inv-hades-031 compliant: it imports internal/store
 // but NOT internal/knowledge/aggregator directly.
 package daemon
 

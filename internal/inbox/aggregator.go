@@ -28,7 +28,7 @@ type CacheRow struct {
 // when set.
 type AggregatorCacheStore interface {
 	// Insert writes r to the cache. Populates r.CacheID on success.
-	// MUST NOT modify r.ProjectID (invariant anchor: the originating
+	// MUST NOT modify r.ProjectID (inv-hades-113 anchor: the originating
 	// project's ID is the only valid value).
 	Insert(ctx context.Context, r CacheRow) error
 

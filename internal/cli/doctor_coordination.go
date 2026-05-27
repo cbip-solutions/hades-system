@@ -8,13 +8,13 @@
 // The daemon's coordination probe inspects:
 // - internal/knowledge/aggregator/aggregator.go (presence)
 //
-// RETIRED: release-h-prime.executed (Hermes plugin
+// RETIRED (v0.20.7, inv-hades-290): release-h-prime.executed (Hermes plugin
 // format converted) was retired because the underlying landing test
-// (presence of plugin/zen-swarm/plugin.yaml + Hermes markers) is obsolete
+// (presence of plugin/hades-system/plugin.yaml + Hermes markers) is obsolete
 // per ADR-0080. release H' was the deferred Claude-Code-plugin conversion
 // path; releaseb replaced that path with the Hermes plugin at
 // plugin/hades/ (different canonical location + format). The probe-target
-// plugin/zen-swarm/plugin.yaml never existed at HEAD and always reported
+// plugin/hades-system/plugin.yaml never existed at HEAD and always reported
 // "fail" — a misleading active signal in doctor output. No Claude-Code
 // plugin conversion is planned (Q1 substrate decision + ADR-0080 supersede
 package cli
@@ -37,7 +37,7 @@ type CoordinationProber interface {
 func NewDoctorCoordinationCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "coordination",
-		Short: "Cross-plan coordination checks (Plan 11; 1 active check per spec §7.4; plan-1-h-prime.executed retired in v0.20.7 per inv-zen-290)",
+		Short: "Cross-plan coordination checks (Plan 11; 1 active check per spec §7.4; plan-1-h-prime.executed retired in v0.20.7 per inv-hades-290)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runOneSection(cmd, "Coordination (Plan 11)", runCoordinationChecks)
 		},

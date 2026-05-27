@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package cli — sshexec.go.
 //
-// `zen ssh-exec` exposes the security-grade ssh-exec MCP. Validation
+// `hades ssh-exec` exposes the security-grade ssh-exec MCP. Validation
 // and allowlist queries are handled locally via internal/mcp/sshexec
 // (no daemon round-trip needed); audit-log reads route through the
 // daemon's /v1/audit/events endpoint filtered to type=sshexec prefix.
 //
 // Cobra layout (6 leaves):
 //
-// zen ssh-exec validate --cmd --project [--toml]
-// zen ssh-exec allowlist show --project [--toml]
-// zen ssh-exec allowlist add --project --pattern --yes
-// zen ssh-exec allowlist remove --project --pattern --yes
-// zen ssh-exec audit-log --project --since --limit
-// zen ssh-exec exec --host --cmd --cwd --timeout --project --toml
+// hades ssh-exec validate --cmd --project [--toml]
+// hades ssh-exec allowlist show --project [--toml]
+// hades ssh-exec allowlist add --project --pattern --yes
+// hades ssh-exec allowlist remove --project --pattern --yes
+// hades ssh-exec audit-log --project --since --limit
+// hades ssh-exec exec --host --cmd --cwd --timeout --project --toml
 //
 // Option A adaptation: invokes internal/mcp/sshexec.Validate /
 // ResolveAllowlist directly. exec uses sshexec.Run with explicit auth
@@ -62,13 +62,13 @@ func loadAllowlistForCmd(cmd *cobra.Command) (*sshexec.Allowlist, error) {
 		return nil, ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--project required"))
 	}
 	if tomlPath == "" {
-		tomlPath = "zenswarm.toml"
+		tomlPath = "hadessystem.toml"
 	}
 	// Review F-8: the source-of-truth comment in
 	// internal/mcp/sshexec/allowlist.go::ResolveAllowlist says
 	// "projectTOMLPath may be empty: doctrine alone is the source".
 	// Make the CLI honour that contract by falling through to "" when
-	// the default./zenswarm.toml is absent. Operators can still pass
+	// the default./hadessystem.toml is absent. Operators can still pass
 	// an explicit --toml=/path/that/must/exist and that case is treated
 	// as required (we do NOT silently fall through if the operator
 	// asked for a specific file).
@@ -154,7 +154,7 @@ func sshExecValidateCmd() *cobra.Command {
 	}
 	cmd.Flags().String("cmd", "", "Command to validate")
 	cmd.Flags().String("project", "", "Project ID (required)")
-	cmd.Flags().String("toml", "", "Path to zenswarm.toml (default: ./zenswarm.toml)")
+	cmd.Flags().String("toml", "", "Path to hadessystem.toml (default: ./hadessystem.toml)")
 	return cmd
 }
 
@@ -205,7 +205,7 @@ func sshExecAllowlistShowCmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().String("project", "", "Project ID (required)")
-	cmd.Flags().String("toml", "", "Path to zenswarm.toml (default: ./zenswarm.toml)")
+	cmd.Flags().String("toml", "", "Path to hadessystem.toml (default: ./hadessystem.toml)")
 	return cmd
 }
 
@@ -225,10 +225,10 @@ func sshExecAllowlistAddCmd() *cobra.Command {
 				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--yes required to confirm allowlist mutation"))
 			}
 			if tomlPath == "" {
-				tomlPath = "zenswarm.toml"
+				tomlPath = "hadessystem.toml"
 			}
 
-			if _, err := validateZenswarmTOMLPath(tomlPath); err != nil {
+			if _, err := validateHadesSystemTOMLPath(tomlPath); err != nil {
 				return err
 			}
 			outcome, err := mutateAllowlistTOML(tomlPath, project, pattern, true)
@@ -251,7 +251,7 @@ func sshExecAllowlistAddCmd() *cobra.Command {
 	}
 	cmd.Flags().String("project", "", "Project ID")
 	cmd.Flags().String("pattern", "", "Allowlist pattern (e.g. 'alembic *')")
-	cmd.Flags().String("toml", "", "Path to zenswarm.toml (default: ./zenswarm.toml)")
+	cmd.Flags().String("toml", "", "Path to hadessystem.toml (default: ./hadessystem.toml)")
 	cmd.Flags().Bool("yes", false, "Confirm mutation")
 	return cmd
 }
@@ -272,10 +272,10 @@ func sshExecAllowlistRemoveCmd() *cobra.Command {
 				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--yes required to confirm allowlist mutation"))
 			}
 			if tomlPath == "" {
-				tomlPath = "zenswarm.toml"
+				tomlPath = "hadessystem.toml"
 			}
 
-			if _, err := validateZenswarmTOMLPath(tomlPath); err != nil {
+			if _, err := validateHadesSystemTOMLPath(tomlPath); err != nil {
 				return err
 			}
 			outcome, err := mutateAllowlistTOML(tomlPath, project, pattern, false)
@@ -296,7 +296,7 @@ func sshExecAllowlistRemoveCmd() *cobra.Command {
 	}
 	cmd.Flags().String("project", "", "Project ID")
 	cmd.Flags().String("pattern", "", "Allowlist pattern to remove")
-	cmd.Flags().String("toml", "", "Path to zenswarm.toml (default: ./zenswarm.toml)")
+	cmd.Flags().String("toml", "", "Path to hadessystem.toml (default: ./hadessystem.toml)")
 	cmd.Flags().Bool("yes", false, "Confirm mutation")
 	return cmd
 }
@@ -316,19 +316,19 @@ const (
 )
 
 // mutateAllowlistTOML adds or removes a pattern from the project's
-// zenswarm.toml [ssh_exec.allowlist].patterns. Atomic: writes to a
+// hadessystem.toml [ssh_exec.allowlist].patterns. Atomic: writes to a
 // .tmp file then renames. Idempotent: removing a non-existent pattern
 // or adding a duplicate is a no-op success that returns the
 // corresponding OutcomeAlreadyPresent / OutcomeNotPresent value.
 //
 // SECURITY (review C-1, defense-in-depth): rejects any path outside cwd
 // BEFORE any read/write. The cobra layer (sshExecAllowlistAddCmd /
-// sshExecAllowlistRemoveCmd) calls validateZenswarmTOMLPath as layer-1;
+// sshExecAllowlistRemoveCmd) calls validateHadesSystemTOMLPath as layer-1;
 // this is layer-2 so direct invocations (tests, future callers) cannot
 // bypass the check.
 func mutateAllowlistTOML(path, project, pattern string, add bool) (AllowlistMutationOutcome, error) {
 
-	if _, err := validateZenswarmTOMLPath(path); err != nil {
+	if _, err := validateHadesSystemTOMLPath(path); err != nil {
 		return OutcomeUnknown, err
 	}
 	type tomlShape struct {
@@ -430,7 +430,7 @@ func sshExecAuditLogCmd() *cobra.Command {
 			}
 			ctx, cancel := context.WithTimeout(cmd.Context(), 5*time.Second)
 			defer cancel()
-			// invariant (review F-5): MUST filter on the canonical
+			// inv-hades-082 (review F-5): MUST filter on the canonical
 			// `ssh_exec.` prefix (underscore) — this matches what the
 			// MCP Emitter at internal/mcp/sshexec/emit.go::EmitStarted/
 			// Completed/Denied/InteractiveBlocked actually writes
@@ -518,11 +518,11 @@ func sshExecExecCmd() *cobra.Command {
 			ctx, cancel := context.WithTimeout(cmd.Context(), req.Timeout+30*time.Second)
 			defer cancel()
 			sink := &cliStreamSink{out: cmd.OutOrStdout(), errw: cmd.ErrOrStderr()}
-			// invariant (review F-1): wire a real audit emitter that
+			// inv-hades-082 (review F-1): wire a real audit emitter that
 			// POSTs ssh_exec.{started,completed,denied,interactive_blocked}
 			// events to the daemon /v1/audit/emit endpoint. Pre-fix the
 			// CLI passed &sshexec.NopAuditEmitter{} which silently
-			// discarded every event, so a security-grade `zen ssh-exec
+			// discarded every event, so a security-grade `hades ssh-exec
 			// exec --yes` produced ZERO audit rows — operators couldn't
 			// reconstruct the session afterwards. The dispatcher uses a
 			// detached context (Background) so emission survives past
@@ -543,10 +543,10 @@ func sshExecExecCmd() *cobra.Command {
 	}
 	cmd.Flags().String("host", "", "Remote host[:port]")
 	cmd.Flags().String("cmd", "", "Command to execute (allowlist-checked)")
-	cmd.Flags().String("cwd", "", "Remote cwd (forwarded as ZEN_CWD)")
+	cmd.Flags().String("cwd", "", "Remote cwd (forwarded as HADES_CWD)")
 	cmd.Flags().String("timeout", "", "Wall-clock timeout (default: doctrine 60s)")
 	cmd.Flags().String("project", "", "Project ID (required)")
-	cmd.Flags().String("toml", "", "Path to zenswarm.toml (default: ./zenswarm.toml)")
+	cmd.Flags().String("toml", "", "Path to hadessystem.toml (default: ./hadessystem.toml)")
 	cmd.Flags().Bool("dry-run", false, "Validate only; do not connect")
 	cmd.Flags().Bool("yes", false, "Confirm execution")
 	return cmd
@@ -571,7 +571,7 @@ func (s *cliStreamSink) Emit(chunk sshexec.StreamChunk) error {
 // dispatcherAuditEmitter implements sshexec.AuditEmitter by POSTing
 // each event to the daemon's /v1/audit/emit endpoint via *client.Client.
 //
-// invariant (review F-1): every Run call MUST emit
+// inv-hades-082 (review F-1): every Run call MUST emit
 // ssh_exec.{started,completed,denied,interactive_blocked} so operators
 // can reconstruct security-grade SSH sessions after the fact. The
 // pre-fix CLI used &sshexec.NopAuditEmitter{} which silently dropped
@@ -589,10 +589,10 @@ func (s *cliStreamSink) Emit(chunk sshexec.StreamChunk) error {
 // - Errors are returned to sshexec.Run which treats them as
 // best-effort and never fails the parent command. A daemon-down
 // state should not block a successful command. The daemon's
-// EmitClient at internal/mcp/client/emit.go provides invariant
+// EmitClient at internal/mcp/client/emit.go provides inv-hades-083
 // no-loss buffering for the MCP path; the CLI path is used by
 // direct operators and a daemon-down state surfaces via
-// `zen doctor sshexec` rather than command failure.
+// `hades doctor sshexec` rather than command failure.
 // - Payload schema matches internal/mcp/sshexec/emit.go: same keys
 // so audit-log queries don't need to discriminate by source.
 //
@@ -609,7 +609,7 @@ type dispatcherAuditEmitter struct {
 //
 // Each emit call uses a fresh 5s deadline derived from
 // context.Background() (NOT the caller's ctx) so audit emission survives
-// parent ctx cancellation — this is intentional per invariant: the
+// parent ctx cancellation — this is intentional per inv-hades-082: the
 // security trail must always be produced even if the operator cancels
 // the surrounding command.
 func newDispatcherAuditEmitter(c *client.Client, projectID string) *dispatcherAuditEmitter {
@@ -680,7 +680,7 @@ func cmdPreview(cmd string, n int) string {
 	return cmd[:n] + "..."
 }
 
-// validateZenswarmTOMLPath resolves --toml; rejects paths outside cwd
+// validateHadesSystemTOMLPath resolves --toml; rejects paths outside cwd
 // (security, prevents `--toml=/etc/passwd`) by absolute-pathing it.
 //
 // Used by per-project allowlist mutators to defend against path-escape.
@@ -692,7 +692,7 @@ func cmdPreview(cmd string, n int) string {
 // before comparison so legitimate paths under TempDir aren't falsely
 // rejected. EvalSymlinks errors only when the path doesn't exist; in
 // that case we fall back to the lexical-prefix check.
-func validateZenswarmTOMLPath(path string) (string, error) {
+func validateHadesSystemTOMLPath(path string) (string, error) {
 	abs, err := filepath.Abs(path)
 	if err != nil {
 		return "", err
@@ -712,9 +712,9 @@ func validateZenswarmTOMLPath(path string) (string, error) {
 	}
 
 	cwdSep := resolvedCwd + string(filepath.Separator)
-	defaultAtCwd := filepath.Join(resolvedCwd, "zenswarm.toml")
+	defaultAtCwd := filepath.Join(resolvedCwd, "hadessystem.toml")
 	rawCwdSep := cwd + string(filepath.Separator)
-	rawDefaultAtCwd := filepath.Join(cwd, "zenswarm.toml")
+	rawDefaultAtCwd := filepath.Join(cwd, "hadessystem.toml")
 	if strings.HasPrefix(resolvedAbs, cwdSep) || resolvedAbs == defaultAtCwd ||
 		strings.HasPrefix(abs, rawCwdSep) || abs == rawDefaultAtCwd {
 		return abs, nil

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 // Package cleanup — enumerate.go ships state directory enumeration for
-// `zen state list` + Apply.
+// `hades state list` + Apply.
 //
 // Subsystems enumerated:
 //
-// doctor-backups under $XDG_STATE_HOME/zen-swarm/doctor-backups/
-// migrate-backups under $XDG_STATE_HOME/zen-swarm/migrate-backups/
-// spike-artifacts under $XDG_STATE_HOME/zen-swarm/spike-artifacts/
-// cache under $XDG_CACHE_HOME/zen-swarm/ (LRU subdirs)
+// doctor-backups under $XDG_STATE_HOME/hades-system/doctor-backups/
+// migrate-backups under $XDG_STATE_HOME/hades-system/migrate-backups/
+// spike-artifacts under $XDG_STATE_HOME/hades-system/spike-artifacts/
+// cache under $XDG_CACHE_HOME/hades-system/ (LRU subdirs)
 //
 // Each StateEntry carries path + subsystem + ID + size + age + modTime
-// for both the human renderer (zen state list) + JSON output (zen state
+// for both the human renderer (hades state list) + JSON output (hades state
 // list --json).
 package cleanup
 

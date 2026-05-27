@@ -16,11 +16,11 @@
 // "structural anchor" pattern.
 //
 // Three sentinels ship in D-2:
-// - aggregatorBoundaryRespectSentinel
-// - aggregatorNoWebSentinel
-// - promoteRequiresReasonSentinel
+// - aggregatorBoundaryRespectSentinel (inv-hades-031)
+// - aggregatorNoWebSentinel (inv-hades-129)
+// - promoteRequiresReasonSentinel (inv-hades-146)
 //
-// D-9..D-13 may add more (e.g., for invariant knowledge_extension
+// D-9..D-13 may add more (e.g., for inv-hades-130 knowledge_extension
 // columns NULL); D-14 ships the compliance tests that grep for these
 // anchor names.
 package aggregator
@@ -34,10 +34,10 @@ func aggregatorNoWebSentinel() error {
 }
 
 // promoteRequiresReasonSentinel returns nil. It is invoked from
-// aggregator.New (production code path) to keep the invariant anchor
+// aggregator.New (production code path) to keep the inv-hades-146 anchor
 // reachable.
 //
-// invariant: Promote(noteID, operatorID, reason) MUST reject empty
+// inv-hades-146: Promote(noteID, operatorID, reason) MUST reject empty
 // reason. This is the operator-attestation contract — every promote
 // event surfaces in the audit log AND in the cross-project search
 // surface, and a blank reason would silently erase the operator's

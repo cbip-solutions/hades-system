@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
 // Package eval ships the release dynamic per-call MCP-boundary
-// doctrine evaluator per Q10=D + spec §3.3 + §3.7 + §8.6 invariant.
+// doctrine evaluator per Q10=D + spec §3.3 + §3.7 + §8.6 inv-hades-184.
 //
 // The evaluator consumes the active doctrine bundle (release
 // doctrine.Active accessor) + the per-MCP risk-tier classification
 // (Q10=D) + parameters of an outbound MCP call; produces (CallDecision,
 // evidence). release dispatcher consumes at the MCP-call boundary; the
-// single-egress invariant invariant stays intact (eval runs at the
+// single-egress invariant inv-hades-088 stays intact (eval runs at the
 // existing dispatcher seam, no new egress).
 //
-// Boundary: eval package consumes ONLY internal/doctrine
+// Boundary (inv-hades-031): eval package consumes ONLY internal/doctrine
 // (active doctrine accessor; for now via the TierPolicy injection seam,
 // so this package's static imports are stdlib-only) + a caller-injected
 // Emitter; MUST NOT import internal/store.
 //
 // Wiring note:
 // this package ships the complete evaluator + lint extension as a
-// consumable library; daemon-wiring (cmd/zen-swarm-ctld/main.go) is
+// consumable library; daemon-wiring (cmd/hades-ctld/main.go) is
 // forward-additive release+ scope. The release spec §3.7 documents the
 // MCP-call boundary as the canonical seam; release wires it. The eval
 // API is final-shape (Q10=D doctrine satisfied) and ready for

@@ -54,8 +54,8 @@ None — this skill reads project files autonomously.
    - `git tag --list 'v*' --sort=-creatordate | head -5` — recent tags
 
 4. **Check daemon state** (if applicable):
-   - `pgrep -f zen-swarm-ctld` — daemon running
-   - If running: `curl --unix-socket /tmp/zen-swarm.sock http://localhost/v1/health`
+   - `pgrep -f hades-ctld` — daemon running
+   - If running: `curl --unix-socket /tmp/hades-system.sock http://localhost/v1/health`
 
 5. **Present 5-line session summary** to operator:
 
@@ -79,7 +79,7 @@ None — this skill reads project files autonomously.
 - **Build the final product, not the stages** — refactor toward final shape
 - **No stubs** — production code complete day 1
 - **No defer, no tech debt** — fix coverage gaps + missing tests before next task
-- **No Claude attribution in commits** (invariant; gated by pre_tool_call callback)
+- **No Claude attribution in commits** (inv-hades-004; gated by pre_tool_call callback)
 - **Tag safety gate**: NEVER push tags without operator approval
 
 ## Edge cases
@@ -89,7 +89,7 @@ None — this skill reads project files autonomously.
 - **Methodology memory missing or stale (>14d)**: surface to operator,
   recommend re-reading `docs/METHODOLOGY.md`
 - **Daemon not running**: state explicitly; some operations (caronte code-graph,
-  /v1/events) unavailable until `zen-swarm-ctld` started
+  /v1/events) unavailable until `hades-ctld` started
 
 ## See also
 

@@ -5,7 +5,7 @@
 -- Architecture (spec §3.3, Q11 C):
 --
 --   Per-project authoritative `inbox` table:
---     - severity 4-tier CHECK (invariant)
+--     - severity 4-tier CHECK (inv-hades-124)
 --     - 5min sliding-window dedup UNIQUE on
 --       (event_type, content_hash, created_at_bucket)
 --     - cascade-delete on project removal (handled at adapter layer; the
@@ -43,26 +43,26 @@
 --      bucket values BEFORE the SQL layer; SQLite UNIQUE is the floor.
 --
 -- ============================================================================
--- Inv-zen anchors (spec §7.2):
+-- Inv-hades anchors (spec §7.2):
 --
---   - invariant (no cross-project leak): inbox_aggregator_cache rows
+--   - inv-hades-113 (no cross-project leak): inbox_aggregator_cache rows
 --     carry project_id matching the originating per-project source DB.
 --     Compile-time anchor in inbox/sentinel.go (release track);
 --     runtime via the outbox bridge writing project_id from the source
 --     scope (release track); property-based fuzz test in
---     tests/compliance/inv_zen_113_no_cross_project_inbox_leak_test.go
+--     tests/compliance/inv_hades_113_no_cross_project_inbox_leak_test.go
 --     (release track).
 --
---   - invariant (severity 4-tier CHECK enum): inbox.severity column +
+--   - inv-hades-124 (severity 4-tier CHECK enum): inbox.severity column +
 --     inbox_aggregator_cache.severity column both enforce the 4-tier
 --     enum at the SQL layer. Defense in depth: Go-side ValidSeverity
 --     (release track) rejects first; SQL CHECK is the floor.
 --
---   - invariant (boundary): internal/inbox/* MUST NEVER import
+--   - inv-hades-031 (boundary): internal/inbox/* MUST NEVER import
 --     internal/store. The internal/daemon/inboxadapter/ package
 --     (release track) is the ONLY package permitted to bridge inbox
 --     value types to *store.Store via this migration's tables.
---     release track inv_zen_122 compliance test extends to enforce this
+--     release track inv_hades_122 compliance test extends to enforce this
 --     on the release design packages (greps internal/inbox/*.go for forbidden
 --     internal/store imports).
 --
@@ -117,7 +117,7 @@
 --                          unused for inbox but present for shape
 --                          parity with the cache table).
 --
---   - severity TEXT NOT NULL CHECK: 4-tier enum per invariant.
+--   - severity TEXT NOT NULL CHECK: 4-tier enum per inv-hades-124.
 --                          Defense in depth — Go-side ValidSeverity
 --                          rejects first; SQL CHECK is the floor.
 --
@@ -136,7 +136,7 @@
 --                          this layer. The Go-side decoder validates
 --                          per event_type before surfacing to render.
 --
---   - created_at INTEGER NOT NULL: UTC unix seconds (invariant).
+--   - created_at INTEGER NOT NULL: UTC unix seconds (inv-hades-005).
 --
 --   - created_at_bucket INTEGER NOT NULL: created_at / 300 (5min). The
 --                          dedup pivot. Stored explicitly (not generated)
@@ -148,7 +148,7 @@
 --                          query path.
 --
 --   - snoozed_until INTEGER: NULL if not snoozed. UTC unix seconds.
---                          Sweep runs release track (zen inbox snooze
+--                          Sweep runs release track (hades inbox snooze
 --                          surfaces).
 --
 -- Index strategy:
@@ -156,7 +156,7 @@
 --   - PRIMARY KEY(id) is implicitly indexed (used by Ack/Snooze).
 --
 --   - idx_inbox_project_severity_created (composite):
---                          accelerates `zen inbox --severity=...
+--                          accelerates `hades inbox --severity=...
 --                          --since=...` queries on per-project + cache.
 --                          Project_id leftmost so per-project queries
 --                          stay in-index; severity filter chains down.
@@ -189,11 +189,11 @@ CREATE TABLE IF NOT EXISTS inbox (
                           'action-needed',
                           'info-immediate',
                           'info-digest'
-                      )),                              -- invariant
+                      )),                              -- inv-hades-124
     event_type        TEXT NOT NULL,                  -- e.g. "hra.l4_alert"
     content_hash      TEXT NOT NULL,                  -- sha256 hex of canonical fields
     payload           TEXT NOT NULL DEFAULT '{}',     -- JSON blob
-    created_at        INTEGER NOT NULL,               -- UTC unix seconds (invariant)
+    created_at        INTEGER NOT NULL,               -- UTC unix seconds (inv-hades-005)
     created_at_bucket INTEGER NOT NULL,               -- created_at / 300 (5min dedup pivot)
     acked_at          INTEGER,                        -- NULL if not acked
     snoozed_until     INTEGER,                        -- NULL if not snoozed
@@ -222,14 +222,14 @@ CREATE INDEX IF NOT EXISTS idx_inbox_unacked
 --   - cache_id INTEGER PRIMARY KEY AUTOINCREMENT: append-only.
 --
 --   - project_id TEXT NOT NULL: sha256 hex matching authoritative
---                          source. invariant anchor — runtime
+--                          source. inv-hades-113 anchor — runtime
 --                          fanout MUST write the source DB's
 --                          project_id; cross-project leaks fail the
 --                          property-based fuzz test (release track).
 --
 --   - project_alias TEXT NOT NULL: human alias joined from projects
 --                          table at write time. Denormalized for the
---                          `zen day` cross-project digest path
+--                          `hades day` cross-project digest path
 --                          (release track leverage-sort) — avoids a JOIN
 --                          on every render.
 --
@@ -240,7 +240,7 @@ CREATE INDEX IF NOT EXISTS idx_inbox_unacked
 --                          (the periodic Rebuild reconciles).
 --
 --   - severity TEXT NOT NULL CHECK: mirror of the per-project
---                          invariant enum. Denormalized but the
+--                          inv-hades-124 enum. Denormalized but the
 --                          same CHECK enforces parity at the SQL
 --                          layer.
 --
@@ -263,7 +263,7 @@ CREATE INDEX IF NOT EXISTS idx_inbox_unacked
 --
 -- Index strategy:
 --
---   - idx_aggregator_project: hot `zen day` cross-project digest
+--   - idx_aggregator_project: hot `hades day` cross-project digest
 --                          (release track) + cascade DeleteByProject sweep.
 --
 --   - idx_aggregator_severity_created (composite): accelerates
@@ -286,7 +286,7 @@ CREATE TABLE IF NOT EXISTS inbox_aggregator_cache (
                           'action-needed',
                           'info-immediate',
                           'info-digest'
-                      )),                              -- invariant (mirror)
+                      )),                              -- inv-hades-124 (mirror)
     event_type        TEXT NOT NULL,
     content_hash      TEXT NOT NULL,
     created_at        INTEGER NOT NULL,

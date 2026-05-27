@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package auth — project_scoped.go.
 //
-// invariant: every project-scoped /v1/* endpoint validates the
+// inv-hades-146: every project-scoped /v1/* endpoint validates the
 // caller's effective-project set BEFORE delegating to the substrate +
 // emits audit.access_denied{caller_uid, project_id, route, ts} on 403.
 //

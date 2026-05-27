@@ -1,6 +1,6 @@
 -- ==============================================================================
 -- Migration 065: tier_health_samples — per-provider health observability
--- (the release design release track; C9; invariant).
+-- (the release design release track; C9; inv-hades-214).
 -- ==============================================================================
 --
 -- One row per backend outcome. Two write-paths land samples here:

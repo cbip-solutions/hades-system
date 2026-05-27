@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package cli — state_xdg.go.
 //
-// `zen state list` + `zen state cleanup` are the XDG state-retention
-// surface per Q12=D + invariant. The manifest leaves
+// `hades state list` + `hades state cleanup` are the XDG state-retention
+// surface per Q12=D + inv-hades-187. The manifest leaves
 // (show/regenerate/verify/pin/history) live in state.go + sibling
 // files; this file isolates the XDG-state retention leaves.
 //
 // XDG state paths resolved per spec §2.12:
 //
-// $XDG_STATE_HOME/zen-swarm (default ~/.local/state/zen-swarm)
-// $XDG_CACHE_HOME/zen-swarm (default ~/.cache/zen-swarm)
+// $XDG_STATE_HOME/hades-system (default ~/.local/state/hades-system)
+// $XDG_CACHE_HOME/hades-system (default ~/.cache/hades-system)
 //
 // Retention defaults: doctor-backups 30d / migrate-backups 30d /
 // spike-artifacts indefinite / cache 7d. release doctrine TOML override
@@ -36,13 +36,13 @@ func newStateListCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "Enumerate XDG state dirs with sizes + ages + paths (Plan 13 F7)",
-		Long: `List entries under $XDG_STATE_HOME/zen-swarm + $XDG_CACHE_HOME/zen-swarm.
+		Long: `List entries under $XDG_STATE_HOME/hades-system + $XDG_CACHE_HOME/hades-system.
 
 Subsystems enumerated:
-  doctor-backups   ($XDG_STATE_HOME/zen-swarm/doctor-backups/)
-  migrate-backups  ($XDG_STATE_HOME/zen-swarm/migrate-backups/)
-  spike-artifacts  ($XDG_STATE_HOME/zen-swarm/spike-artifacts/)
-  cache            ($XDG_CACHE_HOME/zen-swarm/)
+  doctor-backups   ($XDG_STATE_HOME/hades-system/doctor-backups/)
+  migrate-backups  ($XDG_STATE_HOME/hades-system/migrate-backups/)
+  spike-artifacts  ($XDG_STATE_HOME/hades-system/spike-artifacts/)
+  cache            ($XDG_CACHE_HOME/hades-system/)
 
 Use --json for schemaVersion=1.0 machine-parseable output.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -69,7 +69,7 @@ func newStateCleanupCmd() *cobra.Command {
 	var keepIDs []string
 	cmd := &cobra.Command{
 		Use:   "cleanup",
-		Short: "Apply retention policy to XDG state dirs (Q12=D + inv-zen-187)",
+		Short: "Apply retention policy to XDG state dirs (Q12=D + inv-hades-187)",
 		Long: `Apply the retention policy to XDG state dirs (doctor-backups,
 migrate-backups, spike-artifacts, cache).
 
@@ -131,7 +131,7 @@ func resolveXDGPaths() (stateDir, cacheDir string) {
 			xdgCache = filepath.Join(home, ".cache")
 		}
 	}
-	return filepath.Join(xdgState, "zen-swarm"), filepath.Join(xdgCache, "zen-swarm")
+	return filepath.Join(xdgState, "hades-system"), filepath.Join(xdgCache, "hades-system")
 }
 
 func renderHumanList(w io.Writer, entries []cleanup.StateEntry) {

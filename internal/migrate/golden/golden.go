@@ -36,9 +36,9 @@ func runFixture(t *testing.T, fixtureName string) {
 		return
 	}
 	tmp := t.TempDir()
-	pluginRoot := filepath.Join(tmp, "plugin", "zen-swarm")
+	pluginRoot := filepath.Join(tmp, "plugin", "hades-system")
 	hermesCfg := filepath.Join(tmp, "hermes", "config.yaml")
-	zenCfgRoot := filepath.Join(tmp, "zen-config")
+	zenCfgRoot := filepath.Join(tmp, "hades-config")
 	inv, err := source.ReadAll(inputDir)
 	if err != nil {
 		t.Fatalf("ReadAll: %v", err)
@@ -50,7 +50,7 @@ func runFixture(t *testing.T, fixtureName string) {
 	w := writer.New(writer.WriterConfig{
 		HermesPluginRoot: pluginRoot,
 		HermesConfigPath: hermesCfg,
-		ZenConfigRoot:    zenCfgRoot,
+		HadesConfigRoot:  zenCfgRoot,
 		ForceOverwrite:   true,
 	})
 	if err := w.Apply(plan); err != nil {
@@ -113,7 +113,7 @@ func normalizeFixtureBody(expected, actual []byte) []byte {
 	}
 
 	actStr := string(actual)
-	markers := []string{"# Raw source: ", "# 1:1 preservation per inv-zen-183. Source: "}
+	markers := []string{"# Raw source: ", "# 1:1 preservation per inv-hades-183. Source: "}
 	for _, m := range markers {
 		if idx := strings.Index(actStr, m); idx >= 0 {
 			end := strings.Index(actStr[idx:], "\n")

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain.go.
 //
-// `zen audit-chain` is the release umbrella for chain-integrity, backup,
-// witness, and recovery operations. Distinct's `zen audit`
+// `hades audit-chain` is the release umbrella for chain-integrity, backup,
+// witness, and recovery operations. Distinct's `hades audit`
 // event-emit/query surface (which lives in audit.go and serves the
 // audit_events_raw row-level read API).
 //
@@ -10,24 +10,24 @@
 // - verify-chain: walk the tile-log Merkle + record_hash + witness sig [I-2]
 // - history: query release eventlog with chain proofs [I-2]
 // - recover: interactive recovery (Litestream + cold archive + verify) [I-2]
-// - checkpoint: capa-firewall manual checkpoint [I-3]
+// - checkpoint: capa-firewall manual checkpoint (inv-hades-145 §1 Q4 B) [I-3]
 // - cold-archive: nested group → ls | restore [I-3]
 // - configure-s3: interactive Keychain-integrated S3 credential setup [I-4]
 // - witness: nested group → rotate | pubkey [I-4]
 //
 // Cobra layout:
 //
-// zen audit-chain verify-chain --project <id>
-// zen audit-chain history [--filter <type>] [--since <ts>] [--project <id>]
-// zen audit-chain recover --project <id> --from <ts>
-// zen audit-chain checkpoint --reason "<X>"
-// zen audit-chain cold-archive ls [--project <id>]
-// zen audit-chain cold-archive restore --partition <YYYY_MM> [--project <id>]
-// zen audit-chain configure-s3 --project <id>
-// zen audit-chain witness rotate --reason "<X>"
-// zen audit-chain witness pubkey
+// hades audit-chain verify-chain --project <id>
+// hades audit-chain history [--filter <type>] [--since <ts>] [--project <id>]
+// hades audit-chain recover --project <id> --from <ts>
+// hades audit-chain checkpoint --reason "<X>"
+// hades audit-chain cold-archive ls [--project <id>]
+// hades audit-chain cold-archive restore --partition <YYYY_MM> [--project <id>]
+// hades audit-chain configure-s3 --project <id>
+// hades audit-chain witness rotate --reason "<X>"
+// hades audit-chain witness pubkey
 //
-// invariant (--reason mandatory) is enforced per leaf inside the individual
+// inv-hades-146 (--reason mandatory) is enforced per leaf inside the individual
 // constructors (checkpoint, witness rotate); see Tasks I-3, I-4.
 // Cross-cutting reason-flag enforcement test lives in reason_flag_test.go (I-12).
 //
@@ -56,19 +56,19 @@ tamper events interactively, manually checkpoint capa-firewall projects,
 manage Tessera cold archives, configure per-project S3 backup
 credentials, and rotate the daemon witness key.
 
-Plan 4's ` + "`zen audit`" + ` group remains for raw event emit/query.
-Plan 9's ` + "`zen audit-chain`" + ` group is for chain operations.`,
+Plan 4's ` + "`hades audit`" + ` group remains for raw event emit/query.
+Plan 9's ` + "`hades audit-chain`" + ` group is for chain operations.`,
 		Example: `  # Verify integrity for one project
-  zen audit-chain verify-chain --project zen-swarm
+  hades audit-chain verify-chain --project hades-system
 
   # Manually checkpoint capa-firewall project before sensitive batch
-  zen audit-chain checkpoint --reason "pre-merge audit anchor for v0.9.0"
+  hades audit-chain checkpoint --reason "pre-merge audit anchor for v0.9.0"
 
   # Recover from detected tamper interactively
-  zen audit-chain recover --project zen-swarm --from 2026-05-06T08:00:00Z
+  hades audit-chain recover --project hades-system --from 2026-05-06T08:00:00Z
 
   # Rotate the daemon-level ECDSA witness key
-  zen audit-chain witness rotate --reason "scheduled 90d rotation"`,
+  hades audit-chain witness rotate --reason "scheduled 90d rotation"`,
 	}
 	format.AttachFlags(cmd)
 	cmd.AddCommand(auditChainVerifyCmd())

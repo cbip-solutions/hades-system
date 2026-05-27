@@ -3,7 +3,7 @@
 //
 // VersionDetector — 5-layer version-context detection cascade.
 //
-// Invariant invariant: VersionDetector.Detect is deterministic for the same
+// Invariant inv-hades-192: VersionDetector.Detect is deterministic for the same
 // (req.Query, req.Version, req.ProjectPath) triple — no random elements, no
 // per-call state mutation. Layer 4 (Haiku classifier) is gated by
 // VersionDetectorOptions.SkipLLMDetection; when enabled the cascade falls

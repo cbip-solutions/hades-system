@@ -36,7 +36,7 @@ Default: doctrine-config determined.
 ### 2. POST to daemon
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock \
+curl --unix-socket /tmp/hades-system.sock \
      -X POST \
      -d '{"pattern":"<pattern>","scope":"<scope>","realtime":false}' \
      http://unix/v1/knowledge/query
@@ -44,7 +44,7 @@ curl --unix-socket /tmp/zen-swarm.sock \
 
 ### 3. Privacy filter at retrieval boundary
 
-Per invariant:
+Per inv-hades-163:
 - capa-firewall: self-only
 - max-scope ↔ default: bidirectional
 - max-scope or default → capa-firewall: filtered
@@ -62,6 +62,6 @@ Per doctrine.augmentation.max_kg_tokens:
 
 - spec §9.1 the release design D aggregator.Query
 - spec §3.4 doctrine.knowledge.cross_project
-- invariant augmentation cross-project privacy boundary
-- invariant augmentation budget gate
+- inv-hades-163 augmentation cross-project privacy boundary
+- inv-hades-167 augmentation budget gate
 - /hades:knowledge-query slash command handler

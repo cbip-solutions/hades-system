@@ -9,7 +9,7 @@
 // OR'd: 3 = warn+fail, 5 = warn+skip, 6 = fail+skip, 7 = all-three.
 //
 // SOTA-4 anti-pattern #5 ("exit-code-as-mask undiscoverable") avoided via
-// explicit documentation in `zen doctor full --help` EXIT CODES section
+// explicit documentation in `hades doctor full --help` EXIT CODES section
 // shipped by
 package aggregator
 

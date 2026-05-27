@@ -15,20 +15,20 @@
 // tools/list — returns Dispatcher.ListTools as MCP-spec tools array
 // tools/call — routes to Dispatcher.Dispatch and re-encodes response
 //
-// Header conventions (Hermes side forwards via ZenSwarmTransport, release
+// Header conventions (Hermes side forwards via HadesSystemTransport, release
 // ):
 //
-// X-Zen-Doctrine — active doctrine slug (max-scope / default / capa-firewall)
-// X-Zen-Mode — call mode (interactive / autonomy / afk)
-// X-Zen-Session-ID — Hermes session id
-// X-Zen-Project-ID — active project id
+// X-HADES-Doctrine — active doctrine slug (max-scope / default / capa-firewall)
+// X-HADES-Mode — call mode (interactive / autonomy / afk)
+// X-HADES-Session-ID — Hermes session id
+// X-HADES-Project-ID — active project id
 //
 // JSON-RPC 2.0 error codes used:
 //
 // -32700 Parse error (invalid JSON in request body)
 // -32600 Invalid Request (missing method or jsonrpc != "2.0")
 // -32601 Method not found
-// -32602 Invalid params (includes unrecognised X-Zen-Mode / X-Zen-Doctrine header)
+// -32602 Invalid params (includes unrecognised X-HADES-Mode / X-HADES-Doctrine header)
 // -32000 Server error (RBAC denies, gitnexus unreachable, etc.)
 package mcpgateway
 
@@ -42,28 +42,28 @@ import (
 	"sync/atomic"
 )
 
-var ErrInvalidMode = errors.New("mcpgateway: invalid X-Zen-Mode header")
+var ErrInvalidMode = errors.New("mcpgateway: invalid X-HADES-Mode header")
 
-var ErrInvalidDoctrine = errors.New("mcpgateway: invalid X-Zen-Doctrine header")
+var ErrInvalidDoctrine = errors.New("mcpgateway: invalid X-HADES-Doctrine header")
 
 // Server wraps a Dispatcher + exposes the HTTP MCP endpoint.
 //
-// aliasResolver translates the X-Zen-Project-ID header OR the body
-// arguments.project_id from an alias (e.g. "zen-swarm-3572a35b") into
+// aliasResolver translates the X-HADES-Project-ID header OR the body
+// arguments.project_id from an alias (e.g. "hades-system-3572a35b") into
 // the canonical id_sha256 (64 hex chars) the engine + caronteadapter
 // consume. Wired via SetAliasResolver (NOT NewServer) so the daemon
 // can construct Server before the projects_alias store + adapter exist
 // (matches the buildDispatcher → NewServer → wire-tail order in
-// cmd/zen-swarm-ctld/main.go).
+// cmd/hades-ctld/main.go).
 //
 // A nil aliasResolver means "legacy header pass-through mode" — the raw
-// X-Zen-Project-ID value is forwarded AS-IS to CallRequest.ProjectID.
+// X-HADES-Project-ID value is forwarded AS-IS to CallRequest.ProjectID.
 // Production daemons MUST call SetAliasResolver at boot; the nil
 // fallback exists so that a partially-wired daemon does not crash on
 // tools/call (defensive operator-recovery posture per spec §22.4
 // graceful degradation).
 //
-// invariant (project_id dual-source), invariant (alias resolution).
+// inv-hades-280 (project_id dual-source), inv-hades-277 (alias resolution).
 type Server struct {
 	d             *Dispatcher
 	aliasResolver ProjectsAliasResolver
@@ -110,18 +110,18 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	doctrine, doctrineErr := parseDoctrine(r.Header.Get("X-Zen-Doctrine"))
+	doctrine, doctrineErr := parseDoctrine(r.Header.Get("X-HADES-Doctrine"))
 	if doctrineErr != nil {
 		s.writeErr(w, req.ID, -32602, "invalid params: "+doctrineErr.Error())
 		return
 	}
-	mode, modeErr := parseMode(r.Header.Get("X-Zen-Mode"))
+	mode, modeErr := parseMode(r.Header.Get("X-HADES-Mode"))
 	if modeErr != nil {
 		s.writeErr(w, req.ID, -32602, "invalid params: "+modeErr.Error())
 		return
 	}
-	sessionID := r.Header.Get("X-Zen-Session-ID")
-	projectID := r.Header.Get("X-Zen-Project-ID")
+	sessionID := r.Header.Get("X-HADES-Session-ID")
+	projectID := r.Header.Get("X-HADES-Project-ID")
 
 	switch req.Method {
 	case "initialize":
@@ -144,7 +144,7 @@ func (s *Server) handleInitialize(w http.ResponseWriter, req jsonrpcRequest) {
 			"prompts":   nil,
 		},
 		"serverInfo": map[string]any{
-			"name":    "zen-swarm-mcpgateway",
+			"name":    "hades-system-mcpgateway",
 			"version": "0.11.0-dev",
 		},
 	}
@@ -207,7 +207,7 @@ func (s *Server) handleToolsCall(
 		if rawProjectID == "" {
 
 			s.writeErr(w, req.ID, -32602,
-				"project_id required (header X-Zen-Project-ID or arguments.project_id)")
+				"project_id required (header X-HADES-Project-ID or arguments.project_id)")
 			return
 		}
 
@@ -216,7 +216,7 @@ func (s *Server) handleToolsCall(
 
 			if errors.Is(resErr, ErrAliasNotFound) {
 				s.writeErr(w, req.ID, -32000,
-					fmt.Sprintf("project_id %q not found in projects_alias (register via 'zen project doctor' or check archive state)", rawProjectID))
+					fmt.Sprintf("project_id %q not found in projects_alias (register via 'hades project doctor' or check archive state)", rawProjectID))
 			} else {
 				s.writeErr(w, req.ID, -32000,
 					fmt.Sprintf("project_id resolution failed: %v", resErr))

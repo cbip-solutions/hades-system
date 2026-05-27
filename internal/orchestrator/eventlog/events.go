@@ -113,7 +113,7 @@ const (
 
 	EvtDoctrineAccessorAuditPassed EventType = 70
 
-	// invariant: canonical ordering; numbers MUST NOT change post-declaration.
+	// inv-hades-197: canonical ordering; numbers MUST NOT change post-declaration.
 	// See internal design record §4.6.
 	EvtRAGQuery         EventType = 92
 	EvtRAGRetrieval     EventType = 93
@@ -1012,7 +1012,7 @@ func (e ADRRangeExhausted) Payload() ([]byte, error) { return json.Marshal(e) }
 
 // HandoffPostedEvent records a project /handoff slash command invocation.
 // 8-field schema frozen master plan §"HandoffPosted event
-// coordination" + spec §1 Q15 + §6.6 + §6.8. invariant enforces
+// coordination" + spec §1 Q15 + §6.6 + §6.8. inv-hades-128 enforces
 // schema integrity (compliance test round-trips Marshal/Unmarshal +
 // asserts field set; extends with fuzz N=100 random payloads).
 //
@@ -1021,7 +1021,7 @@ func (e ADRRangeExhausted) Payload() ([]byte, error) { return json.Marshal(e) }
 // HTTP POST /v1/events/handoff_posted. The plugin also
 // continues to write .hades/session.md to disk (existing behaviour
 // preserved); the event is the cross-project signal surface.
-// - Consumer A: `zen day --eod` reads per-project event-log
+// - Consumer A: `hades day --eod` reads per-project event-log
 // entries to compose ProjectStatusSection blocks in the EOD digest.
 // - Consumer B: release doctrine notification routing + release
 // multi-channel delivery may opt-in for operator-channel surfacing.

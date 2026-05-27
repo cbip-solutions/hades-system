@@ -104,7 +104,7 @@ async def expand(
         daemon_url: Daemon HTTP base URL (e.g. ``"http://localhost:4471"``).
         client: An ``httpx.AsyncClient`` (test injects ``MockTransport``;
             production constructs via
-            ``plugin/zen-swarm/transports/zen_swarm_transport.py``).
+            ``plugin/hades-system/transports/hades_system_transport.py``).
         audit_emitter: Callable that emits the
             ``AUDIT_MOBILE_EXPANSION_REQUESTED`` event to the daemon's
             audit chain (D-6 ships

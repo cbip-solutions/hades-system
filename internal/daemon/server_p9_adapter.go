@@ -11,7 +11,7 @@
 // - release N: SetPlan5OrchestratorService (orchestrator engine)
 // - release I: SetPlan7Adapters (projectctx + quota + tmuxlife +...)
 //
-// invariant: this file imports internal/daemon/handlers only; it never
+// inv-hades-031: this file imports internal/daemon/handlers only; it never
 // imports internal/audit/*, internal/knowledge/*, internal/adr,
 // internal/research/cache, or internal/state/manifest directly. All
 // substrate calls flow through the handler-package Ctx interfaces.

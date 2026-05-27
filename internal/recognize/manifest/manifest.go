@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package manifest implements Tier 1 of zen recognize per spec §2.4 Q4=B:
+// Package manifest implements Tier 1 of hades recognize per spec §2.4 Q4=B:
 // per-ecosystem manifest detection with highest confidence (~0 false positive).
 //
 // Each detector implements the Detector interface; the package-level Detect()

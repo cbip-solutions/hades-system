@@ -6,7 +6,7 @@
 // Caronte engine. CLI is operator-side; LLM
 // traffic isn't involved (these are KG queries, not generation).
 //
-// ProjectAlias as the canonical `X-Zen-Project-ID` header so the daemon
+// ProjectAlias as the canonical `X-HADES-Project-ID` header so the daemon
 // mcpgateway alias resolver picks it up per the MCP protocol convention.
 // The body still includes ProjectAlias ( body-fallback path
 // keeps operator-pinned behavior). CaronteProbe migrated from legacy
@@ -43,7 +43,7 @@ func projectAliasHeaders(alias string) map[string]string {
 	if alias == "" {
 		return nil
 	}
-	return map[string]string{"X-Zen-Project-ID": alias}
+	return map[string]string{"X-HADES-Project-ID": alias}
 }
 
 func (c *Client) CodegraphQuery(ctx context.Context, req CodegraphQueryRequest) (*CodegraphQueryResponse, error) {
@@ -166,7 +166,7 @@ func (c *Client) CaronteProbe(ctx context.Context, check, projectAlias string) (
 		"id":      1,
 		"method":  "tools/call",
 		"params": map[string]any{
-			"name":      "mcp_zen-swarm_caronte_get_health",
+			"name":      "mcp_hades-system_caronte_get_health",
 			"arguments": args,
 		},
 	}

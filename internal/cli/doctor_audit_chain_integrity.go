@@ -58,7 +58,7 @@ func runAuditChainIntegrityChecks(ctx context.Context, c *client.Client) []Check
 			Name:   "audit.chain-integrity",
 			Status: "warn",
 			Detail: "no projects configured",
-			Hint:   "run `zen audit verify-chain --project <id>` to bootstrap a baseline",
+			Hint:   "run `hades audit verify-chain --project <id>` to bootstrap a baseline",
 		})
 	}
 	return out

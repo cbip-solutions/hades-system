@@ -2,7 +2,7 @@
 // Package cli — day_merge.go.
 //
 // renderMergeMorningBrief writes the [release merge] section of the
-// `zen day` morning brief per spec §6.3. Layout:
+// `hades day` morning brief per spec §6.3. Layout:
 //
 // [release merge]
 // Cache size=N entries, hit_rate=P%

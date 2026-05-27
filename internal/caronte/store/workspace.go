@@ -49,7 +49,7 @@ func WithLinkStore(ls linkStorePort) WorkspaceOption {
 }
 
 // graphqlNodeFallbackPort is the narrow indirection through which the
-// invariant production wiring
+// inv-hades-272 production wiring
 // reads the persistent caronte_workspaces.enable_graphql_node_fallback
 // flag without creating an import cycle (the federation package imports
 // internal/caronte/store for value types, so a direct import of
@@ -140,7 +140,7 @@ func (w *Workspace) AuthorizeProjects(projects []string) error {
 	return w.authorize(projects)
 }
 
-// EnableGraphQLNodeFallback is the invariant production-wiring accessor.
+// EnableGraphQLNodeFallback is the inv-hades-272 production-wiring accessor.
 // Returns the persisted caronte_workspaces.enable_graphql_node_fallback
 // flag for this workspace via the
 // graphqlNodeFallbackPort seam wired at construction with
@@ -153,7 +153,7 @@ func (w *Workspace) AuthorizeProjects(projects []string) error {
 // is the only production caller that wires WithGraphQLNodeFallbackPort.
 // gate-closed.
 // - Port lookup error (e.g., unreachable federation DB) → returns false.
-// The error is intentionally NOT surfaced — the invariant spawn
+// The error is intentionally NOT surfaced — the inv-hades-272 spawn
 // gate MUST be fail-closed (a transient persistence failure must
 // NEVER open the spawn-site by accident). The port implementation
 // SHOULD log the error for observability; this accessor's contract
@@ -229,7 +229,7 @@ func (w *Workspace) FederatedQuery(ctx context.Context, q FederatedQuery) ([]Fed
 // extends with a persistent contract_links table via w.linkStore (a
 // federation.LinkStore wired at the daemon composition root). The
 // persistent write runs AFTER w.authorize so capa-firewall consistency is
-// preserved. A link to a non-member repo is refused
+// preserved (inv-hades-264). A link to a non-member repo is refused
 // (ErrUnauthorizedProject) — never a false cross-workspace link.
 //
 // are populated INSIDE this method — the signature stays unchanged so

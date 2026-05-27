@@ -11,13 +11,13 @@
 // "github.com/bufbuild/buf/private code must only be imported by
 // github.com/bufbuild projects"
 //
-// This means the invariant anchor for the proto detector cannot be
+// This means the inv-hades-267 anchor for the proto detector cannot be
 // `bufbuild/buf` literally. Resolution per the plan's authorized fallback
 // path (divergence #2 + max-scope doctrine + no-defer):
 //
 // - We use `github.com/bufbuild/protocompile` (Apache-2.0, by Buf
 // authors; the protobuf compiler underlying the buf CLI) as the
-// canonical Buf-authored anti-bespoke-diff library. The invariant
+// canonical Buf-authored anti-bespoke-diff library. The inv-hades-267
 // compliance test anchors on protocompile for the
 // proto subpackage with documented rationale.
 // - We walk the descriptor pair and classify changes per the documented
@@ -28,7 +28,7 @@
 // - FILE: PACKAGE + every source-incompatible change (strictest).
 //
 // This is doctrine-faithful: the schema CHECK constraint on
-// breaking_changes.detector_id is the wire-side anchor of invariant
+// breaking_changes.detector_id is the wire-side anchor of inv-hades-267
 // (still gates "buf" verbatim); protocompile is the Go-side anchor for
 // the proto detector; the canonical buf rule semantics are reproduced
 // faithfully (the buf documentation IS the spec — see
@@ -36,7 +36,7 @@
 // classifier when buf publishes a public Go SDK.
 //
 // NO os/exec — the spawn fallback path is NOT
-// taken; the invariant sovereignty perimeter remains scoped to the
+// taken; the inv-hades-272 sovereignty perimeter remains scoped to the
 // graphql/nodefallback.go single site.
 package proto
 

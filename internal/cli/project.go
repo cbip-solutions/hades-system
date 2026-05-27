@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package cli — project.go.
 //
-// `zen project {doctor,archive,rm}` is the operator-facing project
+// `hades project {doctor,archive,rm}` is the operator-facing project
 // lifecycle surface. Each subcommand sends a JSON-over-UDS
 // request to the daemon (the daemon is the only process that holds
-// *store.Store; the CLI never touches storage directly — invariant).
+// *store.Store; the CLI never touches storage directly — inv-hades-031).
 //
 // Cobra layout:
 //
-// zen project
+// hades project
 // doctor [<alias>] [--rebind] # cwd-based or by alias
 // archive <alias> # soft-delete
 // rm <alias> --yes # hard-delete (cascades path_history)
@@ -23,7 +23,7 @@
 //
 // Categorisation is implemented via the ErrRecoverable sentinel: every
 // recoverable error returned from this package wraps ErrRecoverable so
-// cmd/zen/main.go can decide via cli.IsRecoverable(err) whether to exit
+// cmd/hades/main.go can decide via cli.IsRecoverable(err) whether to exit
 // 1 (recoverable) or 2 (everything else). See ErrRecoverable's docstring.
 //
 // reserves the `--rebind` flag on `doctor` so the command shape
@@ -47,7 +47,7 @@ import (
 
 // ErrRecoverable is the sentinel root any operator-recoverable error in
 // the CLI MUST wrap (via fmt.Errorf("%w:...", ErrRecoverable)). The
-// process entry point (cmd/zen/main.go) maps these to exit code 1, all
+// process entry point (cmd/hades/main.go) maps these to exit code 1, all
 // other non-nil errors to exit code 2 — per spec §6.2 :
 //
 // 0 — success / healthy
@@ -70,11 +70,11 @@ import (
 var ErrRecoverable = errors.New("operator-recoverable")
 
 // ErrPreflightFailure is the sentinel root any preflight-gate failure
-// (release `zen config init`: Hermes not installed, plugin
+// (release `hades config init`: Hermes not installed, plugin
 // format remnant detected) MUST wrap. The process entry point
-// (cmd/zen/main.go) maps this category to exit code 3 — distinct from
+// (cmd/hades/main.go) maps this category to exit code 3 — distinct from
 // generic recoverable errors (exit 1) and unrecoverable errors (exit 2)
-// per the EXIT CODES section in `zen config init --help` and spec §6.2.
+// per the EXIT CODES section in `hades config init --help` and spec §6.2.
 //
 // Why a third code: preflight failures are operator-recoverable but
 // have a fundamentally different fix-loop than other recoverable errors.
@@ -126,16 +126,16 @@ Subcommands:
   rm        hard-delete an alias (cascades path_history; --yes required)
   priority  Layer-3 WFQ override (boost / reset / list; spec §1 Q10)`,
 		Example: `  # Diagnose the project anchored at the current cwd
-  zen project doctor
+  hades project doctor
 
   # Archive the "internal-platform-x" alias (reversible)
-  zen project archive internal-platform-x
+  hades project archive internal-platform-x
 
   # Permanently remove an alias and its path_history rows
-  zen project rm old-prototype --yes
+  hades project rm old-prototype --yes
 
   # Boost the "internal-platform-x" alias for 4 hours
-  zen project priority --boost internal-platform-x --duration 4h --reason "release prep"`,
+  hades project priority --boost internal-platform-x --duration 4h --reason "release prep"`,
 	}
 	cmd.AddCommand(projectDoctorCmd())
 	cmd.AddCommand(projectArchiveCmd())
@@ -151,7 +151,7 @@ func projectDoctorCmd() *cobra.Command {
 		Short: "Diagnose project identity (cwd-based or by alias)",
 		Long: `Run a project-identity health probe against the daemon's project
 registry. With no argument the CLI captures cwd; the daemon walks up
-to find zenswarm.toml or .git via projectctx.FindProjectRoot. With an
+to find hadessystem.toml or .git via projectctx.FindProjectRoot. With an
 alias argument the daemon resolves directly without filesystem walking.
 
 Output reports:
@@ -168,13 +168,13 @@ Exit codes (spec §6.2):
   1  mv-detection pending OR alias not found OR daemon healthy:false
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Probe the project anchored at cwd
-  zen project doctor
+  hades project doctor
 
   # Probe a specific project by alias
-  zen project doctor internal-platform-x
+  hades project doctor internal-platform-x
 
   # Phase B/J: rebind the alias to cwd's sha256 after a directory move
-  zen project doctor --rebind`,
+  hades project doctor --rebind`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			alias := ""
@@ -199,7 +199,7 @@ func projectArchiveCmd() *cobra.Command {
 		Long: `Soft-delete a project alias by setting autonomous_state="complete"
 in the daemon's project registry. The alias is preserved (so historical
 references in audit / inbox / knowledge tables remain navigable) but
-hidden from the default surface — ` + "`zen projects ls`" + ` shows archived
+hidden from the default surface — ` + "`hades projects ls`" + ` shows archived
 rows under a STATE=archived marker so operator can spot dead aliases.
 
 Reversible: a future Plan 7 Phase J restore-flow will resurrect archived
@@ -212,10 +212,10 @@ Exit codes (spec §6.2):
   1  alias not found (operator typo or already archived/removed)
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Archive a deprecated project
-  zen project archive old-prototype
+  hades project archive old-prototype
 
   # Inspect after archiving (archived rows show with STATE=archived)
-  zen projects ls`,
+  hades projects ls`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cli := newClientFromCmd(cmd)
@@ -241,7 +241,7 @@ The --yes flag is mandatory because the operation is irreversible
 
 The CLI enforces --yes locally because the daemon's UDS surface is
 trust-on-first-use within the host: any process able to open
-/tmp/zen-swarm.sock can call /v1/projects/rm. The CLI's destructive-
+/tmp/hades-system.sock can call /v1/projects/rm. The CLI's destructive-
 confirmation discipline is the operator-facing safety net.
 
 Exit codes (spec §6.2):
@@ -249,10 +249,10 @@ Exit codes (spec §6.2):
   1  --yes omitted OR alias not found
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Refused (no --yes; safe default)
-  zen project rm old-prototype
+  hades project rm old-prototype
 
   # Confirmed removal (cascades path_history)
-  zen project rm old-prototype --yes`,
+  hades project rm old-prototype --yes`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			yes, _ := cmd.Flags().GetBool("yes")

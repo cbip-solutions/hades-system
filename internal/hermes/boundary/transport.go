@@ -10,39 +10,39 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/providers"
 )
 
-// NewHermesCliFromZenSwarmTransport adapts an existing daemon-side
-// ZenSwarmTransport (internal/daemon/transport/zenswarm_transport.go) into
-// the boundary.HermesCli interface. Constructor preserves the invariant
-// compile-anchor (the underlying transport.ZenSwarmTransport file stays at
+// NewHermesCliFromHadesSystemTransport adapts an existing daemon-side
+// HadesSystemTransport (internal/daemon/transport/hadessystem_transport.go) into
+// the boundary.HermesCli interface. Constructor preserves the inv-hades-164
+// compile-anchor (the underlying transport.HadesSystemTransport file stays at
 // its canonical path); the boundary package consumes it via this adapter.
 //
-// Per release / policy: the ZenSwarmTransport is NOT moved
-// . Instead, the boundary package
+// Per release / policy: the HadesSystemTransport is NOT moved
+// (would shatter the inv-hades-164 grep). Instead, the boundary package
 // wraps it so the consolidation surface (Surface interface) covers the
 // existing single-egress completion path AND adds capability-feature
 // detection + lifecycle hooks for future Hermes API growth.
 //
 // version MUST match the.hermes-version pin at repo root (consumed by
 // CapabilitiesFor to compute the empirically-verified capability snapshot).
-// Production wiring at cmd/zen-swarm-ctld bootstrap reads.hermes-version
+// Production wiring at cmd/hades-ctld bootstrap reads.hermes-version
 // + passes the value here.
 //
 // Returned HermesCli:
-// - SendCompletion routes via the existing ZenSwarmTransport.Forward
-// .
+// - SendCompletion routes via the existing HadesSystemTransport.Forward
+// (single-egress preserved per inv-hades-164 + inv-hades-088).
 // - RegisterStatusProvider / OnSessionStart / RenderInlinePrompt all
 // return ErrCapabilityUnavailable in v0.13.x (G2/G3/G5 absent).
 // - OnPreToolCall accepts handlers and stores them; production wiring
 // surfaces them at the Python/Hermes integration boundary.
 // - WrapMCPEnvelope delegates to the canonical WrapMCPEnvelope helper.
 //
-// Behaviour preservation: callers of the underlying ZenSwarmTransport
-// (compliance test invariant, integration tests, daemon dispatcher
+// Behaviour preservation: callers of the underlying HadesSystemTransport
+// (compliance test inv-hades-164, integration tests, daemon dispatcher
 // wiring) see no behaviour change. The boundary wrapping is additive — it
 // gives consolidation a home without removing the existing surface.
-func NewHermesCliFromZenSwarmTransport(zt *transport.ZenSwarmTransport, version HermesVersion) HermesCli {
+func NewHermesCliFromHadesSystemTransport(zt *transport.HadesSystemTransport, version HermesVersion) HermesCli {
 	if zt == nil {
-		panic("boundary.NewHermesCliFromZenSwarmTransport: zt is required")
+		panic("boundary.NewHermesCliFromHadesSystemTransport: zt is required")
 	}
 	return &zenSwarmHermesCli{
 		zt:           zt,
@@ -52,7 +52,7 @@ func NewHermesCliFromZenSwarmTransport(zt *transport.ZenSwarmTransport, version 
 }
 
 type zenSwarmHermesCli struct {
-	zt           *transport.ZenSwarmTransport
+	zt           *transport.HadesSystemTransport
 	cap          Capabilities
 	hooksMu      sync.RWMutex
 	preToolHooks []PreToolCallHandler

@@ -26,7 +26,7 @@ import (
 // normalizeSlashNamespace is applied to all calls before processing.
 // It rewrites the first positional arg of every ctx.register_command(...)
 // call to use the `hades:` namespace prefix — bare names become
-// `hades:<name>`, `zen-swarm:<name>` becomes `hades:<name>`, and
+// `hades:<name>`, `hades-system:<name>` becomes `hades:<name>`, and
 // already-`hades:` names are left unchanged (idempotent).
 // register_skill calls are NOT touched (skill names live in a separate
 // namespace per spec §"Cross-phase type discipline").
@@ -66,7 +66,7 @@ func renderInitPy(calls []string) []byte {
 }
 
 var registerCommandFirstArgPattern = regexp.MustCompile(
-	`(ctx\.register_command\(\s*")(zen-swarm:)?([a-zA-Z][a-zA-Z0-9_:-]*)`,
+	`(ctx\.register_command\(\s*")(hades-system:)?([a-zA-Z][a-zA-Z0-9_:-]*)`,
 )
 
 func normalizeSlashNamespace(calls []string) []string {

@@ -24,7 +24,7 @@ func doctorMCPsCmd() *cobra.Command {
 }
 
 func runMCPsChecks(ctx context.Context, c *client.Client) []CheckResult {
-	mcps := []string{"zen-mcp-research", "zen-mcp-budget", "zen-mcp-audit", "zen-mcp-sshexec"}
+	mcps := []string{"hades-mcp-research", "hades-mcp-budget", "hades-mcp-audit", "hades-mcp-sshexec"}
 	out := make([]CheckResult, 0, len(mcps))
 	for _, name := range mcps {
 		cctx, cancel := context.WithTimeout(ctx, 2*time.Second)

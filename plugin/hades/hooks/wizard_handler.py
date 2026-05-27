@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Auto-launch the onboarding wizard on first-run if ~/.config/zen-swarm/config.toml absent."""
+"""Auto-launch the onboarding wizard on first-run if ~/.config/hades-system/config.toml absent."""
 
 from __future__ import annotations
 
@@ -14,9 +14,9 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 # The subprocess command target — the release design A wrapper subcommand that
-# dispatches to the release design `zen config init`. Operator may override binary
+# dispatches to the release design `hades config init`. Operator may override binary
 # lookup via HADES_BIN env (test fixtures + custom installs). Default:
-# shutil.which("hades") then shutil.which("zen") fallback.
+# shutil.which("hades") then shutil.which("hades") fallback.
 _HADES_BIN_ENV = "HADES_BIN"
 _NO_WIZARD_ENV = "HADES_NO_WIZARD"
 _HERMES_SKIN_ENV = "HERMES_SKIN"
@@ -26,7 +26,7 @@ _HADES_SKIN_NAME = "hades"
 # The 3 wizard.* catalog codes from the release design release track
 # (internal/errors/codes.go). The hook does NOT directly route through
 # Render (the Go wrapper at the subprocess boundary owns rendering); it
-# logs these code names for operator traceability + release track invariant
+# logs these code names for operator traceability + release track inv-hades-220
 # compliance grep.
 _WIZARD_CATALOG_CODES = (
     "wizard.config-corrupt",
@@ -41,28 +41,28 @@ _INTERNAL_UNCAUGHT_CODE = "internal-uncaught"
 
 
 def _config_path() -> Path:
-    """Resolve the canonical `~/.config/zen-swarm/config.toml` path.
+    """Resolve the canonical `~/.config/hades-system/config.toml` path.
 
     Mirrors internal/onboard/paths.go:GlobalConfigPath() — honors
     XDG_CONFIG_HOME if set; falls back to $HOME/.config otherwise.
     """
     xdg = os.environ.get(_XDG_CONFIG_ENV, "").strip()
     if xdg:
-        return Path(xdg) / "zen-swarm" / "config.toml"
+        return Path(xdg) / "hades-system" / "config.toml"
     home = os.environ.get("HOME", "").strip()
     if not home:
         # Defensive: no HOME env (degenerate process env). Fall back to
         # the path expansion which returns ~/ verbatim in this case;
         # callers treat the file as "not present" downstream.
-        return Path.home() / ".config" / "zen-swarm" / "config.toml"
-    return Path(home) / ".config" / "zen-swarm" / "config.toml"
+        return Path.home() / ".config" / "hades-system" / "config.toml"
+    return Path(home) / ".config" / "hades-system" / "config.toml"
 
 
 def _should_launch_wizard() -> bool:
     """Return True iff first-run conditions are met.
 
     Conditions (per spec §5.1 + amendment 2026-05-21):
-    1. ~/.config/zen-swarm/config.toml does NOT exist
+    1. ~/.config/hades-system/config.toml does NOT exist
     2. HADES_NO_WIZARD env is NOT set to "1" (the escape hatch)
 
     The hook caller layers ADDITIONAL defensive guards (cwd non-empty,
@@ -247,7 +247,7 @@ def _maybe_launch_wizard(
         # boundary (the release design release track contract); the operator-visible
         # HADES error block is already on stderr. The hook logs a
         # structured trace entry referencing the candidate wizard.*
-        # catalog codes for operator traceability + invariant
+        # catalog codes for operator traceability + inv-hades-220
         # compliance grep.
         logger.warning(
             "HADES wizard exited with error (rc=%d). The wrapper has "

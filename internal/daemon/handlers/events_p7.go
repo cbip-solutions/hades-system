@@ -5,7 +5,7 @@
 //
 // The plugin `/handoff` slash command writes .hades/session.md and
 // then emits a structured HandoffPostedEvent via this endpoint so
-// `zen day --eod` digest can render a ProjectStatusSection
+// `hades day --eod` digest can render a ProjectStatusSection
 // per project. The endpoint:
 //
 // 1. Parses application/json body matching eventlog.HandoffPostedEvent
@@ -21,7 +21,7 @@
 // goroutine; aggregator hot-update flows via the existing
 // notification pipeline).
 //
-// Status-code contract (consumed by zen plugin + future
+// Status-code contract (consumed by hades plugin + future
 // retry/backoff machinery):
 //
 // 202 — accepted, event_id returned. Plugin logs success + done.
@@ -43,7 +43,7 @@
 // via SetHandoffEmitter yet). Plugin surfaces "feature not
 // configured" rather than retrying indefinitely.
 //
-// invariant boundary: this handler imports
+// inv-hades-031 boundary: this handler imports
 // internal/orchestrator/eventlog value types only (HandoffPostedEvent
 // type alias). It NEVER imports internal/store directly — the daemon
 // adapter that satisfies HandoffEmitter is the single bridge to the
@@ -72,7 +72,7 @@ type HandoffPostedEvent = eventlog.HandoffPostedEvent
 
 // HandoffEmitter is the abstract emitter interface consumed by the
 // handler. The single concrete implementation lives daemon-side
-// (cmd/zen-swarm-ctld composes it from *eventlog.Log + per-project
+// (cmd/hades-ctld composes it from *eventlog.Log + per-project
 // dispatch); tests substitute fakeHandoffEmitter.
 //
 // Emit is asynchronous in spirit: callers MUST NOT assume the event

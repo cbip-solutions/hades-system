@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package embed provides Embedder implementations for zen-swarm knowledge
+// Package embed provides Embedder implementations for hades-system knowledge
 // search. Three implementations are shipped:
 //
 // - MPSEmbedder: Mac M-series GPU path via Python sentence-transformers
@@ -13,7 +13,7 @@
 // Factory (NewEmbedder) auto-detects backend per Config.Backend:
 // "auto" → MPS on darwin if python3+script available, else CPU.
 //
-// invariant: NO net/http imports in this package — all embed operations
+// inv-hades-129: NO net/http imports in this package — all embed operations
 // are local-only. Compliance grep in tests/compliance enforces this.
 package embed
 

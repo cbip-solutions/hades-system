@@ -247,7 +247,7 @@ func (cc *concreteCandidate) applyFlakeRerun(ctx context.Context, out *Candidate
 			})
 		}
 
-		env := []string{"ZEN_MERGE_RERUN_TESTS=" + strings.Join(failed, ",")}
+		env := []string{"HADES_MERGE_RERUN_TESTS=" + strings.Join(failed, ",")}
 		res, err := cc.deps.Executor.Run(runCtx, worktreeDir, rerunCmd, env)
 		if err != nil {
 

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package cache ships the release doctor freshness cache layer
 // per Q5=C+ + Q12=D state model. Last-run JSON output is persisted at
-// `$XDG_CACHE_HOME/zen-swarm/doctor/last-run.json` (default
-// `~/.cache/zen-swarm/doctor/last-run.json`). Per-operator freshness ≤5min
+// `$XDG_CACHE_HOME/hades-system/doctor/last-run.json` (default
+// `~/.cache/hades-system/doctor/last-run.json`). Per-operator freshness ≤5min
 // TTL.
 //
-// Boundary: cache writes ONLY to XDG paths; no DB; no
+// Boundary (inv-hades-031): cache writes ONLY to XDG paths; no DB; no
 // internal/store import.
 //
 // Cross-platform: tests inject t.TempDir() + t.Setenv("HOME",...)
@@ -39,10 +39,10 @@ func New() *Cache {
 		} else if home, err := os.UserHomeDir(); err == nil && home != "" {
 			xdg = filepath.Join(home, ".cache")
 		} else {
-			xdg = filepath.Join(".", ".zen-swarm-cache")
+			xdg = filepath.Join(".", ".hades-system-cache")
 		}
 	}
-	return NewWithDir(filepath.Join(xdg, "zen-swarm", "doctor"))
+	return NewWithDir(filepath.Join(xdg, "hades-system", "doctor"))
 }
 
 func NewWithDir(dir string) *Cache {

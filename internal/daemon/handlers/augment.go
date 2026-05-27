@@ -3,13 +3,13 @@
 // extends with the 5-lane RRF pipeline).
 //
 // /v1/augment is the daemon-side endpoint the Python
-// plugin/zen-swarm/hooks/llm_handlers.py:pre_llm_call hook callback
+// plugin/hades-system/hooks/llm_handlers.py:pre_llm_call hook callback
 // calls before each LLM
 // completion. The endpoint:
 //
 // 1. Reads the active doctrine's augmentation config (release doctrine
 // schema § [doctrine.augmentation]).
-// 2. When enable = false, returns
+// 2. When enable = false (capa-firewall default per inv-hades-170), returns
 // 204 No Content. Hermes treats this as "proceed unaugmented".
 // 3. When enabled, runs the 5-lane RRF retrieval pipeline and
 // returns an AugmentResponse envelope with static_context (system
@@ -131,7 +131,7 @@ const maxAugmentBodyBytes = 4 << 20
 // dr MUST be non-nil — passing nil is a wiring bug at daemon bootstrap
 // that panics here rather than at first request. This aligns with the
 // fail-fast discipline enforced by the sibling transport.NewMessagesHandler
-// and transport.NewZenSwarmTransport constructors (reviewer M4: a half-
+// and transport.NewHadesSystemTransport constructors (reviewer M4: a half-
 // wired daemon that reports healthy on the readiness probe while
 // every /v1/augment call 500s masks the wiring bug from operators —
 // panic-and-exit at construction makes the doctor surface the bug

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — docs_reindex.go.
 //
-// `zen docs reindex` rebuilds or refreshes the ecosystem-docs corpus.
+// `hades docs reindex` rebuilds or refreshes the ecosystem-docs corpus.
 // By default the daemon performs a delta sweep (only docs that changed
 // since the last successful poll). --full forces a complete reindex
 // across the configured ecosystems / versions.
@@ -53,13 +53,13 @@ func NewDocsReindexCmd(factory DocsClientFactory) *cobra.Command {
 By default performs a delta sweep (only docs that changed since last poll).
 Use --full to force a complete reindex.`,
 		Example: `  # Delta sweep across all ecosystems
-  zen docs reindex
+  hades docs reindex
 
   # Full reindex of Go ecosystem only
-  zen docs reindex --ecosystem go --full
+  hades docs reindex --ecosystem go --full
 
   # Pin to a specific version
-  zen docs reindex --ecosystem python --version 3.12.0`,
+  hades docs reindex --ecosystem python --version 3.12.0`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

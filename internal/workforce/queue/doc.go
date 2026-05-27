@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package queue provides three SQLite-backed durable queues for the
-// zen-swarm workforce layer:
+// hades-system workforce layer:
 //
 // - SharedTaskList — Kanban board (pending/in_progress/review/done/failed);
 // concurrent-safe; checkpoint-keyed-by-thread_id; LangGraph pattern.
 // - CheckpointQueue — async durable channel from generation Worker to L2
-// tactical reviewer; deadline-stamped per invariant.
+// tactical reviewer; deadline-stamped per inv-hades-050.
 // - FixPromptQueue — async durable channel from L2/L3/L4 reviewer to next
 // worker iteration.
 //
-// All three queues are SQLite-backed with WAL mode + busy_timeout=5 s.
+// All three queues are SQLite-backed with WAL mode + busy_timeout=5 s (inv-hades-073).
 // This package declares ONLY interfaces and value types. Concrete SQL-backed
-// implementations live in internal/daemon/workforceadapter.
+// implementations live in internal/daemon/workforceadapter (inv-hades-031 boundary).
 //
 // # project_id isolation contract
 //
@@ -39,10 +39,10 @@
 //
 // Invariant compile-checks:
 //
-// var _ = DurableQueueOpened() // invariant: WAL requirement documented at interface level
+// var _ = DurableQueueOpened() // inv-hades-073: WAL requirement documented at interface level
 package queue
 
-// DurableQueueOpened is a zero-cost compile-time marker for invariant.
+// DurableQueueOpened is a zero-cost compile-time marker for inv-hades-073.
 // Concrete implementations MUST configure: PRAGMA journal_mode=WAL;
 // PRAGMA synchronous=NORMAL; PRAGMA busy_timeout=5000;
 // This function is called by adapters in their constructor.

@@ -3,9 +3,9 @@
 //
 // Filename uses _p9 suffix because doctor_research.go already ships from
 // reachability and size checks). This file adds the release RunResearchCacheProbe
-// orchestrator and `zen doctor research cache` subcommand.
+// orchestrator and `hades doctor research cache` subcommand.
 //
-// `zen doctor research cache` delegates to ResearchCacheProber declared
+// `hades doctor research cache` delegates to ResearchCacheProber declared
 // in probe.go; 5 results:
 //
 // - research.cache.hit_rate
@@ -19,9 +19,9 @@
 // ResearchCacheProber interface declared in probe.go (CLI side).
 // Substrate prober.go files (internal/research/cache/) are NOT modified
 // per J-1 pattern.
-// Production wiring in cmd/zen-swarm-ctld/main.go.
+// Production wiring in cmd/hades-ctld/main.go.
 //
-// Boundary:
+// Boundary (inv-hades-031):
 //
 // This file imports only cli-internal types + cobra + context + stdlib.
 // Does NOT import internal/research/cache concrete types.

@@ -36,14 +36,14 @@ func DefaultEmbedderConfig() EmbedderConfig {
 
 func defaultJinaModelPath() string {
 	if v := os.Getenv("XDG_DATA_HOME"); v != "" {
-		return filepath.Join(v, "zen-swarm", "models", "jina-code", "model.onnx")
+		return filepath.Join(v, "hades-system", "models", "jina-code", "model.onnx")
 	}
 	home, err := os.UserHomeDir()
 	if err != nil || home == "" {
 
-		return "/var/empty/zen-swarm/models/jina-code/model.onnx"
+		return "/var/empty/hades-system/models/jina-code/model.onnx"
 	}
-	return filepath.Join(home, ".local", "share", "zen-swarm", "models", "jina-code", "model.onnx")
+	return filepath.Join(home, ".local", "share", "hades-system", "models", "jina-code", "model.onnx")
 }
 
 func (c *EmbedderConfig) Validate() error {

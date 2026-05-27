@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package cli — priority.go.
 //
-// `zen project priority --boost / --reset / --ls` is the operator surface
+// `hades project priority --boost / --reset / --ls` is the operator surface
 // for Layer 3 WFQ priority overrides per spec §1 Q10 + §6.2.
 //
 // Cobra layout (single subcommand, three mutually-exclusive flag actions):
 //
-// zen project priority --boost <alias> --duration 4h --reason "..."
-// zen project priority --reset <alias>
-// zen project priority --ls
+// hades project priority --boost <alias> --duration 4h --reason "..."
+// hades project priority --reset <alias>
+// hades project priority --ls
 //
 // Action mutex: exactly one of --boost / --reset / --ls must be set;
 // any other combination errors out. The mutex check happens BEFORE
@@ -27,7 +27,7 @@
 // Output formatting:
 // - boost: ✓ priority boost queued + project/multiplier/duration/
 // expires(RFC3339)/reason block (machine-parseable; stable across
-// releases for `zen day` morning brief composition).
+// releases for `hades day` morning brief composition).
 // - reset: ✓ priority override removed: <alias>
 // - ls: ALIAS / MULT / EXPIRES / REASON / CREATED column header +
 // row-per-override.
@@ -94,16 +94,16 @@ Exit codes (spec §6.2):
     422 quota.ErrInvalidOverride)
   2 unrecoverable (transport / decode / daemon 5xx)`,
 		Example: `  # Boost a project for 4 hours with a documented reason (audit-logged)
-  zen project priority --boost internal-platform-x --duration 4h --reason "release prep"
+  hades project priority --boost internal-platform-x --duration 4h --reason "release prep"
 
   # Specify a non-default multiplier (5x weight)
-  zen project priority --boost internal-platform-x --duration 1h --reason "demo" --multiplier 5
+  hades project priority --boost internal-platform-x --duration 1h --reason "demo" --multiplier 5
 
   # Reset (remove) an existing override
-  zen project priority --reset internal-platform-x
+  hades project priority --reset internal-platform-x
 
   # List active overrides
-  zen project priority --ls`,
+  hades project priority --ls`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			actions := 0
 			if boostAlias != "" {

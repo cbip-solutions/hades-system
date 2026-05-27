@@ -8,7 +8,7 @@
 -- partition_id = yyyy-mm; weekly Sunday 03:00 sweep (release track) seals the
 -- prior month's partition.
 --
--- invariant: seq is monotonic, APPEND-ONLY, no reuse. Enforced by
+-- inv-hades-197: seq is monotonic, APPEND-ONLY, no reuse. Enforced by
 -- AUTOINCREMENT semantics (sqlite_sequence is never reused after row
 -- deletion in this design).
 --

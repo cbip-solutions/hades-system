@@ -5,7 +5,7 @@
 // §1): full schema día 1 covering Plans 4-15 surfaces. Built-in
 // defaults (max-scope/default/capa-firewall) live in builtin.go; TOML
 // loading lives in loader.go; resolver chain (system-design §7.1) in
-// resolver.go; additive-only CI gate in validator.go.
+// resolver.go; additive-only CI gate (inv-hades-084) in validator.go.
 //
 // Schema is a pure value type. No I/O, no global state, no methods that
 // mutate. This file is the single source of truth for the schema shape;

@@ -6,7 +6,7 @@
 // the AuditWriter / AuditRetention pipelines from When a
 // concrete operation has no backend symbol yet, the handler
 // returns a structured 200 with shape-correct fields so the operator
-// surface (CLI + zen day brief) is exercised end-to-end and the
+// surface (CLI + hades day brief) is exercised end-to-end and the
 // behaviour can be back-filled by later phases without altering the
 // wire contract.
 package handlers

@@ -25,7 +25,7 @@
 // it; View renders. lastErr fallback per spec §15 graceful
 // degradation.
 //
-// Privacy / invariant / invariant: this file consumes the daemon
+// Privacy / inv-hades-031 / inv-hades-129: this file consumes the daemon
 // ONLY via internal/client; it does NOT import internal/caronte/*,
 // does NOT touch net/http directly, and does NOT import the
 // federation/coordinator packages (those live behind the daemon's

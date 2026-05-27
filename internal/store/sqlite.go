@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package store wraps SQLite for zen-swarm-ctld.
+// Package store wraps SQLite for hades-ctld.
 //
-// Uses ncruces/go-sqlite3 (pure-Go via wasm, no CGO) per invariant
+// Uses ncruces/go-sqlite3 (pure-Go via wasm, no CGO) per inv-hades-031
 // (auditable; zero supply chain via CGO toolchain) and verified by
 // design v1.2 R3.
 //
@@ -77,11 +77,11 @@ func DefaultPath() (string, error) {
 
 func defaultDataDir() (string, error) {
 	if xdg := os.Getenv("XDG_DATA_HOME"); xdg != "" {
-		return filepath.Join(xdg, "zen-swarm"), nil
+		return filepath.Join(xdg, "hades-system"), nil
 	}
 	home := os.Getenv("HOME")
 	if home == "" {
 		return "", fmt.Errorf("$HOME not set")
 	}
-	return filepath.Join(home, ".local", "share", "zen-swarm"), nil
+	return filepath.Join(home, ".local", "share", "hades-system"), nil
 }

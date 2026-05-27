@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_workforce.go.
 //
-// `zen doctor workforce` checks workforce primitives (gate, queues, specs).
+// `hades doctor workforce` checks workforce primitives (gate, queues, specs).
 //
 // Threshold rationale (review M-5): the warning thresholds for
 // checkpoint queue depth and unconsumed fix-prompts are CLI-default
 // health-check values, intentionally NOT part of the doctrine schema.
 // Promoting them to doctrine-resolved values would require a doctrine
-// schema addition, which is out of release scope per invariant
+// schema addition, which is out of release scope per inv-hades-084
 // (additive-only schema; schema bumps belong to a future Plan that
 // owns the doctrine surface). The constants below document the rationale
 // and act as the sole source of truth for the namespace; a future Plan
@@ -111,7 +111,7 @@ func checkWorkforceFixPromptsBacklog(ctx context.Context, c *client.Client) Chec
 	if pending > workforceFixPromptWarn {
 		return CheckResult{Name: "workforce.fix_prompts.backlog", Status: "warn",
 			Detail: fmt.Sprintf("%d unconsumed fix-prompts (> %d)", pending, workforceFixPromptWarn),
-			Hint:   "review backlog: zen workforce fix-prompts"}
+			Hint:   "review backlog: hades workforce fix-prompts"}
 	}
 	return CheckResult{Name: "workforce.fix_prompts.backlog", Status: "ok",
 		Detail: fmt.Sprintf("%d unconsumed", pending)}

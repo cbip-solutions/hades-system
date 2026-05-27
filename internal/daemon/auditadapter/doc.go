@@ -4,7 +4,7 @@
 // dispatcheradapter, orchestratoradapter,
 // projectctxadapter.
 //
-// Boundary: the chain layer (internal/audit/chain) NEVER
+// Boundary (inv-hades-031): the chain layer (internal/audit/chain) NEVER
 // imports internal/store. Adapter satisfies chain.EventStore via
 // field-by-field copy between chain.* value types and store.* row
 // types — same shape, deliberate layer boundary.
@@ -31,9 +31,9 @@
 //
 // Boot-time ordering contract:
 //
-// 1. store.Open + Migrate (existing daemon boot; cmd/zen-swarm-ctld/main.go)
+// 1. store.Open + Migrate (existing daemon boot; cmd/hades-ctld/main.go)
 // 2. auditadapter.New(store) constructs the chain compute coordinator
-// 3. chain.Backfill runs synchronously (cmd/zen-swarm-ctld/main.go
+// 3. chain.Backfill runs synchronously (cmd/hades-ctld/main.go
 // bootBackfillChain helper) — chain-links any historical
 // audit_events_raw rows from pre- sessions (release/8 events
 // that landed with empty chain columns)
@@ -46,7 +46,7 @@
 // OnEmitRaw is wired persists with empty chain columns (recoverable
 // by next Backfill but adds doctor-noise in the meantime).
 //
-// ships steps 1-3 wiring (cmd/zen-swarm-ctld/main.go boot-time
+// ships steps 1-3 wiring (cmd/hades-ctld/main.go boot-time
 // chain.Backfill call via bootBackfillChain). ships step 4
 // (orchestratoradapter OnEmitRaw integration). Until lands,
 // new audit_events_raw rows persist with empty chain columns; the next

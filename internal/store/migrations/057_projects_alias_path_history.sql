@@ -1,10 +1,10 @@
--- Migration 057: project alias dual-ID + path_history (the release design release track, Q3, invariant).
+-- Migration 057: project alias dual-ID + path_history (the release design release track, Q3, inv-hades-114).
 -- Two new tables introduce AIP-2510 dual-ID separation:
 --   - projects_alias: sha256(canonical-path) canonical id + human alias
 --                     UX-facing operator commands resolve via alias
 --   - path_history:   tracks (id_sha256, path) tuples for mv-detection.
 --                     Same alias appearing at new canonical path with a
---                     different sha256 → daemon prompts `zen project doctor`
+--                     different sha256 → daemon prompts `hades project doctor`
 --                     rebind (see internal/projectctx/path_history.go).
 --
 -- NOTE: release track leaves the existing v1 `projects` table untouched. Plans
@@ -32,7 +32,7 @@
 -- pattern + supports boundary-correctness tests.
 CREATE TABLE IF NOT EXISTS projects_alias (
     id_sha256       TEXT PRIMARY KEY,        -- sha256 hex (64 chars), of EvalSymlinks(canonical_path)
-    alias           TEXT NOT NULL UNIQUE,    -- human alias from zenswarm.toml [project] id (or fallback <dirname>-<sha8>)
+    alias           TEXT NOT NULL UNIQUE,    -- human alias from hadessystem.toml [project] id (or fallback <dirname>-<sha8>)
     canonical_path  TEXT NOT NULL,           -- absolute filepath.EvalSymlinks(path)
     first_seen_at   INTEGER NOT NULL,        -- ms when project first activated
     last_seen_at    INTEGER NOT NULL,        -- ms last activation

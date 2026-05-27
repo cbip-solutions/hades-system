@@ -1,4 +1,4 @@
-// Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
+// Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
 // Package daemon — server_conn_context.go (release fix-cycle
 // re-review pre-existing-gap fix).
@@ -10,7 +10,7 @@
 // context so every HTTP request served over that connection sees the
 // cred via auth.PeerCredFromContext(r.Context()).
 //
-// # Contract
+// # Contract (inv-hades-131)
 //
 // - UDS connection (*net.UnixConn) → ExtractPeerCred + WithPeerCred.
 // On extraction failure, the context proceeds untouched so

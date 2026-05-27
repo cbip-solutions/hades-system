@@ -26,11 +26,11 @@
 // 1-hour wait. Default is defaultWindowResetTickInterval (1h);
 // test-only callers override before invoking WindowResetScheduler.
 //
-// Boundary: this file imports stdlib only (context, errors,
+// Boundary (inv-hades-031): this file imports stdlib only (context, errors,
 // fmt, sync, time). The orchestrator package MUST NOT import internal/store.
 // Pin pattern matches F-5 / F-7 / I-2 precedent.
 //
-// invariant anchor: capOverridesPin lives here. Removing PaygSafety,
+// inv-hades-063 anchor: capOverridesPin lives here. Removing PaygSafety,
 // CheckCap, HandleCapReached, ErrCapWillExceed, OR the file-scope
 // `var _ = capOverridesPin` reference breaks the build. The runtime
 // ordering invariant — "pin is resolved FIRST, cap is checked SECOND, cap
@@ -203,7 +203,7 @@ func (p *PaygSafety) HandleCapReached(project, profile, tier, mode string) error
 	case ModePauseDescriptive:
 		p.notifyCritical(project, profile, tier,
 			"PAYG cap reached — tier paused (descriptive)",
-			fmt.Sprintf("Tier %s for project=%s profile=%s is paused.\nOptions:\n  - zen budget --raise --tier %s --per-month-usd <amount>\n  - zen orchestrator pin --scope global --tier <other-tier>\n  - Set on_cap_reached=cascade_down to auto-fall-through.",
+			fmt.Sprintf("Tier %s for project=%s profile=%s is paused.\nOptions:\n  - hades budget --raise --tier %s --per-month-usd <amount>\n  - hades orchestrator pin --scope global --tier <other-tier>\n  - Set on_cap_reached=cascade_down to auto-fall-through.",
 				tier, project, profile, tier),
 		)
 		return ErrTierPausedDescriptive

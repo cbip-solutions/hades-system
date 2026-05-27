@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_state.go
 //
-// `zen doctor state-system` delegates to StateProber declared in probe.go;
+// `hades doctor state-system` delegates to StateProber declared in probe.go;
 // 3 results:
 //
 // - state.last_regenerate_age
@@ -13,16 +13,16 @@
 // StateProber interface declared in probe.go (CLI side).
 // Substrate prober.go files (internal/state/manifest/) are NOT modified
 // per J-1 pattern.
-// Production wiring in cmd/zen-swarm-ctld/main.go.
+// Production wiring in cmd/hades-ctld/main.go.
 //
 // # Naming
 //
 // Use="state-system" to avoid collision with:
-// - `zen state`
-// - `zen doctor` child commands from other Plans
+// - `hades state`
+// - `hades doctor` child commands from other Plans
 // The cobra Use field is "state-system"; file is doctor_state.go.
 //
-// Boundary:
+// Boundary (inv-hades-031):
 //
 // This file imports only cli-internal types + cobra + context + stdlib.
 // Does NOT import internal/state/manifest concrete types.
@@ -50,7 +50,7 @@ import (
 // Typical result count: 3 (last_regenerate_age + manual_field_count +
 // missing_source_count). Callers MUST NOT branch on len(results) == 3.
 //
-// Doctrine reference: last_regenerate_age thresholds per invariant:
+// Doctrine reference: last_regenerate_age thresholds per inv-hades-149:
 //
 // max-scope doctrine: 24h; default doctrine: 168h; capa-firewall: 24h.
 // WARN at 1×-2× threshold; FAIL at >2× threshold (stale TOML).
@@ -69,11 +69,11 @@ func RunSystemStateProbe(ctx context.Context, deps DoctorDeps) ([]ProbeResult, e
 func NewDoctorStateCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "state-system",
-		Short: "System state health (Plan 9: regenerate age + manual fields + missing sources per inv-zen-149)",
+		Short: "System state health (Plan 9: regenerate age + manual fields + missing sources per inv-hades-149)",
 		Long: `Run 3 system-state checks (spec §6.2):
 
   state.last_regenerate_age    OK if <doctrine threshold (max-scope=24h, default=168h, capa-firewall=24h);
-                               WARN 1×-2×; FAIL >2× — flags stale TOML per inv-zen-149
+                               WARN 1×-2×; FAIL >2× — flags stale TOML per inv-hades-149
   state.manual_field_count     informational; reports count + names of x-manual-field: true fields
   state.missing_source_count   OK if 0; WARN if 1-2; FAIL if 3+ — flags broken auto-derive walker
 

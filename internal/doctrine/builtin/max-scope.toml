@@ -1,6 +1,6 @@
 # internal/doctrine/builtin/max-scope.toml
 #
-# zen-swarm built-in doctrine: max-scope.
+# hades-system built-in doctrine: max-scope.
 #
 # Doctrine principle: full codification, build the final product, no defer,
 # no tech debt, no stubs. The "max scope always" lens applies to every
@@ -21,7 +21,7 @@ doctrine_version = "1.0.0"
 auto_upgrade = "patch"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Doctrine transverse axioms — Q3 C Tier 1 + invariant
+# Doctrine transverse axioms — Q3 C Tier 1 + inv-hades-135
 # Hardcoded operator-only. User TOML attempting override REJECTED at parse.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -170,11 +170,11 @@ urgent_bypasses_quiet_hours = true
 info_immediate_during_quiet = "queue"
 
 # ──────────────────────────────────────────────────────────────────────────
-# zen day cadence — the release design Q13 C (R5 per-doctrine variation)
+# hades day cadence — the release design Q13 C (R5 per-doctrine variation)
 # max-scope: twice-daily Mon-Fri 08/18 with 2h catch-up window (narrow).
 # ──────────────────────────────────────────────────────────────────────────
 
-[zen_day_cadence]
+[hades_day_cadence]
 # release track R5 ack — max-scope: twice-daily, narrow catch-up.
 morning_brief_cron = "0 8 * * 1-5"
 morning_brief_if_within_hours = 2
@@ -227,11 +227,11 @@ overcommit_policy = "degrade"
 
 [knowledge]
 hive_doc_cadence_hours = 1
-obsidian_vault_path = "~/Obsidian/zen-swarm-max-scope"
+obsidian_vault_path = "~/Obsidian/hades-system-max-scope"
 cross_project_aggregator_enabled = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + invariant)
+# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + inv-hades-084)
 # max-scope: no tools disabled — agentic deep research + caronte permitted
 # (max-scope doctrine intentionally allows the widest tool surface).
 # ──────────────────────────────────────────────────────────────────────────
@@ -255,7 +255,7 @@ cross_project_scope = "opt-in"
 # ──────────────────────────────────────────────────────────────────────────
 # Renderers — the release design release track M-5 platform-renderer enable matrix.
 # max-scope: all 7 platforms enabled. Replaces hardcoded
-# _DOCTRINE_ENABLED matrix in plugin/zen-swarm/renderers/__init__.py.
+# _DOCTRINE_ENABLED matrix in plugin/hades-system/renderers/__init__.py.
 # ──────────────────────────────────────────────────────────────────────────
 
 [renderers]

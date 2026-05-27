@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package backup — restore.go ships the restoration path consumed by
-// `zen doctor restore <ID>` CLI (internal/cli/doctor_restore.go).
+// `hades doctor restore <ID>` CLI (internal/cli/doctor_restore.go).
 //
 // Conflict semantics: by default, RestoreFromManifest halts when any
 // target file already exists (operator must explicitly --overwrite).

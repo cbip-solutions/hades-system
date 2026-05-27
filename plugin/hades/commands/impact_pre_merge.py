@@ -21,7 +21,7 @@ For each changed file, query daemon's augmentation pipeline in preflight mode:
 
 ```bash
 for FILE in $CHANGED_FILES; do
-  curl --unix-socket /tmp/zen-swarm.sock \\
+  curl --unix-socket /tmp/hades-system.sock \\
        -X POST \\
        -H "Content-Type: application/json" \\
        -d '{{"mode":"preflight","file":"'"$FILE"'","diff_context":"'"$(git diff main..{branch} -- $FILE | head -200)"'"}}' \\
@@ -78,7 +78,7 @@ If aggregate run exceeds `impact_timeout_ms`, daemon returns partial result + wa
 Each preflight call emits `AugmentationStarted` + `AugmentationCompleted` events (spec §4.6).
 
 ```
-Audit chain: zen://audit/<aggregate_event_id>
+Audit chain: hades://audit/<aggregate_event_id>
 ```
 
 ## 6. the release design integration (MergeEngine)
@@ -93,7 +93,7 @@ winner = max(test_pass) + max(reviewer_agreement) + min(unintended_blast_radius)
 - spec §4.3 the release design orchestrator pre-flight extension
 - spec §4.4 the release design MergeEngine winner extension
 - spec §3.4 doctrine.preflight schema
-- invariant augmentation budget gated via the release design budget MCP
+- inv-hades-167 augmentation budget gated via the release design budget MCP
 """
 
 _PROMPT_NO_BRANCH = """# /hades:impact-pre-merge — Pre-merge blast radius analysis

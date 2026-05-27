@@ -35,7 +35,7 @@ slash command handler which explicitly calls `skill_load("superpowers:brainstorm
 skill_load("superpowers:brainstorming")
 ```
 
-Per invariant, Hermes is discover-then-call. Explicit invocation required.
+Per inv-hades-015, Hermes is discover-then-call. Explicit invocation required.
 
 ### 2. Research SOTA first (project-doctrine override)
 

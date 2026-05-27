@@ -3,8 +3,8 @@
 //
 // 9 NEW operator-facing ADR endpoints surfacing substrate
 // (Structured MADR machine-readable index per Q7 A) over /v1/adr/*.
-// invariant: write endpoints (accept/reject/supersede) require non-empty
-// reason — 400 on violation. invariant: handler never imports
+// inv-hades-146: write endpoints (accept/reject/supersede) require non-empty
+// reason — 400 on violation. inv-hades-031: handler never imports
 // internal/store. Wire types (ADRDoc, ADRListFilter, ADRGraph, ADRTransition,
 // ADRManifest) are declared locally to keep the handler boundary decoupled
 // from internal/adr — wires *daemon.Server to satisfy ADRIndex
@@ -15,7 +15,7 @@
 // GET /v1/adr/list — filter by status/plan/risk_level
 // GET /v1/adr/graph — supersede chain DAG (nodes + edges)
 // GET /v1/adr/history — transition log for one ADR
-// POST /v1/adr/accept — emit adr.accepted event
+// POST /v1/adr/accept — emit adr.accepted event (reason mandatory; inv-hades-146)
 // POST /v1/adr/reject — emit adr.rejected event (reason mandatory)
 // POST /v1/adr/supersede — link old→new chain + emit adr.superseded (reason mandatory)
 // POST /v1/adr/index — regenerate dual manifest (check=true for CI gate dry-run)
@@ -28,8 +28,8 @@
 //
 // Boundary invariants:
 //
-// invariant: handler never imports internal/store directly.
-// invariant: accept/reject/supersede require non-empty reason; 400 on violation.
+// inv-hades-031: handler never imports internal/store directly.
+// inv-hades-146: accept/reject/supersede require non-empty reason; 400 on violation.
 package handlers
 
 import (
@@ -272,7 +272,7 @@ func adrTransition(fn func(context.Context, string, string) error) http.HandlerF
 		}
 		if req.ID == "" || req.Reason == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{
-				"error": "id and reason required (inv-zen-146)",
+				"error": "id and reason required (inv-hades-146)",
 			})
 			return
 		}
@@ -301,7 +301,7 @@ func ADRSupersede(s ADRCtx) http.HandlerFunc {
 		}
 		if req.OldID == "" || req.NewID == "" || req.Reason == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{
-				"error": "old_id, new_id and reason required (inv-zen-146)",
+				"error": "old_id, new_id and reason required (inv-hades-146)",
 			})
 			return
 		}

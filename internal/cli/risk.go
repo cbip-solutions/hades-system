@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — risk.go.
 //
-// `zen risk <symbols-or-files…>` computes the blast-radius of a change set:
+// `hades risk <symbols-or-files…>` computes the blast-radius of a change set:
 // a composite risk score (cone + coreness + churn + coupling) graded
 // low|medium|high with the most-affected downstream symbols. Routes via the
 // daemon /v1/mcpgateway/risk route → engine BlastRadius. Variadic args are
@@ -52,9 +52,9 @@ func NewRiskCmd(factory func(cmd *cobra.Command) CaronteRiskClient) *cobra.Comma
 positional arg is classified as a file (path-like) or a symbol; use
 --file/--symbol to override. The composite score weights reverse-reachability
 cone + k-core coreness + churn + co-change coupling (spec §9). Routes via the
-daemon (single-egress, inv-zen-088).`,
-		Example: `  zen risk internal/orchestrator/merge/engine.go
-  zen risk MergeEngine.Run transport.Forward --format json`,
+daemon (single-egress, inv-hades-088).`,
+		Example: `  hades risk internal/orchestrator/merge/engine.go
+  hades risk MergeEngine.Run transport.Forward --format json`,
 		Args: cobra.ArbitraryArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			flags.Args = args

@@ -107,7 +107,7 @@ async def dispatch_voice_query(
         daemon_url: Daemon HTTP base URL.
         client: ``httpx.AsyncClient`` (test injects mock; production
             constructs via
-            ``plugin/zen-swarm/transports/zen_swarm_transport.py``).
+            ``plugin/hades-system/transports/hades_system_transport.py``).
         audit_emitter: Emits ``AUDIT_VOICE_QUERY_DISPATCHED`` to the release design
             chain.
         inbox_poster: Posts to the release design inbox via daemon

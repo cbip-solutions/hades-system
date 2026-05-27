@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain_recover.go.
 //
-// `zen audit-chain recover --project <id> --from <ts>` is the spec §6.5
+// `hades audit-chain recover --project <id> --from <ts>` is the spec §6.5
 // interactive tamper-recovery flow. It calls the single POST
 // /v1/audit-chain/recover endpoint twice (H-7 two-phase semantics):
 //
@@ -57,7 +57,7 @@ dispatched after explicit "y"; project appends remain paused until the
 operator explicitly resumes.
 
 Required: --project, --from (RFC 3339 timestamp).`,
-		Example: `  zen audit-chain recover --project zen-swarm --from 2026-05-06T08:00:00Z`,
+		Example: `  hades audit-chain recover --project hades-system --from 2026-05-06T08:00:00Z`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			project, _ := cmd.Flags().GetString("project")
 			from, _ := cmd.Flags().GetString("from")

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package cli — contract.go.
 //
-// zen contract <endpoint> — text/JSON dump for an endpoint (mirrors get_contract MCP).
-// zen contract validate <repo> — validate caronte.yaml against schema v1 (§6 corpus).
-// zen contract why <change_id> — D7 Lore-attribution for a breaking_changes row.
+// hades contract <endpoint> — text/JSON dump for an endpoint (mirrors get_contract MCP).
+// hades contract validate <repo> — validate caronte.yaml against schema v1 (§6 corpus).
+// hades contract why <change_id> — D7 Lore-attribution for a breaking_changes row.
 //
 // Routes via the daemon /v1/mcpgateway/contract* sub-routes → caronte engine.
-// Single-egress preserved. Tests inject ContractClient fakes.
+// Single-egress preserved (inv-hades-088). Tests inject ContractClient fakes.
 // Capa-firewall errors (store.ErrCrossProjectDenied / ErrUnauthorizedProject)
 // surface as actionable operator hints via classifyCapaFirewallError
 // .
@@ -67,9 +67,9 @@ func NewContractCmd(factory func(cmd *cobra.Command) ContractClient) *cobra.Comm
 		Long: `Look up a Plan-20 federated endpoint by its endpoint_id. The daemon
 delegates to the Caronte engine; output is the extractor-resolved metadata
 (method/path/handler_node_id + the contract_artifact pointer + the
-extractor_id provenance). Routes via the daemon (single-egress, inv-zen-088).`,
-		Example: `  zen contract repo-a:http:GET:/users/{id}
-  zen contract endpoint-1 --workspace ws-1 --format json | jq '.extractor_id'`,
+extractor_id provenance). Routes via the daemon (single-egress, inv-hades-088).`,
+		Example: `  hades contract repo-a:http:GET:/users/{id}
+  hades contract endpoint-1 --workspace ws-1 --format json | jq '.extractor_id'`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -145,9 +145,9 @@ func NewContractValidateCmd(factory func(cmd *cobra.Command) ContractClient) *co
 missing schema_version; multiple base_url variants per service entry;
 unknown target_repo; inline secrets (blacklisted field names); regex past
 MaxPatternRunes; regex-DoS pattern; invalid unresolved_policy. Routes via
-the daemon (single-egress, inv-zen-088).`,
-		Example: `  zen contract validate /path/to/projects/backend
-  zen contract validate . --workspace ws-1 --format json`,
+the daemon (single-egress, inv-hades-088).`,
+		Example: `  hades contract validate /path/to/projects/backend
+  hades contract validate . --workspace ws-1 --format json`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -216,8 +216,8 @@ func NewContractWhyCmd(factory func(cmd *cobra.Command) ContractClient) *cobra.C
 		Long: `Surface the D7 Lore-attribution for a breaking_changes row: who made the
 change, the commit SHA, the ADR refs cited in trailers, the supersession
 history. Mirrors get_why_breaking_change MCP.`,
-		Example: `  zen contract why chg-001
-  zen contract why chg-001 --format json | jq '.lore_adr_refs'`,
+		Example: `  hades contract why chg-001
+  hades contract why chg-001 --format json | jq '.lore_adr_refs'`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -289,13 +289,13 @@ func classifyCapaFirewallError(err error, op string) error {
 		return ierrors.Wrap(ierrors.Code("cli.capa-firewall-denied"), recoverableWrap(err,
 			fmt.Sprintf("%s: cross-project access denied — workspace privacy policy is locked. "+
 				"To proceed, either (1) work within the owning project's scope, or "+
-				"(2) ask the operator to run `zen workspace policy set <wsid> permissive`.", op)))
+				"(2) ask the operator to run `hades workspace policy set <wsid> permissive`.", op)))
 	}
 	if errors.Is(err, store.ErrUnauthorizedProject) {
 		return ierrors.Wrap(ierrors.Code("cli.capa-firewall-denied"), recoverableWrap(err,
 			fmt.Sprintf("%s: project not on workspace roster — "+
-				"run `zen workspace members <wsid>` to inspect, "+
-				"or `zen workspace link <wsid> <project>` to add.", op)))
+				"run `hades workspace members <wsid>` to inspect, "+
+				"or `hades workspace link <wsid> <project>` to add.", op)))
 	}
 
 	if client.IsHTTPStatus(err, http.StatusForbidden) {

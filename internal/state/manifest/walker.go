@@ -20,7 +20,7 @@ type WalkerConfig struct {
 
 	AutonomyStampPath string
 
-	ZenSwarmVersion string
+	HadesSystemVersion string
 
 	DoctrineRegistryFn func() []string
 }
@@ -53,7 +53,7 @@ func (w *Walker) Walk(ctx context.Context) (WalkResult, error) {
 	dres, _ := dw.Walk(ctx)
 	addMissing(dres.MissingSources...)
 
-	gomod := walkers.NewGoModWalker(w.cfg.GoModPath, w.cfg.ZenSwarmVersion)
+	gomod := walkers.NewGoModWalker(w.cfg.GoModPath, w.cfg.HadesSystemVersion)
 	gores, _ := gomod.Walk(ctx)
 	addMissing(gores.MissingSources...)
 
@@ -68,7 +68,7 @@ func (w *Walker) Walk(ctx context.Context) (WalkResult, error) {
 	mcps := MCPsSection{Entries: map[string]MCPEntry{}}
 
 	manifest := Manifest{
-		ZenSwarm: ZenSwarmSection{
+		HadesSystem: HadesSystemSection{
 			Version:   gores.Version,
 			Substrate: "openclaude",
 		},

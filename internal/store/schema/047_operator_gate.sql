@@ -16,5 +16,5 @@ CREATE TABLE IF NOT EXISTS operator_gate_state (
     state      TEXT    NOT NULL
                    CHECK(state IN ('running','paused_descriptive','paused_quiet','paused_after_apply')),
     reason     TEXT    NOT NULL DEFAULT '',
-    updated_at INTEGER NOT NULL    -- UTC unix seconds (invariant)
+    updated_at INTEGER NOT NULL    -- UTC unix seconds (inv-hades-005)
 );

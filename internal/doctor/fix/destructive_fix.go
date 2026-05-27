@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package fix ships the release doctor `Fix(ctx, FixMode) error`
-// implementations + the destructive-confirmation guard.
+// implementations + the destructive-confirmation guard (inv-hades-178).
 //
 // Each per-check Fix impl satisfies internal/doctor/check.Check.Fix; the
 // concrete check (e.g., internal/doctor/hermes.InstallCheck) holds a
@@ -8,7 +8,7 @@
 // to fix.Apply (which runs GuardDestructive first, then the per-fix
 // Apply method).
 //
-// Boundary: fix package consumes ONLY internal/doctor/check
+// Boundary (inv-hades-031): fix package consumes ONLY internal/doctor/check
 // + internal/doctor/backup + internal/migrate/writer (for plugin-format
 // scaffolder) + stdlib; MUST NOT import internal/store. Per-fix shell-out
 // uses os/exec.CommandContext (no daemon HTTP round-trip — fix runs
@@ -17,8 +17,8 @@
 // review: the destructive-confirm gate is the load-bearing safety
 // net. The compile-check guard `_ Destructive = (*XyzFix)(nil)` in every
 // destructive Fix impl file is the canonical enforcement mechanism (per
-// invariant). The runtime gate (GuardDestructive) is the second line.
-// The third line is the operator backup-before-modify
+// inv-hades-178). The runtime gate (GuardDestructive) is the second line.
+// The third line is the operator backup-before-modify (inv-hades-177)
 // shipped in internal/doctor/backup (F4).
 package fix
 
@@ -31,7 +31,7 @@ import (
 )
 
 // Destructive is the interface a destructive Fix MUST satisfy (per
-// invariant). The compile-check guard `_ Destructive = (*XyzFix)(nil)`
+// inv-hades-178). The compile-check guard `_ Destructive = (*XyzFix)(nil)`
 // in each destructive Fix impl file enforces this at build time.
 //
 // destructive Fix impls in F3: PluginFormatFix (deletes plugin

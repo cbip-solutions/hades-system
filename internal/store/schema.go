@@ -14,7 +14,7 @@ import (
 //
 // - v4: conversation_id column on bypass_audit (Q7 D)
 //
-// - v5: bypass_audit_bodies
+// - v5: bypass_audit_bodies (encrypted bodies, inv-hades-055)
 //
 // - v6: bypass_audit_pins (retention-exempt registry)
 //
@@ -25,22 +25,22 @@ import (
 // - v9: notifications (bypass-event ledger + 1h CRITICAL repeat)
 //
 // - v10: cost_ledger (one row per LLM request, USD-converted, idempotency
-// UNIQUE for invariant no-double-charge guarantee)
+// UNIQUE for inv-hades-062 no-double-charge guarantee)
 //
-// - v11: pin_overrides
+// - v11: pin_overrides (Q8 D pin hierarchy with optional TTL, inv-hades-063)
 //
 // - v12: doctrine_state singleton (last-loaded Resolved.Schema +
 // Provenance JSON snapshot; daemon reads on startup so
 //
 // - v13: workforce_tasks (SharedTaskList), workforce_checkpoints
 // (CheckpointQueue), workforce_fix_prompts (FixPromptQueue).
-// WAL + busy_timeout enforced by workforceadapter.
+// WAL + busy_timeout enforced by workforceadapter (inv-hades-073).
 // project_id on every row for logical isolation (spec §7.1).
 //
 // - v14: subprocess_sessions — persistent TeamLead + Reviewer L3/L4
 // subprocess registry for crash recovery (Q3 C lifecycle).
 // Idempotency key (spec_id, doctrine_name); ttl_seconds drives the
-// invariant TTL evictor.
+// inv-hades-074 TTL evictor.
 //
 // - v15: worker_specs / team_lead_specs / reviewer_specs — three tables
 // holding the immutable WorkerSpec snapshots persisted by the daemon
@@ -66,7 +66,7 @@ import (
 // - v19: budget_pauses + budget_anomalies + budget_anomaly_samples
 // — 4-scope hierarchical pause state machine + z-score event log
 //
-// - per-scope rolling sample window. invariant: internal/budget
+// - per-scope rolling sample window. inv-hades-031: internal/budget
 // never imports internal/store; bridge via dispatcheradapter.
 //
 // - v20: budget_anomaly_samples gains cost_id column + UNIQUE
@@ -88,7 +88,7 @@ import (
 // outcome. The regression-by-self detector queries this table to spot
 // "substrate is regressing on its own commits" (Apr 23 chicken-and-egg
 // failure mode). release extends additively (history queries, time-series,
-// adversarial corpus). invariant boundary: writes go through the
+// adversarial corpus). inv-hades-031 boundary: writes go through the
 // SubstrateHealthWriter interface declared in safetynet/regression.go;
 // adapter wired in (internal/daemon/orchestratoradapter/).
 //
@@ -96,40 +96,40 @@ import (
 // addressable) separated from human alias (operator-facing). Path
 // history table tracks every (id_sha256, path) tuple ever observed,
 // enabling mv-detection in projectctx.DetectMv. ON DELETE CASCADE
-// links path_history → projects_alias. invariant.
+// links path_history → projects_alias. inv-hades-114.
 //
 // - v25: priority_overrides — UNIQUE(project_alias), multiplier > 0,
 // reason NOT NULL. Set/Reset emit audit events in the same SQL
-// transaction as the row mutation. will add
+// transaction as the row mutation (inv-hades-115). will add
 // tmux_session_state in a subsequent migration; the reservation in
 // master plan §"Migration numbering coordination" was for the joint
 // pair, but ships only the priority_overrides half because
 // owns its own DDL.
 //
-// - v26: tmux_session_state — one row per spawned zen-swarm tmux
-// session, keyed by canonical "zen-<alias>-<sha8>" name. Status
+// - v26: tmux_session_state — one row per spawned hades-system tmux
+// session, keyed by canonical "hades-<alias>-<sha8>" name. Status
 // four-value enum (Active=0/Idle=1/Orphaned=2/Archived=3) bounded
 // by SQL CHECK + Go validateTmuxStatus (defense in depth).
 // expected_panes is a JSON-encoded map[WindowName][]string of
 // daemon-recorded pane ids per daemon-owned window — EXCLUDES
-// WindowScratch.
+// WindowScratch (inv-hades-118 enforced by the tmuxlife encoder).
 // Drift note: master plan reserved slot 060 for a joint
 // priority_overrides + tmux_session_state migration;
 // shipped 060_priority_overrides.sql alone, so picks
 // the next free number (slot 061 reserved for knowledge-
-// index on a separate DB file). invariant: internal/tmuxlife
+// index on a separate DB file). inv-hades-031: internal/tmuxlife
 // never imports internal/store; wires the adapter that
 // bridges tmuxlife.SessionStore to *store.Store via these CRUD
 // primitives.
 //
 // - v27: schedules + schedule_history — durable scheduler substrate
 // for Routine + Task + Loop schedules (3-tier per spec §1 Q8 D)
-// plus per-fire outcome ledger driving `zen schedule history`.
+// plus per-fire outcome ledger driving `hades schedule history`.
 // Five CHECK-constrained enums (tier, trigger_type, miss_policy,
 // status, outcome) plus three indexes (idx_schedules_due partial
-// for the tick scan, idx_schedules_project_alias for `zen
+// for the tick scan, idx_schedules_project_alias for `hades
 // schedule list --project=...`, idx_schedule_history_lookup for
-// time-window queries). invariant: internal/scheduler never
+// time-window queries). inv-hades-031: internal/scheduler never
 // imports internal/store; the adapter at
 // internal/daemon/scheduleradapter is the only legitimate bridge.
 // Drift note: master plan §"Migration numbering coordination"
@@ -143,20 +143,20 @@ import (
 //
 // - v28: per-project `inbox` table + daemon.db `inbox_aggregator_cache`.
 // Q11 C hybrid storage substrate. Per-project authoritative inbox
-// carries severity 4-tier CHECK, 5min sliding-window
+// carries severity 4-tier CHECK (inv-hades-124), 5min sliding-window
 // dedup UNIQUE on (event_type, content_hash, created_at_bucket),
 // and partial unacked index for the hot render path. Daemon-level
 // aggregator cache is a denormalized read view written by the
 // outbox bridge on every per-project INSERT;
-// project_id + project_alias indexed for the `zen day`
+// project_id + project_alias indexed for the `hades day`
 // cross-project digest hot path;
 // UNIQUE (project_id, notification_id) prevents duplicate fanout
 // under at-least-once outbox replay. Cold rebuildable from
 // per-project sources on daemon boot (Aggregator.Rebuild). Cascade
 // delete on project rm via the per-project DB-file unlink (atomic).
-// invariant: internal/inbox MUST NEVER import internal/store;
+// inv-hades-031: internal/inbox MUST NEVER import internal/store;
 // internal/daemon/inboxadapter is the only legitimate
-// bridge. invariant: aggregator cache rows carry source-DB
+// bridge. inv-hades-113: aggregator cache rows carry source-DB
 // project_id (no cross-project leak).
 // Drift note: spec-frozen release-phase-E projected migrationV27
 // under the original A→C→B→D→E execution sequence (
@@ -167,10 +167,10 @@ import (
 //
 // - v29: audit_events_raw chain integration — adds four chain columns
 // (prev_hash, record_hash, partition_id, tessera_leaf_id) + REFUSE
-// triggers + monthly partition
+// triggers (inv-hades-143 append-only enforcement) + monthly partition
 // view (audit_events_partitions) + audit_partition_seals CRUD table.
 // Chain hashes are computed in app-layer (auditadapter post-INSERT
-// same-row UPDATE) — no SQL trigger recursion. Boundary invariant:
+// same-row UPDATE) — no SQL trigger recursion. Boundary inv-hades-031:
 // internal/audit/chain MUST NEVER import internal/store; the bridge
 // is internal/daemon/auditadapter. schemaVersion bump
 // path: 28 → 29 (this migration).
@@ -202,13 +202,13 @@ var migrationV2 string
 var migrationV3 string
 
 // migrationV4 adds conversation_id to bypass_audit so can group
-// audit rows by upstream conversation.
+// audit rows by upstream conversation (inv-hades-054 / Q7 D pin registry).
 //
 //go:embed schema/034_bypass_audit.sql
 var migrationV4 string
 
 // migrationV5 adds bypass_audit_bodies — the AES-256-GCM-encrypted body
-// table populated only when tier=in-house.
+// table populated only when tier=in-house (inv-hades-054, inv-hades-055).
 //
 //go:embed schema/035_bypass_audit_bodies.sql
 var migrationV5 string
@@ -222,7 +222,7 @@ var migrationV6 string
 // migrationV7 adds conversation_wal — Layer 1 of the bypass resilience
 // model. One row per orchestrator turn; pending state
 // persisted BEFORE upstream call so a restart can replay the in-flight
-// turn.
+// turn (half of inv-hades-056).
 //
 //go:embed schema/037_conversation_wal.sql
 var migrationV7 string
@@ -231,7 +231,7 @@ var migrationV7 string
 // ). MarkPending persists BEFORE upstream call; MarkCompleted
 // stores the full response so a restart in the upstream-response →
 // orchestrator-delivery gap replays without a second upstream charge
-// .
+// (other half of inv-hades-056).
 //
 //go:embed schema/038_idempotency.sql
 var migrationV8 string
@@ -256,7 +256,7 @@ var migrationV10 string
 
 // migrationV11 adds pin_overrides — operator-set tier pins at three scope
 // levels (session, project, global) with optional TTL (release,
-// Task I-1, invariant). UNIQUE(scope, scope_id) with scope_id=” for
+// Task I-1, inv-hades-063). UNIQUE(scope, scope_id) with scope_id=” for
 // global (SQLite NULL-distinctness workaround). expires_at is INTEGER unix
 // seconds; NULL means permanent. The 5-min sweep runs PurgeExpiredPins.
 //
@@ -277,7 +277,7 @@ var migrationV12 string
 // (CheckpointQueue), workforce_fix_prompts (FixPromptQueue). All three
 // tables carry project_id for logical isolation (spec §7.1). WAL mode
 // + busy_timeout=5000 are enforced by workforceadapter constructors
-// ; independent failure domains, no FK between tables
+// (inv-hades-073); independent failure domains, no FK between tables
 // (spec §2.2).
 //
 //go:embed schema/045_workforce_queues.sql
@@ -288,7 +288,7 @@ var migrationV13 string
 // Ephemeral Worker rows never appear here; only persistent variants.
 // Idempotency key (spec_id, doctrine_name). TTL semantics diverge per
 // doctrine so the same SpecID under two doctrines yields two rows.
-// ttl_seconds + last_use_at drive the invariant evictor. invariant
+// ttl_seconds + last_use_at drive the inv-hades-074 evictor. inv-hades-031
 // preserved by the SessionStore interface in subprocess package (no
 // internal/store import there); wires the adapter.
 //
@@ -299,7 +299,7 @@ var migrationV14 string
 // snapshots persisted by the daemon adapter. project_id
 // on every row (spec §7.1). reviewer_specs has a composite PK
 // (id, project_id, reviewer_tier) so the same spec ID can hold L2/L3/L4
-// rows independently. invariant preserved: internal/workforce/worker
+// rows independently. inv-hades-031 preserved: internal/workforce/worker
 // MUST NOT import internal/store; the daemon workforceadapter
 // owns the read/write surface.
 //
@@ -307,7 +307,7 @@ var migrationV14 string
 var migrationV15 string
 
 // migrationV16 adds aggregation_windows + aggregation_events — release
-// AggregationStream SQLite-durability layer (invariant boundary:
+// AggregationStream SQLite-durability layer (inv-hades-031 boundary:
 // workforce/stream never imports internal/store; bridge via StreamAdapter
 // in workforceadapter). Window open/close/event records survive daemon
 // restart; LoadOpenWindows surfaces in-progress windows for recovery.
@@ -319,19 +319,19 @@ var migrationV16 string
 // migrationV17 adds operator_gate_state — singleton row (id=1 UPSERT)
 // persisting OperatorGate pause/resume state across daemon restarts (release
 // ). CHECK constraint enforces the four-value State enum; LoadState
-// returns StateRunning when row absent (clean boot). invariant: gate/*
+// returns StateRunning when row absent (clean boot). inv-hades-031: gate/*
 // never imports internal/store; bridge via GateAdapter in workforceadapter.
 //
 //go:embed schema/047_operator_gate.sql
 var migrationV17 string
 
 // migrationV18 adds cost_axis_tags + axis_tag_loss_events — release
-// Task F-1, Q6 C, invariant. The 4-axis attribution store
+// Task F-1, Q6 C, inv-hades-077. The 4-axis attribution store
 // (project × doctrine × stage × task; +operation +worker_id optional).
 // UNIQUE (cost_id, axis_name) + INSERT OR IGNORE in the Go layer keeps
 // PostCall idempotent under retries. axis_tag_loss_events records every
 // missing-axis incident so completeness drift surfaces immediately rather
-// than silently degrading invariant. invariant: internal/budget never
+// than silently degrading inv-hades-077. inv-hades-031: internal/budget never
 // imports internal/store; bridge via dispatcheradapter/budget_hooks.go.
 // The cost_ledger (v10) is already present on main; this migration
 // ships without an FK back to keep the diff minimal — a future
@@ -341,12 +341,12 @@ var migrationV17 string
 var migrationV18 string
 
 // migrationV19 adds budget_pauses + budget_anomalies + budget_anomaly_samples
-// — release Task F-5, Q6 C, invariant + invariant. 4-scope
+// — release Task F-5, Q6 C, inv-hades-078 + inv-hades-079. 4-scope
 // hierarchical pause state machine (project / doctrine / stage / worker_id),
 // z-score event log, and per-scope rolling sample window. budget_pauses
 // PRIMARY KEY (scope, scope_value) + UPSERT keeps the latest reason on
 // re-trigger. budget_anomaly_samples is housekeeping-pruned
-// (>24h cutoff). invariant: internal/budget never imports
+// (>24h cutoff). inv-hades-031: internal/budget never imports
 // internal/store; bridge via dispatcheradapter.
 //
 //go:embed schema/052_budget_pause.sql
@@ -367,7 +367,7 @@ var migrationV20 string
 
 // migrationV23 adds substrate_health — release Task M-1, Q2 C
 // regression-by-self metric. Per-commit test pass-rate + doctrine-lint
-// outcome storage. release extends additively. invariant: safetynet
+// outcome storage. release extends additively. inv-hades-031: safetynet
 // writes go through SubstrateHealthWriter interface; adapter in
 //
 //go:embed schema/056_substrate_health.sql
@@ -377,7 +377,7 @@ var migrationV23 string
 // implements AIP-2510 dual-ID per spec §1 Q3. sha256 canonical + human
 // alias separation; path_history tracks every (id_sha256, path) tuple
 // ever observed, enabling mv-detection in projectctx.DetectMv. ON
-// DELETE CASCADE links path_history → projects_alias. invariant.
+// DELETE CASCADE links path_history → projects_alias. inv-hades-114.
 //
 //go:embed migrations/057_projects_alias_path_history.sql
 var migrationV24 string
@@ -386,18 +386,18 @@ var migrationV24 string
 // the Layer 3 operator override seam per spec §1 Q10. UNIQUE(project_alias)
 // + multiplier > 0 + reason NOT NULL constraints. internal/quota declares
 // the OverrideStore interface; internal/daemon/quotaadapter is the only
-// package permitted to bridge to *store.Store.
+// package permitted to bridge to *store.Store (inv-hades-031 + inv-hades-122).
 // Set / Reset emit audit events in the SAME transaction as the row
-// mutation — invariant audit-chain integrity.
+// mutation — inv-hades-115 audit-chain integrity.
 //
 //go:embed migrations/060_priority_overrides.sql
 var migrationV25 string
 
 // migrationV26 introduces tmux_session_state — release ships
 // the per-session lifecycle storage row keyed by canonical
-// "zen-<alias>-<sha8>" name. Status four-value enum bounded by SQL CHECK
-// + Go validateTmuxStatus (defense in depth, invariant boundary
-// preserved). expected_panes JSON excludes WindowScratch (invariant
+// "hades-<alias>-<sha8>" name. Status four-value enum bounded by SQL CHECK
+// + Go validateTmuxStatus (defense in depth, inv-hades-031 boundary
+// preserved). expected_panes JSON excludes WindowScratch (inv-hades-118
 // enforced by the tmuxlife encoder). The adapter
 // (internal/daemon/handlers/sessions.go) is the only legitimate bridge
 // to *store.Store via this package's CRUD primitives.
@@ -414,13 +414,13 @@ var migrationV26 string
 // D-1 ships the durable scheduler substrate. The schedules table hosts
 // Routine + Task + Loop schedules (3-tier per spec §1 Q8 D); the
 // schedule_history table is the append-only fire-attempt outcome
-// ledger driving `zen schedule history`. Five CHECK-constrained enums
+// ledger driving `hades schedule history`. Five CHECK-constrained enums
 // (tier 0..2, trigger_type 0..2, miss_policy 0..3, status 0..2,
 // outcome 0..3) lock the contract at the SQL layer; the Go-side
 // validators in internal/store/schedules.go reject out-of-range values
 // before the SQL CHECK fires (defense in depth).
 //
-// invariant: internal/scheduler/* MUST NEVER import internal/store;
+// inv-hades-031: internal/scheduler/* MUST NEVER import internal/store;
 // internal/daemon/scheduleradapter/ is the only package permitted to
 // bridge scheduler value types to *store.Store via this package's
 // CRUD primitives.
@@ -439,7 +439,7 @@ var migrationV27 string
 // `inbox_aggregator_cache` — release Task E-1 ships the Q11 C
 // hybrid storage substrate.
 //
-// Per-project authoritative inbox: severity 4-tier CHECK,
+// Per-project authoritative inbox: severity 4-tier CHECK (inv-hades-124),
 // 5min sliding-window dedup UNIQUE on (event_type, content_hash,
 // created_at_bucket), partial idx_inbox_unacked for the hot render
 // path. Cascade-delete on project rm via per-project DB-file unlink
@@ -447,22 +447,22 @@ var migrationV27 string
 //
 // Daemon-level aggregator cache: denormalized read view written by
 // the outbox bridge on every per-project INSERT;
-// project_id + project_alias indexed for the `zen day` cross-project
+// project_id + project_alias indexed for the `hades day` cross-project
 // digest hot path; UNIQUE (project_id,
 // notification_id) prevents duplicate fanout under at-least-once
 // outbox replay. Cold rebuildable from per-project sources on daemon
 // boot (Aggregator.Rebuild, ~1s for 10 projects per spec target).
 //
-// invariant: internal/inbox/* MUST NEVER import internal/store;
+// inv-hades-031: internal/inbox/* MUST NEVER import internal/store;
 // internal/daemon/inboxadapter/ is the only package
 // permitted to bridge inbox value types to *store.Store via this
 // migration's tables.
 //
-// invariant: aggregator cache rows carry source-DB project_id
+// inv-hades-113: aggregator cache rows carry source-DB project_id
 // (no cross-project leak). Compile-time anchor in inbox/sentinel.go;
 // runtime via outbox bridge writing project_id from source scope;
 // property-based fuzz test in
-// tests/compliance/inv_zen_113_no_cross_project_inbox_leak_test.go.
+// tests/compliance/inv_hades_113_no_cross_project_inbox_leak_test.go.
 //
 // Drift note: spec-frozen release-phase-E projected migrationV27 under
 // the original A→C→B→D→E execution sequence ( would land 059
@@ -479,7 +479,7 @@ var migrationV28 string
 // ships the Q3 C decision: per-event Tessera leaf + per-partition
 // seal hybrid granularity. Four chain columns added via additive ALTER
 // TABLE (prev_hash, record_hash, partition_id all TEXT NOT NULL DEFAULT ”;
-// tessera_leaf_id TEXT NULL) plus REFUSE triggers enforcing invariant
+// tessera_leaf_id TEXT NULL) plus REFUSE triggers enforcing inv-hades-143
 // append-only at the SQL layer (BEFORE UPDATE on truly-immutable columns,
 // BEFORE UPDATE WHEN already-set on chain hashes / partition_id /
 // tessera_leaf_id one-time-write columns, BEFORE DELETE unconditional).
@@ -488,7 +488,7 @@ var migrationV28 string
 // extraction; SQLite 3.40+-compat). audit_partition_seals TABLE holds
 // monthly seal records keyed by partition_id with sealed_at +
 // final_record_hash + tessera_seal_leaf_id + daemon_witness_signature
-// + optional cold_archive_url +
+// (NOT NULL CHECK length>0, inv-hades-145) + optional cold_archive_url +
 // cold_archive_content_hash cold-archive write-back.
 //
 // Chain compute is app-layer (auditadapter post-INSERT same-row UPDATE);
@@ -497,7 +497,7 @@ var migrationV28 string
 // — the one-time write that flips ” to non-empty (or NULL to non-NULL
 // for tessera_leaf_id) is allowed.
 //
-// Boundary: internal/audit/chain MUST NEVER
+// Boundary (inv-hades-031): internal/audit/chain MUST NEVER
 // import internal/store; the bridge is internal/daemon/auditadapter
 // , which translates between chain.* value types and store
 // row types via field-by-field copy. This package's audit_chain.go
@@ -510,7 +510,7 @@ var migrationV28 string
 var migrationV29 string
 
 // migrationV30 adds cost_ledger.provider — release Task 9, C9,
-// invariant. Per-provider cost attribution: the dispatcher cascade
+// inv-hades-214. Per-provider cost attribution: the dispatcher cascade
 // iterates NAMED backends, so cost must be persisted at Backend.Name()
 // granularity (not just providers.Tier). DEFAULT ” so pre-release rows
 // decode cleanly. The cost_ledger window index is rebuilt to include
@@ -520,7 +520,7 @@ var migrationV29 string
 var migrationV30 string
 
 // migrationV31 adds tier_health_samples — release Task 11, C9,
-// invariant. Per-provider health observability: one row per backend
+// inv-hades-214. Per-provider health observability: one row per backend
 // outcome (dispatcher attempt + RecoveryScheduler probe). provider is
 // Backend.Name() — the per-provider counterpart to the per-Name circuit
 // breaker. Append-only, no UNIQUE (health samples are not idempotency-
@@ -543,7 +543,7 @@ var migrations = []string{
 
 	CREATE TABLE IF NOT EXISTS events (
 		id           INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts           INTEGER NOT NULL,           -- UTC unix seconds (inv-zen-005)
+		ts           INTEGER NOT NULL,           -- UTC unix seconds (inv-hades-005)
 		project      TEXT,                       -- empty for daemon-level events
 		session_id   TEXT,
 		swarm_id     TEXT,
@@ -599,7 +599,7 @@ var migrations = []string{
 		file_path     TEXT NOT NULL,
 		action        TEXT NOT NULL,            -- "create" | "update" | "delete"
 		content_hash  TEXT,
-		runtime       TEXT NOT NULL             -- "zen-swarm" | "claude-code-vps"
+		runtime       TEXT NOT NULL             -- "hades-system" | "claude-code-vps"
 	);
 	CREATE INDEX IF NOT EXISTS idx_memory_writes_project ON memory_writes(project);
 	CREATE INDEX IF NOT EXISTS idx_memory_writes_ts      ON memory_writes(ts);
@@ -660,7 +660,7 @@ var migrations = []string{
 	);
 	CREATE INDEX IF NOT EXISTS idx_worktrees_status ON worktrees(status);
 
-	-- Bypass module audit (Plan 2; spec §22 inv-zen-034) ----------------------
+	-- Bypass module audit (Plan 2; spec §22 inv-hades-034) ----------------------
 
 	CREATE TABLE IF NOT EXISTS bypass_audit (
 		id             INTEGER PRIMARY KEY AUTOINCREMENT,

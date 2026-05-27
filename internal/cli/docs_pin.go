@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
 // Package cli — docs_pin.go.
 //
-// `zen docs pin --ecosystem <X> --version <Y>` sets
+// `hades docs pin --ecosystem <X> --version <Y>` sets
 // ecosystem_versions.indefinite_retain=true for the (ecosystem, version)
 // tuple via daemon POST /v1/ecosystem/pin. Pinned versions are:
 //
 // - Never archived (excluded from the 2-prior-stable retention window
 // governed by the Q9=A cron sweep).
 // - Never auto-pruned by background storage-budget enforcement.
-// - Only hard-removable via explicit `zen docs unpin` followed by
-// `zen docs prune --confirm`; the daemon refuses to prune pinned
+// - Only hard-removable via explicit `hades docs unpin` followed by
+// `hades docs prune --confirm`; the daemon refuses to prune pinned
 // versions with 409 Conflict.
 //
 // Architecture CLI calls daemon HTTP; daemon owns the write transaction.
-// Boundary: does NOT import internal/research/ecosystem.
+// Boundary (inv-hades-031): does NOT import internal/research/ecosystem.
 //
 // Operator gate: requires explicit --ecosystem + --version flags (no
 // positional arg, reducing typo-driven misuse). A promptYN confirmation
 // prompt is shown before the daemon call; blank input aborts.
 //
-// G-5 SUPERSEDES F-6: F-6 shipped `zen docs pin <chunk-id>` (positional,
+// G-5 SUPERSEDES F-6: F-6 shipped `hades docs pin <chunk-id>` (positional,
 // chunk granularity). G-5 evolves to version granularity per spec §2.9
 // Q9=A (retention operates on ecosystem_versions rows, not chunks).
 // History NewDocsPinCmd previously took a factory + ExactArgs(1) chunk
@@ -68,7 +68,7 @@ func NewDocsPinCmd(factory DocsClientFactory) *cobra.Command {
 		Long: `Pin sets ecosystem_versions.indefinite_retain=true for the given
 version via the daemon. Pinned versions are excluded from the 2-prior-stable
 retention window and cannot be auto-pruned. The daemon refuses to prune a
-pinned version (409 Conflict); the operator must run ` + "`zen docs unpin`" + `
+pinned version (409 Conflict); the operator must run ` + "`hades docs unpin`" + `
 first.
 
 Operator-confirmation prompt: a y/N gate is shown before the daemon call.
@@ -77,8 +77,8 @@ Blank input aborts without side-effect (privacy-by-default).
 Required flags:
   --ecosystem    one of: go, python, typescript, rust
   --version      semver string (e.g. "1.22.0", "3.11.9", "1.70.0")`,
-		Example: `  zen docs pin --ecosystem go --version 1.22.0
-  zen docs pin --ecosystem python --version 3.11.9`,
+		Example: `  hades docs pin --ecosystem go --version 1.22.0
+  hades docs pin --ecosystem python --version 3.11.9`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
@@ -111,7 +111,7 @@ func RunDocsPin(ctx context.Context, c DocsClient, flags DocsPinFlags, in io.Rea
 
 	fmt.Fprintf(w, "About to pin %s@%s (indefinite_retain=true).\n", eco, ver)
 	fmt.Fprintln(w, "Pinned versions are never archived and never auto-pruned.")
-	fmt.Fprintf(w, "To remove the pin later: zen docs unpin --ecosystem %s --version %s\n", eco, ver)
+	fmt.Fprintf(w, "To remove the pin later: hades docs unpin --ecosystem %s --version %s\n", eco, ver)
 
 	ok, err := promptYN(in, w, "Continue?")
 	if err != nil {

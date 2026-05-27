@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package errors centralises sentinel error values and the typed
-// error-code catalog used across zen-swarm.
+// error-code catalog used across hades-system.
 //
 // This file (codes.go) ships the releasec error catalog: a
 // typed table of 31 user-visible error codes per spec §Q6, each with
@@ -211,7 +211,7 @@ type CatalogEntry struct {
 // the package is impossible
 // - In-package additions go through new struct literals in this map
 // declaration; runtime mutation is forbidden
-// - invariant compliance test asserts no production
+// - inv-hades-220 compliance test asserts no production
 // code path mutates this map at runtime
 var catalog = map[Code]*CatalogEntry{
 
@@ -228,7 +228,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "daemon.unreachable",
 		Title:        "HADES daemon unreachable.",
 		BodyTemplate: "The daemon process appears to be running, but the UDS socket is not responding. The socket may be stale (daemon crashed without cleanup) or the file permissions may block the current user.",
-		RecoveryHint: "the socket may be stale: rm /tmp/zen-swarm.sock && hades daemon start; if launchd-managed: launchctl kickstart -k gui/$UID/com.zenswarm.ctld; see docs/operations/hades-entry-point.md §4.2",
+		RecoveryHint: "the socket may be stale: rm /tmp/hades-system.sock && hades daemon start; if launchd-managed: launchctl kickstart -k gui/$UID/com.hadessystem.ctld; see docs/operations/hades-entry-point.md §4.2",
 		Severity:     SeverityError,
 		Category:     CategoryDaemon,
 	},
@@ -246,7 +246,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         CodeEndpointNotFound,
 		Title:        "HADES daemon endpoint not found.",
 		BodyTemplate: "The daemon returned HTTP 404 for the requested path. The daemon process is reachable and responding, but the endpoint may have moved (route renamed across releases) or been deprecated. Common cause: the installed daemon binary is older than the CLI and predates the route.",
-		RecoveryHint: "verify CLI / daemon versions match: hades --version && hades doctor --component=daemon; if a recent upgrade moved the route (e.g. Plan 19 moved /v1/caronte/* to /v1/mcpgateway/*), reinstall both via the same release: make install (from this repo). Do NOT delete /tmp/zen-swarm.sock — that is the wrong remedy for endpoint-404 (the daemon is reachable).",
+		RecoveryHint: "verify CLI / daemon versions match: hades --version && hades doctor --component=daemon; if a recent upgrade moved the route (e.g. Plan 19 moved /v1/caronte/* to /v1/mcpgateway/*), reinstall both via the same release: make install (from this repo). Do NOT delete /tmp/hades-system.sock — that is the wrong remedy for endpoint-404 (the daemon is reachable).",
 		Severity:     SeverityError,
 		Category:     CategoryDaemon,
 	},
@@ -255,7 +255,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "daemon.version-mismatch",
 		Title:        "HADES CLI / daemon version mismatch.",
 		BodyTemplate: "The CLI and the running daemon report different versions. The wire protocol between them is version-pinned; mixed versions may silently corrupt state.",
-		RecoveryHint: "verify: hades --version && hades doctor --component=daemon (will print daemon version); if mismatched, run: systemctl --user restart zen-swarm-ctld; if persistent, reinstall both via the same release: brew reinstall hades (macOS) or `make install` from this repo",
+		RecoveryHint: "verify: hades --version && hades doctor --component=daemon (will print daemon version); if mismatched, run: systemctl --user restart hades-ctld; if persistent, reinstall both via the same release: brew reinstall hades (macOS) or `make install` from this repo",
 		Severity:     SeverityError,
 		Category:     CategoryDaemon,
 	},
@@ -264,7 +264,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "daemon.auth-failed",
 		Title:        "HADES daemon authentication failed.",
 		BodyTemplate: "The CLI's session token was rejected by the daemon. The token may have rotated (daemon restarted without preserving the secrets file) or the secrets file may be corrupted.",
-		RecoveryHint: "run: hades doctor --component=auth (prints token file location + validity); if invalid, run: rm ~/.config/zen-swarm/daemon.token && systemctl --user restart zen-swarm-ctld (daemon regenerates the token); see docs/operations/security.md §daemon-auth for the token-lifecycle reference",
+		RecoveryHint: "run: hades doctor --component=auth (prints token file location + validity); if invalid, run: rm ~/.config/hades-system/daemon.token && systemctl --user restart hades-ctld (daemon regenerates the token); see docs/operations/security.md §daemon-auth for the token-lifecycle reference",
 		Severity:     SeverityError,
 		Category:     CategoryDaemon,
 	},
@@ -318,7 +318,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "bypass.config-missing",
 		Title:        "Bypass config not extracted yet.",
 		BodyTemplate: "The Anthropic Tier 1 bypass requires a one-time interactive extraction of OAuth credentials from a logged-in Claude Code session. No config has been extracted; Tier 1 is disabled until this completes.",
-		RecoveryHint: "run interactively in a TTY: hades bypass extract-config (will prompt for the Claude Code OAuth token; writes ~/.config/zen-swarm/bypass-config.json); see docs/operations/bypass.md §first-time-setup for the step-by-step procedure",
+		RecoveryHint: "run interactively in a TTY: hades bypass extract-config (will prompt for the Claude Code OAuth token; writes ~/.config/hades-system/bypass-config.json); see docs/operations/bypass.md §first-time-setup for the step-by-step procedure",
 		Severity:     SeverityWarn,
 		Category:     CategoryBypass,
 	},
@@ -344,8 +344,8 @@ var catalog = map[Code]*CatalogEntry{
 	"wizard.config-corrupt": {
 		Code:         "wizard.config-corrupt",
 		Title:        "Onboarding wizard found corrupt config.",
-		BodyTemplate: "The config file at ~/.config/zen-swarm/config.toml exists but failed parsing (invalid TOML, missing required section, or partial write). The wizard cannot continue without a valid config.",
-		RecoveryHint: "inspect: cat ~/.config/zen-swarm/config.toml | head -50 (check for syntax errors); to start fresh, run: mv ~/.config/zen-swarm/config.toml ~/.config/zen-swarm/config.toml.bak && hades (re-launches the wizard with a clean slate); see docs/operations/onboarding.md §config-schema for the expected layout",
+		BodyTemplate: "The config file at ~/.config/hades-system/config.toml exists but failed parsing (invalid TOML, missing required section, or partial write). The wizard cannot continue without a valid config.",
+		RecoveryHint: "inspect: cat ~/.config/hades-system/config.toml | head -50 (check for syntax errors); to start fresh, run: mv ~/.config/hades-system/config.toml ~/.config/hades-system/config.toml.bak && hades (re-launches the wizard with a clean slate); see docs/operations/onboarding.md §config-schema for the expected layout",
 		Severity:     SeverityError,
 		Category:     CategoryWizard,
 	},
@@ -362,8 +362,8 @@ var catalog = map[Code]*CatalogEntry{
 	"wizard.mcp-spawn-fail": {
 		Code:         "wizard.mcp-spawn-fail",
 		Title:        "MCP server spawn failed during wizard.",
-		BodyTemplate: "The wizard tried to spawn one of the 4 zen-swarm MCP servers (research, budget, audit, ssh-exec) to verify Hermes plugin integration; the spawn failed (binary not on PATH, permission denied, or transport handshake error).",
-		RecoveryHint: "diagnose: hades doctor --component=mcp (probes each MCP server with verbose output); verify PATH: which zen-swarm-mcp-research && which zen-swarm-mcp-budget; if missing, run: make install (rebuilds + installs all binaries); see docs/operations/mcps.md for MCP server-specific install steps",
+		BodyTemplate: "The wizard tried to spawn one of the 4 hades-system MCP servers (research, budget, audit, ssh-exec) to verify Hermes plugin integration; the spawn failed (binary not on PATH, permission denied, or transport handshake error).",
+		RecoveryHint: "diagnose: hades doctor --component=mcp (probes each MCP server with verbose output); verify PATH: which hades-system-mcp-research && which hades-system-mcp-budget; if missing, run: make install (rebuilds + installs all binaries); see docs/operations/mcps.md for MCP server-specific install steps",
 		Severity:     SeverityError,
 		Category:     CategoryWizard,
 	},
@@ -389,8 +389,8 @@ var catalog = map[Code]*CatalogEntry{
 	"plugin.mcp-handshake-fail": {
 		Code:         "plugin.mcp-handshake-fail",
 		Title:        "MCP handshake with Hermes plugin failed.",
-		BodyTemplate: "The HADES plugin tried to register MCP servers with Hermes' MCP host, but the handshake failed (protocol version mismatch, transport error, or the writer's mcp_servers translator emitted a malformed manifest — see inv-zen-217 for the writer constraint).",
-		RecoveryHint: "diagnose: hades doctor --component=mcp (probes each MCP transport with verbose output); reinstall MCPs: hades plugin install-mcps (re-emits the manifests via the inv-zen-217-compliant writer); see docs/operations/mcps.md §handshake-protocol and ADR-0094 + ADR-0095 for the transport contract",
+		BodyTemplate: "The HADES plugin tried to register MCP servers with Hermes' MCP host, but the handshake failed (protocol version mismatch, transport error, or the writer's mcp_servers translator emitted a malformed manifest — see inv-hades-217 for the writer constraint).",
+		RecoveryHint: "diagnose: hades doctor --component=mcp (probes each MCP transport with verbose output); reinstall MCPs: hades plugin install-mcps (re-emits the manifests via the inv-hades-217-compliant writer); see docs/operations/mcps.md §handshake-protocol and ADR-0094 + ADR-0095 for the transport contract",
 		Severity:     SeverityError,
 		Category:     CategoryPlugin,
 	},
@@ -418,7 +418,7 @@ var catalog = map[Code]*CatalogEntry{
 		Title: "Unknown subcommand.",
 
 		BodyTemplate: "{{suggestion_line}}The HADES CLI does not recognize the subcommand. It may be a typo, a deprecated command, or a Plan 18+ command that has not landed yet.",
-		RecoveryHint: "list valid subcommands: hades --help (top-level command tree); to find a specific subcommand by keyword: hades --help | grep -i <keyword>; the legacy `zen` subcommand surface is still available — see docs/operations/hades-entry-point.md §legacy-cli-passthrough for the full alias map",
+		RecoveryHint: "list valid subcommands: hades --help (top-level command tree); to find a specific subcommand by keyword: hades --help | grep -i <keyword>; the legacy `hades` subcommand surface is still available — see docs/operations/hades-entry-point.md §legacy-cli-passthrough for the full alias map",
 		Severity:     SeverityError,
 		Category:     CategoryCLI,
 	},
@@ -436,7 +436,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "skin.skin-not-registered",
 		Title:        "HADES skin not registered with Hermes.",
 		BodyTemplate: "Hermes did not find a skin manifest at ~/.hermes/skins/hades.toml. The `hades` wrapper sets HERMES_SKIN=hades but Hermes loaded its default skin instead because the manifest is missing or unreadable.",
-		RecoveryHint: "verify: ls -la ~/.hermes/skins/hades.toml (expected: regular file, readable by current user); reinstall the skin: hades --install-skin (re-deploys from binary); see docs/operations/hades-entry-point.md §skin-engine and ADR-0094 for the skin module closure contract (inv-zen-218)",
+		RecoveryHint: "verify: ls -la ~/.hermes/skins/hades.toml (expected: regular file, readable by current user); reinstall the skin: hades --install-skin (re-deploys from binary); see docs/operations/hades-entry-point.md §skin-engine and ADR-0094 for the skin module closure contract (inv-hades-218)",
 		Severity:     SeverityError,
 		Category:     CategorySkin,
 	},
@@ -472,7 +472,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "reserved.slot-2",
 		Title:        "Reserved overflow slot 2 (catalog capacity).",
 		BodyTemplate: "This code is reserved capacity per the Plan 18c max-scope doctrine. Future point-releases consume slots in-place; the slot becomes a real surface (with full title/body/recovery) at that time. Phase A ships 6 reserved slots; this is slot 2.",
-		RecoveryHint: "see: docs/superpowers/specs/2026-05-20-zen-swarm-plan-18-hades-system-unified-ux-design.md §Q6 (catalog enumeration + reserved-capacity rationale); the Plan 18c master plan §\"Doctrine applied\" documents the reserve > scarcity contract",
+		RecoveryHint: "see: docs/superpowers/specs/2026-05-20-hades-system-plan-18-hades-system-unified-ux-design.md §Q6 (catalog enumeration + reserved-capacity rationale); the Plan 18c master plan §\"Doctrine applied\" documents the reserve > scarcity contract",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -481,7 +481,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "reserved.slot-3",
 		Title:        "Reserved overflow slot 3 (catalog capacity).",
 		BodyTemplate: "This code is reserved capacity per the Plan 18c max-scope doctrine. Reserved slots are NOT stubs — they are production-shape catalog entries that happen to be reserved for future consumption. Phase A ships 6 reserved slots; this is slot 3.",
-		RecoveryHint: "see: Plan 18c master plan §\"Doctrine applied\" — the reserved-capacity contract; consult docs/superpowers/specs/2026-05-20-zen-swarm-plan-18-hades-system-unified-ux-design.md §Q6 for the catalog schema",
+		RecoveryHint: "see: Plan 18c master plan §\"Doctrine applied\" — the reserved-capacity contract; consult docs/superpowers/specs/2026-05-20-hades-system-plan-18-hades-system-unified-ux-design.md §Q6 for the catalog schema",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -525,7 +525,7 @@ var catalog = map[Code]*CatalogEntry{
 	"migrate.allowlist-violation": {
 		Code:         "migrate.allowlist-violation",
 		Title:        "File is outside the migration allowlist.",
-		BodyTemplate: "The path {{.rel}} is not in the set of operator home-dir surfaces that `hades migrate plan-18` is allowed to read or write. The tool NEVER touches files outside the allowlist (shell RC files, ~/.config/zen-swarm/, ~/.zen/, ~/.hermes/plugins/zen-swarm/, specific ~/.claude/ files).",
+		BodyTemplate: "The path {{.rel}} is not in the set of operator home-dir surfaces that `hades migrate plan-18` is allowed to read or write. The tool NEVER touches files outside the allowlist (shell RC files, ~/.config/hades-system/, ~/.hades/, ~/.hermes/plugins/hades-system/, specific ~/.claude/ files).",
 		RecoveryHint: "verify the file path is within the allowlist: hades migrate plan-18 --help (prints the full scope); if you believe the path should be in scope, open an issue at https://github.com/cbip-solutions/hades-system/issues/new referencing migrate.allowlist-violation + the rejected path",
 		Severity:     SeverityError,
 		Category:     CategoryMigrate,
@@ -544,7 +544,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "migrate.write-failed",
 		Title:        "Migration atomic write failed.",
 		BodyTemplate: "The atomic write (temp + fsync + rename) for {{.path}} failed. The file was NOT modified; the backup (if created) is intact at the timestamped subdir. Common causes: disk full, permission denied on the parent directory, or a concurrent migration invocation holding the backup-dir lock.",
-		RecoveryHint: "diagnose: ls -la {{.path}} && df -h {{.path}} (check permissions + disk space); verify no concurrent migration is running: ls ~/.local/share/zen-swarm/migrate-plan-18-backup/lock (if present + stale, remove it manually); then re-run: hades migrate plan-18 --from-zen-swarm-aliases --apply (idempotent — already-migrated files skipped)",
+		RecoveryHint: "diagnose: ls -la {{.path}} && df -h {{.path}} (check permissions + disk space); verify no concurrent migration is running: ls ~/.local/share/hades-system/migrate-plan-18-backup/lock (if present + stale, remove it manually); then re-run: hades migrate plan-18 --from-hades-system-aliases --apply (idempotent — already-migrated files skipped)",
 		Severity:     SeverityError,
 		Category:     CategoryMigrate,
 	},
@@ -553,7 +553,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "migrate.dry-run-required",
 		Title:        "Migration requires explicit --apply flag.",
 		BodyTemplate: "The migration tool is dry-run-by-default. No files were modified. To perform the actual migration, pass --apply explicitly (this is the operator-explicit safety gate per spec §Q4 — the tool refuses to mutate files without an affirmative --apply flag).",
-		RecoveryHint: "re-run with the apply flag: hades migrate plan-18 --from-zen-swarm-aliases --apply (this will perform the atomic per-file writes + create a timestamped backup under ~/.local/share/zen-swarm/migrate-plan-18-backup/); review the dry-run diff first if you haven't: hades migrate plan-18 --from-zen-swarm-aliases (no --apply = dry-run)",
+		RecoveryHint: "re-run with the apply flag: hades migrate plan-18 --from-hades-system-aliases --apply (this will perform the atomic per-file writes + create a timestamped backup under ~/.local/share/hades-system/migrate-plan-18-backup/); review the dry-run diff first if you haven't: hades migrate plan-18 --from-hades-system-aliases (no --apply = dry-run)",
 		Severity:     SeverityWarn,
 		Category:     CategoryMigrate,
 	},

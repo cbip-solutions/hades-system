@@ -5,10 +5,10 @@
 //
 // # Invariant
 //
-// invariant: release ingester / ecosystem code NEVER imports net/http
+// inv-hades-191: release ingester / ecosystem code NEVER imports net/http
 // (or crypto/tls). ALL outbound egress goes via
 // internal/research/cache/Revalidator.Fetch (the sole legal HTTP callsite
-// per invariant + ADR-0087 amendment). The boundary is enforced both
+// per inv-hades-152 + ADR-0087 amendment). The boundary is enforced both
 // at the package level (no file under internal/research/ecosystem/...
 // may import net/http or crypto/tls) and at the callsite level
 // (defense-in-depth catch for aliased imports).
@@ -24,7 +24,7 @@
 //
 // # Why also crypto/tls
 //
-// invariant prevents direct outbound HTTPS. crypto/tls is the layer
+// inv-hades-191 prevents direct outbound HTTPS. crypto/tls is the layer
 // beneath net/http; if a future contributor reaches for tls.Dial or
 // tls.Client directly (a vector that bypasses net/http entirely) the
 // single-egress invariant is just as violated. Flagging crypto/tls is
@@ -43,7 +43,7 @@
 //
 // Mirrors the release Task J-7 `noWebInAggregator` analyzer in
 // shape (`golang.org/x/tools/go/analysis.Analyzer`) for consistency.
-// Registered in `cmd/zen-doctrine-lint/release_extension.go` alongside
+// Registered in `cmd/hades-doctrine-lint/release_extension.go` alongside
 // the release extension surface.
 //
 // # Known-uncaught callsite shape (acknowledged limitation)
@@ -58,8 +58,8 @@
 // arbitrary depths of selector nesting yields diminishing returns
 // versus false-positives on aliased struct fields). If a future
 // adversarial case slips through, the runtime egress also fails the
-// daemon's dispatcher routing and the cron worker's
-// allowlist.
+// daemon's dispatcher routing (inv-hades-152) and the cron worker's
+// allowlist (inv-hades-191 runtime side).
 //
 // References
 // - Spec §7.3 release ingester invariants
@@ -78,9 +78,9 @@ import (
 
 var NoWebInEcosystemAnalyzer = &analysis.Analyzer{
 	Name: "noWebInEcosystem",
-	Doc: `Enforces inv-zen-191: internal/research/ecosystem/... NEVER imports
+	Doc: `Enforces inv-hades-191: internal/research/ecosystem/... NEVER imports
 net/http or crypto/tls. All HTTP egress MUST go via
-internal/research/cache/Revalidator.Fetch (inv-zen-152 + ADR-0087). There
+internal/research/cache/Revalidator.Fetch (inv-hades-152 + ADR-0087). There
 is no allowlist — no file in the ecosystem package tree legitimately
 needs direct web-stack access.`,
 	Run: runNoWebInEcosystem,
@@ -109,9 +109,9 @@ func isEcosystemPkg(pkgPath string) bool {
 func isForbiddenWebImport(path string) (msg string, forbidden bool) {
 	switch path {
 	case "net/http":
-		return "inv-zen-191: net/http import in ecosystem package forbidden — use Revalidator.Fetch", true
+		return "inv-hades-191: net/http import in ecosystem package forbidden — use Revalidator.Fetch", true
 	case "crypto/tls":
-		return "inv-zen-191: crypto/tls import in ecosystem package forbidden — use Revalidator.Fetch", true
+		return "inv-hades-191: crypto/tls import in ecosystem package forbidden — use Revalidator.Fetch", true
 	}
 	return "", false
 }
@@ -147,7 +147,7 @@ func runNoWebInEcosystem(pass *analysis.Pass) (any, error) {
 			if pkgName, ok := webPkgIdent(pass, sel.X); ok {
 				if isForbiddenWebMethod(pkgName, sel.Sel.Name) {
 					pass.Reportf(call.Pos(),
-						"inv-zen-191: ecosystem NEVER queries web directly — use Revalidator.Fetch")
+						"inv-hades-191: ecosystem NEVER queries web directly — use Revalidator.Fetch")
 				}
 			}
 			return true

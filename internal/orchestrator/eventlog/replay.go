@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-// ReplayCorruptionBudget is the invariant cap: at most this many
+// ReplayCorruptionBudget is the inv-hades-095 cap: at most this many
 // corrupted events tolerated per session replay before the orchestrator
 // MUST transition to HARD_PAUSED. Surfaced as an exported constant so
 // callers ( HARD_PAUSED handler, recovery,
@@ -22,7 +22,7 @@ const ReplayCorruptionBudget = 5
 // . Replay
 // returns the partial ReplayState alongside this error so the caller
 // can audit how far reconstruction progressed before halting.
-var ErrCorruptionBudgetExceeded = errors.New("eventlog: replay corruption budget exceeded (inv-zen-095)")
+var ErrCorruptionBudgetExceeded = errors.New("eventlog: replay corruption budget exceeded (inv-hades-095)")
 
 type ReplayState struct {
 	SessionID       string
@@ -50,7 +50,7 @@ type ReplayState struct {
 // reconstructs ReplayState by folding each decoded event into the
 // state accumulator.
 //
-// Inv-zen-095 contract: at most ReplayCorruptionBudget corrupted events
+// Inv-hades-095 contract: at most ReplayCorruptionBudget corrupted events
 // are tolerated. Each skip is itself audited via a ReplayCorruptionDetected
 // event re-appended to the log (best-effort; emit failures during the
 // audit-of-corruption do NOT abort replay because the corruption signal

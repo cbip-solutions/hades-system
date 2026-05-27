@@ -3,12 +3,12 @@
 // row in scope, it tries the precision-ordered tier chain (artifact → spec →
 // static → fuzzy → unresolved) and either persists a contract_links row
 // (Confidence + LinkMethod per master C-5) through federation
-// LinkStore + emits a release Tessera
-// audit row via federation.AuditEmitter, or records
+// LinkStore (capa-firewall gated; inv-hades-264) + emits a release Tessera
+// audit row via federation.AuditEmitter (inv-hades-269), or records
 // an `unresolved` row (per caronte.yaml unresolved_policy; doctrine-default
-// surface; invariant).
+// surface; inv-hades-265).
 //
-// Boundary: this package NEVER imports
+// Boundary (inv-hades-031 mirror inv-hades-271): this package NEVER imports
 // internal/store; it imports only internal/caronte/store ( + Plan
 // 20 ), internal/caronte/contract/extract, and
 // internal/caronte/contract/yaml.

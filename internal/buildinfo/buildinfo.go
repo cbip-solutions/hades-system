@@ -10,17 +10,17 @@
 //
 // so the values are available at runtime via Version() / Commit() / Date().
 //
-// For developer workflows (`go build./cmd/zen` without -X flags) the
+// For developer workflows (`go build./cmd/hades` without -X flags) the
 // package-level vars default to clear "dev" / "unknown" sentinels so the
 // resulting binary still works and `--version` still prints something
 // useful (just labelled "dev").
 //
-// invariant (reproducibility metadata) — three things load-bear on this
+// inv-hades-297 (reproducibility metadata) — three things load-bear on this
 // package:
 //
-// 1. The Anthropic-style `zen --version` surface MUST embed Version() +
+// 1. The Anthropic-style `hades --version` surface MUST embed Version() +
 // Commit() + Date() so bug reports + CI matrix diagnostics carry the
-// binary's identity (see cmd/zen, cmd/zen-swarm-ctld).
+// binary's identity (see cmd/hades, cmd/hades-ctld).
 // 2. cmd/verify-release-checksums parses the
 // `--version` output to cross-check the binaries in dist/ against the
 // recorded checksum manifest.
@@ -28,7 +28,7 @@
 // provenance with every event via Provenance() — so audit-log forensics
 // can attribute behaviour to a specific build.
 //
-// Boundary respect: buildinfo MUST NOT import any other zen-swarm package;
+// Boundary respect: buildinfo MUST NOT import any other hades-system package;
 // it sits below every consumer so cycles are structurally impossible. The
 // stdlib imports (fmt + runtime + strings) are deliberate.
 package buildinfo
@@ -60,17 +60,17 @@ func Platform() string {
 }
 
 // Summary returns a single-line human-readable build summary suitable
-// for `zen --version` output, bug reports, and `zen doctor` banner.
+// for `hades --version` output, bug reports, and `hades doctor` banner.
 //
 // Canonical format (load-bearing for cmd/verify-release-checksums):
 //
-// "zen-swarm <version> commit:<commit> date:<date> go:<gover> platform:<plat>"
+// "hades-system <version> commit:<commit> date:<date> go:<gover> platform:<plat>"
 //
 // Drift here MUST be paired with an update to verify-release-checksums
 // since the parser anchors on the field keys ("commit:", "date:", "go:",
 // "platform:").
 func Summary() string {
-	return fmt.Sprintf("zen-swarm %s commit:%s date:%s go:%s platform:%s",
+	return fmt.Sprintf("hades-system %s commit:%s date:%s go:%s platform:%s",
 		version, commit, date, GoVersion(), Platform(),
 	)
 }

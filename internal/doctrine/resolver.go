@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // 1. Built-in Go-coded defaults (builtin.go)
-// 2. ~/.config/zen-swarm/doctrines/<name>.toml
-// 3. zenswarm.toml per-project (capped by doctrine ceiling)
+// 2. ~/.config/hades-system/doctrines/<name>.toml
+// 3. hadessystem.toml per-project (capped by doctrine ceiling)
 // 4. --doctrine flag (transient)
 //
 // The resolver returns a Resolved{Schema, Provenance} value. Each
@@ -93,7 +93,7 @@ func resolveBaseLayer(chosen, customDoctrinePath string) (Schema, string, error)
 	}
 
 	if customDoctrinePath == "" {
-		return Schema{}, "", fmt.Errorf("doctrine: chosen %q is not a builtin and no custom doctrine file path provided (set zenswarm.toml [doctrine] custom_path or pass --doctrine-path)", chosen)
+		return Schema{}, "", fmt.Errorf("doctrine: chosen %q is not a builtin and no custom doctrine file path provided (set hadessystem.toml [doctrine] custom_path or pass --doctrine-path)", chosen)
 	}
 	return MaxScopeBuiltin(), "builtin:max-scope", nil
 }
@@ -107,14 +107,14 @@ func ReadSettingsDoctrine(path string) (string, error) {
 		return "", fmt.Errorf("doctrine: settings %q: %w", path, err)
 	}
 	var raw struct {
-		Zenswarm struct {
+		HadesSystem struct {
 			Doctrine string `json:"doctrine"`
-		} `json:"zenswarm"`
+		} `json:"hadessystem"`
 	}
 	if err := json.Unmarshal(body, &raw); err != nil {
 		return "", fmt.Errorf("doctrine: settings %q parse: %w", path, err)
 	}
-	return raw.Zenswarm.Doctrine, nil
+	return raw.HadesSystem.Doctrine, nil
 }
 
 func buildBuiltinProvenance(source string) map[string]string {

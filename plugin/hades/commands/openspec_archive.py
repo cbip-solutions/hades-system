@@ -13,12 +13,12 @@ Per spec §3.3 (Modo C híbrido) via HADES:
 ## 1. Trigger archive via daemon
 
 ```bash
-SWARM_ID=$(curl --unix-socket /tmp/zen-swarm.sock -s \\
+SWARM_ID=$(curl --unix-socket /tmp/hades-system.sock -s \\
                 "http://unix/v1/swarms?feature={feature_name}" \\
                 | jq -r '.swarms[0].id')
 
-# pending endpoint registration: swarm archive (POST) per spec §3.3 archive phase awaits zen migrate
-curl --unix-socket /tmp/zen-swarm.sock \\
+# pending endpoint registration: swarm archive (POST) per spec §3.3 archive phase awaits hades migrate
+curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      "http://unix/v1/swarms/$SWARM_ID/archive"
 ```
@@ -58,13 +58,13 @@ git commit -m "feat({feature_name}): <subject>
 
 <body>
 
-Zen-Trace-Id: <trace-id>
-Zen-Provider: <provider>
-Zen-Audit-Passed: yes
+HADES-Trace-Id: <trace-id>
+HADES-Provider: <provider>
+HADES-Audit-Passed: yes
 "
 ```
 
-## 6. NEVER add Claude/Anthropic/AI attribution (invariant)
+## 6. NEVER add Claude/Anthropic/AI attribution (inv-hades-004)
 
 the release design substrate hook (`hooks/llm_handlers.py` pre_llm_call callback) regex-rejects commit messages containing:
 - `Co-Authored-By: prohibited assistant`
@@ -75,8 +75,8 @@ the release design substrate hook (`hooks/llm_handlers.py` pre_llm_call callback
 ## 7. Cleanup worktrees + branches
 
 ```bash
-# pending endpoint registration: swarm cleanup per cleanup-policy.toml awaits zen migrate
-curl --unix-socket /tmp/zen-swarm.sock \\
+# pending endpoint registration: swarm cleanup per cleanup-policy.toml awaits hades migrate
+curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      "http://unix/v1/swarms/$SWARM_ID/cleanup"
 ```
@@ -86,7 +86,7 @@ Per cleanup-policy.toml.
 ## Cross-references
 
 - spec §3.3 archive phase
-- invariant NO Claude attribution
+- inv-hades-004 NO Claude attribution
 - the release design MergeEngine (winner selection per spec §4.4)
 - /hades:openspec-apply (precedent step)
 """

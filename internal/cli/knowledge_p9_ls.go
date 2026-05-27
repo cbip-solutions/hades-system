@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — knowledge_p9_ls.go.
 //
-// `zen knowledge-p9 ls` — list notes from the release aggregator.
+// `hades knowledge-p9 ls` — list notes from the release aggregator.
 //
 // Wire method: KnowledgeListP9(ctx, projectID, pinnedOnly) → ([]KnowledgeNote, error).
 // KnowledgeNote fields: NoteID, ProjectID, Path, Pinned, UpdatedAt (no Title).
@@ -34,13 +34,13 @@ filter to pinned notes with --pinned-only.
 
 Output columns: NOTE_ID / PROJECT / PATH / PINNED / UPDATED`,
 		Example: `  # All notes
-  zen knowledge-p9 ls
+  hades knowledge-p9 ls
 
   # One project
-  zen knowledge-p9 ls --project internal-platform-x
+  hades knowledge-p9 ls --project internal-platform-x
 
   # Pinned-only across all projects
-  zen knowledge-p9 ls --pinned-only`,
+  hades knowledge-p9 ls --pinned-only`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(cmd.Context(), 30*time.Second)
 			defer cancel()

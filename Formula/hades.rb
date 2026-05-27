@@ -20,7 +20,7 @@ class Hades < Formula
 
   def install
     bin.install "bin/hades"
-    bin.install "bin/zen-swarm-ctld"
+    bin.install "bin/hades-ctld"
     pkgshare.install "share/migrations" if (buildpath/"share/migrations").exist?
     (etc/"hades").mkpath
   end
@@ -51,10 +51,10 @@ class Hades < Formula
   end
 
   service do
-    run [opt_bin/"zen-swarm-ctld"]
+    run [opt_bin/"hades-ctld"]
     keep_alive true
-    log_path var/"log/zen-swarm-ctld.log"
-    error_log_path var/"log/zen-swarm-ctld.error.log"
+    log_path var/"log/hades-ctld.log"
+    error_log_path var/"log/hades-ctld.error.log"
   end
 
   test do

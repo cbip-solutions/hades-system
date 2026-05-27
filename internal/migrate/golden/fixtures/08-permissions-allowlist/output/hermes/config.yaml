@@ -4,8 +4,8 @@ default_provider:
   model: claude-opus-4-7-1m
 
 mcp_servers:
-  zen-swarm:
+  hades-system:
     transport: http
     url: http://unix/v1/mcpgateway
-    socket: /tmp/zen-swarm.sock
+    socket: /tmp/hades-system.sock
 

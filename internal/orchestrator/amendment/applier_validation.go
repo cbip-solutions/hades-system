@@ -36,11 +36,11 @@ func DefaultSchemaParser() SchemaParser {
 }
 
 // ApplyWithValidation is tighten-validating entry point that
-// wraps release's existing Apply per invariant. Sequence:
+// wraps release's existing Apply per inv-hades-140. Sequence:
 //
 // 1. Locate proposed ADR + extract toml diff (delegated via
 // extractTOMLDiff helper that release ships).
-// 2. Read pre-Apply zenswarm.toml; build candidate by appending diff +
+// 2. Read pre-Apply hadessystem.toml; build candidate by appending diff +
 // parsing the merged blob via SchemaParser.
 // 3. Load baseline via BaselineLoader.
 // 4. Run candidate.ValidateTighten(baseline) ( canonical method
@@ -54,11 +54,11 @@ func DefaultSchemaParser() SchemaParser {
 // Reverter is wired) for the atomic git commit + file write +
 // reload signal.
 //
-// invariant: ValidateTighten BEFORE write — the file write only
+// inv-hades-140: ValidateTighten BEFORE write — the file write only
 // happens inside the inner Apply call (ownership lives there), so the
 // tighten-rejection branch never reaches the filesystem.
 //
-// invariant: file rollback on post-commit failure is preserved by
+// inv-hades-094: file rollback on post-commit failure is preserved by
 // the inner ApplyTransacted (when wired); ApplyWithValidation does
 // not alter that contract.
 //
@@ -69,12 +69,12 @@ func DefaultSchemaParser() SchemaParser {
 //
 // Synchronous reload-wait: when a non-nil
 // ReloadAwaiter is wired in ApplierConfig, ApplyWithValidation calls
-// NotifyForceAndWait(zenswarm.toml, ReloadWaitTimeout) AFTER the inner
+// NotifyForceAndWait(hadessystem.toml, ReloadWaitTimeout) AFTER the inner
 // Apply commit lands and synchronously awaits the matching
 // DoctrineReloaded event. On stall (timeout / nil-watcher / channel
 // closed), emits eventlog.EvtDoctrineWatcherStalled (event 67) so the
 // operator-readable telemetry surfaces the reload-wait failure as
-// DISTINCT FROM the apply success. Per invariant atomicity, the
+// DISTINCT FROM the apply success. Per inv-hades-094 atomicity, the
 // apply itself succeeded — the new schema IS on disk + committed; the
 // reload-wait is an operator-visibility upgrade, NOT a correctness
 // fix. ApplyWithValidation therefore returns nil on stall (the inner
@@ -86,7 +86,7 @@ func DefaultSchemaParser() SchemaParser {
 // inner Apply ( semantics preserved; release's existing contract
 // untouched).
 //
-// Cross-reference: invariant (atomic reload via reload.Watcher
+// Cross-reference: inv-hades-138 (atomic reload via reload.Watcher
 // singleton) + release §3.4 / §4.1 F13 reload-wait flow + release Phase
 // J pre-flight PF-1..PF-5.
 func (a *AmendmentApplier) ApplyWithValidation(ctx context.Context, adrID int, operator string, baselineFn BaselineLoader, schemaParser SchemaParser) error {
@@ -110,10 +110,10 @@ func (a *AmendmentApplier) ApplyWithValidation(ctx context.Context, adrID int, o
 		return fmt.Errorf("ApplyWithValidation: ADR-%04d: %w", adrID, err)
 	}
 
-	tomlPath := filepath.Join(a.cfg.RepoRoot, "zenswarm.toml")
+	tomlPath := filepath.Join(a.cfg.RepoRoot, "hadessystem.toml")
 	pre, err := os.ReadFile(tomlPath)
 	if err != nil {
-		return fmt.Errorf("ApplyWithValidation: read zenswarm.toml: %w", err)
+		return fmt.Errorf("ApplyWithValidation: read hadessystem.toml: %w", err)
 	}
 
 	merged := append(append([]byte{}, pre...), '\n')

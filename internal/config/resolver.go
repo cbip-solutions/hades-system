@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // internal/config/resolver.go
 //
-// ProfileResolver materializes invariant: it merges the four config
+// ProfileResolver materializes inv-hades-066: it merges the four config
 // layers of release's routing model into a single ordered provider
 // cascade, deterministically.
 //
-// built-in defaults → profiles.toml → projects.toml[orchestrator] →.zen-swarm.toml
+// built-in defaults → profiles.toml → projects.toml[orchestrator] →.hades-system.toml
 //
 // Merge is per-field replacement: a later layer that sets a cascade
 // wholly replaces the earlier one (it does not append or splice).
-// invariant is the guarantee that the merge result depends only on
+// inv-hades-066 is the guarantee that the merge result depends only on
 // the layer *contents*, never on map-iteration order — a dedicated test
 // (resolver_test.go) asserts determinism across layer permutations.
 //

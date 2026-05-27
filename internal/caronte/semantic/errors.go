@@ -2,7 +2,7 @@
 // Package semantic is Caronte's L2 resolution layer for Go: it turns the
 // syntactic symbol table parsed into a semantically resolved
 // call/implements graph, attaching a store.Confidence tier to EVERY edge
-// .
+// (inv-hades-233 — precision > recall for agents).
 //
 // Resolution paths, precision-ordered (§6):
 //
@@ -16,19 +16,19 @@
 // (CaronteDispatcher.Forward, Profile "local-code")
 // ⇒ ConfLLMHint, bounded to the unresolved tail
 //
-// Boundary: this package NEVER imports internal/store. It
+// Boundary (inv-hades-031/230): this package NEVER imports internal/store. It
 // writes edges through the injected *store.Store and
-// reaches the LLM ONLY through the CaronteDispatcher seam;
+// reaches the LLM ONLY through the CaronteDispatcher seam (inv-hades-088/236);
 // the daemon wires the real *orchestrator.Orchestrator at the composition
 // root. No net/http, no direct backend dial lives here — the
-// compliance test tests/compliance/inv_zen_236_caronte_single_egress_test.go
+// compliance test tests/compliance/inv_hades_236_caronte_single_egress_test.go
 // enforces that.
 //
 // Scheduling (§21 risk register): ResolveProject runs ON-DEMAND + cached,
 // NEVER during initial indexing — the go/types cold load is 10-60 s on
 // 500 k LOC; the fast indexing path does not block on it.
 //
-// invariant: this package makes NO web calls of its own (the dispatcher
+// inv-hades-129: this package makes NO web calls of its own (the dispatcher
 // seam is the single egress; embeddings are not used here).
 package semantic
 

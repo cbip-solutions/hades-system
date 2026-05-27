@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
 // Package cli — budget.go.
 //
-// `zen budget` is the operator's authoritative interface to the release
+// `hades budget` is the operator's authoritative interface to the release
 // budget engine.
 //
 // Cobra layout (8 leaves + 2 group):
 //
-// zen budget cap-status --axis --value
-// zen budget record (operator manual axis-tagging; rare)
-// zen budget axes --cost-id
-// zen budget anomaly --scope --value --window
-// zen budget events --since --limit
-// zen budget pause --scope --value --reason --yes
-// zen budget resume --scope --value --yes
-// zen budget pause-modes
-// zen budget rollup --since --limit (synthetic from events)
+// hades budget cap-status --axis --value
+// hades budget record (operator manual axis-tagging; rare)
+// hades budget axes --cost-id
+// hades budget anomaly --scope --value --window
+// hades budget events --since --limit
+// hades budget pause --scope --value --reason --yes
+// hades budget resume --scope --value --yes
+// hades budget pause-modes
+// hades budget rollup --since --limit (synthetic from events)
 //
 // Option A adaptation: the plan-doc uses `caps {show, set}` whereas the
 // daemon exposes `cap_status` (read) plus `record` (write). The CLI
@@ -332,15 +332,15 @@ func budgetResumeCmd() *cobra.Command {
 func budgetPauseModesCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "pause-modes",
-		Short: "Doctrine [budget].pause_mode catalog (set in zenswarm.toml; not a flag on 'zen budget pause')",
+		Short: "Doctrine [budget].pause_mode catalog (set in hadessystem.toml; not a flag on 'hades budget pause')",
 		Long: `Lists the pause-mode values the active doctrine recognises in
-[budget].pause_mode (zenswarm.toml). These are CONFIGURATION values
+[budget].pause_mode (hadessystem.toml). These are CONFIGURATION values
 read by the daemon at doctrine load — NOT command-line flags on
-'zen budget pause'. Switching pause-mode requires editing the
-project's zenswarm.toml [budget].pause_mode field and reloading the
-daemon (or 'zen doctrine reload --yes').
+'hades budget pause'. Switching pause-mode requires editing the
+project's hadessystem.toml [budget].pause_mode field and reloading the
+daemon (or 'hades doctrine reload --yes').
 
-The 'zen budget pause' command does NOT accept --mode; the active
+The 'hades budget pause' command does NOT accept --mode; the active
 mode is whichever the doctrine resolver selects (default: descriptive).
 
 Review M-6: pre-fix the Short text read "Doctrine-resolved pause-mode

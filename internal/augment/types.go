@@ -13,14 +13,14 @@
 //
 // Invariants compile-checked + runtime-enforced (per spec §8.2):
 //
-// - invariant: augmentation cross-project respects doctrine privacy boundaries
-// - invariant: augmentation budget gated budget MCP
-// - invariant: capa-firewall doctrine disables augmentation by default
-// - invariant: aggregator queries filter doctrine privacy
-// - invariant (transitively preserved): augmentation flows through daemon
-// - invariant (transitively preserved): no internal/store import
+// - inv-hades-163: augmentation cross-project respects doctrine privacy boundaries
+// - inv-hades-167: augmentation budget gated budget MCP
+// - inv-hades-170: capa-firewall doctrine disables augmentation by default
+// - inv-hades-171: aggregator queries filter doctrine privacy
+// - inv-hades-088 (transitively preserved): augmentation flows through daemon
+// - inv-hades-031 (transitively preserved): no internal/store import
 //
-// Boundary: this package depends ONLY on:
+// Boundary (inv-hades-031): this package depends ONLY on:
 //
 // - stdlib
 // - internal/knowledge/rrf (CGO-free RRF Fuse — release fix-cycle

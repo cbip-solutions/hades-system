@@ -11,12 +11,12 @@
 // + adapter) via internal/inbox.AggregatorCacheStore +
 // internal/inbox.Store.Ack/Snooze. The InboxStore interface this
 // handler consumes is the read+write surface the daemon-level cache
-// adapter satisfies; per invariant the handler never imports
+// adapter satisfies; per inv-hades-031 the handler never imports
 // internal/store directly — the inboxadapter is the single bridge.
 //
 // Status-code mapping (mirrors the projects_p7 + schedule_p7 patterns):
 //
-// 503 — InboxStore() not yet wired (cmd/zen-swarm-ctld registers
+// 503 — InboxStore() not yet wired (cmd/hades-ctld registers
 // the adapter at boot; tests inject fakes via SetInboxStore).
 // 400 — invalid JSON / missing required fields (id, until).
 // 404 — notification id not found (ack/snooze paths surface
@@ -26,7 +26,7 @@
 // 500 — opaque backend error (sql I/O, transactional failure).
 // 200 — success; bodies documented per route below.
 //
-// invariant boundary: this handler imports internal/inbox value
+// inv-hades-031 boundary: this handler imports internal/inbox value
 // types only (Severity / CacheRow / ListFilter / sentinel errors). No
 // internal/store imports — the InboxStore interface is structural and
 // the daemon-side accessor returns it as the same interface, keeping
@@ -35,9 +35,9 @@
 //
 // CLI surface (handled in internal/cli/inbox.go):
 //
-// zen inbox [--severity X] [--unacked] [--project alias] [--since DUR] [--limit N]
-// zen inbox ack <id>
-// zen inbox snooze <id> --until <duration>
+// hades inbox [--severity X] [--unacked] [--project alias] [--since DUR] [--limit N]
+// hades inbox ack <id>
+// hades inbox snooze <id> --until <duration>
 package handlers
 
 import (

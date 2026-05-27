@@ -20,5 +20,5 @@ func (SystemResolver) Lookup(service, account string) (redact.Secret, error) {
 	if err := validateServiceName(service); err != nil {
 		return nil, err
 	}
-	return nil, fmt.Errorf("keychain.Lookup(%q): %w (set ZEN_KEYCHAIN_DISABLE=1 to use env vars)", service, ErrUnsupported)
+	return nil, fmt.Errorf("keychain.Lookup(%q): %w (set HADES_KEYCHAIN_DISABLE=1 to use env vars)", service, ErrUnsupported)
 }

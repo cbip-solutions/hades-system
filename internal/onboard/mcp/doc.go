@@ -4,26 +4,26 @@
 //
 // Per spec §2.7 + §3.7 + Q7=D:
 //
-// Tier 1 (Mandatory) — cannot uncheck: zen-swarm-ctld
+// Tier 1 (Mandatory) — cannot uncheck: hades-ctld
 // Tier 2 (Universal) — default-yes for all kinds: playwright,
 // filesystem, github
-// Tier 3 (Smart-default) — default-yes IF zen recognize detects
+// Tier 3 (Smart-default) — default-yes IF hades recognize detects
 // relevant signals: prisma-postgres,
 // sentry, linear, memory, sequential-thinking
-// Tier 4 (Catalog opt-in) — wizard customize or `zen mcp add`:
+// Tier 4 (Catalog opt-in) — wizard customize or `hades mcp add`:
 // sqlite, graphql, mysql, openapi
 //
 // Each entry carries a RiskTier (low/medium/high) consumed by
 // doctrine eval (Q10=D); the field is populated NOW so has no
 // retrofit work to do.
 //
-// Per spec §8.6 invariant: smart-default Detected fns enforce a
+// Per spec §8.6 inv-hades-179: smart-default Detected fns enforce a
 // confidence ≥0.6 threshold; below that, even positive signals do not
 // enable the MCP. The threshold is centralized in
 // SmartDefaultConfidenceThreshold + confidenceGate() (defense-in-depth:
 // every Detected fn calls confidenceGate before signal extraction).
 //
-// Per invariant (full invariant lands ; compile-check substrate
+// Per inv-hades-181 (full invariant lands ; compile-check substrate
 // sits here): AssertAllTiered runs at package init and panics if any
 // catalog entry has Tier=0 or empty RiskTier — programmer errors caught
 // at compile-test rather than at first user call.
@@ -37,7 +37,7 @@
 //
 // # Boundary discipline
 //
-// Per invariant: this package NEVER imports internal/store. Catalog
+// Per inv-hades-031: this package NEVER imports internal/store. Catalog
 // entries and smart-default detection are pure value types + pure
 // functions; audit emit (if any) lives in the daemon layer downstream
 // via internal/audit/chain/.

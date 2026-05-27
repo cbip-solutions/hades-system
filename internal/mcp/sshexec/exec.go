@@ -9,9 +9,9 @@
 // - SSH credentials come only from SSH_AUTH_SOCK; private keys are
 // never read from disk.
 // - Host keys are verified through known_hosts unless the test-only
-// ZEN_SSH_INSECURE_TEST=1 escape is set.
+// HADES_SSH_INSECURE_TEST=1 escape is set.
 // - Run signature requires ValidationResult with OK=true (compile-check
-// anchor for invariant).
+// anchor for inv-hades-082).
 // - PTY=false on every session (no interactive shells; sess.RequestPty
 // never called).
 
@@ -207,18 +207,18 @@ func Run(
 	if req.Cwd != "" {
 		// ForceCommand wrapper handles cwd semantics; we do not embed `cd`
 		// because ';' is a forbidden char. The wrapper accepts a CWD
-		// envelope via SSH env var: pass via $ZEN_CWD; wrapper recognises
+		// envelope via SSH env var: pass via $HADES_CWD; wrapper recognises
 		// it.
 		//
-		// ZEN_CWD_REQUESTED=1 is a sentinel the wrapper checks: if it
-		// arrives but ZEN_CWD itself didn't (sshd AcceptEnv missing for
-		// ZEN_CWD), the wrapper fails loud instead of silently falling
+		// HADES_CWD_REQUESTED=1 is a sentinel the wrapper checks: if it
+		// arrives but HADES_CWD itself didn't (sshd AcceptEnv missing for
+		// HADES_CWD), the wrapper fails loud instead of silently falling
 		// back to $HOME. Both env vars must be in the host's
 		// AcceptEnv list — see wrapper header for sshd_config setup.
-		_ = sess.Setenv("ZEN_CWD", req.Cwd)
-		_ = sess.Setenv("ZEN_CWD_REQUESTED", "1")
+		_ = sess.Setenv("HADES_CWD", req.Cwd)
+		_ = sess.Setenv("HADES_CWD_REQUESTED", "1")
 	}
-	_ = sess.Setenv("ZEN_PROJECT", req.Project)
+	_ = sess.Setenv("HADES_PROJECT", req.Project)
 
 	start := time.Now()
 	if err := sess.Start(commandLine); err != nil {
@@ -376,13 +376,13 @@ func dialContext(ctx context.Context, network, addr string, cfg *ssh.ClientConfi
 }
 
 func hostKeyCallback() ssh.HostKeyCallback {
-	if os.Getenv("ZEN_SSH_INSECURE_TEST") == "1" {
+	if os.Getenv("HADES_SSH_INSECURE_TEST") == "1" {
 		return ssh.InsecureIgnoreHostKey()
 	}
 	paths := knownHostsPaths()
 	if len(paths) == 0 {
 		return func(hostname string, remote net.Addr, key ssh.PublicKey) error {
-			return errors.New("known_hosts unavailable; set ZEN_SSH_KNOWN_HOSTS or create ~/.ssh/known_hosts")
+			return errors.New("known_hosts unavailable; set HADES_SSH_KNOWN_HOSTS or create ~/.ssh/known_hosts")
 		}
 	}
 	cb, err := knownhosts.New(paths...)
@@ -396,7 +396,7 @@ func hostKeyCallback() ssh.HostKeyCallback {
 }
 
 func knownHostsPaths() []string {
-	if raw := os.Getenv("ZEN_SSH_KNOWN_HOSTS"); raw != "" {
+	if raw := os.Getenv("HADES_SSH_KNOWN_HOSTS"); raw != "" {
 		return splitKnownHostsEnv(raw)
 	}
 	home, err := os.UserHomeDir()
@@ -429,7 +429,7 @@ func splitKnownHostsEnv(raw string) []string {
 }
 
 func sshUserFromEnv() string {
-	if u := os.Getenv("ZEN_SSH_USER"); u != "" {
+	if u := os.Getenv("HADES_SSH_USER"); u != "" {
 		return u
 	}
 	return os.Getenv("USER")

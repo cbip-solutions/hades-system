@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctrine_revert.go.
 //
-// `zen doctrine revert <ADR-NNNN>` rolls back a previously applied
+// `hades doctrine revert <ADR-NNNN>` rolls back a previously applied
 // amendment via the daemon's amendment.Reverter wiring. Optional
-// --reason is recorded into the eventlog (invariant operator-override
+// --reason is recorded into the eventlog (inv-hades-099 operator-override
 // audit) when supplied.
 package cli
 

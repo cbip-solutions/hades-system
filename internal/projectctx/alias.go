@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // alias.go — release : human alias resolution per spec §1 Q3.
 //
-// The alias is read from <canonical-path>/zenswarm.toml [project] id, with
+// The alias is read from <canonical-path>/hadessystem.toml [project] id, with
 // fallback <dirname>-<sha256[:8]>. Both forms validate against the same
 // charset rules so the daemon's storage layer never sees malformed input.
 package projectctx
@@ -36,7 +36,7 @@ var ErrAliasReserved = errors.New("projectctx: alias is reserved by daemon")
 
 var ErrAliasInvalid = errors.New("projectctx: alias is invalid")
 
-var ErrZenswarmTOMLMalformed = errors.New("projectctx: zenswarm.toml malformed")
+var ErrHadesSystemTOMLMalformed = errors.New("projectctx: hadessystem.toml malformed")
 
 func (a Alias) Validate() error {
 	s := string(a)
@@ -72,25 +72,25 @@ func isAliasChar(r rune) bool {
 	return false
 }
 
-type zenswarmTOML struct {
+type hadessystemTOML struct {
 	Project struct {
 		ID string `toml:"id"`
 	} `toml:"project"`
 }
 
 // ResolveAlias returns the alias for a project at canonicalPath.
-// 1. If <canonicalPath>/zenswarm.toml exists AND parses AND
+// 1. If <canonicalPath>/hadessystem.toml exists AND parses AND
 // [project] id is set + valid, return that.
 // 2. If TOML parses but no [project] id, fall back to <dirname>-<sha8>.
 // 3. If TOML doesn't exist, fall back to <dirname>-<sha8>.
-// 4. If TOML exists and fails to parse, return ErrZenswarmTOMLMalformed
+// 4. If TOML exists and fails to parse, return ErrHadesSystemTOMLMalformed
 // (do NOT silently fall back — operator misconfig must surface).
 // 5. If [project] id is set but invalid, return ErrAliasInvalid.
 //
 // canonicalPath must exist on disk (ResolveAlias calls ResolveProjectID
 // for the fallback computation, which calls EvalSymlinks).
 func ResolveAlias(canonicalPath string) (Alias, error) {
-	tomlPath := filepath.Join(canonicalPath, "zenswarm.toml")
+	tomlPath := filepath.Join(canonicalPath, "hadessystem.toml")
 	data, err := os.ReadFile(tomlPath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -99,9 +99,9 @@ func ResolveAlias(canonicalPath string) (Alias, error) {
 		}
 		return "", fmt.Errorf("projectctx.ResolveAlias: read %q: %w", tomlPath, err)
 	}
-	var cfg zenswarmTOML
+	var cfg hadessystemTOML
 	if err := toml.Unmarshal(data, &cfg); err != nil {
-		return "", fmt.Errorf("%w: %v", ErrZenswarmTOMLMalformed, err)
+		return "", fmt.Errorf("%w: %v", ErrHadesSystemTOMLMalformed, err)
 	}
 	if cfg.Project.ID == "" {
 		return fallbackAlias(canonicalPath)
@@ -124,7 +124,7 @@ func fallbackAlias(canonicalPath string) (Alias, error) {
 func computeFallbackAlias(dirname string, id ProjectID) Alias {
 	// Sanitize dirname: strip non-alias chars to produce a usable fallback.
 	// We deliberately do NOT validate the result (mv-detection or operator
-	// override via zenswarm.toml is the recovery path); but we keep
+	// override via hadessystem.toml is the recovery path); but we keep
 	// determinism + readability.
 	clean := make([]rune, 0, len(dirname))
 	for _, r := range dirname {

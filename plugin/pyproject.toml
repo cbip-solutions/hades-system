@@ -1,13 +1,13 @@
 # pyproject.toml — pytest configuration anchor for Hermes plugin tests.
 #
-# Why this file lives at ``plugin/`` (not ``plugin/zen-swarm/``):
+# Why this file lives at ``plugin/`` (not ``plugin/hades-system/``):
 # pytest's rootdir is the directory containing the nearest pyproject.toml /
 # pytest.ini / etc. By anchoring rootdir at ``plugin/``, the parent
 # ``plugin/conftest.py`` is in scope for all plugin subdirs and can
 # intercept ``pytest_collect_directory`` to keep individual plugin dirs from
 # being treated as pytest Package nodes.
 #
-# Background: Hermes plugin dirs (e.g. ``plugin/zen-swarm/``) have
+# Background: Hermes plugin dirs (e.g. ``plugin/hades-system/``) have
 # ``__init__.py`` files designed for Hermes' own loader at
 # ``hermes_cli/plugins.py:1030-1065`` — they use relative imports and live in
 # hyphenated directories. Pytest's default Package collection chokes on both

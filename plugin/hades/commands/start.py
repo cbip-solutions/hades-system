@@ -98,7 +98,7 @@ def _daemon_brief() -> str:
     """Check daemon liveness; returns a one-line status."""
     try:
         out = subprocess.run(
-            ["pgrep", "-f", "zen-swarm-ctld"],
+            ["pgrep", "-f", "hades-ctld"],
             capture_output=True,
             text=True,
             timeout=1.0,

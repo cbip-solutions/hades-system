@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package cli — layout.go.
 //
-// `zen layout repaint <alias>` is the operator-invoked recovery primitive:
+// `hades layout repaint <alias>` is the operator-invoked recovery primitive:
 // re-construct the 5 daemon-owned tmux windows (orch / leads / workers /
 // hra / logs) from logical state in daemon.db. Preserves the
-// operator-owned scratch window per invariant.
+// operator-owned scratch window per inv-hades-118.
 //
-// Use case: after `zen day` surfaces a TmuxLayoutDriftDetected event
+// Use case: after `hades day` surfaces a TmuxLayoutDriftDetected event
 // (the drift poller's read-only forensic side-channel — Q6 D), the
 // operator can manually trigger a re-paint to converge the live tmux
 // server back to the daemon's expected layout.
 //
 // Cobra layout:
 //
-// zen layout
+// hades layout
 // repaint <alias> re-construct daemon-owned windows
 //
 // Exit-code mapping (per spec §6.2):
@@ -53,11 +53,11 @@ func NewLayoutCmd(factory LayoutClientFactory) *cobra.Command {
 
 Currently only "repaint" is registered; the namespace is reserved for
 future Plan 7+ recovery primitives (e.g. snapshot, kill-orphaned). The
-canonical workflow is: ` + "`zen day`" + ` surfaces a TmuxLayoutDriftDetected
-event in the inbox, operator runs ` + "`zen layout repaint <alias>`" + ` to
+canonical workflow is: ` + "`hades day`" + ` surfaces a TmuxLayoutDriftDetected
+event in the inbox, operator runs ` + "`hades layout repaint <alias>`" + ` to
 re-construct the daemon-owned windows in place.`,
 		Example: `  # Repaint the daemon-owned windows for a specific session
-  zen layout repaint internal-platform-x`,
+  hades layout repaint internal-platform-x`,
 	}
 	root.AddCommand(newLayoutRepaintCmd(factory))
 	return root
@@ -75,10 +75,10 @@ func newLayoutRepaintCmd(factory LayoutClientFactory) *cobra.Command {
 		Short: "Re-construct daemon-owned windows for a session",
 		Long: `Re-construct the 5 daemon-owned windows (orch, leads, workers, hra,
 logs) for the per-project tmux session bound to <alias>. Preserves the
-operator-owned scratch window (Q6 D + inv-zen-118).
+operator-owned scratch window (Q6 D + inv-hades-118).
 
-Use this after ` + "`zen day`" + ` surfaces a TmuxLayoutDriftDetected event,
-or whenever ` + "`zen sessions ls`" + ` shows a row whose WINDOWS count is
+Use this after ` + "`hades day`" + ` surfaces a TmuxLayoutDriftDetected event,
+or whenever ` + "`hades sessions ls`" + ` shows a row whose WINDOWS count is
 below the expected 5. The repaint is idempotent: running it on a
 session whose layout is already correct is a no-op.
 
@@ -87,7 +87,7 @@ Exit codes:
   1  alias not found
   2  unrecoverable: transport, decode, daemon 5xx, tmux server stuck`,
 		Example: `  # Repaint after drift
-  zen layout repaint internal-platform-x`,
+  hades layout repaint internal-platform-x`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			alias := args[0]

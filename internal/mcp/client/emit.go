@@ -40,7 +40,7 @@ func NewEmitClient(c *Client, bufDir string) *EmitClient {
 		name = "unknown"
 	}
 	bufPath := filepath.Join(bufDir,
-		"zen-mcp-"+name+"-emit-buffer-"+strconv.Itoa(os.Getpid())+".jsonl")
+		"hades-mcp-"+name+"-emit-buffer-"+strconv.Itoa(os.Getpid())+".jsonl")
 	return &EmitClient{c: c, bufDir: bufDir, bufPath: bufPath}
 }
 
@@ -181,7 +181,7 @@ func (ec *EmitClient) DrainBuffer(ctx context.Context) (int, error) {
 }
 
 // DrainAllBuffers scans bufDir for every buffer file produced by THIS
-// MCP (matching pattern `zen-mcp-<MCPName>-emit-buffer-*.jsonl` plus
+// MCP (matching pattern `hades-mcp-<MCPName>-emit-buffer-*.jsonl` plus
 // the `.draining` companion files left by crashed prior drains) and
 // drains each. Designed to be called once at process startup as part
 // of the release (persistence + audit-trail subsystem) recovery hook.
@@ -207,7 +207,7 @@ func (ec *EmitClient) DrainAllBuffers(ctx context.Context, bufDir string) (int, 
 		mcpName = "unknown"
 	}
 
-	pattern := filepath.Join(bufDir, "zen-mcp-"+mcpName+"-emit-buffer-*.jsonl")
+	pattern := filepath.Join(bufDir, "hades-mcp-"+mcpName+"-emit-buffer-*.jsonl")
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
 		return 0, fmt.Errorf("drain-all: glob %q: %w", pattern, err)

@@ -5,7 +5,7 @@
 // spec §6.7 (binary.installed, server.reachable, session.count,
 // drift.count, socket.permissions).
 //
-// invariant anchor: every tmux invocation MUST go through ExecTmux
+// inv-hades-117 anchor: every tmux invocation MUST go through ExecTmux
 // which enforces -S flag (forbids default socket /tmp/tmux-<uid>).
 // The Prober honours this discipline by delegating to the live tmux
 // adapter rather than shelling tmux directly.
@@ -71,11 +71,11 @@ func runTmuxServer(ctx context.Context, p TmuxProber) ProbeResult {
 		r.Status = ProbeFail
 		r.Message = "tmux server not responding"
 		r.Detail = err.Error()
-		r.Hint = "tmux daemon socket /tmp/zen-swarm.sock unresponsive; restart daemon: zen daemon restart"
+		r.Hint = "tmux daemon socket /tmp/hades-system.sock unresponsive; restart daemon: hades daemon restart"
 		return r
 	}
 	r.Status = ProbeOK
-	r.Message = "/tmp/zen-swarm.sock responsive"
+	r.Message = "/tmp/hades-system.sock responsive"
 	return r
 }
 
@@ -106,10 +106,10 @@ func runTmuxDrift(ctx context.Context, p TmuxProber) ProbeResult {
 	switch {
 	case n >= tmuxDriftFailAt:
 		r.Status = ProbeFail
-		r.Hint = "chronic drift suggests drift-poller goroutine wedged; restart daemon: zen daemon restart"
+		r.Hint = "chronic drift suggests drift-poller goroutine wedged; restart daemon: hades daemon restart"
 	case n >= tmuxDriftWarnAt:
 		r.Status = ProbeWarn
-		r.Hint = "drift recovers on next activation per spec §4.1; if persistent: zen sessions ls"
+		r.Hint = "drift recovers on next activation per spec §4.1; if persistent: hades sessions ls"
 	default:
 		r.Status = ProbeOK
 	}
@@ -123,13 +123,13 @@ func runTmuxSocketPerms(ctx context.Context, p TmuxProber) ProbeResult {
 		r.Status = ProbeFail
 		r.Message = "socket permissions query failed"
 		r.Detail = err.Error()
-		r.Hint = "verify daemon running and /tmp/zen-swarm.sock exists; otherwise chmod 0600 /tmp/zen-swarm.sock"
+		r.Hint = "verify daemon running and /tmp/hades-system.sock exists; otherwise chmod 0600 /tmp/hades-system.sock"
 		return r
 	}
 	if mode != tmuxSocketModeMin {
 		r.Status = ProbeFail
 		r.Message = fmt.Sprintf("socket mode = %s (want %s)", mode, tmuxSocketModeMin)
-		r.Hint = "chmod 0600 /tmp/zen-swarm.sock; spec §7.3 mandates owner-only socket access"
+		r.Hint = "chmod 0600 /tmp/hades-system.sock; spec §7.3 mandates owner-only socket access"
 		return r
 	}
 	r.Status = ProbeOK

@@ -66,7 +66,7 @@ lock contention, N+1 queries, unnecessary serialization, blocking calls in hot p
 Diff to review:
 `,
 
-		"doctrine-violation": `You are a doctrine compliance reviewer for the zen-swarm project. Review the following unified diff for violations of the project's max-scope doctrine, invariants, and architectural boundaries. Return ONLY a JSON object with exactly these fields:
+		"doctrine-violation": `You are a doctrine compliance reviewer for the hades-system project. Review the following unified diff for violations of the project's max-scope doctrine, invariants, and architectural boundaries. Return ONLY a JSON object with exactly these fields:
 
 {
   "classification": "<one of: clean, minor, major, reject>",
@@ -78,12 +78,12 @@ Classification guide:
 - clean: no doctrine violations; code is complete, correct, and boundary-respecting
 - minor: style inconsistency (naming, comment missing why) that doesn't break invariants
 - major: stub code (ErrNotImplementedPlanN, panic("not implemented"), TODO implement later),
-  missing test coverage for documented behaviour, or inv-zen-031 boundary leakage
+  missing test coverage for documented behaviour, or inv-hades-031 boundary leakage
 - reject: architectural boundary violation (internal/store imported from bypass/providers/mcp),
-  inv-zen-004 Claude attribution, skipped gate (--no-verify), or max-scope regression
+  inv-hades-004 Claude attribution, skipped gate (--no-verify), or max-scope regression
 
 Check specifically for: incomplete method bodies, missing error propagation, missing WHY comments,
-inv-zen-031 boundary leakage, Claude attribution in commits, missing invariant tests,
+inv-hades-031 boundary leakage, Claude attribution in commits, missing invariant tests,
 single-egress bypass, and Plan N boundary violations.
 
 Diff to review:

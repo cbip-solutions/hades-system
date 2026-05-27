@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package client provides a shared HTTP client library for the four
-// zen-swarm MCP binaries (zen-mcp-research, zen-mcp-budget, zen-mcp-audit,
-// zen-mcp-sshexec) to communicate with the zen-swarm-ctld daemon over a
+// hades-system MCP binaries (hades-mcp-research, hades-mcp-budget, hades-mcp-audit,
+// hades-mcp-sshexec) to communicate with the hades-ctld daemon over a
 // Unix domain socket.
 //
 // Decision Q9 B: MCPs are stdio-canonical processes. They do NOT run an HTTP
@@ -12,20 +12,20 @@
 // plumbing.
 //
 // Security invariants enforced by this package:
-// - invariant: outbound requests from MCPs are restricted to the
+// - inv-hades-085: outbound requests from MCPs are restricted to the
 // daemon Unix socket plus a sealed allowedHosts whitelist
 // (arxiv.org, api.github.com, duckduckgo.com, configurable Firecrawl
 // host). Any request targeting a non-whitelisted host returns
 // ErrHostNotAllowed before network I/O.
-// - invariant: this package NEVER imports internal/store directly.
+// - inv-hades-031: this package NEVER imports internal/store directly.
 // It is a pure MCP-side library.
-// - invariant: audit emit events are never silently discarded.
+// - inv-hades-083: audit emit events are never silently discarded.
 // emit.go writes a local buffer file when the daemon is unreachable;
 // wires full drain-on-restart recovery via the EmitClient.DrainBuffer
 // and EmitClient.DrainAllBuffers methods.
 //
 // Auth the daemon auth token is read once at construction time from
-// ~/.config/zen-swarm/auth-token (or a custom path in Config). The file
+// ~/.config/hades-system/auth-token (or a custom path in Config). The file
 // MUST have mode 0600 or stricter (no group/world bits); New() rejects
 // looser permissions to prevent accidental credential leaks. Every
 // outgoing request carries "Authorization: Bearer <token>".

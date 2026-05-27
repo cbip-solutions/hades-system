@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — providers_extra.go
 //
-// The Keychain-touching `zen providers` subcommands: verify, rotate,
+// The Keychain-touching `hades providers` subcommands: verify, rotate,
 // add, setup. Split from providers.go (list + init) to keep each file
 // focused. All four resolve their config dir via the configDirFunc seam
 // so tests point at a t.TempDir().
@@ -68,7 +68,7 @@ func newProvidersVerifyCmd(dir configDirFunc) *cobra.Command {
 			backend, err := buildBackend(cfg)
 			if err != nil {
 				if errors.Is(err, keychain.ErrNotFound) {
-					return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("providers verify %q: Keychain entry %q not found — provision it with `security add-generic-password -U -s %q -a \"zen-swarm\" -w \"<key>\"`",
+					return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("providers verify %q: Keychain entry %q not found — provision it with `security add-generic-password -U -s %q -a \"hades-system\" -w \"<key>\"`",
 						args[0], cfg.APIKeyKeychain, cfg.APIKeyKeychain))
 				}
 				return ierrors.Wrap(ierrors.Code("daemon.unreachable"), fmt.Errorf("providers verify %q: %w", args[0], err))
@@ -154,8 +154,8 @@ func newProvidersAddCmd(dir configDirFunc) *cobra.Command {
 	cmd.Flags().StringVar(&typ, "type", "", "provider type (anthropic-paygo|gemini|ollama|openai-compat)")
 	cmd.Flags().StringVar(&endpoint, "endpoint", "", "http(s) base URL")
 	cmd.Flags().StringVar(&model, "model", "", "model name")
-	cmd.Flags().StringVar(&family, "family", "", "family key (inv-zen-080)")
-	cmd.Flags().StringVar(&kcRef, "keychain", "", "Keychain service ref (zen-swarm/<provider>)")
+	cmd.Flags().StringVar(&family, "family", "", "family key (inv-hades-080)")
+	cmd.Flags().StringVar(&kcRef, "keychain", "", "Keychain service ref (hades-system/<provider>)")
 	return cmd
 }
 
@@ -169,14 +169,14 @@ func newProvidersSetupCmd(dir configDirFunc) *cobra.Command {
 			out := cmd.OutOrStdout()
 			if _, err := os.Stat(providersPath); errors.Is(err, os.ErrNotExist) {
 				fmt.Fprintln(out, "no providers.toml found.")
-				fmt.Fprintln(out, "step 1: run `zen providers init` to materialize the roster template")
+				fmt.Fprintln(out, "step 1: run `hades providers init` to materialize the roster template")
 			} else {
 				fmt.Fprintf(out, "providers.toml present at %s\n", providersPath)
 			}
 			fmt.Fprintln(out, "step 2: edit each [[providers]] endpoint to the provider's real base URL")
 			fmt.Fprintln(out, "step 3: provision each Keychain key:")
-			fmt.Fprintln(out, "        security add-generic-password -U -s \"zen-swarm/<provider>\" -a \"zen-swarm\" -w \"<key>\"")
-			fmt.Fprintln(out, "step 4: run `zen providers verify <name>` per provider to confirm")
+			fmt.Fprintln(out, "        security add-generic-password -U -s \"hades-system/<provider>\" -a \"hades-system\" -w \"<key>\"")
+			fmt.Fprintln(out, "step 4: run `hades providers verify <name>` per provider to confirm")
 			return nil
 		},
 	}

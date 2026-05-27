@@ -1,6 +1,6 @@
 # internal/doctrine/builtin/capa-firewall.toml
 #
-# zen-swarm built-in doctrine: capa-firewall.
+# hades-system built-in doctrine: capa-firewall.
 #
 # Doctrine principle: Pulido-strict. The most conservative doctrine —
 # optimized for high-stakes work where false-negatives are catastrophic
@@ -8,9 +8,9 @@
 # documents-don't-decide research workflows). Every hard guard enforced.
 #
 # Hard guards (cannot be relaxed without operator amendment + ADR):
-# - auto_upgrade = "none" (invariant generalized — capa-firewall NEVER
+# - auto_upgrade = "none" (inv-hades-100 generalized — capa-firewall NEVER
 #   auto-upgrades; only the operator may bump versions via explicit
-#   `zen doctrine migrate --confirm`)
+#   `hades doctrine migrate --confirm`)
 # - autonomy.mode = "assisted" (operator gates ALL substantive decisions)
 # - autonomy.voting.plurality_threshold_pct = 100 (full consensus required;
 #   no early-stop)
@@ -27,10 +27,10 @@
 
 schema_version = "1.0"
 doctrine_version = "1.0.0"
-auto_upgrade = "none"     # HARD GUARD — invariant generalized
+auto_upgrade = "none"     # HARD GUARD — inv-hades-100 generalized
 
 # ──────────────────────────────────────────────────────────────────────────
-# Doctrine transverse axioms — Q3 C Tier 1 + invariant
+# Doctrine transverse axioms — Q3 C Tier 1 + inv-hades-135
 # ──────────────────────────────────────────────────────────────────────────
 
 [doctrine_transverse]
@@ -178,13 +178,13 @@ urgent_bypasses_quiet_hours = true
 info_immediate_during_quiet = "deliver"
 
 # ──────────────────────────────────────────────────────────────────────────
-# zen day cadence — the release design Q13 C (R5)
+# hades day cadence — the release design Q13 C (R5)
 # capa-firewall: daily 7-day; tight 1h catch-up reflects scoped-context
 # philosophy (every workday + weekend gets brief; 1h catch-up enforces
 # fresh-state).
 # ──────────────────────────────────────────────────────────────────────────
 
-[zen_day_cadence]
+[hades_day_cadence]
 # release track R5 ack — capa-firewall: daily 7-day; tight 1h catch-up.
 morning_brief_cron = "0 9 * * 1-7"
 morning_brief_if_within_hours = 1
@@ -236,25 +236,25 @@ overcommit_policy = "reject"
 
 [knowledge]
 hive_doc_cadence_hours = 6
-obsidian_vault_path = "~/Obsidian/zen-swarm-capa-firewall"
+obsidian_vault_path = "~/Obsidian/hades-system-capa-firewall"
 cross_project_aggregator_enabled = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + invariant)
+# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + inv-hades-084)
 # capa-firewall: caronte code-graph tools + research_agentic denied per spec
 # §1 Q3 (capa-firewall augmentation disabled). Operator-tunable extension.
 # ──────────────────────────────────────────────────────────────────────────
 
 [gateway]
 disabled_tools = [
-    "mcp_zen-swarm_caronte_query",
-    "mcp_zen-swarm_caronte_context",
-    "mcp_zen-swarm_caronte_impact",
-    "mcp_zen-swarm_research_agentic",
+    "mcp_hades-system_caronte_query",
+    "mcp_hades-system_caronte_context",
+    "mcp_hades-system_caronte_impact",
+    "mcp_hades-system_research_agentic",
 ]
 
 # ──────────────────────────────────────────────────────────────────────────
-# Augmentation — the release design release track HARD GUARD per invariant.
+# Augmentation — the release design release track HARD GUARD per inv-hades-170.
 # capa-firewall: augmentation DISABLED by default; max_kg_tokens=0.
 # 500ms timeout (lowest); forbidden cross-project scope.
 # ──────────────────────────────────────────────────────────────────────────
@@ -272,7 +272,7 @@ cross_project_scope = "forbidden"
 # voice, web all DISABLED (third-party leak risk + audible exposure).
 # voice_tts_enabled=false is the fast-path guard for audit-chain rejection.
 # Replaces hardcoded _DOCTRINE_ENABLED matrix in
-# plugin/zen-swarm/renderers/__init__.py.
+# plugin/hades-system/renderers/__init__.py.
 # ──────────────────────────────────────────────────────────────────────────
 
 [renderers]

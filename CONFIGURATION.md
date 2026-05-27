@@ -8,15 +8,15 @@ doctor output until the operator wires the desired backends.
 
 | Surface | Default Path | Purpose |
 | --- | --- | --- |
-| Global config | `$XDG_CONFIG_HOME/zen-swarm/config.toml` or `~/.config/zen-swarm/config.toml` | Setup choices: selected provider, doctrine, Hermes scope. |
-| Provider configs | `$XDG_CONFIG_HOME/zen-swarm/providers/<name>.toml` | Provider-specific setup written by onboarding flows. |
-| Provider roster | `$XDG_CONFIG_HOME/zen-swarm/providers.toml` | `[[providers]]` entries consumed by the daemon registry. |
-| Profile roster | `$XDG_CONFIG_HOME/zen-swarm/profiles.toml` | Role-to-provider cascade mapping. |
-| Project roster | `$XDG_CONFIG_HOME/zen-swarm/projects.toml` | Known projects and per-project orchestrator overrides. |
-| Checkout override | `<repo>/.zen-swarm.toml` | Highest-priority per-checkout provider profile/cascade override. |
+| Global config | `$XDG_CONFIG_HOME/hades-system/config.toml` or `~/.config/hades-system/config.toml` | Setup choices: selected provider, doctrine, Hermes scope. |
+| Provider configs | `$XDG_CONFIG_HOME/hades-system/providers/<name>.toml` | Provider-specific setup written by onboarding flows. |
+| Provider roster | `$XDG_CONFIG_HOME/hades-system/providers.toml` | `[[providers]]` entries consumed by the daemon registry. |
+| Profile roster | `$XDG_CONFIG_HOME/hades-system/profiles.toml` | Role-to-provider cascade mapping. |
+| Project roster | `$XDG_CONFIG_HOME/hades-system/projects.toml` | Known projects and per-project orchestrator overrides. |
+| Checkout override | `<repo>/.hades-system.toml` | Highest-priority per-checkout provider profile/cascade override. |
 | Sidecars | `$XDG_CONFIG_HOME/hades/sidecars.toml` or `~/.config/hades/sidecars.toml` | Optional loopback-only Tier 1 sidecar registration. |
-| Daemon state | `$XDG_STATE_HOME/zen-swarm/` or `~/.local/state/zen-swarm/` | Runtime state, backups, federation DB, and related daemon files. |
-| Daemon socket | `/tmp/zen-swarm.sock` | Default local socket used by CLI and plugin surfaces. |
+| Daemon state | `$XDG_STATE_HOME/hades-system/` or `~/.local/state/hades-system/` | Runtime state, backups, federation DB, and related daemon files. |
+| Daemon socket | `/tmp/hades-system.sock` | Default local socket used by CLI and plugin surfaces. |
 | Hermes config | `~/.hermes/config.yaml` | Hermes plugin and MCP process registration. |
 
 ## Environment Variables
@@ -25,16 +25,16 @@ doctor output until the operator wires the desired backends.
 | --- | --- |
 | `XDG_CONFIG_HOME` | Overrides the config root used by HADES and Hermes helpers. |
 | `XDG_STATE_HOME` | Overrides the daemon state root. |
-| `ZEN_STATE_DIR` | Overrides the daemon state root for HADES-managed state, including `zen-swarm/workspace.db`. |
-| `ZEN_DAEMON_UDS` | Overrides the socket path used by the `hades` wrapper liveness probe. |
-| `ZEN_SWARM_UDS` | Overrides the socket path used by plugin status and event surfaces. |
-| `ZEN_DAEMON_SOCKET` | Fallback socket variable used by Hermes MCP and hook transports. |
-| `ZEN_SSH_KNOWN_HOSTS` | Explicit `known_hosts` file for SSH MCP host-key verification. |
-| `ZEN_SSH_INSECURE_TEST` | Test-only fake-SSH escape hatch; do not use for real hosts. |
+| `HADES_STATE_DIR` | Overrides the daemon state root for HADES-managed state, including `hades-system/workspace.db`. |
+| `HADES_DAEMON_UDS` | Overrides the socket path used by local liveness probes. |
+| `HADES_SYSTEM_UDS` | Overrides the socket path used by plugin status and event surfaces. |
+| `HADES_DAEMON_SOCKET` | Fallback socket variable used by Hermes MCP and hook transports. |
+| `HADES_SSH_KNOWN_HOSTS` | Explicit `known_hosts` file for SSH MCP host-key verification. |
+| `HADES_SSH_INSECURE_TEST` | Test-only fake-SSH escape hatch; do not use for real hosts. |
 | `HADES_NO_WIZARD` | Suppresses first-run Hermes wizard launch when set by the wrapper or operator. |
-| `ZEN_HOOK_DRY_RUN` | Test-only hook dry-run path for plugin hook tests. |
-| `ZEN_MCP_DRAIN_TIMEOUT` | MCP shutdown drain timeout override for controlled process tests. |
-| `ZEN_LOG_DIR` | Log directory override for MCP processes that need file logging. |
+| `HADES_HOOK_DRY_RUN` | Test-only hook dry-run path for plugin hook tests. |
+| `HADES_MCP_DRAIN_TIMEOUT` | MCP shutdown drain timeout override for controlled process tests. |
+| `HADES_LOG_DIR` | Log directory override for MCP processes that need file logging. |
 
 ## Global Config
 
@@ -158,13 +158,13 @@ as a hard startup or routing problem.
 ## Hermes And MCP Wiring
 
 Hermes uses `~/.hermes/config.yaml`. The HADES plugin and MCP entries should
-point at the local daemon socket through `ZEN_DAEMON_SOCKET` when possible.
+point at the local daemon socket through `HADES_DAEMON_SOCKET` when possible.
 Run:
 
 ```bash
 bin/hades doctor
-bin/zen doctor mcps
-bin/zen doctor hermes
+bin/hades doctor mcps
+bin/hades doctor hermes
 ```
 
 Use doctor output as the source of truth for missing binaries, socket mismatch,
@@ -174,10 +174,10 @@ plugin installation drift, and MCP reachability.
 
 ```bash
 bin/hades status
-bin/zen doctor
-bin/zen providers list
-bin/zen doctor sidecars
-bin/zen doctor caronte
+bin/hades doctor
+bin/hades providers list
+bin/hades doctor sidecars
+bin/hades doctor caronte
 ```
 
 For release or distribution work, also run the clean-build checks documented in

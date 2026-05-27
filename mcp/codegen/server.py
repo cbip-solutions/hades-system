@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Zen-Swarm codegen MCP server.
+"""HADES System codegen MCP server.
 
 The single path through which source code is produced. Routes requests to
 DeepSeek / GLM / Kimi / local-MLX based on policy. Writes files itself
@@ -41,10 +41,10 @@ CONFIG_PATH = Path(
 )
 SECRETS_PATH = Path(
     os.environ.get("CODEGEN_SECRETS",
-                   str(Path.home() / ".config/zen-swarm/secrets.env"))
+                   str(Path.home() / ".config/hades-system/secrets.env"))
 )
 LOG_DIR = Path(
-    os.environ.get("ZEN_LOG_DIR", str(Path.home() / ".local/share/zen-swarm"))
+    os.environ.get("HADES_LOG_DIR", str(Path.home() / ".local/share/hades-system"))
 )
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE = LOG_DIR / "codegen.log"
@@ -250,7 +250,7 @@ def write_safely(path: Path, content: str) -> None:
 # MCP server
 # ─────────────────────────────────────────────────────────────────────────────
 
-mcp = FastMCP("zen-swarm-codegen")
+mcp = FastMCP("hades-system-codegen")
 
 
 @mcp.tool()

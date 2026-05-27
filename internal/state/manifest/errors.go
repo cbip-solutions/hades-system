@@ -26,9 +26,9 @@ var (
 
 	ErrAutoSourceUnavailable = errors.New("manifest: auto-source unavailable")
 
-	ErrFreshnessExceeded = errors.New("manifest: freshness threshold exceeded (inv-zen-149)")
+	ErrFreshnessExceeded = errors.New("manifest: freshness threshold exceeded (inv-hades-149)")
 
-	ErrDiffMismatch = errors.New("manifest: regenerate-and-diff mismatch (inv-zen-151)")
+	ErrDiffMismatch = errors.New("manifest: regenerate-and-diff mismatch (inv-hades-151)")
 
 	// ErrEventEmissionFailed is returned when the chain integration call
 	// fails; manual change MUST be reverted (no silent state divergence).

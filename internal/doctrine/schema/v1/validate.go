@@ -58,7 +58,7 @@ type TransverseMutationViolation struct {
 }
 
 func (e *TransverseMutationViolation) Error() string {
-	return fmt.Sprintf("doctrine: transverse axioms mutated; got %+v want %+v (inv-zen-135)", e.Got, TransverseExpected())
+	return fmt.Sprintf("doctrine: transverse axioms mutated; got %+v want %+v (inv-hades-135)", e.Got, TransverseExpected())
 }
 
 func (e *TransverseMutationViolation) Is(target error) bool { return target == ErrValidationFailed }
@@ -199,11 +199,11 @@ func validateRanges(s *Schema) []error {
 		add(&RangeViolation{Field: "Merge.MaxCandidates", Got: s.Merge.MaxCandidates, MinAllow: 1, Reason: "at least one candidate"})
 	}
 
-	if s.ZenDayCadence.MorningBriefIfWithinHours < 0 {
-		add(&RangeViolation{Field: "ZenDayCadence.MorningBriefIfWithinHours", Got: s.ZenDayCadence.MorningBriefIfWithinHours, MinAllow: 0, Reason: "non-negative"})
+	if s.HadesDayCadence.MorningBriefIfWithinHours < 0 {
+		add(&RangeViolation{Field: "HadesDayCadence.MorningBriefIfWithinHours", Got: s.HadesDayCadence.MorningBriefIfWithinHours, MinAllow: 0, Reason: "non-negative"})
 	}
-	if s.ZenDayCadence.EODDigestIfWithinHours < 0 {
-		add(&RangeViolation{Field: "ZenDayCadence.EODDigestIfWithinHours", Got: s.ZenDayCadence.EODDigestIfWithinHours, MinAllow: 0, Reason: "non-negative"})
+	if s.HadesDayCadence.EODDigestIfWithinHours < 0 {
+		add(&RangeViolation{Field: "HadesDayCadence.EODDigestIfWithinHours", Got: s.HadesDayCadence.EODDigestIfWithinHours, MinAllow: 0, Reason: "non-negative"})
 	}
 
 	if s.Quota.MaxConcurrentTasks < 1 {

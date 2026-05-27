@@ -24,7 +24,7 @@ var randRead = rand.Read
 //
 // Security invariant: only the hash is persisted in
 // daemon.db.bearer_token_hash. The raw token is surfaced to the
-// operator EXACTLY ONCE in the `zen schedule routine create` CLI
+// operator EXACTLY ONCE in the `hades schedule routine create` CLI
 // response and never again — never logged, never persisted, never
 // echoed to disk by the daemon. Loss of the raw token requires a
 // rotation (delete + recreate the routine) per spec §1 Q8.

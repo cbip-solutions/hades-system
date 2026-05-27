@@ -22,7 +22,7 @@ import (
 	"time"
 )
 
-const defaultFetchUserAgent = "zen-swarm/0.14.0"
+const defaultFetchUserAgent = "hades-system/0.14.0"
 
 type FetchOptions struct {
 	ForceRefresh bool

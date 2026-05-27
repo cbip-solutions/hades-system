@@ -6,7 +6,7 @@
 // (DECISION L-3: the GitnexusClient interface name is retained as the stable
 // drop-in contract — do NOT rename it).
 //
-// Boundary: this file imports ONLY internal/mcp/client.
+// Boundary (inv-hades-031): this file imports ONLY internal/mcp/client.
 // The daemon is the sole binary that imports internal/caronte. The research
 // MCP reaches caronte exclusively over the daemon HTTP API.
 //

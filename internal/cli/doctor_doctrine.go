@@ -41,7 +41,7 @@
 // Each check has its own pure function (context.Context, *client.Client)
 // CheckResult and a 3-second timeout. NO STUBS: every function returns a
 // real CheckResult derived from a real source. Failure-mode CheckResults
-// have explicit Hint strings pointing to the zen doctrine subcommand the
+// have explicit Hint strings pointing to the hades doctrine subcommand the
 // operator runs to diagnose.
 package cli
 
@@ -101,14 +101,14 @@ func checkDoctrineActiveResolves(ctx context.Context, c *client.Client) CheckRes
 		return CheckResult{
 			Name: "doctrine.active.resolves", Status: "fail",
 			Detail: err.Error(),
-			Hint:   "daemon /v1/doctrine/active unreachable; run zen doctor daemon",
+			Hint:   "daemon /v1/doctrine/active unreachable; run hades doctor daemon",
 		}
 	}
 	if resp.Name == "" {
 		return CheckResult{
 			Name: "doctrine.active.resolves", Status: "warn",
 			Detail: "active doctrine has no name",
-			Hint:   "check doctrine loader; run zen doctrine list",
+			Hint:   "check doctrine loader; run hades doctrine list",
 		}
 	}
 	if resp.SchemaVersion != schema.CurrentSchemaVersion {
@@ -116,7 +116,7 @@ func checkDoctrineActiveResolves(ctx context.Context, c *client.Client) CheckRes
 			Name: "doctrine.active.resolves", Status: "warn",
 			Detail: fmt.Sprintf("active=%s; schema_version=%s; want %s",
 				resp.Name, resp.SchemaVersion, schema.CurrentSchemaVersion),
-			Hint: "rebuild HADES or run zen doctrine migrate",
+			Hint: "rebuild HADES or run hades doctrine migrate",
 		}
 	}
 	return CheckResult{
@@ -173,7 +173,7 @@ func checkDoctrineOverridesPerProjectHealthy(ctx context.Context, c *client.Clie
 		return CheckResult{
 			Name: "doctrine.overrides.per-project.healthy", Status: "fail",
 			Detail: err.Error(),
-			Hint:   "daemon /v1/doctrine/list unreachable; run zen doctrine list to diagnose",
+			Hint:   "daemon /v1/doctrine/list unreachable; run hades doctrine list to diagnose",
 		}
 	}
 	var projectCount int
@@ -192,7 +192,7 @@ func checkDoctrineOverridesPerProjectHealthy(ctx context.Context, c *client.Clie
 			Name: "doctrine.overrides.per-project.healthy", Status: "fail",
 			Detail: fmt.Sprintf("%d invalid project overrides: %s",
 				len(invalid), strings.Join(invalid, "; ")),
-			Hint: "run zen doctrine validate <override-path> for each invalid; fix tighten violations",
+			Hint: "run hades doctrine validate <override-path> for each invalid; fix tighten violations",
 		}
 	}
 	return CheckResult{
@@ -215,7 +215,7 @@ func checkDoctrineReloadWatcherHealthy(ctx context.Context, c *client.Client) Ch
 		return CheckResult{
 			Name: "doctrine.reload.watcher.healthy", Status: "fail",
 			Detail: "watcher reports unhealthy (likely fsnotify queue overflow or stalled)",
-			Hint:   "run zen doctrine reload --path <doctrine-toml-path> to manually trigger",
+			Hint:   "run hades doctrine reload --path <doctrine-toml-path> to manually trigger",
 		}
 	}
 	if resp.LastReloadAt != "" && !resp.LastReloadOk {
@@ -223,7 +223,7 @@ func checkDoctrineReloadWatcherHealthy(ctx context.Context, c *client.Client) Ch
 			Name: "doctrine.reload.watcher.healthy", Status: "warn",
 			Detail: fmt.Sprintf("watcher healthy but last reload at %s failed",
 				resp.LastReloadAt),
-			Hint: "check zen doctrine history --filter reload to investigate",
+			Hint: "check hades doctrine history --filter reload to investigate",
 		}
 	}
 	detail := "healthy"
@@ -255,7 +255,7 @@ func checkDoctrineTelemetrySubscriberHealthy(ctx context.Context, c *client.Clie
 		return CheckResult{
 			Name: "doctrine.telemetry.subscriber.healthy", Status: "warn",
 			Detail: fmt.Sprintf("%d autonomous reverts in last 24h", reverts),
-			Hint:   "run zen doctrine history --filter reverted to investigate",
+			Hint:   "run hades doctrine history --filter reverted to investigate",
 		}
 	}
 	return CheckResult{
@@ -288,7 +288,7 @@ func checkDoctrineLintAnalyzersRegistered(_ context.Context, _ *client.Client) C
 			Name: "doctrine.lint.analyzers.registered", Status: "fail",
 			Detail: fmt.Sprintf("%d analyzers missing Name: %s",
 				len(missing), strings.Join(missing, ", ")),
-			Hint: "rebuild cmd/zen-doctrine-lint; check Phase L analyzer registration",
+			Hint: "rebuild cmd/hades-doctrine-lint; check Phase L analyzer registration",
 		}
 	}
 	return CheckResult{
@@ -318,7 +318,7 @@ func checkDoctrineSchemaMigrationStatus(ctx context.Context, c *client.Client) C
 			Name: "doctrine.schema.migration.status", Status: "warn",
 			Detail: fmt.Sprintf("current=%s; %d doctrines need migration: %s",
 				schema.CurrentSchemaVersion, len(pending), strings.Join(pending, ", ")),
-			Hint: "run zen doctrine migrate <path> --confirm for each pending",
+			Hint: "run hades doctrine migrate <path> --confirm for each pending",
 		}
 	}
 	return CheckResult{
@@ -390,7 +390,7 @@ func checkDoctrineAmendmentsPending(ctx context.Context, c *client.Client) Check
 		return CheckResult{
 			Name: "doctrine.amendments.pending", Status: "warn",
 			Detail: fmt.Sprintf("%d pending: %s", len(pending), strings.Join(pending, ", ")),
-			Hint:   "run zen doctrine ack <adr_id> or zen doctrine deny <adr_id> for each",
+			Hint:   "run hades doctrine ack <adr_id> or hades doctrine deny <adr_id> for each",
 		}
 	}
 	return CheckResult{
@@ -450,12 +450,12 @@ func checkDoctrineTransverseAxiomsHardcoded(_ context.Context, _ *client.Client)
 			Name: "doctrine.transverse.axioms.hardcoded", Status: "fail",
 			Detail: fmt.Sprintf("%d axioms missing: %s",
 				len(missing), strings.Join(missing, ", ")),
-			Hint: "Phase A transverse.go regression; check inv-zen-135 enforcement",
+			Hint: "Phase A transverse.go regression; check inv-hades-135 enforcement",
 		}
 	}
 
 	return CheckResult{
 		Name: "doctrine.transverse.axioms.hardcoded", Status: "ok",
-		Detail: fmt.Sprintf("4 axioms hardcoded operator-only: no_tech_debt, no_stubs, build_final_product, no_defer (per inv-zen-135)"),
+		Detail: fmt.Sprintf("4 axioms hardcoded operator-only: no_tech_debt, no_stubs, build_final_product, no_defer (per inv-hades-135)"),
 	}
 }

@@ -401,11 +401,11 @@ func mapGeminiStopReason(r string) string {
 	}
 }
 
-// keychainAccount is the account component of every zen-swarm Keychain
+// keychainAccount is the account component of every hades-system Keychain
 // entry — the form documented in HANDOFF
-// (security add-generic-password -s "zen-swarm/<provider>" -a "zen-swarm").
+// (security add-generic-password -s "hades-system/<provider>" -a "hades-system").
 // Backend constructors pass it to keychain.Resolver.Lookup.
-const keychainAccount = "zen-swarm"
+const keychainAccount = "hades-system"
 
 func capBody(body []byte) string {
 	if len(body) > 512 {

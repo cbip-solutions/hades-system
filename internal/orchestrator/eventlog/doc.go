@@ -10,14 +10,14 @@
 //
 // Boundaries (lint-enforced):
 //
-// invariant internal/orchestrator/* MUST NOT import internal/store.
+// inv-hades-089 internal/orchestrator/* MUST NOT import internal/store.
 // Bridge via internal/daemon/orchestratoradapter/.
 //
-// invariant internal/orchestrator/eventlog/ MUST NOT import
+// inv-hades-090 internal/orchestrator/eventlog/ MUST NOT import
 // internal/workforce/queue/. The event log records
 // STATE; the queues carry MESSAGES. Substrate separation.
 //
-// invariant Replay tolerates at most 5 corrupted events per session
+// inv-hades-095 Replay tolerates at most 5 corrupted events per session
 // (each emits ReplayCorruptionDetected). On the 6th, the
 // replay halts and the orchestrator transitions HARD_PAUSED
 // (driven by the caller; Replay returns ErrCorruptionBudget
@@ -27,7 +27,7 @@
 // categories. release G-2 added 2 (43-44); G-4 added 1 (45); G-6 added
 // 2 (46-47); H-8 added 1 (48); I-5 added 1 (49); J-2 wired 3 (40-42);
 // K-7 added 1 (50). release F-1 added 1 (51, EvtHandoffPosted) for the
-// /handoff slash command + zen day --eod integration.
+// /handoff slash command + hades day --eod integration.
 // internal design record §4.6.
 // Slots 71-91 are reserved for future plans; next free integer is 100.
 //
@@ -68,13 +68,13 @@
 // defines the wire schema; release redact + adapter
 // connect emitters to the storage layer.
 //
-// The compile-check below ensures invariant wiring at package init time.
+// The compile-check below ensures inv-hades-090 wiring at package init time.
 package eventlog
 
 // substrateSeparated is a compile-time marker that this package compiles
 // without importing internal/workforce/queue. Removing the line below
 // MUST NOT cause a missing import; if a future contributor accidentally
-// imports queue, the invariant compliance test fails.
+// imports queue, the inv-hades-090 compliance test fails.
 var _ = substrateSeparated()
 
 func substrateSeparated() bool { return true }

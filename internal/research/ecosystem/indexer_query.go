@@ -22,7 +22,7 @@ import (
 // legs per ecosystem (the other is FTS5Top200); the two result sets
 // are RRF-fused and re-ranked downstream.
 //
-// CRITICAL wire-format invariant:
+// CRITICAL wire-format invariant (inv-hades-203, C-3 inheritance):
 // queryEmbBin MUST be wrapped as `vec_bit(?)` in the SQL MATCH
 // clause — sqlite-vec BIT[N] virtual tables REJECT raw `?` bindings
 // with "Inserted vector for the embedding column is expected to be

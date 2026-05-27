@@ -26,7 +26,7 @@
 // registry.InvalidateAll() after the atomic-swap so the next request observes the
 // new threshold (no stale capacity cached forever).
 //
-// invariant: Unix socket is the transport layer; rate limiter is an additional
+// inv-hades-001: Unix socket is the transport layer; rate limiter is an additional
 // per-endpoint guard (defense-in-depth).
 package handlers
 
@@ -184,7 +184,7 @@ func RateLimitMiddleware(ctx RateLimitCtx, registry *BucketRegistry, endpoint st
 				retryMs = 1
 			}
 			w.Header().Set("Retry-After", fmt.Sprintf("%d", retryMs))
-			w.Header().Set("X-Zen-Rate-Limit-Endpoint", endpoint)
+			w.Header().Set("X-HADES-Rate-Limit-Endpoint", endpoint)
 			writeJSON(w, http.StatusTooManyRequests, map[string]string{
 				"error":       "rate limit exceeded",
 				"endpoint":    endpoint,

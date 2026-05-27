@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package cli — knowledge_remote.go.
 //
-// RunKnowledgeQueryRemote implements `zen knowledge query --remote`. Called
+// RunKnowledgeQueryRemote implements `hades knowledge query --remote`. Called
 // from RunKnowledgeQuery when flags.Remote=true. Dispatches to the daemon's
 // POST /v1/knowledge/ecosystem/query endpoint, which routes through the
 //
-// invariant amendment: --remote is NOW OPERATIONAL.
+// inv-hades-129 amendment: --remote is NOW OPERATIONAL.
 // The sentinel short-circuit previously rendered a deferred-message
 // pointer; it is replaced by a live round-trip to the daemon. The
-// invariant boundary is preserved by routing distinction:
+// inv-hades-129 boundary is preserved by routing distinction:
 // - --remote=true → ecosystem RAG over ingested corpus
 // (daemon-side Dispatcher; no open-web queries from the daemon).
 // - --remote=false → release aggregator (FTS5 over local docs;

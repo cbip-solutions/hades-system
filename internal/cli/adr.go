@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr.go.
 //
-// `zen adr` is the release operator surface for the ADR machine-readable
+// `hades adr` is the release operator surface for the ADR machine-readable
 // index (spec §6.1 Q7 A). Ten leaves cover the full ADR lifecycle:
 //
 // propose <topic> — draft + $EDITOR + daemon commit [I-6]
@@ -15,7 +15,7 @@
 // migrate — one-time 39-ADR frontmatter import [I-8]
 // index [--check] — dual manifest regenerate / CI gate [I-8]
 //
-// invariant: accept / reject / supersede MUST require non-empty --reason.
+// inv-hades-146: accept / reject / supersede MUST require non-empty --reason.
 // Cross-cutting compliance test in reason_flag_test.go (I-12).
 //
 // Wire types: client.ADR, client.ADRGraph, client.ADRGraphNode,
@@ -33,7 +33,7 @@ func NewAdrCmd() *cobra.Command {
 		Short: "ADR machine-readable index (Plan 9)",
 		Long: `Plan 9 ADR surface. Structured MADR YAML frontmatter + JSON Schema
 validator + dual JSON manifest emitter (_index.json + _graph.json).
-Transitions (accept | reject | supersede) require --reason (inv-zen-146)
+Transitions (accept | reject | supersede) require --reason (inv-hades-146)
 and emit Plan 8 events anchored on Plan 9 chain.
 
 Ten leaves:
@@ -42,17 +42,17 @@ Ten leaves:
   ls         Filter list by status / plan / risk-level
   graph      Supersede chain ASCII tree
   history    Transition log for one ADR
-  accept     Mark accepted (--reason mandatory; inv-zen-146)
-  reject     Mark rejected (--reason mandatory; inv-zen-146)
-  supersede  Link old→new chain (--reason mandatory; inv-zen-146)
+  accept     Mark accepted (--reason mandatory; inv-hades-146)
+  reject     Mark rejected (--reason mandatory; inv-hades-146)
+  supersede  Link old→new chain (--reason mandatory; inv-hades-146)
   migrate    One-time: parse 39 legacy headers → MADR frontmatter
   index      Regenerate dual manifest; --check for CI gate`,
-		Example: `  zen adr propose tessera-batch-cadence-tuning
-  zen adr show ADR-0042
-  zen adr ls --status proposed --plan plan-9
-  zen adr graph --from ADR-0001 --depth 3
-  zen adr accept ADR-0070 --reason "Q4 B approved"
-  zen adr index --check`,
+		Example: `  hades adr propose tessera-batch-cadence-tuning
+  hades adr show ADR-0042
+  hades adr ls --status proposed --plan plan-9
+  hades adr graph --from ADR-0001 --depth 3
+  hades adr accept ADR-0070 --reason "Q4 B approved"
+  hades adr index --check`,
 	}
 	cmd.AddCommand(adrProposeCmd())
 	cmd.AddCommand(adrShowCmd())

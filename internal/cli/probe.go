@@ -190,16 +190,16 @@ type StateProber interface {
 // §5 doctor surface example) is:
 //
 // ecosystem.{go,python,typescript,rust}.db_size per-ecosystem DB size on disk
-// ecosystem.budget invariant 4-state classification
+// ecosystem.budget inv-hades-199 4-state classification
 // ecosystem.cas_blobs_shared release F CAS dedup count + total size
 // ecosystem.last_upstream_poll last 6h cron upstream-poll timestamp
 // ecosystem.last_weekly_sweep last Sunday 03:00 integrity sweep
-// ecosystem.cron.pid zen-docs-cron worker PID (or "not running")
+// ecosystem.cron.pid hades-docs-cron worker PID (or "not running")
 // ecosystem.symbol_index.count in-memory symbol-existence set cardinality × 4 eco
 // ecosystem.symbol_index.last_rebuild last weekly symbol-index rebuild timestamp
 // ecosystem.verifier.{go,python,npm,cargo} live cmd reachable + non-empty response
 //
-// Inv-zen-031 boundary: implementations live in the daemon or in a CLI shim
+// Inv-hades-031 boundary: implementations live in the daemon or in a CLI shim
 // that consumes the daemon HTTP surface — never in internal/cli directly.
 type EcosystemProber interface {
 	Probe(ctx context.Context) []ProbeResult
@@ -267,7 +267,7 @@ func runDaemonReachable(ctx context.Context, deps DoctorDeps) []ProbeResult {
 			Status:  ProbeFail,
 			Message: "unreachable",
 			Detail:  err.Error(),
-			Hint:    "run: zen daemon start",
+			Hint:    "run: hades daemon start",
 		}}
 	}
 	return []ProbeResult{{

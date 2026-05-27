@@ -13,7 +13,7 @@ Query HADES daemon for the current phase of `{feature_name}`:
 ## 1. Query daemon
 
 ```bash
-PHASE=$(curl --unix-socket /tmp/zen-swarm.sock -s \\
+PHASE=$(curl --unix-socket /tmp/hades-system.sock -s \\
              "http://unix/v1/swarms?feature={feature_name}" \\
              | jq -r '.swarms[0].phase')
 ```
@@ -24,15 +24,15 @@ PHASE=$(curl --unix-socket /tmp/zen-swarm.sock -s \\
 
 Re-enter doc-live mode:
 <!-- the release design — pending endpoint registration: swarm conversation history (GET); the release design swarm substrate ships but conversation log endpoint awaits the release design -->
-- Load conversation history from daemon: `curl --unix-socket /tmp/zen-swarm.sock -s "http://unix/v1/swarms/<id>/conversation"`
+- Load conversation history from daemon: `curl --unix-socket /tmp/hades-system.sock -s "http://unix/v1/swarms/<id>/conversation"`
 - Continue the wizard / live-edit loop where operator left off
 - Render any file diffs since session pause
 
 ### Phase = "applying"
 
 Stream SSE events:
-<!-- the release design — pending endpoint registration: swarm SSE event stream awaits the release design 'zen migrate' -->
-- `curl --unix-socket /tmp/zen-swarm.sock --no-buffer "http://unix/v1/swarms/<id>/events"`
+<!-- the release design — pending endpoint registration: swarm SSE event stream awaits the release design 'hades migrate' -->
+- `curl --unix-socket /tmp/hades-system.sock --no-buffer "http://unix/v1/swarms/<id>/events"`
 - Surface latest attention items
 - Show progress (tasks complete / tasks in flight / tasks blocked)
 

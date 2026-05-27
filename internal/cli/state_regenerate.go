@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — state_regenerate.go.
 //
-// `zen state regenerate [--dry-run]` calls POST /v1/state/regenerate.
+// `hades state regenerate [--dry-run]` calls POST /v1/state/regenerate.
 // With --dry-run the TOML file is NOT rewritten; a diff of what would
 // change is returned and printed. Without --dry-run the file is atomically
 // rewritten on the daemon side.
@@ -28,8 +28,8 @@ Without --dry-run: atomically rewrites docs/system-state.toml on the daemon side
 
 Sources consulted: go.mod, git tags, doctrine registry, ADR _index.json.
 Manual (pinned) fields are preserved unless explicitly overridden.`,
-		Example: `  zen state regenerate --dry-run   # preview changes
-  zen state regenerate             # write changes`,
+		Example: `  hades state regenerate --dry-run   # preview changes
+  hades state regenerate             # write changes`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			dryRun, _ := cmd.Flags().GetBool("dry-run")
 			ctx, cancel := context.WithTimeout(cmd.Context(), 60*time.Second)

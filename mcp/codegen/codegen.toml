@@ -1,4 +1,4 @@
-# Zen-Swarm codegen MCP — provider catalog and routing policy.
+# HADES System codegen MCP — provider catalog and routing policy.
 # Edit prices and model ids as the ecosystem evolves.
 
 [providers.deepseek]

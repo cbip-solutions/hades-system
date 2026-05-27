@@ -12,7 +12,7 @@ import (
 )
 
 // Indexer composes Validator, WalkAndEmitIndex, and WalkAndEmitGraph into the
-// high-level API consumed by `zen adr index --check`
+// high-level API consumed by `hades adr index --check`
 // and by `make verify-invariants`.
 //
 // Indexer is the single stable entry point for all index-and-diff operations.
@@ -21,7 +21,7 @@ import (
 // production passes time.Now().UTC().Format(time.RFC3339).
 //
 // Boundary Indexer lives in internal/adr/ and MUST NOT import internal/store
-// . It calls only the pure-functional walkers and the Validator
+// (inv-hades-031). It calls only the pure-functional walkers and the Validator
 // defined in this same package.
 type Indexer struct {
 	v     *Validator

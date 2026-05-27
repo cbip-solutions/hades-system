@@ -15,8 +15,8 @@ The reason arg is required. Promotion is a doctrinal YES — moving content from
 
 ```bash
 # Verify knowledge item exists + operator can see it.
-# pending endpoint registration: knowledge item GET; aggregator.Get() awaits zen migrate
-curl --unix-socket /tmp/zen-swarm.sock -s \\
+# pending endpoint registration: knowledge item GET; aggregator.Get() awaits hades migrate
+curl --unix-socket /tmp/hades-system.sock -s \\
      "http://unix/v1/knowledge/{item_id}" \\
      | jq '.'
 ```
@@ -27,7 +27,7 @@ If 404 or privacy-filtered → operator does not have visibility; abort with act
 
 ```bash
 # pending endpoint registration: knowledge promote (POST) anchors aggregator.Promote() via audit chain
-curl --unix-socket /tmp/zen-swarm.sock \\
+curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
      -d '{{"reason":"{reason}"}}' \\
@@ -49,7 +49,7 @@ Expected response:
 ```
 Knowledge item {item_id} promoted to global.
 Reason: {reason}
-Audit event: zen://audit/<audit_event_id>
+Audit event: hades://audit/<audit_event_id>
 Promoted at: <promoted_at>
 Visible to: <list of projects per doctrine>
 ```
@@ -58,7 +58,7 @@ Visible to: <list of projects per doctrine>
 
 If operator changes mind:
 ```
-zen knowledge unpromote {item_id} --reason "..."
+hades knowledge unpromote {item_id} --reason "..."
 ```
 
 CLI subcommand (no slash equivalent; demoting is rarer + less time-critical). Anchored in audit chain identically.
@@ -71,7 +71,7 @@ The reason text becomes part of audit chain. Operator's reason MUST NOT contain 
 
 - spec §9.1 the release design D aggregator.Promote
 - spec §4.6 audit chain integration (event types)
-- invariant privacy boundary (promotion crosses boundary; explicit operator action required)
+- inv-hades-163 privacy boundary (promotion crosses boundary; explicit operator action required)
 - /knowledge-query (companion command)
 """
 

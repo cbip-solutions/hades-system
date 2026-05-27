@@ -30,7 +30,7 @@ import (
 // "I asked too early" signal.
 var ErrLeafNotFound = errors.New("tessera: leaf not found")
 
-const sthOriginPrefix = "zen-swarm-tessera"
+const sthOriginPrefix = "hades-system-tessera"
 
 const checkpointInterval = 100 * time.Millisecond
 
@@ -66,7 +66,7 @@ type STH struct {
 
 func (s STH) CanonicalBytes() []byte {
 	var buf bytes.Buffer
-	buf.WriteString("zen-swarm-tessera-sth\x00")
+	buf.WriteString("hades-system-tessera-sth\x00")
 	buf.WriteString(s.ProjectID)
 	buf.WriteByte(0)
 	var sizeBuf [8]byte
@@ -278,7 +278,7 @@ func (t *tesseraAppender) Close() error {
 
 func encodeLeaf(leaf Leaf) []byte {
 	var buf bytes.Buffer
-	buf.WriteString("zen-swarm-leaf-v1\x00")
+	buf.WriteString("hades-system-leaf-v1\x00")
 	buf.WriteString(leaf.EventID)
 	buf.WriteByte(0)
 	buf.WriteString(leaf.EventType)

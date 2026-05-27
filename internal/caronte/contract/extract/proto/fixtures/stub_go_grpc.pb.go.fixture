@@ -9,7 +9,7 @@ package authv1
 import (
 	context "context"
 
-	proto "github.com/zen-swarm/example/auth/v1"
+	proto "github.com/hades-system/example/auth/v1"
 
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"

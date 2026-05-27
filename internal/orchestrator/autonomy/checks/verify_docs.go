@@ -18,7 +18,7 @@ func (c *verifyDocs) Run(ctx context.Context, _ autonomy.CheckEnv) (autonomy.Che
 	if c.d.Exec == nil {
 		return autonomy.CheckSkip, "verify-docs (Execer) not configured", nil
 	}
-	stdout, code, err := c.d.Exec.Run(ctx, "zen", "doctor", "verify-docs")
+	stdout, code, err := c.d.Exec.Run(ctx, "hades", "doctor", "verify-docs")
 	if err != nil {
 		return autonomy.CheckFail, "verify-docs exec: " + err.Error(), nil
 	}

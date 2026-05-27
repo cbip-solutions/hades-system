@@ -6,7 +6,7 @@
 // daemon-side cost ledger + override store + WFQ queue. The dispatcher
 // (internal/daemon/dispatcher.PreFlightCheck) consumes the assembled
 // PreFlightDeps to run the 3-layer pre-flight gate without itself
-// touching internal/store — that is the invariant boundary this
+// touching internal/store — that is the inv-hades-031 boundary this
 // adapter package absorbs.
 //
 // Why a separate file (vs. extending dispatcheradapter.go): the
@@ -20,7 +20,7 @@
 // passes the *store.Store via a thin shim (release scheduler
 // composition or a future cost_ledger reader implementation).
 //
-// invariant boundary: this file imports internal/quota +
+// inv-hades-031 boundary: this file imports internal/quota +
 // internal/doctrine + stdlib only. internal/store is reached
 // indirectly via the CostLedgerReader interface — implementations
 // (fakes in tests, *store.Store-backed shim in daemon) live elsewhere.
@@ -72,7 +72,7 @@ type CostLedgerReader interface {
 // runtime sources. The function is the single import-edge between the
 // dispatcher's pre-flight gate and the daemon's persistence layer:
 // dispatcher → BuildPreFlightDeps → CostLedgerReader (interface) →
-// *store.Store (implementation, daemon-side). invariant boundary
+// *store.Store (implementation, daemon-side). inv-hades-031 boundary
 // preserved: neither the dispatcher nor internal/quota sees
 // *store.Store.
 //

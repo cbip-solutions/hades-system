@@ -8,7 +8,7 @@
 // config_hash + bypass_configs_version + anthropic_api_envelope_version).
 // The daemon reads + feature-flags downstream behaviour accordingly.
 //
-// Forward-compat property (inv-zen-B7 placeholder; concrete inv-zen-NNN
+// Forward-compat property (inv-hades-B7 placeholder; concrete inv-hades-NNN
 // allocated at release merge-time renumber reconciliation):
 //
 // - New sidecar releases announce new behaviour by adding entries to
@@ -19,12 +19,12 @@
 // - This is what allows Anthropic upstream body-shape changes to be
 // absorbed inside the sidecar without ever bumping `/v1` to `/v2`.
 //
-// Graceful degradation: every error path returns a
+// Graceful degradation (inv-hades-280): every error path returns a
 // typed error so the daemon can continue without sidecar feature flags
 // — the release cascade is the natural fallback when the sidecar is
 // unreachable / degraded / malformed.
 //
-// invariant boundary: this file imports stdlib only (net/http,
+// inv-hades-031 boundary: this file imports stdlib only (net/http,
 // encoding/json, context, errors, fmt, io, net/url, time). It does NOT
 // import internal/store, private-tier1-module, or
 // internal/providers — the capabilities vector is daemon-owned state

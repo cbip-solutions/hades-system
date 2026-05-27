@@ -28,7 +28,7 @@
 // run inside ColdRebuild + IncrementalUpdate; HTTP handlers do not bind
 // individual docs from the wire).
 //
-// Boundary: the façade lives entirely in
+// Boundary (inv-hades-031): the façade lives entirely in
 // `internal/knowledge` and takes a *sql.DB the caller has already
 // constructed via knowledge.Open + knowledge.Init. It does NOT import
 // internal/store; the daemon adapter in
@@ -37,7 +37,7 @@
 // façade's Reindex into a event emit when the rebuild
 // completes.
 //
-// Boundary: the façade's Query method delegates to
+// Boundary (inv-hades-129): the façade's Query method delegates to
 // Execute, which validates `Remote` + `AuditChain` against the deferred
 // sentinels in sentinel.go. The façade itself never speaks net/http;
 // the only way a remote/audit-chain flag reaches the index is through

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package backup ships the release backup-before-modify
-// substrate per spec §2.5 + §2.12 + §5.1 + invariant.
+// substrate per spec §2.5 + §2.12 + §5.1 + inv-hades-177.
 //
-// Backups land at $XDG_STATE_HOME/zen-swarm/doctor-backups/<ISO8601>/<check>/
+// Backups land at $XDG_STATE_HOME/hades-system/doctor-backups/<ISO8601>/<check>/
 // with manifest.json (mode 0600) + content.tar.gz tarball. Manifest
 // carries: BackupID (ISO8601 UTC) + CheckName + SourcePath + TarballPath +
 // AuditEventHash + Files (list of paths relative to SourcePath).
 //
-// Boundary: backup package consumes ONLY stdlib (os, io,
+// Boundary (inv-hades-031): backup package consumes ONLY stdlib (os, io,
 // archive/tar, compress/gzip, encoding/json, path/filepath, time); MUST
 // NOT import internal/store.
 //
@@ -61,7 +61,7 @@ func NewBackuper(cfg Config) *Backuper {
 			home, _ := os.UserHomeDir()
 			xdg = filepath.Join(home, ".local", "state")
 		}
-		dir = filepath.Join(xdg, "zen-swarm")
+		dir = filepath.Join(xdg, "hades-system")
 	}
 	return &Backuper{stateDir: dir}
 }
@@ -97,7 +97,7 @@ func (b *Backuper) BackupTarget(ctx context.Context, checkName, sourcePath strin
 		Path:           manifestPath,
 		CreatedAt:      time.Now().UTC(),
 		Files:          files,
-		RestoreCommand: fmt.Sprintf("zen doctor restore %s", id),
+		RestoreCommand: fmt.Sprintf("hades doctor restore %s", id),
 	}
 	body, err := json.MarshalIndent(m, "", "  ")
 	if err != nil {

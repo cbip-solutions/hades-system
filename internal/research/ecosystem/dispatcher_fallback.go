@@ -2,7 +2,7 @@
 // internal/research/ecosystem/dispatcher_fallback.go
 //
 //
-// Live fallback path per spec §4.3 + invariant.
+// Live fallback path per spec §4.3 + inv-hades-203.
 //
 // # When invoked
 //
@@ -16,7 +16,7 @@
 // # Flow (spec §4.3)
 //
 // 1. Audit: emit EvtRAGQuery with payload.fresh_dispatch=true FIRST
-// (invariant ordering — chain captures dispatch reason BEFORE any
+// (inv-hades-203 ordering — chain captures dispatch reason BEFORE any
 // live-network operation, so an aborted-mid-flight fallback still
 // leaves an audit trail).
 // 2. Source.FetchManifest force-refresh: the context is decorated with
@@ -30,7 +30,7 @@
 // research_findings table with cache_hit_reason='fresh_dispatch'.
 // 5. Return QueryResult{Provenance.FreshDispatch=true} in either branch.
 //
-// # invariant enforcement
+// # inv-hades-203 enforcement
 //
 // EvtRAGQuery (with payload.FreshDispatch=true) emits BEFORE any
 // live-network operation. The audit chain captures the dispatch reason
@@ -39,7 +39,7 @@
 // don't attempt the live-network work — fail-loud is preferable to
 // silent un-audited network calls.
 //
-// # invariant boundary
+// # inv-hades-031 boundary
 //
 // This file does NOT import internal/store; it consumes only narrow
 // interfaces (ResearchMCPSynthesizer, FindingsCache, IndexerDeltaWriter)
@@ -101,13 +101,13 @@ type IndexerDeltaWriter interface {
 // calls per the Source contract (source.go §"Concurrency"). Two concurrent
 // fallbacks for the same package may both fetch+index — the second
 // IndexerDeltaWriter.WriteDelta is a no-op upsert at the storage layer
-// (invariant conflict-resolution: last write wins on identical chunk
+// (inv-hades-200 conflict-resolution: last write wins on identical chunk
 // fingerprint).
 //
 // Pre ctx non-nil; req.Ecosystem identifies a wired Source; d.auditEmitter
 // wired.
 // Post on nil error: audit chain has one EvtRAGQuery row with
-// fresh_dispatch=true; on package-found branch indexerDelta
+// fresh_dispatch=true (inv-hades-203); on package-found branch indexerDelta
 // has one new entry; on synthesis branch findingsCache has one new entry.
 func (d *Dispatcher) LiveFallback(ctx context.Context, req LiveFallbackRequest) (*QueryResult, error) {
 	if err := ctx.Err(); err != nil {
@@ -124,7 +124,7 @@ func (d *Dispatcher) LiveFallback(ctx context.Context, req LiveFallbackRequest) 
 		}
 	}
 
-	// invariant: emit EvtRAGQuery FIRST. If the chain is failing (disk
+	// inv-hades-203: emit EvtRAGQuery FIRST. If the chain is failing (disk
 	// full, corrupted), we MUST NOT proceed to live-network ops — better to
 	// surface an un-audited dispatch as an error than to silently dispatch
 	// without a chain link. This is the load-bearing ordering invariant.

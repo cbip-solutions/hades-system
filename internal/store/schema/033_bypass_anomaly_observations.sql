@@ -1,4 +1,4 @@
--- Migration v3 — bypass_anomaly_observations (the release design release track, invariant)
+-- Migration v3 — bypass_anomaly_observations (the release design release track, inv-hades-060)
 --
 -- Per-event observation table for the rolling-window numerator. The v2
 -- bypass_anomalies table aggregates by field_path and stores a lifetime
@@ -9,7 +9,7 @@
 --
 -- This migration introduces one row per observation:
 --   - field_path: the un-normalised JSON path observed.
---   - ts: UTC unix seconds (invariant) at which the observation was
+--   - ts: UTC unix seconds (inv-hades-005) at which the observation was
 --     recorded. Indexed (field_path, ts) for fast window queries.
 --
 -- Lifecycle:
@@ -26,7 +26,7 @@
 -- delete path; release track only writes ack=1 without deleting).
 --
 -- Refs: spec the release design §2 Q6-C, §5 row "Shape unknown field", §7
--- invariant.
+-- inv-hades-060.
 
 CREATE TABLE IF NOT EXISTS bypass_anomaly_observations (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,

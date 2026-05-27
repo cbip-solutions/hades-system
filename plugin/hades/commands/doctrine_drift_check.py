@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:doctrine-drift-check — Doctrine drift detection via caronte code-graph query
 
-You are detecting doctrine drift in the active HADES project. **Drift** = code/spec/docs that reference doctrine values inconsistent with current `.zen-swarm.toml` + the release design doctrine schema. Wraps caronte code-graph query + cross-references current doctrine config.
+You are detecting doctrine drift in the active HADES project. **Drift** = code/spec/docs that reference doctrine values inconsistent with current `.hades-system.toml` + the release design doctrine schema. Wraps caronte code-graph query + cross-references current doctrine config.
 
 ## 1. Identify active project + current doctrine
 
@@ -13,7 +13,7 @@ You are detecting doctrine drift in the active HADES project. **Drift** = code/s
 PROJECT="{project}"
 
 # Read current doctrine config from daemon
-DOCTRINE_CONFIG=$(curl --unix-socket /tmp/zen-swarm.sock -s \\
+DOCTRINE_CONFIG=$(curl --unix-socket /tmp/hades-system.sock -s \\
                        "http://unix/v1/doctrine/show?project=$PROJECT" \\
                        | jq -r '.doctrine_config')
 ```
@@ -24,10 +24,10 @@ For each known doctrine key, query via the release design mcpgateway (caronte is
 
 ```bash
 for KEY in $DOCTRINE_KEYS; do
-  curl --unix-socket /tmp/zen-swarm.sock \\
+  curl --unix-socket /tmp/hades-system.sock \\
        -X POST \\
        -H "Content-Type: application/json" \\
-       -d '{{"tool":"mcp_zen-swarm_caronte_query","query":"references_to:doctrine.'"$KEY"'"}}' \\
+       -d '{{"tool":"mcp_hades-system_caronte_query","query":"references_to:doctrine.'"$KEY"'"}}' \\
        http://unix/v1/mcpgateway
 done
 ```
@@ -50,7 +50,7 @@ For each (key, reference) pair:
 ## Drifts found: <K>
 
 ### HIGH
-1. spec/2026-04-29-zen-swarm-design.md:842 references `max_kg_tokens=15000`
+1. spec/2026-04-29-hades-system-design.md:842 references `max_kg_tokens=15000`
    - Current daemon config: `max_kg_tokens=25000` (max-scope doctrine)
    - Likely outdated since the release design ship; recommend doc update
 
@@ -75,7 +75,7 @@ For each HIGH/MEDIUM drift:
 
 This check should run periodically:
 - Pre-merge gate (every PR in `make verify-doctrine-drift` Q16 layer C)
-- Morning brief (`zen day` includes drift summary)
+- Morning brief (`hades day` includes drift summary)
 - Manual operator query (this slash) when investigating discrepancy
 
 ## 7. Audit chain anchor
@@ -83,13 +83,13 @@ This check should run periodically:
 This check emits `DoctrineDriftCheckCompleted` event:
 
 ```
-Audit chain: zen://audit/<aggregate_event_id>
+Audit chain: hades://audit/<aggregate_event_id>
 ```
 
 ## Cross-references
 
 - the release design doctrine schema (canonical source of truth)
-- the release design §3.1 mcpgateway (caronte in-process; tool name mcp_zen-swarm_caronte_query)
+- the release design §3.1 mcpgateway (caronte in-process; tool name mcp_hades-system_caronte_query)
 - spec §4.2 slash command flow
 - spec §11.3 cross-plan canon checklist (drift detection mechanism)
 """
@@ -100,6 +100,6 @@ def doctrine_drift_check_handler(raw_args: str) -> str | None:
     # pending endpoint registration: /v1/project/active resolves active project alias when no arg passed
     project = (
         raw_args.strip()
-        or "$(curl --unix-socket /tmp/zen-swarm.sock -s http://unix/v1/project/active)"
+        or "$(curl --unix-socket /tmp/hades-system.sock -s http://unix/v1/project/active)"
     )
     return _PROMPT.format(project=project)

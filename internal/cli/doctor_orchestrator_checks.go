@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_orchestrator_checks.go.
 //
-// 4 orchestrator-level health checks for `zen doctor`. Mirrors the
+// 4 orchestrator-level health checks for `hades doctor`. Mirrors the
 // runBypassChecks pattern from doctor_checks.go. Probes the daemon
 // over existing /v1/orchestrator/* and /v1/budget endpoints using the
 // typed client surface added in K-3 and K-4.
@@ -45,7 +45,7 @@ func checkOrchestratorReachable(ctx context.Context, c *client.Client) CheckResu
 			Name:   name,
 			Status: "fail",
 			Detail: err.Error(),
-			Hint:   "Ensure daemon is running: zen daemon start",
+			Hint:   "Ensure daemon is running: hades daemon start",
 		}
 	}
 	return CheckResult{Name: name, Status: "ok"}
@@ -59,7 +59,7 @@ func checkTierStatesClean(ctx context.Context, c *client.Client) CheckResult {
 			Name:   name,
 			Status: "fail",
 			Detail: err.Error(),
-			Hint:   "Run zen orchestrator status to investigate",
+			Hint:   "Run hades orchestrator status to investigate",
 		}
 	}
 	var nonClosed []string
@@ -73,7 +73,7 @@ func checkTierStatesClean(ctx context.Context, c *client.Client) CheckResult {
 			Name:   name,
 			Status: "warn",
 			Detail: "non-closed tiers: " + strings.Join(nonClosed, ", "),
-			Hint:   "Tiers in suspect/open state recover via probe scheduler. Run zen orchestrator probe to force a recovery attempt.",
+			Hint:   "Tiers in suspect/open state recover via probe scheduler. Run hades orchestrator probe to force a recovery attempt.",
 		}
 	}
 	return CheckResult{Name: name, Status: "ok"}
@@ -87,7 +87,7 @@ func checkPinOverridesReachable(ctx context.Context, c *client.Client) CheckResu
 			Name:   name,
 			Status: "fail",
 			Detail: err.Error(),
-			Hint:   "Restart daemon: zen daemon start",
+			Hint:   "Restart daemon: hades daemon start",
 		}
 	}
 	return CheckResult{Name: name, Status: "ok"}
@@ -101,7 +101,7 @@ func checkBudgetReachable(ctx context.Context, c *client.Client) CheckResult {
 			Name:   name,
 			Status: "fail",
 			Detail: err.Error(),
-			Hint:   "Restart daemon: zen daemon start",
+			Hint:   "Restart daemon: hades daemon start",
 		}
 	}
 	return CheckResult{Name: name, Status: "ok"}

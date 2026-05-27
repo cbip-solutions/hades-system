@@ -2,17 +2,17 @@
 // internal/providers/sidecar_backend.go
 //
 // SidecarBackend is the release Tier 1 HTTP TierBackend that talks
-// to the private zen-bypass-tier1 sidecar process running on loopback.
+// to the private hades-bypass-tier1 sidecar process running on loopback.
 //
 // Substrate split: the in-process bypass.Client
 // (BypassBackend, private-tier1-module) is being relocated to a
-// separate private binary (zen-bypass-tier1) speaking the HTTP contract
-// defined in cmd/zen-bypass — the public daemon (this dev repo)
+// separate private binary (hades-bypass-tier1) speaking the HTTP contract
+// defined in cmd/hades-bypass — the public daemon (this dev repo)
 // communicates with the private sidecar over loopback so:
 // - the Anthropic-Max-subscription OAuth bypass code never ships in the
 // public Apache-2.0 distribution;
 // - the dispatcher (this package's consumer) keeps a uniform
-// name-based cascade: "bypass-sidecar"
+// name-based cascade (inv-hades-066 frozen contract C8): "bypass-sidecar"
 // is the first entry in the operator's profiles.toml cascade, and a
 // missing/unhealthy sidecar surfaces as ErrSidecarUnavailable →
 // cascade proceeds to the release direct backends (Anthropic paygo,
@@ -23,11 +23,11 @@
 // returns the upstream response body verbatim. The sidecar owns
 // auth, cert pinning, idempotency, concurrency, OAuth refresh — this
 // backend is a thin HTTP client only.
-// - GET /health: content-free probe; 200 == healthy.
+// - GET /health: content-free probe (inv-hades-071); 200 == healthy.
 // - GET /v1/sidecar/info: capability vector (versions + feature flags);
-// not consumed by Forward — orchestrator surfaces these via `zen status`.
+// not consumed by Forward — orchestrator surfaces these via `hades status`.
 //
-// Graceful degradation:
+// Graceful degradation (inv-hades-280):
 // - Connection-refused / DNS-fail / timeout / ctx-cancel → ErrSidecarUnavailable.
 // - 5xx HTTP status → ErrSidecarDegraded.
 // - 4xx HTTP status → a real upstream contract violation; NOT a fallback
@@ -42,7 +42,7 @@
 // Timeout; the client is goroutine-safe so the SidecarBackend itself is also
 // safe for concurrent Forward / Probe invocation.
 //
-// Boundary discipline: this file lives in internal/providers/
+// Boundary discipline (inv-hades-031): this file lives in internal/providers/
 // (the canonical home for every concrete TierBackend impl); it imports only
 // stdlib. NO import of internal/store, private-tier1-module, or
 // internal/config — registration wiring (RegisterSidecars) lives in

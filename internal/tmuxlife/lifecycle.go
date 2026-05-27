@@ -24,7 +24,7 @@ import (
 // - doctrine.NameDefault ("default") — 24h idle, 100% hard cap
 // - doctrine.NameCapaFirewall ("capa-firewall") — 4h idle, 95% hard cap
 //
-// Validation of doctrine names from untrusted input (zenswarm.toml,
+// Validation of doctrine names from untrusted input (hadessystem.toml,
 // HTTP request body) MUST go through `doctrine.IsValid` BEFORE calling
 // `DoctrineIdleTTL` — the latter panics on unknown to surface
 // programmer error, NOT to be a graceful runtime gate.
@@ -33,17 +33,17 @@ type IdleTTL int
 
 // DoctrineIdleTTL returns the idle TTL in hours for the given doctrine.
 //
-// Mapping:
+// Mapping (inv-hades-119, spec §1 Q7 D):
 //
 // max-scope → IdleTTLInfinity (-1)
 // default → 24
 // capa-firewall → 4
 //
-// Per-project override (zenswarm.toml [project.tmux] idle_ttl_hours = X)
+// Per-project override (hadessystem.toml [project.tmux] idle_ttl_hours = X)
 // is consumed by IdleReaper.doctrineFor callback (C-10); this function
 // returns ONLY the doctrine-default. Override resolution lives at the
 // callsite, NOT here, so the doctrine-default mapping stays the single
-// source of truth for invariant enforcement.
+// source of truth for inv-hades-119 enforcement.
 //
 // Panics on unknown doctrine to surface drift
 // (programmer-error-must-surface principle). Callers consuming
@@ -57,7 +57,7 @@ type IdleTTL int
 // quota's fallback is conservative because cost-side overshoot is
 // recoverable (operator notices, refunds, adjusts threshold), whereas
 // tmuxlife mismapping silently leaves stale tmux sessions running for
-// hours past the intended TTL — an invariant violation. The panic
+// hours past the intended TTL — an inv-hades-119 violation. The panic
 // path keeps the bug visible.
 func DoctrineIdleTTL(d doctrine.Name) IdleTTL {
 	switch d {

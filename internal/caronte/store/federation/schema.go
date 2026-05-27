@@ -16,14 +16,14 @@ func schemaStatements() []string {
   --             writes here; GetWorkspacePolicy reads here. NULLABLE so a
   --             workspace registered before a policy is set has no row drift.
   policy_text     TEXT,
-  -- enable_graphql_node_fallback: Plan 20 Phase G inv-zen-272 opt-in flag.
+  -- enable_graphql_node_fallback: Plan 20 Phase G inv-hades-272 opt-in flag.
   --              When 1, the bcdetect graphql detector MAY shell out to
   --              node graphql-inspector when the Go path returns
   --              SevInsufficient AND the workspace consents. When 0
   --              (default), the graphql detector returns SevInsufficient
   --              verbatim and the operator sees the unclassified rule
   --              surfaced. The bcdetect package consults this via the
-  --              workspace seam; Phase I zen workspace policy set surfaces
+  --              workspace seam; Phase I hades workspace policy set surfaces
   --              the operator-facing knob.
   enable_graphql_node_fallback INTEGER NOT NULL DEFAULT 0
 )`,

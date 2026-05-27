@@ -14,7 +14,7 @@ import (
 
 var ErrCacheMiss = errors.New("research_cache: cache miss")
 
-var ErrProjectIDRequired = errors.New("research_cache: project_id required (inv-zen-148)")
+var ErrProjectIDRequired = errors.New("research_cache: project_id required (inv-hades-148)")
 
 func LookupExact(ctx context.Context, db *DB, query, projectID, sessionID string) (*LookupResult, error) {
 	if projectID == "" {

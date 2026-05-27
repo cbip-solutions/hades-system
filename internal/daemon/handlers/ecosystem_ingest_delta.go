@@ -4,9 +4,9 @@
 // EcosystemIngestDelta implements POST /v1/ecosystem/ingest-delta.
 //
 // Schedules a delta-index run for the named ecosystem. The cron worker
-// (cmd/zen-docs-cron) calls this every 6 hours after DetectNewVersions
+// (cmd/hades-docs-cron) calls this every 6 hours after DetectNewVersions
 // surfaces a newly-published upstream version; the operator may also
-// trigger it manually via `zen docs reindex --ecosystem <X>`.
+// trigger it manually via `hades docs reindex --ecosystem <X>`.
 //
 // The daemon-side seam dispatches to
 // internal/research/ecosystem.Dispatcher.IngestDelta which:

@@ -3,23 +3,23 @@
 // resolution + installation primitives.
 //
 // Per spec §2.13 Q13=D + §4.5 spike re-verify + §8.6
-// invariant: the plugin install location depends on the 13-A0
+// inv-hades-190: the plugin install location depends on the 13-A0
 // spike outcome.
 //
 // spike PASS → project-scope primary:
-// <repo>/.hermes/plugins/zen-swarm/
+// <repo>/.hermes/plugins/hades-system/
 //
 // spike FAIL → user-scope per-project fallback:
-// ~/.hermes/plugins/zen-swarm-<slug>/
+// ~/.hermes/plugins/hades-system-<slug>/
 // (ADR-0086 documents fallback rationale; releaseb conditional
 // sibling work triggered)
 //
-// Per spec §8.6 invariant: XDG-canonical path convention; macOS
+// Per spec §8.6 inv-hades-186: XDG-canonical path convention; macOS
 // precedence operator-config. Helpers in xdg.go honor $XDG_CONFIG_HOME
 // / $XDG_STATE_HOME / $XDG_CACHE_HOME / $XDG_DATA_HOME with $HOME-based
 // fallback.
 //
-// Per invariant: this package does NOT import internal/store.
+// Per inv-hades-031: this package does NOT import internal/store.
 //
 // # Surface
 //
@@ -35,7 +35,7 @@
 //
 // # Invariants
 //
-// - invariant — XDG-canonical path convention (xdg.go).
-// - invariant — plugin location resolved at install (location.go).
-// - invariant — boundary discipline (no internal/store import).
+// - inv-hades-186 — XDG-canonical path convention (xdg.go).
+// - inv-hades-190 — plugin location resolved at install (location.go).
+// - inv-hades-031 — boundary discipline (no internal/store import).
 package plugin

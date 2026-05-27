@@ -4,7 +4,7 @@
 // daemon /v1/mcpgateway/{codegraph,impact,context,wiki}. These bypass
 // Hermes (so operators can query the KG without a Hermes session
 // running) but route via the daemon — single-egress + audit chain
-// preserved.
+// preserved (inv-hades-088).
 //
 // Each command lazily resolves *client.Client at RunE time via
 // newClientFromCmd. Tests inject CodegraphClient interface fakes.
@@ -72,10 +72,10 @@ func NewCodegraphCmd(factory CodegraphClientFactory) *cobra.Command {
 		Use:   "codegraph <query>",
 		Short: "Direct caronte code-graph query (bypasses Hermes; routes via daemon → mcpgateway → caronte)",
 		Long: `Query the caronte code-graph directly. Single-egress preserved
-via daemon /v1/mcpgateway/codegraph route (inv-zen-088); the daemon
+via daemon /v1/mcpgateway/codegraph route (inv-hades-088); the daemon
 proxies to the in-process caronte engine.`,
-		Example: `  zen codegraph MergeEngine
-  zen codegraph "RRF.*" --project internal-platform-x --format json | jq '.hits[].file'`,
+		Example: `  hades codegraph MergeEngine
+  hades codegraph "RRF.*" --project internal-platform-x --format json | jq '.hits[].file'`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -143,8 +143,8 @@ func NewImpactCmd(factory CodegraphClientFactory) *cobra.Command {
 		Long: `Compute the blast radius of changing <symbol>. The daemon delegates
 to the caronte engine for caller graph + GraphRAG community-aware spread; the
 score is graded against doctrine.preflight.impact_thresholds.`,
-		Example: `  zen impact MergeEngine.Run --project zen-swarm
-  zen impact transport.ZenSwarmTransport.Forward --format json`,
+		Example: `  hades impact MergeEngine.Run --project hades-system
+  hades impact transport.HadesSystemTransport.Forward --format json`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -208,8 +208,8 @@ func NewContextCmd(factory CodegraphClientFactory) *cobra.Command {
 		Short: "360° context for a symbol: callers + callees + community + neighbors",
 		Long: `Show the symbol's full graph context: who calls it, what it calls,
 GraphRAG community label, and immediate KG neighbors.`,
-		Example: `  zen context MergeEngine
-  zen context internal/orchestrator.WaitForReviews --format json`,
+		Example: `  hades context MergeEngine
+  hades context internal/orchestrator.WaitForReviews --format json`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -288,8 +288,8 @@ func NewWikiCmd(factory CodegraphClientFactory) *cobra.Command {
 full project wiki; with [module] scopes to one Go package.
 
 --regenerate forces a fresh build (bypasses cached output).`,
-		Example: `  zen wiki | glow
-  zen wiki internal/orchestrator/merge --regenerate`,
+		Example: `  hades wiki | glow
+  hades wiki internal/orchestrator/merge --regenerate`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

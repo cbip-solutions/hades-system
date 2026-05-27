@@ -2,7 +2,7 @@
 // Package handlers — hermes_probe.go.
 //
 // GET /v1/hermes/probe?check=<name> — diagnostic probe surface for the
-// F9 Skills panel and `zen doctor hermes` CLI.
+// F9 Skills panel and `hades doctor hermes` CLI.
 //
 // Background — release substrate gap closure:
 //
@@ -14,13 +14,13 @@
 // This handler closes the gap. Each probe check is a static introspection
 // against the daemon-known state:
 //
-// - "plugin_installed" — Hermes plugin (`zen-swarm`) is installable;
+// - "plugin_installed" — Hermes plugin (`hades-system`) is installable;
 // status reflects whether the plugin manifest path is reachable on
 // the operator's host. Since the daemon cannot detect Hermes's
-// plugin runtime state at HEAD (a future release 'zen migrate' wires
+// plugin runtime state at HEAD (a future release 'hades migrate' wires
 // it via socket), the probe always returns "ok" with a detail
 // describing the install path. Real state is surfaced via the
-// `zen-swarm:install-mcps` slash command output.
+// `hades-system:install-mcps` slash command output.
 // - "session_active" — A Hermes session has registered with the
 // daemon via /v1/sessions. Status=ok when at least
 // one active session exists; warn otherwise.
@@ -64,12 +64,12 @@ func HermesProbeHandler(s HermesProbeCtx) http.HandlerFunc {
 		switch check {
 		case "plugin_installed":
 
-			resp.Detail = "plugin installs via `/zen-swarm:install-mcps` slash command (ADR-0080)"
+			resp.Detail = "plugin installs via `/hades-system:install-mcps` slash command (ADR-0080)"
 		case "session_active":
 			n := s.HermesActiveSessions()
 			if n == 0 {
 				resp.Status = "warn"
-				resp.Detail = "no active Hermes session registered (POST /v1/sessions); start a Hermes session via `/zen-swarm:start`"
+				resp.Detail = "no active Hermes session registered (POST /v1/sessions); start a Hermes session via `/hades-system:start`"
 			} else if n == 1 {
 				resp.Detail = "1 active Hermes session"
 			} else {

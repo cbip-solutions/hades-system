@@ -25,7 +25,7 @@ const doctrineCapaFirewall = "capa-firewall"
 // fail-closed (capa-firewall). Kept in sync with internal/doctrine
 // builtin labels (`max-scope`, `default`, `capa-firewall` — spec §3.1).
 //
-// invariant: this set is the trust boundary between extracted-and-
+// inv-hades-172: this set is the trust boundary between extracted-and-
 // accepted vs. fail-closed. New doctrine names introduced in future
 // plans MUST be added here AND in the visibility-matrix doc in
 // internal/daemon/handlers/audit_event.go.

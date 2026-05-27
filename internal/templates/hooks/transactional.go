@@ -14,7 +14,7 @@ import (
 )
 
 func StageTempDir(tag string) (string, error) {
-	tmp, err := os.MkdirTemp("", "zen-scaffold-"+sanitizeID(tag)+"-*")
+	tmp, err := os.MkdirTemp("", "hades-scaffold-"+sanitizeID(tag)+"-*")
 	if err != nil {
 		return "", fmt.Errorf("stage tmp: %w", err)
 	}

@@ -2,7 +2,7 @@
 // Package handlers — notifications_post.go.
 //
 // POST /v1/notifications/post — accepts notification events from the
-// out-of-process bypass sidecar (cbip-solutions/zen-bypass-tier1) and
+// out-of-process bypass sidecar (cbip-solutions/hades-bypass-tier1) and
 // writes them to the schema-v9 notifications table.
 //
 // Architectural intent:
@@ -18,7 +18,7 @@
 // "ts": "RFC3339",
 // "payload": {...}}
 //
-// invariant boundary: this handler imports internal/store solely for
+// inv-hades-031 boundary: this handler imports internal/store solely for
 // the Notification value type passed to NotificationsInserter — it
 // never touches the concrete *store.Store. The daemon adapter that
 // satisfies NotificationsInserter is the single bridge.

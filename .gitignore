@@ -17,7 +17,7 @@ coverage.html
 # Runtime state
 /data/
 /.local/
-.zen/
+.hades/
 .caronte/
 *.sock
 *.pid

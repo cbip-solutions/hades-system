@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package recognize is the canonical home of release
-// `zen recognize` 3-tier signal stack (linguist filters → manifest deps
+// `hades recognize` 3-tier signal stack (linguist filters → manifest deps
 // → framework configs → monorepo walk → maturity probe) — see
 // internal design record
 //
@@ -27,13 +27,13 @@
 // .linear.{yml,yaml}, etc.).
 //
 // `internal/onboard/mcp/smart_default.go` consumes those
-// fields directly via Tier 3 `Detected fn` evaluation (invariant
+// fields directly via Tier 3 `Detected fn` evaluation (inv-hades-179
 // confidence ≥0.6 threshold).
 //
 // # Invariants enforced by this package
 //
-// - invariant — boundary discipline: NEVER import internal/store.
-// - invariant — smart-default confidence ≥0.6 threshold (enforced
+// - inv-hades-031 — boundary discipline: NEVER import internal/store.
+// - inv-hades-179 — smart-default confidence ≥0.6 threshold (enforced
 // downstream in internal/onboard/mcp/smart_default.go; this package
 // surfaces `Result.PrimaryConfidence` as the threshold input).
 package recognize

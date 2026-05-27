@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Compile-time anchors for invariant (single-egress preservation) and
-// invariant.
+// Compile-time anchors for inv-hades-164 (single-egress preservation) and
+// inv-hades-088.
 //
 // These sentinels exist so the compliance test can grep the
 // package for the canonical anchor lines and prove the wiring is in place.
@@ -16,9 +16,9 @@ import (
 
 // errSingleEgressAnchor is the sentinel error returned by SingleEgressSentinel.
 // Its message is stable and grep-targeted by the compliance test; do not
-// rephrase without updating tests/compliance/inv_zen_164_*_test.go.
+// rephrase without updating tests/compliance/inv_hades_164_*_test.go.
 var errSingleEgressAnchor = errors.New(
-	"transport: single-egress anchor (inv-zen-164) — ZenSwarmTransport routes all Hermes LLM via daemon /v1/messages",
+	"transport: single-egress anchor (inv-hades-164) — HadesSystemTransport routes all Hermes LLM via daemon /v1/messages",
 )
 
 func SingleEgressSentinel() error { return errSingleEgressAnchor }

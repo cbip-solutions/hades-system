@@ -3,7 +3,7 @@
 //
 // 10 NEW operator-facing audit endpoints surfacing the audit
 // substrate (tessera tile-log + chain integrity + Litestream + recovery)
-// over /v1/audit-chain/*. invariant + invariant: handlers consume the
+// over /v1/audit-chain/*. inv-hades-150 + inv-hades-031: handlers consume the
 // AuditCtxP9 interface and never import internal/audit/* directly.
 //
 // POST /v1/audit-chain/verify-chain — walk chain + return tamper events
@@ -17,7 +17,7 @@
 // GET /v1/audit-chain/witness/pubkey — daemon-global witness pubkey + meta
 // POST /v1/audit-chain/configure-s3 — per-project S3 credential setup
 //
-// Auth ACL: verify-chain / history / recover /
+// Auth ACL (per inv-hades-146): verify-chain / history / recover /
 // partition-seals / cold-archive list+restore / configure-s3 are
 // project-scoped (caller's effective-project set must include the named
 // project — wrapper auth.ProjectScopedMiddleware enforces in ).
@@ -33,8 +33,8 @@
 //
 // Boundary invariants:
 //
-// invariant: handler never imports internal/store directly.
-// invariant: handler never imports internal/audit/{tessera,chain,
+// inv-hades-031: handler never imports internal/store directly.
+// inv-hades-150: handler never imports internal/audit/{tessera,chain,
 // litestream,recovery} directly; all calls go via AuditCtxP9.
 package handlers
 

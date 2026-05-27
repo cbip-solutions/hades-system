@@ -129,7 +129,7 @@ func (w *Watcher) IsOverflowErrorForTest(err error) bool {
 
 // RestartNeededSignalForTest reports whether the restartNeeded channel
 // has a pending signal at call time (drains the signal as a side
-// effect). Used by invariant behavioural sister-tests to verify that
+// effect). Used by inv-hades-291 behavioural sister-tests to verify that
 // handleOverflow dispatched a restart request to the Start loop after
 // force-reload-all. Production callers MUST NOT consume this signal —
 // Start is the sole owner of restartNeeded receives; in unit tests

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package cli — why.go.
 //
-// `zen why <symbol>` surfaces the architect's intent for a symbol: linked
+// `hades why <symbol>` surfaces the architect's intent for a symbol: linked
 // ADRs (+stale flag), semantic passages, and Lore-trailers from the
 // symbol's commit history. Routes via the daemon /v1/mcpgateway/why route
-// → the native Caronte engine GetWhy.
+// → the native Caronte engine GetWhy (single-egress preserved, inv-hades-088).
 // Tests inject CaronteWhyClient fakes.
 package cli
 
@@ -48,9 +48,9 @@ func NewWhyCmd(factory func(cmd *cobra.Command) CaronteWhyClient) *cobra.Command
 		Long: `Surface WHY a symbol exists before you change it. Caronte links the
 symbol to ADRs (explicit refs + coverage manifest + semantic similarity),
 flags stale links (the code changed since the ADR), and shows Lore-trailers
-from its commit history. Routes via the daemon (single-egress, inv-zen-088).`,
-		Example: `  zen why MergeEngine
-  zen why internal/orchestrator/merge.Engine --format json`,
+from its commit history. Routes via the daemon (single-egress, inv-hades-088).`,
+		Example: `  hades why MergeEngine
+  hades why internal/orchestrator/merge.Engine --format json`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

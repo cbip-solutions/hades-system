@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package cli — internal/cli/migrate_plan18.go
 //
-// Operator migration tooling for legacy /zen-swarm:* slash command
+// Operator migration tooling for legacy /hades-system:* slash command
 // references in operator home-directory surfaces. Subcommand
-// `hades migrate release --from-zen-swarm-aliases` (or `zen migrate release...`
+// `hades migrate release --from-hades-system-aliases` (or `hades migrate release...`
 // via the wrapper). Idempotent + dry-run-by-default + allowlist-scoped +
 // atomic per-file writes + backup directory.
 //
@@ -17,7 +17,7 @@
 // - migrate.dry-run-required
 // - cli.no-op
 //
-// Compliance gate: invariant — idempotency + scope guarantee.
+// Compliance gate: inv-hades-222 — idempotency + scope guarantee.
 package cli
 
 import (
@@ -56,12 +56,12 @@ type MigratePlan18Opts struct {
 }
 
 type migrateP18Flags struct {
-	fromZenSwarmAliases bool
-	dryRun              bool
-	apply               bool
-	includeAliases      bool
-	backupRoot          string
-	homeOverride        string
+	fromHadesSystemAliases bool
+	dryRun                 bool
+	apply                  bool
+	includeAliases         bool
+	backupRoot             string
+	homeOverride           string
 }
 
 type allowlistEntry struct {
@@ -94,11 +94,11 @@ var allowlistEntries = []allowlistEntry{
 	{Glob: ".zprofile"},
 	{Glob: ".bash_profile"},
 
-	{Glob: ".config/zen-swarm/**"},
+	{Glob: ".config/hades-system/**"},
 
-	{Glob: ".zen/**"},
+	{Glob: ".hades/**"},
 
-	{Glob: ".hermes/plugins/zen-swarm/**"},
+	{Glob: ".hermes/plugins/hades-system/**"},
 
 	{Glob: ".claude/CLAUDE.md"},
 	{Glob: ".claude/settings.json"},
@@ -107,11 +107,11 @@ var allowlistEntries = []allowlistEntry{
 
 var denylistRoots = []string{".git", ".ssh", ".gnupg"}
 
-var slashRefRegex = regexp.MustCompile(`/zen-swarm:`)
+var slashRefRegex = regexp.MustCompile(`/hades-system:`)
 
-var aliasRefRegex = regexp.MustCompile(`^(\s*alias\s+\S+\s*=\s*)(['"])([^'"]*zen-swarm[^'"]*)(['"])\s*$`)
+var aliasRefRegex = regexp.MustCompile(`^(\s*alias\s+\S+\s*=\s*)(['"])([^'"]*hades-system[^'"]*)(['"])\s*$`)
 
-var aliasUnquotedRegex = regexp.MustCompile(`^(\s*alias\s+\S+\s*=\s*)(\S*zen-swarm\S*)\s*$`)
+var aliasUnquotedRegex = regexp.MustCompile(`^(\s*alias\s+\S+\s*=\s*)(\S*hades-system\S*)\s*$`)
 
 // maxScanFileSize caps the file size the scanner will read.
 // Files larger than this are skipped with a per-file warning.
@@ -350,7 +350,7 @@ func scanFileIfAllowed(home, absPath string, includeAliases bool, result *migrat
 	return scanFile(absPath, includeAliases, result)
 }
 
-// scanFile reads absPath line by line, identifies /zen-swarm: references
+// scanFile reads absPath line by line, identifies /hades-system: references
 // (and with includeAliases, broader alias-line matches), and appends each
 // matching line to result.Matches with the replaced text.
 //
@@ -432,7 +432,7 @@ func replaceLine(line string, includeAliases bool) string {
 		body := line[m[6]:m[7]]
 		closeQuote := line[m[8]:m[9]]
 		openQuote := line[m[4]:m[5]]
-		newBody := strings.ReplaceAll(body, "zen-swarm", "hades")
+		newBody := strings.ReplaceAll(body, "hades-system", "hades")
 
 		newBody = slashRefRegex.ReplaceAllString(newBody, "/hades:")
 		newLine = prefix + openQuote + newBody + closeQuote
@@ -442,7 +442,7 @@ func replaceLine(line string, includeAliases bool) string {
 	if m := aliasUnquotedRegex.FindStringSubmatchIndex(line); m != nil {
 		prefix := line[m[2]:m[3]]
 		body := line[m[4]:m[5]]
-		newBody := strings.ReplaceAll(body, "zen-swarm", "hades")
+		newBody := strings.ReplaceAll(body, "hades-system", "hades")
 		newLine = prefix + newBody
 		return newLine
 	}
@@ -507,7 +507,7 @@ func applyMigrations(home string, result *migratePlan18Result, opts MigratePlan1
 				nil,
 			)
 		}
-		backupRoot = filepath.Join(udsHome, ".local", "share", "zen-swarm", "migrate-plan-18-backup")
+		backupRoot = filepath.Join(udsHome, ".local", "share", "hades-system", "migrate-plan-18-backup")
 	}
 	if err := os.MkdirAll(backupRoot, 0o755); err != nil {
 		return zerrors.New(
@@ -699,7 +699,7 @@ func RunMigratePlan18(opts MigratePlan18Opts) error {
 
 		info := zerrors.New(
 			zerrors.Code("cli.no-op"),
-			fmt.Errorf("no /zen-swarm: references found in allowlisted surfaces (idempotent: already migrated)"),
+			fmt.Errorf("no /hades-system: references found in allowlisted surfaces (idempotent: already migrated)"),
 			map[string]string{"home": home},
 		)
 		msg := Render(info, RenderOpts{
@@ -726,14 +726,14 @@ func newMigratePlan18Command() *cobra.Command {
 	f := &migrateP18Flags{}
 	cmd := &cobra.Command{
 		Use:   "plan-18",
-		Short: "Migrate legacy /zen-swarm:* slash command references to /hades:*",
-		Long: `Migrate legacy /zen-swarm:* slash command references in operator home-dir
+		Short: "Migrate legacy /hades-system:* slash command references to /hades:*",
+		Long: `Migrate legacy /hades-system:* slash command references in operator home-dir
 surfaces to /hades:* per spec §Q4. Scope:
 
   ~/.zshrc, ~/.bashrc, ~/.zprofile, ~/.bash_profile
-  ~/.config/zen-swarm/**     (any file under)
-  ~/.zen/**                  (any file under)
-  ~/.hermes/plugins/zen-swarm/**  (legacy plugin dir; pre-18b artifacts)
+  ~/.config/hades-system/**     (any file under)
+  ~/.hades/**                  (any file under)
+  ~/.hermes/plugins/hades-system/**  (legacy plugin dir; pre-18b artifacts)
   ~/.claude/CLAUDE.md
   ~/.claude/settings.json
   ~/.claude/keybindings.json
@@ -741,14 +741,14 @@ surfaces to /hades:* per spec §Q4. Scope:
 NEVER touches .git/, .ssh/, .gnupg/, or anything outside the allowlist.
 
 Safety: dry-run-by-default; per-file atomic write + backup under
-~/.local/share/zen-swarm/migrate-plan-18-backup/<ISO-timestamp>/ on --apply.
+~/.local/share/hades-system/migrate-plan-18-backup/<ISO-timestamp>/ on --apply.
 Idempotent: second invocation against an already-migrated home dir exits 0
 with <no changes; already migrated> message.
 
 Examples:
-  hades migrate plan-18 --from-zen-swarm-aliases               # dry-run, default
-  hades migrate plan-18 --from-zen-swarm-aliases --apply       # mutate files
-  hades migrate plan-18 --from-zen-swarm-aliases --include-aliases   # broader scope
+  hades migrate plan-18 --from-hades-system-aliases               # dry-run, default
+  hades migrate plan-18 --from-hades-system-aliases --apply       # mutate files
+  hades migrate plan-18 --from-hades-system-aliases --include-aliases   # broader scope
 
 See docs/operations/hades-entry-point.md §"Migration tooling" for the full
 operator workflow.`,
@@ -769,27 +769,27 @@ operator workflow.`,
 			return RunMigratePlan18(opts)
 		},
 	}
-	cmd.Flags().BoolVar(&f.fromZenSwarmAliases, "from-zen-swarm-aliases", false,
+	cmd.Flags().BoolVar(&f.fromHadesSystemAliases, "from-hades-system-aliases", false,
 		"REQUIRED: operator-explicit acknowledgement (spec §Q4 contract)")
 	cmd.Flags().BoolVar(&f.dryRun, "dry-run", true,
 		"Print diffs; no filesystem mutation (default true)")
 	cmd.Flags().BoolVar(&f.apply, "apply", false,
 		"Perform mutations (atomic write + backup); mutually exclusive with --dry-run=true")
 	cmd.Flags().BoolVar(&f.includeAliases, "include-aliases", false,
-		"Broader replacement scope: zen-swarm in shell alias declarations")
+		"Broader replacement scope: hades-system in shell alias declarations")
 	cmd.Flags().StringVar(&f.backupRoot, "backup-root", "",
-		"Backup destination root (default ~/.local/share/zen-swarm/migrate-plan-18-backup/)")
+		"Backup destination root (default ~/.local/share/hades-system/migrate-plan-18-backup/)")
 	cmd.Flags().StringVar(&f.homeOverride, "home", "",
 		"Override home dir (testing; default $HOME)")
-	if err := cmd.MarkFlagRequired("from-zen-swarm-aliases"); err != nil {
-		panic(fmt.Sprintf("MarkFlagRequired from-zen-swarm-aliases: %v", err))
+	if err := cmd.MarkFlagRequired("from-hades-system-aliases"); err != nil {
+		panic(fmt.Sprintf("MarkFlagRequired from-hades-system-aliases: %v", err))
 	}
 	return cmd
 }
 
 func validateMigrateP18FlagsWithChanged(f *migrateP18Flags, dryRunExplicit bool) error {
-	if !f.fromZenSwarmAliases {
-		return fmt.Errorf("--from-zen-swarm-aliases is required (spec §Q4 operator-explicit contract)")
+	if !f.fromHadesSystemAliases {
+		return fmt.Errorf("--from-hades-system-aliases is required (spec §Q4 operator-explicit contract)")
 	}
 	if f.apply && dryRunExplicit && f.dryRun {
 		return fmt.Errorf("--apply and --dry-run are mutually exclusive (drop one)")

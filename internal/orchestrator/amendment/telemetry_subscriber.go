@@ -66,8 +66,8 @@ func NewTelemetrySubscriber(cfg TelemetrySubscriberConfig) *TelemetrySubscriber 
 // metadata from the project's active doctrine schema, and dispatches
 // AutoRevert when (a) total_sessions ≥ revert_window_sessions, (b)
 // pct_passing < revert_threshold_pct, (c) lastApplied != ""
-// , (d) project is NOT bound to capa-firewall
-// , and (e) per-rule cooldown is satisfied (invariant,
+// (inv-hades-141), (d) project is NOT bound to capa-firewall
+// (inv-hades-100), and (e) per-rule cooldown is satisfied (inv-hades-139,
 // Task H-8).
 //
 // Returns the count of AutoRevert calls dispatched (useful for

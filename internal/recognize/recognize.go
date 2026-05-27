@@ -457,7 +457,7 @@ const doctrineSignalCap int64 = 50 * 1024
 
 func inferDoctrine(root fs.FS) string {
 
-	if buf, ok := readCappedFile(root, ".zen/doctrine.toml", doctrineSignalCap); ok {
+	if buf, ok := readCappedFile(root, ".hades/doctrine.toml", doctrineSignalCap); ok {
 		if name := extractTOMLName(buf); name != "" {
 			return name
 		}

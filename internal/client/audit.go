@@ -7,7 +7,7 @@
 // GET /v1/audit/events — ; recent events filtered by type/project
 // GET /v1/audit/types — ; distinct types catalog (last 30d)
 //
-// Family-disjoint reviewer pool and criteria templates are
+// Family-disjoint reviewer pool (inv-hades-080) and criteria templates are
 // surfaced via doctrine state (audit.families, audit.criteria.*); the CLI
 // reads them through DoctrineState rather than dedicated audit endpoints.
 package client
@@ -107,7 +107,7 @@ func (c *Client) AuditTypes(ctx context.Context) ([]AuditType, error) {
 // familyDescriptions maps a family name to its operator-visible
 // description. Used by AuditFamiliesFromPool to enrich the doctrine-
 // resolved name list. New families MUST be registered here so they
-// surface in `zen audit families show` with a meaningful description.
+// surface in `hades audit families show` with a meaningful description.
 var familyDescriptions = map[string]string{
 	"anthropic":  "Claude (Opus, Sonnet, Haiku) via Anthropic API.",
 	"google":     "Gemini (Pro, Flash) via Google AI / Vertex AI.",
@@ -229,13 +229,13 @@ func (c *Client) AuditDoctorChainIntegrity(_ context.Context) ([]CheckSummary, e
 // internal/mcp/audit/criteria.go::defaultTemplates: default, security,
 // performance, doctrine-violation). The audit MCP's CriteriaRegistry
 // rejects names it does not recognise, so operators running e.g.
-// `zen audit criteria show <name>` and then dispatching that name to
+// `hades audit criteria show <name>` and then dispatching that name to
 // the audit MCP MUST see only valid names here (review F-4).
 func AuditCriteria() []AuditCriterion {
 	return []AuditCriterion{
 		{Name: "default", Description: "Comprehensive review (correctness + style + tests).", Source: "builtin"},
 		{Name: "security", Description: "Security-grade audit (auth, crypto, input validation, secret leak, RCE).", Source: "builtin"},
 		{Name: "performance", Description: "Performance + scalability review (algorithmic complexity, allocations, leaks).", Source: "builtin"},
-		{Name: "doctrine-violation", Description: "Doctrine compliance check (max-scope/no-stub/no-defer; inv-zen-* boundary leakage).", Source: "builtin"},
+		{Name: "doctrine-violation", Description: "Doctrine compliance check (max-scope/no-stub/no-defer; inv-hades-* boundary leakage).", Source: "builtin"},
 	}
 }

@@ -7,7 +7,7 @@
 // checks compose via adapter shims in internal/doctor/check/adapters.go
 // .
 //
-// Boundary: this package consumes ONLY internal/audit/chain/
+// Boundary (inv-hades-031): this package consumes ONLY internal/audit/chain/
 // (typed event emit) + internal/doctrine/ (active doctrine accessor) +
 // internal/cli (existing ProbeResult/ProbeStatus types via the adapter
 // shim); it MUST NOT import internal/store.

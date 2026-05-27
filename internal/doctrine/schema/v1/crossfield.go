@@ -62,17 +62,17 @@ func validateCrossField(s *Schema) []error {
 		})
 	}
 
-	if s.ZenDayCadence.MorningBriefIfWithinHours > 24 {
+	if s.HadesDayCadence.MorningBriefIfWithinHours > 24 {
 		errs = append(errs, &CrossFieldViolation{
 			InvariantID: "MorningBriefWithinAtMostOneDay",
-			Detail:      fmt.Sprintf("ZenDayCadence.MorningBriefIfWithinHours=%d > 24", s.ZenDayCadence.MorningBriefIfWithinHours),
+			Detail:      fmt.Sprintf("HadesDayCadence.MorningBriefIfWithinHours=%d > 24", s.HadesDayCadence.MorningBriefIfWithinHours),
 		})
 	}
 
-	if s.ZenDayCadence.EODDigestIfWithinHours > 24 {
+	if s.HadesDayCadence.EODDigestIfWithinHours > 24 {
 		errs = append(errs, &CrossFieldViolation{
 			InvariantID: "EODDigestWithinAtMostOneDay",
-			Detail:      fmt.Sprintf("ZenDayCadence.EODDigestIfWithinHours=%d > 24", s.ZenDayCadence.EODDigestIfWithinHours),
+			Detail:      fmt.Sprintf("HadesDayCadence.EODDigestIfWithinHours=%d > 24", s.HadesDayCadence.EODDigestIfWithinHours),
 		})
 	}
 

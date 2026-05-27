@@ -3,7 +3,7 @@
 // substrate verification: install + plugin-format. Each check satisfies
 // the internal/doctor/check.Check interface.
 //
-// Boundary: hermes package consumes ONLY internal/doctor/check
+// Boundary (inv-hades-031): hermes package consumes ONLY internal/doctor/check
 // + the OS exec/PATH facilities (via the Detector seam); MUST NOT import
 // internal/store.
 //
@@ -84,7 +84,7 @@ func (c *InstallCheck) Name() string { return "hermes.install" }
 func (c *InstallCheck) Category() check.Category { return check.CategoryPreflight }
 
 func (c *InstallCheck) Description() string {
-	return "Hermes binary presence + version ≥" + MinimumHermesVersion + " (inv-zen-175)"
+	return "Hermes binary presence + version ≥" + MinimumHermesVersion + " (inv-hades-175)"
 }
 
 func (c *InstallCheck) IsDestructive() bool { return false }

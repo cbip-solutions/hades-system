@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — attach.go.
 //
-// `zen attach <alias> [--window <name>]` is the operator-facing entry
+// `hades attach <alias> [--window <name>]` is the operator-facing entry
 // point for re-entering a per-project tmux session. If the session is
 // Idle/Archived, the daemon spawns lazy (Q7 D TriggerExplicitAttach).
 // Default window: orch (per spec §6.3).
@@ -52,8 +52,8 @@ import (
 
 type AttachClient interface {
 	// AttachSession dispatches the request. Returns the exact tmux
-	// command-line the CLI MUST exec (`tmux -S /tmp/zen-swarm.sock
-	// attach -t zen-<alias>-<sha8>:<window>`), or an error.
+	// command-line the CLI MUST exec (`tmux -S /tmp/hades-system.sock
+	// attach -t hades-<alias>-<sha8>:<window>`), or an error.
 	AttachSession(ctx context.Context, alias, window string) (tmuxCmd string, err error)
 }
 
@@ -70,15 +70,15 @@ func NewAttachCmd(factory AttachClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "attach <alias>",
 		Short: "Attach to a project's tmux session",
-		Long: `Attach to the per-project tmux session named "zen-<alias>-<sha8>".
+		Long: `Attach to the per-project tmux session named "hades-<alias>-<sha8>".
 
 If the session is in Idle or Archived state, the daemon will lazily spawn
 (or restore from snapshot) a fresh session. The default window is "orch";
 override with --window. Valid windows: orch, leads, workers, hra, logs,
-scratch (operator-owned per Q6 D + inv-zen-118).
+scratch (operator-owned per Q6 D + inv-hades-118).
 
 The CLI execs ` + "`tmux attach-session`" + ` directly so the operator's terminal
-takes over the tmux foreground. Inside the test harness (ZEN_TEST_MODE=1)
+takes over the tmux foreground. Inside the test harness (HADES_TEST_MODE=1)
 the command echoes the resolved tmux invocation instead of execing so
 unit tests can assert without taking over the test process.
 
@@ -87,13 +87,13 @@ Exit codes (spec §6.2):
   1  alias not found OR --window invalid
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Attach to the orch window (default)
-  zen attach internal-platform-x
+  hades attach internal-platform-x
 
   # Attach to the logs window
-  zen attach internal-platform-x --window logs
+  hades attach internal-platform-x --window logs
 
   # Attach to the operator-owned scratch window
-  zen attach internal-platform-x --window scratch`,
+  hades attach internal-platform-x --window scratch`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			alias := args[0]

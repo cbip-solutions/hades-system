@@ -8,9 +8,9 @@
 // Phase ownership: D-12 ships the basic SELECT path. extends with
 // pagination (LIMIT + OFFSET) if operator UX reveals the need.
 //
-// Boundary: this file imports NO internal/store. Direct access
+// Boundary (inv-hades-031): this file imports NO internal/store. Direct access
 // to a.db is within the aggregator package's own DB — not the daemon store.
-// invariant: no web calls.
+// inv-hades-129: no web calls.
 package aggregator
 
 import (

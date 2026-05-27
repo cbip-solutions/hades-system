@@ -12,7 +12,7 @@
 // - The dispatcher selects Tier 1 when bypass-config exists and circuit
 // breaker permits; falls back to the providers.toml cascade otherwise.
 //
-// Import boundary:
+// Import boundary (inv-hades-031 + doc.go):
 // - This file MUST NOT import private-tier1-module directly.
 // - The BypassClient interface defined here uses only context + stdlib types.
 // - Daemon bootstrap constructs a thin adapter
@@ -25,20 +25,20 @@
 // - Missing usage field → zero token counts (non-fatal; treats as
 // zero-cost — the convention every cascade backend follows).
 //
-// Credential forwarding:
+// Credential forwarding (inv-hades-068):
 // - TierRequest.Credentials are revealed at the last moment before the
 // ForwardRaw call and injected into the headers map passed to the client.
 // - TierRequest.Headers minus managed keys (Content-Type, Authorization)
-// are also forwarded so X-Zen-* metadata reaches bypass.Client.Render.
+// are also forwarded so X-HADES-* metadata reaches bypass.Client.Render.
 //
-// Probe:
+// Probe (inv-hades-071):
 // - Delegates to BypassClient.Health — content-free, no Anthropic Max sub
 // turn consumed.
 // - circuit breaker recovery scheduler calls Probe to detect Open →
 // Closed transition.
 //
-// invariant compile guard (TierBackend interface) sits below the struct.
-// invariant boundary: this file must NOT import internal/store or
+// inv-hades-067 compile guard (TierBackend interface) sits below the struct.
+// inv-hades-031 boundary: this file must NOT import internal/store or
 // private-tier1-module (enforced by the providers package-level doc.go).
 package providers
 

@@ -21,7 +21,7 @@ type InvariantsWalker struct {
 
 func NewInvariantsWalker(root string) *InvariantsWalker { return &InvariantsWalker{root: root} }
 
-var invZenRE = regexp.MustCompile(`inv-zen-([0-9]+)`)
+var invHadesRE = regexp.MustCompile(`inv-hades-([0-9]+)`)
 
 func (w *InvariantsWalker) Walk(_ context.Context) (InvariantsResult, error) {
 	res := InvariantsResult{}
@@ -66,7 +66,7 @@ func (w *InvariantsWalker) Walk(_ context.Context) (InvariantsResult, error) {
 			scanner := bufio.NewScanner(f)
 			scanner.Buffer(make([]byte, 1024*1024), 4*1024*1024)
 			for scanner.Scan() {
-				for _, m := range invZenRE.FindAllStringSubmatch(scanner.Text(), -1) {
+				for _, m := range invHadesRE.FindAllStringSubmatch(scanner.Text(), -1) {
 					seen[m[1]] = struct{}{}
 				}
 			}

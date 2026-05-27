@@ -98,7 +98,7 @@ class Envelope:
     Round-trips with the release design Go ``internal/citation/types.go`` ``Envelope``
     struct byte-exact via JSON tags. Field order + names MUST match Go json
     tags; validation enforces invariants (confidence in [0.0, 1.0]; id
-    non-empty) — these are invariant anchors.
+    non-empty) — these are inv-hades-166 anchors.
 
     The Go ``Lane`` field has JSON tag ``retrieval_lane``; Python uses the
     same JSON name (``retrieval_lane`` field on the dataclass).
@@ -154,8 +154,8 @@ class Envelope:
             )
 
     def audit_event_url(self) -> str:
-        """Canonical zen://audit/<id> deep-link (mirrors Go AuditEventURL)."""
-        return f"zen://audit/{self.audit_event_id}"
+        """Canonical hades://audit/<id> deep-link (mirrors Go AuditEventURL)."""
+        return f"hades://audit/{self.audit_event_id}"
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize to dict matching Go json tags."""
@@ -236,7 +236,7 @@ class AugmentationResult:
     load-bearing for downstream filtering (e.g., capa-firewall hides
     cross-project citations entirely at render time).
 
-    invariant: structured serialization preserves to Tessera audit chain
+    inv-hades-166: structured serialization preserves to Tessera audit chain
     via the per-citation envelopes.
     """
 

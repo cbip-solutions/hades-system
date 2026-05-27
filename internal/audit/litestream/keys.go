@@ -46,7 +46,7 @@ func (s *S3CredentialsStore) Load(ctx context.Context, projectID string) (S3Cred
 	if projectID == "" {
 		return S3Credentials{}, errors.New("litestream: empty project_id")
 	}
-	if os.Getenv("ZEN_AUDIT_DISABLE_KEYCHAIN") == "1" {
+	if os.Getenv("HADES_AUDIT_DISABLE_KEYCHAIN") == "1" {
 		return S3Credentials{}, ErrKeychainUnsupported
 	}
 	return loadKeychainFn(projectID)
@@ -57,7 +57,7 @@ func (s *S3CredentialsStore) Save(ctx context.Context, projectID string, creds S
 	if projectID == "" {
 		return errors.New("litestream: empty project_id")
 	}
-	if os.Getenv("ZEN_AUDIT_DISABLE_KEYCHAIN") == "1" {
+	if os.Getenv("HADES_AUDIT_DISABLE_KEYCHAIN") == "1" {
 		return ErrKeychainUnsupported
 	}
 	return saveKeychainFn(projectID, creds)
@@ -68,14 +68,14 @@ func (s *S3CredentialsStore) Delete(ctx context.Context, projectID string) error
 	if projectID == "" {
 		return errors.New("litestream: empty project_id")
 	}
-	if os.Getenv("ZEN_AUDIT_DISABLE_KEYCHAIN") == "1" {
+	if os.Getenv("HADES_AUDIT_DISABLE_KEYCHAIN") == "1" {
 		return ErrKeychainUnsupported
 	}
 	return deleteKeychainFn(projectID)
 }
 
 func s3CredentialsServiceName(projectID string) string {
-	return "zen-swarm-audit-s3-" + projectID
+	return "hades-system-audit-s3-" + projectID
 }
 
 func defaultLoadKeychainFn(projectID string) (S3Credentials, error) {

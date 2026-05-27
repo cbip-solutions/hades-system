@@ -32,7 +32,7 @@ type RotationResult struct {
 // Per spec § 7.4 the rotation cadence is doctrine-driven (max-scope
 // 90 days; default 365; capa-firewall 90 + operator-triggered).
 // wires the rotation primitive only; wires the
-// scheduler + the `zen audit witness rotate --reason` CLI command.
+// scheduler + the `hades audit witness rotate --reason` CLI command.
 //
 // Concurrency a Rotation value is single-shot from the caller's
 // perspective — callers MUST NOT invoke Rotate / RevokeAndRotate
@@ -205,7 +205,7 @@ func (r *Rotation) appendTransitionLeaf(ctx context.Context, res RotationResult)
 
 func transitionDigest(old, fresh *ecdsa.PublicKey, reason string) [sha256.Size]byte {
 	var buf bytes.Buffer
-	buf.WriteString("zen-swarm-tessera-rotation-v1\x00")
+	buf.WriteString("hades-system-tessera-rotation-v1\x00")
 	buf.Write(marshalPubkey(old))
 	buf.WriteByte(0)
 	buf.Write(marshalPubkey(fresh))

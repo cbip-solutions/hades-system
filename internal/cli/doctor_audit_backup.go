@@ -61,7 +61,7 @@ func runAuditBackupChecks(ctx context.Context, c *client.Client) []CheckResult {
 			Name:   "audit.backup",
 			Status: "warn",
 			Detail: "no projects configured",
-			Hint:   "run `zen audit configure-s3 --project <id>` then restart daemon",
+			Hint:   "run `hades audit configure-s3 --project <id>` then restart daemon",
 		})
 	}
 	return out

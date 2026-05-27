@@ -3,7 +3,7 @@
 //
 // Task J-4 adapter: exposes a slim Prober implementation that
 // the cli/doctor_scheduler.go layer consumes (cli.SchedulerProber). The
-// split keeps invariant clean (internal/cli imports internal/scheduler;
+// split keeps inv-hades-031 clean (internal/cli imports internal/scheduler;
 // internal/scheduler does NOT import internal/store).
 //
 // prefers closure injection over Store interface accretion.
@@ -29,7 +29,7 @@ import (
 // daemon over the *scheduleradapter Adapter (the boundary crosser).
 //
 // MUST be safe for concurrent use; multiple operators may run
-// `zen doctor scheduler` concurrently.
+// `hades doctor scheduler` concurrently.
 type QueueDepthFn func(ctx context.Context, now time.Time) (total int, byProject map[string]int, err error)
 
 // MissedFiresFn returns count of MissedFire events in the [since, now]

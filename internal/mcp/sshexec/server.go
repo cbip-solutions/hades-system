@@ -4,7 +4,7 @@
 // Task L-9 — go-sdk stdio MCP server, three tools.
 //
 // The server is constructed via NewServer(cfg) and started by the
-// binary cmd/zen-mcp-sshexec/main.go. For
+// binary cmd/hades-mcp-sshexec/main.go. For
 // we ship Server with InvokeForTest / InvokeExecForTest helpers
 // so unit tests can dispatch tools without a real go-sdk transport.
 //
@@ -13,13 +13,13 @@
 // - exec(host, cmd, cwd, timeout, project) → streaming chunks + ExecResult
 // - list_allowed(project) → ListAllowedResult JSON
 //
-// invariant (stdio canonical for MCP): server-level constructor uses
+// inv-hades-086 (stdio canonical for MCP): server-level constructor uses
 // only mcp.StdioTransport; no HTTP listen. compliance test
 // asserts no `net.Listen` import in the binary main.go. The package
 // itself imports neither net.Listen nor http.ListenAndServe (compile-
 // check anchor).
 //
-// Boundary: no internal/store import.
+// Boundary (inv-hades-031): no internal/store import.
 
 package sshexec
 
@@ -34,7 +34,7 @@ import (
 	mcp "github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-// Coverage-tooling sentinels.
+// Coverage-tooling sentinels (inv-hades-031, inv-hades-086).
 //
 // The two AssertX functions below do NOT perform runtime checks — they
 // always return true. Their value is **structural**: they are exported
@@ -49,13 +49,13 @@ import (
 // reorg that accidentally removes the package boundary comment
 // leaves a coverage gap that surfaces in CI;
 // - the no-import-path checks at the bottom of the spec
-// (compliance/inv_zen_086_test) grep for the symbol's presence as
+// (compliance/inv_hades_086_test) grep for the symbol's presence as
 // an explicit "package authors thought about this" marker.
 //
 // Real enforcement of these invariants lives in:
-// - invariant: `compliance/inv_zen_031_test` (no internal/store
+// - inv-hades-031: `compliance/inv_hades_031_test` (no internal/store
 // import in this package).
-// - invariant: `compliance/inv_zen_086_test` (no http.ListenAndServe
+// - inv-hades-086: `compliance/inv_hades_086_test` (no http.ListenAndServe
 // in any sshexec source file) plus the var-block import sentinel
 // at the top of this file.
 var (
@@ -95,7 +95,7 @@ func NewServer(cfg ServerConfig) *Server {
 		tools: []string{"validate", "exec", "list_allowed"},
 	}
 	sdk := mcp.NewServer(&mcp.Implementation{
-		Name:    "zen-swarm-ssh-exec",
+		Name:    "hades-system-ssh-exec",
 		Version: "0.4.0",
 	}, nil)
 	s.mcpServer = sdk
@@ -205,7 +205,7 @@ func execInputSchema() map[string]any {
 			},
 			"cwd": map[string]any{
 				"type":        "string",
-				"description": "Optional working directory; forwarded as ZEN_CWD env to the wrapper.",
+				"description": "Optional working directory; forwarded as HADES_CWD env to the wrapper.",
 			},
 			"timeout": map[string]any{
 				"type":        "string",

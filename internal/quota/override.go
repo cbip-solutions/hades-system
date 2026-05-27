@@ -51,7 +51,7 @@ func validateOverrideArgs(alias string, mult float64, expiresAt time.Time, reaso
 		return fmt.Errorf("%w: alias is empty", ErrInvalidOverride)
 	}
 	if mult <= 0 {
-		return fmt.Errorf("%w: multiplier must be > 0 (got %v); use `zen project pause` for zero/negative effect",
+		return fmt.Errorf("%w: multiplier must be > 0 (got %v); use `hades project pause` for zero/negative effect",
 			ErrInvalidOverride, mult)
 	}
 	if mult > maxOverrideMultiplier {

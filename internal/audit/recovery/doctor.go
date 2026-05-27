@@ -17,7 +17,7 @@
 // and delegates to RunDoctorAuditBackup / RunDoctorAuditChainIntegrity
 // via a daemon HTTP round-trip.
 //
-// invariant: this file does NOT import internal/store. Backup status
+// inv-hades-031: this file does NOT import internal/store. Backup status
 // fields are read through a small extension on Manager / RsyncScheduler
 // and ChainStatus reads from the in-memory cache
 // populated by tamper.scheduler. The doctor returns CheckResult
@@ -60,7 +60,7 @@ func RunDoctorAuditBackup(ctx context.Context, projectID, doctrine string, st Ba
 			Name:   "audit.backup",
 			Status: "fail",
 			Detail: fmt.Sprintf("S3 unreachable for project %s", projectID),
-			Hint:   "verify AWS credentials via `zen audit configure-s3 --project " + projectID + "`",
+			Hint:   "verify AWS credentials via `hades audit configure-s3 --project " + projectID + "`",
 		}
 	}
 
@@ -115,7 +115,7 @@ func RunDoctorAuditChainIntegrity(ctx context.Context, projectID, doctrine strin
 			Name:   "audit.chain-integrity",
 			Status: "fail",
 			Detail: fmt.Sprintf("verify-chain never run for project %s", projectID),
-			Hint:   "run `zen audit verify-chain --project " + projectID + "`",
+			Hint:   "run `hades audit verify-chain --project " + projectID + "`",
 		}
 	}
 
@@ -134,7 +134,7 @@ func RunDoctorAuditChainIntegrity(ctx context.Context, projectID, doctrine strin
 	}
 	if tamperN > 0 {
 		status = worse(status, "fail")
-		hint = fmt.Sprintf("%d tamper events in last 7d; run `zen audit recover --project %s`", tamperN, projectID)
+		hint = fmt.Sprintf("%d tamper events in last 7d; run `hades audit recover --project %s`", tamperN, projectID)
 	}
 	if lag > time.Duration(float64(cadence)*1.5) {
 		status = worse(status, "warn")

@@ -10,7 +10,7 @@
 // This package does NOT write to any database. It is an outbound HTTP client
 // to the release dispatcher.
 //
-// # Invariant invariant
+// # Invariant inv-hades-080
 //
 // The reviewer provider family MUST be disjoint from the generator provider
 // family. The Pool sealed constructor enforces:
@@ -18,7 +18,7 @@
 // - generator family is absent from the chosen reviewer family
 //
 // This is a hard rule. Any code path that calls pool.Choose() without
-// first constructing Pool via NewPool() is a violation of invariant.
+// first constructing Pool via NewPool() is a violation of inv-hades-080.
 //
 // # release boundary
 //

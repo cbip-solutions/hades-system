@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain_history.go.
 //
-// `zen audit-chain history` queries release audit_events_raw augmented with
+// `hades audit-chain history` queries release audit_events_raw augmented with
 // the release chain extension columns via GET /v1/audit-chain/history:
 //
 // PrevHash — previous record's hash (chain linkage)
@@ -10,7 +10,7 @@
 // PartitionID — monthly partition tag (e.g. "2026_05")
 //
 // Output table (default) or json/yaml (--format flag). Table adds three
-// chain-proof columns beyond the release `zen audit events` surface:
+// chain-proof columns beyond the release `hades audit events` surface:
 //
 // REC_HASH (truncated 16 chars) TESSERA_LEAF PARTITION
 //
@@ -41,12 +41,12 @@ proofs: each row includes the Tessera Merkle path + witness signature cover
 so the operator can verify event authenticity without re-running verify-chain.
 Supports time-bound and event-type prefix filters.
 
-Chain-proof columns added vs ` + "`zen audit events`" + `:
+Chain-proof columns added vs ` + "`hades audit events`" + `:
   REC_HASH     — first 16 chars of record_hash (full in --format json)
   TESSERA_LEAF — leaf index in the Tessera tile-log (nil = not yet tiled)
   PARTITION    — monthly partition tag (e.g. 2026_05)`,
-		Example: `  zen audit-chain history --project zen-swarm
-  zen audit-chain history --filter audit_review --since 24h --format json`,
+		Example: `  hades audit-chain history --project hades-system
+  hades audit-chain history --filter audit_review --since 24h --format json`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if err := format.ValidateExclusive(cmd); err != nil {
 				return err

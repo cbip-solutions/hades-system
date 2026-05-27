@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package fix — hermes_install_fix.go ships the Fix impl for the
-// hermes.install check. Non-destructive: shells out to
+// hermes.install check (inv-hades-175). Non-destructive: shells out to
 // `brew install hermes-agent` on macOS; surfaces manual install guidance
 // on other platforms.
 package fix

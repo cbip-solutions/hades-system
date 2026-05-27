@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr_history.go.
 //
-// `zen adr history <id>` calls GET /v1/adr/history?id=... and renders
+// `hades adr history <id>` calls GET /v1/adr/history?id=... and renders
 // the transition log for one ADR. Wire type: []client.ADRTransition.
 package cli
 
@@ -20,7 +20,7 @@ func adrHistoryCmd() *cobra.Command {
 		Use:     "history <id>",
 		Short:   "Show transition log for one ADR",
 		Args:    cobra.ExactArgs(1),
-		Example: `  zen adr history ADR-0042`,
+		Example: `  hades adr history ADR-0042`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx, cancel := context.WithTimeout(cmd.Context(), 10*time.Second)
 			defer cancel()

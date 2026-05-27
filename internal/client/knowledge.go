@@ -3,7 +3,7 @@
 //
 // Three methods + supporting wire types for the daemon's
 // /v1/knowledge/* surface backing the operator-facing
-// `zen knowledge` CLI:
+// `hades knowledge` CLI:
 //
 // KnowledgeQuery POST /v1/knowledge/query — hybrid FTS5 + structured filter
 // KnowledgeReindex POST /v1/knowledge/reindex — cold rebuild dispatch
@@ -21,7 +21,7 @@
 // hydrates rows back into a domain-friendly form for rendering — keeping
 // the wire boundary at strings, the domain layer at typed enums.
 //
-// invariant boundary: this file imports stdlib + context + encoding/json
+// inv-hades-129 boundary: this file imports stdlib + context + encoding/json
 // only — never net/http directly (the *Client transport handles it).
 // `--remote` and `--audit-chain` are intercepted at the CLI BEFORE this
 // layer runs, so neither flag ever reaches a wire payload (per spec §1

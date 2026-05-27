@@ -14,7 +14,7 @@
 // 8. BUILD.bazel + MODULE.bazel (both required)
 // 9. pants.toml
 //
-// Rationale (spec §2.4 + SOTA-3 #4): when operator runs zen recognize inside
+// Rationale (spec §2.4 + SOTA-3 #4): when operator runs hades recognize inside
 // e.g. apps/web/ of a monorepo, recognize would mis-classify the inner package
 // as the whole project. Walk-UP first identifies the workspace root so the
 // orchestrator can position its FS scope correctly.

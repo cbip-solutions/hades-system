@@ -22,26 +22,26 @@
 // no_defer) are declared TRUE in every built-in TOML's
 // [doctrine_transverse] section. The parser rejects
 // [doctrine_transverse] in user TOMLs (returning
-// *doctrineerrors.TransverseOverrideAttempt per invariant). LoadAll()
+// *doctrineerrors.TransverseOverrideAttempt per inv-hades-135). LoadAll()
 // passes ParseOpts{AllowTransverseDeclaration: true} to opt INTO the
 // transverse-allowed parse mode; this option is set ONLY in this package
 // and ONLY for the embedded files. Reload, per-project override
 // , and amendment-apply parse paths MUST NOT
 // pass this option.
 //
-// # invariant — Boundary
+// # inv-hades-133 — Boundary
 //
 // This package does NOT import internal/store. The
 // noStoreImportAnalyzer enforces this at compile time via golangci-lint
 // (and via analysistest fixtures in internal/doctrine/lint/analysistest/).
 //
-// # invariant — Sole accessor
+// # inv-hades-134 — Sole accessor
 //
 // External callers (release worker, release orchestrator, release merge,
 // , NOT through this package's per-doctrine accessors directly.
 // The per-doctrine accessors (MaxScope/Default/CapaFirewall) exist for
 // init-path callers and for the CLI debug
-// command `zen doctrine show <name>`. All three are read-only.
+// command `hades doctrine show <name>`. All three are read-only.
 package builtin
 
 import (

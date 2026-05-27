@@ -3,7 +3,7 @@
 // CodeEmbedder + Reranker seams to the real release ecosystem implementations
 // (JinaCodeEmbeddings + BGEReRankerV2M3). It lives in internal/daemon (the
 // composition-root layer) because internal/caronte must NOT import
-// internal/research/ecosystem — invariant (the embed path is a local
+// internal/research/ecosystem — inv-hades-129 (the embed path is a local
 // subprocess, no net/http) is preserved structurally by keeping caronte's
 // dependency on a pure interface. The daemon wires these adapters into
 // caronte.Deps at main.go.
@@ -13,7 +13,7 @@
 // internal/research/ecosystem (the Jina/BGE implementations). The daemon
 // orchestrator, dispatcher, and mcpgateway MUST NOT import either side
 // directly — they receive the wired intent.CodeEmbedder / intent.Reranker
-// values from the composition root.
+// values from the composition root (inv-hades-031 + inv-hades-129).
 package caronteembedadapter
 
 import (

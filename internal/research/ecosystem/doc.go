@@ -11,7 +11,7 @@
 // arXiv research papers + GitHub top-1000-starred READMEs/docs — and
 // serves them via:
 // - MCP capability `research.ecosystem_docs(query, ecosystem?, version?, scope?)`
-// - CLI commands `zen knowledge query --remote`, `zen memory`, `zen specs`, `zen docs`
+// - CLI commands `hades knowledge query --remote`, `hades memory`, `hades specs`, `hades docs`
 //
 // # Architecture
 //
@@ -22,7 +22,7 @@
 // dispatcher.Query query path
 // router → fan-out → RRF → rerank → verify → abstain → audit → emit
 //
-// # Boundaries
+// # Boundaries (inv-hades-031 preserved)
 //
 // this package MUST NOT import:
 // - internal/store (direct DB ops; use aggregator + indexer abstractions)
@@ -37,11 +37,11 @@
 // - internal/audit/chain
 // - internal/orchestrator/eventlog
 //
-// # 15 invariants
+// # 15 invariants (inv-hades-191..205)
 //
 // See internal design record §5.
 // Compile-time enforced where applicable ( vet analyzer
-// `no_web_in_ecosystem` for invariant); runtime enforced via property
+// `no_web_in_ecosystem` for inv-hades-191); runtime enforced via property
 // tests; CI enforced via tests/property/ecosystem/ + tests/compliance/.
 //
 // # Phase status (frozen at write time)
@@ -54,7 +54,7 @@
 // (query): Dispatcher.Query 14-step orchestration
 // (version + Δ): VersionDetector cascade + ChangeExtractor
 // (surface): MCP + 4 CLI namespaces + ecosystem_join_keys populator
-// (ops): BudgetMonitor + zen docs commands + cron launchd
+// (ops): BudgetMonitor + hades docs commands + cron launchd
 // (tests): adversarial suite + 12 property + 2 compliance tests + vet analyzer
 // (release): 5 ADRs 0087-0091 + handbooks + v0.14.0 tag candidate
 package ecosystem

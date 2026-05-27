@@ -6,7 +6,7 @@
 // one-time backfill walker for post-migration data.
 //
 // This package is the pure-Go domain layer for chain integrity. It
-// NEVER imports internal/store — boundary invariant enforced. All
+// NEVER imports internal/store — boundary inv-hades-031 enforced. All
 // store-side I/O goes through the EventStore interface (store.go),
 // which is satisfied by internal/daemon/auditadapter (the release
 // equivalent of bypassadapter / dispatcheradapter / orchestratoradapter

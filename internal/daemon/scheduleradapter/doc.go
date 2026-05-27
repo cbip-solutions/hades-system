@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package scheduleradapter bridges internal/scheduler types to
-// daemon.db. Satisfies invariant: internal/scheduler/* never imports
+// daemon.db. Satisfies inv-hades-031: internal/scheduler/* never imports
 // internal/store; scheduleradapter is the single bridge.
 //
 // wraps *store.Store CRUD primitives (internal/store/schedules.go) for
@@ -23,9 +23,9 @@
 // store.ErrScheduleNotFound on absent row (operator-driven
 // mutations have no target — the absent case is an error).
 //
-// invariant boundary: the import list of this package is the single
+// inv-hades-122 boundary: the import list of this package is the single
 // legitimate co-location of internal/scheduler (when D-2 lands it) and
 // internal/store anywhere in the codebase. The compliance test
-// inv_zen_122_inv_zen_031_plan7_packages_test.go extends to enforce
+// inv_hades_122_inv_hades_031_plan7_packages_test.go extends to enforce
 // this on release packages.
 package scheduleradapter

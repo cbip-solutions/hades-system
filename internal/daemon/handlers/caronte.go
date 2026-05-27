@@ -2,23 +2,23 @@
 // Package handlers — caronte.go.
 //
 // POST /v1/caronte/reindex — operator-triggered reindex of a project's
-// Caronte code-graph. The handler resolves the X-Zen-Project-ID header
+// Caronte code-graph. The handler resolves the X-HADES-Project-ID header
 // (alias OR canonical id_sha256) through the ProjectsAliasResolver,
 // then delegates to the engine's IndexProject method. The engine is
 // in-daemon; this route
 // avoids the gateway round-trip used by /v1/mcpgateway/* — operators
-// can `zen caronte reindex` against a daemon without a running Hermes
+// can `hades caronte reindex` against a daemon without a running Hermes
 // session.
 //
-// invariant boundary: this handler does NOT import internal/caronte
+// inv-hades-031 boundary: this handler does NOT import internal/caronte
 // or internal/daemon/mcpgateway. The engine + alias resolver are
 // consumed through narrow handler-local interfaces
 // (CaronteEngineForReindex + ProjectsAliasResolverForReindex). The
-// *daemon.Server in cmd/zen-swarm-ctld wires concrete adapters that
+// *daemon.Server in cmd/hades-ctld wires concrete adapters that
 // thin-translate to those interfaces (the existing CaronteEngine /
 // mcpgateway.ProjectsAliasResolver instances).
 //
-// invariant alias resolution: the handler MUST translate alias →
+// inv-hades-277 alias resolution: the handler MUST translate alias →
 // canonical id_sha256 BEFORE invoking IndexProject (the engine never
 // sees aliases — its surface keys on canonical id_sha256 always).
 package handlers
@@ -94,9 +94,9 @@ func CaronteReindex(s CaronteReindexCtx) http.HandlerFunc {
 			http.Error(w, "alias resolver not configured", http.StatusServiceUnavailable)
 			return
 		}
-		raw := r.Header.Get("X-Zen-Project-ID")
+		raw := r.Header.Get("X-HADES-Project-ID")
 		if raw == "" {
-			http.Error(w, "X-Zen-Project-ID header required", http.StatusBadRequest)
+			http.Error(w, "X-HADES-Project-ID header required", http.StatusBadRequest)
 			return
 		}
 		canonicalID, err := resolver.Resolve(r.Context(), raw)

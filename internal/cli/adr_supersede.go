@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr_supersede.go.
 //
-// `zen adr supersede <old-id> <new-id> --reason <X>` calls
-// POST /v1/adr/supersede. --reason is mandatory per invariant.
+// `hades adr supersede <old-id> <new-id> --reason <X>` calls
+// POST /v1/adr/supersede. --reason is mandatory per inv-hades-146.
 // Two positional args are required (cobra.ExactArgs(2)).
 package cli
 
@@ -21,15 +21,15 @@ func adrSupersedeCmd() *cobra.Command {
 	var reason string
 	cmd := &cobra.Command{
 		Use:   "supersede <old-id> <new-id>",
-		Short: "Link old→new supersede chain (--reason mandatory; inv-zen-146)",
+		Short: "Link old→new supersede chain (--reason mandatory; inv-hades-146)",
 		Args:  cobra.ExactArgs(2),
 		Long: `supersede transitions oldID from accepted → superseded and links
 it to newID. Emits an adr.superseded event anchored on the Plan 9 audit
-chain. Both IDs and --reason are mandatory per inv-zen-146.`,
-		Example: `  zen adr supersede ADR-0042 ADR-0070 --reason "design drift post Plan 9"`,
+chain. Both IDs and --reason are mandatory per inv-hades-146.`,
+		Example: `  hades adr supersede ADR-0042 ADR-0070 --reason "design drift post Plan 9"`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if strings.TrimSpace(reason) == "" {
-				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason must not be empty (inv-zen-146)"))
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason must not be empty (inv-hades-146)"))
 			}
 			oldID, newID := args[0], args[1]
 			ctx, cancel := context.WithTimeout(cmd.Context(), 10*time.Second)
@@ -42,7 +42,7 @@ chain. Both IDs and --reason are mandatory per inv-zen-146.`,
 			return nil
 		},
 	}
-	cmd.Flags().StringVar(&reason, "reason", "", "Rationale for supersession (mandatory; inv-zen-146)")
+	cmd.Flags().StringVar(&reason, "reason", "", "Rationale for supersession (mandatory; inv-hades-146)")
 	_ = cmd.MarkFlagRequired("reason")
 	return cmd
 }

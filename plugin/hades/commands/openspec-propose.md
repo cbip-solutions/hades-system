@@ -10,7 +10,7 @@ arguments:
 # Propose phase for: {{feature_name}}
 
 You are starting the propose phase for feature `{{feature_name}}`. Per
-spec §3.1 + invariant, follow this flow:
+spec §3.1 + inv-hades-015, follow this flow:
 
 1. **Load the brainstorming skill** explicitly:
    ```
@@ -19,7 +19,7 @@ spec §3.1 + invariant, follow this flow:
    The skill cannot be auto-triggered by keyword on OpenCode (R6 verified
    discover-then-call semantics) — explicit invocation is required.
 
-2. **Follow brainstorming with these zen-swarm adaptations:**
+2. **Follow brainstorming with these hades-system adaptations:**
    - Output format: OpenSpec (proposal/design/tasks/deltas)
    - Write to: `openspec/changes/{{feature_name}}/`
    - When foundational questions are settled, write the four `.md` files

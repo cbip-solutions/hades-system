@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package handlers provides the HTTP handler factories for the
-// zen-swarm daemon (zen-swarm-ctld) /v1/* surface.
+// hades-system daemon (hades-ctld) /v1/* surface.
 //
 // Each route is registered in internal/daemon/server.go via
 // http.ServeMux.Handle and wrapped with RateLimitMiddleware drawing
@@ -77,7 +77,7 @@
 // and silently 500s every request.
 //
 // This aligns with the sibling internal/daemon/transport package whose
-// NewMessagesHandler + NewZenSwarmTransport constructors panic on
+// NewMessagesHandler + NewHadesSystemTransport constructors panic on
 // nil dispatcher (see internal/daemon/transport/doc.go and reviewer M4
 // post- audit). Optional dependencies (audit anchors, with
 // documented graceful-degradation paths) MAY be nil; required engines
@@ -85,18 +85,18 @@
 //
 // # Invariants
 //
-// - invariant: All routes ride the Unix domain socket bound by
+// - inv-hades-001: All routes ride the Unix domain socket bound by
 // server.go. The TCP listener (when configured) is for the local
 // web UI only; production daemons under launchd leave HTTPAddr
 // empty.
-// - invariant: This package never imports internal/store. The
+// - inv-hades-031: This package never imports internal/store. The
 // Ctx interfaces (ResearchCacheCtx, AuditEmitCtx, BudgetCtx,
 // WorkforceCtx, OperatorGateCtx, DoctrineCtx, RateLimitCtx) are the
 // bridge: *daemon.Server satisfies them via methods that delegate
 // through internal/daemon/{bypass,workforce}adapter to *store.Store.
 // handlers.doctrine.go imports the doctrine.ErrDoctrineValidation
 // sentinel — pure value, no transitive store dependency.
-// - invariant: API surface is /v1/-versioned and stays stable across
+// - inv-hades-024: API surface is /v1/-versioned and stays stable across
 // plans; handlers for routes whose backing engine isn't wired yet
 // return shape-correct defaults (PHASE_G_DEFAULT) so contract
 // tests pass from day 1.

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package cleanup — inspect.go ships JSON serialization for
-// `zen state list`.
+// `hades state list`.
 //
 // Schema version follows release's aggregator + recognize JSON pattern:
 // schemaVersion="1.0" with additive growth. Operators MAY parse via

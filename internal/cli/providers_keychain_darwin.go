@@ -17,7 +17,7 @@ func storeKeychainKey(service, key string) error {
 	item := gokeychain.NewItem()
 	item.SetSecClass(gokeychain.SecClassGenericPassword)
 	item.SetService(service)
-	item.SetAccount("zen-swarm")
+	item.SetAccount("hades-system")
 	item.SetLabel(service)
 	item.SetData([]byte(key))
 	item.SetSynchronizable(gokeychain.SynchronizableNo)
@@ -30,7 +30,7 @@ func storeKeychainKey(service, key string) error {
 		query := gokeychain.NewItem()
 		query.SetSecClass(gokeychain.SecClassGenericPassword)
 		query.SetService(service)
-		query.SetAccount("zen-swarm")
+		query.SetAccount("hades-system")
 		if delErr := gokeychain.DeleteItem(query); delErr != nil && !errors.Is(delErr, gokeychain.ErrorItemNotFound) {
 			return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("keychain rotate: delete-before-add: %w", delErr))
 		}

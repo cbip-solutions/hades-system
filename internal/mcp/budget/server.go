@@ -38,7 +38,7 @@ func NewServer(bc *client.BudgetClient) *Server {
 	s.registerHandlers()
 
 	sdk := mcp.NewServer(&mcp.Implementation{
-		Name:    "zen-mcp-budget",
+		Name:    "hades-mcp-budget",
 		Version: "0.4.0",
 	}, nil)
 	s.bindToMCPServer(sdk)

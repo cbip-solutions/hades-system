@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — safetynet_regression.go.
 //
-// `zen safetynet regression {show,query}` reads the substrate_health
+// `hades safetynet regression {show,query}` reads the substrate_health
 // table via the daemon (Q2 C element 3 — regression-by-self detector
 // from the Apr 23 substrate-regression incident). The adapter at
 // internal/daemon/orchestratoradapter is the persistence

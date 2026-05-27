@@ -28,10 +28,10 @@ RUN CGO_ENABLED=1 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
         -X main.version=${VERSION} \
         -X main.commit=${COMMIT} \
         -X main.date=${DATE} \
-        -X github.com/zen-swarm/zen-swarm/internal/buildinfo.version=${VERSION} \
-        -X github.com/zen-swarm/zen-swarm/internal/buildinfo.commit=${COMMIT} \
-        -X github.com/zen-swarm/zen-swarm/internal/buildinfo.date=${DATE}" \
-    -o /out/zen ./cmd/zen
+        -X github.com/cbip-solutions/hades-system/internal/buildinfo.version=${VERSION} \
+        -X github.com/cbip-solutions/hades-system/internal/buildinfo.commit=${COMMIT} \
+        -X github.com/cbip-solutions/hades-system/internal/buildinfo.date=${DATE}" \
+    -o /out/hades ./cmd/hades
 
 RUN CGO_ENABLED=1 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
     -trimpath \
@@ -40,13 +40,13 @@ RUN CGO_ENABLED=1 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
         -X main.version=${VERSION} \
         -X main.commit=${COMMIT} \
         -X main.date=${DATE} \
-        -X github.com/zen-swarm/zen-swarm/internal/buildinfo.version=${VERSION} \
-        -X github.com/zen-swarm/zen-swarm/internal/buildinfo.commit=${COMMIT} \
-        -X github.com/zen-swarm/zen-swarm/internal/buildinfo.date=${DATE}" \
-    -o /out/zen-swarm-ctld ./cmd/zen-swarm-ctld
+        -X github.com/cbip-solutions/hades-system/internal/buildinfo.version=${VERSION} \
+        -X github.com/cbip-solutions/hades-system/internal/buildinfo.commit=${COMMIT} \
+        -X github.com/cbip-solutions/hades-system/internal/buildinfo.date=${DATE}" \
+    -o /out/hades-ctld ./cmd/hades-ctld
 
 RUN if [ "${TARGETARCH}" = "${BUILDARCH}" ] || [ -z "${BUILDARCH}" ]; then \
-        /out/zen --version && /out/zen-swarm-ctld --version; \
+        /out/hades --version && /out/hades-ctld --version; \
     else \
         echo "skip --version smoke for cross-arch build"; \
     fi
@@ -58,11 +58,11 @@ LABEL org.opencontainers.image.description="Multi-project agentic development or
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.vendor="hades-system"
 
-COPY --from=builder /out/zen /usr/local/bin/zen
-COPY --from=builder /out/zen-swarm-ctld /usr/local/bin/zen-swarm-ctld
-COPY --from=builder /src/LICENSE /usr/share/doc/zen-swarm/LICENSE
-COPY --from=builder /src/README.md /usr/share/doc/zen-swarm/README.md
+COPY --from=builder /out/hades /usr/local/bin/hades
+COPY --from=builder /out/hades-ctld /usr/local/bin/hades-ctld
+COPY --from=builder /src/LICENSE /usr/share/doc/hades-system/LICENSE
+COPY --from=builder /src/README.md /usr/share/doc/hades-system/README.md
 
-ENTRYPOINT ["/usr/local/bin/zen-swarm-ctld"]
+ENTRYPOINT ["/usr/local/bin/hades-ctld"]
 CMD ["--version"]
 USER nonroot:nonroot

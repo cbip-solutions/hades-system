@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// specs_show.go — release Task F-5 subcommand `zen specs show <id>`.
+// specs_show.go — release Task F-5 subcommand `hades specs show <id>`.
 //
 // Pure filesystem read of openspec/specs/<id>.md — no daemon call.
 // Renders the full file content. --format text|md is a no-op alias
@@ -79,8 +79,8 @@ func newSpecsShowCmd(getDir specsDirResolver) *cobra.Command {
 
 Pure filesystem read — no daemon call. Reserved formats: text (default)
 and md (alias today). Missing spec returns exit 1 (operator-recoverable).`,
-		Example: `  zen specs show adr-0001
-  zen specs show design-v1 --format md`,
+		Example: `  hades specs show adr-0001
+  hades specs show design-v1 --format md`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return RunSpecsShow(getDir(cmd), args[0], flags.Format, cmd.OutOrStdout())

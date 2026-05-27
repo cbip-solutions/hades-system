@@ -12,7 +12,7 @@
 // lookup helper; the extractor never emits a row for Reverse calls (the
 // httpMethods set excludes it).
 //
-// Boundary: no internal/store import; no
+// Boundary (inv-hades-230 + inv-hades-271): no internal/store import; no
 // golang.org/x/tools/go/packages.
 package echo
 

@@ -2,8 +2,8 @@
 // Package augment — PrivacyFilter enforces doctrine cross-project rules at
 // the retrieval boundary.
 //
-// invariant: augmentation cross-project respects doctrine privacy boundaries.
-// invariant: aggregator queries filter doctrine privacy.
+// inv-hades-163: augmentation cross-project respects doctrine privacy boundaries.
+// inv-hades-171: aggregator queries filter doctrine privacy.
 //
 // ARBITER pattern (Q4 SOTA Report Dec 2025): filter at retrieval, never at
 // presentation. NEVER trust the LLM to filter privacy-sensitive content.

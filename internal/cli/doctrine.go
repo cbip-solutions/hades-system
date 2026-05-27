@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctrine.go.
 //
-// `zen doctrine` exposes the doctrine config system. Three commands
+// `hades doctrine` exposes the doctrine config system. Three commands
 // hit the daemon (state, validate, reload); the rest (list, which,
 // diff, schema) are computed locally via internal/doctrine.
 //
 // Cobra layout (7 leaves):
 //
-// zen doctrine show (alias: state)
-// zen doctrine list (built-in catalog)
-// zen doctrine validate --file <toml>
-// zen doctrine which (active doctrine name)
-// zen doctrine reload --yes (atomic-swap; security-grade)
-// zen doctrine diff --from <a> --to <b>
-// zen doctrine schema (canonical TOML schema text)
+// hades doctrine show (alias: state)
+// hades doctrine list (built-in catalog)
+// hades doctrine validate --file <toml>
+// hades doctrine which (active doctrine name)
+// hades doctrine reload --yes (atomic-swap; security-grade)
+// hades doctrine diff --from <a> --to <b>
+// hades doctrine schema (canonical TOML schema text)
 package cli
 
 import (
@@ -236,7 +236,7 @@ func doctrineWhichCmd() *cobra.Command {
 			fmt.Fprintf(out, "Active doctrine: %s\n", active)
 			fmt.Fprintln(out, "Resolution chain:")
 			fmt.Fprintln(out, "  1. user-level CLAUDE.md doctrine (if set)")
-			fmt.Fprintln(out, "  2. project zenswarm.toml [doctrine.name] (if set)")
+			fmt.Fprintln(out, "  2. project hadessystem.toml [doctrine.name] (if set)")
 			fmt.Fprintln(out, "  3. CLI --doctrine override (if passed)")
 			fmt.Fprintln(out, "  4. built-in catalog (max-scope|default|capa-firewall)")
 			return nil
@@ -399,7 +399,7 @@ func doctrineSchemaCmd() *cobra.Command {
 			}
 			out := cmd.OutOrStdout()
 			fmt.Fprintln(out, "# Canonical doctrine TOML schema (from default builtin).")
-			fmt.Fprintln(out, "# Field set is additive-only across schema versions (inv-zen-084).")
+			fmt.Fprintln(out, "# Field set is additive-only across schema versions (inv-hades-084).")
 			fmt.Fprintln(out)
 			fmt.Fprint(out, buf.String())
 			return nil

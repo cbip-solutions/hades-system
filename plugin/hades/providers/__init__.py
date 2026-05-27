@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Zen-swarm provider profile for Hermes."""
+"""HADES system provider profile for Hermes."""
 
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ def _load_default_base_url() -> str:
     constants_path = Path(__file__).resolve().parent.parent / "_constants.py"
     # Stable module name keeps repeated loads idempotent (sys.modules
     # cache hit on subsequent imports).
-    module_name = "_zen_swarm_plugin_constants"
+    module_name = "_hades_system_plugin_constants"
     cached = sys.modules.get(module_name)
     if cached is not None:
         return cached.DEFAULT_DAEMON_BASE_URL
@@ -57,7 +57,7 @@ def _load_default_base_url() -> str:
     return mod.DEFAULT_DAEMON_BASE_URL
 
 
-# Default base_url — operator override via env var ``ZEN_SWARM_BASE_URL``.
+# Default base_url — operator override via env var ``HADES_SYSTEM_BASE_URL``.
 # Canonical literal lives in ``plugin/hades/_constants.py`` (reviewer
 # M1: single source of truth across providers + install_mcps consumers).
 # Loaded via absolute path because Hermes loads this module standalone
@@ -72,18 +72,18 @@ def _resolve_base_url() -> str:
     per session, so subsequent env mutations don't propagate. Operators
     needing a runtime change must restart Hermes.
     """
-    return os.environ.get("ZEN_SWARM_BASE_URL", _DEFAULT_BASE_URL)
+    return os.environ.get("HADES_SYSTEM_BASE_URL", _DEFAULT_BASE_URL)
 
 
-zen_swarm = ProviderProfile(
-    name="zen-swarm",
-    aliases=("zen", "zenswarm"),
+hades_system = ProviderProfile(
+    name="hades-system",
+    aliases=("hades", "hadessystem"),
     api_mode="anthropic_messages",
-    env_vars=("ZEN_SWARM_API_KEY",),
+    env_vars=("HADES_SYSTEM_API_KEY",),
     base_url=_resolve_base_url(),
-    display_name="zen-swarm",
-    description="zen-swarm-ctld single-egress proxy (Anthropic Messages format)",
+    display_name="hades-system",
+    description="hades-ctld single-egress proxy (Anthropic Messages format)",
     auth_type="api_key",
 )
 
-register_provider(zen_swarm)
+register_provider(hades_system)

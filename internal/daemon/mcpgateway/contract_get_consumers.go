@@ -3,7 +3,7 @@
 //
 // Handler for the `get_consumers` MCP tool. Validates required `endpoint` +
 // `workspace` args + dispatches to engine.GetConsumers; returns the
-// ConsumerList payload. Capa-firewall enforced upstream.
+// ConsumerList payload. Capa-firewall enforced upstream (inv-hades-031).
 package mcpgateway
 
 import "context"

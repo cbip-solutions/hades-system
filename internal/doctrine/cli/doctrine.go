@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctrine.go.
 //
-// `zen doctrine` (registered as `zen doctrine-v2` during + K parity
-// window; quality promotes to `zen doctrine`) exposes 15 subcommands
+// `hades doctrine` (registered as `hades doctrine-v2` during + K parity
+// window; quality promotes to `hades doctrine`) exposes 15 subcommands
 // organized via cobra.Group annotations:
 //
 // Read group → list, show, status, history, diff, validate
@@ -11,22 +11,22 @@
 // registers group only)
 // Debug group → reinforce
 //
-// Q14 C: flat invocation pattern — `zen doctrine show max-scope`, NOT
-// `zen doctrine read show max-scope`. cobra.Group annotation organizes
+// Q14 C: flat invocation pattern — `hades doctrine show max-scope`, NOT
+// `hades doctrine read show max-scope`. cobra.Group annotation organizes
 // `--help` into visual groups WITHOUT introducing intermediate command
 // nodes.
 //
 // Q15 A: `migrate` operator-explicit write-back; daemon never auto-writes
-// .
+// (inv-hades-137).
 //
 // Q12 C: `reinforce` previews template render output for operator inspection
 // of what worker subprocess will receive.
 //
 // Help text + error messages in español per project instructions operator language §6.6.
 //
-// invariant: this package imports zero internal/store; all stateful reads
+// inv-hades-133: this package imports zero internal/store; all stateful reads
 // route via internal/client (typed HTTP daemon client) which itself respects
-// invariant.
+// inv-hades-031.
 package cli
 
 import (
@@ -68,13 +68,13 @@ func NewRoot() *cobra.Command {
 	return root
 }
 
-const rootLongHelp = `Gestiona el sistema de doctrina del daemon zen-swarm.
+const rootLongHelp = `Gestiona el sistema de doctrina del daemon hades-system.
 
 La doctrina es un conjunto declarativo de límites (TOML) que rige cómo el
 daemon coordina workers, presupuestos, revisiones, fusiones y políticas
 operativas para cada proyecto. Los comandos están agrupados visualmente
 para facilitar la consulta de --help; la invocación es siempre plana
-(p.ej. ` + "`zen doctrine show max-scope`" + `), no anidada por grupo.
+(p.ej. ` + "`hades doctrine show max-scope`" + `), no anidada por grupo.
 
 Grupos:
   Lectura    — list, show, status, history, diff, validate
@@ -82,7 +82,7 @@ Grupos:
   Enmienda   — propose-list, ack, deny, revert
   Depuración — reinforce
 
-Use ` + "`zen doctrine <comando> --help`" + ` para ver opciones de cada uno.`
+Use ` + "`hades doctrine <comando> --help`" + ` para ver opciones de cada uno.`
 
 func registerGroups(root *cobra.Command) {
 	root.AddGroup(
@@ -99,7 +99,7 @@ func clientFromCmd(cmd *cobra.Command) *Client {
 	if TestOnlyClientFactory != nil {
 		return TestOnlyClientFactory()
 	}
-	uds := "/tmp/zen-swarm.sock"
+	uds := "/tmp/hades-system.sock"
 	if root := cmd.Root(); root != nil {
 		if v, _ := root.PersistentFlags().GetString("uds"); v != "" {
 			uds = v

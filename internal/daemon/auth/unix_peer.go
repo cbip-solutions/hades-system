@@ -45,7 +45,7 @@ func IsLoopbackAddr(remoteAddr string) bool {
 	return ip.IsLoopback()
 }
 
-// PeerCredOnly is the middleware enforcing invariant: every
+// PeerCredOnly is the middleware enforcing inv-hades-131: every
 // /v1/* route (except the two bearer-only endpoints) MUST require
 // either Unix-socket peer-cred OR loopback TCP.
 //

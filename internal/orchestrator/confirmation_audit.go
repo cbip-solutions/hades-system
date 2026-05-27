@@ -1,7 +1,7 @@
-// Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
+// Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 //
 // RequireOperatorIdentity middleware (release Task F-5,
-// invariant).
+// inv-hades-099).
 //
 // The daemon accepts operator overrides (confirmation ack/deny,
 // doctrine revert, autonomy mode change, depth flag) over a Unix domain

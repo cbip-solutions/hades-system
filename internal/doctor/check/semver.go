@@ -10,7 +10,7 @@
 // digits-until-first-non-digit). Duplicate logic + behavioural mismatch
 // violated no-tech-debt + risked downstream bugs.
 //
-// Boundary: semver.go consumes ONLY the stdlib. The check
+// Boundary (inv-hades-031): semver.go consumes ONLY the stdlib. The check
 // package is the canonical shared substrate for doctor primitives — both
 // internal/doctor/hermes and internal/doctor/mcp already import it for
 // the Check interface, so consolidation here adds no new boundary

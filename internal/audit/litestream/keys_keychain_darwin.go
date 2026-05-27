@@ -42,7 +42,7 @@ func saveKeychainImpl(projectID string, creds S3Credentials) error {
 	item := keychain.NewItem()
 	item.SetSecClass(keychain.SecClassGenericPassword)
 	item.SetService(s3CredentialsServiceName(projectID))
-	item.SetAccount("zen-swarm-audit-s3")
+	item.SetAccount("hades-system-audit-s3")
 	item.SetData(body)
 	item.SetSynchronizable(keychain.SynchronizableNo)
 	item.SetAccessible(keychain.AccessibleWhenUnlocked)

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 // Package cli — specs.go.
 //
-// `zen specs <subcommand>` is the operator-facing entry point for the
+// `hades specs <subcommand>` is the operator-facing entry point for the
 // read-only OpenSpec management surface (spec §0.2). Specs are read-only
 // at the CLI in release; write-back is deferred to post-v0.14.0.
 //
 // Four leaves under one root:
 //
-// zen specs list [--format text|json]
-// zen specs show <spec-id> [--format text|md]
-// zen specs diff <change-id> [--v <from>..<to>]
-// zen specs sync [--full] [--specs-dir <path>]
+// hades specs list [--format text|json]
+// hades specs show <spec-id> [--format text|md]
+// hades specs diff <change-id> [--v <from>..<to>]
+// hades specs sync [--full] [--specs-dir <path>]
 //
 // list / show / diff are pure filesystem reads of openspec/specs/ +
 // openspec/changes/<id>/deltas/ — no daemon call.
@@ -52,10 +52,10 @@ Four subcommands:
 
 Specs are read-only at this CLI surface in Plan 14. Write-back is
 deferred to post-v0.14.0 per spec §0.2.`,
-		Example: `  zen specs list
-  zen specs show adr-0001
-  zen specs diff zen-swarm-bootstrap
-  zen specs sync --full`,
+		Example: `  hades specs list
+  hades specs show adr-0001
+  hades specs diff hades-system-bootstrap
+  hades specs sync --full`,
 	}
 
 	root.PersistentFlags().String("root", "", "Project root override (defaults to cwd)")

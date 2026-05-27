@@ -14,7 +14,7 @@
 // transports (e.g. a future fake-keyed in-memory client for chaos
 // tests) can also satisfy MergeClient without name collision.
 //
-// Wire types live in merge_dto.go alongside the interface; invariant
+// Wire types live in merge_dto.go alongside the interface; inv-hades-104
 // boundary preserved (no internal/orchestrator/merge import here).
 //
 // # Routes

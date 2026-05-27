@@ -64,7 +64,7 @@ func (r WorkerSpecRef) Validate() error {
 		return errors.New("subprocess: WorkerSpecRef.SpecID required")
 	}
 	if r.Worktree == "" {
-		return errors.New("subprocess: WorkerSpecRef.Worktree required (inv-zen-087 boundary)")
+		return errors.New("subprocess: WorkerSpecRef.Worktree required (inv-hades-087 boundary)")
 	}
 	if r.DoctrineName == "" {
 		return errors.New("subprocess: WorkerSpecRef.DoctrineName required")

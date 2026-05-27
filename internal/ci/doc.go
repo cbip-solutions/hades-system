@@ -43,6 +43,6 @@
 // loader with 14d expiry enforcement.
 //
 // Cache path: ~/.cache/hades/ci/{sha}.json (per master §2.6 + policy
-// identity rename; NOT ~/.cache/zen-swarm/ which was the pre-rename
+// identity rename; NOT ~/.cache/hades-system/ which was the pre-rename
 // location).
 package ci

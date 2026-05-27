@@ -4,7 +4,7 @@
 // the release surface-migration auto-detection per SOTA-2 "surface
 // migration when state detected" pattern (Q1=C rationale).
 //
-// Boundary: migrate doctor sub-package consumes ONLY
+// Boundary (inv-hades-031): migrate doctor sub-package consumes ONLY
 // internal/doctor/check; MUST NOT import internal/store. The check is
 // read-only (no recursion into ~/.claude/; only top-level marker probe).
 //
@@ -84,6 +84,6 @@ func (c *DetectCheck) Run(_ context.Context) check.DiagnosticResult {
 		return d
 	}
 	d.Message = fmt.Sprintf("~/.claude/ detected with %d marker(s); migration available", len(found))
-	d.Hint = "run `zen migrate claude-code --dry-run` to preview migration plan"
+	d.Hint = "run `hades migrate claude-code --dry-run` to preview migration plan"
 	return d
 }

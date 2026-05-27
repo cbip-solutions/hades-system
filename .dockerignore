@@ -52,7 +52,7 @@ CHANGELOG.md.bak
 .env
 .env.*
 .secrets/
-.zen/
+.hades/
 .hades/
 **/*.key
 **/*.pem

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package projectctx owns project-identity resolution for zen-swarm.
+// Package projectctx owns project-identity resolution for hades-system.
 //
 // - ProjectID — sha256 hex of canonical path (AIP-2510 canonical id, Q3).
-// - Alias — human alias from zenswarm.toml [project] id, with
+// - Alias — human alias from hadessystem.toml [project] id, with
 // fallback <dirname>-<sha256[:8]>.
 // - Project — the activated project record returned by Activate().
 // - PathHistoryEntry / MvDetection — mv-detection support.
@@ -11,13 +11,13 @@
 // internal/daemon/projectctxadapter (which
 // imports internal/store; this package never does).
 //
-// Boundary discipline: this package imports
+// Boundary discipline (inv-hades-031 + inv-hades-122): this package imports
 // only stdlib + github.com/BurntSushi/toml. NEVER imports internal/store.
 // All persistence flows through the ProjectStore interface; the adapter
 // in internal/daemon/projectctxadapter is the ONLY package that may
 // import both projectctx and store.
 //
-// Round-trip invariant: for any registered project,
+// Round-trip invariant (inv-hades-114): for any registered project,
 // alias → IDSha256 → alias must round-trip lossless. The canonical path
 // component is stable as long as the project is not moved (mv-detection
 // catches the latter).

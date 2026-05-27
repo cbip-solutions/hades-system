@@ -11,7 +11,7 @@
 // dep-validation + defaults (pollEvery=500ms; atomTimeout=30s)
 // - Forward-declared interfaces consumed by G-2/G-3/G-4:
 // BudgetSnapshotReader, WorkerSet, OrchestratorActuator
-// - invariant compile anchor (atomicityGuardEnforced); runtime
+// - inv-hades-092 compile anchor (atomicityGuardEnforced); runtime
 // enforcement lands in G-4
 //
 // Adaptation notes vs plan code:

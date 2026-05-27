@@ -14,7 +14,7 @@
 // (this file's contract: ProcessVaultNote writes the JSON array column
 // vault.db.notes.ecosystem_join_keys per resolved symbol candidate).
 // - AuditChainAnchor: populated chain (post- invariant
-// invariant binding vault notes to the audit chain).
+// inv-hades-074 binding vault notes to the audit chain).
 //
 
 package ecosystem

@@ -45,9 +45,9 @@ type Entry struct {
 var catalog = []Entry{
 
 	{
-		Name:        "zen-swarm-ctld",
+		Name:        "hades-ctld",
 		Tier:        TierMandatory,
-		Description: "HADES daemon gateway (zen-swarm-ctld) — Q1=B aggregator",
+		Description: "HADES daemon gateway (hades-ctld) — Q1=B aggregator",
 		RiskTier:    "low",
 		Package:     "local",
 	},
@@ -98,7 +98,7 @@ var catalog = []Entry{
 	{
 		Name:        "memory",
 		Tier:        TierSmart,
-		Description: "Knowledge memory MCP (default-off when zen-swarm-ctld covers)",
+		Description: "Knowledge memory MCP (default-off when hades-ctld covers)",
 		RiskTier:    "low",
 		Package:     "@modelcontextprotocol/server-memory",
 	},
@@ -175,10 +175,10 @@ func assertAllTiered(entries []Entry) {
 			panic("mcp.AssertAllTiered: catalog entry has empty Name; programmer error")
 		}
 		if e.Tier == TierUnknown {
-			panic("mcp.AssertAllTiered: MCP " + e.Name + " has Tier=0 (TierUnknown); programmer error (inv-zen-181 substrate)")
+			panic("mcp.AssertAllTiered: MCP " + e.Name + " has Tier=0 (TierUnknown); programmer error (inv-hades-181 substrate)")
 		}
 		if e.Tier < TierMandatory || e.Tier > TierCatalog {
-			panic("mcp.AssertAllTiered: MCP " + e.Name + " has out-of-range Tier; programmer error (inv-zen-181 substrate)")
+			panic("mcp.AssertAllTiered: MCP " + e.Name + " has out-of-range Tier; programmer error (inv-hades-181 substrate)")
 		}
 		if e.RiskTier == "" {
 			panic("mcp.AssertAllTiered: MCP " + e.Name + " has empty RiskTier; Q10=D doctrine eval requires populated")

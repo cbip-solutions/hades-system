@@ -3,7 +3,7 @@
 // Evaluator interface impl that produces a CallDecision from (mcpName,
 // toolName, params) + active doctrine bundle.
 //
-// invariant enforcement: every EvaluateCall invocation MUST emit
+// inv-hades-184 enforcement: every EvaluateCall invocation MUST emit
 // exactly one audit event via the configured Emitter. The runtime
 // guarantee is the emit call below; tests assert via recordingEmitter
 // count.

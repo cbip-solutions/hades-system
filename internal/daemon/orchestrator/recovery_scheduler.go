@@ -25,7 +25,7 @@
 // This deviation is pinned by TestRecoveryScheduler_GracefulShutdown and
 // documented in the commit body.
 //
-// Boundary: this file imports stdlib (context, time) and
+// Boundary (inv-hades-031): this file imports stdlib (context, time) and
 // internal/providers only. The orchestrator package MUST NOT import
 // internal/store directly; boundary crossings flow through
 // internal/daemon/dispatcheradapter.

@@ -121,7 +121,7 @@ type JinaCodeEmbeddingsOptions struct {
 	ScriptPath string
 
 	BatchSize int
-	// ShimMode runs the script with ZEN_JINA_SHIM=1 so unit tests can run
+	// ShimMode runs the script with HADES_JINA_SHIM=1 so unit tests can run
 	// without sentence-transformers / torch installed. Production callers
 	// MUST leave ShimMode=false (the daemon orchestrator passes false).
 	ShimMode bool
@@ -147,7 +147,7 @@ func NewJinaCodeEmbeddings(opts JinaCodeEmbeddingsOptions) (*JinaCodeEmbeddings,
 	}
 	cmd := exec.Command(opts.PythonPath, opts.ScriptPath)
 	if opts.ShimMode {
-		cmd.Env = append(os.Environ(), "ZEN_JINA_SHIM=1")
+		cmd.Env = append(os.Environ(), "HADES_JINA_SHIM=1")
 	}
 	stdin, err := cmd.StdinPipe()
 
@@ -380,7 +380,7 @@ func (e *JinaCodeEmbeddings) request(ctx context.Context, texts []string, shape 
 // quantizeBinary256 packs 256 fp32 values into 32 bytes via sign-bit.
 // Bit i (MSB-first within each byte) = 1 if fp32[i] >= 0 else 0.
 // Wire format MUST match sqlite-vec's BIT[256] convention (verified
-// against zen_jina_embed.py's quantize_binary_256 plus sqlite-vec docs).
+// against hades_jina_embed.py's quantize_binary_256 plus sqlite-vec docs).
 //
 // Panics on input length != 256 — callers MUST slice properly. This is a
 // defense-in-depth guard: silent miscompression would corrupt the
@@ -405,23 +405,23 @@ func quantizeBinary256(fp32 []float32) []byte {
 // per docs.voyageai.com). Routes ALL HTTP egress through release dispatcher via
 // the narrow Forwarder interface declared below (release B-6 narrow-interface
 // pattern). Tokens come from macOS Keychain at (service="voyage-api-token",
-// account="zen-swarm") by default — never accept tokens via struct field or
+// account="hades-system") by default — never accept tokens via struct field or
 // env var (defense-in-depth: prevents accidental token leakage through logs
 // or process listings).
 //
 // Privacy doctrine (LOAD-BEARING):
 // - EnableFallback defaults to FALSE. Operator must opt in via
-// ~/.config/zen-swarm/providers/ecosystem-embedder.toml [fallback]
+// ~/.config/hades-system/providers/ecosystem-embedder.toml [fallback]
 // enable_fallback = true. Without opt-in, every Embed* method returns
 // ErrFallbackDisabled before any Keychain lookup or Forwarder call.
 // - Tokens are cached in-memory after first Keychain fetch to avoid
 // repeated unlock prompts on high-throughput batches.
 //
 // Boundary doctrine:
-// - invariant forward-compat: this type does NOT import net/http
+// - inv-hades-191 forward-compat: this type does NOT import net/http
 // directly; HTTP egress flows through Forwarder which the daemon
 // orchestrator wires to a concrete *providers.Dispatcher at runtime.
-// - invariant: no internal/providers import here — the narrow Forwarder
+// - inv-hades-031: no internal/providers import here — the narrow Forwarder
 // interface keeps the boundary clean (mirrors the bypassadapter +
 // dispatcheradapter split in internal/daemon/).
 //
@@ -509,7 +509,7 @@ func NewVoyageCode3(opts VoyageCode3Options) (*VoyageCode3, error) {
 		opts.TokenKey = "voyage-api-token"
 	}
 	if opts.TokenAccount == "" {
-		opts.TokenAccount = "zen-swarm"
+		opts.TokenAccount = "hades-system"
 	}
 	return &VoyageCode3{opts: opts}, nil
 }

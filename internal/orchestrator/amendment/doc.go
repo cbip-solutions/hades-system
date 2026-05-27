@@ -16,15 +16,15 @@
 // architecture records and a DoctrineAmendmentProposed
 // event is emitted. Operator acknowledgement (via
 // OperatorGate) drives AmendmentApplier.Apply: validate-first
-// , capture pre-apply TOML SHA-256, atomic git commit,
+// (inv-hades-098), capture pre-apply TOML SHA-256, atomic git commit,
 // HTTP reload signal, emit DoctrineAmendmentApplied. Any post-commit
 // failure triggers a deferred AmendmentReverter.Rollback that restores
 // the working tree byte-identical to its pre-Apply state
-// . Operator deny moves the ADR to
+// (inv-hades-094). Operator deny moves the ADR to
 // architecture records and arms a per-doctrine cooldown timer
 // suppressing re-proposal of the same trigger pattern.
 //
-// # Boundaries
+// # Boundaries (inv-hades-089 generalized)
 //
 // - amendment ⊥ internal/store — no SQLite import. Bridged in
 // daemon/orchestratoradapter.
@@ -41,15 +41,15 @@
 //
 // # Invariants enforced here
 //
-// - invariant — Amendment rollback atomicity. AmendmentApplier.Apply
+// - inv-hades-094 — Amendment rollback atomicity. AmendmentApplier.Apply
 // is transactional: any post-commit failure triggers a deferred
 // rollback that leaves the working tree byte-identical to pre-Apply
 // state (TOML SHA-256 hash check).
-// - invariant — Doctrine validate before apply. Apply MUST call
+// - inv-hades-098 — Doctrine validate before apply. Apply MUST call
 // doctrine.ValidateAdditive on the proposed diff BEFORE any git
 // operation; failure aborts + emits DoctrineAmendmentSuppressed
 // {reason:"validate_failed"}.
-// - invariant — ADR range reservation. release reserves
+// - inv-hades-103 — ADR range reservation. release reserves
 // decisions/0020..0029 (10 slots); range.NextAvailableID returns
 // ErrADRRangeExhausted + emits ADRRangeExhausted on overflow.
 //

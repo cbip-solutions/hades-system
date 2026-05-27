@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — state_history.go.
 //
-// `zen state history [--field <name>]` calls GET /v1/state/history and
+// `hades state history [--field <name>]` calls GET /v1/state/history and
 // renders manual field change events from the release chain as a table.
 // Optional --field scopes output to one field name.
 //
@@ -25,9 +25,9 @@ func newStateHistoryCmd() *cobra.Command {
 events in chronological order. Use --field to scope output to one field.
 
 Columns: FIELD | OLD | NEW | AT | REASON | OPERATOR`,
-		Example: `  zen state history
-  zen state history --field substrate_min_version
-  zen state history --json`,
+		Example: `  hades state history
+  hades state history --field substrate_min_version
+  hades state history --json`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if err := format.ValidateExclusive(cmd); err != nil {
 				return err

@@ -5,7 +5,7 @@ package mixed.v1;
 import "common/types.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/zen-swarm/example/mixed/v1;mixedv1";
+option go_package = "github.com/hades-system/example/mixed/v1;mixedv1";
 
 service MixedService {
   rpc DoThing (DoThingRequest) returns (DoThingResponse);

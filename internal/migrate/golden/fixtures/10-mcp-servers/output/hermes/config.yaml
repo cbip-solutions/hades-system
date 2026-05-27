@@ -7,8 +7,8 @@ mcp_servers:
   playwright:
     command: npx
     args: ["@playwright/mcp"]
-  zen-swarm:
+  hades-system:
     transport: http
     url: http://unix/v1/mcpgateway
-    socket: /tmp/zen-swarm.sock
+    socket: /tmp/hades-system.sock
 

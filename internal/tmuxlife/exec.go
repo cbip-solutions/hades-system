@@ -10,7 +10,7 @@ import (
 
 // ExecTmux is the canonical wrapper for invoking the tmux binary.
 //
-// invariant enforcement (layer 2): every invocation MUST include "-S".
+// inv-hades-117 enforcement (layer 2): every invocation MUST include "-S".
 // The wrapper panics if "-S" is absent in args; this surfaces the
 // programmer error immediately rather than silently spawning on the
 // operator's default socket /tmp/tmux-<uid> and contaminating their
@@ -40,7 +40,7 @@ func ExecTmux(ctx context.Context, args ...string) ([]byte, error) {
 
 		if i == 0 && a == "tmux" {
 			panic(fmt.Sprintf(
-				"tmuxlife.ExecTmux: args[0] = %q; pass subcommand args only (do not pre-pend %q). inv-zen-117 socket %s",
+				"tmuxlife.ExecTmux: args[0] = %q; pass subcommand args only (do not pre-pend %q). inv-hades-117 socket %s",
 				a, "tmux", SocketPath,
 			))
 		}
@@ -50,7 +50,7 @@ func ExecTmux(ctx context.Context, args ...string) ([]byte, error) {
 	}
 	if !hasDashS {
 		panic(fmt.Sprintf(
-			"tmuxlife.ExecTmux: -S flag missing in args %v; inv-zen-117 forbids default socket /tmp/tmux-<uid>; pass -S %s explicitly",
+			"tmuxlife.ExecTmux: -S flag missing in args %v; inv-hades-117 forbids default socket /tmp/tmux-<uid>; pass -S %s explicitly",
 			args, SocketPath,
 		))
 	}

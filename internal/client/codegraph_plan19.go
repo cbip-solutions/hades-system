@@ -8,11 +8,11 @@
 // caronte segment with the engine). CLI is operator-side; LLM traffic is
 // not involved (these are structural queries, not generation).
 //
-// invariant single-egress preserved: every round-trip proxies through
-// the daemon. invariant enforced: this file uses ONLY c.postJSON /
+// inv-hades-088 single-egress preserved: every round-trip proxies through
+// the daemon. inv-hades-129 enforced: this file uses ONLY c.postJSON /
 // c.postJSONH — never net/http directly.
 //
-// ProjectAlias as the canonical X-Zen-Project-ID header so the daemon
+// ProjectAlias as the canonical X-HADES-Project-ID header so the daemon
 // mcpgateway alias resolver picks it up per MCP protocol convention.
 // Body still includes ProjectAlias.
 package client

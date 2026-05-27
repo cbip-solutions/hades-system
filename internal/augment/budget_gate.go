@@ -2,7 +2,7 @@
 // Package augment — BudgetGate enforces release budget MCP cap_status pre-call
 // check + writes cost_ledger entry post-call.
 //
-// invariant: every augmentation request MUST pass through BudgetGate.Check
+// inv-hades-167: every augmentation request MUST pass through BudgetGate.Check
 // before any LLM/MCP cost is incurred.
 //
 // Two-method contract:

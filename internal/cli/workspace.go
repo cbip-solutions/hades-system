@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — workspace.go.
 //
-// `zen workspace {init,list,members,link,remove,policy {get,set}}` — 7 verbs
+// `hades workspace {init,list,members,link,remove,policy {get,set}}` — 7 verbs
 // total. The DECISION-5 policy-set flow is the load-bearing core:
 // 1. CLI emits the release audit row `policy_change_requested` FIRST
 // (records operator intent regardless of prompt outcome);
@@ -24,8 +24,8 @@
 // `--yes` bypasses the prompt for scripted runs; non-interactive without
 // `--yes` is rejected (destructive-default-no per project instructions hard rule).
 //
-// Routes via the daemon /v1/mcpgateway/workspace/* sub-routes (invariant
-// single-egress, invariant no direct net/http). Tests inject
+// Routes via the daemon /v1/mcpgateway/workspace/* sub-routes (inv-hades-088
+// single-egress, inv-hades-129 no direct net/http). Tests inject
 // WorkspaceClient fakes.
 package cli
 
@@ -493,8 +493,8 @@ prompt outcome), then prompts in interactive mode; on confirm/abort emits a
 SECOND audit row encoding the outcome. --yes bypasses the prompt for
 scripted runs (but BOTH audit rows still emit). Non-interactive without
 --yes is rejected (destructive-default-no).`,
-		Example: `  zen workspace policy set ws-1 locked
-  zen workspace policy set ws-1 permissive --yes`,
+		Example: `  hades workspace policy set ws-1 locked
+  hades workspace policy set ws-1 permissive --yes`,
 		Args: cobra.MaximumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

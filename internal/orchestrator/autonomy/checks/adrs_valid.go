@@ -22,7 +22,7 @@ func (c *adrsValid) Run(ctx context.Context, _ autonomy.CheckEnv) (autonomy.Chec
 	if dir := strings.TrimSpace(c.d.Paths.ADRsDir); dir != "" {
 		args = append(args, dir)
 	}
-	stdout, code, err := c.d.Exec.Run(ctx, "zen", args...)
+	stdout, code, err := c.d.Exec.Run(ctx, "hades", args...)
 	if err != nil {
 		return autonomy.CheckFail, "adrs validator exec: " + err.Error(), nil
 	}

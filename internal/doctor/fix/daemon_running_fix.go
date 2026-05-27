@@ -2,7 +2,7 @@
 // Package fix — daemon_running_fix.go ships the Fix impl for the
 // daemon.running check.
 //
-// Non-destructive: starts the daemon idempotently via `zen daemon start`.
+// Non-destructive: starts the daemon idempotently via `hades daemon start`.
 // Existing running daemon → no-op; stopped daemon → reachable post-fix.
 package fix
 
@@ -23,15 +23,15 @@ func (d *DaemonRunningFix) IsDestructive() bool { return false }
 
 func (d *DaemonRunningFix) Apply(ctx context.Context, mode check.FixMode) error {
 	if mode == check.FixModeReadOnly {
-		return errors.New("fix: read-only mode; run `zen daemon start` to start daemon")
+		return errors.New("fix: read-only mode; run `hades daemon start` to start daemon")
 	}
-	if _, err := exec.LookPath("zen"); err != nil {
-		return fmt.Errorf("fix: `zen` binary not on PATH: %w", err)
+	if _, err := exec.LookPath("hades"); err != nil {
+		return fmt.Errorf("fix: `hades` binary not on PATH: %w", err)
 	}
-	cmd := exec.CommandContext(ctx, "zen", "daemon", "start")
+	cmd := exec.CommandContext(ctx, "hades", "daemon", "start")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("fix: zen daemon start failed: %w; output:\n%s", err, string(out))
+		return fmt.Errorf("fix: hades daemon start failed: %w; output:\n%s", err, string(out))
 	}
 	return nil
 }

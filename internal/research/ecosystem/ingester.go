@@ -41,9 +41,9 @@
 // passes -race -count=10 (security/correctness invariant).
 //
 // Doctrine compliance:
-// - invariant: ingester does NOT import internal/store / internal/daemon/*
+// - inv-hades-031: ingester does NOT import internal/store / internal/daemon/*
 // directly; IndexerWriter + SymbolIndexRegistrar narrow interfaces live HERE.
-// - invariant: no direct net/http (Source impls own their HTTP via cache.Revalidator).
+// - inv-hades-191: no direct net/http (Source impls own their HTTP via cache.Revalidator).
 // - EventType slots 98/99 declared canonically at A-1 in
 // internal/orchestrator/eventlog/events.go; consumes by name
 // (no local uint32 redeclarations).
@@ -80,7 +80,7 @@ import (
 //
 // PackageLastIndexedAt + UpdatePackageLastIndexedAt are methods on
 // `*Indexer` struct (canonical owner); consumes via this narrow
-// interface to preserve invariant boundary discipline (ingester package
+// interface to preserve inv-hades-031 boundary discipline (ingester package
 // does NOT import internal/store).
 //
 // Concurrency implementations MUST be safe for concurrent WriteChunks /
@@ -111,7 +111,7 @@ type SymbolIndexRegistrar interface {
 // sqlite transaction layer. NIL OK at unit-test boundary (ingester silent-
 // skips the write step; audit emit + return remain functional).
 //
-// Declared HERE in ingester.go per invariant boundary — does NOT
+// Declared HERE in ingester.go per inv-hades-031 boundary — does NOT
 // import internal/store / internal/daemon; narrow interfaces live in
 // internal/research/ecosystem and are wired at daemon-init time.
 //

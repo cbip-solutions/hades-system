@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package glob implements Tier 3 of zen recognize per spec §2.4 Q4=B:
+// Package glob implements Tier 3 of hades recognize per spec §2.4 Q4=B:
 // go-enry-powered byte-ranking with linguist filters (IsVendor / IsGenerated /
 // IsDocumentation / IsTest / IsBinary) applied BEFORE byte-counting.
 // Honors.gitattributes linguist-* overrides.

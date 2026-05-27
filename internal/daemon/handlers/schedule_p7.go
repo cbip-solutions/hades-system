@@ -13,13 +13,13 @@
 // These operate on the schedules + schedule_history substrate
 // (migration 063) via internal/scheduler.Store + a typed
 // ScheduleHandler that bridges scheduler.Schedule ↔ store.ScheduleRow
-// per invariant: this handler package never imports internal/store
+// per inv-hades-031: this handler package never imports internal/store
 // directly for scheduler-side lifecycle; the scheduleradapter is the
 // single bridge.
 //
 // Status-code mapping (mirrors the projects_p7 + priority patterns):
 //
-// 503 — ScheduleStore() not yet wired (cmd/zen-swarm-ctld registers
+// 503 — ScheduleStore() not yet wired (cmd/hades-ctld registers
 // the adapter at boot; tests inject fakes via SetScheduleStore).
 // 400 — invalid JSON / missing required fields.
 // 404 — schedule id not found (delete / run / history paths).
@@ -32,10 +32,10 @@
 // gap: the Run path requires a wired scheduler.FireDeps (quota
 // + dispatcher + eventlog + ratelimit), which composes at boot.
 // Until then the Run route returns 503 even when the store is wired —
-// the operator surface is final-shape day 1 (`zen schedule routine run`
+// the operator surface is final-shape day 1 (`hades schedule routine run`
 // reaches a real route) but the dispatch substrate ships in
 //
-// invariant boundary: the only scheduler-side imports are the
+// inv-hades-031 boundary: the only scheduler-side imports are the
 // scheduler.Schedule + scheduler.HistoryEntry value types and the
 // scheduler.Tier / scheduler.MissPolicy / scheduler.TriggerType /
 // scheduler.Status / scheduler.Outcome enums. No internal/store, no

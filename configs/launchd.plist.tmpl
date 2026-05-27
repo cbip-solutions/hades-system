@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.zenswarm.ctld</string>
+    <string>com.hadessystem.ctld</string>
 
     <key>ProgramArguments</key>
     <array>
         <string>{{CTLD_PATH}}</string>
         <string>-uds</string>
-        <string>/tmp/zen-swarm.sock</string>
+        <string>/tmp/hades-system.sock</string>
         <string>-http</string>
         <string>127.0.0.1:8080</string>
         <string>-db</string>
-        <string>{{HOME}}/.local/share/zen-swarm/state.db</string>
+        <string>{{HOME}}/.local/share/hades-system/state.db</string>
     </array>
 
     <key>RunAtLoad</key>
@@ -26,13 +26,13 @@
     </dict>
 
     <key>StandardOutPath</key>
-    <string>{{HOME}}/.local/share/zen-swarm/logs/ctld.stdout.log</string>
+    <string>{{HOME}}/.local/share/hades-system/logs/ctld.stdout.log</string>
 
     <key>StandardErrorPath</key>
-    <string>{{HOME}}/.local/share/zen-swarm/logs/ctld.stderr.log</string>
+    <string>{{HOME}}/.local/share/hades-system/logs/ctld.stderr.log</string>
 
     <key>WorkingDirectory</key>
-    <string>{{HOME}}/.local/share/zen-swarm</string>
+    <string>{{HOME}}/.local/share/hades-system</string>
 
     <key>EnvironmentVariables</key>
     <dict>

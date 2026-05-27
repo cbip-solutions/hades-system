@@ -24,8 +24,8 @@ Workflow per task:
 3. Implement minimal code to pass.
 4. Run the test runner (`{{.PrimaryTestRunner}}`); iterate until green.
 5. If fix-loop iter ≥ 3, escalate via daemon (provider rotation).
-6. When green: `git commit` with trailers `Zen-Trace-Id` + `Zen-Provider`
-   + `Zen-Audit-Passed: yes`. **Never** add AI attribution (invariant).
+6. When green: `git commit` with trailers `HADES-Trace-Id` + `HADES-Provider`
+   + `HADES-Audit-Passed: yes`. **Never** add AI attribution (inv-hades-004).
 
 Constraints:
 - Stay within your worktree.

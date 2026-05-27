@@ -5,12 +5,12 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:audit-impact — KG context for audit event {event_id}
 
-Resolve audit event **{event_id}** + show its full KG augmentation context (citations, affected symbols, community membership) in the HADES project. Wraps `zen://audit/<id>` URL handler (spec §4.2) + the release design augmentation citation chain.
+Resolve audit event **{event_id}** + show its full KG augmentation context (citations, affected symbols, community membership) in the HADES project. Wraps `hades://audit/<id>` URL handler (spec §4.2) + the release design augmentation citation chain.
 
 ## 1. Resolve event via daemon
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock -s \\
+curl --unix-socket /tmp/hades-system.sock -s \\
      "http://unix/v1/audit/event/{event_id}" \\
      | jq '.'
 ```
@@ -28,7 +28,7 @@ Expected response:
 For each citation source, query the the release design augmentation pipeline (`/v1/augment` mode=audit_resolve):
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock \\
+curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
      -d '{{"mode":"audit_resolve","source_query":"<citation.source_query>"}}' \\
@@ -71,10 +71,10 @@ Format as operator briefing:
 
 ## 4. Privacy filter
 
-Per the release design invariant (privacy boundary), if event was emitted in capa-firewall doctrine, only show events visible to operator's current doctrine + project.
+Per the release design inv-hades-163 (privacy boundary), if event was emitted in capa-firewall doctrine, only show events visible to operator's current doctrine + project.
 
 ```
-Some context filtered by capa-firewall privacy boundary (invariant).
+Some context filtered by capa-firewall privacy boundary (inv-hades-163).
 ```
 
 ## 5. Audit chain navigation
@@ -89,8 +89,8 @@ Operator can deep-link to any chained event:
 - spec §4.2 slash command flow
 - spec §4.6 audit chain integration (event types table)
 - spec §1 Q9 citation envelope structure
-- invariant privacy boundary
-- invariant zen://audit URL handler auth check
+- inv-hades-163 privacy boundary
+- inv-hades-172 hades://audit URL handler auth check
 """
 
 _PROMPT_NO_ID = """# /hades:audit-impact — KG context for audit event

@@ -10,8 +10,8 @@ You are showing the currently-active doctrine for the current HADES project + se
 ## 1. Identify active project + session
 
 ```bash
-# pending endpoint registration: /v1/project/active resolves active project alias from .zen-swarm.toml
-PROJECT=$(curl --unix-socket /tmp/zen-swarm.sock -s http://unix/v1/project/active 2>&1)
+# pending endpoint registration: /v1/project/active resolves active project alias from .hades-system.toml
+PROJECT=$(curl --unix-socket /tmp/hades-system.sock -s http://unix/v1/project/active 2>&1)
 SESSION=$(echo "$HERMES_SESSION_ID")
 ```
 
@@ -20,7 +20,7 @@ SESSION=$(echo "$HERMES_SESSION_ID")
 Show currently-active doctrine for project + session.
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock -s \\
+curl --unix-socket /tmp/hades-system.sock -s \\
      "http://unix/v1/doctrine/show?project=$PROJECT&session=$SESSION" \\
      | jq '.'
 ```
@@ -61,7 +61,7 @@ Format the daemon response as operator-friendly summary:
 ## Cross-references
 
 - spec §3.4 Doctrine schema extensions
-- invariant doctrine ceiling enforcement (the release design)
+- inv-hades-084 doctrine ceiling enforcement (the release design)
 - the release design audit chain (Tessera-anchored DoctrineOverridden event)
 """
 
@@ -72,8 +72,8 @@ You are overriding the active doctrine to **{name}** for the current HADES sessi
 ## 1. Identify active project + session
 
 ```bash
-# pending endpoint registration: /v1/project/active resolves active project alias from .zen-swarm.toml
-PROJECT=$(curl --unix-socket /tmp/zen-swarm.sock -s http://unix/v1/project/active 2>&1)
+# pending endpoint registration: /v1/project/active resolves active project alias from .hades-system.toml
+PROJECT=$(curl --unix-socket /tmp/hades-system.sock -s http://unix/v1/project/active 2>&1)
 SESSION=$(echo "$HERMES_SESSION_ID")
 ```
 
@@ -88,17 +88,17 @@ Allowed values: `max-scope`, `default`, `capa-firewall`.
 ### POST to daemon /v1/doctrine/override
 
 ```bash
-# pending endpoint registration: doctrine runtime override per session (audit-anchored via invariant)
-curl --unix-socket /tmp/zen-swarm.sock \\
+# pending endpoint registration: doctrine runtime override per session (audit-anchored via inv-hades-072)
+curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
      -d '{{"project":"'"$PROJECT"'","session":"'"$SESSION"'","doctrine":"{name}","reason":"operator runtime override via /doctrine slash"}}' \\
      http://unix/v1/doctrine/override
 ```
 
-The override is **audit-logged via the release design chain** — Tessera-anchored event `DoctrineOverridden` with payload (project, session, prior-doctrine, new-doctrine, reason, operator-identity-from-keychain). Per invariant (the release design amendment-anchored audit), every override appears in the Hermes Ink TUI F10 panel + `zen day` morning brief.
+The override is **audit-logged via the release design chain** — Tessera-anchored event `DoctrineOverridden` with payload (project, session, prior-doctrine, new-doctrine, reason, operator-identity-from-keychain). Per inv-hades-072 (the release design amendment-anchored audit), every override appears in the Hermes Ink TUI F10 panel + `hades day` morning brief.
 
-Per the release design doctrine ceiling enforcement (invariant): override can ONLY tighten beyond project ceiling, not loosen. If `{name}` is more permissive than project ceiling → daemon refuses with 409 Conflict + actionable error.
+Per the release design doctrine ceiling enforcement (inv-hades-084): override can ONLY tighten beyond project ceiling, not loosen. If `{name}` is more permissive than project ceiling → daemon refuses with 409 Conflict + actionable error.
 
 ## 3. Display result
 
@@ -116,7 +116,7 @@ Format the daemon response as operator-friendly summary:
 ## Cross-references
 
 - spec §3.4 Doctrine schema extensions
-- invariant doctrine ceiling enforcement (the release design)
+- inv-hades-084 doctrine ceiling enforcement (the release design)
 - the release design audit chain (Tessera-anchored DoctrineOverridden event)
 """
 

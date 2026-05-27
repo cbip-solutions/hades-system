@@ -91,7 +91,7 @@ func NewServer(opts *ServerOptions) (*Server, error) {
 	srv.registerTools()
 
 	mcpSrv := mcp.NewServer(&mcp.Implementation{
-		Name:    "zen-mcp-research",
+		Name:    "hades-mcp-research",
 		Version: "0.4.0",
 	}, nil)
 	srv.bindToMCPServer(mcpSrv)

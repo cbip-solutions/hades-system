@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_event.go
 //
-// zen://audit/<id> deep-link by dialing the daemon's GET
+// hades://audit/<id> deep-link by dialing the daemon's GET
 // /v1/audit/event/<id> endpoint shipped by
 // (internal/daemon/handlers/audit_event.go).
 //
 // The command accepts both bare event-IDs ("evt-abc123") and the URL
-// form ("zen://audit/evt-abc123"). The URL prefix is stripped client-
+// form ("hades://audit/evt-abc123"). The URL prefix is stripped client-
 // side BEFORE the round-trip so the daemon always receives the bare
 // id. Output formats: text (default; human-readable summary) or json.
 //
-// invariant: daemon validates event-id existence + auth + doctrine-
+// inv-hades-172: daemon validates event-id existence + auth + doctrine-
 // aware filtering. The CLI is a transparent surface — recoverable
 // vs unrecoverable error mapping mirrors knowledge/inbox patterns.
 //
@@ -63,24 +63,24 @@ func NewAuditEventCmd(factory AuditEventClientFactory) *cobra.Command {
 	flags := AuditEventFlags{}
 	cmd := &cobra.Command{
 		Use:   "event <id>",
-		Short: "Resolve zen://audit/<id> deep-link to the structured audit event",
+		Short: "Resolve hades://audit/<id> deep-link to the structured audit event",
 		Long: `Resolve a Plan 9 Tessera-anchored audit event by ID. Accepts both
-bare event-IDs ("evt-abc123") and zen://audit URL form
-("zen://audit/evt-abc123"); the URL prefix is stripped client-side.
+bare event-IDs ("evt-abc123") and hades://audit URL form
+("hades://audit/evt-abc123"); the URL prefix is stripped client-side.
 
-The daemon enforces inv-zen-172: auth check + doctrine-aware filtering.
+The daemon enforces inv-hades-172: auth check + doctrine-aware filtering.
 
 Output formats:
   text  human-readable summary (default)
   json  structured JSON for jq pipelines`,
 		Example: `  # Bare ID
-  zen audit event evt-abc123
+  hades audit event evt-abc123
 
-  # zen:// URL form (e.g. paste from a Hermes citation)
-  zen audit event "zen://audit/evt-abc123"
+  # hades:// URL form (e.g. paste from a Hermes citation)
+  hades audit event "hades://audit/evt-abc123"
 
   # JSON for tooling
-  zen audit event evt-abc123 --format json | jq '.detail.tokens_used'`,
+  hades audit event evt-abc123 --format json | jq '.detail.tokens_used'`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -102,8 +102,8 @@ func NewAuditEventCmdProd() *cobra.Command {
 	})
 }
 
-func stripZenAuditURL(s string) string {
-	const prefix = "zen://audit/"
+func stripHadesAuditURL(s string) string {
+	const prefix = "hades://audit/"
 	if strings.HasPrefix(s, prefix) {
 		return strings.TrimPrefix(s, prefix)
 	}
@@ -111,9 +111,9 @@ func stripZenAuditURL(s string) string {
 }
 
 func RunAuditEvent(ctx context.Context, c AuditEventClient, flags AuditEventFlags, w io.Writer) error {
-	id := strings.TrimSpace(stripZenAuditURL(flags.ID))
+	id := strings.TrimSpace(stripHadesAuditURL(flags.ID))
 	if id == "" {
-		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("audit event: <id> is required (positional or zen://audit/<id> form)"))
+		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("audit event: <id> is required (positional or hades://audit/<id> form)"))
 	}
 	format := flags.Format
 	if format == "" {
@@ -165,7 +165,7 @@ func classifyAuditEventError(err error) error {
 		return err
 	}
 	if client.IsHTTPStatus(err, http.StatusNotFound) {
-		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, "audit event: id not found (verify with: zen audit list --since 24h)"))
+		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, "audit event: id not found (verify with: hades audit list --since 24h)"))
 	}
 	if client.IsHTTPStatus(err, http.StatusUnprocessableEntity) {
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, "audit event: daemon rejected request (auth or doctrine filter)"))

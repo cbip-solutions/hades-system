@@ -18,7 +18,7 @@ import (
 func NewDaemonCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "daemon",
-		Short: "Manage the HADES daemon (zen-swarm-ctld)",
+		Short: "Manage the HADES daemon (hades-ctld)",
 	}
 	cmd.AddCommand(daemonStartCmd())
 	cmd.AddCommand(daemonStopCmd())
@@ -150,7 +150,7 @@ func daemonUninstallCmd() *cobra.Command {
 			if err != nil {
 				return ierrors.Wrap(ierrors.Code("daemon.not-running"), err)
 			}
-			plistPath := filepath.Join(home, "Library", "LaunchAgents", "com.zenswarm.ctld.plist")
+			plistPath := filepath.Join(home, "Library", "LaunchAgents", "com.hadessystem.ctld.plist")
 			_ = exec.Command("launchctl", "unload", plistPath).Run()
 			if err := os.Remove(plistPath); err != nil && !os.IsNotExist(err) {
 				return ierrors.Wrap(ierrors.Code("daemon.not-running"), fmt.Errorf("remove plist: %w", err))
@@ -162,31 +162,31 @@ func daemonUninstallCmd() *cobra.Command {
 }
 
 func findCtldBinary() (string, error) {
-	if env := os.Getenv("ZEN_SWARM_CTLD"); env != "" {
+	if env := os.Getenv("HADES_SYSTEM_CTLD"); env != "" {
 		return env, nil
 	}
 	for _, p := range []string{
-		"/opt/homebrew/bin/zen-swarm-ctld",
-		"/usr/local/bin/zen-swarm-ctld",
+		"/opt/homebrew/bin/hades-ctld",
+		"/usr/local/bin/hades-ctld",
 	} {
 		if _, err := os.Stat(p); err == nil {
 			return p, nil
 		}
 	}
-	if p, err := exec.LookPath("zen-swarm-ctld"); err == nil {
+	if p, err := exec.LookPath("hades-ctld"); err == nil {
 		return p, nil
 	}
 	if exe, err := os.Executable(); err == nil {
-		alt := filepath.Join(filepath.Dir(exe), "zen-swarm-ctld")
+		alt := filepath.Join(filepath.Dir(exe), "hades-ctld")
 		if _, err := os.Stat(alt); err == nil {
 			return alt, nil
 		}
 	}
-	return "", fmt.Errorf("zen-swarm-ctld binary not found in PATH")
+	return "", fmt.Errorf("hades-ctld binary not found in PATH")
 }
 
 func findCtldPID() (int, error) {
-	out, err := exec.Command("pgrep", "-f", "zen-swarm-ctld").Output()
+	out, err := exec.Command("pgrep", "-f", "hades-ctld").Output()
 	if err != nil {
 		return 0, err
 	}
@@ -199,8 +199,8 @@ func findCtldPID() (int, error) {
 
 func findInstallScript() (string, error) {
 	candidates := []string{
-		"/opt/homebrew/share/zen-swarm/scripts/install-launchd.sh",
-		"/usr/local/share/zen-swarm/scripts/install-launchd.sh",
+		"/opt/homebrew/share/hades-system/scripts/install-launchd.sh",
+		"/usr/local/share/hades-system/scripts/install-launchd.sh",
 	}
 	if exe, err := os.Executable(); err == nil {
 		candidates = append(candidates,

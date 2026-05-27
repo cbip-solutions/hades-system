@@ -7,7 +7,7 @@
 // Wraps release internal/audit/chain/ primitives indirectly via a
 // narrow release-owned RAGAuditChainEmitter interface (release B-6
 // pattern). release does NOT import internal/daemon/budget; declaring
-// the interface HERE lets release honour invariant boundary while
+// the interface HERE lets release honour inv-hades-031 boundary while
 // still leveraging the same release chain hashing/sealing primitives.
 //
 // Production implementation lands at Task D-12 — a thin
@@ -17,7 +17,7 @@
 // test impl (mock_chain.go) that exercises the SAME chain-link hashing
 // logic locally so wiring is verifiable in isolation.
 //
-// D-13: added SetProfile rebind hook +
+// D-13 (inv-hades-205 full enforcement): added SetProfile rebind hook +
 // atomic.Pointer-backed profile storage so the Dispatcher can swap the
 // constructor-time `default` profile for the per-query resolved
 // doctrine at step 2 of Query() without racing concurrent Emit calls.

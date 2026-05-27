@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr_migrate.go.
 //
-// `zen adr migrate [--dry-run] [--plan <range>]` is a one-time operator
+// `hades adr migrate [--dry-run] [--plan <range>]` is a one-time operator
 // tool: walk architecture records parse legacy markdown headers, emit
 // Structured MADR YAML frontmatter. Idempotent — already-migrated files
 // are skipped.
@@ -35,16 +35,16 @@ Structured MADR YAML frontmatter at top of file. Idempotent — running
 again on already-migrated ADRs is a no-op (skipped).
 
 Migration runs entirely on local files (no daemon round-trip). Run from
-any directory inside the zen-swarm repo. Use --dry-run first to preview
+any directory inside the hades-system repo. Use --dry-run first to preview
 per-file results before committing the bulk migration.
 
 Output per file:
   success <path>   — migrated and written
   skipped <path>   — already has frontmatter; not modified
   failed  <path>   — parse or write error (see error line below)`,
-		Example: `  zen adr migrate --dry-run          # preview without writing
-  zen adr migrate --plan plan-1      # supply default plan tag for ADRs missing **Plan**: header
-  zen adr migrate                    # migrate all legacy ADRs in docs/decisions/`,
+		Example: `  hades adr migrate --dry-run          # preview without writing
+  hades adr migrate --plan plan-1      # supply default plan tag for ADRs missing **Plan**: header
+  hades adr migrate                    # migrate all legacy ADRs in docs/decisions/`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			root, err := findRepoRoot()
 			if err != nil {

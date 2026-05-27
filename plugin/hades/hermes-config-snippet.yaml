@@ -1,40 +1,40 @@
 
 mcp_servers:
-  zen-mcp-research:
-    command: zen-mcp-research
+  hades-mcp-research:
+    command: hades-mcp-research
     args: []
     description: |
       HADES research MCP: fan-out parallel search + agentic_deep_research
       + caronte engine code-graph (in-process; the release design sovereignty).
     env:
-      ZEN_DAEMON_SOCKET: "${ZEN_DAEMON_SOCKET:-/tmp/zen-swarm.sock}"
+      HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"
 
-  zen-mcp-budget:
-    command: zen-mcp-budget
+  hades-mcp-budget:
+    command: hades-mcp-budget
     args: []
     description: |
       HADES budget MCP: 4-axis attribution (caller/project/agent/
       augmentation) + z-score anomaly + hierarchical hard-pause cascade
       (per the release design Q6=C).
     env:
-      ZEN_DAEMON_SOCKET: "${ZEN_DAEMON_SOCKET:-/tmp/zen-swarm.sock}"
+      HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"
 
-  zen-mcp-audit:
-    command: zen-mcp-audit
+  hades-mcp-audit:
+    command: hades-mcp-audit
     args: []
     description: |
       HADES audit MCP: audit_review with cross-provider family-disjoint
       reviewer enforcement + Tessera-anchored audit chain integration
       (per the release design Q7=D, the release design).
     env:
-      ZEN_DAEMON_SOCKET: "${ZEN_DAEMON_SOCKET:-/tmp/zen-swarm.sock}"
+      HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"
 
-  zen-mcp-sshexec:
-    command: zen-mcp-sshexec
+  hades-mcp-sshexec:
+    command: hades-mcp-sshexec
     args: []
     description: |
       HADES ssh-exec MCP: production-grade remote execution with
       per-project allowlist + streaming logs + idempotency token registry
       (per the release design Q8=C).
     env:
-      ZEN_DAEMON_SOCKET: "${ZEN_DAEMON_SOCKET:-/tmp/zen-swarm.sock}"
+      HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"

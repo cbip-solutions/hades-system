@@ -149,7 +149,7 @@ func (c ProviderConfig) Validate() error {
 		return fmt.Errorf("providers.ProviderConfig(%q): model is empty", c.Name)
 	}
 	if c.Family == "" {
-		return fmt.Errorf("providers.ProviderConfig(%q): family is empty (inv-zen-080 family-disjoint key)", c.Name)
+		return fmt.Errorf("providers.ProviderConfig(%q): family is empty (inv-hades-080 family-disjoint key)", c.Name)
 	}
 	if _, needs := providerTypesNeedingAPIKey[c.Type]; needs && c.APIKeyKeychain == "" {
 		return fmt.Errorf("providers.ProviderConfig(%q): api_key_keychain is required for type=%q",
@@ -208,7 +208,7 @@ func (r *Registry) RegisterFromConfig(cfg ProviderConfig) error {
 // adapter) are absent from the map; callers treat an absent name as
 // "family unknown".
 //
-// invariant: the audit MCP's family-disjoint reviewer pool is built from
+// inv-hades-213: the audit MCP's family-disjoint reviewer pool is built from
 // this live map (was a static doctrine TOML list). A reviewer<->worker
 // pair sharing a family is rejected at pair-selection.
 //

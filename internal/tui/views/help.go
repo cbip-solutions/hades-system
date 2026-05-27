@@ -29,7 +29,7 @@ func (v *HelpView) View() string {
   F6   confirmations   pending confirmations
   F7   codegraph       caronte code structure (current file)
   F8   memory          memory inspector (per-project + global)
-  F9   skills          Hermes Curator + zen skills browser
+  F9   skills          Hermes Curator + hades skills browser
   F10  doctrine        active doctrine + amendments
   F11  xproject        cross-project switcher
   F12  inbox           notifications inbox

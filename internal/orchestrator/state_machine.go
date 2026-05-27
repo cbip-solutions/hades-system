@@ -2,7 +2,7 @@
 // Package orchestrator state machine — release
 //
 // Defines the 9 supervisor states and the canonical TransitionTable of
-// 28 valid transitions per spec §1 Q6 D. invariant enforces that
+// 28 valid transitions per spec §1 Q6 D. inv-hades-091 enforces that
 // every runtime transition is in this table; illegal transitions return
 // ErrIllegalTransition without mutating state and without emitting an
 // event. Concurrent callers serialize through the embedded mutex.
@@ -14,11 +14,11 @@
 // this file as the supervisor's authoritative state holder.
 //
 // Invariants
-// - invariant: state machine transitions ∈ TransitionTable
+// - inv-hades-091: state machine transitions ∈ TransitionTable
 // (compile-checked exhaustiveness witnesses + runtime rejection +
 // compliance test in tests/compliance/).
-// - invariant: this file does NOT import internal/store.
-// - invariant: this file does NOT import internal/workforce/queue.
+// - inv-hades-089: this file does NOT import internal/store.
+// - inv-hades-090: this file does NOT import internal/workforce/queue.
 package orchestrator
 
 import (
@@ -119,7 +119,7 @@ type StateTransition struct {
 }
 
 // TransitionTable is the canonical set of 28 valid transitions per
-// spec §1 Q6 D invariant. The compliance test re-derives this set
+// spec §1 Q6 D inv-hades-091. The compliance test re-derives this set
 // from the spec; do NOT add a transition without first amending the
 // spec.
 //

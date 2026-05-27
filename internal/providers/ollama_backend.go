@@ -7,7 +7,7 @@
 // anthropic_paygo / gemini / openai_compat backends NewOllamaBackend takes
 // no keychain.Resolver (frozen contract C5).
 //
-// Wire translation: zen-swarm's canonical request/response shape is
+// Wire translation: hades-system's canonical request/response shape is
 // Anthropic /v1/messages. This backend translates canonical -> OpenAI
 // chat-completions on the way out and OpenAI -> canonical on the way back,
 // identically to openai_compat_backend.go. The two share the canonical
@@ -20,10 +20,10 @@
 // - Token usage parsed from the response "usage" field; non-fatal on
 // absence.
 // - Probe issues GET {endpoint}/api/tags (Ollama's model-list endpoint —
-// content-free, invariant) to confirm the server is reachable.
+// content-free, inv-hades-071) to confirm the server is reachable.
 //
-// invariant compile guard sits below the struct.
-// invariant boundary: this file MUST NOT import internal/store.
+// inv-hades-067 compile guard sits below the struct.
+// inv-hades-031 boundary: this file MUST NOT import internal/store.
 package providers
 
 import (

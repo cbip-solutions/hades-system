@@ -36,7 +36,7 @@ func NewAdapterFromDB(db *sql.DB) *Adapter {
 }
 
 // OpenProjectDB returns a *sql.DB for the project's caronte.db, opening
-// (and creating the file +.zen/ dir) on first call and returning the
+// (and creating the file +.hades/ dir) on first call and returning the
 // cached handle thereafter. The caller (caronte.store.Open via the engine)
 // MUST NOT Close the returned handle — Close() owns the lifecycle.
 //
@@ -56,7 +56,7 @@ func (a *Adapter) OpenProjectDB(ctx context.Context, projectID string) (*sql.DB,
 	}
 
 	if err := os.MkdirAll(filepath.Dir(dbPath), 0o700); err != nil {
-		return nil, fmt.Errorf("caronteadapter: mkdir .zen for %q: %w", projectID, err)
+		return nil, fmt.Errorf("caronteadapter: mkdir .hades for %q: %w", projectID, err)
 	}
 	dsn := fmt.Sprintf("%s?_journal_mode=WAL&_busy_timeout=5000&_foreign_keys=1&_synchronous=NORMAL", dbPath)
 	db, err := sql.Open(store.DefaultDriver, dsn)
@@ -93,7 +93,7 @@ func (a *Adapter) resolveProjectPath(ctx context.Context, projectID string) (str
 	if err != nil {
 		return "", fmt.Errorf("caronteadapter: resolveProjectPath %q: %w", projectID, err)
 	}
-	return filepath.Join(canonicalPath, ".zen", "caronte.db"), nil
+	return filepath.Join(canonicalPath, ".hades", "caronte.db"), nil
 }
 
 // Close closes all cached caronte.db handles and clears the cache. Safe to

@@ -4,7 +4,7 @@
 // . Phases B (parser), D (builtin), E (active
 // accessor), H (amendment extension) all import this package.
 //
-// Boundary discipline: this package imports stdlib only +
+// Boundary discipline (inv-hades-133): this package imports stdlib only +
 // internal/doctrine/errors. Never imports internal/store, internal/orchestrator,
 // private-tier1-module, internal/redact. Verified by close-out
 // `go list -deps`.
@@ -12,7 +12,7 @@
 // Versioning (per design spec §1 Q5 B): SchemaVersion governs file shape;
 // DoctrineVersion governs rule content. AutoUpgrade declares per-project
 // auto-upgrade policy; capa-firewall hardcodes auto_upgrade="none" per
-// invariant (enforced at named-doctrine layer in internal/doctrine/builtin
+// inv-hades-100 (enforced at named-doctrine layer in internal/doctrine/builtin
 // , not at Schema layer — the v1 Schema does not know which named
 // doctrine it represents, so transverse.go + cross-field validators stay
 // schema-shape-local; the builtin loader rejects auto_upgrade != "none" for
@@ -44,7 +44,7 @@ type Schema struct {
 
 	Notifications NotificationsConfig `toml:"notifications" tighten:"-"`
 
-	ZenDayCadence ZenDayCadenceConfig `toml:"zen_day_cadence" tighten:"-"`
+	HadesDayCadence HadesDayCadenceConfig `toml:"hades_day_cadence" tighten:"-"`
 
 	Quota QuotaConfig `toml:"quota" tighten:"-"`
 
@@ -63,7 +63,7 @@ type Schema struct {
 	Renderers RenderersConfig `toml:"renderers" tighten:"-"`
 
 	// Validated is set to true by Validate() on success. analyzer
-	// requires this to be true
+	// (inv-hades-140 applierMustValidateTighten) requires this to be true
 	// before ValidateTighten may be called by the amendment Apply path —
 	// the analyzer asserts the Apply path read this flag (or called
 	// Validate) before calling ValidateTighten. Tag toml:"-" excludes it
@@ -120,7 +120,7 @@ type ReviewConfig struct {
 	RequireDualReview   bool `toml:"require_dual_review" tighten:"truth"`
 }
 
-// TransverseConfig — 4 axioms HARDCODED operator-only per invariant.
+// TransverseConfig — 4 axioms HARDCODED operator-only per inv-hades-135.
 // User TOML attempting override of ANY field is REJECTED at parse (transverse.go).
 // All four MUST be `true` in shipped doctrines.
 type TransverseConfig struct {
@@ -191,7 +191,7 @@ type SeverityPerDoctrineConfig struct {
 	InfoImmediateDuringQuiet     string `toml:"info_immediate_during_quiet" tighten:"rank:queue,deliver,drop"`
 }
 
-type ZenDayCadenceConfig struct {
+type HadesDayCadenceConfig struct {
 	MorningBriefCron          string `toml:"morning_brief_cron" tighten:"bidirectional"`
 	MorningBriefIfWithinHours int    `toml:"morning_brief_if_within_hours" tighten:"decrease"`
 	EODDigestCron             string `toml:"eod_digest_cron" tighten:"bidirectional"`

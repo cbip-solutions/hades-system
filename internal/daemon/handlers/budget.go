@@ -11,7 +11,7 @@
 // load-bearing per max-scope-meta doctrine — building a stub today
 // becomes retrofit debt tomorrow when the real cap source lands.
 //
-// Boundary: consumes the Server pointer as `any` and
+// Boundary (inv-hades-031): consumes the Server pointer as `any` and
 // reuses orchestratorAccessor (defined in handlers/orchestrator.go) so
 // this file shares the K-3 nil-safe accessor wiring without re-defining
 // the interface. Production *daemon.Server satisfies it structurally.

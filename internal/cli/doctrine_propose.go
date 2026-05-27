@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctrine_propose.go.
 //
-// Adds the amendment-lifecycle sub-commands to the existing zen doctrine
+// Adds the amendment-lifecycle sub-commands to the existing hades doctrine
 // namespace (release N-7 owns show/list/validate/which/reload/
 // diff/schema). Per Q10 C + spec §6.1:
 //
-// zen doctrine propose-list
-// zen doctrine propose-show <id>
-// zen doctrine ack <id>
-// zen doctrine deny <id> --reason...
+// hades doctrine propose-list
+// hades doctrine propose-show <id>
+// hades doctrine ack <id>
+// hades doctrine deny <id> --reason...
 //
 // All four route to the daemon /v1/doctrine/{propose-list,propose-show,
 // ack,deny} endpoints. Deny additionally records reason in the eventlog
-// as EvtOperatorAmendmentDeny (invariant operator-override audit;
+// as EvtOperatorAmendmentDeny (inv-hades-099 operator-override audit;
 // daemon-side enforcement).
 package cli
 

@@ -13,7 +13,7 @@
 // GET /v1/research/cache/list — ResearchCacheListP9 (P9 suffix avoids
 // conflict with release N ResearchCacheList)
 //
-// invariant: this file imports stdlib only (context, net/url, strconv).
+// inv-hades-031: this file imports stdlib only (context, net/url, strconv).
 // No internal/daemon, internal/store, or internal/research imports.
 //
 // Method-name rationale (P9 suffix):

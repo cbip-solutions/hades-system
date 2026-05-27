@@ -12,9 +12,9 @@
 // Gemini contents/candidates shape — translate.go bridges them to/from
 // the canonical Anthropic shape.
 //
-// invariant: imports internal/keychain (boundary-neutral), not
+// inv-hades-031: imports internal/keychain (boundary-neutral), not
 // internal/store / private-tier1-module.
-// invariant compile guard below the struct. invariant: API key is a
+// inv-hades-067 compile guard below the struct. inv-hades-068: API key is a
 // redact.Secret revealed only at the instant of URL construction.
 package providers
 

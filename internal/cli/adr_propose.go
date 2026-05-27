@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr_propose.go.
 //
-// `zen adr propose <topic>` is the interactive ADR draft workflow:
+// `hades adr propose <topic>` is the interactive ADR draft workflow:
 // 1. POST /v1/adr/propose → daemon auto-assigns next ID, returns ADR stub.
 // 2. Write prefilled MADR YAML frontmatter + empty sections to temp file.
 // 3. Open editorRunner (resolveEditorName() → $VISUAL | $EDITOR | vi).
 // 4. Read back edited content; abort if body is empty.
-// 5. Print confirmation with ADR ID (accept/reject workflow is `zen adr
+// 5. Print confirmation with ADR ID (accept/reject workflow is `hades adr
 // accept <id> --reason <X>` — a separate I-7 command).
 //
 // The editorRunner package-level var enables test substitution without
@@ -36,10 +36,10 @@ The daemon auto-assigns the next available ID in the active plan range;
 status defaults to proposed; plan auto-detected from active branch.
 
 The operator's $EDITOR (or $VISUAL or vi) opens the draft. On save the
-content is ready for review. Use 'zen adr accept <id> --reason <X>' to
-formally accept or 'zen adr reject <id> --reason <X>' to reject.`,
-		Example: `  zen adr propose tessera-batch-cadence-tuning
-  zen adr propose multi-tenant-auth --plan plan-9`,
+content is ready for review. Use 'hades adr accept <id> --reason <X>' to
+formally accept or 'hades adr reject <id> --reason <X>' to reject.`,
+		Example: `  hades adr propose tessera-batch-cadence-tuning
+  hades adr propose multi-tenant-auth --plan plan-9`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			topic := args[0]
 			ctx, cancel := context.WithTimeout(cmd.Context(), 10*time.Second)
@@ -77,7 +77,7 @@ title: %s
 <!-- What becomes easier or harder as a result of this change? -->
 `, draft.ID, planTag, strings.ReplaceAll(topic, "-", " "))
 
-			tmp, err := os.CreateTemp("", "zen-adr-*.md")
+			tmp, err := os.CreateTemp("", "hades-adr-*.md")
 			if err != nil {
 				return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("create temp file: %w", err))
 			}
@@ -105,7 +105,7 @@ title: %s
 			}
 
 			fmt.Fprintf(cmd.OutOrStdout(),
-				"id=%s status=%s plan=%s\ndraft saved — use 'zen adr accept %s --reason <X>' to commit\n",
+				"id=%s status=%s plan=%s\ndraft saved — use 'hades adr accept %s --reason <X>' to commit\n",
 				draft.ID, "proposed", planTag, draft.ID)
 			return nil
 		},

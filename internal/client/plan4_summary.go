@@ -3,7 +3,7 @@
 //
 // Typed daemon-API helpers for the GET /v1/{workforce,research,audit,
 // budget,sshexec}/summary and GET /v1/health/release endpoints. The
-// morning-brief renderer (`zen day`) calls these to populate the
+// morning-brief renderer (`hades day`) calls these to populate the
 //
 // Each helper consults daemon over the canonical UDS dialer (or the
 // test base URL when set via NewWithBaseURL) and decodes a strongly-

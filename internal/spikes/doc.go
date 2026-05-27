@@ -5,7 +5,7 @@
 // Per amendment §2.4 D-4: 8 spikes verify Hermes substrate ABCs +
 // hook contracts + MCP envelope shapes + renderer feasibility. Spike
 // vigencia ≤14d (Q10=B Hermes evolution velocity); CATASTROPHIC severity
-// blocks releases unconditionally.
+// blocks releases unconditionally (inv-hades-274).
 //
 // Spike harness files live under docs/spikes/spike_NN_*.go (build tag
 // spikes; isolated from production binaries). Each harness exposes a

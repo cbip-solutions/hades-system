@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""zen-swarm AFK richness module — the release design release track."""
+"""hades-system AFK richness module — the release design release track."""
 
 from __future__ import annotations
 

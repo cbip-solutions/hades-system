@@ -21,7 +21,7 @@
 // slog is the canonical surface (ops grep daemon.log for
 // "auth: bearer mismatch" / "auth: schedule_not_found" lines).
 //
-// invariant boundary: this file imports log/slog + internal/daemon/auth
+// inv-hades-031 boundary: this file imports log/slog + internal/daemon/auth
 // (interface only). It NEVER imports internal/store directly.
 
 package daemon

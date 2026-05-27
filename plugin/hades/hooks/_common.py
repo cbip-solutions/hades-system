@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-# plugin/zen-swarm/hooks/_common.py
-"""Shared helpers for zen-swarm Hermes hook callbacks."""
+# plugin/hades-system/hooks/_common.py
+"""Shared helpers for hades-system Hermes hook callbacks."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 # Path to the Go event-poster binary (built by `make plugin`). Resolved
 # relative to the plugin root (parent of this hooks/ directory).
 _PLUGIN_ROOT = Path(__file__).resolve().parent.parent
-_POSTER_BIN = _PLUGIN_ROOT / "bin" / "zen-event-poster"
+_POSTER_BIN = _PLUGIN_ROOT / "bin" / "hades-event-poster"
 
 # Subprocess timeout for the Go poster invocation (seconds). At 1s, hooks
 # never noticeably slow down Hermes tool calls; daemon-side processing is
@@ -25,32 +25,32 @@ _POSTER_TIMEOUT = 1.0
 
 
 def invoke_event_poster(event_name: str, payload: dict[str, Any]) -> int:
-    """Invoke bin/zen-event-poster as a subprocess.
+    """Invoke bin/hades-event-poster as a subprocess.
 
     Args:
         event_name: argv[1] for the binary (e.g. "on_session_start",
             "pre_tool_call.blocked"). Must be a known event per the binary's
             dispatch table.
         payload: dict serialized to JSON on stdin (Hermes hook kwargs +
-            zen-derived fields).
+            hades-derived fields).
 
     Returns:
         Exit code from the binary (0 = ok, 1 = warn, 2 = block — though
         callbacks DO NOT signal block via exit code; they return the block
         directive dict to Hermes). Returns 0 unconditionally if
-        ZEN_HOOK_DRY_RUN=1 is set in env (used by unit tests).
+        HADES_HOOK_DRY_RUN=1 is set in env (used by unit tests).
 
     Never raises. Subprocess errors, timeouts, and missing binaries return 1.
     """
-    if os.environ.get("ZEN_HOOK_DRY_RUN"):
+    if os.environ.get("HADES_HOOK_DRY_RUN"):
         return 0
 
     if not _POSTER_BIN.exists():
         # Defensive: never crash the user's tool call on missing poster.
         # Log via logger (Hermes captures it via the plugin error path).
         logger.warning(
-            "zen-swarm hook: bin/zen-event-poster not built; run 'make plugin' "
-            "in zen-swarm root. expected at %s",
+            "hades-system hook: bin/hades-event-poster not built; run 'make plugin' "
+            "in hades-system root. expected at %s",
             _POSTER_BIN,
         )
         return 1
@@ -58,7 +58,7 @@ def invoke_event_poster(event_name: str, payload: dict[str, Any]) -> int:
     try:
         body = json.dumps(payload).encode("utf-8")
     except (TypeError, ValueError) as exc:
-        logger.warning("zen-swarm hook: payload JSON encode failed: %s", exc)
+        logger.warning("hades-system hook: payload JSON encode failed: %s", exc)
         return 1
 
     try:
@@ -71,12 +71,12 @@ def invoke_event_poster(event_name: str, payload: dict[str, Any]) -> int:
         )
     except subprocess.TimeoutExpired:
         logger.warning(
-            "zen-swarm hook: zen-event-poster timed out after %.1fs",
+            "hades-system hook: hades-event-poster timed out after %.1fs",
             _POSTER_TIMEOUT,
         )
         return 1
     except OSError as exc:
-        logger.warning("zen-swarm hook: zen-event-poster invocation failed: %s", exc)
+        logger.warning("hades-system hook: hades-event-poster invocation failed: %s", exc)
         return 1
 
     if result.stderr:
@@ -87,7 +87,7 @@ def invoke_event_poster(event_name: str, payload: dict[str, Any]) -> int:
         except Exception:
             err_text = repr(result.stderr)
         if err_text:
-            logger.warning("zen-swarm hook poster stderr: %s", err_text)
+            logger.warning("hades-system hook poster stderr: %s", err_text)
 
     return result.returncode
 

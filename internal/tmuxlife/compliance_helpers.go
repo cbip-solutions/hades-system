@@ -8,17 +8,17 @@ import (
 )
 
 // This file exposes a narrow public surface intended ONLY for cross-package
-// compliance tests in tests/compliance/inv_zen_118_*.go. Production code
+// compliance tests in tests/compliance/inv_hades_118_*.go. Production code
 // MUST NOT import these symbols (the names carry the "ForCompliance" /
 // "Compliance" suffix specifically so a code-search at review time
 // surfaces any accidental production use). The boundary is documented in
-// the package doc-comment of inv_zen_118_*_test.go and reviewed by the
+// the package doc-comment of inv_hades_118_*_test.go and reviewed by the
 // reviewer cross-phase categories (master plan §" reviewer
 // cross-phase categories").
 //
 // Why this file exists (max-scope doctrine, not a stub):
 //
-// - invariant lives at THREE layers (resurrect-strategy directive,
+// - inv-hades-118 lives at THREE layers (resurrect-strategy directive,
 // pre-tar strip, post-tar scan). All three must be exercised by a
 // compliance test that lives OUTSIDE internal/tmuxlife/ so an external
 // reviewer can read it without doing package archaeology. The post-tar
@@ -62,7 +62,7 @@ func (a complianceResurrectAdapter) restore(ctx context.Context, sessionName str
 
 // NewManagerForCompliance constructs a Manager wired to the given store,
 // snapshot directory, and ResurrectExecForCompliance fake. Used EXCLUSIVELY
-// by tests/compliance/inv_zen_118_*_test.go (the invariant three-layer
+// by tests/compliance/inv_hades_118_*_test.go (the inv-hades-118 three-layer
 // witness suite); production callers MUST use New(store).
 //
 // The deterministic clock returns 2026-05-01T14:30:45Z so SnapshotPath

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package client — bypass.go.
 //
-// Typed helper methods for /v1/bypass/* endpoints exercised by the zen
+// Typed helper methods for /v1/bypass/* endpoints exercised by the hades
 // CLI subcommands.
 package client
 

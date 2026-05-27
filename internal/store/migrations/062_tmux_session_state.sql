@@ -1,6 +1,6 @@
--- Migration 062: tmux_session_state (the release design release track, invariant + invariant + invariant).
+-- Migration 062: tmux_session_state (the release design release track, inv-hades-117 + inv-hades-118 + inv-hades-119).
 --
--- One row per spawned zen-swarm tmux session, keyed by canonical name.
+-- One row per spawned hades-system tmux session, keyed by canonical name.
 -- The internal/tmuxlife.Manager + DriftPoller + IdleReaper read/write here
 -- through the SessionStore interface declared in internal/tmuxlife/session.go;
 -- internal/daemon/handlers/sessions.go (release track) is the only package permitted
@@ -18,7 +18,7 @@
 --
 -- Constraints:
 --
---   - name TEXT PRIMARY KEY: canonical "zen-<alias>-<sha8>". Spawn is
+--   - name TEXT PRIMARY KEY: canonical "hades-<alias>-<sha8>". Spawn is
 --                            idempotent at the daemon level via
 --                            UpsertSession (interface declared in
 --                            internal/tmuxlife/session.go); duplicate
@@ -28,7 +28,7 @@
 --                            "race window" semantics.
 --   - alias TEXT NOT NULL:   release track projectctx alias. Plain text — NOT a
 --                            FK to projects_alias.alias. Tmux state is
---                            forensic-relevant after archive (`zen day`
+--                            forensic-relevant after archive (`hades day`
 --                            digest); coupling lifecycle to projects_alias
 --                            via FK CASCADE would silently lose audit-
 --                            relevant rows.
@@ -54,7 +54,7 @@
 --                            JSON-encoded map[WindowName][]string of
 --                            daemon-recorded pane ids per daemon-owned
 --                            window. EXCLUDES WindowScratch
---                            (invariant): the JSON encoder in
+--                            (inv-hades-118): the JSON encoder in
 --                            tmuxlife.encodeExpectedPanes filters
 --                            scratch out before serialisation; the
 --                            store layer is content-blind. Empty
@@ -69,7 +69,7 @@
 --     path bypasses any other lookup.
 --
 --   - idx_tmux_session_state_alias accelerates release track
---     `zen sessions ls` and the IdleReaper's resolveAlias scan when
+--     `hades sessions ls` and the IdleReaper's resolveAlias scan when
 --     ListSessions filters by alias (1-2 active sessions per project on
 --     the typical workstation, but the index keeps the lookup O(log n)
 --     rather than O(n) when project count grows).
@@ -81,22 +81,22 @@
 --
 -- No FK to projects_alias.alias:
 --   Same rationale as priority_overrides (migration 060). Tmux state is
---   forensic-relevant beyond project lifecycle: `zen day` digest reads
+--   forensic-relevant beyond project lifecycle: `hades day` digest reads
 --   archived sessions; an FK with ON DELETE CASCADE would silently lose
 --   audit-relevant rows when a project is archived. An FK without CASCADE
 --   would block project removal, coupling lifecycle. The IdleReaper +
---   operator-driven `zen project rm <alias>` are the legitimate row
+--   operator-driven `hades project rm <alias>` are the legitimate row
 --   removers.
 
 CREATE TABLE IF NOT EXISTS tmux_session_state (
-    name           TEXT PRIMARY KEY,                                 -- "zen-<alias>-<sha8>"
+    name           TEXT PRIMARY KEY,                                 -- "hades-<alias>-<sha8>"
     alias          TEXT NOT NULL,                                    -- release track projectctx alias
     sha8           TEXT NOT NULL,                                    -- First 8 lowercase-hex chars of project sha256
     status         INTEGER NOT NULL DEFAULT 0
                    CHECK (status >= 0 AND status <= 3),              -- 0=Active, 1=Idle, 2=Orphaned, 3=Archived
     created_at     INTEGER NOT NULL,                                 -- UTC unix seconds
     last_attach_at INTEGER NOT NULL DEFAULT 0,                       -- UTC unix seconds; 0 = never attached
-    expected_panes TEXT NOT NULL DEFAULT '{}'                        -- JSON: map[WindowName][]string; excludes scratch (invariant)
+    expected_panes TEXT NOT NULL DEFAULT '{}'                        -- JSON: map[WindowName][]string; excludes scratch (inv-hades-118)
 );
 
 CREATE INDEX IF NOT EXISTS idx_tmux_session_state_alias

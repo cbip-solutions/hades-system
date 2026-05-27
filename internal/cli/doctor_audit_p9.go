@@ -13,12 +13,12 @@
 // the typed prober interfaces declared in probe.go (TesseraProber,
 // LitestreamProber, ChainProber, RecoveryProber) injected via DoctorDeps.
 //
-// Boundary:
+// Boundary (inv-hades-031):
 //
 // This file imports only cli-internal types + cobra + context. It does NOT
 // import internal/store, internal/audit/tessera, internal/audit/chain,
 // internal/audit/litestream, or internal/audit/recovery concrete types.
-// Substrate adapters are wired by cmd/zen-swarm-ctld/main.go via the
+// Substrate adapters are wired by cmd/hades-ctld/main.go via the
 // DoctorDeps fields declared in probe.go.
 //
 // Naming note:
@@ -26,7 +26,7 @@
 // The release doctor_audit.go declares `doctorAuditCmd()` with Use="audit"
 // . This file
 // exports NewDoctorAuditCmd() as a SEPARATE exportable group builder that
-// callers (cmd/zen) may register under a parent command. The two commands do
+// callers (cmd/hades) may register under a parent command. The two commands do
 // not collide when registered at different levels of the cobra tree.
 package cli
 
@@ -120,7 +120,7 @@ Each check returns OK / WARN / FAIL severity with doctrine-tuned thresholds.
 Use --strict (inherited from parent) to promote WARN to FAIL-equivalent for CI gating.
 
 Prober interfaces are declared in internal/cli/probe.go; production wiring in
-cmd/zen-swarm-ctld/main.go. Until wired, invoking a sub-command returns an error.`,
+cmd/hades-ctld/main.go. Until wired, invoking a sub-command returns an error.`,
 	}
 	cmd.AddCommand(newDoctorAuditTesseraCmd())
 	cmd.AddCommand(newDoctorAuditBackupCmd())

@@ -9,12 +9,12 @@
 // subprocess + doctrine into a single executable surface that
 // the AutonomousOrchestrator composes without modification.
 //
-// Boundary integrity: the Worker constructor REQUIRES a
+// Boundary integrity (inv-hades-087): the Worker constructor REQUIRES a
 // non-nil worktreePath. The orchestrator's WorktreePool owns allocation;
 // this package is the consumer. Compile-check via constructor signature;
 // runtime check via panic at construction with explanatory message.
 //
-// invariant boundary: this package depends on internal/workforce/queue
+// inv-hades-031 boundary: this package depends on internal/workforce/queue
 // (interfaces) and internal/workforce/subprocess; it MUST NOT import
 // internal/store directly. Concrete queue/store wiring lives in
 // internal/daemon/workforceadapter (separate package).

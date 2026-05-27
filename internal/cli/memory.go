@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package cli — memory.go.
 //
-// `zen memory` is the operator-facing entry point for cross-corpus memory
+// `hades memory` is the operator-facing entry point for cross-corpus memory
 // retrieval over the release D aggregator (per-project + global pin index)
 // and the release ecosystem RAG (Go/Python/TypeScript/Rust docs corpus).
 //
 // Five leaves under one root:
 //
-// zen memory query <free-text> [--remote] [--limit N] [--format text|json]
-// zen memory list [--limit N] [--offset M] [--format text|json]
-// zen memory pin <note-id> --reason <text> [--operator <id>]
-// zen memory unpin <note-id> [--reason <text>] [--operator <id>]
-// zen memory promote <note-id> --reason <text> [--operator <id>]
+// hades memory query <free-text> [--remote] [--limit N] [--format text|json]
+// hades memory list [--limit N] [--offset M] [--format text|json]
+// hades memory pin <note-id> --reason <text> [--operator <id>]
+// hades memory unpin <note-id> [--reason <text>] [--operator <id>]
+// hades memory promote <note-id> --reason <text> [--operator <id>]
 //
 // # Semantics
 //
@@ -25,7 +25,7 @@
 //
 // - pin / promote: alias pair (pin is the operator-ergonomics term, promote
 // the release D term). Both call MemoryPromote (POST /v1/knowledge/aggregator/promote).
-// invariant: --reason MANDATORY (cobra MarkFlagRequired + RunE TrimSpace check).
+// inv-hades-146: --reason MANDATORY (cobra MarkFlagRequired + RunE TrimSpace check).
 //
 // - unpin: reverse promote (POST /v1/knowledge/aggregator/unpromote).
 //
@@ -35,7 +35,7 @@
 // factory threading because memory subcommands share one production constructor).
 //
 // Boundary this file imports internal/client + cobra + stdlib only. No
-// internal/research/ecosystem import. Cross-corpus calls go
+// internal/research/ecosystem import (inv-hades-031). Cross-corpus calls go
 // through the daemon via the client; CLI never talks to dispatcher directly.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract):
@@ -118,7 +118,7 @@ func NewMemoryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "memory",
 		Short: "Cross-corpus memory tooling (Plan 9 aggregator + Plan 14 ecosystem)",
-		Long: `zen memory groups the operator-facing tools for cross-corpus memory
+		Long: `hades memory groups the operator-facing tools for cross-corpus memory
 retrieval. The Plan 9 D aggregator (per-project + global pin index, FTS5
 + sqlite-vec + wikilink graph) joins with the Plan 14 ecosystem RAG
 dispatcher (Go/Python/TypeScript/Rust docs corpus) when --remote is
@@ -131,23 +131,23 @@ Five leaves:
   unpin     Reverse a prior pin/promote
   promote   Pin a note to the global pin index (Plan 9 term)
 
-inv-zen-146: pin / promote / unpin all REQUIRE a non-empty --reason.
+inv-hades-146: pin / promote / unpin all REQUIRE a non-empty --reason.
 The reason is anchored on the Plan 9 audit chain and surfaces via
-` + "`zen audit-chain history`" + `.`,
+` + "`hades audit-chain history`" + `.`,
 		Example: `  # Cross-corpus query (Plan 9 aggregator only)
-  zen memory query "context cancellation"
+  hades memory query "context cancellation"
 
   # Cross-corpus with Plan 14 ecosystem RAG fusion
-  zen memory query "context cancellation" --remote
+  hades memory query "context cancellation" --remote
 
   # List pinned notes
-  zen memory list
+  hades memory list
 
-  # Pin a note (inv-zen-146: --reason required)
-  zen memory pin internal-platform-x/M0-doctrine --reason "load-bearing for max-scope"
+  # Pin a note (inv-hades-146: --reason required)
+  hades memory pin internal-platform-x/M0-doctrine --reason "load-bearing for max-scope"
 
   # Unpin a note
-  zen memory unpin internal-platform-x/M0-doctrine --reason "superseded by N0"`,
+  hades memory unpin internal-platform-x/M0-doctrine --reason "superseded by N0"`,
 	}
 	cmd.AddCommand(newMemoryQueryCmd())
 	cmd.AddCommand(newMemoryListCmd())

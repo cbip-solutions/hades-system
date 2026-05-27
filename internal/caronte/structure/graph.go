@@ -4,7 +4,7 @@
 // the undirected projection), Tarjan SCC (cycles + condensation), and
 // package/directory labels. 100% deterministic by design: the same
 // (node-set, edge-set) yields byte-identical coreness/scc_id/package_id, the
-// invariant contract asserted by the determinism golden. Only deterministic
+// inv-hades-232 contract asserted by the determinism golden. Only deterministic
 // graph algorithms are used — no stochastic community detection.
 //
 // Boundary this package reads/writes the graph ONLY through the injected

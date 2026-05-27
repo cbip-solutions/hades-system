@@ -12,7 +12,7 @@ import (
 
 var ErrNoSurvivors = errors.New("merge: no surviving candidates after Stage 1 filter")
 
-var ErrLooseAttemptRejected = errors.New("merge: doctrine override attempts to loosen a tightening constraint (TIGHTEN-only per inv-zen-111)")
+var ErrLooseAttemptRejected = errors.New("merge: doctrine override attempts to loosen a tightening constraint (TIGHTEN-only per inv-hades-111)")
 
 type Scorer interface {
 	Rank(ctx context.Context, outcomes []CandidateOutcome, votes map[string]int, cfg ScoringConfig) (ScoringResult, error)

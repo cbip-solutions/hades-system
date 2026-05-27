@@ -11,7 +11,7 @@
 // import count (per spec §2.1 Q1=D corpus matrix).
 //
 // All HTTP egress routes via a narrow FetchClient interface that wraps
-// cache.Revalidator.Fetch (invariant + invariant — single egress
+// cache.Revalidator.Fetch (inv-hades-152 + inv-hades-191 — single egress
 // point for the research data plane; no direct net/http imports in this
 // package). The narrow-interface pattern mirrors release B-6 and B-2
 // chunker contextual-prefix wiring: production wires *cache.Revalidator;
@@ -21,7 +21,7 @@
 // honored automatically by the Revalidator cache layer; no extra wiring
 // is required here).
 //
-// Boundary: this package MAY import internal/research/cache
+// Boundary (inv-hades-031): this package MAY import internal/research/cache
 // + internal/research/ecosystem (parent) + golang.org/x/net/html (DOM
 // parser, read-only stdlib-adjacent). It MUST NOT import internal/store
 // or internal/providers.

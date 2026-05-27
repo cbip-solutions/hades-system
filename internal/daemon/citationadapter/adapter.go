@@ -1,4 +1,4 @@
-// Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
+// Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
 // Package citationadapter bridges the citation package (substrate
 // renderer) to the release audit chain so CitationRendered events
@@ -8,14 +8,14 @@
 //
 // Why a dedicated adapter:
 //
-// - invariant: the citation package MUST NOT import internal/store
+// - inv-hades-031: the citation package MUST NOT import internal/store
 // (boundary preserved by interface segregation; citation.AuditEmitter
 // is the contract). The adapter package lives in internal/daemon/
 // specifically so it can pull together internal/citation +
 // daemon.AuditEmitCtx without forcing the citation package into
 // the daemon's import set.
 //
-// - invariant: same release boundary discipline as
+// - inv-hades-104: same release boundary discipline as
 // bypassadapter/dispatcheradapter — the bridge belongs in
 // internal/daemon/, not on the citation side.
 //
@@ -25,7 +25,7 @@
 // OnEmitRaw when wired) as every other event — there's no
 // parallel write path to keep in sync.
 //
-// Wire-up (cmd/zen-swarm-ctld/main.go):
+// Wire-up (cmd/hades-ctld/main.go):
 //
 // bridge := citationadapter.New(srv)
 // reg := citation.NewRegistry()
@@ -66,7 +66,7 @@ type AuditEmitter interface {
 // payload = { // JSON
 // "citation_id": "c-XXXX",
 // "platform": "markdown" | "ink" |...,
-// "audit_event_link": "zen://audit/<id>",
+// "audit_event_link": "hades://audit/<id>",
 // "rendered_at": <ev.RenderedAt copy>,
 // }
 //

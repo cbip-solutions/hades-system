@@ -68,7 +68,7 @@ func tryMPS(cfg Config) (Embedder, bool) {
 
 		exe, err := os.Executable()
 		if err == nil {
-			scriptPath = filepath.Join(filepath.Dir(exe), "..", "..", "internal", "knowledge", "embed", "scripts", "zen_embed.py")
+			scriptPath = filepath.Join(filepath.Dir(exe), "..", "..", "internal", "knowledge", "embed", "scripts", "hades_embed.py")
 		}
 	}
 	if _, err := os.Stat(scriptPath); err != nil {

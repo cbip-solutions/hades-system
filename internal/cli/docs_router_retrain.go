@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package cli — docs_router_retrain.go.
 //
-// `zen docs router-retrain` invokes the daemon endpoint that retrains
+// `hades docs router-retrain` invokes the daemon endpoint that retrains
 // the router's local logistic classifier (per spec §2.6 Q6=A; D-2
-// scaffold in cmd/zen/docs/router_retrain.go).
+// scaffold in cmd/hades/docs/router_retrain.go).
 //
 // The daemon-side handler wires the D-2 trainer pipeline:
 // it resolves the corpus + output path from configuration and invokes
-// cmd/zen/docs.RunRouterRetrainWithOptions(...). The CLI surface here
+// cmd/hades/docs.RunRouterRetrainWithOptions(...). The CLI surface here
 // is a thin transport call — no flag plumbing for corpus / output path
 // at this layer; that configuration is daemon-resident so a single
 // retrain invocation produces a deterministic checkpoint regardless of
@@ -15,7 +15,7 @@
 //
 // Output a single confirmation line with checkpoint path + accuracy +
 // elapsed wall-clock. This is the same shape used by other one-shot
-// daemon operations (zen audit verify, zen knowledge promote).
+// daemon operations (hades audit verify, hades knowledge promote).
 //
 // Exit codes (per spec §6.2):
 //
@@ -41,11 +41,11 @@ func NewDocsRouterRetrainCmd(factory DocsClientFactory) *cobra.Command {
 		Short: "Retrain the router's local logistic classifier",
 		Long: `Invoke the daemon-side router-retrain pipeline. The daemon
 resolves the corpus + output path from its configuration and runs the D-2
-training pipeline (cmd/zen/docs.RunRouterRetrainWithOptions).
+training pipeline (cmd/hades/docs.RunRouterRetrainWithOptions).
 
 On success prints the persisted checkpoint path, held-out accuracy, and
 total elapsed wall-clock.`,
-		Example: `  zen docs router-retrain`,
+		Example: `  hades docs router-retrain`,
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

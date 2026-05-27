@@ -5,12 +5,12 @@
 // spec §6.7 (aggregator.cache.consistent, outbox.queue.depth,
 // dedup.window.health, severity.distribution).
 //
-// invariant anchor: aggregator.cache.consistent reconciles per-project
+// inv-hades-113 anchor: aggregator.cache.consistent reconciles per-project
 // authoritative inbox row counts vs the daemon-level
 // inbox_aggregator_cache. Drift > tolerance signals write-fanout failure
 // or outbox replay missed.
 //
-// invariant anchor: severity.distribution exposes the 4-tier enum
+// inv-hades-124 anchor: severity.distribution exposes the 4-tier enum
 // (urgent / action-needed / info-immediate / info-digest). Detail
 // rendering uses the canonical order so operator output is stable.
 package cli
@@ -77,10 +77,10 @@ func runInboxAggregator(ctx context.Context, p InboxProber) ProbeResult {
 	switch {
 	case drift >= inboxCacheDriftFailRows:
 		r.Status = ProbeFail
-		r.Hint = "rebuild aggregator cache: zen inbox rebuild-cache (Plan 7 spec §3.3 — cache is rebuildable from per-project authoritative)"
+		r.Hint = "rebuild aggregator cache: hades inbox rebuild-cache (Plan 7 spec §3.3 — cache is rebuildable from per-project authoritative)"
 	case drift >= inboxCacheDriftWarnRows:
 		r.Status = ProbeWarn
-		r.Hint = "minor drift may be in-flight write; if persistent: zen inbox rebuild-cache"
+		r.Hint = "minor drift may be in-flight write; if persistent: hades inbox rebuild-cache"
 	default:
 
 		r.Status = ProbeOK
@@ -101,7 +101,7 @@ func runInboxOutbox(ctx context.Context, p InboxProber) ProbeResult {
 	switch {
 	case depth >= inboxOutboxFailDepth:
 		r.Status = ProbeFail
-		r.Hint = "delivery saturated; check Plan 11 channel adapters or osascript availability; flush via: zen inbox flush"
+		r.Hint = "delivery saturated; check Plan 11 channel adapters or osascript availability; flush via: hades inbox flush"
 	case depth >= inboxOutboxWarnDepth:
 		r.Status = ProbeWarn
 		r.Hint = "delivery is backing up; spec §6.5 expects steady-state ≤50"
@@ -127,7 +127,7 @@ func runInboxDedup(ctx context.Context, p InboxProber) ProbeResult {
 	}
 	r.Status = ProbeFail
 	r.Message = fmt.Sprintf("%d rows violate dedup UNIQUE constraint", v)
-	r.Hint = "UNIQUE constraint violated; schema drift detected — verify migration 058 applied: zen daemon migrations status; if needed, restore from backup"
+	r.Hint = "UNIQUE constraint violated; schema drift detected — verify migration 058 applied: hades daemon migrations status; if needed, restore from backup"
 	return r
 }
 
@@ -145,7 +145,7 @@ func runInboxSeverity(ctx context.Context, p InboxProber) ProbeResult {
 	case urgent >= inboxUrgentWarnPerDay:
 		r.Status = ProbeWarn
 		r.Message = fmt.Sprintf("%d urgent notifications in last 24h", urgent)
-		r.Hint = "review severity classifier tuning OR investigate the urgent events: zen inbox --severity urgent --since 24h"
+		r.Hint = "review severity classifier tuning OR investigate the urgent events: hades inbox --severity urgent --since 24h"
 	default:
 		r.Status = ProbeOK
 		r.Message = fmt.Sprintf("%d urgent / 24h (within budget)", urgent)

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_ecosystem.go
 //
-// Reports per-ecosystem DB size, package/version/chunk counts, invariant
+// Reports per-ecosystem DB size, package/version/chunk counts, inv-hades-199
 // 4-state budget classification, release F CAS blobs shared, cron worker
 // PID, last upstream-poll + weekly-sweep timestamps, symbol-index health,
 // and verifier live-cmd health (go doc / pip show / npm view / cargo doc).
@@ -10,15 +10,15 @@
 //
 // - EcosystemProber interface declared in probe.go (CLI side)
 // - RunEcosystemProbe orchestrator declared here
-// - Production wiring in cmd/zen-swarm-ctld/main.go ( daemon-init or
+// - Production wiring in cmd/hades-ctld/main.go ( daemon-init or
 // follow-up); buildDoctorDeps currently returns DoctorDeps with
 // EcosystemProber=nil — RunEcosystemProbe surfaces that as a non-nil
 // error so mis-wired daemon compositions fail loudly at first call
 // rather than emitting an empty report
 // - Tests inject fakeEcosystemProberG4 (zero internal/research/ecosystem
-// import; invariant clean)
+// import; inv-hades-031 clean)
 //
-// Boundary: this file imports only cli-internal types + cobra +
+// Boundary (inv-hades-031): this file imports only cli-internal types + cobra +
 // context + stdlib. Does NOT import internal/research/ecosystem concrete types.
 package cli
 
@@ -48,7 +48,7 @@ import (
 // the operator's interrupt signal up the call stack).
 // - DoctorDeps.EcosystemProber is nil. The error message names the field
 // so the operator's first remediation step is "wire
-// DoctorDeps.EcosystemProber in cmd/zen-swarm-ctld/main.go" (matching
+// DoctorDeps.EcosystemProber in cmd/hades-ctld/main.go" (matching
 // the J-1/J-2 nil-deps error surface).
 //
 // Typical result count: ≥15 (see EcosystemProber docstring in probe.go).
@@ -59,7 +59,7 @@ func RunEcosystemProbe(ctx context.Context, deps DoctorDeps) ([]ProbeResult, err
 		return nil, err
 	}
 	if deps.EcosystemProber == nil {
-		return nil, errors.New("RunEcosystemProbe: EcosystemProber is nil — wire DoctorDeps.EcosystemProber in cmd/zen-swarm-ctld/main.go")
+		return nil, errors.New("RunEcosystemProbe: EcosystemProber is nil — wire DoctorDeps.EcosystemProber in cmd/hades-ctld/main.go")
 	}
 
 	pctx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -79,7 +79,7 @@ func NewDoctorEcosystemCmd() *cobra.Command {
   ecosystem.cas_blobs_shared                       Plan 9 F CAS blob dedup count + total size
   ecosystem.last_upstream_poll                     last 6h upstream poll timestamp (from cron)
   ecosystem.last_weekly_sweep                      last Sunday 03:00 integrity sweep timestamp
-  ecosystem.cron.pid                               zen-docs-cron worker PID (or "not running")
+  ecosystem.cron.pid                               hades-docs-cron worker PID (or "not running")
   ecosystem.symbol_index.count                     in-memory symbol-existence set cardinality × 4 eco
   ecosystem.symbol_index.last_rebuild              last weekly symbol-index rebuild timestamp
   ecosystem.verifier.go                            live: go doc reachable + non-empty response
@@ -87,9 +87,9 @@ func NewDoctorEcosystemCmd() *cobra.Command {
   ecosystem.verifier.npm                           live: npm view reachable + non-empty response
   ecosystem.verifier.cargo                         live: cargo doc reachable + non-empty response
 
-Budget states (inv-zen-199):
+Budget states (inv-hades-199):
   GREEN     < 32 GB (< 80% of 40 GB target)   no action
-  YELLOW    32-40 GB                          alert only; zen docs prune when convenient
+  YELLOW    32-40 GB                          alert only; hades docs prune when convenient
   RED       40-60 GB                          new ingest blocked; prune required
   OVERFLOW  > 60 GB                           all writes blocked; operator must prune immediately
 
@@ -101,10 +101,10 @@ Exit codes:
   1  any check FAIL OR (any WARN AND --strict)
   2  unrecoverable: prober wiring, transport`,
 		Example: `  # Probe the ecosystem RAG substrate
-  zen doctor ecosystem
+  hades doctor ecosystem
 
   # CI gate: fail on Warn rows (Yellow budget band) too
-  zen doctor ecosystem --strict`,
+  hades doctor ecosystem --strict`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			udsPath, strict := resolveDoctorFlags(cmd)
 			deps, err := buildDoctorDepsFunc(udsPath, strict)

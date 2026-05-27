@@ -5,7 +5,7 @@
 // (init, migrate, override edit) because they're operator-explicit by
 // nature; one (reload) hits the daemon HTTP API for manual reload trigger.
 //
-// invariant (daemon NEVER auto-writes): all writeback to TOML files is
+// inv-hades-137 (daemon NEVER auto-writes): all writeback to TOML files is
 // operator-explicit. This file's commands ARE the operator-explicit path.
 package cli
 
@@ -30,7 +30,7 @@ func initCmd() *cobra.Command {
 		GroupID: "write",
 		Short:   "Copia una doctrina built-in al directorio de usuario para edición",
 		Long: `Copia el TOML de una doctrina built-in (max-scope, default,
-capa-firewall) a ~/.config/zen-swarm/doctrines/<nombre>.toml para que
+capa-firewall) a ~/.config/hades-system/doctrines/<nombre>.toml para que
 el operador pueda editarla. El file-watcher del daemon detectará el nuevo
 archivo y lo cargará automáticamente.
 
@@ -74,14 +74,14 @@ Workflow A en spec §6.5 (Tightening exploration).`,
 			if !opts.Quiet {
 				fmt.Fprintf(out, "Doctrina %q escrita a:\n  %s\n\n", name, dest)
 				fmt.Fprintln(out, "El daemon detectará el archivo via file-watcher y lo cargará automáticamente.")
-				fmt.Fprintln(out, "Use `zen doctrine-v2 status` para verificar.")
+				fmt.Fprintln(out, "Use `hades doctrine-v2 status` para verificar.")
 			} else {
 				fmt.Fprintln(out, dest)
 			}
 			return nil
 		},
 	}
-	cmd.Flags().String("output", "", "Ruta de salida (default: ~/.config/zen-swarm/doctrines/<nombre>.toml)")
+	cmd.Flags().String("output", "", "Ruta de salida (default: ~/.config/hades-system/doctrines/<nombre>.toml)")
 	cmd.Flags().Bool("force", false, "Sobrescribir archivo existente")
 	return cmd
 }
@@ -107,7 +107,7 @@ func defaultUserDoctrinePath(name string) string {
 		}
 		cfg = filepath.Join(home, ".config")
 	}
-	return filepath.Join(cfg, "zen-swarm", "doctrines", name+".toml")
+	return filepath.Join(cfg, "hades-system", "doctrines", name+".toml")
 }
 
 func migrateCmd() *cobra.Command {
@@ -123,7 +123,7 @@ Con --confirm: el archivo se reescribe con la versión migrada y el
 original se preserva como <ruta>.v<MAJOR>.bak (donde <MAJOR> es la
 componente major del schema_version FROM).
 
-El daemon NUNCA reescribe archivos automáticamente (inv-zen-137); este
+El daemon NUNCA reescribe archivos automáticamente (inv-hades-137); este
 comando es la única ruta sancionada para persistir migraciones.
 
 Workflow B en spec §6.5 (Schema migration).`,
@@ -167,7 +167,7 @@ Workflow B en spec §6.5 (Schema migration).`,
 
 			if compareSemver(resp.ToSchemaVersion, fromVersion) < 0 {
 				return fmt.Errorf(
-					"doctrine cli: rechazo de downgrade (inv-zen-142): destino %q es menor que origen %q",
+					"doctrine cli: rechazo de downgrade (inv-hades-142): destino %q es menor que origen %q",
 					resp.ToSchemaVersion, fromVersion)
 			}
 			if !confirm {
@@ -284,12 +284,12 @@ func overrideCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "override",
 		GroupID: "write",
-		Short:   "Edita el override per-proyecto en .zen/doctrine-override.toml",
+		Short:   "Edita el override per-proyecto en .hades/doctrine-override.toml",
 		Long: `Gestiona el archivo de override per-proyecto. La doctrina del proyecto
-es la doctrina baseline + ajustes tighten-only en este archivo (inv-zen-136).
+es la doctrina baseline + ajustes tighten-only en este archivo (inv-hades-136).
 
 Subcomandos:
-  edit   abre $EDITOR sobre <proyecto>/.zen/doctrine-override.toml
+  edit   abre $EDITOR sobre <proyecto>/.hades/doctrine-override.toml
          (creando el archivo con un stub si no existe)`,
 	}
 	cmd.AddCommand(overrideEditCmd())
@@ -302,12 +302,12 @@ func overrideEditCmd() *cobra.Command {
 		Short: "Abre $EDITOR sobre el archivo de override del proyecto",
 		Long: `Resuelve la ruta del proyecto:
   1. --path <ruta>   sobreescribe la resolución
-  2. --project <ali> resuelve el alias en ~/.config/zen-swarm/projects.toml
+  2. --project <ali> resuelve el alias en ~/.config/hades-system/projects.toml
                      (Plan 7; fallback a --path si no está disponible)
   3. cwd             asume que es la raíz del proyecto
 
 Si el archivo no existe, lo crea con un stub que recuerda la regla
-tighten-only (inv-zen-136). Tras editar, valida el contenido contra
+tighten-only (inv-hades-136). Tras editar, valida el contenido contra
 el daemon (saltable con --no-validate).`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			path, _ := cmd.Flags().GetString("path")
@@ -317,7 +317,7 @@ el daemon (saltable con --no-validate).`,
 			if err != nil {
 				return err
 			}
-			dest := filepath.Join(projectRoot, ".zen", "doctrine-override.toml")
+			dest := filepath.Join(projectRoot, ".hades", "doctrine-override.toml")
 			if err := os.MkdirAll(filepath.Dir(dest), 0o700); err != nil {
 				return fmt.Errorf("doctrine cli: creación de %q falló: %w", filepath.Dir(dest), err)
 			}
@@ -355,7 +355,7 @@ el daemon (saltable con --no-validate).`,
 					fmt.Fprintf(out, "  - %s\n", e)
 				}
 				return fmt.Errorf(
-					"doctrine cli: el override no es válido (use 'zen doctrine-v2 validate %s' para detalles)",
+					"doctrine cli: el override no es válido (use 'hades doctrine-v2 validate %s' para detalles)",
 					dest)
 			}
 			if !opts.Quiet {
@@ -365,7 +365,7 @@ el daemon (saltable con --no-validate).`,
 		},
 	}
 	cmd.Flags().String("path", "", "Ruta absoluta del proyecto (override de la resolución)")
-	cmd.Flags().String("project", "", "Alias del proyecto en ~/.config/zen-swarm/projects.toml")
+	cmd.Flags().String("project", "", "Alias del proyecto en ~/.config/hades-system/projects.toml")
 	cmd.Flags().Bool("no-validate", false, "Saltar validación post-edición")
 	return cmd
 }
@@ -396,7 +396,7 @@ func overrideStub(projectRoot string) []byte {
 #
 # Proyecto: %s
 #
-# Reglas (inv-zen-136 tighten-only):
+# Reglas (inv-hades-136 tighten-only):
 #   - Solo se permiten valores MÁS estrictos que la doctrina baseline.
 #   - Aflojar (loosen) cualquier campo provoca DoctrineTightenViolationRejected
 #     y el archivo será rechazado en el próximo file-watcher tick.
@@ -409,7 +409,7 @@ func overrideStub(projectRoot string) []byte {
 #   research.depth = "shallow"        # rejection: deep -> shallow
 #   merge.weights.cost = 0.3          # rejection: 0.5 -> 0.3
 #
-# Use 'zen doctrine-v2 show <doctrina-baseline>' para ver los valores
+# Use 'hades doctrine-v2 show <doctrina-baseline>' para ver los valores
 # permitidos como punto de partida.
 
 `, projectRoot))

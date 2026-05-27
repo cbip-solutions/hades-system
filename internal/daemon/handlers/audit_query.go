@@ -8,13 +8,13 @@
 // GET /v1/audit/events — recent events filtered by type/project/since
 // GET /v1/audit/types — distinct event types (catalog)
 //
-// The CLI's `zen audit verdicts` filters events by type prefix
+// The CLI's `hades audit verdicts` filters events by type prefix
 // (audit_review.*) on the events route; the catalog supports
-// `zen audit criteria list` where criteria templates are surfaced
+// `hades audit criteria list` where criteria templates are surfaced
 // via doctrine state (audit.criteria.* keys).
 //
-// invariant: Unix socket only.
-// invariant: never imports internal/store directly; AuditQueryCtx is the bridge.
+// inv-hades-001: Unix socket only.
+// inv-hades-031: never imports internal/store directly; AuditQueryCtx is the bridge.
 package handlers
 
 import (
@@ -42,7 +42,7 @@ type AuditQueryCtx interface {
 	AuditTypes() ([]AuditTypeRow, error)
 	// AuditEventByID returns a single row by id, or
 	// (zero-value, ErrAuditEventNotFound) when absent. release D-5
-	// (zen://audit URL handler). The Doctrine field MUST be populated
+	// (hades://audit URL handler). The Doctrine field MUST be populated
 	// (extracted from payload_json) so the handler's doctrine privacy
 	// filter can run without re-parsing.
 	AuditEventByID(id string) (AuditEventRow, error)

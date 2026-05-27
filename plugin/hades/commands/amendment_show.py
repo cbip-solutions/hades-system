@@ -11,7 +11,7 @@ Show full detail for amendment **{amendment_id}**.
 
 ```bash
 # pending endpoint registration: amendment detail (GET) per spec §7.2
-curl --unix-socket /tmp/zen-swarm.sock -s \\
+curl --unix-socket /tmp/hades-system.sock -s \\
      "http://unix/v1/amendment/{amendment_id}" \\
      | jq '.'
 ```
@@ -28,7 +28,7 @@ Expected response includes:
 - `audit_event_id` — the release design Tessera-anchored event linking
 - `status` — `pending` | `acknowledged` | `denied`
 - `dependent_on` — list of prior amendments this one depends on (if any)
-- `affects_invariants` — list of inv-zen-XXX impacted (if any)
+- `affects_invariants` — list of inv-hades-XXX impacted (if any)
 
 ## 2. Render full detail
 
@@ -52,10 +52,10 @@ By <proposed_by> at <proposed_at>
 ...
 
 ## Audit chain link
-zen://audit/<audit_event_id>
+hades://audit/<audit_event_id>
 
 ## Affects invariants
-<inv-zen-XXX list>
+<inv-hades-XXX list>
 
 ## Dependent on prior amendments
 <dependent_on list>

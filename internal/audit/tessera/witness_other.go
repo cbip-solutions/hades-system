@@ -31,7 +31,7 @@ func resetTestWitnessKeychain() {
 }
 
 func defaultWitnessBackend() witnessBackend {
-	if os.Getenv("ZEN_BYPASS_DISABLE_KEYCHAIN") == "1" {
+	if os.Getenv("HADES_BYPASS_DISABLE_KEYCHAIN") == "1" {
 		return defaultMemWitnessBackend
 	}
 	return &fileWitnessBackend{}
@@ -42,7 +42,7 @@ func witnessFilePath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(cfg, "zen-swarm", "witness-priv.der"), nil
+	return filepath.Join(cfg, "hades-system", "witness-priv.der"), nil
 }
 
 func (f *fileWitnessBackend) Load() (*ecdsa.PrivateKey, error) {

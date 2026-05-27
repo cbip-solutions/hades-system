@@ -231,7 +231,7 @@ func verifyCheckpointWithReader(ctx context.Context, lr tessera.LogReader, pub *
 
 // Latest returns the most-recent SignedSTH co-signed into the daemon-
 // global checkpoint log along with the current committed tree size.
-// Used by `zen doctor audit.tessera.checkpoint` — through
+// Used by `hades doctor audit.tessera.checkpoint` — through
 // CheckpointDoctor.Check (doctor.go) — to surface freshness without
 // reaching into the unexported logReader.
 //
@@ -319,7 +319,7 @@ func (c *Checkpoint) Close() error {
 	return firstErr
 }
 
-const signedSTHMagic = "zen-swarm-signed-sth-v1\x00"
+const signedSTHMagic = "hades-system-signed-sth-v1\x00"
 
 func encodeSignedSTH(s SignedSTH) []byte {
 	var buf bytes.Buffer
@@ -343,7 +343,7 @@ func decodeSignedSTH(data []byte) (SignedSTH, error) {
 	}
 	cur := data[len(signedSTHMagic):]
 
-	const sthMagic = "zen-swarm-tessera-sth\x00"
+	const sthMagic = "hades-system-tessera-sth\x00"
 	if len(cur) < len(sthMagic) {
 		return SignedSTH{}, fmt.Errorf("tessera: STH magic missing")
 	}

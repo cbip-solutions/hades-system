@@ -9,12 +9,12 @@
 // Closed/paid API; per-query egress; violates single-egress doctrine when
 // active. Default config `enable_fallback = false` (privacy posture mirrors
 // VoyageCode3). The operator who explicitly opts in (via
-// ~/.config/zen-swarm/providers/ecosystem-reranker.toml [fallback]) trades
+// ~/.config/hades-system/providers/ecosystem-reranker.toml [fallback]) trades
 // privacy for top-of-leaderboard reranker quality (ELO 1629 per ZeroEntropy
 // 2025). The dispatcher prefers BGE local but cascades to Cohere when BGE
 // returns no result or exceeds the per-query budget.
 //
-// # Egress path
+// # Egress path (inv-hades-191 forward-compat)
 //
 // This file does NOT import net/http directly. HTTP egress routes through
 // the narrow CohereForwarder interface, which the daemon orchestrator wires
@@ -35,14 +35,14 @@
 //
 // Tokens stored in macOS Keychain via:
 //
-// security add-generic-password -a zen-swarm -s cohere-api-token -w '<tok>'
+// security add-generic-password -a hades-system -s cohere-api-token -w '<tok>'
 //
 // CohereRerankV4Options.TokenKey ("cohere-api-token" by default) +
-// TokenAccount ("zen-swarm" by default) name the Keychain entry. The
+// TokenAccount ("hades-system" by default) name the Keychain entry. The
 // KeychainAccessor narrow interface (defined in embedder.go) is reused —
 // production wires the real macOS Keychain; tests inject fakeKeychain.
 //
-// invariant + privacy doctrine: ensureToken runs ONLY after the
+// inv-hades-191 + privacy doctrine: ensureToken runs ONLY after the
 // EnableFallback gate; ErrFallbackDisabled (defined in embedder.go and
 // shared across the package) short-circuits at construction. Empty token
 // → ErrKeychainTokenMissing (defense-in-depth: never invoke Forwarder
@@ -113,7 +113,7 @@ func (e *CohereHTTPError) Error() string {
 // (which owns URL routing → api.cohere.ai/v2/rerank, bearer-token auth
 // header injection, HTTP transport, and per-release audit logging); tests
 // wire fakeCohereForwarder. This keeps the ecosystem package free of any
-// net/http import and internal/providers import.
+// net/http import (inv-hades-191) and internal/providers import (inv-hades-031).
 //
 // Contract
 // - On HTTP 2xx: returns (body, nil) — the raw response body for the
@@ -137,7 +137,7 @@ const (
 
 	cohereDefaultTokenKey = "cohere-api-token"
 
-	cohereDefaultTokenAccount = "zen-swarm"
+	cohereDefaultTokenAccount = "hades-system"
 )
 
 type CohereRerankV4Options struct {

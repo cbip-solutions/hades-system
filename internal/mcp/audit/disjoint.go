@@ -42,7 +42,7 @@ func NewPool(allFamilies []string, generatorFamily string, minSize int) (*Pool, 
 
 	if len(disjoint) < minSize {
 		return nil, fmt.Errorf(
-			"%w after excluding generator %q: have %d families (%v), need >= %d (inv-zen-080)",
+			"%w after excluding generator %q: have %d families (%v), need >= %d (inv-hades-080)",
 			ErrPoolTooSmall, generatorFamily, len(disjoint), disjoint, minSize,
 		)
 	}
@@ -52,7 +52,7 @@ func NewPool(allFamilies []string, generatorFamily string, minSize int) (*Pool, 
 
 func (p *Pool) Choose() string {
 	if len(p.families) == 0 {
-		panic("audit: Pool.Choose() called on empty families — inv-zen-080 violation; Pool must only be constructed via NewPool")
+		panic("audit: Pool.Choose() called on empty families — inv-hades-080 violation; Pool must only be constructed via NewPool")
 	}
 	return p.families[0]
 }

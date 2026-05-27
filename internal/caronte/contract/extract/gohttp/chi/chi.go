@@ -38,7 +38,7 @@
 // chi router iff its assignment / parameter type / type-conversion source
 // names the chi package (the import-alias name from the file's import block).
 //
-// Boundary: imports only
+// Boundary (inv-hades-230 + inv-hades-271): imports only
 // `internal/caronte/store` + `internal/caronte/contract/extract` + the
 // standard library. Does NOT import `internal/store` (daemon store boundary)
 // nor `golang.org/x/tools/go/packages` (kept out of the dep chain for Phase

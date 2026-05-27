@@ -7,7 +7,7 @@
 -- subsequent migration (e.g., 060a or a new number) — release track leaving room
 -- here would invite a half-empty migration; release track owns its own DDL.
 --
--- invariant (audit chain integrity): every priority_overrides mutation MUST
+-- inv-hades-115 (audit chain integrity): every priority_overrides mutation MUST
 -- emit a row in the events table inside the same transaction. The Go-layer
 -- helpers (UpsertPriorityOverrideTx + InsertEventTx in
 -- internal/store/priority_overrides.go) compose the multi-statement atomic
@@ -27,7 +27,7 @@
 --   - reason TEXT NOT NULL: audit trail demands operator intent (spec §1 Q10).
 --                   internal/quota/override.go rejects empty/whitespace reasons.
 --   - created_at TIMESTAMP NOT NULL: the wall-clock instant Set was invoked.
---                   ORDER BY created_at DESC drives `zen project priority --ls`.
+--                   ORDER BY created_at DESC drives `hades project priority --ls`.
 --
 -- Index strategy:
 --   - UNIQUE(project_alias) is implicitly indexed (PRIMARY KEY-equivalent).
@@ -39,10 +39,10 @@
 --   The priority_overrides table tracks aliases by string; an FK would either
 --   require ON DELETE CASCADE (silently lose audit-relevant overrides when a
 --   project is archived) or block project deletion. Both are wrong:
---   - silent loss violates invariant (audit chain integrity).
---   - blocking deletion couples lifecycle. Operator-driven `zen project rm`
+--   - silent loss violates inv-hades-115 (audit chain integrity).
+--   - blocking deletion couples lifecycle. Operator-driven `hades project rm`
 --     should also Reset the override; if the override survives, ListPriorityOverrides
---     returns it as a dangling row that the next `zen project priority --ls`
+--     returns it as a dangling row that the next `hades project priority --ls`
 --     surfaces (forensic visibility). The override sweeper additionally GCs
 --     by expires_at so dangling rows expire on their own TTL.
 

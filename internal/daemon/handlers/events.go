@@ -79,7 +79,7 @@ func writeJSON(w http.ResponseWriter, code int, body any) {
 }
 
 func notImplemented(w http.ResponseWriter, plan int, planRef string) {
-	w.Header().Set("X-Zen-Plan", strconv.Itoa(plan))
+	w.Header().Set("X-HADES-Plan", strconv.Itoa(plan))
 	writeJSON(w, http.StatusNotImplemented, map[string]any{
 		"error": "endpoint scaffolded; implementation pending",
 		"plan":  plan,

@@ -37,7 +37,7 @@ import (
 // main-module-root pkg / cmd:
 // import path == module → dir prefix "" → "Run" / "Server.Serve" (no leading dot — exactly
 // as goPackagePathFromFile drops the prefix for a repo-root file)
-// github.com/.../cmd/zen → "cmd/zen" → "cmd/zen.main"
+// github.com/.../cmd/hades → "cmd/hades" → "cmd/hades.main"
 //
 // Pointer and value receivers collapse to the same node_id: keys a
 // method on its receiver's NAMED type, not on pointer-ness, so (T).M and
@@ -52,7 +52,7 @@ import (
 // Post "" iff obj is nil or has no enclosing package; otherwise a dotted
 //
 // repo-relative id BYTE-EQUAL to qualifiedNodeID for the same
-// symbol, stable across runs (deterministic — feeds the invariant
+// symbol, stable across runs (deterministic — feeds the inv-hades-232
 // byte-stable structure downstream).
 func canonicalNodeID(obj types.Object, modulePrefix string) string {
 	if obj == nil {

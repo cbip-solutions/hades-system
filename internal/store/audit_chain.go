@@ -4,7 +4,7 @@
 // CRUD wrappers chain integrity columns on
 // audit_events_raw + the audit_partition_seals table.
 //
-// Boundary: the chain layer (internal/audit/chain) NEVER
+// Boundary (inv-hades-031): the chain layer (internal/audit/chain) NEVER
 // imports this file directly — it goes through internal/daemon/auditadapter
 // which translates between chain.* value types and store row types via
 // field-by-field copy.

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package fix — plugin_format_fix.go ships the DESTRUCTIVE Fix impl for
-// the hermes.plugin-format check.
+// the hermes.plugin-format check (inv-hades-176 + 190).
 //
 // Delegates to:
-// - internal/doctor/backup (F4) for backup-before-modify
+// - internal/doctor/backup (F4) for backup-before-modify (inv-hades-177)
 // - internal/migrate/writer for fresh plugin scaffold
 //
-// invariant enforcement: declared via interface guard
+// inv-hades-178 enforcement: declared via interface guard
 // `_ Destructive = (*PluginFormatFix)(nil)` AND IsDestructive() returns true.
 // The GuardDestructive gate rejects FixModeAutoSafe/FixModeInteractive
 // without TTY; only FixModeYes (explicit) and FixModeInteractive in TTY
@@ -15,12 +15,12 @@
 // Failure halts:
 // - Backup fails → halt; plugin untouched
 // - Backup succeeds + delete fails → halt; manifest references backup
-// for `zen doctor restore <ID>` reverse op
+// for `hades doctor restore <ID>` reverse op
 // - Delete succeeds + scaffold fails → halt; manifest references backup
 // for reverse op
 //
 // Operator UX: post-failure, the error string carries the BackupID so the
-// operator can run `zen doctor restore <ID>` immediately.
+// operator can run `hades doctor restore <ID>` immediately.
 package fix
 
 import (
@@ -68,7 +68,7 @@ func (p *PluginFormatFix) IsDestructive() bool { return true }
 
 func (p *PluginFormatFix) Apply(ctx context.Context, mode check.FixMode) error {
 	if mode == check.FixModeReadOnly {
-		return fmt.Errorf("fix: read-only mode; run `zen doctor full --fix --yes` (destructive: backup + delete + scaffold)")
+		return fmt.Errorf("fix: read-only mode; run `hades doctor full --fix --yes` (destructive: backup + delete + scaffold)")
 	}
 
 	if p.backuper == nil {
@@ -87,16 +87,16 @@ func (p *PluginFormatFix) Apply(ctx context.Context, mode check.FixMode) error {
 	}
 
 	if err := p.backuper.RemoveAfterBackup(ctx, p.pluginPath); err != nil {
-		return fmt.Errorf("fix: delete plugin failed (backup at %s for manual restore via `zen doctor restore %s`): %w",
+		return fmt.Errorf("fix: delete plugin failed (backup at %s for manual restore via `hades doctor restore %s`): %w",
 			manifest.Path, manifest.BackupID, err)
 	}
 
 	if p.scaffolder == nil {
-		return fmt.Errorf("fix: scaffolder not configured; plugin deleted (backup at %s; restore via `zen doctor restore %s`)",
+		return fmt.Errorf("fix: scaffolder not configured; plugin deleted (backup at %s; restore via `hades doctor restore %s`)",
 			manifest.Path, manifest.BackupID)
 	}
 	if err := p.scaffolder.ScaffoldFreshPlugin(ctx, p.pluginPath); err != nil {
-		return fmt.Errorf("fix: scaffold failed (backup at %s; restore via `zen doctor restore %s`): %w",
+		return fmt.Errorf("fix: scaffold failed (backup at %s; restore via `hades doctor restore %s`): %w",
 			manifest.Path, manifest.BackupID, err)
 	}
 

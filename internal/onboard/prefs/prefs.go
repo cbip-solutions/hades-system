@@ -34,7 +34,7 @@ func mustParseMajor(v string) int {
 }
 
 // Prefs is the on-disk shape of
-// $XDG_CONFIG_HOME/zen-swarm/onboard-prefs.toml. Flat shape (C1+C3
+// $XDG_CONFIG_HOME/hades-system/onboard-prefs.toml. Flat shape (C1+C3
 // reconciliation 2026-05-14): mirrors the persistable subset of
 // onboard.WizardAnswers — per-kind fields are zero when irrelevant.
 //
@@ -76,14 +76,14 @@ type Prefs struct {
 
 func Path() string {
 	if dir := os.Getenv("XDG_CONFIG_HOME"); dir != "" {
-		return filepath.Join(dir, "zen-swarm", "onboard-prefs.toml")
+		return filepath.Join(dir, "hades-system", "onboard-prefs.toml")
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 
 		home = "."
 	}
-	return filepath.Join(home, ".config", "zen-swarm", "onboard-prefs.toml")
+	return filepath.Join(home, ".config", "hades-system", "onboard-prefs.toml")
 }
 
 func Load(path string) (*Prefs, error) {

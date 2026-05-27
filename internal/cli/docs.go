@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package cli — docs.go.
 //
-// `zen docs` is the operator-facing surface for ecosystem-docs corpus
+// `hades docs` is the operator-facing surface for ecosystem-docs corpus
 // management. The release design registers six management subcommands:
 //
-// zen docs reindex rebuild/refresh
-// zen docs pin --ecosystem X --version Y set indefinite_retain=true (G-5)
-// zen docs prune --ecosystem X --version Y --confirm hard-remove version (G-5)
-// zen docs status per-ecosystem table
-// zen docs sources --list per-source health table
-// zen docs router-retrain retrain D-2 classifier
+// hades docs reindex rebuild/refresh
+// hades docs pin --ecosystem X --version Y set indefinite_retain=true (G-5)
+// hades docs prune --ecosystem X --version Y --confirm hard-remove version (G-5)
+// hades docs status per-ecosystem table
+// hades docs sources --list per-source health table
+// hades docs router-retrain retrain D-2 classifier
 //
-// All six talk to the HADES daemon (zen-swarm-ctld) over the HTTP API
+// All six talk to the HADES daemon (hades-ctld) over the HTTP API
 // (internal/client.ecosystem_docs_ops.go). The daemon-side handlers land
 // in — until then the endpoints return 503 and the CLI maps that
 // to exit-code 2 (unrecoverable per spec §6.2).
@@ -25,10 +25,10 @@
 // pruning pinned versions (409 Conflict); CLI surfaces unpin guidance.
 //
 // Boundary stdlib + spf13/cobra + internal/client only. No
-// internal/research/ecosystem import; the orchestrator
+// internal/research/ecosystem import (inv-hades-031); the orchestrator
 // owns ecosystem operations and the daemon mediates.
 //
-// History pre-F-6, `zen docs` registered six `notImplementedSubcommand`
+// History pre-F-6, `hades docs` registered six `notImplementedSubcommand`
 // stubs (show/open/diff/versions/export/recover) targeting release. F-6
 // replaced them with the management surface above. G-5 refined the
 // pin/prune semantics from F-6's initial chunk-id-based / dry-run-or-confirm
@@ -103,7 +103,7 @@ func NewDocsCmd() *cobra.Command {
 		Long: `Manage the Plan 14 ecosystem-docs corpus that powers the
 RAG-grounded augmentation surface.
 
-Subcommands talk to the HADES daemon (zen-swarm-ctld) via the HTTP API; the daemon
+Subcommands talk to the HADES daemon (hades-ctld) via the HTTP API; the daemon
 orchestrates ecosystem ingestion, pruning, and the local router classifier
 retrain pipeline.`,
 	}

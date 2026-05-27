@@ -8,16 +8,16 @@ paths, endpoints, and workspace IDs with your local values.
 
 ```bash
 make build
-bin/zen-swarm-ctld
+bin/hades-ctld
 ```
 
 In another terminal:
 
 ```bash
 bin/hades status
-bin/zen doctor
-bin/zen doctor caronte
-bin/zen providers list
+bin/hades doctor
+bin/hades doctor caronte
+bin/hades providers list
 ```
 
 Expected shape: the daemon is reachable, doctor reports local prerequisites,
@@ -48,8 +48,8 @@ cascade = ["ollama-local"]
 Verify:
 
 ```bash
-bin/zen providers list
-bin/zen doctor
+bin/hades providers list
+bin/hades doctor
 ```
 
 ## 3. Run A Code-Graph Inspection
@@ -57,10 +57,10 @@ bin/zen doctor
 Index or refresh the project graph, then ask for impact and intent:
 
 ```bash
-bin/zen caronte reindex
-bin/zen impact internal/daemon/server.go
-bin/zen why internal/daemon/server.go
-bin/zen cochange internal/daemon/server.go
+bin/hades caronte reindex
+bin/hades impact internal/daemon/server.go
+bin/hades why internal/daemon/server.go
+bin/hades cochange internal/daemon/server.go
 ```
 
 Use this before editing high-blast-radius code. The goal is to learn the
@@ -73,18 +73,18 @@ Create a workspace roster, inspect it, and validate one repo's manifest
 against that roster:
 
 ```bash
-bin/zen workspace init example-ws --owner example-api --member example-web
-bin/zen workspace link example-ws example-worker
-bin/zen workspace members example-ws --format json
-bin/zen contract validate /path/to/example-web --workspace example-ws
+bin/hades workspace init example-ws --owner example-api --member example-web
+bin/hades workspace link example-ws example-worker
+bin/hades workspace members example-ws --format json
+bin/hades contract validate /path/to/example-web --workspace example-ws
 ```
 
 Policy changes and destructive removal require explicit confirmation in
 non-interactive shells:
 
 ```bash
-bin/zen workspace policy set example-ws permissive --yes
-bin/zen workspace remove example-ws --yes
+bin/hades workspace policy set example-ws permissive --yes
+bin/hades workspace remove example-ws --yes
 ```
 
 ## 5. Inspect API-Contract Federation Readiness
@@ -93,15 +93,15 @@ For a project with indexed federation data, inspect health and known contract
 records through the daemon:
 
 ```bash
-bin/zen federation health example-ws
-bin/zen contract example-service:http:GET:/users/{id} --workspace example-ws --format json
+bin/hades federation health example-ws
+bin/hades contract example-service:http:GET:/users/{id} --workspace example-ws --format json
 ```
 
 If a breaking-change record exists, inspect the attribution payload:
 
 ```bash
-bin/zen contract why change-123 --format json
-bin/zen api-impact change:change-123 --workspace example-ws --format json
+bin/hades contract why change-123 --format json
+bin/hades api-impact change:change-123 --workspace example-ws --format json
 ```
 
 If no federation data is indexed yet, these commands should report an explicit
@@ -113,17 +113,17 @@ Audit and cost surfaces are daemon-owned. Use them to understand what happened
 and why a scope is paused.
 
 ```bash
-bin/zen audit events --limit 20
-bin/zen audit types
-bin/zen budget events --limit 20
-bin/zen budget cap-status --axis project --value example-service --estimate-usd 0.25
+bin/hades audit events --limit 20
+bin/hades audit types
+bin/hades budget events --limit 20
+bin/hades budget cap-status --axis project --value example-service --estimate-usd 0.25
 ```
 
 If a scope is intentionally paused or resumed:
 
 ```bash
-bin/zen budget pause --axis project --value example-service --reason "release freeze" --yes
-bin/zen budget resume --axis project --value example-service --yes
+bin/hades budget pause --axis project --value example-service --reason "release freeze" --yes
+bin/hades budget resume --axis project --value example-service --yes
 ```
 
 ## 7. Exercise A Safe SSH MCP Path
@@ -131,8 +131,8 @@ bin/zen budget resume --axis project --value example-service --yes
 Use an explicit `known_hosts` file for remote hosts:
 
 ```bash
-export ZEN_SSH_KNOWN_HOSTS="$HOME/.ssh/known_hosts"
-bin/zen doctor mcps
+export HADES_SSH_KNOWN_HOSTS="$HOME/.ssh/known_hosts"
+bin/hades doctor mcps
 ```
 
 The SSH MCP should reject unknown hosts and commands outside its allowlist.
@@ -158,7 +158,7 @@ required = false
 Then verify:
 
 ```bash
-bin/zen doctor sidecars
+bin/hades doctor sidecars
 bin/hades status
 ```
 

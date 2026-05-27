@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package conventional_commit implements conventionalCommitAnalyzer for
-// zen-swarm release (spec §1 Q4 B). Enforces project instructions hard rule 2 +
-// invariant.
+// hades-system release (spec §1 Q4 B). Enforces project instructions hard rule 2 +
+// inv-hades-004.
 //
 // Mechanism shell out to `git log --pretty=%H %s` in the cwd OR a
 // configured git directory; validate each subject against the
@@ -106,7 +106,7 @@ var Analyzer = &analysis.Analyzer{
 		"(b) -conventional_commit.depth=N scans the last N commits via " +
 		"`git log -n N` (legacy, default N=50). Scope allowlist via " +
 		"-conventional_commit.allowed-scopes. Enforces CLAUDE.md hard rule 2 + " +
-		"inv-zen-004 (no Claude attribution in commit subjects).",
+		"inv-hades-004 (no Claude attribution in commit subjects).",
 	Flags: flagSetOnce,
 	Run:   run,
 }
@@ -205,7 +205,7 @@ func RunWithGitDir(gitDir string, depth int, allowedScopes string, skipHashes st
 			diags = append(diags, Diagnostic{
 				CommitHash: hash, Subject: subject,
 				Message: "cc-claude-attribution: subject contains Claude attribution; " +
-					"violates inv-zen-004 (no Claude attribution in commits)",
+					"violates inv-hades-004 (no Claude attribution in commits)",
 			})
 		}
 

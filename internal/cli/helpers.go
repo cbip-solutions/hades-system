@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package cli implements the zen CLI commands.
+// Package cli implements the hades CLI commands.
 //
-// All subcommands talk to zen-swarm-ctld via internal/client.
+// All subcommands talk to hades-ctld via internal/client.
 // scaffolds all ~25 commands; real implementations land in Plans 2-15.
 package cli
 
@@ -16,7 +16,7 @@ func notImplementedCmd(use, short string, plan int, planRef string) *cobra.Comma
 		Use:   use,
 		Short: short,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			fmt.Printf("zen %s: command available; implementation pending Plan %d\n", use, plan)
+			fmt.Printf("hades %s: command available; implementation pending Plan %d\n", use, plan)
 			fmt.Printf("  ref: %s\n", planRef)
 			fmt.Printf("  see: docs/superpowers/plans/2026-04-29-plan-%d-*.md\n", plan)
 			return nil

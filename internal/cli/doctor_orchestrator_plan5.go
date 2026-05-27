@@ -11,7 +11,7 @@
 // 1. orchestrator.daemon_up — daemon process responding on UDS
 // 2. orchestrator.event_log_writable — audit_events_raw writable + corruption < 5
 // 3. orchestrator.worktree_pool_healthy — pool floor reached + 0 leaked + GC ran (Q3+Q4)
-// 4. orchestrator.research_mcp_up — research MCP reachable
+// 4. orchestrator.research_mcp_up — research MCP reachable (inv-hades-101 hard tier)
 // 5. orchestrator.caronte_up — caronte engine up + index currency ≤ 24h (Q13 D)
 // 6. orchestrator.adapters_clean — orchestratoradapter Close() succeeded last shutdown
 // 7. orchestrator.background_goroutines — exactly 11 expected (spec §3.3)
@@ -87,7 +87,7 @@ func newOrchestratorPlan5DoctorChecks(baseURL string) []orchestratorCheckP5 {
 				return DoctorResultP5{Pass: false, Detail: "audit_events_raw not writable"}
 			}
 			if resp.CorruptionCount >= 5 {
-				return DoctorResultP5{Pass: false, Detail: fmt.Sprintf("corruption_count=%d (>=5 -> HARD_PAUSE imminent per inv-zen-095)", resp.CorruptionCount)}
+				return DoctorResultP5{Pass: false, Detail: fmt.Sprintf("corruption_count=%d (>=5 -> HARD_PAUSE imminent per inv-hades-095)", resp.CorruptionCount)}
 			}
 			return DoctorResultP5{Pass: true, Detail: fmt.Sprintf("writable; corruption=%d", resp.CorruptionCount)}
 		}},
@@ -114,7 +114,7 @@ func newOrchestratorPlan5DoctorChecks(baseURL string) []orchestratorCheckP5 {
 				return DoctorResultP5{Pass: false, Detail: err.Error()}
 			}
 			if !resp.Up {
-				return DoctorResultP5{Pass: false, Detail: "research MCP unreachable (inv-zen-101 hard tier - orchestrator will refuse to start)"}
+				return DoctorResultP5{Pass: false, Detail: "research MCP unreachable (inv-hades-101 hard tier - orchestrator will refuse to start)"}
 			}
 			return DoctorResultP5{Pass: true, Detail: "research MCP up"}
 		}},
@@ -144,7 +144,7 @@ func newOrchestratorPlan5DoctorChecks(baseURL string) []orchestratorCheckP5 {
 				return DoctorResultP5{Pass: false, Detail: err.Error()}
 			}
 			if !resp.Clean {
-				return DoctorResultP5{Pass: false, Detail: "orchestratoradapter.Close() failed at last shutdown (inv-zen-089 boundary at risk)"}
+				return DoctorResultP5{Pass: false, Detail: "orchestratoradapter.Close() failed at last shutdown (inv-hades-089 boundary at risk)"}
 			}
 			return DoctorResultP5{Pass: true, Detail: "adapters Close() clean; goleak verified"}
 		}},

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package errors centralises sentinel error values used across zen-swarm.
+// Package errors centralises sentinel error values used across hades-system.
 //
 // The most important export is the family of ErrNotImplementedPlanN
 // constants — every stub created during release (and replaced by subsequent
-// plans) returns one of these. This lets `zen doctor --verbose` count
+// plans) returns one of these. This lets `hades doctor --verbose` count
 // references and report implementation progress.
 //
 // Using errors.Is(err, ErrNotImplementedPlan5) tests for a specific stub.
@@ -88,7 +88,7 @@ var (
 		Plan: 12, PlanRef: "TUI views complete + Glamour + lipgloss custom",
 	}
 	ErrNotImplementedPlan13 = &NotImplementedError{
-		Plan: 13, PlanRef: "Onboarding wizard + zen doctor full",
+		Plan: 13, PlanRef: "Onboarding wizard + hades doctor full",
 	}
 	ErrNotImplementedPlan14 = &NotImplementedError{
 		Plan: 14, PlanRef: "Documentation system + RAG hybrid",

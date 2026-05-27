@@ -3,16 +3,16 @@
 // OverrideStore interface (Layer 3 operator override spec
 // §1 Q10).
 //
-// invariant boundary: internal/quota MUST NOT import internal/store.
+// inv-hades-031 boundary: internal/quota MUST NOT import internal/store.
 // This adapter is the only package permitted to translate between
 // quota.Override (value type owned by the quota package) and
 // store.PriorityOverrideRow (SQLite-backed row owned by store). The
 // import list of this file is the single legitimate co-location of
 // internal/quota and internal/store anywhere in the codebase, enforced
-// by the invariant compliance test in
-// tests/compliance/inv_zen_122_inv_zen_031_plan7_packages_test.go.
+// by the inv-hades-122 compliance test in
+// tests/compliance/inv_hades_122_inv_hades_031_plan7_packages_test.go.
 //
-// invariant audit hook: every Set / Reset emits an event row in the
+// inv-hades-115 audit hook: every Set / Reset emits an event row in the
 // shared events table inside the SAME transaction as the
 // priority_overrides change. Atomicity is load-bearing — release hash-
 // chain integrity depends on event-row presence whenever the

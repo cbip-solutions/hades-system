@@ -17,7 +17,7 @@ from hades.commands import status_core
 
 logger = logging.getLogger(__name__)
 
-# Module-level schema version constant (invariant anchor). Bumped per
+# Module-level schema version constant (inv-hades-221 anchor). Bumped per
 # ADR-0097 rules; v1 ships with release track and is frozen for the lifetime
 # of v1 consumers (release track compliance test + the release design +N future plans).
 SCHEMA_VERSION: int = 1
@@ -33,13 +33,13 @@ _ENDPOINT_TIMEOUT_S: float = status_core.ENDPOINT_TIMEOUT_S
 _ENDPOINTS: tuple[str, ...] = status_core.ENDPOINTS
 
 # Standard degraded-mode hint per spec §Q5. The exact phrasing is
-# stable for invariant golden-file comparison.
+# stable for inv-hades-221 golden-file comparison.
 _DEGRADED_HINT = "unavailable (daemon path down — try: hades doctor)"
 
 # Catalog code for top-level daemon-down condition. Matches release track
 # `internal/errors/codes.go` entry `daemon.not-running` (the daemon's
 # HTTP error responses use the same code string, enforcing consistency
-# across the Go + Python sides — release track invariant ships the
+# across the Go + Python sides — release track inv-hades-220 ships the
 # compliance test for this routing).
 _CODE_DAEMON_NOT_RUNNING = "daemon.not-running"
 
@@ -51,11 +51,11 @@ _LOCAL_DAEMON_NOT_RUNNING_ENVELOPE: dict[str, str] = {
     "code": _CODE_DAEMON_NOT_RUNNING,
     "title": "daemon not running",
     "body": (
-        "The zen-swarm-ctld daemon is not listening on the expected UDS path. "
+        "The hades-ctld daemon is not listening on the expected UDS path. "
         "/hades:status cannot retrieve runtime state without the daemon."
     ),
     "recovery_hint": (
-        "Start the daemon: `bin/zen-swarm-ctld` (foreground) or via the launchd "
+        "Start the daemon: `bin/hades-ctld` (foreground) or via the launchd "
         "agent. Run `hades doctor` for an end-to-end environment check."
     ),
 }
@@ -322,7 +322,7 @@ def _classify_field_state(response: dict[str, Any] | None) -> str:
 
 
 def _render_json(responses: dict[str, dict[str, Any] | None]) -> str:
-    """Render the schema-v1 JSON payload per spec §Q5 + invariant.
+    """Render the schema-v1 JSON payload per spec §Q5 + inv-hades-221.
 
     Schema-v1 shape (frozen for the lifetime of v1 consumers):
         {
@@ -498,7 +498,7 @@ def handle_status(raw_args: str) -> str | None:
         raw_args: trailing text after the command name. Recognized
             tokens (whitespace-separated; case-sensitive):
                 --json   Emit machine-readable JSON output per
-                         schema-v1 (invariant anchor) instead of
+                         schema-v1 (inv-hades-221 anchor) instead of
                          the spec §Q5 human-readable block.
 
             Unknown flags are tolerated (forward-compat) and fall
@@ -511,7 +511,7 @@ def handle_status(raw_args: str) -> str | None:
         mode). Returns the spec §Q6 three-line HADES error block on
         top-level failure (UDS missing / structured-error envelope).
     """
-    uds_path = os.environ.get("ZEN_SWARM_UDS") or _DEFAULT_UDS_PATH
+    uds_path = os.environ.get("HADES_SYSTEM_UDS") or _DEFAULT_UDS_PATH
 
     # Top-level error path 1: UDS does not exist on disk.
     if not os.path.exists(uds_path):

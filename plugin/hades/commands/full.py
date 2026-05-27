@@ -10,8 +10,8 @@ You are expanding citation **{citation_id}** from a mobile-format summary card t
 ## 1. Resolve citation envelope
 
 ```bash
-# pending endpoint registration: citation envelope retrieval (GET); substrate ships envelope type, daemon endpoint awaits zen migrate
-curl --unix-socket /tmp/zen-swarm.sock -s \\
+# pending endpoint registration: citation envelope retrieval (GET); substrate ships envelope type, daemon endpoint awaits hades migrate
+curl --unix-socket /tmp/hades-system.sock -s \\
      "http://unix/v1/citation/{citation_id}" \\
      | jq '.'
 ```
@@ -23,7 +23,7 @@ Expected response: full citation envelope per spec §1 Q9 structure:
   "source_tool": "...",
   "source_query": "...",
   "result_summary": "...",
-  "audit_event_link": "zen://audit/...",
+  "audit_event_link": "hades://audit/...",
   "confidence": 0.94,
   "platform_renderings": {{
     "ink": {{}},
@@ -66,8 +66,8 @@ If `HERMES_PLATFORM_CONTEXT` env var is unset or platform is novel:
 
 ```bash
 # Use universal markdown fallback when platform context is unset.
-# pending endpoint registration: explicit renderer dispatch (POST); per-renderer call is shipped substrate but daemon side awaits zen migrate
-curl --unix-socket /tmp/zen-swarm.sock -s \\
+# pending endpoint registration: explicit renderer dispatch (POST); per-renderer call is shipped substrate but daemon side awaits hades migrate
+curl --unix-socket /tmp/hades-system.sock -s \\
      -X POST \\
      -H "Content-Type: application/json" \\
      -d '{{"renderer":"markdown_fallback"}}' \\
@@ -91,7 +91,7 @@ Further actions:
 
 ## 6. Privacy filter
 
-Per invariant, if citation crosses doctrine boundary, daemon may return 403 Forbidden.
+Per inv-hades-163, if citation crosses doctrine boundary, daemon may return 403 Forbidden.
 
 ## Cross-references
 

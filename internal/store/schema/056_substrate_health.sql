@@ -9,7 +9,7 @@
 -- narrow now to keep aggregation queries cheap; widening to per-agent labels
 -- happens via a SEPARATE join table in the release design, not by relaxing this CHECK.
 --
--- Boundary (invariant): writes from internal/orchestrator/safetynet/regression.go
+-- Boundary (inv-hades-031): writes from internal/orchestrator/safetynet/regression.go
 -- go through the SubstrateHealthWriter interface (declared in safetynet); the
 -- store-side adapter lives in internal/daemon/orchestratoradapter/ (release track).
 

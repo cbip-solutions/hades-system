@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package merge implements zen-swarm's cross-worker MergeEngine: the
+// Package merge implements hades-system's cross-worker MergeEngine: the
 // test-driven 3-way merge layer. release shipped MergeEngine as
 // an interface in internal/orchestrator/apply/; release ships the real
 // implementation here (Q1 B package boundary; ADR-0030).
@@ -25,18 +25,18 @@
 //
 // # Boundaries (lint-enforced)
 //
-// invariant internal/orchestrator/merge/* MUST NOT import
+// inv-hades-104 internal/orchestrator/merge/* MUST NOT import
 // internal/store. Bridge via internal/daemon/
 // orchestratoradapter/. Compliance test
-// tests/compliance/inv_zen_104_merge_no_store_test.go
+// tests/compliance/inv_hades_104_merge_no_store_test.go
 // scans go list -deps for internal/store occurrences and
 // fails the build if found.
 //
-// invariant Anomaly events MUST be typed via the Go enum
+// inv-hades-110 Anomaly events MUST be typed via the Go enum
 // AnomalyType (int). NO string-typed Type field. The
 // AnomalyType so a typo or string concat is a compile
 // error, not a runtime ADR misroute. Compliance test
-// tests/compliance/inv_zen_110_anomaly_typed_test.go
+// tests/compliance/inv_hades_110_anomaly_typed_test.go
 // uses reflect to assert the underlying kind is Int.
 //
 // # Forward-compat reservations
@@ -57,9 +57,9 @@
 // # Compile-time substrate-separation marker
 //
 // The line `var _ = substrateSeparated()` below ensures that this
-// package compiles without importing internal/store.
+// package compiles without importing internal/store (inv-hades-104).
 // Removing it MUST NOT cause a missing-import error; if a future
-// contributor accidentally adds a forbidden import, the invariant
+// contributor accidentally adds a forbidden import, the inv-hades-104
 // compliance test fails with a precise message.
 package merge
 

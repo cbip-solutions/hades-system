@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // internal/daemon/orchestrator/orchestrator.go
 //
-// Orchestrator is the public entry point for LLM traffic from zen-swarm-side
+// Orchestrator is the public entry point for LLM traffic from hades-system-side
 // consumers (anthropic_proxy handler in release/3, release MCPs, release workforce
 // orchestrator subagents). It accepts a high-level Call, resolves the routing
 // profile (explicit on the call OR daemon default), injects context-keyed
-// X-Zen-Project / X-Zen-Session / X-Zen-Profile headers, and forwards to the
+// X-HADES-Project / X-HADES-Session / X-HADES-Profile headers, and forwards to the
 // dispatcher.
 //
-// Boundary: this package MUST NOT import internal/store. The
+// Boundary (inv-hades-031): this package MUST NOT import internal/store. The
 // orchestrator talks to a Forwarder interface (satisfied by *dispatcher.Dispatcher
 // in production wiring); the dispatcher itself bridges to the store via
 // dispatcheradapter. Keeping the orchestrator persistence-agnostic

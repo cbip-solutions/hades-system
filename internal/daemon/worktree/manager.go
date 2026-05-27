@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package worktree owns git worktree lifecycle for swarm tasks
 // (spec §2.5). Each task gets a worktree under
-// ~/.local/share/zen-swarm/worktrees/<project>/<feature>/<task-id>/
-// on a unique branch zen/<feature>/<task-id>.
+// ~/.local/share/hades-system/worktrees/<project>/<feature>/<task-id>/
+// on a unique branch hades/<feature>/<task-id>.
 package worktree
 
 import zerrors "github.com/cbip-solutions/hades-system/internal/errors"

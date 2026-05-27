@@ -23,7 +23,7 @@ func ConfigureS3Interactive(ctx context.Context, projectID string, stdin io.Read
 	br := bufio.NewReader(stdin)
 
 	fmt.Fprintf(stdout, "Configuring S3 credentials for project %s\n", projectID)
-	fmt.Fprintln(stdout, "Bucket name will be: zen-swarm-audit-"+projectID)
+	fmt.Fprintln(stdout, "Bucket name will be: hades-system-audit-"+projectID)
 	fmt.Fprintln(stdout, "(create the bucket separately via your AWS console / aws-cli)")
 	fmt.Fprintln(stdout, "")
 

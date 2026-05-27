@@ -2,18 +2,18 @@
 // findroot.go — release Task A-8 helper.
 //
 // FindProjectRoot walks up the filesystem from `start` looking for an
-// ancestor directory that contains EITHER `zenswarm.toml` OR a `.git`
+// ancestor directory that contains EITHER `hadessystem.toml` OR a `.git`
 // entry (file or directory). Returns the canonical path of the first
 // ancestor that matches, or an error if neither marker is found before
 // reaching the filesystem root.
 //
 // Used by the CLI doctor subcommand (Task A-8) when the operator runs
-// `zen project doctor` (no alias arg) from a subdirectory of a project:
+// `hades project doctor` (no alias arg) from a subdirectory of a project:
 // the daemon needs the project root to compute the canonical sha256
 // project_id consistently regardless of which subdirectory the operator
 // is sitting in.
 //
-// Boundary discipline: pure stdlib (os, path/filepath,
+// Boundary discipline (inv-hades-031): pure stdlib (os, path/filepath,
 // errors, fmt). No internal/store imports; no projectctxadapter
 // dependency.
 package projectctx
@@ -25,7 +25,7 @@ import (
 	"path/filepath"
 )
 
-var ErrNoProjectRoot = errors.New("projectctx: no project root found (no zenswarm.toml or .git ancestor)")
+var ErrNoProjectRoot = errors.New("projectctx: no project root found (no hadessystem.toml or .git ancestor)")
 
 func FindProjectRoot(start string) (string, error) {
 	if start == "" {
@@ -50,7 +50,7 @@ func FindProjectRoot(start string) (string, error) {
 }
 
 func hasMarker(dir string) bool {
-	if _, err := os.Stat(filepath.Join(dir, "zenswarm.toml")); err == nil {
+	if _, err := os.Stat(filepath.Join(dir, "hadessystem.toml")); err == nil {
 		return true
 	}
 	if _, err := os.Stat(filepath.Join(dir, ".git")); err == nil {

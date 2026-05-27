@@ -11,17 +11,17 @@
 // no-store-import-good/ # resolve the stubbed internal/store package)
 // internal/store/ # stub: import-target only, NOT the real store
 // conventional-commit/ # conventional_commit fixtures (Task L-4)
-// inv_zen_031_test.go # Q16 D: replaces tests/compliance/inv_zen_031_workforce_test.go
+// inv_hades_031_test.go # Q16 D: replaces tests/compliance/inv_hades_031_workforce_test.go
 // shared_test.go # cross-analyzer integration test (Task L-5)
 //
-// Q16 D contract: the invariant invariant is enforced by nostore.Analyzer
-// at compile time; this package's inv_zen_031_test.go uses analysistest.Run
+// Q16 D contract: the inv-hades-031 invariant is enforced by nostore.Analyzer
+// at compile time; this package's inv_hades_031_test.go uses analysistest.Run
 // over fixture packages to verify the analyzer's enforcement mechanism.
 // Two-step verification model:
 //
 // invariant ← enforced-by analyzer ← tested-by analysistest
 //
-// The previous runtime test at tests/compliance/inv_zen_031_workforce_test.go
+// The previous runtime test at tests/compliance/inv_hades_031_workforce_test.go
 // is DELETED in Task L-8 — analyzer is THE enforcement.
 //
 // Adding a new fixture:
@@ -43,7 +43,7 @@
 //
 // 3. Implement the analyzer at internal/doctrine/lint/analyzers/<new-rule>/
 //
-// 4. Register in cmd/zen-doctrine-lint/main.go BuildAnalyzers
+// 4. Register in cmd/hades-doctrine-lint/main.go BuildAnalyzers
 //
 // 5. Add an analyzer_test.go that calls analysistest.Run over the new
 // fixture directory

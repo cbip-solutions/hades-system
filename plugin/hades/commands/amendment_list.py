@@ -11,10 +11,10 @@ List pending HADES doctrine-amendment proposals awaiting operator decision (ack/
 
 ```bash
 # pending endpoint registration: /v1/project/active resolves the active project alias
-PROJECT=$(curl --unix-socket /tmp/zen-swarm.sock -s http://unix/v1/project/active)
+PROJECT=$(curl --unix-socket /tmp/hades-system.sock -s http://unix/v1/project/active)
 
 # pending endpoint registration: amendment lifecycle (list/show/ack/deny) per spec §7.2
-curl --unix-socket /tmp/zen-swarm.sock -s \\
+curl --unix-socket /tmp/hades-system.sock -s \\
      "http://unix/v1/amendment/list?project=$PROJECT&status=pending" \\
      | jq '.'
 ```
@@ -47,7 +47,7 @@ For each amendment:
 [<id>] <scope>: <from> → <to>
   Proposed by: <proposed_by> at <proposed_at>
   Reason: <reason>
-  Audit event: zen://audit/<audit_event_id>
+  Audit event: hades://audit/<audit_event_id>
 ```
 
 ## 3. Operator next step
@@ -61,7 +61,7 @@ Operator can:
 
 - the release design + the release design doctrine-amendment lifecycle
 - spec §7.2 (slash commands)
-- the release design invariant amendment audit chain anchor
+- the release design inv-hades-072 amendment audit chain anchor
 """
 
 

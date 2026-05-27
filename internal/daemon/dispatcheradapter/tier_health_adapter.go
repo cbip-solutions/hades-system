@@ -9,7 +9,7 @@
 // *Adapter already carries Insert (CostSink) + InsertCostLedger
 // (CostStore). Same rationale + precedent as PinStoreAdapter.
 //
-// Boundary: this file imports internal/store — that is the
+// Boundary (inv-hades-031): this file imports internal/store — that is the
 // architectural intent; dispatcheradapter IS the boundary that absorbs the
 // store dependency. The orchestrator package never sees store types.
 //

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_web_in_aggregator.go
 //
-// Task J-7: custom go vet analyzer enforcing invariant +
-// invariant at compile time.
+// Task J-7: custom go vet analyzer enforcing inv-hades-129 +
+// inv-hades-152 at compile time.
 //
-// invariant: aggregator NEVER queries web.
-// invariant: research cache stores findings;
+// inv-hades-129: aggregator NEVER queries web.
+// inv-hades-152: research cache stores findings;
 //
 // never dispatches against ecosystem corpus.
 //
@@ -15,7 +15,7 @@
 // FetchPOST URL-fetch primitives consumed ingester sources.
 //
 // Pattern golang.org/x/tools/go/analysis.Analyzer + analysistest.
-// Loaded via cmd/zen-doctrine-lint module plugin.
+// Loaded via cmd/hades-doctrine-lint module plugin.
 package lint
 
 import (
@@ -29,7 +29,7 @@ import (
 
 var NoWebInAggregatorAnalyzer = &analysis.Analyzer{
 	Name: "noWebInAggregator",
-	Doc: `Enforces inv-zen-129 + inv-zen-152: aggregator and research cache
+	Doc: `Enforces inv-hades-129 + inv-hades-152: aggregator and research cache
 NEVER query web (Plan 14 territory). Allowlist: revalidator.go HEAD
 revalidation per Q8 A.`,
 	Run: runNoWebInAggregator,
@@ -38,10 +38,10 @@ revalidation per Q8 A.`,
 func isForbiddenPkg(pkgPath string) (tag string, forbidden bool) {
 
 	if strings.Contains(pkgPath, "internal/knowledge/aggregator") {
-		return "inv-zen-129", true
+		return "inv-hades-129", true
 	}
 	if strings.Contains(pkgPath, "internal/research/cache") {
-		return "inv-zen-152", true
+		return "inv-hades-152", true
 	}
 
 	switch {
@@ -49,12 +49,12 @@ func isForbiddenPkg(pkgPath string) (tag string, forbidden bool) {
 		strings.HasSuffix(pkgPath, "/aggregator_clean") ||
 		pkgPath == "aggregator_violation" ||
 		pkgPath == "aggregator_clean":
-		return "inv-zen-129", true
+		return "inv-hades-129", true
 	case strings.HasSuffix(pkgPath, "/cache_violation") ||
 		strings.HasSuffix(pkgPath, "/cache_revalidator") ||
 		pkgPath == "cache_violation" ||
 		pkgPath == "cache_revalidator":
-		return "inv-zen-152", true
+		return "inv-hades-152", true
 	}
 	return "", false
 }
@@ -80,7 +80,7 @@ func runNoWebInAggregator(pass *analysis.Pass) (any, error) {
 		for _, imp := range file.Imports {
 			path := strings.Trim(imp.Path.Value, `"`)
 			if path == "net/http" {
-				if invariantTag == "inv-zen-129" {
+				if invariantTag == "inv-hades-129" {
 					pass.Reportf(imp.Pos(), "%s: net/http import in aggregator package forbidden", invariantTag)
 				} else {
 					pass.Reportf(imp.Pos(), "%s: net/http import in cache package outside revalidator.go forbidden", invariantTag)
@@ -102,7 +102,7 @@ func runNoWebInAggregator(pass *analysis.Pass) (any, error) {
 			}
 			methodName := sel.Sel.Name
 			if isForbiddenHTTPMethod(methodName) {
-				if invariantTag == "inv-zen-129" {
+				if invariantTag == "inv-hades-129" {
 					pass.Reportf(call.Pos(), "%s: aggregator NEVER queries web - Plan 14 territory", invariantTag)
 				} else {
 					pass.Reportf(call.Pos(), "%s: research cache NEVER dispatches against ecosystem corpus - Plan 14 territory", invariantTag)

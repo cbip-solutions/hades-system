@@ -19,23 +19,23 @@ import (
 //
 // 1. Claim a SharedTaskList row (status: pending → in_progress)
 // 2. Drain pending FixPromptQueue rows for this worker
-// 3. Build a prompt with the doctrine-reinforcement block
+// 3. Build a prompt with the doctrine-reinforcement block (inv-hades-070 hook)
 // + drained fix-prompts + the user prompt
 // 4. Send the prompt as a single Request frame to OpenClaude
 // 5. Loop on Receive:
 // - Notification "checkpoint" → CheckpointQueue.Put with deadline-stamping
-//
+// (inv-hades-050 hook)
 // - Request "tool_use" → route via ToolRelay; send Result/Error back
 // - Result "done" / non-tool_use → terminal; advance task to review
 // - Error → mark task failed
 // 6. Finalize SharedTaskList (success → review, failure → failed)
 //
-// invariant boundary: NewOpenClaudeWorker REQUIRES non-empty
+// inv-hades-087 boundary: NewOpenClaudeWorker REQUIRES non-empty
 // worktreePath. The Worker is the consumer; release WorktreePool will own
 // allocation. Compile-check via constructor signature; runtime check via
 // panic at construction with explanatory message.
 //
-// invariant boundary: this struct depends only on internal/workforce/queue
+// inv-hades-031 boundary: this struct depends only on internal/workforce/queue
 // (interface) + internal/workforce/subprocess (interface) + worker
 // package interfaces (DoctrineConfig, ToolRelay). It MUST NOT import
 // internal/store directly. Concrete queue/store wiring lives in

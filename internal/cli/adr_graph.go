@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr_graph.go.
 //
-// `zen adr graph --from <id> [--depth <n>]` calls
+// `hades adr graph --from <id> [--depth <n>]` calls
 // GET /v1/adr/graph?from=...&depth=... and renders the supersede-chain DAG
 // as an ASCII tree rooted at the --from node.
 //
@@ -29,8 +29,8 @@ func adrGraphCmd() *cobra.Command {
 		Long: `graph calls GET /v1/adr/graph and renders the supersede-chain DAG
 as a Unicode box-drawing tree. The --from flag is required; --depth limits
 how many levels are included (default 5; 0 = server default 1).`,
-		Example: `  zen adr graph --from ADR-0001
-  zen adr graph --from ADR-0001 --depth 3`,
+		Example: `  hades adr graph --from ADR-0001
+  hades adr graph --from ADR-0001 --depth 3`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			from, _ := cmd.Flags().GetString("from")
 			depth, _ := cmd.Flags().GetInt("depth")

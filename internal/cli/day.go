@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package cli — day.go.
 //
-// `zen day [--force | --eod | --check-pending]` dispatches to the
-// daemon-side zen day generator façade and renders the returned
-// BriefDoc to stdout via zenday.Render. Default invocation = morning
+// `hades day [--force | --eod | --check-pending]` dispatches to the
+// daemon-side hades day generator façade and renders the returned
+// BriefDoc to stdout via hadesday.Render. Default invocation = morning
 // brief. --eod runs the EOD digest; --check-pending runs the
 // introspection preview; --force overrides today's-archive
 // idempotency.
@@ -12,11 +12,11 @@
 // morning-brief composer that issued multiple GET /v1/*/summary calls
 // from the CLI side and stitched the markdown locally. release
 // consolidates the brief into a single daemon-side composer
-// (zenday.Generator, F-7..F-9) so the CLI is now a thin dispatcher:
+// (hadesday.Generator, F-7..F-9) so the CLI is now a thin dispatcher:
 // one POST round-trip + Render. The release-6 sections (workforce,
 // research, audit, budget, sshexec, health, autonomy, merge,
 // notifications, bypass) are now sourced server-side via
-// zenday.Collect's parallel fan-out.
+// hadesday.Collect's parallel fan-out.
 //
 // --include-bypass is preserved as a no-op flag (with a stderr
 // deprecation notice) for backward compat with operators who scripted
@@ -43,38 +43,38 @@ import (
 
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
-	"github.com/cbip-solutions/hades-system/internal/zenday"
+	"github.com/cbip-solutions/hades-system/internal/hadesday"
 )
 
 const dayClientTimeout = 30 * time.Second
 
-type ZenDayClient interface {
-	GenerateMorning(ctx context.Context, force bool) (zenday.BriefDoc, error)
-	GenerateEOD(ctx context.Context, force bool) (zenday.BriefDoc, error)
-	CheckPending(ctx context.Context) (zenday.BriefDoc, error)
+type HadesDayClient interface {
+	GenerateMorning(ctx context.Context, force bool) (hadesday.BriefDoc, error)
+	GenerateEOD(ctx context.Context, force bool) (hadesday.BriefDoc, error)
+	CheckPending(ctx context.Context) (hadesday.BriefDoc, error)
 }
 
 type httpDayClient struct {
 	c *client.Client
 }
 
-func (h *httpDayClient) GenerateMorning(ctx context.Context, force bool) (zenday.BriefDoc, error) {
+func (h *httpDayClient) GenerateMorning(ctx context.Context, force bool) (hadesday.BriefDoc, error) {
 	return h.c.DayMorning(ctx, force)
 }
 
-func (h *httpDayClient) GenerateEOD(ctx context.Context, force bool) (zenday.BriefDoc, error) {
+func (h *httpDayClient) GenerateEOD(ctx context.Context, force bool) (hadesday.BriefDoc, error) {
 	return h.c.DayEOD(ctx, force)
 }
 
-func (h *httpDayClient) CheckPending(ctx context.Context) (zenday.BriefDoc, error) {
+func (h *httpDayClient) CheckPending(ctx context.Context) (hadesday.BriefDoc, error) {
 	return h.c.DayCheckPending(ctx)
 }
 
-func dayClientFromHTTP(c *client.Client) ZenDayClient {
+func dayClientFromHTTP(c *client.Client) HadesDayClient {
 	return &httpDayClient{c: c}
 }
 
-// NewDayCmd builds `zen day`. Registered by internal/cli/root.go.
+// NewDayCmd builds `hades day`. Registered by internal/cli/root.go.
 //
 // Flag precedence (locked by tests in day_test.go):
 //
@@ -99,16 +99,16 @@ func NewDayCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "day",
-		Short: "Show today's zen day brief (morning), EOD digest, or check-pending preview",
-		Long: `zen day composes today's morning brief, EOD digest, or check-pending
+		Short: "Show today's hades day brief (morning), EOD digest, or check-pending preview",
+		Long: `hades day composes today's morning brief, EOD digest, or check-pending
 introspection per spec §1 Q13/Q14/Q15. Default invocation is the
 morning brief. --eod runs the EOD digest; --check-pending shows
 next-fire + pending-since-last counts. --force overrides today's-
 archive idempotency for morning / eod (no effect on check-pending).
 
-The brief honours the 7-item hard cap (inv-zen-126) and canonical
-leverage rank order (inv-zen-127). Truncation marker
-"+ N more in zen inbox --since 24h" appears when more items exist
+The brief honours the 7-item hard cap (inv-hades-126) and canonical
+leverage rank order (inv-hades-127). Truncation marker
+"+ N more in hades inbox --since 24h" appears when more items exist
 than the cap allows.
 
 --include-bypass is a legacy Plan 2 flag preserved as a no-op for
@@ -116,16 +116,16 @@ backward compat with scripted callers; the brief now consolidates
 all sources (bypass health is rendered alongside the other sections
 by the daemon-side composer).`,
 		Example: `  # Default: today's morning brief (idempotent)
-  zen day
+  hades day
 
   # Force regeneration even if today's brief is already archived
-  zen day --force
+  hades day --force
 
   # End-of-day digest
-  zen day --eod
+  hades day --eod
 
   # Check what would fire next + pending-since-last counts (read-only)
-  zen day --check-pending`,
+  hades day --check-pending`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(cmd.Context(), dayClientTimeout)
 			defer cancel()
@@ -149,16 +149,16 @@ by the daemon-side composer).`,
 	return cmd
 }
 
-func runDay(ctx context.Context, c ZenDayClient, out io.Writer, force, eod, checkPending bool) error {
+func runDay(ctx context.Context, c HadesDayClient, out io.Writer, force, eod, checkPending bool) error {
 	doc, err := dispatchDay(ctx, c, force, eod, checkPending)
 	if err != nil {
 		return classifyDayError(err, dayPathFor(eod, checkPending))
 	}
-	fmt.Fprint(out, zenday.Render(doc))
+	fmt.Fprint(out, hadesday.Render(doc))
 	return nil
 }
 
-func dispatchDay(ctx context.Context, c ZenDayClient, force, eod, checkPending bool) (zenday.BriefDoc, error) {
+func dispatchDay(ctx context.Context, c HadesDayClient, force, eod, checkPending bool) (hadesday.BriefDoc, error) {
 	switch {
 	case checkPending:
 		return c.CheckPending(ctx)
@@ -186,11 +186,11 @@ func classifyDayError(err error, path string) error {
 	}
 	if client.IsHTTPStatus(err, http.StatusConflict) {
 		return ierrors.Wrap(ierrors.Code("daemon.unreachable"), recoverableWrap(err,
-			fmt.Sprintf("zen day %s: today's brief already exists (use --force to overwrite)", path)))
+			fmt.Sprintf("hades day %s: today's brief already exists (use --force to overwrite)", path)))
 	}
 	if client.IsHTTPStatus(err, http.StatusServiceUnavailable) {
 		return ierrors.Wrap(ierrors.Code("daemon.not-running"), recoverableWrap(err,
-			fmt.Sprintf("zen day %s: daemon not ready (start it with: zen daemon start)", path)))
+			fmt.Sprintf("hades day %s: daemon not ready (start it with: hades daemon start)", path)))
 	}
-	return ierrors.Wrap(ierrors.Code("daemon.unreachable"), fmt.Errorf("zen day %s: %w", path, err))
+	return ierrors.Wrap(ierrors.Code("daemon.unreachable"), fmt.Errorf("hades day %s: %w", path, err))
 }

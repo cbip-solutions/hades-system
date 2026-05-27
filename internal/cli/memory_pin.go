@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package cli — memory_pin.go.
 //
-// `zen memory pin` is the operator-ergonomics alias for `zen memory promote`
+// `hades memory pin` is the operator-ergonomics alias for `hades memory promote`
 // at the CLI surface. Both call MemoryPromote (aggregator promote endpoint).
 //
-// invariant gates apply identically:
+// inv-hades-146 gates apply identically:
 // 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
 // 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 package cli
@@ -35,11 +35,11 @@ func newMemoryPinCmd() *cobra.Command {
 		Short: "Pin a note to the global pin index (alias for promote)",
 		Long: `pin records that a note is operator-flagged as cross-project relevant
 and copies it to the global aggregator pin index. It is the CLI-ergonomic
-alias for ` + "`zen memory promote`" + ` — both call the same daemon endpoint.
+alias for ` + "`hades memory promote`" + ` — both call the same daemon endpoint.
 
-inv-zen-146: --reason MANDATORY. Empty or whitespace-only reasons are rejected
+inv-hades-146: --reason MANDATORY. Empty or whitespace-only reasons are rejected
 before any network call. The pin event is anchored on the Plan 9 audit chain.`,
-		Example: `  zen memory pin internal-platform-x/M0-doctrine \
+		Example: `  hades memory pin internal-platform-x/M0-doctrine \
     --reason "load-bearing for max-scope across all projects"`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -50,7 +50,7 @@ before any network call. The pin event is anchored on the Plan 9 audit chain.`,
 			return RunMemoryPin(ctx, c, flags, cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&flags.Reason, "reason", "", "operator rationale (required; inv-zen-146)")
+	cmd.Flags().StringVar(&flags.Reason, "reason", "", "operator rationale (required; inv-hades-146)")
 	cmd.Flags().StringVar(&flags.OperatorID, "operator", "", "operator identifier (default: daemon-resolved)")
 	_ = cmd.MarkFlagRequired("reason")
 	return cmd
@@ -61,7 +61,7 @@ func RunMemoryPin(ctx context.Context, c MemoryClient, flags MemoryPinFlags, w i
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory pin: <note-id> is required"))
 	}
 	if strings.TrimSpace(flags.Reason) == "" {
-		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory pin: --reason required (inv-zen-146)"))
+		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory pin: --reason required (inv-hades-146)"))
 	}
 	req := client.AggPromoteRequest{
 		NoteID:     flags.NoteID,

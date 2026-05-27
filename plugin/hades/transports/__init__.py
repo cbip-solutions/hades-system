@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-"""ZenSwarmTransport — Python half of the cross-language LLM-dispatch bridge."""
+"""HadesSystemTransport — Python half of the cross-language LLM-dispatch bridge."""
 
-from .zen_swarm_transport import CompletedResponse, ZenSwarmTransport
+from .hades_system_transport import CompletedResponse, HadesSystemTransport
 
-__all__ = ["CompletedResponse", "ZenSwarmTransport"]
+__all__ = ["CompletedResponse", "HadesSystemTransport"]

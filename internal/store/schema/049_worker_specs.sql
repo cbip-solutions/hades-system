@@ -10,7 +10,7 @@
 -- All three carry project_id (spec §7.1 logical isolation; release track
 -- queues already enforce this on every row).
 --
--- invariant boundary preserved: internal/workforce/worker MUST NOT
+-- inv-hades-031 boundary preserved: internal/workforce/worker MUST NOT
 -- import internal/store. The daemon adapter (release track) will wire the
 -- read/write surface; release track ships only the schema so the release design
 -- orchestrator persistence is unblocked.

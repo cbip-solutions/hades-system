@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — research_history.go.
 //
-// NEW release leaf: `zen research history` — query the research dispatch event
+// NEW release leaf: `hades research history` — query the research dispatch event
 // log (GET /v1/research/history) and render a table with cache outcome.
 //
 // Deviation from plan-file: plan-file sketched ResearchHistoryEntry with
@@ -49,9 +49,9 @@ func researchHistoryCmd() *cobra.Command {
 		Long: `history queries the research dispatch log. Use --type to scope
 to a specific cache-outcome source (e.g. cache_hit_exact, fresh_dispatch).
 Use --since to limit results to recent events.`,
-		Example: `  zen research history
-  zen research history --type cache_hit_exact
-  zen research history --since 24h --format json`,
+		Example: `  hades research history
+  hades research history --type cache_hit_exact
+  hades research history --since 24h --format json`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if err := format.ValidateExclusive(cmd); err != nil {
 				return err

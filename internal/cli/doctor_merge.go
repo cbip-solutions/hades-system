@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_merge.go.
 //
-// `runMergeChecks` is the [release merge] section of `zen doctor`. It
+// `runMergeChecks` is the [release merge] section of `hades doctor`. It
 // produces 4 spec §6.2 checks against the daemon's /v1/merge/* surface
 // and the host git binary, returning a `[]CheckResult` slice that the
 // doctorAggregateRunE caller appends to the unified results pipeline:
@@ -24,16 +24,16 @@
 // Shape ([]CheckResult): mirrors the runOrchestratorChecks pattern from
 // / "fail" matching the package-wide convention. Section is left empty —
 // the caller stamps it so the same helper can be reused by a (future)
-// dedicated `zen doctor merge` subcommand without double-scoping.
+// dedicated `hades doctor merge` subcommand without double-scoping.
 //
-// The MergeClient interface is the same one consumed by `zen merge`
+// The MergeClient interface is the same one consumed by `hades merge`
 // (declared in merge.go via type alias of internal/client.MergeClient).
 //
 // Boundary note: this file imports internal/orchestrator/merge for
-// VersionCheck + NewRealGit. invariant forbids merge⊥store
+// VersionCheck + NewRealGit. inv-hades-104 forbids merge⊥store
 // (compliance test pins./internal/orchestrator/merge/... → no store);
-// it does NOT forbid CLI ↔ merge. Per invariant compliance test
-// (tests/compliance/inv_zen_104_merge_no_store_test.go) the boundary
+// it does NOT forbid CLI ↔ merge. Per inv-hades-104 compliance test
+// (tests/compliance/inv_hades_104_merge_no_store_test.go) the boundary
 // is one-directional and unaffected by this import.
 package cli
 
@@ -59,7 +59,7 @@ func runMergeChecks(ctx context.Context, client MergeClient) []CheckResult {
 			Name:   "merge.daemon_up",
 			Status: "fail",
 			Detail: daemonErr.Error(),
-			Hint:   "Ensure daemon is running: zen daemon start",
+			Hint:   "Ensure daemon is running: hades daemon start",
 		})
 	case elapsed > daemonUpThreshold:
 		results = append(results, CheckResult{
@@ -67,7 +67,7 @@ func runMergeChecks(ctx context.Context, client MergeClient) []CheckResult {
 			Status: "warn",
 			Detail: fmt.Sprintf("slow: %s (>%s threshold)",
 				elapsed.Round(time.Millisecond), daemonUpThreshold),
-			Hint: "Inspect dispatcher saturation: zen orchestrator status",
+			Hint: "Inspect dispatcher saturation: hades orchestrator status",
 		})
 	default:
 		results = append(results, CheckResult{
@@ -106,7 +106,7 @@ func runMergeChecks(ctx context.Context, client MergeClient) []CheckResult {
 			Name:   "merge.eventlog_writable",
 			Status: "fail",
 			Detail: "daemon unreachable (cannot probe eventlog)",
-			Hint:   "Restart daemon: zen daemon start",
+			Hint:   "Restart daemon: hades daemon start",
 		})
 	} else {
 		results = append(results, CheckResult{
@@ -122,7 +122,7 @@ func runMergeChecks(ctx context.Context, client MergeClient) []CheckResult {
 			Name:   "merge.cache_health",
 			Status: "fail",
 			Detail: daemonErr.Error(),
-			Hint:   "Restart daemon: zen daemon start",
+			Hint:   "Restart daemon: hades daemon start",
 		})
 	case cs != nil && cs.RebuildError != "":
 		results = append(results, CheckResult{
@@ -130,7 +130,7 @@ func runMergeChecks(ctx context.Context, client MergeClient) []CheckResult {
 			Status: "fail",
 			Detail: fmt.Sprintf("rebuild_error: %s (size=%d, last_rebuilt=%s)",
 				cs.RebuildError, cs.Size, cs.LastRebuilt),
-			Hint: "Clear cache + restart: zen merge cache clear && zen daemon restart",
+			Hint: "Clear cache + restart: hades merge cache clear && hades daemon restart",
 		})
 	case cs != nil:
 		results = append(results, CheckResult{

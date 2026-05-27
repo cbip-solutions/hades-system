@@ -1,6 +1,6 @@
 -- ==============================================================================
 -- Migration 064: cost_ledger per-provider attribution (the release design release track; C9;
--- invariant).
+-- inv-hades-214).
 -- ==============================================================================
 --
 -- The the release design dispatcher cascade iterates NAMED provider backends and the

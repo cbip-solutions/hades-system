@@ -33,7 +33,7 @@ func defaultPluginScanRoots() []string {
 	return []string{
 		filepath.Join(home, ".claude"),
 		filepath.Join(home, ".openclaude"),
-		filepath.Join(cwd, ".zen"),
+		filepath.Join(cwd, ".hades"),
 	}
 }
 
@@ -62,7 +62,7 @@ func (c *PluginFormatCheck) Run(ctx context.Context) Result {
 				Name:            c.Name(),
 				Status:          StatusFail,
 				Summary:         fmt.Sprintf("%s format remnant detected at %s", kind, root),
-				Details:         fmt.Sprintf("inv-zen-176 halts on legacy plugin-format remnants. Evidence: %s. Phase H' (commit 8bd84187) made the Hermes plugin format canonical; legacy CC/OpenClaude installs require migration before HADES onboarding.", evidence),
+				Details:         fmt.Sprintf("inv-hades-176 halts on legacy plugin-format remnants. Evidence: %s. Phase H' (commit 8bd84187) made the Hermes plugin format canonical; legacy CC/OpenClaude installs require migration before HADES onboarding.", evidence),
 				RemediationHint: hintForKind(kind),
 				ExitCode:        3,
 			}
@@ -84,7 +84,7 @@ func migrationAcknowledged() bool {
 		}
 		cfgRoot = filepath.Join(home, ".config")
 	}
-	artifact := filepath.Join(cfgRoot, "zen-swarm", "doctrines", "imported-from-claude-code.toml")
+	artifact := filepath.Join(cfgRoot, "hades-system", "doctrines", "imported-from-claude-code.toml")
 	_, err := os.Stat(artifact)
 	return err == nil
 }
@@ -172,7 +172,7 @@ func scanForRemnants(root string) (bool, string, string) {
 func hintForKind(kind string) string {
 	switch kind {
 	case "claude-code":
-		return "Run `zen migrate claude-code --dry-run` to preview migration; then `zen migrate claude-code --apply` to import. Or move the legacy install out of the scan paths (~/.claude/, ./.zen/) if intentionally preserved offline."
+		return "Run `hades migrate claude-code --dry-run` to preview migration; then `hades migrate claude-code --apply` to import. Or move the legacy install out of the scan paths (~/.claude/, ./.hades/) if intentionally preserved offline."
 	case "openclaude":
 		return "Run `hermes claw migrate` (Hermes-provided OpenClaude importer) to convert to Hermes plugin format. Or move ~/.openclaude/ out of the scan paths."
 	default:

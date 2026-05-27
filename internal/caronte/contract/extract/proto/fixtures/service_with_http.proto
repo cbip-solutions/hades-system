@@ -4,7 +4,7 @@ package auth.v1;
 
 import "google/api/annotations.proto";
 
-option go_package = "github.com/zen-swarm/example/auth/v1;authv1";
+option go_package = "github.com/hades-system/example/auth/v1;authv1";
 
 service UserService {
   rpc GetUser (GetUserRequest) returns (GetUserResponse) {

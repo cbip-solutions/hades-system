@@ -12,7 +12,7 @@ if [ "$INIT_GIT" = "True" ] || [ "$INIT_GIT" = "true" ]; then
   if [ ! -d .git ]; then
     git init -q
     git add -A
-    git -c commit.gpgsign=false commit -q -m "chore(scaffold): initialize $NAME via zen new"
+    git -c commit.gpgsign=false commit -q -m "chore(scaffold): initialize $NAME via hades new"
   fi
 fi
 

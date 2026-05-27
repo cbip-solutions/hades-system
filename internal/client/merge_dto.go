@@ -7,14 +7,14 @@
 // satisfy the interface, and Go's package-isolation requires either
 // the types live with the impl or with the interface — declaring them
 // here with type aliases in cli (cli/merge.go) preserves the F-2 source
-// surface for cli callers (zen merge, doctor merge, day brief) while
+// surface for cli callers (hades merge, doctor merge, day brief) while
 // breaking the import cycle the F-2 layout would have introduced
 // (internal/client cannot import internal/cli because cli imports
 // client elsewhere — see internal/cli/audit.go etc.).
 //
 // Wire-types decoupling vs internal/orchestrator/merge: these structs
 // are pure JSON-tagged value types with NO import of merge or any
-// other domain package — invariant preserved end-to-end.
+// other domain package — inv-hades-104 preserved end-to-end.
 //
 // Drift resolutions (carried over from F-2):
 //

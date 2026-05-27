@@ -57,7 +57,7 @@ type RunInput struct {
 	ProjectRoot       string
 	AllowSoftWarnings bool
 	// PerProjectTiers is the (already-validated) tighten-only override map
-	// from zenswarm.toml [autonomy.check_tiers]. nil ⇒ baseline matrix only.
+	// from hadessystem.toml [autonomy.check_tiers]. nil ⇒ baseline matrix only.
 	// Callers MUST run ValidateOverrides at config-load time before passing
 	// this map; the engine assumes overrides are tighten-only.
 	PerProjectTiers map[string]Tier

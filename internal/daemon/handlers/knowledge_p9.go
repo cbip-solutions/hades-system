@@ -3,9 +3,9 @@
 //
 // 5 NEW operator-facing knowledge aggregator endpoints surfacing
 // substrate (federated query + opt-in promote per Q6 C) over
-// /v1/knowledge/*. invariant + invariant: handlers consume the
+// /v1/knowledge/*. inv-hades-150 + inv-hades-031: handlers consume the
 // KnowledgeAdapterP9 interface and never import internal/knowledge/*
-// directly. invariant: promote/unpromote require non-empty, non-whitespace
+// directly. inv-hades-146: promote/unpromote require non-empty, non-whitespace
 // --reason (auto-promote bypass structurally impossible from this surface).
 //
 // GET /v1/knowledge/query — federated/pinned/chain-anchored search
@@ -23,8 +23,8 @@
 //
 // Boundary invariants:
 //
-// invariant: handler never imports internal/store directly.
-// invariant: handler never imports internal/knowledge/{aggregator,embed}
+// inv-hades-031: handler never imports internal/store directly.
+// inv-hades-150: handler never imports internal/knowledge/{aggregator,embed}
 // directly; all calls go via KnowledgeAdapterP9.
 //
 // Wire KnowledgeQueryReqP9, KnowledgeResultP9, KnowledgeNoteP9,
@@ -151,7 +151,7 @@ func KnowledgeP9Promote(s KnowledgeAdapterP9) http.HandlerFunc {
 		}
 		if strings.TrimSpace(req.Reason) == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{
-				"error": "reason required (inv-zen-146; auto-promote forbidden)",
+				"error": "reason required (inv-hades-146; auto-promote forbidden)",
 			})
 			return
 		}
@@ -191,7 +191,7 @@ func KnowledgeP9Unpromote(s KnowledgeAdapterP9) http.HandlerFunc {
 		}
 		if strings.TrimSpace(req.Reason) == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{
-				"error": "reason required (inv-zen-146; auto-unpromote forbidden)",
+				"error": "reason required (inv-hades-146; auto-unpromote forbidden)",
 			})
 			return
 		}

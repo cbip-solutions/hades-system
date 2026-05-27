@@ -7,7 +7,7 @@
 // POST /v1/quiet/urgent-pause — set UrgentPauseUntil for a duration
 // POST /v1/quiet/cancel — clear active urgent-pause
 //
-// The persistent quiet-hours config (~/.config/zen-swarm/notifications.toml)
+// The persistent quiet-hours config (~/.config/hades-system/notifications.toml)
 // is operator-edited; this surface ONLY exposes the read view + the
 // runtime UrgentPauseUntil mutator (the file-as-source-of-truth pattern
 // per spec §6.5). The CLI's RunQuietList renders the config, and
@@ -15,14 +15,14 @@
 //
 // Status-code mapping (mirrors the inbox_p7 + schedule_p7 patterns):
 //
-// 503 — QuietStore() not yet wired (cmd/zen-swarm-ctld registers
+// 503 — QuietStore() not yet wired (cmd/hades-ctld registers
 // the store at boot; tests inject fakes via SetQuietStore).
 // 400 — invalid JSON / missing required fields (until on pause).
 // 422 — validation rejected the input (zero / past until).
 // 500 — opaque backend error.
 // 200 — success; bodies documented per route below.
 //
-// invariant boundary: this handler imports internal/inbox value types
+// inv-hades-031 boundary: this handler imports internal/inbox value types
 // only (QuietConfig / QuietHours). No internal/store imports — the
 // QuietStore interface is structural and the daemon-side accessor
 // returns it as the same interface, keeping the boundary at the
@@ -30,9 +30,9 @@
 //
 // CLI surface (handled in internal/cli/quiet.go):
 //
-// zen quiet [--list] # default: list
-// zen quiet --urgent-pause <duration>
-// zen quiet --cancel
+// hades quiet [--list] # default: list
+// hades quiet --urgent-pause <duration>
+// hades quiet --cancel
 package handlers
 
 import (

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — orchestrator_depth.go.
 //
-// `zen orchestrator depth` overrides the calculated depth/width for a
+// `hades orchestrator depth` overrides the calculated depth/width for a
 // given spec on a given project. --depth and --reset are mutually
 // exclusive; --project + --spec are required.
 package cli

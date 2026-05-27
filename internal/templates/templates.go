@@ -4,7 +4,7 @@
 // Spec reference: §3.5 (template system shape).
 //
 // Doctrine every scaffolded project is Hermes-loadable + carries NO Claude
-// attribution in its post_gen.sh git commit.
+// attribution in its post_gen.sh git commit (inv-hades-004 propagation).
 package templates
 
 import (

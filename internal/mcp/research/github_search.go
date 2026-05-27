@@ -3,7 +3,7 @@
 //
 // Calls api.github.com via the go-github v66 client with optional
 // bearer-token auth (production: macOS Keychain via the
-// `gh:zen-swarm:github-search-token` slot; tests inject directly).
+// `gh:hades-system:github-search-token` slot; tests inject directly).
 // Cache hit/miss is the same shape as web_search and arxiv:
 // sha256(query|language|stars_min) → CacheClient.
 //

@@ -37,7 +37,7 @@ git diff --name-only main..<branch>
 ### 2. Per-file preflight augmentation
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock \
+curl --unix-socket /tmp/hades-system.sock \
      -X POST \
      -d '{"mode":"preflight","file":"<file>","diff_context":"..."}' \
      http://unix/v1/augment
@@ -61,5 +61,5 @@ On timeout → warn-proceed (constant).
 
 - spec §4.3 the release design orchestrator pre-flight extension
 - spec §4.4 the release design MergeEngine winner extension
-- invariant augmentation budget gate
+- inv-hades-167 augmentation budget gate
 - /hades:impact-pre-merge slash command handler

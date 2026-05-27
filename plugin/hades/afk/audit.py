@@ -33,7 +33,7 @@ async def _emit(
     """POST an audit event to the daemon's chain endpoint.
 
     Raises ``RuntimeError`` on non-2xx — audit chain integrity is
-    load-bearing per invariant (Tessera anchor chain unbroken).
+    load-bearing per inv-hades-051 (Tessera anchor chain unbroken).
     Operators see the upstream error in the daemon log + the AFK
     module's caller logs the failed dispatch context.
     """

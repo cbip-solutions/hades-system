@@ -37,7 +37,7 @@ HADES project directory.
 
 ## Project identity
 
-HADES (formerly zen-swarm) is a multi-project agentic development
+HADES (formerly hades-system) is a multi-project agentic development
 orchestrator. Go-based daemon + CLI + Hermes plugin (this package).
 Privacy-by-default, max-scope doctrine, single-egress-point for LLM
 traffic. Released as private repo at `github.com/cbip-solutions/hades-system`
@@ -76,12 +76,12 @@ in user-level memory at `~/.claude/projects/-path-to-projects-hades-system/memor
 
 ## Hard rules
 
-1. **NO AI-attribution markers in commits** (invariant). Never
+1. **NO AI-attribution markers in commits** (inv-hades-004). Never
    `Co-Authored-By: prohibited assistant`, `Generated with prohibited assistant`, or any
    AI-attribution marker. Violations gated automatically by the plugin's
    `pre_tool_call` hook callback — returns `{"action": "block",
    "message": "..."}` to Hermes; Hermes blocks the tool call. Defense-
-   in-depth: `bin/zen-event-poster` Go binary has the same regex.
+   in-depth: `bin/hades-event-poster` Go binary has the same regex.
 2. **Conventional commits**: `type(scope): subject` (imperative, lowercase,
    no trailing period). Types: feat / fix / docs / test / refactor / chore /
    style / perf / build / ci.

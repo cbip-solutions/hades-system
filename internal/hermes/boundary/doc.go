@@ -6,9 +6,9 @@
 // # Why this package exists
 //
 // Pre-H-12, the Hermes-touching surface was spread across three places:
-// - `internal/daemon/transport/zenswarm_transport.go` — Go-side
-// ZenSwarmTransport (providers.TierBackend adapter; preserved in place
-// per invariant compile-anchor grep).
+// - `internal/daemon/transport/hadessystem_transport.go` — Go-side
+// HadesSystemTransport (providers.TierBackend adapter; preserved in place
+// per inv-hades-164 compile-anchor grep).
 // - `plugin/hades/__init__.py` + `plugin/hades/hooks/` — Python-side
 // plugin registrations + PreCompletion hooks + skin + status helpers.
 // - `internal/daemon/mcpgateway/server.go` — ad-hoc MCP CallToolResult
@@ -38,15 +38,15 @@
 // preventing future regression: no direct `hermes_cli` /
 // `hermes_agent` imports outside this package.
 //
-// # Why ZenSwarmTransport stays in internal/daemon/transport/
+// # Why HadesSystemTransport stays in internal/daemon/transport/
 //
-// The existing `internal/daemon/transport/zenswarm_transport.go` is
-// preserved in place because the invariant compile-anchor grep checks
+// The existing `internal/daemon/transport/hadessystem_transport.go` is
+// preserved in place because the inv-hades-164 compile-anchor grep checks
 // that literal file path (see
-// tests/compliance/inv_zen_164_zenswarm_transport_single_egress_test.go:73).
+// tests/compliance/inv_hades_164_hadessystem_transport_single_egress_test.go:73).
 // Moving it would break the compliance test grep. The boundary package
-// provides a constructor (NewTransportFromZenSwarm) that wraps the
-// existing transport behind the Surface interface — preserving invariant
+// provides a constructor (NewTransportFromHadesSystem) that wraps the
+// existing transport behind the Surface interface — preserving inv-hades-164
 // while still delivering policy consolidation for NEW code.
 //
 // # Boundary lint scope
@@ -57,7 +57,7 @@
 // plugin — Python-side Hermes imports there are by design). The
 // existing `internal/daemon/transport/` package does NOT import any
 // `hermes_cli` Go symbol — it operates entirely at the HTTP boundary
-// (POST /v1/messages from Python ZenSwarmTransport class). The boundary
+// (POST /v1/messages from Python HadesSystemTransport class). The boundary
 // lint therefore passes cleanly today AND prevents any future Go-side
 // drift.
 //
@@ -67,6 +67,6 @@
 // - ADR-0080 — substrate pivot to hermes-agent (the why behind H-12).
 // - `docs/operations/hermes-compat.md` — G2/G3/G4/G5 divergence catalog +
 // fast-follow commitment.
-// - `internal/daemon/transport/` — preserved ZenSwarmTransport
-// ; the boundary wraps but does not move.
+// - `internal/daemon/transport/` — preserved HadesSystemTransport
+// (inv-hades-164 compile-anchor); the boundary wraps but does not move.
 package boundary

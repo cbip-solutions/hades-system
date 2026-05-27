@@ -2,7 +2,7 @@
 --
 -- Hosts the durable scheduler substrate: Routine + Task + Loop schedules
 -- (3-tier per spec §1 Q8 D) plus the per-fire outcome ledger driving
--- `zen schedule history`. release track ships only the schema (this file) and
+-- `hades schedule history`. release track ships only the schema (this file) and
 -- the Go-side CRUD primitives (internal/store/schedules.go); the
 -- internal/scheduler/ package and its scheduleradapter bridge land in
 -- D-2..D-12.
@@ -21,15 +21,15 @@
 --   (separate SQLite file, no daemon.db schemaVersion bump).
 --   schemaVersion bump path: 26 (release track) → 27 (this migration).
 --
--- Boundary (invariant release track slice):
+-- Boundary (inv-hades-031 release track slice):
 --   internal/scheduler/* MUST NEVER import internal/store; the daemon
 --   adapter (internal/daemon/scheduleradapter/) is the ONLY package
 --   permitted to bridge scheduler value types to *store.Store via the
 --   CRUD primitives in internal/store/schedules.go. release track
---   inv_zen_122 compliance test extends to enforce this on the release design
+--   inv_hades_122 compliance test extends to enforce this on the release design
 --   packages.
 --
--- Boundary (invariant / invariant release track slice):
+-- Boundary (inv-hades-080 / inv-hades-123 release track slice):
 --   The schedules table itself stores no LLM-call surface; it is the
 --   trigger substrate. scheduler.Fire orchestrates dispatch via the
 --   dispatcher.Client interface so this table is single-egress-aligned
@@ -37,10 +37,10 @@
 --   never internal/providers/ direct).
 --
 -- Compile-time invariants surfaced:
---   - invariant (jitter deterministic) — enforced in app code via
+--   - inv-hades-120 (jitter deterministic) — enforced in app code via
 --     scheduler.ComputeJitter(routineID, period); the schedules.id
 --     column is the canonical hash input.
---   - invariant (per-doctrine miss policy + rate-limit) — enforced
+--   - inv-hades-121 (per-doctrine miss policy + rate-limit) — enforced
 --     in app code via scheduler.DoctrineMissPolicy(d) matrix and
 --     scheduler.RateLimiter; the miss_policy column is CHECK-
 --     constrained so a corrupted INSERT fails fast.
@@ -51,7 +51,7 @@
 --
 -- One row per Routine, Task, or Loop schedule. UUIDv7-keyed (TEXT PK
 -- so the canonical id is content-addressable on the wire and across
--- backups). All time columns store UTC unix seconds (per invariant);
+-- backups). All time columns store UTC unix seconds (per inv-hades-005);
 -- the Go layer translates to time.Time, mapping NULL to zero-value.
 --
 -- Constraints:
@@ -75,7 +75,7 @@
 --   - project_alias TEXT NOT NULL: release track projectctx alias. Plain text
 --                          — NOT a FK to projects_alias.alias.
 --                          Schedules are forensic-relevant beyond
---                          project lifecycle (`zen day` digest reads
+--                          project lifecycle (`hades day` digest reads
 --                          archived schedule outcomes); coupling
 --                          lifecycle via FK CASCADE would silently lose
 --                          audit-relevant rows. Same rationale as
@@ -106,7 +106,7 @@
 --                          0=Skip, 1=CatchUpBounded, 2=Coalesce,
 --                          3=NotifyOnly. Per-doctrine miss-policy
 --                          matrix lives in scheduler.DoctrineMissPolicy
---                          (invariant); CHECK is the floor.
+--                          (inv-hades-121); CHECK is the floor.
 --
 --   - miss_lookback_seconds INTEGER NOT NULL DEFAULT 604800:
 --                          7 days; configurable per routine via
@@ -131,13 +131,13 @@
 --
 --   - status INTEGER NOT NULL DEFAULT 0 CHECK (status IN (0,1,2)):
 --                          0=Enabled, 1=Disabled, 2=Failed. Failed
---                          rows survive for forensic analysis (`zen
+--                          rows survive for forensic analysis (`hades
 --                          schedule history`); operator-driven
 --                          re-enable transitions Failed→Enabled with
 --                          an audit event.
 --
 --   - created_at_unix INTEGER NOT NULL: INSERT timestamp; ORDER BY
---                          created_at_unix DESC drives `zen schedule
+--                          created_at_unix DESC drives `hades schedule
 --                          list` for newest-first ordering.
 --
 --   - bearer_token_hash TEXT: SHA-256 hex of HTTP trigger token; NULL
@@ -158,8 +158,8 @@
 --     disabled or failed rows, accelerating the common case (most
 --     rows enabled, a few due at any time).
 --
---   - idx_schedules_project_alias accelerates `zen schedule list
---     --project=<alias>` and the audit query path (`zen audit log
+--   - idx_schedules_project_alias accelerates `hades schedule list
+--     --project=<alias>` and the audit query path (`hades audit log
 --     --schedule-project=...`).
 
 CREATE TABLE IF NOT EXISTS schedules (
@@ -192,13 +192,13 @@ CREATE INDEX IF NOT EXISTS idx_schedules_project_alias
 -- ----------------------------------------------------------------------------
 --
 -- Append-only fire-attempt outcome ledger. Every Fire emits one row
--- (success / failure / skipped / rate-limited). `zen schedule history`
+-- (success / failure / skipped / rate-limited). `hades schedule history`
 -- queries by schedule_id + time range; idx_schedule_history_lookup
 -- supports both predicates with one composite index.
 --
 -- Retention: release track ships unbounded growth; the per-spec retention
 -- policy is deferred to the release design quality (operator-driven vacuum). No FK
--- back to schedules.id (history outlives the schedule — `zen day`
+-- back to schedules.id (history outlives the schedule — `hades day`
 -- digest must surface fires for since-deleted routines).
 --
 -- Constraints:
@@ -216,7 +216,7 @@ CREATE INDEX IF NOT EXISTS idx_schedules_project_alias
 --   - reason TEXT NOT NULL DEFAULT '': human-readable failure / skip
 --                          reason; empty for Success.
 --   - cost_usd REAL NOT NULL DEFAULT 0: cost emitted from cost_ledger
---                          post-call (the release design invariant integration).
+--                          post-call (the release design inv-hades-062 integration).
 --                          The Go-side rejects negative values.
 --   - duration_ms INTEGER NOT NULL DEFAULT 0: end-to-end fire latency.
 --                          The Go-side rejects negative values.

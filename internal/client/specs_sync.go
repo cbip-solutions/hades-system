@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package client — specs_sync.go.
 //
-// SpecsSync wires the operator-facing `zen specs sync` subcommand to the
+// SpecsSync wires the operator-facing `hades specs sync` subcommand to the
 // daemon's POST /v1/knowledge/ecosystem/specs-sync route. The daemon-side
 // handler is wired in ; F-5 declares the client-side
 // method + wire types so the CLI surface is final-shape day 1 per project

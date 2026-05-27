@@ -145,7 +145,7 @@ func detectLinear(r recognize.Result) (bool, string) {
 }
 
 func detectMemory(_ recognize.Result) (bool, string) {
-	return false, "HADES daemon (zen-swarm-ctld) covers Plan 9 substrate (Q1=B aggregator); memory MCP default-off"
+	return false, "HADES daemon (hades-ctld) covers Plan 9 substrate (Q1=B aggregator); memory MCP default-off"
 }
 
 func detectSequentialThinking(r recognize.Result) (bool, string) {

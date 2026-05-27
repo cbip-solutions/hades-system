@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package events.v1;
 
-option go_package = "github.com/zen-swarm/example/events/v1;eventsv1";
+option go_package = "github.com/hades-system/example/events/v1;eventsv1";
 
 service EventBus {
   // Server-streaming.

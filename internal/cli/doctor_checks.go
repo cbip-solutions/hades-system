@@ -53,37 +53,37 @@ func checkBypassCredentialsReadable(ctx context.Context, c *client.Client) Check
 func checkBypassCredentialsFresh(ctx context.Context, c *client.Client) CheckResult {
 	r, err := c.BypassDoctor(ctx, "credentials.fresh")
 	return resultFrom("bypass.credentials.fresh", r, err,
-		"OAuth token expired or about to; run: zen bypass refresh-now")
+		"OAuth token expired or about to; run: hades bypass refresh-now")
 }
 
 func checkBypassKeychainAccessible(ctx context.Context, c *client.Client) CheckResult {
 	r, err := c.BypassDoctor(ctx, "keychain.accessible")
 	return resultFrom("bypass.keychain.accessible", r, err,
-		"macOS Keychain unlock failed; check the zen-swarm-bypass entry in Keychain Access.app")
+		"macOS Keychain unlock failed; check the hades-system-bypass entry in Keychain Access.app")
 }
 
 func checkBypassConfigValid(ctx context.Context, c *client.Client) CheckResult {
 	r, err := c.BypassDoctor(ctx, "config.valid")
 	return resultFrom("bypass.config.valid", r, err,
-		"bypass-config.json failed schema validation; run: zen bypass update-config --check")
+		"bypass-config.json failed schema validation; run: hades bypass update-config --check")
 }
 
 func checkBypassConfigFresh(ctx context.Context, c *client.Client) CheckResult {
 	r, err := c.BypassDoctor(ctx, "config.fresh")
 	return resultFrom("bypass.config.fresh", r, err,
-		"bypass-config older than 30 days; run: zen bypass update-config")
+		"bypass-config older than 30 days; run: hades bypass update-config")
 }
 
 func checkBypassCFRangeFresh(ctx context.Context, c *client.Client) CheckResult {
 	r, err := c.BypassDoctor(ctx, "cf-range.fresh")
 	return resultFrom("bypass.cf-range.fresh", r, err,
-		"CF IP range cache stale (>48h); run: zen bypass cf-range --refresh")
+		"CF IP range cache stale (>48h); run: hades bypass cf-range --refresh")
 }
 
 func checkBypassCertValid(ctx context.Context, c *client.Client) CheckResult {
 	r, err := c.BypassDoctor(ctx, "cert.valid")
 	return resultFrom("bypass.cert.valid", r, err,
-		"pinned intermediate cert expired or unreachable; run: zen bypass certs --show")
+		"pinned intermediate cert expired or unreachable; run: hades bypass certs --show")
 }
 
 func checkBypassConnectivity(ctx context.Context, c *client.Client) CheckResult {
@@ -106,7 +106,7 @@ func checkBypassMitmproxyAvailable(ctx context.Context, c *client.Client) CheckR
 			Name:   "bypass.tools.mitmproxy-available",
 			Status: "warn",
 			Detail: err.Error(),
-			Hint:   "optional; only needed for `zen bypass extract-config`. brew install mitmproxy",
+			Hint:   "optional; only needed for `hades bypass extract-config`. brew install mitmproxy",
 		}
 	}
 	return resultFrom("bypass.tools.mitmproxy-available", r, nil,

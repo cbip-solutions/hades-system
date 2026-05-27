@@ -6,11 +6,11 @@
 // Per release spec Q11 D, all amendment business logic lives in the release
 // amendment package (internal/orchestrator/amendment/); the CLI is a pure
 // HTTP client to the daemon's /v1/doctrine/{propose-list,ack,deny,revert,
-// propose} routes. Boundary invariant: zero internal/orchestrator/* or
+// propose} routes. Boundary inv-hades-133: zero internal/orchestrator/* or
 // internal/store imports — the CLI talks JSON-only to the daemon.
 //
-// Per spec Q14 C, commands are flat-invocation (zen doctrine ack ADR-0050,
-// not zen doctrine amendment ack ADR-0050). The cobra.Group{ID: "amendment"}
+// Per spec Q14 C, commands are flat-invocation (hades doctrine ack ADR-0050,
+// not hades doctrine amendment ack ADR-0050). The cobra.Group{ID: "amendment"}
 // declared by doctrine.go organizes --help output only.
 //
 // Per project instructions operator language preference + spec §6.6, command help text
@@ -76,19 +76,19 @@ func proposeListCmd() *cobra.Command {
 título, enfriamiento restante y marca de tiempo de la propuesta.
 
 Las propuestas son generadas por el TelemetrySubscriber (autónomas)
-o por el operador (manuales, vía 'zen doctrine propose'). Cada
+o por el operador (manuales, vía 'hades doctrine propose'). Cada
 propuesta atraviesa el ciclo: proposed → applied | denied → reverted.
 
-Use 'zen doctrine ack ADR-NNNN' o 'zen doctrine deny ADR-NNNN
+Use 'hades doctrine ack ADR-NNNN' o 'hades doctrine deny ADR-NNNN
 --reason ...' para resolver propuestas pendientes.`,
 		Example: `  # Listar todas las propuestas (cualquier estado)
-  zen doctrine propose-list
+  hades doctrine propose-list
 
   # Solo propuestas pendientes
-  zen doctrine propose-list --status proposed
+  hades doctrine propose-list --status proposed
 
   # Salida JSON para piping a jq
-  zen doctrine propose-list --json | jq '.proposals[] | select(.status == "proposed")'`,
+  hades doctrine propose-list --json | jq '.proposals[] | select(.status == "proposed")'`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if err := format.ValidateExclusive(cmd); err != nil {
 				return err
@@ -235,7 +235,7 @@ func ackCmd() *cobra.Command {
 		Short:   "Acepta una enmienda de doctrina propuesta (dispara Plan 5 Applier.ApplyWithValidation)",
 		Long: `Acepta una propuesta de enmienda pendiente. El daemon ejecuta el flujo
 Plan 5 Applier.ApplyWithValidation que (1) valida con ValidateTighten
-para garantizar que el cambio respeta inv-zen-136 (overrides solo
+para garantizar que el cambio respeta inv-hades-136 (overrides solo
 pueden tensar nunca relajar); (2) escribe la mutación al TOML de
 doctrina; (3) hace commit Git atómico; (4) recarga la doctrina vía
 atomic-swap (Phase G); (5) emite DoctrineAmendmentApplied en el
@@ -243,13 +243,13 @@ eventlog Plan 5.
 
 Si el validador rechaza (HTTP 409 + cuerpo *TightenViolation), la
 propuesta queda como "proposed" y el operador puede editar el override
-subyacente o denegar la propuesta con 'zen doctrine deny ADR-NNNN
+subyacente o denegar la propuesta con 'hades doctrine deny ADR-NNNN
 --reason ...'.`,
 		Example: `  # Aceptar sin comentario
-  zen doctrine ack ADR-0050
+  hades doctrine ack ADR-0050
 
   # Aceptar con justificación (visible en eventlog para auditoría)
-  zen doctrine ack ADR-0050 --reason "telemetría confirma reducción de falsos positivos"`,
+  hades doctrine ack ADR-0050 --reason "telemetría confirma reducción de falsos positivos"`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			adrID := ""
@@ -284,7 +284,7 @@ subyacente o denegar la propuesta con 'zen doctrine deny ADR-NNNN
 	return cmd
 }
 
-// denyCmd constructs the `zen doctrine deny <adr_id> --reason...` command.
+// denyCmd constructs the `hades doctrine deny <adr_id> --reason...` command.
 //
 // Per release K-3 verbatim baseline, --reason is REQUIRED for deny
 // (operators MUST articulate rejection rationale for the audit trail).
@@ -305,7 +305,7 @@ misma regla.
 
 --reason es obligatorio: la razón queda registrada para trazabilidad
 histórica.`,
-		Example: `  zen doctrine deny ADR-0050 --reason "propuesta agresiva; revisitar tras Plan 9 cost-degradation"`,
+		Example: `  hades doctrine deny ADR-0050 --reason "propuesta agresiva; revisitar tras Plan 9 cost-degradation"`,
 		Args:    cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			adrID := ""
@@ -354,7 +354,7 @@ vía la atomic-swap de Phase G; (3) emite DoctrineAmendmentReverted en
 el eventlog Plan 5 (NB: telemetry-driven autonomous reverts emiten
 DoctrineAutonomousReverted; mecánica de Phase H AutoRevert).
 
-Solo enmiendas en estado 'accepted' son revertibles (inv-zen-141):
+Solo enmiendas en estado 'accepted' son revertibles (inv-hades-141):
 intentar revertir una propuesta 'rejected' o ya 'reverted' devuelve
 HTTP 409 con un mensaje claro.
 
@@ -363,10 +363,10 @@ del evento DoctrineAmendmentReverted; si se omite, el evento aún se
 emite con reason vacío. Para reverts vinculados a fire-drill (donde
 el contexto del audit trail ya es claro), --reason puede omitirse.`,
 		Example: `  # Revert sin razón (audit trail tiene contexto suficiente)
-  zen doctrine revert ADR-0050
+  hades doctrine revert ADR-0050
 
   # Revert con justificación (recomendado para no-emergency reverts)
-  zen doctrine revert ADR-0050 --reason "regresión confirmada en métricas cost-degradation tras 24h"`,
+  hades doctrine revert ADR-0050 --reason "regresión confirmada en métricas cost-degradation tras 24h"`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			adrID := ""
@@ -421,8 +421,8 @@ func proposeCmd() *cobra.Command {
 		Long: `Crea una propuesta de enmienda manual. El daemon ejecuta el flujo
 Plan 5 Proposer (mismo path que el TelemetrySubscriber autónomo):
 redacta el ADR markdown en docs/decisions/proposed/NNNN-*.md desde el
-rango ADR-0050..0059 reservado para Plan 8 (inv-zen-103), entra al
-estado 'proposed' y queda visible vía 'zen doctrine propose-list'.
+rango ADR-0050..0059 reservado para Plan 8 (inv-hades-103), entra al
+estado 'proposed' y queda visible vía 'hades doctrine propose-list'.
 Desde ahí sigue el ciclo estándar ack/deny/revert.
 
 Reglas de cooldown (Plan 5 Q10 C): cada regla tiene un cooldown
@@ -436,21 +436,21 @@ el operador conoce contexto que el Proposer autónomo no puede inferir).
 auditoría).
 --category es obligatorio (cost|merge|recovery; Plan 8 Q13 C aggregator
 categories) — determina qué aggregator monitorea esta regla para
-revert-attribution (inv-zen-141).`,
+revert-attribution (inv-hades-141).`,
 		Example: `  # Propuesta manual con justificación
-  zen doctrine propose amendment.cooldown_hours 12 \
+  hades doctrine propose amendment.cooldown_hours 12 \
       --justify "Reducir cooldown basado en telemetría P50 operator-ack" \
       --category merge
 
   # Forzar override de cooldown (operador conoce contexto)
-  zen doctrine propose amendment.threshold_pct 0.04 \
+  hades doctrine propose amendment.threshold_pct 0.04 \
       --justify "Tightening preemptivo antes de Plan 9 cost-degradation" \
       --category cost \
       --cooldown-override`,
 		Args: cobra.MaximumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) < 2 {
-				return errors.New("se requieren <rule_path> y <new_value> como argumentos posicionales (formato: zen doctrine propose <rule_path> <new_value> --justify ... --category ...)")
+				return errors.New("se requieren <rule_path> y <new_value> como argumentos posicionales (formato: hades doctrine propose <rule_path> <new_value> --justify ... --category ...)")
 			}
 			rulePath := args[0]
 			newValue := args[1]
@@ -509,7 +509,7 @@ revert-attribution (inv-zen-141).`,
 			if resp.AdrMarkdownPath != "" {
 				fmt.Fprintf(out, "  ADR markdown:  %s\n", resp.AdrMarkdownPath)
 			}
-			fmt.Fprintf(out, "\nUse 'zen doctrine ack %s' para aceptar o 'zen doctrine deny %s --reason ...' para rechazar.\n",
+			fmt.Fprintf(out, "\nUse 'hades doctrine ack %s' para aceptar o 'hades doctrine deny %s --reason ...' para rechazar.\n",
 				resp.ID, resp.ID)
 			return nil
 		},

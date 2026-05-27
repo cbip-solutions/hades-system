@@ -68,7 +68,7 @@ type PaneLister interface {
 // DriftEmitter abstracts the event-emission seam. The real implementation
 // wraps the orchestrator eventlog. Tests use a fake that records
 // emissions in a slice. Forensic-only contract: emitter never auto-reverts;
-// receivers MAY surface drift in operator-visible UIs (zen day brief)
+// receivers MAY surface drift in operator-visible UIs (hades day brief)
 // but MUST NOT mutate tmux state.
 type DriftEmitter interface {
 	Emit(d LayoutDrift)
@@ -120,7 +120,7 @@ func (p *DriftPoller) Run(ctx context.Context) {
 // is a ListSessions failure (the whole walk cannot proceed), which Run()
 // then logs.
 //
-// invariant guarantees scratch is never inspected: the poller iterates
+// inv-hades-118 guarantees scratch is never inspected: the poller iterates
 // over DaemonOwnedWindows (which excludes WindowScratch). A defensive
 // guard inside the loop logs and skips if WindowScratch ever appears in
 // DaemonOwnedWindows (compile-time test TestDaemonOwnedExcludesScratch
@@ -142,7 +142,7 @@ func (p *DriftPoller) tick(ctx context.Context) error {
 		for _, win := range DaemonOwnedWindows {
 
 			if win == WindowScratch {
-				p.logger.Printf("tmuxlife.DriftPoller: scratch in DaemonOwnedWindows; inv-zen-118 violated")
+				p.logger.Printf("tmuxlife.DriftPoller: scratch in DaemonOwnedWindows; inv-hades-118 violated")
 				continue
 			}
 			actual, err := p.lister.ListPanes(ctx, s.Name, win)

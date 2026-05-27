@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package dispatcheradapter is the bridge from the release dispatcher to
 // the release budget engine. It is the SINGLE import-edge between
-// internal/daemon/dispatcher/ and internal/budget/, satisfying invariant:
+// internal/daemon/dispatcher/ and internal/budget/, satisfying inv-hades-031:
 // internal/budget/ never imports internal/store/ directly; this package
 // imports both.
 //
@@ -32,14 +32,14 @@
 // follow-up task will replace the body with the JOIN against
 // cost_ledger; tests assert the (0, nil) contract today.
 //
-// # Boundary discipline
+// # Boundary discipline (inv-hades-031)
 //
 // internal/budget/ has zero imports of internal/store/. The BudgetStore
 // interface declared in internal/budget/axes.go is the only surface
 // the engine sees; this file is the only concrete implementation. The
 // dispatcher (internal/daemon/dispatcher/) will call only the exported
 // PreCall/PostCall(*) methods; it never reaches into internal/budget/
-// directly (the AST grep test in tests/compliance/inv_zen_076_test.go
+// directly (the AST grep test in tests/compliance/inv_hades_076_test.go
 // enforces this once wires the import).
 package dispatcheradapter
 
@@ -84,7 +84,7 @@ func (a *BudgetAdapter) SetAnomalyConfig(threshold float64, window int) {
 	a.detector = budget.NewAnomalyDetector(a, threshold, window)
 }
 
-// PreCall is the invariant entry point. Dispatcher MUST call before
+// PreCall is the inv-hades-076 entry point. Dispatcher MUST call before
 // every backend.Forward(...).
 func (a *BudgetAdapter) PreCall(ctx context.Context, scopes budget.Scopes, caps budget.Caps, estimated float64) (budget.Decision, error) {
 	return a.gate.Check(ctx, scopes, caps, estimated)

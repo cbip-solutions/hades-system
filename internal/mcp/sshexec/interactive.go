@@ -5,7 +5,7 @@
 // prompt detector. Sealed type; constructor is the unexported
 // newDetector() called by Run only.
 //
-// This is the compile-check anchor for invariant: callers cannot
+// This is the compile-check anchor for inv-hades-081: callers cannot
 // instantiate a Detector outside this package, so every exec.Run path
 // goes through Run's wired-up SIGKILL handling.
 //

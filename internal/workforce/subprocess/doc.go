@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package subprocess owns the OS-level lifecycle of OpenClaude subprocesses
-// for the zen-swarm workforce.
+// for the hades-system workforce.
 //
 // Two lifecycles are supported:
 //
@@ -19,10 +19,10 @@
 //
 // Single IPC primitive: stdio JSON-RPC. Every Session, ephemeral or
 // persistent, exposes Send/Receive on the same Message type; the underlying
-// transport is openclaude --stdio. invariant (stdio canonical) is enforced
+// transport is openclaude --stdio. inv-hades-086 (stdio canonical) is enforced
 // by the absence of any HTTP server constructor in this package.
 //
-// Invariant invariant (TTL eviction enforcement): a goroutine in
+// Invariant inv-hades-074 (TTL eviction enforcement): a goroutine in
 // SubprocessManager polls every 60 s and sends SIGTERM to any persistent
 // session whose last-use timestamp is older than the doctrine-bounded TTL,
 // then SIGKILL after a 10 s grace period.
@@ -40,7 +40,7 @@
 // Both background goroutines (TTL evictor + crash detector) shut down
 // cleanly when SubprocessManager.Shutdown closes the shared shutdownCh.
 //
-// Invariant invariant (boundary): this package never imports
+// Invariant inv-hades-031 (boundary): this package never imports
 // internal/store. Persistence is reached via the SessionStore interface
 // (see manager.go) and the CheckpointStore interface (see recovery.go),
 // satisfied by daemon adapter.

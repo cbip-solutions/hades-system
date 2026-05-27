@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package dispatcheradapter bridges the dispatcher's CostSink seam to
-// internal/store. Per invariant, the dispatcher / orchestrator /
+// internal/store. Per inv-hades-031, the dispatcher / orchestrator /
 // providers packages MUST NOT import internal/store; this package is
 // the boundary that absorbs the dependency.
 //
@@ -33,7 +33,7 @@
 // *store.Store directly — the concrete type satisfies the interface
 // structurally, no glue required. This keeps B-7 fully decoupled from
 // scope while still producing complete, production-shaped code
-// (zen-swarm doctrine: build the final shape, not a scaffold).
+// (hades-system doctrine: build the final shape, not a scaffold).
 //
 // Scope discipline. The adapter implements ONLY dispatcher.CostSink.
 // dispatcher.BreakerState wire-up is job (real circuit

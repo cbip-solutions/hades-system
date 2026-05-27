@@ -77,8 +77,8 @@ func (w *Writer) touchedRoots() []string {
 	if w.cfg.HermesPluginRoot != "" {
 		out = append(out, w.cfg.HermesPluginRoot)
 	}
-	if w.cfg.ZenConfigRoot != "" {
-		out = append(out, w.cfg.ZenConfigRoot)
+	if w.cfg.HadesConfigRoot != "" {
+		out = append(out, w.cfg.HadesConfigRoot)
 	}
 	if w.cfg.HermesConfigPath != "" {
 		dir := filepath.Dir(w.cfg.HermesConfigPath)

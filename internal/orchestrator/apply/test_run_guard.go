@@ -10,7 +10,7 @@ import "flag"
 //
 // This function lives in a file WITHOUT a build tag so the production
 // binary still compiles it — the resolver is what protects
-// invariant: MergeEngineFake's constructor calls mustBeTestRun() which
+// inv-hades-097: MergeEngineFake's constructor calls mustBeTestRun() which
 // reads IsTestRun() and panics if false.
 //
 // Why flag.Lookup("test.v") rather than a build-tag-flipped const?
@@ -38,6 +38,6 @@ func mustBeTestRun() {
 
 func mustBeTestRunWith(isTestRun bool) {
 	if !isTestRun {
-		panic("apply: NewMergeEngineFake invoked outside `go test` (inv-zen-097)")
+		panic("apply: NewMergeEngineFake invoked outside `go test` (inv-hades-097)")
 	}
 }

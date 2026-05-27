@@ -6,7 +6,7 @@
 // - Manifest, Section value types mirroring the TOML structure
 // - Walker orchestrator + per-section sub-walkers in walkers/
 // - Regenerator (preserve-manual + emit-toml)
-// - Differ for `zen state verify`
+// - Differ for `hades state verify`
 // - ManualTracker (detect manual changes + emit events)
 // - AutonomyValidator (release prereq validators consumed
 // orchestrator's autonomy gate)
@@ -16,13 +16,13 @@
 //
 // Invariants enforced by this package:
 //
-// - invariant: never imports internal/store; chain integration flows
+// - inv-hades-031: never imports internal/store; chain integration flows
 // via internal/audit/chain + internal/daemon/auditadapter
-// - invariant: docs/system-state.toml freshness < 7d (manifest.Differ
-// reports stale; CI gate `zen state verify` fails) UNLESS recent
+// - inv-hades-149: docs/system-state.toml freshness < 7d (manifest.Differ
+// reports stale; CI gate `hades state verify` fails) UNLESS recent
 // state.manual_field_changed events compensate (operator-pinned
 // freshness via the chain anchor)
-// - invariant: regenerate-and-diff CI gate via `make verify-system-state`
+// - inv-hades-151: regenerate-and-diff CI gate via `make verify-system-state`
 // integrated into `make verify-invariants`
 //
 // Threat model coverage (§7.1 T10): system-state.toml manual field silent

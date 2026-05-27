@@ -8,7 +8,7 @@
 // §"Task G-10" lines 3349-3437 (IncrementalUpdate — single-file).
 //
 // `ColdRebuild` runs at daemon boot (and on operator request via
-// `zen knowledge reindex --full` once the CLI lands in ). It
+// `hades knowledge reindex --full` once the CLI lands in ). It
 // idempotently re-populates the index from the given sources by
 // chaining Scanner → Parser → Indexer. Per spec §4.5 the function
 // honors `ctx.Deadline()` and returns `context.DeadlineExceeded`
@@ -31,7 +31,7 @@
 // the watcher glue can classify and act.
 //
 // Boundary stdlib + database/sql only — no internal/store import,
-// no net/http. Reuses package-internal
+// no net/http (inv-hades-129 no remote queries). Reuses package-internal
 // `Scanner`, `Parse`, and `IndexDoc`; does NOT introduce new dependencies.
 package knowledge
 
@@ -74,9 +74,9 @@ func (re ReindexError) Unwrap() error { return re.Err }
 // loop checks ctx.Err() before each Parse so the operator-configured
 // 30 min cap is respected with at most one file's worth of overrun.
 //
-// Per invariant: ColdRebuild does not directly touch
+// Per inv-hades-130: ColdRebuild does not directly touch
 // audit_chain_anchor / ecosystem_join_keys / caronte_symbol_refs —
-// it delegates to IndexDoc, which is already invariant-compliant
+// it delegates to IndexDoc, which is already inv-hades-130-compliant
 // (G-5 enforces). Future release / release / Caronte writers fill those
 // columns at materialization time without rebuild churn.
 //
@@ -145,7 +145,7 @@ func ColdRebuild(ctx context.Context, db *sql.DB, sources []ScannerSource) ([]Re
 // IncrementalUpdate trusts sf.Kind / sf.ProjectID / sf.ProjectAlias
 // verbatim.
 //
-// Inv-zen-130: composition with Parse + IndexDoc inherits the
+// Inv-hades-130: composition with Parse + IndexDoc inherits the
 // NULL-discipline for audit_chain_anchor / ecosystem_join_keys /
 // caronte_symbol_refs. A frontmatter blob with keys named like the
 // extension hooks does NOT populate those columns (Parse leaves them

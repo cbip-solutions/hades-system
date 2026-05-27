@@ -9,10 +9,10 @@
 // lived in internal/daemon, every daemon test binary would panic on startup
 // with "sql: Register called twice for driver sqlite3".
 //
-// Import topology:
+// Import topology (inv-hades-031 compliant):
 //
-// cmd/zen-swarm-ctld → aggregatorbridge (mattn)
-// cmd/zen-swarm-ctld → internal/daemon (ncruces via store)
+// cmd/hades-ctld → aggregatorbridge (mattn)
+// cmd/hades-ctld → internal/daemon (ncruces via store)
 // aggregatorbridge → internal/knowledge/aggregator (mattn via db.go CGO)
 // aggregatorbridge → internal/daemon/handlers (no drivers)
 //
@@ -21,12 +21,12 @@
 // registers "sqlite3", and ncruces silently skips its init() because
 // driverName registration check detects the name already claimed.
 //
-// invariant: this package imports internal/knowledge/aggregator but NOT
+// inv-hades-031: this package imports internal/knowledge/aggregator but NOT
 //
 // internal/store. The daemon package + store coexist in the binary but
 // neither package directly imports the other via aggregatorbridge.
 //
-// invariant: does NOT import net/http.
+// inv-hades-129: does NOT import net/http.
 package aggregatorbridge
 
 import (

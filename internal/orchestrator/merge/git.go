@@ -45,10 +45,10 @@ func (g *realGit) Run(ctx context.Context, repoDir, stdin string, args ...string
 
 func GitEnv() []string {
 	out := []string{
-		"GIT_AUTHOR_NAME=zen-merge",
-		"GIT_AUTHOR_EMAIL=merge@zen-swarm.local",
-		"GIT_COMMITTER_NAME=zen-merge",
-		"GIT_COMMITTER_EMAIL=merge@zen-swarm.local",
+		"GIT_AUTHOR_NAME=hades-merge",
+		"GIT_AUTHOR_EMAIL=merge@hades-system.local",
+		"GIT_COMMITTER_NAME=hades-merge",
+		"GIT_COMMITTER_EMAIL=merge@hades-system.local",
 		"GIT_TERMINAL_PROMPT=0",
 	}
 	for _, e := range os.Environ() {

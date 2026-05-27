@@ -9,10 +9,10 @@ package scheduleradapter
 // D-2 lands the internal/scheduler package with its own Schedule +
 // HistoryEntry types and adds a thin translation layer on top.
 //
-// invariant boundary: internal/scheduler MUST NEVER import
+// inv-hades-031 boundary: internal/scheduler MUST NEVER import
 // internal/store. This adapter's import list is the single legitimate
 // co-location point — verified by the compliance test
-// inv_zen_122_inv_zen_031_plan7_packages_test.go.
+// inv_hades_122_inv_hades_031_plan7_packages_test.go.
 //
 // Constructor pattern: New(*store.Store) panics on nil. Same defensive
 // contract as bypassadapter / quotaadapter / projectctxadapter — daemon

@@ -39,7 +39,7 @@ func (m *CoverageManifest) ADRsForPackage(pkg string) []string {
 }
 
 func ManifestPathFor(canonicalPath string) string {
-	return filepath.Join(canonicalPath, ".zen", "caronte-intent.toml")
+	return filepath.Join(canonicalPath, ".hades", "caronte-intent.toml")
 }
 
 func LoadCoverageManifest(path string) (*CoverageManifest, error) {

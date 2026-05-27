@@ -2,9 +2,9 @@
 // Package handlers — ecosystem_sweep.go.
 //
 // Four weekly-sweep handlers backing the cron worker's WeeklySweep
-// (cmd/zen-docs-cron Sunday 03:00 local; see also master plan §5 G-6).
-// Each handler is idempotent per invariant (re-running produces zero
-// schema diff). Operator-initiated invocations from `zen doctor` and
+// (cmd/hades-docs-cron Sunday 03:00 local; see also master plan §5 G-6).
+// Each handler is idempotent per inv-hades-204 (re-running produces zero
+// schema diff). Operator-initiated invocations from `hades doctor` and
 // the cron worker share the same code path.
 //
 // POST /v1/ecosystem/sweep/fingerprints — chunk fingerprint sweep

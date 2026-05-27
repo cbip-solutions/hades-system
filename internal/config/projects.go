@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package config wraps reading/writing the various toml/json config
-// files that live under configs/ + ~/.config/zen-swarm/.
+// files that live under configs/ + ~/.config/hades-system/.
 package config
 
 import zerrors "github.com/cbip-solutions/hades-system/internal/errors"

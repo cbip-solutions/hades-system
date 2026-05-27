@@ -37,12 +37,12 @@ class SlackCitationRenderer(Renderer):
         *,
         daemon_url: str | None = None,
     ) -> None:
-        """``use_url_for_audit``: emit ``zen://audit/<id>`` as ``button.url``.
+        """``use_url_for_audit``: emit ``hades://audit/<id>`` as ``button.url``.
 
         When False (default), audit button uses ``action_id`` only — Slack
         routes back to the plugin which dispatches ``/audit`` slash command.
         When True, the button has a ``url`` field; Slack opens via OS
-        handler (daemon registered ``zen://`` scheme).
+        handler (daemon registered ``hades://`` scheme).
 
         ``daemon_url`` is forwarded to the base ``Renderer`` so the
         instance-level audit endpoint (``self._audit_endpoint``) honors

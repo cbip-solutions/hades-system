@@ -1,28 +1,28 @@
 // SPDX-License-Identifier: MIT
 // Package cli — inbox.go.
 //
-// `zen inbox <subcommand>` is the operator-facing entry point for the
+// `hades inbox <subcommand>` is the operator-facing entry point for the
 // per-project inbox storage + cross-project aggregator cache (spec §6.5).
 //
 // Cobra layout (3 leaves under 1 root):
 //
-// zen inbox # list (default)
+// hades inbox # list (default)
 // ack <id> # set AckedAt = now
 // snooze <id> --until <duration> # set SnoozedUntil
 //
 // # Examples
 //
-// $ zen inbox
+// $ hades inbox
 // ID SEVERITY PROJECT EVENT AGE
 // #234 urgent internal-platform-x hra.l4_alert 1h
 //
-// $ zen inbox --severity urgent --since 24h --limit 10
-// $ zen inbox --format json | jq '.[].notification_id'
+// $ hades inbox --severity urgent --since 24h --limit 10
+// $ hades inbox --format json | jq '.[].notification_id'
 //
-// $ zen inbox ack 234
+// $ hades inbox ack 234
 // ✓ Acked notification #234
 //
-// $ zen inbox snooze 230 --until 8h
+// $ hades inbox snooze 230 --until 8h
 // ✓ Snoozed #230 until 2026-05-07T20:00:00Z
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
@@ -171,13 +171,13 @@ Subcommands:
   ack <id>     mark a notification as acked (sets AckedAt = now)
   snooze <id>  hide a notification until a future time`,
 		Example: `  # Bare list (most recent unacked, all projects, top 20)
-  zen inbox
+  hades inbox
 
   # Filter by urgent severity in the last 24h
-  zen inbox --severity urgent --since 24h
+  hades inbox --severity urgent --since 24h
 
   # JSON output for jq pipelines
-  zen inbox --format json | jq '.[] | select(.Severity=="urgent")'`,
+  hades inbox --format json | jq '.[] | select(.Severity=="urgent")'`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
@@ -285,7 +285,7 @@ sets AckedAt = now() so the row is excluded from the default unacked
 view. The notification body remains in the per-project inbox table for
 audit / digest consumption.
 
-The id argument matches the "#NN" column in ` + "`zen inbox`" + ` output
+The id argument matches the "#NN" column in ` + "`hades inbox`" + ` output
 (without the # prefix); pass the bare integer.
 
 Exit codes (spec §6.5):
@@ -293,7 +293,7 @@ Exit codes (spec §6.5):
   1  invalid id (not numeric, ≤0) OR id not found
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Ack notification #42
-  zen inbox ack 42`,
+  hades inbox ack 42`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			id, err := strconv.ParseInt(args[0], 10, 64)
@@ -325,7 +325,7 @@ func newInboxSnoozeCmd(factory InboxClientFactory) *cobra.Command {
 		Use:   "snooze <id>",
 		Short: "Snooze a notification until a future time",
 		Long: `Snooze a notification until a future time. The row is hidden
-from the default ` + "`zen inbox`" + ` view until --until elapses, then
+from the default ` + "`hades inbox`" + ` view until --until elapses, then
 re-surfaces automatically. Accepts Go duration syntax for --until:
 30m, 8h, 24h, 7d, etc. Named forms (9am-tomorrow) are deferred to a
 future enhancement.
@@ -339,10 +339,10 @@ Exit codes:
   1  invalid id, missing --until, malformed duration, OR id not found
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # Snooze notification 42 for 30 minutes
-  zen inbox snooze 42 --until 30m
+  hades inbox snooze 42 --until 30m
 
   # Snooze until tomorrow morning (8h after midnight UTC)
-  zen inbox snooze 42 --until 24h`,
+  hades inbox snooze 42 --until 24h`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if until == "" {

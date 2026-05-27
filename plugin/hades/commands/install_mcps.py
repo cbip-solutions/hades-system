@@ -24,10 +24,10 @@ SNIPPET_PATH = Path(__file__).resolve().parent.parent / "hermes-config-snippet.y
 PROVIDER_PLUGIN_SRC = Path(__file__).resolve().parent.parent / "providers"
 
 # Hermes config keys we manage. Listed for verifiability + auditability.
-# PROVIDER_NAME stays as "zen-swarm" per spec §Q3 BORDERLINE — keychain
+# PROVIDER_NAME stays as "hades-system" per spec §Q3 BORDERLINE — keychain
 # service prefix + provider-registration name preserved for operator
 # re-provisioning friction; full borderline migration deferred to the release design+N.
-PROVIDER_NAME = "zen-swarm"
+PROVIDER_NAME = "hades-system"
 # Re-exported for backward compatibility with callers / tests; canonical
 # definition lives in ``plugin/hades/_constants.py`` (reviewer M1).
 DEFAULT_BASE_URL = DEFAULT_DAEMON_BASE_URL
@@ -138,8 +138,8 @@ def _resolve_hermes_home() -> Path:
 def _install_provider_plugin_symlink(hermes_home: Path) -> tuple[bool, str]:
     """Symlink the HADES provider plugin into Hermes' user plugins dir.
 
-    Creates (or replaces) ``<hermes_home>/plugins/model-providers/zen-swarm
-    -> <repo>/plugin/hades/providers``. Target name stays as ``zen-swarm``
+    Creates (or replaces) ``<hermes_home>/plugins/model-providers/hades-system
+    -> <repo>/plugin/hades/providers``. Target name stays as ``hades-system``
     per spec §Q3 BORDERLINE (keychain/provider-name preservation; see the
     constant PROVIDER_NAME above). Refuses to clobber a real (non-symlink)
     directory at that path — operator-managed installs (e.g. ``make
@@ -204,7 +204,7 @@ def _install_provider_plugin_symlink(hermes_home: Path) -> tuple[bool, str]:
 
 
 def _update_hermes_config_provider(hermes_home: Path, base_url: str) -> tuple[bool, str]:
-    """Write ``model.provider: zen-swarm`` (BORDERLINE stays) + ``model.base_url`` into
+    """Write ``model.provider: hades-system`` (BORDERLINE stays) + ``model.base_url`` into
     ``<hermes_home>/config.yaml``.
 
     Behavior:
@@ -266,7 +266,7 @@ def _update_hermes_config_provider(hermes_home: Path, base_url: str) -> tuple[bo
         # Reviewer M6: exclusive-create the backup so a sub-second
         # collision (two updates landing within the same wall-clock
         # second — possible when the operator chains script invocations
-        # or toggles ZEN_INSTALL_MCPS_DRY_RUN with the slash command)
+        # or toggles HADES_INSTALL_MCPS_DRY_RUN with the slash command)
         # does NOT clobber the first backup. On collision, fall back to
         # a microsecond-suffixed name so both backups survive for
         # operator recovery.
@@ -327,7 +327,7 @@ def handle_install_mcps(raw_args: str) -> str | None:
     if not isinstance(servers, dict) or not servers:
         return f"## /hades:install-mcps\n\nERROR: snippet at {SNIPPET_PATH} has no mcp_servers entries."
 
-    dry_run = bool(os.environ.get("ZEN_INSTALL_MCPS_DRY_RUN")) or "--dry-run" in (
+    dry_run = bool(os.environ.get("HADES_INSTALL_MCPS_DRY_RUN")) or "--dry-run" in (
         raw_args or ""
     )
 
@@ -366,9 +366,9 @@ def handle_install_mcps(raw_args: str) -> str | None:
 
     # release track extension (2026-05-15): wire the ProviderProfile end-to-end.
     # This makes Hermes' anthropic.Anthropic SDK POST native Anthropic JSON
-    # to zen-swarm-ctld's /v1/messages on next start. Closes invariant.
+    # to hades-ctld's /v1/messages on next start. Closes inv-hades-164.
     hermes_home = _resolve_hermes_home()
-    base_url = os.environ.get("ZEN_SWARM_BASE_URL", DEFAULT_BASE_URL)
+    base_url = os.environ.get("HADES_SYSTEM_BASE_URL", DEFAULT_BASE_URL)
     out.append("### Provider plugin wiring")
     out.append("")
     out.append(f"Hermes home: `{hermes_home}`")
@@ -402,8 +402,8 @@ def handle_install_mcps(raw_args: str) -> str | None:
         out.append("")
         out.append("```bash")
         out.append("hermes mcp list")
-        out.append("hermes mcp test zen-mcp-research")
+        out.append("hermes mcp test hades-mcp-research")
         out.append("# caronte code-graph is in-process — no separate MCP entry")
-        out.append("# After restart: ``hermes model`` should list zen-swarm")
+        out.append("# After restart: ``hermes model`` should list hades-system")
         out.append("```")
     return "\n".join(out)

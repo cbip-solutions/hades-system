@@ -4,7 +4,7 @@ package api.v1;
 
 import "google/api/annotations.proto";
 
-option go_package = "github.com/zen-swarm/example/api/v1;apiv1";
+option go_package = "github.com/hades-system/example/api/v1;apiv1";
 
 service WidgetService {
   // GET — get one

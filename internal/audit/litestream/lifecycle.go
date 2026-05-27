@@ -65,7 +65,7 @@ func (lc *LifecycleManager) StartAllProjects(ctx context.Context, projectIDs []s
 		creds, err := lc.credsStore.Load(ctx, id)
 		if err != nil {
 			if errors.Is(err, ErrKeychainNoSuchEntry) {
-				lc.onSkip(id, "no S3 credentials in Keychain (run `zen audit configure-s3 --project "+id+"`)")
+				lc.onSkip(id, "no S3 credentials in Keychain (run `hades audit configure-s3 --project "+id+"`)")
 				continue
 			}
 			if errors.Is(err, ErrKeychainUnsupported) {

@@ -4,7 +4,7 @@
 // §7.4 Hermes integration block.
 //
 // Q5=A hard required posture: hermes.installed surfaces as `fail` when
-// the binary is absent (NOT `warn`); aggregate `zen doctor` exits
+// the binary is absent (NOT `warn`); aggregate `hades doctor` exits
 // non-zero. The hint points at brew install hermes-agent.
 //
 // Probe pattern mirrors doctor_checks.go::runBypassChecks: 4 probe
@@ -55,14 +55,14 @@ func runHermesChecksWith(ctx context.Context, p HermesProber) []CheckResult {
 			hint:       "brew install hermes-agent (Q5=A hard required dependency; daemon refuses bootstrap without)",
 		},
 		{
-			probeName:  "plugin-zen-swarm-loaded",
-			resultName: "hermes.plugin-zen-swarm-loaded",
-			hint:       "verify plugin/zen-swarm/plugin.yaml exists; run: zen migrate hermes (Plan 13)",
+			probeName:  "plugin-hades-system-loaded",
+			resultName: "hermes.plugin-hades-system-loaded",
+			hint:       "verify plugin/hades-system/plugin.yaml exists; run: hades migrate hermes (Plan 13)",
 		},
 		{
 			probeName:  "config-mcp-reachable",
-			resultName: "hermes.config.mcp_servers.zen-swarm-reachable",
-			hint:       "check ~/.hermes/config.yaml mcp_servers.zen-swarm.url; run: zen daemon status",
+			resultName: "hermes.config.mcp_servers.hades-system-reachable",
+			hint:       "check ~/.hermes/config.yaml mcp_servers.hades-system.url; run: hades daemon status",
 		},
 		{
 			probeName:  "curator-last-run",

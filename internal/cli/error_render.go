@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package cli — error_render.go.
 //
-// Render is the SINGLE error-rendering entry point for the zen + hades
+// Render is the SINGLE error-rendering entry point for the hades + hades
 // CLI binaries. Every cobra RunE boundary routes through this function
-// via the cobra integration in cmd/zen/main.go + cmd/hades/main.go.
+// via the cobra integration in cmd/hades/main.go + cmd/hades/main.go.
 //
 // Output format:
 //
@@ -11,11 +11,11 @@
 // <gray body template, sprintf'd with context vars> (#999 gray)
 // → <green recovery hint from catalog> (#10b981 green)
 //
-// invariant boundary: Render is PURE. It does NOT make network/IO
+// inv-hades-088 boundary: Render is PURE. It does NOT make network/IO
 // calls; it only formats. The catalog lookup is in-process (
 // internal/errors package).
 //
-// invariant boundary: Render's output is HADES-branded by construction
+// inv-hades-219 boundary: Render's output is HADES-branded by construction
 // — the catalog entries supply HADES-branded titles + bodies
 // + recovery hints; Render only reformats them.
 //
@@ -202,7 +202,7 @@ func renderCatalogMiss(code errors.Code, useColor bool) string {
 }
 
 // ExitCodeFromError maps an error to the process exit code per spec §Q6.
-// Used by cmd/zen/main.go and cmd/hades/main.go after catching
+// Used by cmd/hades/main.go and cmd/hades/main.go after catching
 // cobra's Execute return value.
 //
 // Mapping

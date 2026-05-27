@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package cli — sessions.go.
 //
-// `zen sessions ls` lists all daemon-tracked tmux sessions in tabular
+// `hades sessions ls` lists all daemon-tracked tmux sessions in tabular
 // form (5 columns: ALIAS, SHA8, STATUS, LAST-ATTACH, PANES).
 //
 // Cobra layout:
 //
-// zen sessions
+// hades sessions
 // ls list known sessions + status + last attach time
 //
 // Format is stable across releases so scripts can grep / awk the output;
@@ -51,11 +51,11 @@ func NewSessionsCmd(factory SessionsClientFactory) *cobra.Command {
 
 Currently only "ls" is registered; future subcommands (Plan 7+ — kill,
 snapshot, restore) will extend this namespace without breaking the
-existing surface. The plural form mirrors ` + "`zen projects`" + ` (cross-
-fleet inspection); singular per-alias actions live on ` + "`zen attach`" + `
-and ` + "`zen layout repaint`" + `.`,
+existing surface. The plural form mirrors ` + "`hades projects`" + ` (cross-
+fleet inspection); singular per-alias actions live on ` + "`hades attach`" + `
+and ` + "`hades layout repaint`" + `.`,
 		Example: `  # List every tracked tmux session across projects
-  zen sessions ls`,
+  hades sessions ls`,
 	}
 	root.AddCommand(newSessionsLsCmd(factory))
 	return root
@@ -79,7 +79,7 @@ session active but tmux has-session disagrees).
 Columns:
   ALIAS      project alias bound to the session
   STATE      Idle | Active | Archived | Orphaned
-  TMUX-NAME  zen-<alias>-<sha8> (the actual tmux session name)
+  TMUX-NAME  hades-<alias>-<sha8> (the actual tmux session name)
   WINDOWS    count of daemon-owned windows (orch/leads/workers/hra/logs)
   LAST-USE   relative time of last activation
 
@@ -87,10 +87,10 @@ Exit codes:
   0  success
   2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: `  # List every tracked session
-  zen sessions ls
+  hades sessions ls
 
   # Spot orphaned sessions (drift candidates)
-  zen sessions ls | grep Orphaned`,
+  hades sessions ls | grep Orphaned`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

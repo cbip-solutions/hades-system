@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package research implements the release zen-mcp-research MCP server.
+// Package research implements the release hades-mcp-research MCP server.
 //
 // (research-SOTA-always-integrated). It exposes 7 deterministic tools
 // (web_search, arxiv, github_search, code_graph, ecosystem_docs,
@@ -13,7 +13,7 @@
 // registration of the 8 tools.
 // - dispatch.go — fan-out parallel; aggregator URL-keyed dedup;
 // min-source threshold; citation-verification
-// gate; pre-check budget.
+// gate; pre-check budget (inv-hades-076).
 // - agentic.go — Q4 C agentic_deep wrapper; gap-detection +
 // saturation + budget terminate.
 // - web_search.go — DDG via daemon-routed search + Firecrawl
@@ -30,27 +30,27 @@
 // embeddings, FTS5, RRF fusion, BGE reranker, Bayesian abstention,
 // citation grammar, symbol verification cascade, LLM-judge re-pass).
 // - synthesize.go — calls release dispatcher via daemon HTTP
-// /v1/messages with X-Zen-Profile=
+// /v1/messages with X-HADES-Profile=
 // research-synthesize.
 // - cite.go — RawCitation + VerifiedCitation + HEAD-probe
-// verifier + markdown formatter +
+// verifier (inv-hades-075) + markdown formatter +
 // OTel GenAI structured JSON.
 // - cache.go — wraps internal/mcp/client/cache.go;
 // cache hash sha256(query+sources+iter).
 //
 // Boundary
-// - invariant — does NOT import internal/store; persistence reaches
+// - inv-hades-031 — does NOT import internal/store; persistence reaches
 // the daemon via internal/mcp/client/.
-// - invariant — outbound HTTP via internal/mcp/client/http.go's
+// - inv-hades-085 — outbound HTTP via internal/mcp/client/http.go's
 // whitelist (arxiv.org, export.arxiv.org,
 // api.github.com, duckduckgo.com, daemon socket;
 // firecrawl.dev added via Config.AllowedHosts).
-// - invariant — stdio canonical: server.go uses only
+// - inv-hades-086 — stdio canonical: server.go uses only
 // mcp.NewStdioServer; no net.Listen anywhere.
-// - invariant — every backend dispatch is wrapped in budget.PreCall;
-// CI grep rule + tests/compliance/inv_zen_076_test.go
+// - inv-hades-076 — every backend dispatch is wrapped in budget.PreCall;
+// CI grep rule + tests/compliance/inv_hades_076_test.go
 // enforce.
-// - invariant — VerifiedCitation type-distinct from RawCitation;
+// - inv-hades-075 — VerifiedCitation type-distinct from RawCitation;
 // only VerifiedCitation flows to cite.Format and
 // downstream synthesizer.
 package research

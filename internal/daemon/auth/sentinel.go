@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package auth — sentinel.go.
 //
-// Compile-time + runtime anchors for invariant (HTTP auth boundary)
-// and invariant (per-routine bearer constant-time + audit).
+// Compile-time + runtime anchors for inv-hades-131 (HTTP auth boundary)
+// and inv-hades-132 (per-routine bearer constant-time + audit).
 //
 // Compliance tests grep for these symbols + invoke them to assert the
 // auth pipeline is reachable from production code (not dead code).
@@ -18,9 +18,9 @@ func perRoutineBearerSentinel() error {
 	return ErrPerRoutineBearerAnchor
 }
 
-var ErrAuthBoundaryAnchor = errors.New("auth: http boundary anchor (inv-zen-131)")
+var ErrAuthBoundaryAnchor = errors.New("auth: http boundary anchor (inv-hades-131)")
 
-var ErrPerRoutineBearerAnchor = errors.New("auth: per-routine bearer anchor (inv-zen-132)")
+var ErrPerRoutineBearerAnchor = errors.New("auth: per-routine bearer anchor (inv-hades-132)")
 
 var (
 	_authBoundarySentinelInvoked     = httpAuthBoundarySentinel()

@@ -25,7 +25,7 @@ Triggered by `/hades:doctrine-drift-check [project]`.
 
 - Operator invokes `/hades:doctrine-drift-check`
 - Pre-merge gate (part of `make verify-doctrine-drift`)
-- Morning brief (`zen day` includes drift summary)
+- Morning brief (`hades day` includes drift summary)
 - When investigating discrepancy between code/spec and active doctrine
 
 ## Workflow
@@ -33,16 +33,16 @@ Triggered by `/hades:doctrine-drift-check [project]`.
 ### 1. Get current doctrine config
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock -s \
+curl --unix-socket /tmp/hades-system.sock -s \
      "http://unix/v1/doctrine/show?project=$PROJECT" | jq '.doctrine_config'
 ```
 
 ### 2. Query caronte code-graph for each doctrine key
 
 ```bash
-curl --unix-socket /tmp/zen-swarm.sock \
+curl --unix-socket /tmp/hades-system.sock \
      -X POST \
-     -d '{"tool":"mcp_zen-swarm_caronte_query","query":"references_to:doctrine.<key>"}' \
+     -d '{"tool":"mcp_hades-system_caronte_query","query":"references_to:doctrine.<key>"}' \
      http://unix/v1/mcpgateway
 ```
 
@@ -64,5 +64,5 @@ Emits `DoctrineDriftCheckCompleted` event anchored in the release design audit c
 ## Cross-references
 
 - the release design doctrine schema (canonical source of truth)
-- the release design §3.1 mcpgateway (caronte in-process; tool name mcp_zen-swarm_caronte_query)
+- the release design §3.1 mcpgateway (caronte in-process; tool name mcp_hades-system_caronte_query)
 - /hades:doctrine-drift-check slash command handler

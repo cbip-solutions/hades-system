@@ -20,7 +20,7 @@
 // 1. validate BuildRequest, then check Initialized() (fail-fast)
 // 2. emit EvtOrchestratorStarted
 // 3. Idle → Initializing
-// 4. ResearchGate.Check (invariant enforcement; failure unwinds
+// 4. ResearchGate.Check (inv-hades-101 enforcement; failure unwinds
 // gracefully to Idle and returns ErrResearchGateNotPassed)
 // 5. DecideWidth + DecideDepth (depth.go scaffolding;
 // D-4/D-5 wholesale-replace with §5.3.2 formula)
@@ -34,9 +34,9 @@
 // Dispatcher.Shutdown, emit EvtOrchestratorStopped(dispatch_failed)
 //
 // Boundaries
-// - invariant: this package NEVER imports internal/store. Persistence
+// - inv-hades-089: this package NEVER imports internal/store. Persistence
 // flows through internal/daemon/orchestratoradapter.
-// - invariant: this package NEVER imports internal/workforce/queue
+// - inv-hades-090: this package NEVER imports internal/workforce/queue
 // directly. release workforce.Manager is wired via the Dispatcher
 // interface (D-3) so eventlog (durable) ⊥ queue (transient) stays
 // a clean separation.
@@ -101,7 +101,7 @@ var (
 	ErrAlreadyInitialized    = errors.New("orchestrator: already initialized")
 	ErrNotInitialized        = errors.New("orchestrator: not initialized")
 	ErrAlreadyShutdown       = errors.New("orchestrator: already shut down")
-	ErrResearchGateNotPassed = errors.New("orchestrator: research gate not passed (inv-zen-101)")
+	ErrResearchGateNotPassed = errors.New("orchestrator: research gate not passed (inv-hades-101)")
 	ErrInvalidBuildRequest   = errors.New("orchestrator: invalid build request")
 )
 

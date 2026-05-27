@@ -26,9 +26,9 @@
 // refactor the lifecycle routes once the engine method bodies grow real
 // composite logic.
 //
-// invariant boundary: this file imports stdlib only; the daemon package
+// inv-hades-031 boundary: this file imports stdlib only; the daemon package
 // adapts concrete federation dependencies behind local interfaces.
-// invariant single-egress: external callers still enter through the daemon;
+// inv-hades-088 single-egress: external callers still enter through the daemon;
 // read routes proxy through the MCP gateway and lifecycle routes mutate the
 // daemon-owned federation store directly.
 
@@ -124,7 +124,7 @@ func ContractREST(ctx MCPGatewayCtx) http.HandlerFunc {
 		if req.WorkspaceID != "" {
 			args["workspace"] = req.WorkspaceID
 		}
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_get_contract", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_get_contract", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -230,7 +230,7 @@ func ContractWhyREST(ctx MCPGatewayCtx) http.HandlerFunc {
 			return
 		}
 		args := map[string]any{"change": req.ChangeID}
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_get_why_breaking_change", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_get_why_breaking_change", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -617,7 +617,7 @@ func FederationHealthREST(ctx MCPGatewayCtx) http.HandlerFunc {
 		if req.WorkspaceID != "" {
 			args["workspace"] = req.WorkspaceID
 		}
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_federation_health", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_federation_health", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -684,7 +684,7 @@ func APIImpactREST(ctx MCPGatewayCtx) http.HandlerFunc {
 			workspaceID = "default"
 		}
 		args := map[string]any{"workspace": workspaceID}
-		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_zen-swarm_caronte_get_breaking_changes", args, r.Header)
+		raw, status, err := callGatewayRaw(r.Context(), gw, "mcp_hades-system_caronte_get_breaking_changes", args, r.Header)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return

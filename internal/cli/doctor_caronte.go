@@ -6,19 +6,19 @@
 // - caronte.engine.healthy — engine constructed + Degraded()==false
 // - caronte.index.freshness — last-index age vs index-currency threshold
 // - caronte.language.coverage — which of Go/TS/Py/Rust parsers loaded
-// - caronte.project-db.status — per-project.zen/caronte.db reachable
+// - caronte.project-db.status — per-project.hades/caronte.db reachable
 // - caronte.rerank.available — BGE reranker model installed (;
-// invariant; missing → KNN-distance order)
+// inv-hades-278; missing → KNN-distance order)
 //
-// invokes the `mcp_zen-swarm_caronte_get_health` MCP tool via
+// invokes the `mcp_hades-system_caronte_get_health` MCP tool via
 // /v1/mcpgateway JSON-RPC tools/call and synthesizes the probe rows
 // from the returned HealthReport. The legacy GET /v1/caronte/probe
 // route is retired from the CLI caller surface (the daemon route
 // remains registered as a fallback during the migration window).
 //
-// The doctor probe is project-scoped via --project (or ZEN_PROJECT_ID
+// The doctor probe is project-scoped via --project (or HADES_PROJECT_ID
 // env). When neither is set the daemon-default-project path is taken
-// (empty alias → no X-Zen-Project-ID header sent).
+// (empty alias → no X-HADES-Project-ID header sent).
 //
 // No license-disclosure probe: Caronte is in-house Apache-2.0; there is
 // no third-party commercial-use disclosure obligation (sovereignty).
@@ -54,7 +54,7 @@ func doctorCaronteCmd() *cobra.Command {
 			})
 		},
 	}
-	cmd.Flags().StringVar(&projectFlag, "project", "", "scope health checks to one project (alias); falls back to $ZEN_PROJECT_ID then cwd-auto-resolve; default = daemon-default-project")
+	cmd.Flags().StringVar(&projectFlag, "project", "", "scope health checks to one project (alias); falls back to $HADES_PROJECT_ID then cwd-auto-resolve; default = daemon-default-project")
 	return cmd
 }
 
@@ -64,7 +64,7 @@ func resolveCaronteProjectAlias(flagValue string) string {
 	if flagValue != "" {
 		return flagValue
 	}
-	return os.Getenv("ZEN_PROJECT_ID")
+	return os.Getenv("HADES_PROJECT_ID")
 }
 
 func resolveCaronteAliasViaCwd(ctx context.Context, c *client.Client) string {
@@ -82,7 +82,7 @@ func resolveCaronteAliasViaCwd(ctx context.Context, c *client.Client) string {
 }
 
 func runCaronteChecks(ctx context.Context, c *client.Client) []CheckResult {
-	alias := os.Getenv("ZEN_PROJECT_ID")
+	alias := os.Getenv("HADES_PROJECT_ID")
 	if alias == "" {
 		alias = resolveCaronteAliasViaCwd(ctx, c)
 	}
@@ -99,12 +99,12 @@ func runCaronteChecksWithAlias(ctx context.Context, c *client.Client, projectAli
 		{
 			probeName:  "engine.healthy",
 			resultName: "caronte.engine.healthy",
-			hint:       "caronte engine degraded; check daemon logs or restart: zen daemon restart",
+			hint:       "caronte engine degraded; check daemon logs or restart: hades daemon restart",
 		},
 		{
 			probeName:  "index.freshness",
 			resultName: "caronte.index.freshness",
-			hint:       "index stale; trigger reindex: zen caronte reindex <project>",
+			hint:       "index stale; trigger reindex: hades caronte reindex <project>",
 		},
 		{
 			probeName:  "language.coverage",
@@ -114,7 +114,7 @@ func runCaronteChecksWithAlias(ctx context.Context, c *client.Client, projectAli
 		{
 			probeName:  "project-db.status",
 			resultName: "caronte.project-db.status",
-			hint:       "per-project .zen/caronte.db unreachable; check project registration: zen project register <path>",
+			hint:       "per-project .hades/caronte.db unreachable; check project registration: hades project register <path>",
 		},
 
 		{

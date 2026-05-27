@@ -22,7 +22,7 @@ import (
 // a no-op (returns nil) — the cosign subprocess + Rekor network call is
 // skipped for offline-friendly invocation.
 //
-// invariant OCI image attestation delegation ( owns
+// inv-hades-303 OCI image attestation delegation ( owns
 // implementation; verifier consumes).
 func (v *Verifier) VerifyOCIImageSignature(imageRef string) error {
 	if v.Mode == ModeFast {

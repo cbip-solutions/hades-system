@@ -7,14 +7,14 @@
 // month-end; capa-firewall: continuous + nightly + month-end on
 // object-lock immutable bucket).
 //
-// invariant: this package MUST NOT import internal/store. All
+// inv-hades-031: this package MUST NOT import internal/store. All
 // chain-state queries + partition-seal updates flow through
 // internal/daemon/auditadapter, which
-// is the sole invariant bridge.
+// is the sole inv-hades-031 bridge.
 //
-// invariant is moot here (no LLM traffic).
+// inv-hades-088 is moot here (no LLM traffic).
 //
-// invariant (per-project Tessera tile-log isolation): Manager keys
+// inv-hades-144 (per-project Tessera tile-log isolation): Manager keys
 // every operation by project_id; cross-project method calls are
 // rejected at the type level via the ProjectID-bearing constructors
 // in tessera.Adapter.
@@ -22,7 +22,7 @@
 // Boundary diagram:
 //
 // ┌──────────────────────────────────────────────────────────────────┐
-// │ Daemon main (cmd/zen-swarm-ctld/main.go) │
+// │ Daemon main (cmd/hades-ctld/main.go) │
 // │ │ wires litestream.Manager + tessera.Adapter │
 // │ ▼ │
 // │ litestream.Manager │
@@ -33,6 +33,6 @@
 // │ ▼ │
 // │ auditadapter.PartitionSealStore │
 // │ └─ writes cold_archive_url + cold_archive_content_hash │
-// │ back into audit_partition_seals row │
+// │ back into audit_partition_seals row (inv-hades-031 bridge) │
 // └──────────────────────────────────────────────────────────────────┘
 package litestream

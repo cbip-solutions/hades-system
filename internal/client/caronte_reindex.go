@@ -3,11 +3,11 @@
 //
 // Client wrappers for the daemon's POST /v1/caronte/reindex endpoint
 // (handlers/caronte.go::CaronteReindex) + the GET /v1/projects helper
-// the `zen caronte reindex --all` enumeration uses.
+// the `hades caronte reindex --all` enumeration uses.
 //
-// The reindex endpoint reads its project id from the X-Zen-Project-ID
+// The reindex endpoint reads its project id from the X-HADES-Project-ID
 // HTTP header (the same protocol the mcpgateway uses for the
-// invariant alias→canonical resolution). Operators pass an alias OR
+// inv-hades-277 alias→canonical resolution). Operators pass an alias OR
 // a canonical id_sha256; the daemon-side resolver translates.
 package client
 
@@ -39,7 +39,7 @@ func (c *Client) CaronteReindex(ctx context.Context, idOrAlias string) (*Caronte
 	if err != nil {
 		return nil, fmt.Errorf("caronte reindex: new request: %w", err)
 	}
-	req.Header.Set("X-Zen-Project-ID", idOrAlias)
+	req.Header.Set("X-HADES-Project-ID", idOrAlias)
 	start := time.Now()
 	resp, err := c.httpC.Do(req)
 	if err != nil {

@@ -15,11 +15,11 @@ import (
 	"time"
 )
 
-var ErrHostNotAllowed = errors.New("mcp/client: outbound host not in allowedHosts whitelist (inv-zen-085)")
+var ErrHostNotAllowed = errors.New("mcp/client: outbound host not in allowedHosts whitelist (inv-hades-085)")
 
-const defaultSocketPath = "/var/run/zen-swarm/zen-swarm.sock"
+const defaultSocketPath = "/var/run/hades-system/hades-system.sock"
 
-const defaultAuthTokenPath = "~/.config/zen-swarm/auth-token"
+const defaultAuthTokenPath = "~/.config/hades-system/auth-token"
 
 const retryMaxAttempts = 3
 
@@ -190,7 +190,7 @@ func (c *Client) Close() error {
 
 const daemonSentinel = ""
 
-// defaultAllowedHostsSealed is the authoritative whitelist.
+// defaultAllowedHostsSealed is the authoritative whitelist (inv-hades-085).
 // Changes to this set require an ADR (see architecture records
 // for the precedent on how to extend it).
 //

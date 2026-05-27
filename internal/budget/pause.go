@@ -25,7 +25,7 @@
 // serialised by the underlying store; the final state reflects the last
 // write (typical SQLite UPSERT semantics).
 //
-// invariant anchor lives in enforce.go (precedence sort); this file
+// inv-hades-079 anchor lives in enforce.go (precedence sort); this file
 // is the storage + state side of the same invariant.
 package budget
 

@@ -33,16 +33,16 @@
 // every (package, version) pair — MDN has no per-API changelog; cross-doc
 // changes happen via the MDN content git repo at
 // github.com/mdn/content (out of scope for ; defer to operator
-// manual reindex via `zen research mdn reindex` post-v0.14.0).
+// manual reindex via `hades research mdn reindex` post-v0.14.0).
 //
 // All HTTP egress routes via the narrow FetchClient interface declared in
-// pkgdev.go (invariant + invariant — single egress point for the
+// pkgdev.go (inv-hades-152 + inv-hades-191 — single egress point for the
 // research data plane; no direct net/http imports in this package).
 //
 // Per-source TTL = 30d (registered in A-10 source-ttls.toml; MDN
 // updates slowly so the polling cadence is the lowest of any source).
 //
-// Boundary: this file MAY import
+// Boundary (inv-hades-031): this file MAY import
 // internal/research/cache + internal/research/ecosystem (parent) +
 // golang.org/x/net/html. It MUST NOT import internal/store, internal/
 // providers, internal/daemon, or any net/http symbols.

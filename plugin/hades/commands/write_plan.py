@@ -65,7 +65,7 @@ Per `feedback_methodology_and_conventions.md` §13:
 - Claude attribution scan
 - Type-name uniqueness across phases
 - Module path consistency
-- inv-zen-XXX coverage
+- inv-hades-XXX coverage
 
 ### release stage — Code-reviewer subagent dispatch (MANDATORY)
 - Dispatch `superpowers:code-reviewer` foreground

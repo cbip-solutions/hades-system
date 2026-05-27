@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package tui implements the zen-swarm dashboard TUI.
+// Package tui implements the hades-system dashboard TUI.
 //
 // Per spec §7.1 (k9s shape, calm-by-default) and R5 verification:
 // - Use lipgloss WithStandardStyleName("dark") — never WithAutoStyle

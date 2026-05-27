@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	witnessKeychainService = "zen-swarm-tessera-witness"
+	witnessKeychainService = "hades-system-tessera-witness"
 	witnessKeychainAccount = "default"
 )
 
@@ -35,7 +35,7 @@ func resetTestWitnessKeychain() {
 }
 
 func defaultWitnessBackend() witnessBackend {
-	if os.Getenv("ZEN_BYPASS_DISABLE_KEYCHAIN") == "1" {
+	if os.Getenv("HADES_BYPASS_DISABLE_KEYCHAIN") == "1" {
 		return defaultMemWitnessBackend
 	}
 	return &macWitnessBackend{}

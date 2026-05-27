@@ -2,7 +2,7 @@
 // Package handlers — augment_summary.go.
 //
 // GET /v1/augment/summary — daily augmentation stats consumed by:
-// - internal/zenday — Augmentation section of the morning brief
+// - internal/hadesday — Augmentation section of the morning brief
 // - internal/tui/views F3 Cost panel via the
 // AugmentCache thin alias in internal/client/codegraph_plan12.go
 //
@@ -36,7 +36,7 @@
 // inherited; could be cherry-picked to a release.1
 // backport branch if needed.
 //
-// invariant: handler relies on AuditQueryCtx (interface), not the
+// inv-hades-031: handler relies on AuditQueryCtx (interface), not the
 // concrete store.
 
 package handlers

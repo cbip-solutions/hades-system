@@ -11,10 +11,10 @@
 // (1s/100-events batch); the handler contract is fire-and-accept (202).
 // - release wraps audit_events_raw with hash-chain WITHOUT migration;
 // this file remains unchanged in release.
-// - invariant: emit no-loss is enforced at the mcp/client layer;
+// - inv-hades-083: emit no-loss is enforced at the mcp/client layer;
 // the daemon itself returns 202 on successful enqueue.
-// - invariant: Unix socket only — enforced at server.go listener level.
-// - invariant: never imports internal/store directly.
+// - inv-hades-001: Unix socket only — enforced at server.go listener level.
+// - inv-hades-031: never imports internal/store directly.
 package handlers
 
 import (

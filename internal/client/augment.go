@@ -4,7 +4,7 @@
 // /v1/augment/probe?check=<name>. ships the daemon-side
 // handler; only consumes for doctor checks.
 //
-// also adds AugmentSummary (consumed by zen day's Augmentation
+// also adds AugmentSummary (consumed by hades day's Augmentation
 // section) wrapping the already-shipped /v1/augment/summary endpoint.
 package client
 

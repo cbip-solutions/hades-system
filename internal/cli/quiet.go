@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: MIT
 // Package cli — quiet.go.
 //
-// `zen quiet` is the operator-facing entry point for inspecting the
+// `hades quiet` is the operator-facing entry point for inspecting the
 // quiet-hours config and managing the runtime urgent-pause window
 // (spec §6.5).
 //
 // Three flag-driven actions, mutually exclusive:
 //
-// zen quiet [--list] # default: list config
-// zen quiet --urgent-pause <duration> # disable urgent-bypass for N
-// zen quiet --cancel # cancel active urgent-pause
+// hades quiet [--list] # default: list config
+// hades quiet --urgent-pause <duration> # disable urgent-bypass for N
+// hades quiet --cancel # cancel active urgent-pause
 //
 // # Examples
 //
-// $ zen quiet --list
+// $ hades quiet --list
 // Quiet hours (operator default): 21:00 — 09:00 (weekdays + extended weekends)
 // Override (active): none
 // Urgent severity bypass: enabled
 //
-// $ zen quiet --urgent-pause 30m
+// $ hades quiet --urgent-pause 30m
 // Urgent bypass paused for 30m (resumes 2026-05-01 12:30 UTC)
 //
-// $ zen quiet --cancel
+// $ hades quiet --cancel
 // Urgent pause cancelled
 //
 // The CLI does NOT directly write notifications.toml — operator edits
@@ -88,7 +88,7 @@ func NewQuietCmd(factory QuietClientFactory) *cobra.Command {
 overrides + active urgent-pause) and manage the runtime urgent-pause
 window.
 
-Persistent config lives in ~/.config/zen-swarm/notifications.toml
+Persistent config lives in ~/.config/hades-system/notifications.toml
 (operator-edited). The CLI reads + renders that file via the daemon;
 only the runtime UrgentPauseUntil state is mutated via
 --urgent-pause / --cancel.
@@ -96,13 +96,13 @@ only the runtime UrgentPauseUntil state is mutated via
 Mutually exclusive: pass exactly one of --list / --urgent-pause /
 --cancel (bare invocation defaults to --list).`,
 		Example: `  # Inspect current quiet-hours config + active pause
-  zen quiet
+  hades quiet
 
   # Disable urgent-bypass for the next 30 minutes (e.g. during a meeting)
-  zen quiet --urgent-pause 30m
+  hades quiet --urgent-pause 30m
 
   # Cancel an active urgent-pause early
-  zen quiet --cancel`,
+  hades quiet --cancel`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 

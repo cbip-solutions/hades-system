@@ -71,13 +71,13 @@ type ReplayResult struct {
 }
 
 type AutonomyShow struct {
-	EffectiveMode    string         `json:"effective_mode"`
-	ResolvedFrom     string         `json:"resolved_from"`
-	DoctrineMode     string         `json:"doctrine_mode"`
-	ZenswarmTOMLMode string         `json:"zenswarm_toml_mode"`
-	FlagMode         string         `json:"flag_mode"`
-	CapaFirewallLock bool           `json:"capa_firewall_lock"`
-	CostDegradation  CostTierStatus `json:"cost_degradation"`
+	EffectiveMode       string         `json:"effective_mode"`
+	ResolvedFrom        string         `json:"resolved_from"`
+	DoctrineMode        string         `json:"doctrine_mode"`
+	HadesSystemTOMLMode string         `json:"hadessystem_toml_mode"`
+	FlagMode            string         `json:"flag_mode"`
+	CapaFirewallLock    bool           `json:"capa_firewall_lock"`
+	CostDegradation     CostTierStatus `json:"cost_degradation"`
 }
 
 type CostTierStatus struct {

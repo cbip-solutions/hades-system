@@ -24,9 +24,9 @@ func effectiveVersion() string {
 
 func NewRootCmd() *cobra.Command {
 	root := &cobra.Command{
-		Use:           "zen",
-		Short:         "HADES command-line interface (zen)",
-		Long:          "zen orchestrates the HADES daemon (zen-swarm-ctld) for multi-project agentic development.",
+		Use:           "hades",
+		Short:         "HADES command-line interface (hades)",
+		Long:          "hades orchestrates the HADES daemon (hades-ctld) for multi-project agentic development.",
 		Version:       effectiveVersion(),
 		SilenceUsage:  true,
 		SilenceErrors: true,
@@ -35,9 +35,9 @@ func NewRootCmd() *cobra.Command {
 	AttachVerboseFlag(root)
 	AttachNoColorFlag(root)
 
-	root.SetVersionTemplate("HADES system v{{.Version}} (binary: zen)\n" + buildinfo.Summary() + "\n")
+	root.SetVersionTemplate("HADES system v{{.Version}} (binary: hades)\n" + buildinfo.Summary() + "\n")
 
-	root.PersistentFlags().String("uds", "/tmp/zen-swarm.sock", "Daemon UDS path")
+	root.PersistentFlags().String("uds", "/tmp/hades-system.sock", "Daemon UDS path")
 
 	root.AddCommand(NewStatusCmd())
 	root.AddCommand(NewDaemonCmd())

@@ -7,7 +7,7 @@
 -- tuple. source_extracted distinguishes explicit_changelog vs
 -- implicit_deepdiff per spec §3.3 ChangeNode field set.
 --
--- invariant: Change-node graph consistency — every row's
+-- inv-hades-193: Change-node graph consistency — every row's
 -- (version_from, version_to) MUST correspond to ecosystem_versions rows
 -- via FK chain (enforced by trigger; declared at release track E-7).
 --

@@ -24,21 +24,21 @@ _PLUGIN_ROOT = Path(__file__).resolve().parent
 _SKILLS_DIR = _PLUGIN_ROOT / "skills"
 
 # Module-global RendererRegistry instance. Populated by `register(ctx)` on
-# plugin load via `register_default_renderers(_RENDERER_REGISTRY)`. zen-side
+# plugin load via `register_default_renderers(_RENDERER_REGISTRY)`. hades-side
 # callbacks (hook handlers, AFK summary builder, slash command handlers)
 # consume this registry via `get_renderer_registry()` when dispatching
 # citation envelopes for platform-specific output.
 #
 # Per the empirically verified 2026-05-11 Hermes plugin spike artifact,
-# Hermes does NOT auto-discover renderers — they are a zen-internal module
-# imported here and made available to zen-side code via this accessor.
+# Hermes does NOT auto-discover renderers — they are a hades-internal module
+# imported here and made available to hades-side code via this accessor.
 _RENDERER_REGISTRY: RendererRegistry = RendererRegistry()
 
 
 def get_renderer_registry() -> RendererRegistry:
     """Return the module-global RendererRegistry populated by ``register(ctx)``.
 
-    Used by zen-side callbacks (``hooks/llm_handlers.py``, AFK summary
+    Used by hades-side callbacks (``hooks/llm_handlers.py``, AFK summary
     builder, slash command handlers) to dispatch citation envelopes
     through the 6 platform renderers + markdown fallback.
 
@@ -100,9 +100,9 @@ def register(ctx: Any) -> None:
 
     # --- the release design release track: wizard auto-launch hook ---------------------------
     # Third on_session_start hook. Detects first-run condition by checking
-    # ~/.config/zen-swarm/config.toml presence + HADES_NO_WIZARD=1 escape.
+    # ~/.config/hades-system/config.toml presence + HADES_NO_WIZARD=1 escape.
     # Spawns `hades config init` subprocess (the release design wizard surface) on trigger.
-    # No-op on subsequent sessions (config present). invariant preserved:
+    # No-op on subsequent sessions (config present). inv-hades-088 preserved:
     # wizard is subprocess to local Go binary, not LLM-mediated HTTP call.
     ctx.register_hook("on_session_start", _maybe_launch_wizard)
 
@@ -110,7 +110,7 @@ def register(ctx: Any) -> None:
     ctx.register_skill(
         "hades",
         _SKILLS_DIR / "hades" / "SKILL.md",
-        description="Canonical HADES system project skill (doctrine + workflow + hard rules; formerly zen-swarm).",
+        description="Canonical HADES system project skill (doctrine + workflow + hard rules; formerly hades-system).",
     )
     ctx.register_skill(
         "start",
@@ -193,7 +193,7 @@ def register(ctx: Any) -> None:
     ctx.register_command(
         "hades:install-mcps",
         handler=handle_install_mcps,
-        description="Install HADES zen MCPs into ~/.hermes/config.yaml via 'hermes mcp add' (caronte is in-process, no MCP needed).",
+        description="Install HADES hades MCPs into ~/.hermes/config.yaml via 'hermes mcp add' (caronte is in-process, no MCP needed).",
     )
     ctx.register_command(
         "hades:status",
@@ -264,7 +264,7 @@ def register(ctx: Any) -> None:
         args_hint="<amendment-id> <reason>",
     )
 
-    # --- the release design release track Task B-5: zen-specific KG commands ------------------
+    # --- the release design release track Task B-5: hades-specific KG commands ------------------
     from .commands.impact_pre_merge import impact_pre_merge_handler
     from .commands.audit_impact import audit_impact_handler
     from .commands.doctrine_drift_check import doctrine_drift_check_handler
@@ -272,7 +272,7 @@ def register(ctx: Any) -> None:
     ctx.register_command(
         "hades:impact-pre-merge",
         handler=impact_pre_merge_handler,
-        description="Analyze blast radius of pending merge (zen-specific KG augmentation per spec §4.4)",
+        description="Analyze blast radius of pending merge (hades-specific KG augmentation per spec §4.4)",
         args_hint="<branch>",
     )
     ctx.register_command(
@@ -396,7 +396,7 @@ def register(ctx: Any) -> None:
 
     # --- Citation renderers (the release design release track) --------------------------------
     # Populates the module-global RendererRegistry with the 6 default
-    # platform renderers (Ink/Telegram/Slack/Email/Voice/Web). zen-side
+    # platform renderers (Ink/Telegram/Slack/Email/Voice/Web). hades-side
     # callbacks consume the registry via ``get_renderer_registry()`` when
     # dispatching citation envelopes for platform-specific output. The
     # universal markdown fallback is registry-internal (mirrors the release design

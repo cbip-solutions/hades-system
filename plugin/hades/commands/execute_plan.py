@@ -83,7 +83,7 @@ pytest plugin/hades/tests/ -v --cov=plugin/hades --cov-report=term --cov-fail-un
 
 Coverage targets: ≥85% new code; ≥90% security/correctness-critical (per project project instructions "Hard rules" #5).
 
-## 6. NO Claude attribution (invariant)
+## 6. NO Claude attribution (inv-hades-004)
 
 Every commit message: `feat(scope): subject` (imperative, lowercase, no trailing period). NO `Co-Authored-By: prohibited assistant`. NO `Generated with prohibited assistant`. Plugin hook regex-rejects.
 

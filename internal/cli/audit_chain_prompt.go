@@ -3,12 +3,12 @@
 //
 // bufio-based interactive prompt helpers used by the release interactive
 // operator flows:
-// - `zen audit-chain recover` (spec §6.5 — blank defaults to N)
-// - `zen audit-chain checkpoint` (operator confirmation before emit)
-// - `zen audit-chain configure-s3` (overwrite confirmation + field input)
-// - `zen state pin` (modify-confirmation)
-// - `zen knowledge promote/unpromote` (gated transitions)
-// - `zen adr accept/reject/supersede` (state-machine confirmation)
+// - `hades audit-chain recover` (spec §6.5 — blank defaults to N)
+// - `hades audit-chain checkpoint` (operator confirmation before emit)
+// - `hades audit-chain configure-s3` (overwrite confirmation + field input)
+// - `hades state pin` (modify-confirmation)
+// - `hades knowledge promote/unpromote` (gated transitions)
+// - `hades adr accept/reject/supersede` (state-machine confirmation)
 //
 // Privacy-by-default semantics: blank input to promptYN always returns false
 // (no), consistent with spec §6.5 "default deny" for destructive interactive

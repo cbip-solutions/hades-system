@@ -34,7 +34,7 @@ If operator provided `--query`, skip STT and use the text directly.
 QUERY="{query}"
 
 # pending endpoint registration: voice estimate (POST) gates sync/async path selection
-ESTIMATE=$(curl --unix-socket /tmp/zen-swarm.sock -s \\
+ESTIMATE=$(curl --unix-socket /tmp/hades-system.sock -s \\
                 -X POST \\
                 -H "Content-Type: application/json" \\
                 -d '{{"query":"'"$QUERY"'"}}' \\
@@ -58,7 +58,7 @@ fi
 ## 5. Sync flow (estimated <10s)
 
 ```bash
-RESPONSE=$(curl --unix-socket /tmp/zen-swarm.sock \\
+RESPONSE=$(curl --unix-socket /tmp/hades-system.sock \\
                 -X POST \\
                 -H "Content-Type: application/json" \\
                 -d '{{"query":"'"$QUERY"'","mode":"voice_sync"}}' \\
@@ -71,7 +71,7 @@ Render via voice TTS renderer (release track `plugin/hades/renderers/voice_citat
 
 ```bash
 # pending endpoint registration: augment/dispatch posts a fire-and-forget job
-JOB_ID=$(curl --unix-socket /tmp/zen-swarm.sock \\
+JOB_ID=$(curl --unix-socket /tmp/hades-system.sock \\
               -X POST \\
               -H "Content-Type: application/json" \\
               -d '{{"query":"'"$QUERY"'","mode":"voice_async"}}' \\
@@ -93,7 +93,7 @@ If offline, respond from KG offline cache subset:
 
 ```bash
 # pending endpoint registration: knowledge offline cache HTTP surface for mobile clients
-curl --unix-socket /tmp/zen-swarm.sock -s \\
+curl --unix-socket /tmp/hades-system.sock -s \\
      "http://unix/v1/knowledge/cache?query=$QUERY"
 ```
 
@@ -101,7 +101,7 @@ Cache holds last 50 queries + community summaries (doctrine-tunable size per spe
 
 ## 8. Privacy filter
 
-Per invariant, voice TTS NEVER reads aloud capa-firewall sensitive content per spec §6.4 (privacy filter never leaks).
+Per inv-hades-163, voice TTS NEVER reads aloud capa-firewall sensitive content per spec §6.4 (privacy filter never leaks).
 
 ## Cross-references
 

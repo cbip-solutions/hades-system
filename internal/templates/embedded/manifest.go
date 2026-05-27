@@ -3,7 +3,7 @@
 //
 // Pure-data file: declares per-template Title + ShortDescription +
 // RecommendedFor strings consumed by the wizard when rendering
-// the "What kind of project?" question and by `zen new --list-templates`.
+// the "What kind of project?" question and by `hades new --list-templates`.
 package embedded
 
 type Metadata struct {

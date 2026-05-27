@@ -83,7 +83,7 @@ func (v *AutonomyValidator) ValidateStateFreshness(
 			return AutonomyResult{
 				Check:  checkName,
 				Pass:   false,
-				Reason: fmt.Sprintf("docs/system-state.toml not found at %s; run `zen state regenerate`", manifestPath),
+				Reason: fmt.Sprintf("docs/system-state.toml not found at %s; run `hades state regenerate`", manifestPath),
 			}, nil
 		}
 		return AutonomyResult{Check: checkName, Pass: false, Reason: "read error: " + err.Error()}, nil
@@ -94,7 +94,7 @@ func (v *AutonomyValidator) ValidateStateFreshness(
 		return AutonomyResult{
 			Check:  checkName,
 			Pass:   false,
-			Reason: "docs/system-state.toml failed TOML decode; restore from VCS or run `zen state regenerate`",
+			Reason: "docs/system-state.toml failed TOML decode; restore from VCS or run `hades state regenerate`",
 		}, nil
 	}
 
@@ -111,7 +111,7 @@ func (v *AutonomyValidator) ValidateStateFreshness(
 		Check: checkName,
 		Pass:  false,
 		Reason: fmt.Sprintf(
-			"docs/system-state.toml is %s old (threshold %s) without recent state.manual_field_changed event; run `zen state regenerate` or pin a manual field to extend the freshness lease",
+			"docs/system-state.toml is %s old (threshold %s) without recent state.manual_field_changed event; run `hades state regenerate` or pin a manual field to extend the freshness lease",
 			age.Truncate(time.Hour),
 			FreshnessThreshold,
 		),

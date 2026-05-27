@@ -3,7 +3,7 @@
 //
 // Promote is the operator-gated action that moves a note from a per-project
 // Obsidian vault into the cross-project knowledge_pin_index. The operation is:
-// - Validated up-front (reason required per invariant; operatorID, noteID,
+// - Validated up-front (reason required per inv-hades-146; operatorID, noteID,
 // projectID required for audit trail integrity).
 // - Idempotent at the DB level (INSERT... ON CONFLICT(note_id) DO UPDATE SET).
 // - Chain-anchored via ChainAnchorComputer (noopChainAnchorComputer pre-;
@@ -14,16 +14,16 @@
 // Promote proceeds without populating knowledge_pin_vec. The row is still
 // indexed in FTS5 and wikilinks so search degrades gracefully to BM25+graph.
 //
-// Boundary: promote.go does NOT import internal/store. The
+// Boundary (inv-hades-031): promote.go does NOT import internal/store. The
 // per-project vault is accessed via PerProjectKnowledgeStore.OpenProjectVault,
 // which returns a ProjectVault (interface{}). Promote type-asserts to *sql.DB —
 // the only contract the aggregator package observes; the adapter (D-12) satisfies
 // it with a real *sql.DB from the daemon's per-project connection pool.
 //
-// invariant: no web calls. All data comes from the per-project SQLite vault
+// inv-hades-129: no web calls. All data comes from the per-project SQLite vault
 // and the aggregator pin-index DB (both local files).
 //
-// invariant: empty reason → ErrPromoteReasonRequired (exported sentinel so
+// inv-hades-146: empty reason → ErrPromoteReasonRequired (exported sentinel so
 // D-14 compliance test can errors.Is-assert across package boundaries).
 package aggregator
 
@@ -42,7 +42,7 @@ import (
 )
 
 var ErrPromoteReasonRequired = errors.New(
-	"aggregator: Promote: reason required (inv-zen-146)",
+	"aggregator: Promote: reason required (inv-hades-146)",
 )
 
 type PromoteResult struct {
@@ -77,7 +77,7 @@ func (a *Aggregator) Promote(
 	}
 
 	// 3. Open per-project vault via the PerProjectKnowledgeStore bridge.
-	// invariant: we do NOT import internal/store; we type-assert the
+	// inv-hades-031: we do NOT import internal/store; we type-assert the
 	// opaque ProjectVault to *sql.DB — the only contract this package observes.
 	srcVault, err := a.store.OpenProjectVault(ctx, projectID)
 	if err != nil {

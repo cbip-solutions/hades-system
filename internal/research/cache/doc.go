@@ -3,7 +3,7 @@
 // research dispatch records, findings, validation logs, and a sqlite-vec
 // virtual table for semantic query deduplication.
 //
-// # Architecture boundary
+// # Architecture boundary (inv-hades-031)
 //
 // This package MUST NOT import internal/store. Each database owns its own
 // *sql.DB handle and schema-version bookkeeping. research_cache.db is fully

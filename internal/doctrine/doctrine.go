@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package doctrine implements the doctrine configuration substrate
-// for zen-swarm (spec §2.2 Capa 2 + §4.4) and the per-project policy
+// for hades-system (spec §2.2 Capa 2 + §4.4) and the per-project policy
 // doctrines: max-scope, default, capa-firewall.
 //
 // The package exposes:
@@ -8,11 +8,11 @@
 // - Schema: pure value type describing the full TOML schema
 // (resolver, loader, builtin defaults, additive-only validator).
 // - Resolver / Resolved: the four-layer chain (builtin → custom
-// TOML → project zenswarm.toml → --doctrine flag) with field-
+// TOML → project hadessystem.toml → --doctrine flag) with field-
 // level provenance tracking and ceiling-aware clamping.
 // - LoadFile / Loaded: pure I/O wrapper over BurntSushi/toml with
-// strict-mode unknown-field rejection.
-// - ValidateAdditive / ValidateRange: invariant enforcement
+// strict-mode unknown-field rejection (inv-hades-088).
+// - ValidateAdditive / ValidateRange: inv-hades-084 enforcement
 // (additive-only Schema evolution unless a doctrine-schema ADR
 // is referenced).
 // - Doctrine + Get / MaxScope / Default / CapaFirewall: the

@@ -136,7 +136,7 @@ func ApplyOverride(baseline, override Tier) Tier {
 // explicit error citing the (baseline, attempted) pair. Unknown check or
 // doctrine names are also rejected so misspelled config surfaces fail-closed.
 //
-// Callers (zenswarm.toml loader) MUST invoke this at load time and refuse to
+// Callers (hadessystem.toml loader) MUST invoke this at load time and refuse to
 // start the daemon on error — runtime "soft" tolerance of misconfig is not
 // a recoverable posture for autonomy gating.
 func ValidateOverrides(doctrine string, overrides map[string]Tier) error {

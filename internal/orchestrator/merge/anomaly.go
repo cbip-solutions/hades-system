@@ -26,7 +26,7 @@ import (
 	"time"
 )
 
-// Severity is the closed enum of anomaly severity levels. invariant
+// Severity is the closed enum of anomaly severity levels. inv-hades-110
 // sibling: must be Go enum (int kind) so the dispatch table compiles
 // (compile-time switch, not a runtime string lookup). Ordered ascending
 // (Info < Warning < High < Critical) so callers can compare via simple
@@ -434,7 +434,7 @@ func (d *AnomalyDetector) emit(ctx context.Context, anomalyType AnomalyType, sev
 }
 
 // releaseADRRangeStart is the first ADR ID reserved anomaly proposals.
-// invariant: every ADR proposed in response to a release EvtMergeAnomalyDetected
+// inv-hades-112: every ADR proposed in response to a release EvtMergeAnomalyDetected
 // event MUST allocate its ID from [releaseADRRangeStart, releaseADRRangeEnd]. release
 // amendment.proposer enforces at allocation time ( cross-branch
 // amendment); the compliance test verifies the reserved range constants are

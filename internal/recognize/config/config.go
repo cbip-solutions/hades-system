@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package config implements Tier 2 of zen recognize per spec §2.4 Q4=B:
+// Package config implements Tier 2 of hades recognize per spec §2.4 Q4=B:
 // framework-config detection (Next/Vite/Nuxt/Astro/Remix/Svelte/Angular/Gatsby).
 //
 // Vite is special-cased: vite.config.{js,mjs,ts} alone is ambiguous — could

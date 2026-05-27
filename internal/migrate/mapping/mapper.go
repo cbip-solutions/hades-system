@@ -56,7 +56,7 @@ func mapSkills(inv *source.Inventory, plan *Plan) error {
 		plan.Entries = append(plan.Entries, PlanEntry{
 			Kind:        EntryKindSkill,
 			SourcePath:  s.Path,
-			TargetPath:  filepath.ToSlash(filepath.Join("plugin", "zen-swarm", "skills", s.Name, "SKILL.md")),
+			TargetPath:  filepath.ToSlash(filepath.Join("plugin", "hades-system", "skills", s.Name, "SKILL.md")),
 			Frontmatter: fm,
 			BodyBytes:   s.Body,
 			RegisterCall: fmt.Sprintf(
@@ -77,7 +77,7 @@ func mapCommands(inv *source.Inventory, plan *Plan) error {
 		plan.Entries = append(plan.Entries, PlanEntry{
 			Kind:       EntryKindCommand,
 			SourcePath: c.Path,
-			TargetPath: filepath.ToSlash(filepath.Join("plugin", "zen-swarm", "commands", c.Name+".py")),
+			TargetPath: filepath.ToSlash(filepath.Join("plugin", "hades-system", "commands", c.Name+".py")),
 			BodyBytes:  c.Body,
 			RegisterCall: fmt.Sprintf(
 				"ctx.register_command(%q, handler=%s_handler, description=%q, args_hint=%q)",
@@ -99,7 +99,7 @@ func mapHooks(inv *source.Inventory, plan *Plan, preset Preset) error {
 			continue
 		}
 		if risk && preset == PresetStrict {
-			return fmt.Errorf("%w: hook event %q → %s (Hermes spec evolved post-spike; run `zen doctor hermes --check-hook-contract` to re-verify)",
+			return fmt.Errorf("%w: hook event %q → %s (Hermes spec evolved post-spike; run `hades doctor hermes --check-hook-contract` to re-verify)",
 				ErrHookRiskFlagged, h.EventName, hermes)
 		}
 		if risk {
@@ -108,18 +108,18 @@ func mapHooks(inv *source.Inventory, plan *Plan, preset Preset) error {
 
 		if h.Lang == "python" {
 			if preset == PresetStrict {
-				return fmt.Errorf("%w: native Python hook %q requires manual migration (re-implement as bash, or hand-port to Hermes callback shape and drop into plugin/zen-swarm/hooks/)",
+				return fmt.Errorf("%w: native Python hook %q requires manual migration (re-implement as bash, or hand-port to Hermes callback shape and drop into plugin/hades-system/hooks/)",
 					ErrPythonHookUnsupported, h.EventName)
 			}
 			plan.Warnings = append(plan.Warnings, fmt.Sprintf(
-				"hooks/%s → %s: native Python hook skipped (auto-migration unsafe; re-implement as bash, or hand-port the file to Hermes callback shape and drop into plugin/zen-swarm/hooks/)",
+				"hooks/%s → %s: native Python hook skipped (auto-migration unsafe; re-implement as bash, or hand-port the file to Hermes callback shape and drop into plugin/hades-system/hooks/)",
 				h.EventName, hermes))
 			continue
 		}
 		plan.Entries = append(plan.Entries, PlanEntry{
 			Kind:       EntryKindHook,
 			SourcePath: h.Path,
-			TargetPath: filepath.ToSlash(filepath.Join("plugin", "zen-swarm", "hooks", hermes+".py")),
+			TargetPath: filepath.ToSlash(filepath.Join("plugin", "hades-system", "hooks", hermes+".py")),
 			HookEvent:  hermes,
 			BodyBytes:  h.Body,
 			Notes:      []string{fmt.Sprintf("source-lang=%s", h.Lang)},
@@ -132,7 +132,7 @@ func mapHooks(inv *source.Inventory, plan *Plan, preset Preset) error {
 
 // knownSettingsKeys is the set of top-level settings.json fields the mapper
 // understands. Any other field encountered triggers strict-mode halt or
-// lenient warning per invariant "no silent drop".
+// lenient warning per inv-hades-183 "no silent drop".
 var knownSettingsKeys = map[string]bool{
 	"permissions": true,
 	"env":         true,

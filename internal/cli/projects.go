@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package cli — projects.go.
 //
-// `zen projects ls` lists every project the daemon's project registry
+// `hades projects ls` lists every project the daemon's project registry
 // knows about, including archived (autonomous_state="complete") rows so
 // the operator can see the full alias set with archive markers.
 //
 // Cobra layout:
 //
-// zen projects
+// hades projects
 // ls list known projects (alias, sha8, path, last-active, state)
 //
-// Distinction from `zen project` (singular): `zen project doctor / archive
-// / rm / priority` operate on a single alias; `zen projects
+// Distinction from `hades project` (singular): `hades project doctor / archive
+// / rm / priority` operate on a single alias; `hades projects
 // ls` is the cross-fleet view. The split mirrors `git remote` (singular
 // management) vs `git remote ls` (plural inspection) — both surfaces
 // matter and live as siblings, neither subsumes the other.
@@ -21,12 +21,12 @@
 //
 // Drift from spec §6.2 example output: the spec shows a "QUOTA" + "PRIORITY"
 // pair. Those columns belong to release quota substrate (live in
-// `zen project priority --ls` per ) and would require a daemon-side
+// `hades project priority --ls` per ) and would require a daemon-side
 // JOIN that GET /v1/projects intentionally avoids ( cap: pure project
 // registry; quota state surfaces via /v1/priority/* in ). Adding
 // QUOTA + PRIORITY here would either widen the wire shape (cross-cutting
 // concern, breaks SRP) or trigger a second round-trip per row (N+1 query).
-// Operators wanting both views chain: `zen projects ls && zen project
+// Operators wanting both views chain: `hades projects ls && hades project
 // priority --ls`. The STATE column captures the archived/active distinction
 // that operators need to spot dead aliases.
 //
@@ -74,13 +74,13 @@ Currently only "ls" is registered; future subcommands (Plan 7+ /
 Plan 14) will extend this namespace without breaking the existing
 surface.
 
-Distinct from "zen project" (singular): plural form lists; singular
+Distinct from "hades project" (singular): plural form lists; singular
 form acts on one alias (doctor / archive / rm / priority). The split
 mirrors ` + "`git remote`" + ` (singular management) vs ` + "`git remote ls`" + `
 (plural inspection) — both surfaces matter and live as siblings,
 neither subsumes the other.`,
 		Example: `  # List every alias the daemon knows about (active + archived)
-  zen projects ls`,
+  hades projects ls`,
 	}
 	root.AddCommand(newProjectsLsCmd(factory))
 	return root
@@ -101,24 +101,24 @@ including archived rows so the operator can see the full alias set
 with archive markers.
 
 Columns (stable across releases for sed/awk pipelines per spec §6.2):
-  ALIAS         operator-facing name (zenswarm.toml [project].alias)
+  ALIAS         operator-facing name (hadessystem.toml [project].alias)
   SHA8          first 8 hex chars of project_id (sha256)
   PATH          canonical absolute path the registry agrees on
   LAST-ACTIVE   relative time since last activation (e.g. "2h ago")
   STATE         "active" or "archived" (autonomous_state column)
 
 Quota + priority intentionally omitted from this view — they live on
-` + "`zen project priority --ls`" + ` to keep this command a pure registry
+` + "`hades project priority --ls`" + ` to keep this command a pure registry
 listing (no N+1 round-trips, no cross-cutting JOIN).
 
 Exit codes (spec §6.2):
   0  success (any row count, including zero)
   2  unrecoverable: transport, decode, daemon 5xx, daemon 503/501`,
 		Example: `  # List every known project
-  zen projects ls
+  hades projects ls
 
   # Pipe through awk for the alias column only
-  zen projects ls | awk 'NR>1 {print $1}'`,
+  hades projects ls | awk 'NR>1 {print $1}'`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

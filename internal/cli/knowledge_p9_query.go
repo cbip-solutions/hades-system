@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — knowledge_p9_query.go.
 //
-// `zen knowledge-p9 query <q>` — federated/pinned/chain-anchored search.
+// `hades knowledge-p9 query <q>` — federated/pinned/chain-anchored search.
 //
 // Four orthogonal flags:
 //
@@ -53,18 +53,18 @@ Scope flags (mutually exclusive):
 Chain flag:
   --audit-chain  Filter to notes whose audit_chain_anchor is present.
 
-inv-zen-129: NEVER queries the web — Plan 14 territory.`,
+inv-hades-129: NEVER queries the web — Plan 14 territory.`,
 		Example: `  # Default federated query
-  zen knowledge-p9 query "WFQ saturation"
+  hades knowledge-p9 query "WFQ saturation"
 
   # Global pin index only
-  zen knowledge-p9 query "max scope" --global
+  hades knowledge-p9 query "max scope" --global
 
   # One project, chain-verified
-  zen knowledge-p9 query "tessera" --project internal-platform-x --audit-chain
+  hades knowledge-p9 query "tessera" --project internal-platform-x --audit-chain
 
   # Pinned-only across all projects, limit 5
-  zen knowledge-p9 query "doctrine" --pinned-only --limit 5`,
+  hades knowledge-p9 query "doctrine" --pinned-only --limit 5`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if global && project != "" {

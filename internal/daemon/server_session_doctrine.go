@@ -1,4 +1,4 @@
-// Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
+// Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
 package daemon
 
@@ -26,9 +26,9 @@ import (
 // fail-closed — better to reject than to silently expose a wrong
 // doctrine).
 //
-// invariant corollary: doctrine MUST NOT be derived from a
+// inv-hades-172 corollary: doctrine MUST NOT be derived from a
 // client-controlled signal. The prior implementation read
-// X-Zen-Doctrine header; this is removed entirely from the security
+// X-HADES-Doctrine header; this is removed entirely from the security
 // path. Tests inject doctrine via the active.Accessor (via
 // active.SetUserDefault) or pass a synthetic sessionDoctrine
 // function to the handler (the handlers.SessionDoctrineFunc seam
@@ -61,7 +61,7 @@ func (s *Server) sessionDoctrine(r *http.Request) string {
 //
 // Non-loopback TCP MUST be rejected regardless of any HTTP-layer
 // headers — exposing UDS-mode endpoints over a public interface is
-// always wrong.
+// always wrong (inv-hades-131).
 func (s *Server) sessionAuthenticated(r *http.Request) bool {
 	if r.RemoteAddr != "" && r.RemoteAddr != "@" {
 

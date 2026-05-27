@@ -90,7 +90,7 @@ class WebCitationRenderer(Renderer):
         lane_e = escape(citation.retrieval_lane.value)
         project_e = escape(citation.project_id)
         audit_id_e = escape(citation.audit_event_id)
-        # Canonical zen:// deep-link via Envelope helper:
+        # Canonical hades:// deep-link via Envelope helper:
         # cross-renderer consistency with email + ink. The deep-link is
         # ALSO escaped before substitution into the href attribute so
         # XSS-style audit IDs cannot break out of the attribute.

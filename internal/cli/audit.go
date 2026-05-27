@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit.go.
 //
-// `zen audit` exposes audit-event read + emit + family/criteria catalogs.
+// `hades audit` exposes audit-event read + emit + family/criteria catalogs.
 //
 // Cobra layout (7 leaves):
 //
-// zen audit emit --type --project --payload (JSON)
-// zen audit events --type --project --since --limit
-// zen audit verdicts (alias: events --type=audit_review)
-// zen audit types (catalog of distinct event types last 30d)
-// zen audit families show
-// zen audit criteria list
+// hades audit emit --type --project --payload (JSON)
+// hades audit events --type --project --since --limit
+// hades audit verdicts (alias: events --type=audit_review)
+// hades audit types (catalog of distinct event types last 30d)
+// hades audit families show
+// hades audit criteria list
 //
 // Option A adaptation: the plan-doc enumerated `review --diff <p>` which
 // requires the audit MCP wiring landed in release (the audit MCP
@@ -200,7 +200,7 @@ func auditTypesCmd() *cobra.Command {
 func auditFamiliesCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "families",
-		Short: "Family-disjoint reviewer pool catalog (inv-zen-080)",
+		Short: "Family-disjoint reviewer pool catalog (inv-hades-080)",
 	}
 	cmd.AddCommand(&cobra.Command{
 		Use:   "show",
@@ -219,7 +219,7 @@ func auditFamiliesCmd() *cobra.Command {
 			opts := format.OptionsFromFlags(cmd)
 			out := cmd.OutOrStdout()
 			if opts.Format == "table" {
-				fmt.Fprintf(out, "Family-disjoint reviewer pool (inv-zen-080) — active doctrine: %s\n", activeName)
+				fmt.Fprintf(out, "Family-disjoint reviewer pool (inv-hades-080) — active doctrine: %s\n", activeName)
 				fmt.Fprintf(out, "  - reviewer family != generator family\n")
 				fmt.Fprintf(out, "  - |pool| >= 2 enforced by doctrine validator\n\n")
 			}

@@ -3,16 +3,16 @@
 //
 // Task L-4 — allowlist resolution.
 //
-// Merges doctrine SSHExecAxis with per-project zenswarm.toml
+// Merges doctrine SSHExecAxis with per-project hadessystem.toml
 // [ssh_exec.allowlist] under the rule:
 //
 // doctrine is ceiling; project can ONLY narrow, never widen.
 //
-// invariant reinforced at this layer: any pattern produced here is
+// inv-hades-082 reinforced at this layer: any pattern produced here is
 // guaranteed to be a non-empty string with no lone '*'; loader-level
 // invalid patterns are rejected with an error.
 //
-// Boundary: imports only stdlib + BurntSushi/toml +
+// Boundary (inv-hades-031): imports only stdlib + BurntSushi/toml +
 // internal/doctrine (pure value type).
 
 package sshexec
@@ -122,7 +122,7 @@ func ResolveAllowlist(doc *doctrine.Schema, projectTOMLPath, projectID string) (
 		Project:  projectID,
 		Patterns: append([]string(nil), pt.SSHExec.Allowlist.Patterns...),
 		Hosts:    append([]string(nil), pt.SSHExec.Allowlist.Hosts...),
-		Source:   "merge(doctrine,zenswarm.toml)",
+		Source:   "merge(doctrine,hadessystem.toml)",
 		Defaults: mergedDefaults,
 	}, nil
 }

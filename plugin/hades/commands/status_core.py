@@ -11,7 +11,7 @@ import httpx
 
 # Default UDS path. Borderline-stays per spec §Q3 (operator scripts
 # reference this path; rename deferred to the release design+N borderline migration).
-DEFAULT_UDS_PATH: str = "/tmp/zen-swarm.sock"
+DEFAULT_UDS_PATH: str = "/tmp/hades-system.sock"
 
 # Per-endpoint timeout in seconds. 3s is conservative — each endpoint is
 # a local UDS call and returns near-instantly under normal conditions;
@@ -20,7 +20,7 @@ DEFAULT_UDS_PATH: str = "/tmp/zen-swarm.sock"
 ENDPOINT_TIMEOUT_S: float = 3.0
 
 # Endpoint paths per spec §Q5. Order matters: it drives the line
-# ordering in the rendered block (per invariant stable schema).
+# ordering in the rendered block (per inv-hades-221 stable schema).
 ENDPOINTS: tuple[str, ...] = (
     "/v1/health",
     "/v1/cascade/state",
@@ -37,14 +37,14 @@ def build_client() -> httpx.AsyncClient:
 
     The base URL is ``http://localhost`` and the transport uses
     ``httpx.AsyncHTTPTransport(uds=...)`` to route over the UDS. The path
-    can be overridden via the ``ZEN_SWARM_UDS`` env var (operator
-    convention — same env consumed by ``bin/zen-event-poster``).
+    can be overridden via the ``HADES_SYSTEM_UDS`` env var (operator
+    convention — same env consumed by ``bin/hades-event-poster``).
 
     NOTE: tests patch this factory to inject ``httpx.MockTransport`` so
     the handler can be exercised without a real daemon. Production
     path uses the real UDS transport.
     """
-    uds_path = os.environ.get("ZEN_SWARM_UDS") or DEFAULT_UDS_PATH
+    uds_path = os.environ.get("HADES_SYSTEM_UDS") or DEFAULT_UDS_PATH
     transport = httpx.AsyncHTTPTransport(uds=uds_path)
     return httpx.AsyncClient(
         transport=transport,
@@ -105,7 +105,7 @@ async def query_daemon(
 def classify_field_state(response: dict[str, Any] | None) -> str:
     """Return 'ok' if response is non-None, 'degraded' otherwise.
 
-    Schema-v1 state classifier per spec §Q5 + invariant.
+    Schema-v1 state classifier per spec §Q5 + inv-hades-221.
     """
     return "ok" if response is not None else "degraded"
 

@@ -115,7 +115,7 @@ session ends. List with explicit "NON-RECOVERABLE; re-dispatch in next session".
 
 ## Pending operator actions
 
-<Items awaiting operator (e.g., 'operator must run `bin/zen bypass extract-config`
+<Items awaiting operator (e.g., 'operator must run `bin/hades bypass extract-config`
 interactively to enable /v1/messages').>
 
 ## Suggested first-message
@@ -200,7 +200,7 @@ def handle_handoff(raw_args: str) -> str | None:
     out.append("")
     out.append(
         "Doctrine: conventional commit subject, NO AI-attribution "
-        "(invariant gated by pre_tool_call callback)."
+        "(inv-hades-004 gated by pre_tool_call callback)."
     )
 
     return "\n".join(out)

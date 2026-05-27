@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_knowledge_p9.go
 //
-// Adds `zen doctor knowledge aggregator` subcommand — a leaf under the release
-// `zen doctor knowledge` group. RunKnowledgeAggregatorProbe delegates to
+// Adds `hades doctor knowledge aggregator` subcommand — a leaf under the release
+// `hades doctor knowledge` group. RunKnowledgeAggregatorProbe delegates to
 // AggregatorProber declared in probe.go; 4 results:
 //
 // - knowledge.aggregator.sqlite_vec_loaded
@@ -14,10 +14,10 @@
 //
 // AggregatorProber interface declared in probe.go (CLI side).
 // Substrate prober.go files are NOT modified per J-1 pattern.
-// Production wiring in cmd/zen-swarm-ctld/main.go assigns the concrete
+// Production wiring in cmd/hades-ctld/main.go assigns the concrete
 // substrate adapter satisfying AggregatorProber.
 //
-// Boundary:
+// Boundary (inv-hades-031):
 //
 // This file imports only cli-internal types + cobra + context + stdlib.
 // Does NOT import internal/knowledge/aggregator concrete types.
@@ -26,7 +26,7 @@
 //
 // File suffix _p9 because doctor_knowledge.go already ships
 // ( Task J-3: 5-aspect KnowledgeProber for the per-project knowledge
-// index). This file extends the same `zen doctor knowledge` group with the
+// index). This file extends the same `hades doctor knowledge` group with the
 package cli
 
 import (

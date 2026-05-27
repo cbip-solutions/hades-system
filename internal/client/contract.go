@@ -7,8 +7,8 @@
 // validator. CLI is operator-side; LLM traffic is not involved (these are
 // structural queries, not generation).
 //
-// invariant single-egress preserved: every round-trip proxies through the
-// daemon. invariant enforced: this file uses ONLY c.postJSON — never
+// inv-hades-088 single-egress preserved: every round-trip proxies through the
+// daemon. inv-hades-129 enforced: this file uses ONLY c.postJSON — never
 // net/http directly.
 package client
 

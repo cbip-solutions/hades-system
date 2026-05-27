@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr_ls.go.
 //
-// `zen adr ls [--status X] [--plan Y] [--risk-level Z]` calls
+// `hades adr ls [--status X] [--plan Y] [--risk-level Z]` calls
 // GET /v1/adr/list with the supplied filter and renders results in a
 // tabwriter table. Wire type: []client.ADR.
 package cli
@@ -20,9 +20,9 @@ func adrLsCmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "ls",
 		Short: "List ADRs filterable by status / plan / risk-level",
-		Example: `  zen adr ls
-  zen adr ls --status proposed
-  zen adr ls --plan plan-9 --risk-level high`,
+		Example: `  hades adr ls
+  hades adr ls --status proposed
+  hades adr ls --plan plan-9 --risk-level high`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			status, _ := cmd.Flags().GetString("status")
 			plan, _ := cmd.Flags().GetString("plan")

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package tierspertool ships the release doctrine lint
 // analyzer validating [capa_firewall.tiers] per-tool granularity per
-// Q10=D + invariant.
+// Q10=D + inv-hades-182.
 //
 // Validation rules:
 //
@@ -12,7 +12,7 @@
 // catalog = skip the catalog check; tests can omit it).
 // - Empty key components rejected (e.g., ".toolName" or "mcp.").
 //
-// Analyzer is consumed by zen-doctrine-lint (existing release lint stack
+// Analyzer is consumed by hades-doctrine-lint (existing release lint stack
 // loader) which loads TOML doctrine bundles + invokes ValidateDoctrineFile
 // per file. Returns []Issue surfaced to operator output.
 package tierspertool
@@ -141,7 +141,7 @@ func (v *Validator) ValidateDoctrineFile(path string, body []byte) ([]Issue, err
 
 var Analyzer = &goanalysis.Analyzer{
 	Name: "tierspertool",
-	Doc:  "validates [capa_firewall.tiers] per-tool granularity per inv-zen-182",
+	Doc:  "validates [capa_firewall.tiers] per-tool granularity per inv-hades-182",
 	Run:  runAnalyzer,
 }
 
@@ -177,7 +177,7 @@ func runAnalyzer(pass *goanalysis.Pass) (any, error) {
 			}
 			pass.Report(goanalysis.Diagnostic{
 				Pos:     pass.Files[0].Pos(),
-				Message: fmt.Sprintf("inv-zen-182 [%s key %q]: %s", iss.Path, iss.Key, iss.Reason),
+				Message: fmt.Sprintf("inv-hades-182 [%s key %q]: %s", iss.Path, iss.Key, iss.Reason),
 			})
 		}
 	}

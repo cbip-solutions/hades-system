@@ -14,12 +14,12 @@
 // rejected/) for doctrine propose-list / show
 // - persisted autonomy mode (in-memory atomic; survives requests but
 // not daemon restart — release promotes to a persisted projects table
-// entry per invariant)
+// entry per inv-hades-100)
 //
 // Design ground rules:
 //
 // - Methods that depend on data the daemon already owns (event log,
-// substrate_health, ADR files, zen-prev binary) wire 100% to live
+// substrate_health, ADR files, hades-prev binary) wire 100% to live
 // subsystems. No stubs.
 // - Methods that depend on a live in-flight build (Session,
 // Pool, PrunePool, SetDepth, Capture, Replay) return the truthful
@@ -197,7 +197,7 @@ func NewPlan5OrchestratorService(cfg Plan5OrchestratorServiceConfig) (*Plan5Orch
 
 	prevPath := cfg.PrevBinaryPath
 	if prevPath == "" && repoRoot != "" {
-		prevPath = filepath.Join(repoRoot, "bin", "zen-prev")
+		prevPath = filepath.Join(repoRoot, "bin", "hades-prev")
 	}
 
 	log := eventlog.New(cfg.Adapter, cfg.Clock)
@@ -427,12 +427,12 @@ func (s *Plan5OrchestratorService) AutonomyShow() (client.AutonomyShow, error) {
 	})
 
 	return client.AutonomyShow{
-		EffectiveMode:    res.Mode.String(),
-		ResolvedFrom:     resolvedFromLabel(res.Source),
-		DoctrineMode:     doctrineDefaultLabel(doct),
-		ZenswarmTOMLMode: "",
-		FlagMode:         flagModeStr,
-		CapaFirewallLock: res.Source == autonomy.SourceCapaFirewallGuard,
+		EffectiveMode:       res.Mode.String(),
+		ResolvedFrom:        resolvedFromLabel(res.Source),
+		DoctrineMode:        doctrineDefaultLabel(doct),
+		HadesSystemTOMLMode: "",
+		FlagMode:            flagModeStr,
+		CapaFirewallLock:    res.Source == autonomy.SourceCapaFirewallGuard,
 		CostDegradation: client.CostTierStatus{
 			CurrentTier: "none",
 			BudgetPct:   0.0,
@@ -527,7 +527,7 @@ func resolvedFromLabel(src autonomy.Source) string {
 	case autonomy.SourceBuildFlag:
 		return "flag"
 	case autonomy.SourceProjectConfig:
-		return "zenswarm_toml"
+		return "hadessystem_toml"
 	case autonomy.SourceDoctrineDefault:
 		return "doctrine"
 	case autonomy.SourceCapaFirewallGuard:

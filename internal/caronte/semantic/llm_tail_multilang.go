@@ -17,7 +17,7 @@ import (
 // resolveMultiLangTail sends the bounded set of unresolved interfaces (no
 // SCIP/heuristic implementation found) to the LLM via the C-2 single-egress
 // seam — the SAME CaronteDispatcher declares (Profile=local-code →
-// Ollama, §13, invariant/236). It records high-confidence disambiguations as
+// Ollama, §13, inv-hades-088/236). It records high-confidence disambiguations as
 // ConfLLMHint implements edges. Returns the count written.
 //
 // REUSE (not re-declaration): CaronteDispatcher, DefaultLLMProfile,
@@ -28,7 +28,7 @@ import (
 // (interface→concrete) rather than call edges.
 //
 // A nil dispatcher ⇒ ErrNoDispatcher (caller treats the tail as skipped,
-// invariant). A dispatcher error (Ollama down) is returned; the caller
+// inv-hades-234). A dispatcher error (Ollama down) is returned; the caller
 // swallows it (degrade, do not block). NEVER dials a backend directly.
 func (r *MultiLangResolver) resolveMultiLangTail(ctx context.Context, language string, unresolved []unresolvedSite) (int, error) {
 	if r.dispatcher == nil {

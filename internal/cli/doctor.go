@@ -5,14 +5,14 @@
 // to the existing release environment + daemon report.
 //
 // research, budget, audit, sshexec, doctrine, mcps, caronte) plus
-// preserves the aggregate `zen doctor` invocation that runs ALL
+// preserves the aggregate `hades doctor` invocation that runs ALL
 // sections in canonical order.
 //
 // Review I-2: the doctor namespace now wires
 // format.AttachFlags so `--json`, `--yaml`, `--quiet`, `--verbose`,
 // `--filter` work the same as every other release namespace. Output
 // switches to a structured `[]CheckResult` slice when --format != table
-// so operators automating `zen doctor --json | jq` get the same
+// so operators automating `hades doctor --json | jq` get the same
 // machine-parseable shape every namespace ships.
 package cli
 
@@ -86,7 +86,7 @@ func NewDoctorCmd() *cobra.Command {
 
 func buildDoctorFullConfig() doctorfull.Config {
 
-	udsPath := "/tmp/zen-swarm.sock"
+	udsPath := "/tmp/hades-system.sock"
 	emitterClient := client.New(udsPath)
 	emitter := NewDaemonAuditEmitter(emitterClient, nil)
 	return doctorfull.Config{
@@ -198,7 +198,7 @@ func doctorAggregateRunE(cmd *cobra.Command, _ []string) error {
 	if !daemonReachable {
 		allResults = append(allResults, CheckResult{
 			Section: "Daemon", Name: "daemon.reachable", Status: "fail",
-			Detail: "unreachable at " + udsPath, Hint: "zen daemon start",
+			Detail: "unreachable at " + udsPath, Hint: "hades daemon start",
 		})
 	} else {
 		allResults = append(allResults, CheckResult{

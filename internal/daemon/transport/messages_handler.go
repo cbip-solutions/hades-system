@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // MessagesHandler is the HTTP handler bound to /v1/messages by the daemon
-// wiring layer when an inbound request carries the X-Zen-Transport: zenswarm
-// header (set by the Python ZenSwarmTransport in plugin/zen-swarm/transports/).
+// wiring layer when an inbound request carries the X-HADES-Transport: hadessystem
+// header (set by the Python HadesSystemTransport in plugin/hades-system/transports/).
 //
 // Behaviour
 // 1. Decode JSON body into ForwardedRequest.
 // 2. Translate to providers.TierRequest (preserving SessionID, Profile,
 // Project, Model, IdempotencyKey, Body).
-// 3. Call dispatcher.Forward — single-egress chokepoint per invariant.
+// 3. Call dispatcher.Forward — single-egress chokepoint per inv-hades-088.
 // 4. On success: emit release Tessera audit anchor (best-effort; failure
 // does not block forwarding); encode response as ForwardedResponse;
 // write back to caller.
@@ -38,11 +38,11 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/providers"
 )
 
-const HeaderTransportSource = "X-Zen-Transport"
+const HeaderTransportSource = "X-HADES-Transport"
 
-const HeaderIdempotencyKey = "X-Zen-Idempotency-Key"
+const HeaderIdempotencyKey = "X-HADES-Idempotency-Key"
 
-const transportLabelZenSwarm = "zenswarm"
+const transportLabelHadesSystem = "hadessystem"
 
 // maxRequestBodyBytes caps the inbound body at 32 MiB. Large prompts (vision
 // payloads, multi-turn conversation history) MUST fit; truly oversized
@@ -188,7 +188,7 @@ func (d *dispatchFailure) auditPayload() map[string]any {
 }
 
 func (h *MessagesHandler) emitAnchor(r *http.Request, fwd ForwardedRequest, transportHdr string, outcome dispatchOutcome) string {
-	if transportHdr != transportLabelZenSwarm {
+	if transportHdr != transportLabelHadesSystem {
 		return ""
 	}
 	if h.anchor == nil {

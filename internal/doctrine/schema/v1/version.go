@@ -75,7 +75,7 @@ func ValidateSchemaVersion(version string) error {
 	}
 
 	if compareDottedVersion(version, schema.SupportedSchemaVersions[0]) < 0 {
-		return fmt.Errorf("%w: got %q; daemon supports %v; run 'zen doctrine migrate'", doctrineerrors.ErrSchemaVersionTooOld, version, schema.SupportedSchemaVersions)
+		return fmt.Errorf("%w: got %q; daemon supports %v; run 'hades doctrine migrate'", doctrineerrors.ErrSchemaVersionTooOld, version, schema.SupportedSchemaVersions)
 	}
 	return fmt.Errorf("%w: got %q; daemon supports %v", doctrineerrors.ErrSchemaVersionUnsupported, version, schema.SupportedSchemaVersions)
 }

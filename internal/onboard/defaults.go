@@ -24,7 +24,7 @@ func defaultGlobalDefaults() WizardDefaults {
 		EnableAuditChain:   true,
 		MCPSelections: []string{
 
-			"zen-swarm-ctld",
+			"hades-ctld",
 
 			"playwright",
 			"filesystem",
@@ -42,7 +42,7 @@ func defaultGreenfieldDefaults() WizardDefaults {
 		LinkHermesPlugin: true,
 		MCPSelections: []string{
 
-			"zen-swarm-ctld",
+			"hades-ctld",
 
 			"playwright",
 			"filesystem",

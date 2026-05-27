@@ -63,6 +63,6 @@ type AuditAnchor interface {
 	Emit(ctx context.Context, eventType string, payload map[string]any) (eventID string, err error)
 }
 
-const transportSourceLabel = "zenswarm-transport"
+const transportSourceLabel = "hadessystem-transport"
 
 var _ = redact.Marker

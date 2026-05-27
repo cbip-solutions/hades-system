@@ -6,10 +6,10 @@
 // Hard-removes the (ecosystem, version) row from ecosystem_versions and
 // cascade-deletes its chunks, chunks_fp32, symbols, changes, and FTS5
 // entries from ecosystem.db. The deleted data is rebuildable via
-// `zen docs reindex --ecosystem <X> --version <Y>`.
+// `hades docs reindex --ecosystem <X> --version <Y>`.
 //
 // Pinned versions (indefinite_retain=true) are refused with 409 Conflict;
-// the operator must `zen docs unpin` first. The CLI safety gate (promptYN
+// the operator must `hades docs unpin` first. The CLI safety gate (promptYN
 // confirmation) is enforced upstream in docs_prune.go RunDocsPrune; this
 // handler is the unguarded transport.
 //

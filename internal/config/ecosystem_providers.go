@@ -5,7 +5,7 @@
 // provider config files release ingester + retrieval pipeline consume at
 // daemon startup.
 //
-// Files live at ~/.config/zen-swarm/providers/ (operator home) — NOT in
+// Files live at ~/.config/hades-system/providers/ (operator home) — NOT in
 // the repo. Missing files use the embedded Go defaults; well-formed files
 // override per-field; malformed files fail Load* with a typed error so
 // daemon-startup surfaces the misconfig before reaching the dispatch
@@ -18,7 +18,7 @@
 // - ecosystem-embedder.toml — Embedding model
 // (jina-code-embeddings-1.5b / MPS primary; voyage-code-3 fallback)
 // - ecosystem-reranker.toml — Reranker + per-ecosystem λ map
-//
+// (BGE-reranker-v2-m3; inv-hades-198 ≤300ms; inv-hades-196 λ tunable)
 // - ecosystem-router.toml — Local classifier + heuristic
 // pre-filter (no LLM; single-egress doctrine preserved)
 // - ecosystem-version-detect.toml — 5-layer cascade
@@ -234,7 +234,7 @@ func ValidateEcosystemRerankerConfig(cfg *EcosystemRerankerConfig) error {
 	}
 	for eco, lambda := range cfg.Abstention.Lambda {
 		if lambda < 0 {
-			return fmt.Errorf("ecosystem-reranker: abstention.lambda[%q] = %v must be non-negative (inv-zen-196)", eco, lambda)
+			return fmt.Errorf("ecosystem-reranker: abstention.lambda[%q] = %v must be non-negative (inv-hades-196)", eco, lambda)
 		}
 	}
 	return nil

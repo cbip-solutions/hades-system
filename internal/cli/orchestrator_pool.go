@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — orchestrator_pool.go.
 //
-// `zen orchestrator pool {status,prune}` exposes the worktree pool
+// `hades orchestrator pool {status,prune}` exposes the worktree pool
 // surface from Q3 + Q4 — pool counts, leased / elastic / orphan
 // snapshot, and an explicit GC trigger via prune.
 package cli

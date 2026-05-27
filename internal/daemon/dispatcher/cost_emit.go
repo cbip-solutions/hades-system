@@ -36,7 +36,7 @@
 // worker to terminate (unlike the plan-reference's "Flush == Close"
 // conflation, which would prevent post-flush emission).
 //
-// Boundary: this file imports stdlib only. The CostSink
+// Boundary (inv-hades-031): this file imports stdlib only. The CostSink
 // interface is the seam that lets dispatcheradapter bridge
 // to internal/store without violating the no-direct-store rule for the
 // dispatcher package.

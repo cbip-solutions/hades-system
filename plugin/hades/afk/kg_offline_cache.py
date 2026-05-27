@@ -11,7 +11,7 @@ def _privacy_filter_passes(
     entry: OfflineCacheEntry,
     project_id: str,
 ) -> bool:
-    """Privacy filter — capa-firewall isolation per invariant.
+    """Privacy filter — capa-firewall isolation per inv-hades-163.
 
     Defense-in-depth layer 4 per spec §8.3: storage / query /
     serialization / **AFK cache** / audit. Even if a cross-project entry

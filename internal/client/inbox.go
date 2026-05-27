@@ -3,7 +3,7 @@
 //
 // Three methods + supporting wire types for the daemon's
 // /v1/inbox/* surface backing the operator-facing
-// `zen inbox` CLI:
+// `hades inbox` CLI:
 //
 // InboxList POST /v1/inbox/list — filter + decode []InboxCacheRow
 // InboxAck POST /v1/inbox/ack — set AckedAt = now on id

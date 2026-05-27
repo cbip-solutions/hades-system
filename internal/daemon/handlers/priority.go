@@ -9,12 +9,12 @@
 //
 // These operate on the priority_overrides table via
 // internal/quota.OverrideStore (concrete: internal/daemon/quotaadapter)
-// per invariant: this package never imports internal/quota types
+// per inv-hades-031: this package never imports internal/quota types
 // transitively from internal/store; the adapter does the field copy.
 //
 // Status-code mapping (mirrors the projects_p7 + budget_plan4 patterns):
 //
-// 503 — OverrideStore() not yet wired (cmd/zen-swarm-ctld registers
+// 503 — OverrideStore() not yet wired (cmd/hades-ctld registers
 // the adapter at boot; tests inject fakes via SetOverrideStore).
 // 400 — invalid JSON / required fields missing.
 // 422 — quota.ErrInvalidOverride: validation rejected the input

@@ -32,7 +32,7 @@ const binaryHeadBytes = 4096
 // (Doc returned, FrontmatterJSON nil); only ErrBinaryContent and
 // hard I/O errors propagate.
 //
-// Per invariant: Parse MUST NOT populate AuditChainAnchor /
+// Per inv-hades-130: Parse MUST NOT populate AuditChainAnchor /
 // EcosystemJoinKeys / CaronteSymbolRefs even if the operator's YAML
 // frontmatter contains keys with those names. release / release / caronte
 // are the authoritative writers for those fields.
@@ -50,7 +50,7 @@ const binaryHeadBytes = 4096
 //
 // Boundary this function uses stdlib + gopkg.in/yaml.v3 only. No
 // internal/store import (separate-DB boundary per knowledge package
-// docs). No net/http.
+// docs). No net/http (inv-hades-129 no remote queries).
 func Parse(sf ScannedFile) (Doc, error) {
 	raw, err := os.ReadFile(sf.Path)
 	if err != nil {
@@ -69,7 +69,7 @@ func Parse(sf ScannedFile) (Doc, error) {
 		LastModified: time.Unix(0, sf.ModTime).UTC(),
 		LastIndexed:  time.Now().UTC(),
 		// Extension-hook fields LEFT AS ZERO sql.NullString (Valid=false).
-		// invariant: parser MUST NOT populate. release (audit_chain_anchor),
+		// inv-hades-130: parser MUST NOT populate. release (audit_chain_anchor),
 		// are the authoritative writers at materialization time.
 		AuditChainAnchor:  sql.NullString{},
 		EcosystemJoinKeys: sql.NullString{},

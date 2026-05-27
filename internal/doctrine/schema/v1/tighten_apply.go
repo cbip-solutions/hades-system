@@ -39,7 +39,7 @@ func (e *RequiresOperatorConfirmation) Error() string {
 	return fmt.Sprintf("doctrine: rule %s change requires operator confirmation: %s", e.RulePath, e.Reason)
 }
 
-// ValidateTighten enforces invariant — per-project overrides MUST be
+// ValidateTighten enforces inv-hades-136 — per-project overrides MUST be
 // tighten-only relative to baseline. Returns nil if all leaves pass; returns
 // an error wrapping every offending field's *TightenViolation otherwise.
 //

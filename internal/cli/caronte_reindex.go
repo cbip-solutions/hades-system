@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package cli — caronte_reindex.go.
 //
-// `zen caronte reindex [project] [--all]` triggers a full reindex of one
+// `hades caronte reindex [project] [--all]` triggers a full reindex of one
 // project (or every registered project with --all). The CLI POSTs the
-// daemon's /v1/caronte/reindex endpoint with the X-Zen-Project-ID
+// daemon's /v1/caronte/reindex endpoint with the X-HADES-Project-ID
 // header; the daemon resolves the alias→canonical id_sha256 and
 // delegates to the engine's IndexProject method.
 //
@@ -13,9 +13,9 @@
 // 2. positional [project] alias-or-id used verbatim as the header value.
 // 3. neither → CLI uses os.Getwd() as the alias; the daemon's resolver
 // matches against projects_alias.canonical_path (the same trick
-// `zen project doctor` uses for cwd-based resolution).
+// `hades project doctor` uses for cwd-based resolution).
 //
-// invariant: the CLI does NOT pre-resolve aliases — the daemon-side
+// inv-hades-277: the CLI does NOT pre-resolve aliases — the daemon-side
 // handler is the single source of truth. This keeps the CLI thin (no
 // store dependency) and the alias-resolution rules co-located with the
 // projects_alias table.
@@ -82,21 +82,21 @@ Output is the IndexReport (counts, languages, duration); --format json
 emits raw JSON for piping.
 
 Closes the dangling hint at internal/cli/doctor_caronte.go:52
-("trigger reindex: zen caronte reindex <project>").`,
+("trigger reindex: hades caronte reindex <project>").`,
 		Example: `  # Reindex the project anchored at cwd
-  zen caronte reindex
+  hades caronte reindex
 
   # Reindex an explicit alias
-  zen caronte reindex <alias>
+  hades caronte reindex <alias>
 
   # Reindex by canonical id
-  zen caronte reindex abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+  hades caronte reindex abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
 
   # Reindex every registered project (sequential)
-  zen caronte reindex --all
+  hades caronte reindex --all
 
   # JSON output for piping into jq
-  zen caronte reindex --format json | jq '.files_indexed'`,
+  hades caronte reindex --format json | jq '.files_indexed'`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

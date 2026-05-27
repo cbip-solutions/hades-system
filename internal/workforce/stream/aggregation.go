@@ -316,7 +316,7 @@ func (s *AggregationStream) Start(ctx context.Context) error {
 // callback (registered via OnPersistError); they do NOT cause Publish to
 // fail because the event is already in w.events and will be re-persisted
 // or batched by the next flush. This matches the noopPersist + best-effort
-// recovery semantics required by invariant (durability via WAL + flush).
+// recovery semantics required by inv-hades-073 (durability via WAL + flush).
 func (s *AggregationStream) Publish(ctx context.Context, layer Layer, event Event) error {
 	select {
 	case <-s.stopped:

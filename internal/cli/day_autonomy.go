@@ -15,7 +15,7 @@
 // GET /v1/safetynet/status + /v1/orchestrator/pool — substrate + pool
 //
 // internal/cli/brief.go is a notImplementedCmd stub; the morning brief
-// surface is `zen day`, so N-7 extends day.go's
+// surface is `hades day`, so N-7 extends day.go's
 // inline RunE rather than adding a new top-level command.
 package cli
 
@@ -56,7 +56,7 @@ func newMorningBriefAutonomyRenderer(baseURL string) func(ctx context.Context) (
 				ts := time.Unix(sess.LastTransitionAt, 0).Format("15:04")
 				fmt.Fprintf(&b, "     - State: %s since %s\n", sess.State, ts)
 				if sess.State == "WAITING_FOR_CONFIRMATION" && len(sess.RecentTransitions) > 0 {
-					fmt.Fprintf(&b, "     - Action needed: zen confirmation show %s\n",
+					fmt.Fprintf(&b, "     - Action needed: hades confirmation show %s\n",
 						sess.RecentTransitions[len(sess.RecentTransitions)-1].Reason)
 				}
 			}
@@ -76,7 +76,7 @@ func newMorningBriefAutonomyRenderer(baseURL string) func(ctx context.Context) (
 			}
 			fmt.Fprintf(&b, "   Pending amendments: %d", pending)
 			if pending > 0 {
-				fmt.Fprintf(&b, " (%s - %s; review: zen doctrine propose-show %s)",
+				fmt.Fprintf(&b, " (%s - %s; review: hades doctrine propose-show %s)",
 					firstID, firstTitle, firstID)
 			}
 			b.WriteString("\n")

@@ -137,7 +137,7 @@ func (w *Watcher) AddProject(projectRoot string) error {
 			return nil
 		}
 		base := d.Name()
-		if base == ".git" || base == "vendor" || base == "node_modules" || base == ".zen" {
+		if base == ".git" || base == "vendor" || base == "node_modules" || base == ".hades" {
 			return filepath.SkipDir
 		}
 		_ = w.fs.Add(path)

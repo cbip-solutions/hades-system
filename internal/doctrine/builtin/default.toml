@@ -1,6 +1,6 @@
 # internal/doctrine/builtin/default.toml
 #
-# zen-swarm built-in doctrine: default.
+# hades-system built-in doctrine: default.
 #
 # Doctrine principle: balanced — tighter bounds than max-scope, more
 # cost-aware (degrades earlier), but permissive enough for most autonomous
@@ -20,7 +20,7 @@ doctrine_version = "1.0.0"
 auto_upgrade = "patch"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Doctrine transverse axioms — Q3 C Tier 1 + invariant
+# Doctrine transverse axioms — Q3 C Tier 1 + inv-hades-135
 # Hardcoded operator-only.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -156,11 +156,11 @@ urgent_bypasses_quiet_hours = true
 info_immediate_during_quiet = "queue"
 
 # ──────────────────────────────────────────────────────────────────────────
-# zen day cadence — the release design Q13 C verbatim (R5)
+# hades day cadence — the release design Q13 C verbatim (R5)
 # default: 0 8/18 * * 1-5 + if_within_hours 2/4 (asymmetric morning/EOD).
 # ──────────────────────────────────────────────────────────────────────────
 
-[zen_day_cadence]
+[hades_day_cadence]
 # release track R5 ack — default: the release design Q13 C verbatim.
 morning_brief_cron = "0 8 * * 1-5"
 morning_brief_if_within_hours = 2
@@ -208,11 +208,11 @@ overcommit_policy = "queue"
 
 [knowledge]
 hive_doc_cadence_hours = 24
-obsidian_vault_path = "~/Obsidian/zen-swarm-default"
+obsidian_vault_path = "~/Obsidian/hades-system-default"
 cross_project_aggregator_enabled = false
 
 # ──────────────────────────────────────────────────────────────────────────
-# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + invariant)
+# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + inv-hades-084)
 # default: no tools disabled — balanced posture allows full surface.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -235,7 +235,7 @@ cross_project_scope = "opt-in"
 # Renderers — the release design release track M-5 platform-renderer enable matrix.
 # default: all 7 platforms enabled (mirror of max-scope; balanced doctrine
 # does not restrict surface). Replaces hardcoded _DOCTRINE_ENABLED matrix
-# in plugin/zen-swarm/renderers/__init__.py.
+# in plugin/hades-system/renderers/__init__.py.
 # ──────────────────────────────────────────────────────────────────────────
 
 [renderers]

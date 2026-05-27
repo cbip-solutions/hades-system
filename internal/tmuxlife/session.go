@@ -56,7 +56,7 @@ func SessionName(alias, sha8 string) string {
 	if !isValidSha8(sha8) {
 		panic(fmt.Sprintf("tmuxlife.SessionName: sha8 %q is not 8 lowercase hex chars", sha8))
 	}
-	return "zen-" + alias + "-" + sha8
+	return "hades-" + alias + "-" + sha8
 }
 
 func isValidSha8(s string) bool {
@@ -72,7 +72,7 @@ func isValidSha8(s string) bool {
 	return true
 }
 
-// SessionStore is the invariant boundary interface: tmuxlife declares
+// SessionStore is the inv-hades-031 boundary interface: tmuxlife declares
 // what it needs from storage; the daemon implements via *store.Store
 // .
 //
@@ -103,7 +103,7 @@ type SessionStore interface {
 	// stale row); the poller treats this as "no expectation" and
 	// emits no drift, NOT as an error.
 	// - The poller iterates DaemonOwnedWindows; only those keys are
-	// consulted. invariant: implementations MUST never return
+	// consulted. inv-hades-118: implementations MUST never return
 	// WindowScratch as a key (compile-time guarded by the poller's
 	// iteration over DaemonOwnedWindows, but a defense-in-depth
 	// check at the implementation site is good practice).

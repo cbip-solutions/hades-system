@@ -8,4 +8,4 @@ syntax = "proto3";
 
 package comments_only.v1;
 
-option go_package = "github.com/zen-swarm/example/co/v1;cov1";
+option go_package = "github.com/hades-system/example/co/v1;cov1";

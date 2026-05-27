@@ -7,25 +7,25 @@
 // and structured payload schema. Implements the AuditEmitter interface
 // consumed by exec.Run.
 //
-// invariant (no-loss): every emit attempt has two paths inside the
+// inv-hades-083 (no-loss): every emit attempt has two paths inside the
 // underlying EmitClient:
 //
 // 1. POST <daemon>/v1/audit/emit (3 retries built into client.Do)
 // 2. on 5xx / dial failure: append JSONL line to the buffer file
-// <bufDir>/zen-mcp-ssh-exec-emit-buffer-<pid>.jsonl
+// <bufDir>/hades-mcp-ssh-exec-emit-buffer-<pid>.jsonl
 //
 // EmitClient does NOT return an error when the daemon path
 // fails — it falls back to the buffer file silently (so callers in the
 // MCP tool path never block). When BOTH paths fail, the EmitClient
 // writes a stderr log line and returns nil — events are NEVER silently
-// dropped (invariant satisfied; the stderr line is the audit trail of
+// dropped (inv-hades-083 satisfied; the stderr line is the audit trail of
 // the trail).
 //
 // Emitter is a thin typed wrapper: build the JSON payload for
 // each ssh_exec.* event type, hand it to EmitClient.Emit, surface
 // nothing else.
 //
-// Boundary: imports only stdlib + internal/mcp/client.
+// Boundary (inv-hades-031): imports only stdlib + internal/mcp/client.
 
 package sshexec
 

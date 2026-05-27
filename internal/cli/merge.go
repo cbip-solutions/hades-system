@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package cli — merge.go.
 //
-// `zen merge` exposes 8 operator subcommands surfacing the release
+// `hades merge` exposes 8 operator subcommands surfacing the release
 // merge.MergeEngine (Phases A-E) into the CLI:
 //
-// zen merge inspect <generation_id|request_hash> # outcome + scoring + events
-// zen merge replay <session_id> # re-run from captured eventlog
-// zen merge score-explain <outcome_id> # why this winner
-// zen merge baseline show <session_id> # passing_set + duration
-// zen merge cache status # size + hit rate + last rebuild
-// zen merge cache clear # in-memory clear (warns)
-// zen merge config show # effective doctrine merge config
-// zen merge anomaly list [--since <duration>] # rolling-window anomaly events
+// hades merge inspect <generation_id|request_hash> # outcome + scoring + events
+// hades merge replay <session_id> # re-run from captured eventlog
+// hades merge score-explain <outcome_id> # why this winner
+// hades merge baseline show <session_id> # passing_set + duration
+// hades merge cache status # size + hit rate + last rebuild
+// hades merge cache clear # in-memory clear (warns)
+// hades merge config show # effective doctrine merge config
+// hades merge anomaly list [--since <duration>] # rolling-window anomaly events
 //
 // Each subcommand calls a daemon HTTP endpoint via the MergeClient
 // interface. F-2 originally declared the wire DTOs + interface IN this
@@ -32,7 +32,7 @@
 // (no separate EvtMergeCacheRebuildFailed).
 // - Drift F — Event/Payload shape consumed verbatim via json.Unmarshal.
 //
-// invariant preserved: this CLI never imports internal/orchestrator/merge/
+// inv-hades-104 preserved: this CLI never imports internal/orchestrator/merge/
 // — wire DTOs are pure JSON-tagged value types, decoupled from domain types.
 package cli
 

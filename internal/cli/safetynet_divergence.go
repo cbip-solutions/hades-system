@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — safetynet_divergence.go.
 //
-// `zen safetynet divergence {run,history}` triggers and inspects the
+// `hades safetynet divergence {run,history}` triggers and inspects the
 // config-divergence audit (Q2 C element 2). Run is on-demand (POST);
 // history pulls recent reports from the daemon's persistence.
 package cli

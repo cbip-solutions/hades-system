@@ -50,7 +50,7 @@ type sthSubscriber interface {
 }
 
 // NewProjectAdapter constructs an Adapter for the given project_id
-// rooted at `root` (typically ~/.local/share/zen-swarm) using the
+// rooted at `root` (typically ~/.local/share/hades-system) using the
 // supplied Config. It creates the on-disk directory tree (0700)
 // under root/projects/<id>/audit/tessera/{checkpoints,seq}. The tile/
 // subtree (singular) is created on-demand by the Tessera POSIX driver
@@ -58,7 +58,7 @@ type sthSubscriber interface {
 // opens the POSIX storage backend, and wires the Tessera Appender +
 // LogReader.
 //
-// Returns ErrEmptyProjectID if projectID is empty,
+// Returns ErrEmptyProjectID if projectID is empty (inv-hades-144),
 // ErrInvalidConfig if cfg.Validate fails, and any os/Tessera error
 // surfacing during construction. On any error the partially-allocated
 // resources (storage, appender) are released before return so we
@@ -242,7 +242,7 @@ func (a *Adapter) WitnessCoSignSeal(ctx context.Context, leafID LeafID, payload 
 // it through chain.SealAppender; this method is the production
 // implementation behind the interface.
 //
-// invariant alignment: only signing surface is Witness.Sign; this
+// inv-hades-145 alignment: only signing surface is Witness.Sign; this
 // adds a VERIFY surface (read-only, separate concern) — the witness
 // private key never leaves the backend on this path. The verify uses
 // the public-half via Witness.Load + tessera.VerifyWithPubkey, which

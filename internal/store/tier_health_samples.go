@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // tier_health_samples.go — CRUD for the tier_health_samples table (release
-// ; migration 065; invariant).
+// ; migration 065; inv-hades-214).
 //
 // tier_health_samples is the per-provider health observability layer. One
 // row per backend outcome — written by the dispatcher (cascade attempt
 // outcomes) via the dispatcheradapter boundary bridge, and by the
 // RecoveryScheduler (circuit-breaker probe outcomes). The operator-facing
-// `zen orchestrator status` reads QueryTierHealthSamples to render
+// `hades orchestrator status` reads QueryTierHealthSamples to render
 // per-provider success-rate + latency.
 //
-// Boundary: this file is in package store. The orchestrator /
+// Boundary (inv-hades-031): this file is in package store. The orchestrator /
 // dispatcher packages MUST NOT import it directly — the
 // dispatcheradapter.TierHealthSampleAdapter (Task 14) is the bridge.
 //

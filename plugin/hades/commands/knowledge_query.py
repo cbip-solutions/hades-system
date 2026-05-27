@@ -12,7 +12,7 @@ You are running a federated cross-project knowledge query in HADES. Wraps the re
 ```bash
 SCOPE="{scope}"
 # pending endpoint registration: /v1/project/active resolves active project alias
-PROJECT=$(curl --unix-socket /tmp/zen-swarm.sock -s http://unix/v1/project/active)
+PROJECT=$(curl --unix-socket /tmp/hades-system.sock -s http://unix/v1/project/active)
 ```
 
 Scope values:
@@ -25,7 +25,7 @@ Scope values:
 
 ```bash
 # pending endpoint registration: knowledge query (POST) federates aggregator.Query() across projects
-curl --unix-socket /tmp/zen-swarm.sock \\
+curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
      -d '{{"pattern":"{pattern}","scope":"'"$SCOPE"'","realtime":false}}' \\
@@ -38,7 +38,7 @@ Daemon dispatches to the release design D `aggregator.Query()`:
 
 ## 3. Privacy filter at retrieval boundary
 
-Per the release design invariant + the release design §3.4 doctrine.knowledge.cross_project:
+Per the release design inv-hades-163 + the release design §3.4 doctrine.knowledge.cross_project:
 - capa-firewall projects: visible only to other capa-firewall sessions (self-only)
 - max-scope ↔ max-scope OR default ↔ default: bidirectional
 - max-scope ↔ default: bidirectional
@@ -56,15 +56,15 @@ Scope: <SCOPE> | Realtime: <true|false>
 
 1. [project=<P1>, file=<F1>, score=<S1>]
    <result_summary>
-   Audit: zen://audit/<event_id>
+   Audit: hades://audit/<event_id>
 
 ## Privacy filter
 - Filtered <privacy_filtered_count> results due to capa-firewall doctrine
 - Visible projects: <count> / <total>
-- Inv anchor: invariant
+- Inv anchor: inv-hades-163
 
 ## Audit chain anchor
-zen://audit/<aggregate_event_id>
+hades://audit/<aggregate_event_id>
 ```
 
 ## 5. Token budget enforcement
@@ -86,8 +86,8 @@ Cache: lane1=hit | lane2=miss | lane3=hit | lane4=miss | lane5=hit
 
 - spec §9.1 the release design D substrate consumption (aggregator.Query)
 - spec §3.4 doctrine.knowledge.cross_project schema
-- invariant augmentation cross-project privacy boundary
-- invariant augmentation budget gate
+- inv-hades-163 augmentation cross-project privacy boundary
+- inv-hades-167 augmentation budget gate
 - /knowledge-promote (companion command)
 """
 

@@ -4,7 +4,7 @@
 // manual restart of one MCP child managed by the daemon's mcpgateway.
 // Use this when a stuck child needs a manual nudge; daemon's normal
 // health-probe + rate-limited auto-restart governor handles the
-// majority of cases automatically.
+// majority of cases automatically (per inv-hades-168).
 //
 // Closed set of valid MCP names:
 // - research (code_graph + research MCP)
@@ -13,7 +13,7 @@
 // - sshexec
 // - codegen
 //
-// caronte is in-process — no restart-mcp entry; use 'zen doctor caronte' for engine health.
+// caronte is in-process — no restart-mcp entry; use 'hades doctor caronte' for engine health.
 package cli
 
 import (
@@ -68,20 +68,20 @@ func NewDaemonRestartMCPCmd(factory MCPRestartClientFactory) *cobra.Command {
 		Short: "Manually restart one MCP child (research|budget|audit|sshexec|codegen)",
 		Long: `Trigger a manual restart of one MCP child managed by the daemon's
 mcpgateway. Use this when a stuck child needs a nudge; the daemon's
-normal health-probe + rate-limited auto-restart governor (inv-zen-168)
+normal health-probe + rate-limited auto-restart governor (inv-hades-168)
 handles most cases automatically.
 
 The daemon enforces a per-child restart rate-limit (3 restarts in 5
 minutes). Hitting the limit returns 429; the CLI surfaces a recoverable
 error pointing at the rate-limit window.
 
-Note: caronte is in-process (Plan 19) — use 'zen doctor caronte' for
+Note: caronte is in-process (Plan 19) — use 'hades doctor caronte' for
 engine health instead of restart-mcp.`,
 		Example: `  # Restart the research MCP
-  zen daemon restart-mcp research
+  hades daemon restart-mcp research
 
   # Restart the budget MCP
-  zen daemon restart-mcp budget`,
+  hades daemon restart-mcp budget`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -129,7 +129,7 @@ func classifyMCPRestartError(err error) error {
 	}
 	if client.IsHTTPStatus(err, http.StatusTooManyRequests) {
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err,
-			"restart-mcp: rate-limit hit (per inv-zen-168 — 3 restarts in 5min); wait and retry"))
+			"restart-mcp: rate-limit hit (per inv-hades-168 — 3 restarts in 5min); wait and retry"))
 	}
 	if client.IsHTTPStatus(err, http.StatusUnprocessableEntity) {
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, "restart-mcp: daemon rejected request"))

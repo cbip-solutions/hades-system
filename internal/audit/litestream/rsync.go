@@ -48,7 +48,7 @@ func NewRsyncScheduler(starter ExecStarter) *RsyncScheduler {
 }
 
 // StartProject schedules rsync for project_id from the local Tessera
-// directory tree to s3://zen-swarm-audit-<project_id>/tessera/. env is
+// directory tree to s3://hades-system-audit-<project_id>/tessera/. env is
 // the AWS env vars (AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY +
 // AWS_DEFAULT_REGION) provided by LifecycleManager.AwsEnvForProject;
 // nil/empty env means the subprocess inherits the parent's environment
@@ -149,7 +149,7 @@ func (s *RsyncScheduler) runOnce(ctx context.Context, projectID, tesseraDir stri
 	if s.starter == nil {
 		return
 	}
-	bucket := "s3://zen-swarm-audit-" + projectID + "/tessera/"
+	bucket := "s3://hades-system-audit-" + projectID + "/tessera/"
 	cmd := s.starter(ctx, "aws", "s3", "sync", tesseraDir, bucket, "--delete", "--quiet")
 	if len(env) > 0 {
 		cmd.Env = append(append([]string(nil), os.Environ()...), env...)

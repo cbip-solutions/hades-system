@@ -8,7 +8,7 @@
 //
 // This file narrows those typed clients into the
 // research-package-local BudgetClient + AuditClient interfaces.
-// The type system enforces the boundary.
+// The type system enforces the boundary (inv-hades-031).
 package research
 
 import (

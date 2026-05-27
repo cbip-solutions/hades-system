@@ -3,8 +3,8 @@
 //
 // Operator-facing admin endpoints layered on top of the research
 // cache primitives. These are NOT used by the research MCP (it uses
-// /v1/research/cache/{get,set}); they exist solely so `zen research
-// cache {list, clear, stats}` and `zen research show <hash>` can surface
+// /v1/research/cache/{get,set}); they exist solely so `hades research
+// cache {list, clear, stats}` and `hades research show <hash>` can surface
 // the cache to operators.
 //
 // GET /v1/research/cache/list — recent entries (limit/offset)
@@ -12,8 +12,8 @@
 // GET /v1/research/cache/stats — aggregate size + age stats
 // GET /v1/research/cache/show?hash=<sha> — raw row including JSON body
 //
-// invariant: Unix socket only.
-// invariant: never imports internal/store directly; ResearchCacheAdminCtx
+// inv-hades-001: Unix socket only.
+// inv-hades-031: never imports internal/store directly; ResearchCacheAdminCtx
 // is the bridge.
 package handlers
 

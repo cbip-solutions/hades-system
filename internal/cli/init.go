@@ -3,10 +3,10 @@
 //
 // Surface brownfield attach to an existing repo. Delegates
 // recognize for inference + onboard.Wizard with WizardKindBrownfield
-// + writes.zen/{config,scaffold}.toml + optional.hermes/plugins/ symlink.
+// + writes.hades/{config,scaffold}.toml + optional.hermes/plugins/ symlink.
 //
 // brownfield is ADDITIVE ONLY: never overwrites operator source files
-// (only writes inside.zen/ +.hermes/).
+// (only writes inside.hades/ +.hermes/).
 //
 // drift adjustments vs plan §"Tech Stack":
 // - Plan §3416 sets `defaults.RecognizeResult = &result`. Field does
@@ -52,7 +52,7 @@ const sidecarsExampleAsset = `# Example sidecars.toml — copy to ~/.config/hade
 # Anthropic Max-subscription integration. Per decisión 17-i, the default
 # install path uses the Plan 16 provider cascade (Anthropic paygo +
 # Gemini + OpenRouter direct backends); this section is only needed for
-# operators who run the private bypass sidecar binary (zen-bypass-tier1).
+# operators who run the private bypass sidecar binary (hades-bypass-tier1).
 #
 # Path resolution:
 #   $XDG_CONFIG_HOME/hades/sidecars.toml     (when XDG_CONFIG_HOME is set)
@@ -94,35 +94,35 @@ func NewInitCmd() *cobra.Command {
 		Short: "Attach HADES to an existing project (brownfield)",
 		Long: `Attach HADES + Hermes plugin scaffolding to an existing project.
 
-zen init runs inside an existing project's cwd. It:
+hades init runs inside an existing project's cwd. It:
   1. Walks UP to the workspace root (monorepo-aware: pnpm-workspace.yaml,
      go.work, turbo.json, nx.json, Cargo.toml [workspace], etc.).
   2. Infers language + framework + monorepo + maturity via three-tier
      recognize (manifest > config > glob).
   3. Confirms the inference with the operator (Y/n).
-  4. Writes .zen/config.toml + .zen/scaffold.toml (additive only; never
+  4. Writes .hades/config.toml + .hades/scaffold.toml (additive only; never
      overwrites operator source).
   5. Optionally symlinks .hermes/plugins/<project-name>/ for project-
      scope Hermes plugin discovery (Q13=D opt-in).
 
-For greenfield projects (no existing code), use ` + "`zen new`" + `.
-To import an existing claude-code install, use ` + "`zen migrate claude-code`" + `.
+For greenfield projects (no existing code), use ` + "`hades new`" + `.
+To import an existing claude-code install, use ` + "`hades migrate claude-code`" + `.
 
 EXIT CODES:
   0  success
-  1  operator-recoverable (invalid flag, .zen/config.toml exists, non-interactive
+  1  operator-recoverable (invalid flag, .hades/config.toml exists, non-interactive
      without --accept-inference)
   2  unrecoverable (generic I/O, recognize failure)
   3  preflight failure (Hermes missing)
 `,
 		Example: `  # Interactive: walk-up + recognize + confirm:
-  zen init
+  hades init
 
   # Accept inference and proceed:
-  zen init --accept-inference
+  hades init --accept-inference
 
   # CI-friendly:
-  zen init --non-interactive --accept-inference --yes`,
+  hades init --non-interactive --accept-inference --yes`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 			if ctx == nil {
@@ -143,7 +143,7 @@ EXIT CODES:
 	cmd.Flags().BoolVar(&nonInteractive, "non-interactive", false, "Fail loudly on missing required answer")
 	cmd.Flags().BoolVar(&yes, "yes", false, "Skip Y/N confirmations (assume yes)")
 	cmd.Flags().BoolVar(&resetPrefs, "reset-preferences", false, "Force customize path; ignore persisted prefs")
-	cmd.Flags().BoolVar(&forceMerge, "force-merge", false, "Merge into existing .zen/config.toml (default: error)")
+	cmd.Flags().BoolVar(&forceMerge, "force-merge", false, "Merge into existing .hades/config.toml (default: error)")
 	cmd.Flags().BoolVar(&noPluginLink, "no-plugin-link", false, "Skip .hermes/plugins/ symlink (advanced)")
 	cmd.Flags().BoolVar(&withSidecarsExample, "with-sidecars-example", false, "Seed ~/.config/hades/sidecars.toml from the bundled example when absent (Plan 15 Phase B Tier 1 sidecar opt-in)")
 	return cmd
@@ -204,10 +204,10 @@ func runInit(ctx context.Context, cmd *cobra.Command, args initArgs) error {
 		}
 	}
 
-	cfgPath := filepath.Join(workspaceRoot, ".zen", "config.toml")
+	cfgPath := filepath.Join(workspaceRoot, ".hades", "config.toml")
 	if _, statErr := os.Stat(cfgPath); statErr == nil && !args.forceMerge {
 		fmt.Fprintf(stderr, "error: %s exists; pass --force-merge to merge, or remove first\n", cfgPath)
-		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable(".zen/config.toml exists: %s", cfgPath))
+		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable(".hades/config.toml exists: %s", cfgPath))
 	}
 
 	mode := onboard.ModeCustomize
@@ -267,7 +267,7 @@ func runInit(ctx context.Context, cmd *cobra.Command, args initArgs) error {
 //
 // Tier 1 sidecar opt-in scaffolding. The default install path uses the
 // providers.toml cascade (no sidecars.toml needed); operators who run the
-// private zen-bypass-tier1 sidecar pass --with-sidecars-example to seed a
+// private hades-bypass-tier1 sidecar pass --with-sidecars-example to seed a
 // starter file they can hand-edit.
 func seedSidecarsExample(stdout, stderr io.Writer) error {
 	path := config.SidecarsPath()
@@ -403,7 +403,7 @@ func defaultDoctrineFor(r recognize.Result) string {
 }
 
 func writeBrownfieldScaffold(root string, a onboard.WizardAnswers, r recognize.Result) error {
-	zenDir := filepath.Join(root, ".zen")
+	zenDir := filepath.Join(root, ".hades")
 	if err := os.MkdirAll(zenDir, 0o755); err != nil {
 		return err
 	}
@@ -458,11 +458,11 @@ func promptInitInferenceYN(in io.Reader, out io.Writer, q string) bool {
 
 func printInitNextSteps(w io.Writer, root string, a onboard.WizardAnswers) {
 	fmt.Fprintln(w)
-	fmt.Fprintln(w, "zen init complete.")
+	fmt.Fprintln(w, "hades init complete.")
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Next steps:")
-	fmt.Fprintf(w, "  1. Review .zen/config.toml at %s\n", root)
-	fmt.Fprintln(w, "  2. Run `zen doctor full` to verify the installation")
+	fmt.Fprintf(w, "  1. Review .hades/config.toml at %s\n", root)
+	fmt.Fprintln(w, "  2. Run `hades doctor full` to verify the installation")
 	fmt.Fprintln(w, "  3. Run `hermes plugins list` to confirm registration")
 	if a.LinkHermesPlugin {
 		fmt.Fprintln(w, "     (project-scope plugin link installed at .hermes/plugins/)")

@@ -65,7 +65,7 @@ func (r *AmendmentReverter) headSHA(ctx context.Context) (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
-// Revert is the operator-initiated path (`zen doctrine revert ADR-NNNN`).
+// Revert is the operator-initiated path (`hades doctrine revert ADR-NNNN`).
 // It locates the amendment commit, runs `git revert --no-edit`, issues
 // the doctrine reload signal, and emits DoctrineAmendmentReverted.
 //
@@ -107,10 +107,10 @@ func (r *AmendmentReverter) Rollback(ctx context.Context, adrID int, expectedPre
 	if err := r.cfg.Git.Run(ctx, r.cfg.RepoRoot, "revert", "--no-edit", sha); err != nil {
 		return fmt.Errorf("git revert %s: %w", sha, err)
 	}
-	tomlPath := filepath.Join(r.cfg.RepoRoot, "zenswarm.toml")
+	tomlPath := filepath.Join(r.cfg.RepoRoot, "hadessystem.toml")
 	post, err := os.ReadFile(tomlPath)
 	if err != nil {
-		return fmt.Errorf("read zenswarm.toml post-rollback: %w", err)
+		return fmt.Errorf("read hadessystem.toml post-rollback: %w", err)
 	}
 	postHash := sha256.Sum256(post)
 	postHex := hex.EncodeToString(postHash[:])

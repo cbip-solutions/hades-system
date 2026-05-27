@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package scheduler implements the 3-tier (Routine/Task/Loop) scheduler
-// for zen-swarm-ctld with deterministic jitter,
+// for hades-ctld with deterministic jitter (inv-hades-120),
 // doctrine-tunable miss policy + bounded catch-up + coalescing
-// , and single-egress dispatch dispatcher
-// .
+// (inv-hades-121), and single-egress dispatch dispatcher
+// (inv-hades-080 / inv-hades-123).
 //
-// Boundary: this package NEVER imports internal/store.
+// Boundary (inv-hades-031): this package NEVER imports internal/store.
 // Persistence is bridged via internal/daemon/scheduleradapter/.
 //
-// Boundary: scheduler.Fire dispatches
+// Boundary (inv-hades-080 / inv-hades-123): scheduler.Fire dispatches
 // LLM ONLY via the Dispatcher interface declared in dispatcher_iface.go;
 // it never imports internal/providers or private-tier1-module.
 //

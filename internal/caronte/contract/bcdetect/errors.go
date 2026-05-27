@@ -12,7 +12,7 @@ var (
 
 	ErrNodeBinaryMissing = errors.New("bcdetect: node binary not found on PATH")
 
-	ErrBespokeDiffRefused = errors.New("bcdetect: bespoke diff detector refused (inv-zen-267)")
+	ErrBespokeDiffRefused = errors.New("bcdetect: bespoke diff detector refused (inv-hades-267)")
 
 	ErrParamsBelowFloor = errors.New("bcdetect: params below floor")
 )
