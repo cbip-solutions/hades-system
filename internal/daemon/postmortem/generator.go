@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package postmortem generates structured postmortems for failed swarms
-// (spec §9.4). Plan 11 implements; Plan 1 declares types.
+// (spec §9.4). implements; declares types.
 package postmortem
 
 import zerrors "github.com/cbip-solutions/hades-system/internal/errors"

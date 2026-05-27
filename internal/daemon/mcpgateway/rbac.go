@@ -7,20 +7,20 @@
 //
 // Layer 1 — Doctrine filter:
 //
-//	capa-firewall denies a configurable disabled-tool set; max-scope +
-//	default allow all registered tools. The disabled set is wired by
-//	main.go from doctrine TOML (Plan 8 [doctrine.gateway.disabled_tools]).
+// capa-firewall denies a configurable disabled-tool set; max-scope +
+// default allow all registered tools. The disabled set is wired by
+// main.go from doctrine TOML.
 //
 // Layer 2 — Per-tool ACL:
 //
-//	default-deny on tools not in the registry; default-allow on
-//	registered tools. Future plans extend with explicit operator-pinned
-//	allow/deny lists; Phase A is registry-driven.
+// default-deny on tools not in the registry; default-allow on
+// registered tools. Future plans extend with explicit operator-pinned
+// allow/deny lists; is registry-driven.
 //
 // Layer 3 — Concurrency gate:
 //
-//	per-doctrine ceiling (Q8=C; max-scope=20, default=10, capa-firewall=5;
-//	queue depth 50). sync.Cond signals queued waiters on release.
+// per-doctrine ceiling (Q8=C; max-scope=20, default=10, capa-firewall=5;
+// queue depth 50). sync.Cond signals queued waiters on release.
 //
 // The release function returned by Check MUST be called exactly once. The
 // Dispatcher (A-5) wraps each Handler call with `defer release()` so the
@@ -63,15 +63,15 @@ func NewRBAC(reg *ToolRegistry, cfg RBACConfig) *RBAC {
 // Check runs the three-layer authorization chain. On allow, returns a
 // release func the caller MUST defer to free the concurrency slot.
 //
-//	Layer 1: doctrine filter (capa-firewall disabled set)
-//	Layer 2: registry membership (default-deny on unknown)
-//	Layer 3: concurrency gate (per-doctrine ceiling + queue)
+// Layer 1: doctrine filter (capa-firewall disabled set)
+// Layer 2: registry membership (default-deny on unknown)
+// Layer 3: concurrency gate (per-doctrine ceiling + queue)
 //
 // Returned errors:
-//   - ErrRBACDenied wrapping "doctrine" — Layer 1 deny
-//   - ErrRBACDenied wrapping "acl"      — Layer 2 deny
-//   - ErrConcurrencyLimit               — Layer 3 deny (queue full)
-//   - ctx.Err()                         — context cancelled while queued
+// - ErrRBACDenied wrapping "doctrine" — Layer 1 deny
+// - ErrRBACDenied wrapping "acl" — Layer 2 deny
+// - ErrConcurrencyLimit — Layer 3 deny (queue full)
+// - ctx.Err() — context cancelled while queued
 func (r *RBAC) Check(ctx context.Context, req CallRequest) (release func(), err error) {
 	doctrine := req.Doctrine.Resolved()
 

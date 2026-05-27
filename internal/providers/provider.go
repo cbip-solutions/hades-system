@@ -15,8 +15,8 @@ import (
 // Tier identifies which LLM tier handled (or will handle) a request.
 //
 // Order matters: TierInHouse..TierPAYG preserve the numeric values used
-// by Plan 2's bypass.Tier (so audit rows written before Plan 3 remain
-// readable when re-decoded), and Plan 3 appends new tiers after.
+// 's bypass.Tier (so audit rows written before remain
+// readable when re-decoded), and appends new tiers after.
 //
 // String() values are the canonical lowercase form persisted in
 // cost_ledger.tier, tier_health_samples.tier, pin_overrides.tier, and
@@ -38,12 +38,12 @@ const (
 
 	TierGenericOpenAICompat
 	// TierOpenClaude is a TOMBSTONE tier. The routing-layer backend that
-	// formerly reported this tier was removed in Plan 16 Phase C — the
+	// formerly reported this tier was removed in — the
 	// providers.toml-driven cascade superseded it (ADR-0093). This
 	// constant is KEPT, not deleted: its String() value "openclaude"
-	// is persisted in cost_ledger.tier for pre-Plan-16 historical rows,
+	// is persisted in cost_ledger.tier for pre- historical rows,
 	// and Tier String() values MUST NOT change across releases. No
-	// backend reports Tier() == TierOpenClaude anymore. inv-zen-212
+	// backend reports Tier() == TierOpenClaude anymore. invariant
 	// enforces the backend's removal while permitting this enum remnant.
 	// (The substrate-layer OpenClaude in internal/workforce/ is an
 	// unrelated concern — ADR-0080 territory — not governed here.)
@@ -127,24 +127,24 @@ func (e *RateLimitedError) Error() string {
 // TierRequest is the input every TierBackend.Forward consumes. It
 // is provider-agnostic: each backend translates the canonical fields
 // into its own wire format (anthropic-paygo, gemini, openai-compat,
-// etc.). The orchestrator (Phase H) builds this struct from the
+// etc.). The orchestrator builds this struct from the
 // daemon's incoming HTTP request plus the resolved profile/pin/project
 // context.
 //
-// Body is the canonical-encoded request body (Phase E supplies the
-// per-tier encoder; Phase A only carries the bytes through). Backends
+// Body is the canonical-encoded request body ( supplies the
+// per-tier encoder; only carries the bytes through). Backends
 // MUST NOT mutate Body.
 //
 // Credentials carries values whose printed form would expose secrets.
 // Backends call cred.Reveal() at the exact moment of HTTP header
-// injection and never store the unwrapped value. inv-zen-068.
+// injection and never store the unwrapped value. invariant.
 type TierRequest struct {
 	Method  string
 	Path    string
 	Headers map[string]string
 	Body    []byte
 
-	// Credentials — secret headers. Backends unwrap with .Reveal().
+	// Credentials — secret headers. Backends unwrap with.Reveal().
 	// The map is nil for backends that do not need a credential
 	// (e.g. Ollama on localhost with no auth).
 	Credentials map[string]redact.Secret
@@ -185,21 +185,21 @@ type TierCapabilities struct {
 	MaxOutputTokens       int
 }
 
-// TierBackend is the contract every Plan 3 backend satisfies.
+// TierBackend is the contract every backend satisfies.
 //
 // Phases B/C/D/H attach a compile-time guard at package scope:
 //
-//	var _ TierBackend = (*MyBackend)(nil)
+// var _ TierBackend = (*MyBackend)(nil)
 //
-// inv-zen-067 (compliance test scans for this pattern).
+// invariant (compliance test scans for this pattern).
 //
 // Forward MUST be safe for concurrent invocation (the dispatcher fans
 // out up to 200 in-flight requests). Backends use their own mutexes
 // for refresh / rotation; the interface itself imposes no locking.
 //
-// Probe is called by the active probe scheduler (Phase G) every ~10min
+// Probe is called by the active probe scheduler every ~10min
 // for tiers idle ≥30min. It executes a 1-token canonical "hi" request
-// (inv-zen-071: never user content). On success it returns nil; on
+// . On success it returns nil; on
 // failure it returns the wrapped error so the scheduler can record it
 // in tier_health_samples.
 //

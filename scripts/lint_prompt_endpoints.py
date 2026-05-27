@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 """Static lint: prompt-template /v1/* paths vs daemon registrations.
 
-Plan 12 Phase E Stage 2 reviewer surfaced drift between the prompt
+   reviewer surfaced drift between the prompt
 strings shipped in ``plugin/zen-swarm/commands/*.py`` and the daemon-side
 ``mux.HandleFunc`` registrations in ``internal/daemon/server.go`` (and
 neighbouring ``*_routes.go`` helpers). Some referenced paths do not yet
@@ -25,7 +25,7 @@ Usage:
     python3 scripts/lint_prompt_endpoints.py
     python3 scripts/lint_prompt_endpoints.py --plugin-dir plugin/zen-swarm/commands
 
-Wired into ``make lint`` via ``lint-prompt-endpoints``. Plan 12 Phase E
+Wired into ``make lint`` via ``lint-prompt-endpoints``.  
 MAJOR-2 ships the lint + the 3 daemon endpoints (mcpgateway sub-paths,
 augment/summary, hermes/probe) referenced by the F-panels.
 """
@@ -81,7 +81,7 @@ def normalize_path(path: str) -> str:
 def collect_prompt_paths(plugin_dir: Path) -> dict[str, list[tuple[Path, int, str]]]:
     """Walk plugin/zen-swarm/commands/*.py, extract /v1/* paths.
 
-    Returns a dict {normalized_path: [(file, lineno, raw_line), ...]}.
+    Returns a dict {normalized_path: [(file, lineno, raw_line),...]}.
     Excludes paths preceded within 3 lines by a 'Plan N — pending
     endpoint registration' comment (allowlist).
     """

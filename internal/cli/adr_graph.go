@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_graph.go (Plan 9 Phase I Task I-6).
+// Package cli — adr_graph.go.
 //
 // `zen adr graph --from <id> [--depth <n>]` calls
 // GET /v1/adr/graph?from=...&depth=... and renders the supersede-chain DAG

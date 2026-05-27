@@ -105,7 +105,7 @@ def test_invoke_event_poster_handles_oserror():
 
 
 def test_pre_llm_call_emits_event_returns_none_by_default():
-    """Plan 11 will return {context: ...}; Phase H' baseline returns None
+    """ will return {context:...};  baseline returns None
     (event-emit only, no injection)."""
     from hermes_plugins.hades.hooks.llm_handlers import pre_llm_call
 

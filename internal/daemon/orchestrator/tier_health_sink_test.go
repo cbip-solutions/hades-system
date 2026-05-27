@@ -1,14 +1,14 @@
 // internal/daemon/orchestrator/tier_health_sink_test.go
 //
 // Tests for the TierHealthSink interface + the orchestrator-local
-// TierHealthSampleRow mirror (Plan 16 Phase B Task 13).
+// TierHealthSampleRow mirror.
 //
 // Package orchestrator_test — external access only, matching the rest of
 // the orchestrator test files. fakeTierHealthSink is defined here in the
 // external test package so that recovery_scheduler_test.go (same package)
 // can reuse it for the probe-write-path test.
 //
-// Boundary (inv-zen-031): this file imports stdlib + internal/providers
+// Boundary: this file imports stdlib + internal/providers
 // only. It MUST NOT import internal/store — TierHealthSampleRow is the
 // orchestrator-local mirror; the dispatcheradapter (Task 14) bridges to
 // store.TierHealthSampleRow.

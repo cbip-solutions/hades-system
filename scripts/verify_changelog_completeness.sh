@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT
 #     release tag MUST carry CHANGELOG narrative).
-# inv-zen-276: every git v* tag MUST have CHANGELOG entry OR allowlist row.
+# invariant: every git v* tag MUST have CHANGELOG entry OR allowlist row.
 
 set -euo pipefail
 

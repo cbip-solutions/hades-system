@@ -1,18 +1,18 @@
-//go:build chaos
+// go:build chaos
 
 // modes.
 //
-// "WAL fsync" in the inv-zen-054 contract aliases to the leaf-append
+// "WAL fsync" in the invariant contract aliases to the leaf-append
 // durability boundary in chain.SealPartition: the AppendSeal call to
 // the underlying tessera tile-log. A failure here MUST:
 //
-//   1. Wrap the upstream error with the chain.SealPartition prefix
-//      so callers see a clear cause.
-//   2. NOT advance partition state (no half-written seal row in the
-//      store; subsequent reads see ErrPartitionSealNotFound).
-//   3. Be idempotent on retry: once the underlying AppendSeal
-//      succeeds, the seal record materialises and a third call
-//      observes the now-sealed state.
+// 1. Wrap the upstream error with the chain.SealPartition prefix
+// so callers see a clear cause.
+// 2. NOT advance partition state (no half-written seal row in the
+// store; subsequent reads see ErrPartitionSealNotFound).
+// 3. Be idempotent on retry: once the underlying AppendSeal
+// succeeds, the seal record materialises and a third call
+// observes the now-sealed state.
 //
 // The DST harness (F-5) drives the per-step fault stream; each fault
 // is an AppendSeal failure followed by a clean retry.

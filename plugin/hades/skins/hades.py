@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""HADES skin module — Plan 18a Phase B."""
+"""HADES skin module —  """
 
 from __future__ import annotations
 
@@ -148,7 +148,7 @@ def _build_hades_yaml() -> str:
     *below* the title — which mis-placed the Bident next to the system info —
     so ``banner_hero`` is intentionally a blank spacer. It is kept TRUTHY (a
     single space) so Hermes does NOT fall back to its ``HERMES_CADUCEUS``
-    default (``banner.py``: ``_hero = _bskin.banner_hero ... else
+    default (``banner.py``: ``_hero = _bskin.banner_hero... else
     HERMES_CADUCEUS``); the blank value leaves the panel's left column to the
     system info alone. The full 15-row Bident remains the canonical asset
     (``hades_bident.txt``), distilled into the compact title-line variant that
@@ -198,8 +198,8 @@ def _user_skins_dir() -> Path:
 def _maybe_activate_hades(*_args: Any, **_kwargs: Any) -> None:
     """Hermes ``on_session_start`` hook: activate HADES skin when env requests it.
 
-    Triggered by ``HERMES_SKIN=hades`` env (set by the Phase A wrapper). The
-    Phase B-1 amendment documents WHY this hook is needed (Hermes' own
+    Triggered by ``HERMES_SKIN=hades`` env. The
+     amendment documents WHY this hook is needed (Hermes' own
     ``skin_engine`` does NOT consume the env var).
 
     Idempotent: skips activation if the active skin is already ``hades``.

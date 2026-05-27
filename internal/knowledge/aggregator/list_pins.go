@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator — list_pins.go (Plan 9 Phase D-12).
+// Package aggregator — list_pins.go.
 //
 // ListPins returns all rows from knowledge_pin_index, optionally filtered
 // by projectID. This is a direct SELECT on aggregator.db (a.db) — the
 // cross-project pin index owned by the Aggregator.
 //
-// Phase ownership: D-12 ships the basic SELECT path. Phase H extends with
+// Phase ownership: D-12 ships the basic SELECT path. extends with
 // pagination (LIMIT + OFFSET) if operator UX reveals the need.
 //
-// Boundary (inv-zen-031): this file imports NO internal/store. Direct access
+// Boundary: this file imports NO internal/store. Direct access
 // to a.db is within the aggregator package's own DB — not the daemon store.
-// inv-zen-129: no web calls.
+// invariant: no web calls.
 package aggregator
 
 import (

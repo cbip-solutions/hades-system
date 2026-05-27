@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package cli — plan5_client.go (Plan 5 Phase N).
+// Package cli — plan5_client.go.
 //
-// Centralised client builder for Plan 5 sub-commands. All Phase N CLI
+// Centralised client builder sub-commands. All CLI
 // constructors call plan5ClientFromCmd(cmd) to obtain a *client.Client
 // bound to either the production UDS path (--uds persistent flag) or
-// a hidden --daemon-url test seam (mirrors Plan 4's day.go pattern).
+// a hidden --daemon-url test seam.
 //
 // The seam is registered once per cobra root via attachPlan5Flags so
-// every Plan 5 namespace inherits the same flag without each constructor
+// every namespace inherits the same flag without each constructor
 // re-declaring it. Production callers leave the flag empty.
 package cli
 

@@ -189,7 +189,7 @@ func TestRotationIsAtomicOnFailure(t *testing.T) {
 
 // -----------------------------------------------------------------
 // Coverage tests beyond the 6 plan-mandated. Per the project doctrine
-// (≥95% on rotation.go for Phase A bar; ≥90% for security-critical
+// (≥95% on rotation.go for bar; ≥90% for security-critical
 // files; no tech debt) every branch in rotation.go below must be
 // exercised. Each block cites the branch + rationale.
 // -----------------------------------------------------------------

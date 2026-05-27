@@ -1,20 +1,20 @@
-//go:build property && cgo
+// go:build property && cgo
 
-// tests/property/ecosystem/dispatcher_fanout_property_test.go (Plan 14 Phase H Task H-7-6)
+// tests/property/ecosystem/dispatcher_fanout_property_test.go
 //
-// inv-zen-200: cross-eco fan-out parallel-correctness — 4-goroutine result
+// invariant: cross-eco fan-out parallel-correctness — 4-goroutine result
 // merge MUST be deterministic given fixed per-eco inputs (no goroutine
 // scheduling effects bleed into the final ranked list).
 //
 // We model the merge contract that `dispatcher.fanOutRetrieve` is
 // required to honour (see internal/research/ecosystem/dispatcher.go
-// lines 584-587, "inv-zen-200 partial: 4-goroutine result merge is
+// lines 584-587, "invariant partial: 4-goroutine result merge is
 // deterministic given fixed inputs"):
 //
-//   - Each goroutine emits a per-eco ordered candidate list.
-//   - The merge collects all candidates and produces a single list
-//     sorted by a canonical key (ChunkID asc, ties broken by Ecosystem
-//     name asc) with dedup on ChunkID.
+// - Each goroutine emits a per-eco ordered candidate list.
+// - The merge collects all candidates and produces a single list
+// sorted by a canonical key (ChunkID asc, ties broken by Ecosystem
+// name asc) with dedup on ChunkID.
 //
 // Property: same per-eco inputs → same merged output across 200 runs.
 // We launch real goroutines so the test exercises scheduler concurrency,
@@ -93,7 +93,7 @@ func fanOutMerge(ctx context.Context, perEco map[ecosystem.Ecosystem][]int64) []
 // merge 200 times per input shape and asserts every run returns the
 // same merged list. Goroutine scheduling MUST NOT leak into the result.
 //
-// inv-zen-200 enforcement.
+// invariant enforcement.
 func TestDispatcherFanOut_Property_DeterministicMerge(t *testing.T) {
 	prop := func(seed uint16, count uint8) bool {
 		ctx := context.Background()

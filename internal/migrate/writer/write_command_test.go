@@ -59,7 +59,7 @@ func TestWriteCommand_PythonHandler(t *testing.T) {
 // Post-fix sidecar pattern: body lives in <name>.md (raw markdown, never
 // parsed as Python). Wrapper contains zero operator content. This test
 // verifies (a) hostile body lands verbatim in sidecar, (b) wrapper has
-// no inlined body, (c) generated .py is syntactically valid Python.
+// no inlined body, (c) generated.py is syntactically valid Python.
 func TestWriteCommand_HostileBodyDoesNotExecute(t *testing.T) {
 	t.Parallel()
 	tmp := t.TempDir()

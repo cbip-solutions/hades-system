@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package client — federation.go (Plan 20 Phase I).
+// Package client — federation.go.
 //
-// Thin pass-throughs for the daemon's Plan 20 federation REST sub-routes:
+// Thin pass-throughs for the daemon's federation REST sub-routes:
 // /v1/mcpgateway/federation/health and /v1/mcpgateway/api-impact. The
-// daemon-side adapters translate each into a JSON-RPC tools/call against the
-// caronte federation_health / contract_diff engine ops.
+// daemon-side adapters translate each into JSON-RPC tools/call requests against
+// the caronte federation_health / get_breaking_changes engine ops.
 //
-// inv-zen-088 single-egress preserved: every round-trip proxies through the
-// daemon. inv-zen-129 enforced: this file uses ONLY c.postJSON — never
+// invariant single-egress preserved: every round-trip proxies through the
+// daemon. invariant enforced: this file uses ONLY c.postJSON — never
 // net/http directly.
 package client
 

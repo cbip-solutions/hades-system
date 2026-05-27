@@ -4,7 +4,7 @@ import "testing"
 
 // TestHTTPKeyCollapsesAllParamSyntaxes pins every parameter syntax from
 // the spec §6 + §13.1 corpus to the OpenAPI canonical `/path/{param}` form.
-// Sister-test to the extractor outputs of Phase D (chi/gin/echo) + Phase E
+// Sister-test to the extractor outputs of (chi/gin/echo) +
 // (FastAPI / Next.js / NestJS) — the LINK side and the EXTRACT side MUST
 // agree byte-for-byte on the key (otherwise the linker silently misses
 // every link).

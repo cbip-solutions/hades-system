@@ -2,20 +2,20 @@
 // llm_fake.go is an in-process fake for the daemon's HTTP surface that
 // internal/mcp/research/ depends on:
 //
-//	POST /v1/messages
-//	GET  /v1/budget/cap_status
-//	POST /v1/budget/record
-//	GET  /v1/research/cache/get
-//	POST /v1/research/cache/set
-//	POST /v1/audit/emit
+// POST /v1/messages
+// GET /v1/budget/cap_status
+// POST /v1/budget/record
+// GET /v1/research/cache/get
+// POST /v1/research/cache/set
+// POST /v1/audit/emit
 //
 // Used downstream by:
-//   - tests/compliance/inv_zen_075_test.go
-//   - tests/compliance/inv_zen_076_test.go
-//   - internal/mcp/research/synthesize_test.go
-//   - internal/mcp/research/dispatch_test.go
-//   - internal/mcp/research/agentic_test.go
-//   - tests/adversarial/research_attack_test.go
+// - tests/compliance/inv_zen_075_test.go
+// - tests/compliance/inv_zen_076_test.go
+// - internal/mcp/research/synthesize_test.go
+// - internal/mcp/research/dispatch_test.go
+// - internal/mcp/research/agentic_test.go
+// - tests/adversarial/research_attack_test.go
 //
 // The fake is configured via LLMFakeOptions and observable via
 // SeenRequests/SeenProfiles methods after the test exercises it.

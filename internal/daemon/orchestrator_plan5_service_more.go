@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package daemon — orchestrator_plan5_service_more.go (Plan 5 Phase N).
+// Package daemon — orchestrator_plan5_service_more.go.
 //
 // Companion file to orchestrator_plan5_service.go split for readability.
 // Hosts the doctrine + safetynet + doctor health surfaces, plus the

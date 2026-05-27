@@ -1,17 +1,17 @@
-// Package handlers — doctrine_test.go (Plan 8 Phase J — REWRITE).
+// Package handlers — doctrine_test.go.
 //
-// Replaces Plan 4 Phase G-6 doctrine_test.go (3 endpoints: state, validate,
-// reload) with the Plan 8 surface (10 endpoints: active, list, show,
+// Replaces doctrine_test.go (3 endpoints: state, validate,
+// reload) with the surface (10 endpoints: active, list, show,
 // validate, reload, status, history, diff, migrate, reinforce). The old
 // doctrineServer + reloadErrServer fakes are gone; replaced by
 // doctrineFakeServer that satisfies the broader DoctrineHandlerCtx.
 //
-// Phase J wire shapes match Phase I client DTOs at internal/client/doctrine_v2.go
-// VERBATIM (Phase I shipped its CLI httptest mocks before Phase J landed; the
-// Phase J handlers MUST be wire-compatible because Phase I tests treat the
+// wire shapes match client DTOs at internal/client/doctrine_v2.go
+// VERBATIM ( shipped its CLI httptest mocks before landed; the
+// handlers MUST be wire-compatible because tests treat the
 // daemon shape as the contract). This is a load-bearing drift adaptation
-// from the original Phase J plan (which proposed slightly different shapes);
-// Phase I expectations win because they ARE shipped + golden.
+// from the original plan (which proposed slightly different shapes);
+// expectations win because they ARE shipped + golden.
 package handlers
 
 import (
@@ -744,7 +744,7 @@ func TestDoctrineMigrate_HappyPath(t *testing.T) {
 	srv.mu.Unlock()
 }
 
-// TestDoctrineMigrate_DoesNotWriteToDisk enforces inv-zen-137: handler
+// TestDoctrineMigrate_DoesNotWriteToDisk enforces invariant: handler
 // MUST NOT touch the filesystem. We confirm the handler's working
 // directory is unchanged + a sentinel file is NOT created at any
 // suggested path.
@@ -1450,7 +1450,7 @@ func TestDoctrineRouter_AllTenRoutesWired(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.desc, func(t *testing.T) {
 			// Re-publish a reload event before each iteration that exercises /reload.
-			// Phase J fix-pass IMPORTANT #2: handler filters by body.Path; the
+			// fix-pass IMPORTANT #2: handler filters by body.Path; the
 			// publish MUST match the request body's path (here "/tmp/x.toml")
 			// or the event is treated as cross-path noise + the loop times out.
 			if strings.HasPrefix(tc.path, "/v1/doctrine/reload") {

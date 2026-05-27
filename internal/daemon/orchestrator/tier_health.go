@@ -2,26 +2,26 @@
 // internal/daemon/orchestrator/tier_health.go
 //
 // TierHealth tracks recent outcomes per tier in a rolling time-window.
-// Used by CircuitBreaker (Phase D-2) to decide state transitions:
+// Used by CircuitBreaker to decide state transitions:
 // closed → suspect → open.
 //
-// Boundary (inv-zen-031): this file imports only stdlib (sync + time).
+// Boundary: this file imports only stdlib (sync + time).
 // The orchestrator package MUST NOT import internal/store.
 //
 // Design notes:
-//   - Outcomes are stored in insertion order (chronological, assuming
-//     monotonic clock-forward calls). evictExpiredLocked scans from the
-//     front — a linear scan O(n) on the expired prefix — then re-slices.
-//     n is bounded by the request rate × window duration; for typical
-//     circuit-breaker windows (1–5 min) and typical LLM traffic rates
-//     this is at most a few hundred entries and the linear cost is negligible.
-//   - consecF (ConsecutiveFailures) is an independent counter: it counts
-//     consecutive failures since the last success. Crucially, it is NOT
-//     reset when outcomes evict from the window. Rationale: a tier that
-//     had N consecutive failures and then went quiet for longer than the
-//     window is still in a failure streak from the breaker's perspective.
-//     The breaker may decide to probe it anyway; that probe's result will
-//     reset or advance consecF. Phase D-2 documents this choice.
+// - Outcomes are stored in insertion order (chronological, assuming
+// monotonic clock-forward calls). evictExpiredLocked scans from the
+// front — a linear scan O(n) on the expired prefix — then re-slices.
+// n is bounded by the request rate × window duration; for typical
+// circuit-breaker windows (1–5 min) and typical LLM traffic rates
+// this is at most a few hundred entries and the linear cost is negligible.
+// - consecF (ConsecutiveFailures) is an independent counter: it counts
+// consecutive failures since the last success. Crucially, it is NOT
+// reset when outcomes evict from the window. Rationale: a tier that
+// had N consecutive failures and then went quiet for longer than the
+// window is still in a failure streak from the breaker's perspective.
+// The breaker may decide to probe it anyway; that probe's result will
+// reset or advance consecF. documents this choice.
 
 package orchestrator
 

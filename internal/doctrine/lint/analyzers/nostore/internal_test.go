@@ -87,7 +87,7 @@ func TestPkgIsAllowlistedSuffixMatchReverse(t *testing.T) {
 	}
 }
 
-// TestPkgIsAllowlistedNoMatchSubstring covers the Phase L IMPORTANT #1
+// TestPkgIsAllowlistedNoMatchSubstring covers the IMPORTANT #1
 // tightening: substring matches WITHOUT a path-component boundary MUST NOT
 // allowlist. Before the fix, a bare entry "adapter" would match
 // "github.com/example/some-adapter" via raw HasSuffix; the path-component

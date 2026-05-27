@@ -1,14 +1,15 @@
+// go:build adversarial
 //go:build adversarial
 // +build adversarial
 
-// Package adversarial — p13_fix_hostile_env_test.go (Plan 13 Phase
+// Package adversarial — p13_fix_hostile_env_test.go ( Phase
 // F-tail IMPORTANT 7 missing-tests completion).
 //
 // Adversarial: a destructive Fix invocation under hostile environment
 // conditions (forged TTY annotation, racing context cancellation,
 // disabled $HOME, unwritable XDG state) MUST NOT mutate operator state.
-// The destructive-confirm guard (inv-zen-178) + backup-before-modify
-// (inv-zen-177) cooperate to prevent partial-apply under adversarial
+// The destructive-confirm guard + backup-before-modify
+// cooperate to prevent partial-apply under adversarial
 // runtime conditions.
 //
 // Per spec §6.1 threat model + ADR-0084 destructive-fix semantics:

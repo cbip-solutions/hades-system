@@ -35,46 +35,46 @@ func DefaultSchemaParser() SchemaParser {
 	})
 }
 
-// ApplyWithValidation is Phase H's tighten-validating entry point that
-// wraps Plan 5's existing Apply per inv-zen-140. Sequence:
+// ApplyWithValidation is tighten-validating entry point that
+// wraps existing Apply per invariant. Sequence:
 //
-//  1. Locate proposed ADR + extract toml diff (delegated via
-//     extractTOMLDiff helper that Plan 5 ships).
-//  2. Read pre-Apply zenswarm.toml; build candidate by appending diff +
-//     parsing the merged blob via SchemaParser.
-//  3. Load baseline via BaselineLoader.
-//  4. Run candidate.ValidateTighten(baseline) (Phase A canonical method
-//     form). On *TightenViolation: emit
-//     DoctrineTightenViolationRejected{Source: "amendment-apply", ADRID,
-//     RulePath, AttemptedValue, BaselineValue, Direction} + emit
-//     DoctrineAmendmentSuppressed for Plan 5 audit-trail consistency +
-//     return ErrTightenViolation. Filesystem MUST remain byte-identical
-//     to pre-Apply (defense in depth — we have not yet invoked Apply).
-//  5. Delegate to Plan 5's existing Apply (or ApplyTransacted when a
-//     Reverter is wired) for the atomic git commit + file write +
-//     reload signal.
+// 1. Locate proposed ADR + extract toml diff (delegated via
+// extractTOMLDiff helper that ships).
+// 2. Read pre-Apply zenswarm.toml; build candidate by appending diff +
+// parsing the merged blob via SchemaParser.
+// 3. Load baseline via BaselineLoader.
+// 4. Run candidate.ValidateTighten(baseline) ( canonical method
+// form). On *TightenViolation: emit
+// DoctrineTightenViolationRejected{Source: "amendment-apply", ADRID,
+// RulePath, AttemptedValue, BaselineValue, Direction} + emit
+// DoctrineAmendmentSuppressed audit-trail consistency +
+// return ErrTightenViolation. Filesystem MUST remain byte-identical
+// to pre-Apply (defense in depth — we have not yet invoked Apply).
+// 5. Delegate to existing Apply (or ApplyTransacted when a
+// Reverter is wired) for the atomic git commit + file write +
+// reload signal.
 //
-// inv-zen-140: ValidateTighten BEFORE write — the file write only
+// invariant: ValidateTighten BEFORE write — the file write only
 // happens inside the inner Apply call (ownership lives there), so the
 // tighten-rejection branch never reaches the filesystem.
 //
-// inv-zen-094: file rollback on post-commit failure is preserved by
+// invariant: file rollback on post-commit failure is preserved by
 // the inner ApplyTransacted (when wired); ApplyWithValidation does
 // not alter that contract.
 //
 // Source enum on emitted DoctrineTightenViolationRejected:
-// "amendment-apply" (canonical per Stage 2 CRITICAL #6 / Q-Fix-2;
-// distinct from Phase G reload's "operator-edit" / "override-loader" /
+// "amendment-apply" (canonical per CRITICAL #6 / Q-Fix-2;
+// distinct from reload's "operator-edit" / "override-loader" /
 // "reload-watcher").
 //
-// Synchronous reload-wait (Phase J PF-1/PF-2): when a non-nil
+// Synchronous reload-wait: when a non-nil
 // ReloadAwaiter is wired in ApplierConfig, ApplyWithValidation calls
 // NotifyForceAndWait(zenswarm.toml, ReloadWaitTimeout) AFTER the inner
 // Apply commit lands and synchronously awaits the matching
 // DoctrineReloaded event. On stall (timeout / nil-watcher / channel
 // closed), emits eventlog.EvtDoctrineWatcherStalled (event 67) so the
 // operator-readable telemetry surfaces the reload-wait failure as
-// DISTINCT FROM the apply success. Per inv-zen-094 atomicity, the
+// DISTINCT FROM the apply success. Per invariant atomicity, the
 // apply itself succeeded — the new schema IS on disk + committed; the
 // reload-wait is an operator-visibility upgrade, NOT a correctness
 // fix. ApplyWithValidation therefore returns nil on stall (the inner
@@ -83,11 +83,11 @@ func DefaultSchemaParser() SchemaParser {
 //
 // When ReloadAwaiter is nil, ApplyWithValidation falls through to the
 // existing fire-and-forget ReloadSignal.Reload(ctx) path inside the
-// inner Apply (Phase H semantics preserved; Plan 5's existing contract
+// inner Apply ( semantics preserved; existing contract
 // untouched).
 //
-// Cross-reference: inv-zen-138 (atomic reload via reload.Watcher
-// singleton) + Plan 8 §3.4 / §4.1 F13 reload-wait flow + Plan 8 Phase
+// Cross-reference: invariant (atomic reload via reload.Watcher
+// singleton) + §3.4 / §4.1 F13 reload-wait flow + Phase
 // J pre-flight PF-1..PF-5.
 func (a *AmendmentApplier) ApplyWithValidation(ctx context.Context, adrID int, operator string, baselineFn BaselineLoader, schemaParser SchemaParser) error {
 	if baselineFn == nil {

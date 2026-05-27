@@ -142,7 +142,7 @@ def test_email_render_fallback_audit_url_when_configured(
 ) -> None:
     """`web_fallback_audit_url=True` substitutes zen:// with https://<base>.
 
-    Plan 18b Phase D: default `audit_web_base_url` rebranded to
+     : default `audit_web_base_url` rebranded to
     `https://hades.local`; this test asserts the operator-overridden
     form via the explicit constructor arg. The default-form coverage
     moved to `test_email_render_default_audit_web_base_url_is_hades`
@@ -160,7 +160,7 @@ def test_email_render_fallback_audit_url_when_configured(
 def test_email_render_audit_web_base_url_trailing_slash_stripped() -> None:
     """Trailing slash on audit_web_base_url should not double up.
 
-    Plan 18b Phase D: rebranded literal to `https://hades.local`.
+     : rebranded literal to `https://hades.local`.
     """
     citation = Envelope(
         id="c-baseurl0001",
@@ -257,7 +257,7 @@ def test_email_render_audit_event_ids_count_matches_citations(
 def test_email_render_default_audit_web_base_url_is_hades(
     sample_augmentation_result: AugmentationResult,
 ) -> None:
-    """Plan 18b Phase D: default `audit_web_base_url` rebranded from
+    """ : default `audit_web_base_url` rebranded from
     `https://zen-swarm.local` to `https://hades.local`.
 
     This test asserts the BARE constructor (no explicit
@@ -275,7 +275,7 @@ def test_email_render_default_audit_web_base_url_is_hades(
 def test_email_render_html_title_is_hades_branded(
     sample_augmentation_result: AugmentationResult,
 ) -> None:
-    """Plan 18b Phase D: `<title>` element wordmark rebranded from
+    """ : `<title>` element wordmark rebranded from
     `zen-swarm citations` to `HADES citations`.
 
     This is the load-bearing brand-pass assertion for the HTML email

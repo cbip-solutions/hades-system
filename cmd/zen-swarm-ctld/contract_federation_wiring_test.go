@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"os"
 	"path/filepath"
 	"sync"
 	"testing"
@@ -84,7 +85,7 @@ type fakeDoctrineResolver struct {
 func (f fakeDoctrineResolver) Policy() store.WorkspacePolicy { return f.p }
 
 // TestBuildContractFederation_AuditEmitterIsWired pins the CRITICAL
-// inv-zen-269 chokepoint wiring (Fix 1 sister-test). The Phase A
+// invariant chokepoint wiring (Fix 1 sister-test). The
 // federation.Open API gained a WithAuditEmitter Option (review I2) for
 // construction-time injection of the per-workspace AuditEmitter. The
 // production buildContractFederation MUST pass the emitter via this
@@ -488,6 +489,138 @@ func TestFederationDaemonAdapter_ListWorkspaces(t *testing.T) {
 	want := daemon.Workspace{WorkspaceID: "ws-test", OwningProject: "proj-owner", PolicyLocked: true, CreatedAt: 100, SchemaVersion: 1}
 	if got != want {
 		t.Errorf("got %+v; want %+v", got, want)
+	}
+}
+
+func TestFederationDaemonAdapter_LifecycleWriteMethods(t *testing.T) {
+	t.Parallel()
+	statePath := filepath.Join(t.TempDir(), "workspace.db")
+	fedDB, err := federation.Open(context.Background(), statePath)
+	if err != nil {
+		t.Fatalf("federation.Open: %v", err)
+	}
+	t.Cleanup(func() { _ = fedDB.Close() })
+	a := newFederationDaemonAdapter(fedDB)
+
+	if err := a.RegisterWorkspace(context.Background(), daemon.Workspace{
+		WorkspaceID: "ws-life", OwningProject: "proj-a", PolicyLocked: true,
+		CreatedAt: 101, SchemaVersion: 1,
+	}); err != nil {
+		t.Fatalf("RegisterWorkspace: %v", err)
+	}
+	if err := a.AddWorkspaceMember(context.Background(), daemon.Member{
+		WorkspaceID: "ws-life", ProjectID: "proj-a", RegisteredAt: 102,
+	}); err != nil {
+		t.Fatalf("AddWorkspaceMember: %v", err)
+	}
+	if err := a.SetWorkspacePolicy(context.Background(), "ws-life", "permissive"); err != nil {
+		t.Fatalf("SetWorkspacePolicy: %v", err)
+	}
+	policy, err := a.GetWorkspacePolicy(context.Background(), "ws-life")
+	if err != nil {
+		t.Fatalf("GetWorkspacePolicy: %v", err)
+	}
+	if policy != "permissive" {
+		t.Fatalf("policy = %q; want permissive", policy)
+	}
+	n, err := a.RemoveWorkspace(context.Background(), "ws-life")
+	if err != nil {
+		t.Fatalf("RemoveWorkspace: %v", err)
+	}
+	if n != 1 {
+		t.Fatalf("RowsAffected = %d; want 1", n)
+	}
+}
+
+func TestFederationDaemonAdapter_ValidateContractManifestUsesWorkspaceRoster(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	clientDir := filepath.Join(root, "client")
+	if err := os.MkdirAll(clientDir, 0o755); err != nil {
+		t.Fatalf("MkdirAll: %v", err)
+	}
+	manifest := []byte(`schema_version: 1
+services:
+  - base_url_env: BACKEND_URL
+    target_repo: backend
+unresolved_policy: surface
+`)
+	if err := os.WriteFile(filepath.Join(clientDir, "caronte.yaml"), manifest, 0o644); err != nil {
+		t.Fatalf("WriteFile: %v", err)
+	}
+
+	fedDB, err := federation.Open(context.Background(), filepath.Join(root, "workspace.db"))
+	if err != nil {
+		t.Fatalf("federation.Open: %v", err)
+	}
+	t.Cleanup(func() { _ = fedDB.Close() })
+	a := newFederationDaemonAdapter(fedDB)
+	if err := a.RegisterWorkspace(context.Background(), daemon.Workspace{
+		WorkspaceID: "ws-validate", OwningProject: "client", CreatedAt: 1, SchemaVersion: 1,
+	}); err != nil {
+		t.Fatalf("RegisterWorkspace: %v", err)
+	}
+	for _, projectID := range []string{"client", "backend"} {
+		if err := a.AddWorkspaceMember(context.Background(), daemon.Member{
+			WorkspaceID: "ws-validate", ProjectID: projectID, RegisteredAt: 2,
+		}); err != nil {
+			t.Fatalf("AddWorkspaceMember(%s): %v", projectID, err)
+		}
+	}
+
+	resp, err := a.ValidateContractManifest(context.Background(), clientDir, "ws-validate")
+	if err != nil {
+		t.Fatalf("ValidateContractManifest: %v", err)
+	}
+	if !resp.Valid || resp.SchemaVersion != 1 {
+		t.Fatalf("resp = %+v; want valid schema v1", resp)
+	}
+	if len(resp.Services) != 1 || resp.Services[0].BaseURLRef != "${BACKEND_URL}" || resp.Services[0].TargetRepo != "backend" {
+		t.Fatalf("services = %+v; want ${BACKEND_URL} -> backend", resp.Services)
+	}
+}
+
+func TestFederationDaemonAdapter_ValidateContractManifestSurfacesRefusal(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	clientDir := filepath.Join(root, "client")
+	if err := os.MkdirAll(clientDir, 0o755); err != nil {
+		t.Fatalf("MkdirAll: %v", err)
+	}
+	manifest := []byte(`schema_version: 1
+services:
+  - base_url_env: BACKEND_URL
+    target_repo: missing
+`)
+	if err := os.WriteFile(filepath.Join(clientDir, "caronte.yaml"), manifest, 0o644); err != nil {
+		t.Fatalf("WriteFile: %v", err)
+	}
+	fedDB, err := federation.Open(context.Background(), filepath.Join(root, "workspace.db"))
+	if err != nil {
+		t.Fatalf("federation.Open: %v", err)
+	}
+	t.Cleanup(func() { _ = fedDB.Close() })
+	a := newFederationDaemonAdapter(fedDB)
+	if err := a.RegisterWorkspace(context.Background(), daemon.Workspace{
+		WorkspaceID: "ws-refuse", OwningProject: "client", CreatedAt: 1, SchemaVersion: 1,
+	}); err != nil {
+		t.Fatalf("RegisterWorkspace: %v", err)
+	}
+	if err := a.AddWorkspaceMember(context.Background(), daemon.Member{
+		WorkspaceID: "ws-refuse", ProjectID: "client", RegisteredAt: 2,
+	}); err != nil {
+		t.Fatalf("AddWorkspaceMember: %v", err)
+	}
+
+	resp, err := a.ValidateContractManifest(context.Background(), clientDir, "ws-refuse")
+	if err != nil {
+		t.Fatalf("ValidateContractManifest: %v", err)
+	}
+	if resp.Valid {
+		t.Fatalf("resp.Valid = true; want false for missing roster target: %+v", resp)
+	}
+	if len(resp.Errors) != 1 || resp.Errors[0].Code != "unknown_target_repo" {
+		t.Fatalf("errors = %+v; want unknown_target_repo", resp.Errors)
 	}
 }
 

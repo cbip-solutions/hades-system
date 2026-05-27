@@ -3,34 +3,34 @@
 // Standalone binary composed in `make verify-30-ci-green`. Fetches last
 // N commits on a given branch + their CI status, classifies each
 // (success / infra / flake / real), and evaluates the 50/45/2 rolling
-// window per spec §1.4 inv-zen-275.
+// window per spec §1.4 invariant.
 //
 // Flags
 //
-//	--owner       GitHub repo owner       (default cbip-solutions)
-//	--repo        GitHub repo name        (default zen-swarm)
-//	--branch      branch to evaluate      (default main)
-//	--window      window size             (default 50)
-//	--json        emit JSON output (machine-readable)
-//	--quarantine  flake quarantine path   (default scripts/release-gates/flake-quarantine.txt)
-//	--timeout     per-call HTTP timeout   (default 2m)
+// --owner GitHub repo owner (default cbip-solutions)
+// --repo GitHub repo name (default zen-swarm)
+// --branch branch to evaluate (default main)
+// --window window size (default 50)
+// --json emit JSON output (machine-readable)
+// --quarantine flake quarantine path (default scripts/release-gates/flake-quarantine.txt)
+// --timeout per-call HTTP timeout (default 2m)
 //
 // Reads GITHUB_TOKEN or GH_TOKEN from env (avoid rate limits and private-repo
 // 404s). Per-SHA cache at ~/.cache/hades/ci/ for repeat invocations.
 //
 // Reads optional flake quarantine file `scripts/release-gates/flake-
 // quarantine.txt` (one entry per line; comments + blank lines OK;
-// auto-expire 14d per Phase G G-3). Each non-comment line MUST be
+// auto-expire 14d per G-3). Each non-comment line MUST be
 // either a plain test-name OR a full 3-token row per spec §G.3.1
 // (test-name + RFC3339 timestamp + reason-tag). The wrapper accepts
 // the simpler "one regex per line" form for CLI use; the spec-compliant
-// 3-token form is parsed by internal/ci.LoadFlakeQuarantine (Phase G).
+// 3-token form is parsed by internal/ci.LoadFlakeQuarantine.
 //
 // Exit codes:
 //
-//	0  gate passes
-//	1  gate fails (real failures exceed threshold OR sample insufficient)
-//	2  GH API error / network unavailable / config error
+// 0 gate passes
+// 1 gate fails (real failures exceed threshold OR sample insufficient)
+// 2 GH API error / network unavailable / config error
 package main
 
 import (

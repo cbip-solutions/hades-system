@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
                                           
-"""HTML email renderer for citation envelopes (Plan 12 Phase A Task A-6)."""
+"""HTML email renderer for citation envelopes."""
 
 from __future__ import annotations
 
@@ -34,7 +34,7 @@ class EmailCitationRenderer(Renderer):
         ``https://hades.local`` per plan 18b phase D brand pass).
         Operator configures via hades-side config
         (``~/.hermes/config.yaml`` operator section or daemon env
-        var) when daemon exposes a public audit web UI (Plan 13+).
+        var) when daemon exposes a public audit web UI.
 
         ``daemon_url`` is forwarded to the base ``Renderer`` so the
         instance-level audit endpoint (``self._audit_endpoint``) honors
@@ -147,7 +147,7 @@ class EmailCitationRenderer(Renderer):
         renderer whose downstream surface (an MUA / webmail client) may
         not register the ``zen://`` URL handler.
 
-        Plan 13+ may add a daemon-side HTTPS audit redirector that
+        + may add a daemon-side HTTPS audit redirector that
         consumes the same path; the email HTTPS form is a forward-
         compatible alias for that surface.
         """

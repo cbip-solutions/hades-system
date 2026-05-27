@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package errors declares the canonical sentinel errors for the doctrine
-// system per Plan 8 design spec §4.3. Phases B-N consume this package by
+// system design spec §4.3. Phases B-N consume this package by
 // import; in-package short aliases inside internal/doctrine/schema/v1
 // (ErrTightenViolation etc.) point HERE so errors.Is across packages
 // resolves to one canonical identity.
 //
-// Boundary discipline (inv-zen-133): this package imports stdlib only.
+// Boundary discipline: this package imports stdlib only.
 package errors
 
 import (

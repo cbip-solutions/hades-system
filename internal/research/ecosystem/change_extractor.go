@@ -4,22 +4,22 @@
 // (2) DeepDiff implicit Change node generator (Task E-4 extends this file)
 // (3) Haiku-description fallback for ambiguous diffs (Task E-5 extends this file;
 //
-//	LLMJudgeEnabled-gated)
+// LLMJudgeEnabled-gated)
 //
-// Invariant inv-zen-193 (Plan 14 E-7): every row written to ecosystem_changes
+// Invariant invariant: every row written to ecosystem_changes
 // has a matching ecosystem_versions row for version_from + version_to. Enforced by:
 //
-//	(1) writeChangeNodes() always checks version existence before INSERT (E-6)
-//	(2) SweepChangeNodes() weekly consistency verifier (E-7)
-//	(3) SQL UNIQUE constraint on (package_id, version_from, version_to, symbol_path)
+// (1) writeChangeNodes() always checks version existence before INSERT (E-6)
+// (2) SweepChangeNodes() weekly consistency verifier (E-7)
+// (3) SQL UNIQUE constraint on (package_id, version_from, version_to, symbol_path)
 //
-// SourceExtracted contract (load-bearing for downstream Phase E + F queries):
+// SourceExtracted contract:
 //
-//	"explicit_changelog" — emitted by THIS file's ParseChangelog (Task E-3)
-//	"implicit_deepdiff"  — emitted by Task E-4 DeepDiff
-//	"haiku_inferred"     — emitted by Task E-5 Haiku enrichment
+// "explicit_changelog" — emitted by THIS file's ParseChangelog (Task E-3)
+// "implicit_deepdiff" — emitted by Task E-4 DeepDiff
+// "haiku_inferred" — emitted by Task E-5 Haiku enrichment
 //
-// Boundary inv-zen-031: this file MAY import only stdlib + Phase A types
+// Boundary invariant: this file MAY import only stdlib + types
 // (PackageRef, Changelog, ChangeNode, ChangeType, DoctrineProfile). It MUST
 // NOT import internal/store, internal/providers, or net/http directly.
 package ecosystem
@@ -50,10 +50,10 @@ const SourceImplicitDeepDiff = "implicit_deepdiff"
 // Lineage rationale: flipping SourceExtracted from SourceImplicitDeepDiff
 // to SourceImplicitHaiku on successful enrichment lets downstream queries
 //
-//	(1) audit Haiku coverage per package/version pair (E-7 SweepChangeNodes),
-//	(2) filter "show me only template-described nodes" for cost-control review,
-//	(3) measure description-quality regressions if a future provider swap
-//	    silently degrades enrichment output.
+// (1) audit Haiku coverage per package/version pair (E-7 SweepChangeNodes),
+// (2) filter "show me only template-described nodes" for cost-control review,
+// (3) measure description-quality regressions if a future provider swap
+// silently degrades enrichment output.
 //
 // Symmetry with SourceExplicitChangelog + SourceImplicitDeepDiff: all three
 // SourceExtracted constants live in the same const block so the tag-space
@@ -117,7 +117,7 @@ func (ce *ChangeExtractor) ParseChangelog(ctx context.Context, changelog *Change
 // Sections `## [version] - date`
 // Subsections `### Added` | `### Removed` | `### Changed` | `### Deprecated`
 //
-//	| `### Fixed` | `### Security`
+// | `### Fixed` | `### Security`
 //
 // Only the section matching changelog.VersionTo is parsed; earlier sections
 // (representing prior releases captured in the same file) are skipped to
@@ -379,16 +379,16 @@ func (ce *ChangeExtractor) extractSymbolPathFromText(text string) string {
 // slices and returns []ChangeNode with SourceExtracted=SourceImplicitDeepDiff.
 //
 // Algorithm (deterministic set operations, O(N+M) where N=len(old), M=len(new)):
-//  1. Build old-symbol set keyed by SymbolPath (map[string]SymbolRef).
-//  2. Build new-symbol set keyed by SymbolPath.
-//  3. Added:   paths in new not in old → ChangeAdded.
-//  4. Removed: paths in old not in new → ChangeRemoved.
+// 1. Build old-symbol set keyed by SymbolPath (map[string]SymbolRef).
+// 2. Build new-symbol set keyed by SymbolPath.
+// 3. Added: paths in new not in old → ChangeAdded.
+// 4. Removed: paths in old not in new → ChangeRemoved.
 //
 // Unchanged symbols emit NO node — graph density is preserved by emitting
 // only deltas. This is load-bearing for E-7 SweepChangeNodes which sums
 // ecosystem_changes by version pair as a coverage signal.
 //
-// Signature-comparison ChangeChanged: Phase A SymbolRef carries only
+// Signature-comparison ChangeChanged: SymbolRef carries only
 // (Ecosystem, SymbolPath, Version) — no Signature field. DeepDiff therefore
 // cannot detect "same path, changed signature" in v0.14.0. The ChangeChanged
 // case is future-extensible (E-5 LLM enrichment may infer it from
@@ -402,21 +402,21 @@ func (ce *ChangeExtractor) extractSymbolPathFromText(text string) string {
 // enrichment is the Task E-5 EnrichWithHaiku path gated on
 // LLMJudgeEnabled+HaikuDescriber.
 //
-// Nil handling (defense-in-depth, inv-zen-031 boundary):
-//   - Both nil          → returns non-nil empty slice (caller may len-check).
-//   - oldDoc nil only   → every newDoc.Symbols entry → ChangeAdded with
-//     VersionFrom="" and VersionTo=newDoc.Version.
-//   - newDoc nil only   → every oldDoc.Symbols entry → ChangeRemoved with
-//     VersionFrom=oldDoc.Version and VersionTo="".
+// Nil handling:
+// - Both nil → returns non-nil empty slice (caller may len-check).
+// - oldDoc nil only → every newDoc.Symbols entry → ChangeAdded with
+// VersionFrom="" and VersionTo=newDoc.Version.
+// - newDoc nil only → every oldDoc.Symbols entry → ChangeRemoved with
+// VersionFrom=oldDoc.Version and VersionTo="".
 //
-// Invariant inv-zen-192 (Plan 14 §3.6): DeepDiff is deterministic — same
+// Invariant invariant: DeepDiff is deterministic — same
 // inputs MUST produce the same SET of nodes. Map-iteration order in Go is
 // intentionally non-deterministic, so the slice order is NOT guaranteed
 // across calls; callers needing total order sort by SymbolPath.
 //
-// Invariant inv-zen-193 (Plan 14 E-7): caller MUST ensure version rows
+// Invariant invariant: caller MUST ensure version rows
 // exist in ecosystem_versions before persisting nodes via the indexer.
-// DeepDiff itself does not touch SQL — boundary inv-zen-031 (no internal/store).
+// DeepDiff itself does not touch SQL — boundary invariant (no internal/store).
 //
 // ctx is accepted for future-proofing (E-5 EnrichWithHaiku will call out via
 // HaikuDescriber.Describe which honours context cancellation). E-4 itself
@@ -528,20 +528,20 @@ func isTemplateLikeDescription(desc string) bool {
 // their SourceExtracted to SourceImplicitHaiku for lineage.
 //
 // Gating (doctrine wiring):
-//   - opts.LLMJudgeEnabled == false → returns a defensive copy unchanged
-//     (default doctrine path; zero cost; zero Haiku calls).
-//   - opts.HaikuDescriber  == nil   → returns a defensive copy unchanged
-//     (defense-in-depth: a partially-wired dispatcher MUST NOT crash the
-//     ecosystem pipeline; max-scope doctrine in Phase F provider config
-//     guarantees a real HaikuDescriber, but capacity failures or
-//     degraded-mode boot scenarios MAY leave it nil).
-//   - otherwise: iterate, enrich template-described nodes, leave others
-//     untouched.
+// - opts.LLMJudgeEnabled == false → returns a defensive copy unchanged
+// (default doctrine path; zero cost; zero Haiku calls).
+// - opts.HaikuDescriber == nil → returns a defensive copy unchanged
+// (defense-in-depth: a partially-wired dispatcher MUST NOT crash the
+// ecosystem pipeline; max-scope doctrine in provider config
+// guarantees a real HaikuDescriber, but capacity failures or
+// degraded-mode boot scenarios MAY leave it nil).
+// - otherwise: iterate, enrich template-described nodes, leave others
+// untouched.
 //
 // Doctrine equivalence (max-scope vs capa-firewall): BOTH built-in
 // profiles set LLMJudgeEnabled=true (see doctrine.go lines 142, 164).
 // The doctrine distinction between max-scope and capa-firewall lives at
-// the query-answer refusal layer (Phase D, RefuseOnUnverified), NOT at
+// the query-answer refusal layer, NOT at
 // change extraction. Both doctrines enrich identically here.
 //
 // Error semantics (spec lines 2153-2154): individual Haiku call failures
@@ -566,15 +566,15 @@ func isTemplateLikeDescription(desc string) bool {
 // enrichment is in flight.
 //
 // Nil + empty input contract (mirrors ParseChangelog + DeepDiff):
-//   - nil input  → returns (nil, nil); no Haiku calls.
-//   - empty []   → returns (non-nil empty []ChangeNode, nil); no Haiku calls.
+// - nil input → returns (nil, nil); no Haiku calls.
+// - empty [] → returns (non-nil empty []ChangeNode, nil); no Haiku calls.
 //
-// Invariant inv-zen-031 (boundary): no internal/store, no internal/providers,
+// Invariant invariant (boundary): no internal/store, no internal/providers,
 // no net/http — the HaikuChangeDescriber interface IS the boundary. Real
-// implementations live in the dispatcher layer (Plan 3 daemon).
+// implementations live in the dispatcher layer.
 //
 // ctx is forwarded to every HaikuChangeDescriber.Describe call and honoured
-// by real provider implementations (Plan 3 dispatcher path).
+// by real provider implementations.
 func (ce *ChangeExtractor) EnrichWithHaiku(ctx context.Context, nodes []ChangeNode) ([]ChangeNode, error) {
 
 	if nodes == nil {
@@ -609,7 +609,7 @@ func (ce *ChangeExtractor) EnrichWithHaiku(ctx context.Context, nodes []ChangeNo
 }
 
 // WriteChangeNodes persists []ChangeNode rows to ecosystem_changes,
-// enforcing inv-zen-193 at write time: every unique (version_from,
+// enforcing invariant at write time: every unique (version_from,
 // version_to) pair in the batch MUST have matching ecosystem_versions
 // rows for the package. The write is rejected up-front (no partial
 // writes) if either side is missing.
@@ -617,7 +617,7 @@ func (ce *ChangeExtractor) EnrichWithHaiku(ctx context.Context, nodes []ChangeNo
 // Idempotency contract: the underlying INSERT is `INSERT OR IGNORE` and
 // the UNIQUE constraint covers (package_id, version_from, version_to,
 // symbol_path) per migration 006. Re-running the same batch is a no-op
-// (load-bearing for ingester resume — Phase B B-12 contract).
+// .
 //
 // SymbolPath placeholder: ChangeNode.SymbolPath MAY be empty
 // (parseRawText fallback for free-form changelogs). The UNIQUE
@@ -631,12 +631,12 @@ func (ce *ChangeExtractor) EnrichWithHaiku(ctx context.Context, nodes []ChangeNo
 // callers SHOULD populate SymbolPath; the placeholder is a defensive
 // floor.
 //
-// inv-zen-193 write-side enforcement (3-layer doctrine: code +
+// invariant write-side enforcement (3-layer doctrine: code +
 // invariants.sql + CHECK constraints — this method is the code layer):
 //
-//	Pre-check via assertVersionExists for every unique
-//	(version_from, version_to) pair. Reject the entire batch (atomic
-//	guarantee) if either side is missing.
+// Pre-check via assertVersionExists for every unique
+// (version_from, version_to) pair. Reject the entire batch (atomic
+// guarantee) if either side is missing.
 //
 // Defense-in-depth: ctx-cancel checked at entry + per-row in the
 // INSERT loop; nil-DB rejected up-front.

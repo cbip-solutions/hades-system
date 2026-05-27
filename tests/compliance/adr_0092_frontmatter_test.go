@@ -1,3 +1,4 @@
+// go:build !race
 //go:build !race
 // +build !race
 
@@ -158,9 +159,9 @@ func TestADR0092Frontmatter(t *testing.T) {
 
 	// Stable upstream ADRs MUST be cross-referenced (ADR-0006 = research
 	// SOTA mandate, ADR-0062 = audit chain substrate, ADR-0087 = parent
-	// (ADR-0083..0086), sibling Plan 14 ADRs are cited descriptively
+	// (ADR-0083..0086), sibling ADRs are cited descriptively
 	// in body where slot numbers are uncertain due to the parallel
-	// Phase I dispatch shift.
+	// dispatch shift.
 	wantRelatesTo := map[string]bool{"ADR-0006": false, "ADR-0062": false, "ADR-0087": false}
 	for _, rel := range parsed.Frontmatter.RelatesTo {
 		if _, ok := wantRelatesTo[rel]; ok {

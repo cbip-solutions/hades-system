@@ -4,14 +4,14 @@
 // (via build-tag `spikes` factory functions), classifies severity,
 // persists report markdown, and exits non-zero on CATASTROPHIC severity.
 //
-// Modes
+// # Modes
 //
-//	--max-age 14d   stale threshold (default 14d per amendment §2.4 D-4)
-//	--rerun         force re-execution of all spikes regardless of age
-//	--offline       only verify report files exist (no harness exec)
+// --max-age 14d stale threshold (default 14d per amendment §2.4 D-4)
+// --rerun force re-execution of all spikes regardless of age
+// --offline only verify report files exist (no harness exec)
 //
 // Per amendment §2.4 D-4: CATASTROPHIC blocks release unconditionally
-// (inv-zen-274). HIGH severity warns; LOW/MEDIUM/OK pass.
+// . HIGH severity warns; LOW/MEDIUM/OK pass.
 //
 // Doctrine hard parts are where value lives — re-running spikes at
 // release is the gate that earns release confidence; no defer.

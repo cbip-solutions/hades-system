@@ -49,9 +49,9 @@ func TestMigrateV1ToV2NilInputReturnsSentinel(t *testing.T) {
 }
 
 // TestMigrateV1ToV2NotRegisteredInChainAtPhaseC pins the registration
-// contract: MigrateV1ToV2 MUST NOT be wired into the chain map at Phase C.
+// contract: MigrateV1ToV2 MUST NOT be wired into the chain map at
 // Wiring it would shadow the passthrough Migrator on "1.0" source and
-// break Phase D builtin loader. Future Plan 9+ schema-bump implementer
+// break builtin loader. Future + schema-bump implementer
 // must add the chain entry as part of the same commit that fills in the
 // body — this test is the contract reminder.
 //

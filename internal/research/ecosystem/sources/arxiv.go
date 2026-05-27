@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -8,12 +9,12 @@
 //
 // arXiv (https://arxiv.org) exposes a public Atom XML search API at
 // https://export.arxiv.org/api/query that returns paper metadata for a
-// given category-OR query. Phase B's ArxivSource wraps that API behind the
-// ecosystem.Source interface (master plan §3.3) so the Phase B ingester
+// given category-OR query. ArxivSource wraps that API behind the
+// ecosystem.Source interface (master plan §3.3) so the ingester
 // can pull arXiv CS / PL / ML papers into ecosystem.db alongside the
 // per-language package documentation produced by pkgdev/pypi/npm/cratesio.
 //
-// Instance topology (per spec §2.1 + Stage 2 amendment 2026-05-15):
+// Instance topology:
 // arXiv is 1-instance-per-ecosystem (4 instances total: one each in
 // Go/Python/TypeScript/Rust daemon Source maps), in contrast to the
 // pkgdev/pypi/npm/cratesio sources which are 1-instance-total. Each
@@ -43,10 +44,10 @@
 // versions are addressed by the daemon's per-version PackageRef separately).
 //
 // All HTTP egress routes via the narrow FetchClient interface declared in
-// pkgdev.go (inv-zen-152 + inv-zen-191 — single egress point for the
+// pkgdev.go (invariant + invariant — single egress point for the
 // research data plane; no direct net/http imports in this package).
 //
-// Boundary (inv-zen-031): this file MAY import
+// Boundary: this file MAY import
 // internal/research/cache + internal/research/ecosystem (parent) +
 // encoding/xml + github.com/ledongthuc/pdf (stdlib + read-only PDF
 // extraction). It MUST NOT import internal/store, internal/providers,

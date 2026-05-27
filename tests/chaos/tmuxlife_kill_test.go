@@ -1,18 +1,18 @@
-//go:build chaos
+// go:build chaos
 
 // Drives the recovery contract from spec §4.1 row "Tmux server crash":
-//   - HealthMonitor polls Manager.ListSessions and surfaces orphan
-//     status via the OnOrphan callback.
-//   - On store failure during a poll, HealthMonitor MUST absorb and
-//     continue (transient error budget — chaos tests inject store
-//     faults to verify the monitor does not crash).
-//   - When tmux server is "killed" (simulated by flipping every active
-//     session to StatusOrphaned in the store, the way the daemon's
-//     drift detector would when `tmux ls` returns server-gone), the
-//     OnOrphan callback fires for every orphaned session within a
-//     few ticks.
-//   - Lazy-respawn-on-next-activation: after the operator reattaches,
-//     a fresh session is upserted (no reuse of the orphan row).
+// - HealthMonitor polls Manager.ListSessions and surfaces orphan
+// status via the OnOrphan callback.
+// - On store failure during a poll, HealthMonitor MUST absorb and
+// continue (transient error budget — chaos tests inject store
+// faults to verify the monitor does not crash).
+// - When tmux server is "killed" (simulated by flipping every active
+// session to StatusOrphaned in the store, the way the daemon's
+// drift detector would when `tmux ls` returns server-gone), the
+// OnOrphan callback fires for every orphaned session within a
+// few ticks.
+// - Lazy-respawn-on-next-activation: after the operator reattaches,
+// a fresh session is upserted (no reuse of the orphan row).
 //
 // Determinism: this test is single-threaded apart from the monitor
 // goroutine; no random injection. Tickrate is 5ms so all assertions

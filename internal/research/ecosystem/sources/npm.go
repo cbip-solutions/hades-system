@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -18,34 +19,34 @@
 // PackageDoc with two DocSections: Description (KindModule, from the
 // registry's "description" field) and README (KindGuide, from the
 // registry's "readme" markdown body). The full registry JSON is preserved
-// in RawBody for downstream chunker re-parsing in Phase B chunker.go
+// in RawBody for downstream chunker re-parsing in chunker.go
 // (which applies tree-sitter TypeScript / Markdown grammars).
 //
 // FetchChangelog derives a GitHub repo URL from `repository.url` in the
 // registry JSON, normalizes git+https / git:// prefixes to https://, and
 // then probes three known changelog locations in order:
-//   1. master/History.md   (Express + many older npm packages)
-//   2. master/CHANGELOG.md  (Keep-a-Changelog on master)
-//   3. main/CHANGELOG.md    (Keep-a-Changelog on main — modern default)
+// 1. master/History.md (Express + many older npm packages)
+// 2. master/CHANGELOG.md (Keep-a-Changelog on master)
+// 3. main/CHANGELOG.md (Keep-a-Changelog on main — modern default)
 // First hit wins. When none succeed OR no repository URL is derivable
 // OR the repo is non-GitHub (e.g. self-hosted GitLab), returns a non-nil
 // Changelog with FormatDetected = "not-available" (NOT an error — npm
 // packages routinely lack changelogs).
 //
-// The npm ecosystem maps to ONE Plan 14 ecosystem (`typescript`) per
-// master §0.2: TS + JS packages share the npm registry and Plan 14's
+// The npm ecosystem maps to ONE ecosystem (`typescript`) per
+// master §0.2: TS + JS packages share the npm registry and
 // chunker uses TypeScript grammar for both. Ecosystem() returns
 // EcoTypeScript; the KeywordFilter knob lets the ingester run two
 // keyword-filtered passes if desired without changing the source code.
 //
 // All HTTP egress routes via the narrow FetchClient interface declared
-// in pkgdev.go; no direct net/http imports (inv-zen-152 + inv-zen-191).
+// in pkgdev.go; no direct net/http imports.
 // Per-source TTL = 1d (registered in source-ttls.toml at A-10).
 //
-// Boundary (inv-zen-031): this file MAY import internal/research/cache
+// Boundary: this file MAY import internal/research/cache
 // + internal/research/ecosystem (parent). It MUST NOT import internal/store
 // or internal/providers. Verified by `go test -run TestEcosystemBoundary`
-// and Phase H vet analyzer no_web_in_ecosystem.
+// and vet analyzer no_web_in_ecosystem.
 //
 // Concurrency NpmSource is safe for concurrent use from multiple
 // goroutines after construction (immutable opts; the underlying

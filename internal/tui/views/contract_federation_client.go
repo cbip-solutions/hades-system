@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package views — contract_federation_client.go (Plan 20 Phase J Task J-5).
+// Package views — contract_federation_client.go.
 //
 // productionContractFederationClient adapts *client.Client to the
 // ContractFederationClient seam consumed by ContractFederationView. Each
-// method wraps the Phase I client surface (WorkspaceList +
+// method wraps the client surface (WorkspaceList +
 // FederationListRecentBreakingChanges + FederationRecentDispatches —
-// the latter two are Phase J client extensions that this adapter calls).
+// the latter two are client extensions that this adapter calls).
 //
-// inv-zen-129 enforced: this file uses ONLY *client.Client methods —
-// never net/http directly. inv-zen-088 single-egress preserved: every
+// invariant enforced: this file uses ONLY *client.Client methods —
+// never net/http directly. invariant single-egress preserved: every
 // round-trip proxies through the daemon.
 package views
 

@@ -13,30 +13,30 @@ import (
 // "Compliance" suffix specifically so a code-search at review time
 // surfaces any accidental production use). The boundary is documented in
 // the package doc-comment of inv_zen_118_*_test.go and reviewed by the
-// Stage 2 reviewer cross-phase categories (master plan §"Stage 2 reviewer
+// reviewer cross-phase categories (master plan §" reviewer
 // cross-phase categories").
 //
 // Why this file exists (max-scope doctrine, not a stub):
 //
-//   - inv-zen-118 lives at THREE layers (resurrect-strategy directive,
-//     pre-tar strip, post-tar scan). All three must be exercised by a
-//     compliance test that lives OUTSIDE internal/tmuxlife/ so an external
-//     reviewer can read it without doing package archaeology. The post-tar
-//     scan and stripScratchLines are package-internal helpers; therefore
-//     a sanctioned test-aux constructor is the only way to drive Save
-//     end-to-end with controlled input from a sibling package.
+// - invariant lives at THREE layers (resurrect-strategy directive,
+// pre-tar strip, post-tar scan). All three must be exercised by a
+// compliance test that lives OUTSIDE internal/tmuxlife/ so an external
+// reviewer can read it without doing package archaeology. The post-tar
+// scan and stripScratchLines are package-internal helpers; therefore
+// a sanctioned test-aux constructor is the only way to drive Save
+// end-to-end with controlled input from a sibling package.
 //
-//   - Adding the helpers as `_test.go` would NOT work because Go's _test.go
-//     files are package-internal-only by design. The compliance suite
-//     consumes tmuxlife as an external Go package and needs real exported
-//     symbols.
+// - Adding the helpers as `_test.go` would NOT work because Go's _test.go
+// files are package-internal-only by design. The compliance suite
+// consumes tmuxlife as an external Go package and needs real exported
+// symbols.
 //
-//   - The alternative (refactor scratchInPayload + stripScratchLines to
-//     exported functions) would broaden the production surface for one
-//     test consumer; this helper keeps the production surface stable while
-//     giving the compliance suite the seam it needs (max-scope doctrine
-//     "build the final shape": narrow exported interface + adapter is the
-//     final shape).
+// - The alternative (refactor scratchInPayload + stripScratchLines to
+// exported functions) would broaden the production surface for one
+// test consumer; this helper keeps the production surface stable while
+// giving the compliance suite the seam it needs (max-scope doctrine
+// "build the final shape": narrow exported interface + adapter is the
+// final shape).
 
 type ResurrectExecForCompliance interface {
 	Save(ctx context.Context, sessionName string) ([]byte, error)
@@ -62,7 +62,7 @@ func (a complianceResurrectAdapter) restore(ctx context.Context, sessionName str
 
 // NewManagerForCompliance constructs a Manager wired to the given store,
 // snapshot directory, and ResurrectExecForCompliance fake. Used EXCLUSIVELY
-// by tests/compliance/inv_zen_118_*_test.go (the inv-zen-118 three-layer
+// by tests/compliance/inv_zen_118_*_test.go (the invariant three-layer
 // witness suite); production callers MUST use New(store).
 //
 // The deterministic clock returns 2026-05-01T14:30:45Z so SnapshotPath

@@ -1,4 +1,4 @@
-//go:build cgo
+// go:build cgo
 
 // SPDX-License-Identifier: MIT
 
@@ -105,27 +105,27 @@ func (w *WorkspaceFederationDB) RemoveWorkspace(ctx context.Context, workspaceID
 // JSON-encoded doctrine snapshot) for an existing workspace. Distinct
 // from the registration-time policy_locked snapshot (which STAYS
 // immutable for forensic continuity); SetWorkspacePolicy is the
-// mutation path Phase I's `zen workspace policy set` CLI / MCP surfaces.
+// mutation path `zen workspace policy set` CLI / MCP surfaces.
 // Emits a Tessera audit row (EvtWorkspacePolicySet) on every successful
 // set so the doctrine-history trail is forensic.
 //
 // Audit-failure semantics (review I4):
 //
-//   - The SQL UPDATE is committed FIRST; the audit-emit happens AFTER.
-//   - On audit-emit failure, the policy mutation has ALREADY been
-//     committed. Callers must treat audit-emit failure as a forensic-
-//     degradation signal (the chain has a missing leaf for this
-//     mutation), NOT a rollback signal — do NOT issue a compensating
-//     UPDATE to "undo" the mutation; the persisted state is the
-//     intended state and the missing leaf is the only loss.
-//   - This is INTENDED behavior — append-only audit chains cannot
-//     transact across an arbitrary persistence layer. The chain
-//     integrity is verified out-of-band via Plan 14 Tessera STH; a
-//     missing leaf surfaces as a chain-recovery event in the next
-//     zen-day cycle.
-//   - Callers that need transactional ordering across the policy
-//     mutation AND its audit leaf should wrap SetWorkspacePolicy in
-//     a saga (Plan 20 §13.4) — outside this method's contract.
+// - The SQL UPDATE is committed FIRST; the audit-emit happens AFTER.
+// - On audit-emit failure, the policy mutation has ALREADY been
+// committed. Callers must treat audit-emit failure as a forensic-
+// degradation signal (the chain has a missing leaf for this
+// mutation), NOT a rollback signal — do NOT issue a compensating
+// UPDATE to "undo" the mutation; the persisted state is the
+// intended state and the missing leaf is the only loss.
+// - This is INTENDED behavior — append-only audit chains cannot
+// transact across an arbitrary persistence layer. The chain
+// integrity is verified out-of-band Tessera STH; a
+// missing leaf surfaces as a chain-recovery event in the next
+// zen-day cycle.
+// - Callers that need transactional ordering across the policy
+// mutation AND its audit leaf should wrap SetWorkspacePolicy in
+// a saga — outside this method's contract.
 //
 // Returns ErrEmptyDB on nil db, ErrNotFound when no row exists for the
 // workspaceID, or a wrapped audit-emit / marshal error.

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package cli — state_history.go (Plan 9 Phase I Task I-10).
+// Package cli — state_history.go.
 //
 // `zen state history [--field <name>]` calls GET /v1/state/history and
-// renders manual field change events from the Plan 9 chain as a table.
+// renders manual field change events from the chain as a table.
 // Optional --field scopes output to one field name.
 //
 // Wire type: client.StateChange (Field, OldValue, NewValue, Reason, At, OperatorID).

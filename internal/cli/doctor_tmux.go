@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_tmux.go
 //
-// Phase J Task J-6: tmux subsystem doctor probe. Five aspects per
+// Task J-6: tmux subsystem doctor probe. Five aspects per
 // spec §6.7 (binary.installed, server.reachable, session.count,
 // drift.count, socket.permissions).
 //
-// inv-zen-117 anchor: every tmux invocation MUST go through ExecTmux
+// invariant anchor: every tmux invocation MUST go through ExecTmux
 // which enforces -S flag (forbids default socket /tmp/tmux-<uid>).
 // The Prober honours this discipline by delegating to the live tmux
 // adapter rather than shelling tmux directly.

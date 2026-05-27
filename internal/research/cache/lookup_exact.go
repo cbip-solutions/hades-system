@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -49,6 +50,7 @@ func selectMostRecentDispatchByHash(ctx context.Context, raw *sql.DB, hash strin
 		`SELECT id, query, status, created_at, updated_at
 		   FROM research_dispatches
 		  WHERE query_text_hash = ? AND status = ?
+		    AND invalidated_at IS NULL
 		  ORDER BY created_at DESC
 		  LIMIT 1`,
 		hash, string(DispatchStatusDone),

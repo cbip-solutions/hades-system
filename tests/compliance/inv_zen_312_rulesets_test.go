@@ -1,9 +1,9 @@
 // tests/compliance/inv_zen_312_rulesets_test.go
 //
-// inv-zen-312 (Plan 15 Phase G G-2) — .github/rulesets/main-branch.json
-// committed + Rulesets applied post Phase C public flip to
-// cbip-solutions/hades-system PUBLIC repo (per decisión 1 + 4 + 11). Modelo B
-// dual-repo per decisión 14: PRIVATE dev source runs release-gates.yml without
+// invariant —.github/rulesets/main-branch.json
+// committed + Rulesets applied post public flip to
+// cbip-solutions/hades-system PUBLIC repo. Modelo B
+// dual-repo policy: PRIVATE dev source runs release-gates.yml without
 // the strict ruleset (operator velocity); PUBLIC mirror enforces.
 //
 // Compile-check slice: ruleset JSON file MUST exist + parse as valid GitHub
@@ -12,8 +12,8 @@
 // signed-commits + restrict-deletions rules + bypass-actors list +
 // scripts/apply-rulesets.sh executable wrapper.
 //
-// Runtime check (operator-paced post-flip): `gh api /repos/hades-system/
-// hades-system/rulesets` returns matching ruleset entry. Guarded by
+// Runtime check (operator-paced post-flip): `gh api
+// /repos/cbip-solutions/hades-system/rulesets` returns matching ruleset entry. Guarded by
 // ZEN_INTEGRATION_LIVE_GH=1 env var (skipped by default).
 //
 // Helper sharing: repoPath_g + mustReadFile_g defined in
@@ -21,9 +21,9 @@
 //
 // Three-place triple:
 //
-//	(1) spec §7.7 inv-zen-312 text
-//	(2) this compliance test (file existence + JSON schema + parity)
-//	(3) .github/rulesets/main-branch.json + scripts/apply-rulesets.sh
+// (1) spec §7.7 invariant text
+// (2) this compliance test (file existence + JSON schema + parity)
+// (3).github/rulesets/main-branch.json + scripts/apply-rulesets.sh
 package compliance_test
 
 import (

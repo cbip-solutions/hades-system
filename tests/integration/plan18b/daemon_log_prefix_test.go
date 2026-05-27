@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18b_integration_test
 
 import (
@@ -11,31 +10,31 @@ import (
 
 // TestPlan18bJInt5_DaemonStderrShowsHADESPrefix asserts J-int-5: the
 // zen-swarm-ctld daemon source contains HADES-branded startup + shutdown
-// log strings (per master §Phase F daemon log rebrand) + preserves the
+// log strings + preserves the
 // binary name in parens for journalctl/grep-ability (per spec §Q3 BORDERLINE
 // daemon-binary-name carve-out).
 //
 // Strategy: source-text scanning over cmd/zen-swarm-ctld/main.go and
-// cmd/zen-swarm-ctld/log_brand_test.go (the Phase F unit test) to assert:
+// cmd/zen-swarm-ctld/log_brand_test.go to assert:
 //
-//	(a) main.go contains the HADES-prefixed startup banner string.
-//	(b) main.go contains the HADES-prefixed shutdown string.
-//	(c) main.go retains "(zen-swarm-ctld)" in the banner (grep-ability
-//	    carve-out per spec §Q3 BORDERLINE — binary name STAYS).
-//	(d) log_brand_test.go exists (Phase F unit test gate — confirms the
-//	    subprocess version of this test is in-place at the unit tier).
-//	(e) Defense-in-depth: main.go's logger.Info calls outside the binary-name
-//	    carve-out do NOT contain bare "zen-swarm" brand strings (Phase F miss).
+// (a) main.go contains the HADES-prefixed startup banner string.
+// (b) main.go contains the HADES-prefixed shutdown string.
+// (c) main.go retains "(zen-swarm-ctld)" in the banner (grep-ability
+// carve-out per spec §Q3 BORDERLINE — binary name STAYS).
+// (d) log_brand_test.go exists ( unit test gate — confirms the
+// subprocess version of this test is in-place at the unit tier).
+// (e) Defense-in-depth: main.go's logger.Info calls outside the binary-name
+// carve-out do NOT contain bare "zen-swarm" brand strings.
 //
 // NOTE(plan-15): Full subprocess daemon launch (go run + UDS bind + SIGTERM flow) is
-// handled by the existing Phase F unit test cmd/zen-swarm-ctld/log_brand_test.go
+// handled by the existing unit test cmd/zen-swarm-ctld/log_brand_test.go
 // which runs as part of `make test`. This integration test asserts the
-// COMPOSITION property — that the Phase F source changes are present and the
+// COMPOSITION property — that the source changes are present and the
 // unit test gate exists — without duplicating the expensive go-run-based
 // subprocess integration that the unit test already provides.
 //
 // Per spec §Q3 BORDERLINE: binary name "zen-swarm-ctld" STAYS in parens for
-// process supervision configs (launchd, systemd). Plan 18b does NOT rename
+// process supervision configs (launchd, systemd). does NOT rename
 // the binary. The HADES prefix is in the log MESSAGE body only.
 func TestPlan18bJInt5_DaemonStderrShowsHADESPrefix(t *testing.T) {
 	t.Parallel()

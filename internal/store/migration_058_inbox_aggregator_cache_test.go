@@ -159,7 +159,7 @@ func TestMigration058AggregatorCacheProjectIDIndexed(t *testing.T) {
 // the (project_id, notification_id) UNIQUE constraint on
 // inbox_aggregator_cache prevents duplicate fanout — same per-project
 // inbox.id MUST NOT mirror twice into the cache. Outbox replays
-// (Plan 7 Phase E-8) under at-least-once semantics depend on this for
+// under at-least-once semantics depend on this for
 // idempotency at the SQL layer (INSERT OR IGNORE pattern).
 func TestMigration058AggregatorCacheUniqueRejectsDuplicateFanout(t *testing.T) {
 	t.Parallel()
@@ -191,7 +191,7 @@ func TestMigration058AggregatorCacheUniqueRejectsDuplicateFanout(t *testing.T) {
 
 // TestMigration058AggregatorCacheSeverityCheckRejectsInvalid verifies
 // the cache's CHECK constraint mirrors the per-project inbox enum
-// (inv-zen-124 mirror — denormalized fanout MUST agree on the typing
+// (invariant mirror — denormalized fanout MUST agree on the typing
 // surface).
 func TestMigration058AggregatorCacheSeverityCheckRejectsInvalid(t *testing.T) {
 	t.Parallel()

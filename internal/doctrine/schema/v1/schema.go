@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package v1 declares the canonical doctrine schema (version 1.0). It is the
 // SOLE source of truth for doctrine field shape and tighten-only semantics
-// (per Plan 8 design spec §1 Q8 A). Phases B (parser), D (builtin), E (active
+// . Phases B (parser), D (builtin), E (active
 // accessor), H (amendment extension) all import this package.
 //
-// Boundary discipline (inv-zen-133): this package imports stdlib only +
+// Boundary discipline: this package imports stdlib only +
 // internal/doctrine/errors. Never imports internal/store, internal/orchestrator,
-// private-tier1-module, internal/redact. Verified by Phase A close-out
+// private-tier1-module, internal/redact. Verified by close-out
 // `go list -deps`.
 //
 // Versioning (per design spec §1 Q5 B): SchemaVersion governs file shape;
 // DoctrineVersion governs rule content. AutoUpgrade declares per-project
 // auto-upgrade policy; capa-firewall hardcodes auto_upgrade="none" per
-// inv-zen-100 (enforced at named-doctrine layer in internal/doctrine/builtin
-// Phase D, not at Schema layer — the v1 Schema does not know which named
+// invariant (enforced at named-doctrine layer in internal/doctrine/builtin
+// , not at Schema layer — the v1 Schema does not know which named
 // doctrine it represents, so transverse.go + cross-field validators stay
 // schema-shape-local; the builtin loader rejects auto_upgrade != "none" for
 // the capa-firewall named doctrine specifically).
@@ -62,8 +62,8 @@ type Schema struct {
 
 	Renderers RenderersConfig `toml:"renderers" tighten:"-"`
 
-	// Validated is set to true by Validate() on success. Phase L analyzer
-	// (inv-zen-140 applierMustValidateTighten) requires this to be true
+	// Validated is set to true by Validate() on success. analyzer
+	// requires this to be true
 	// before ValidateTighten may be called by the amendment Apply path —
 	// the analyzer asserts the Apply path read this flag (or called
 	// Validate) before calling ValidateTighten. Tag toml:"-" excludes it
@@ -72,7 +72,7 @@ type Schema struct {
 	//
 	// IMPORTANT do NOT add a guard inside ValidateTighten that requires
 	// override.Validated == true. Spec line 872 places the enforcement at
-	// Phase L's analyzer (compile-time) so the error appears at the call
+	// analyzer (compile-time) so the error appears at the call
 	// site, not at runtime via a generic sentinel. Schema-layer keeps the
 	// flag as a marker only.
 	Validated bool `toml:"-" tighten:"-"`
@@ -120,9 +120,9 @@ type ReviewConfig struct {
 	RequireDualReview   bool `toml:"require_dual_review" tighten:"truth"`
 }
 
-// TransverseConfig — 4 axioms HARDCODED operator-only per inv-zen-135.
+// TransverseConfig — 4 axioms HARDCODED operator-only per invariant.
 // User TOML attempting override of ANY field is REJECTED at parse (transverse.go).
-// All four MUST be `true` in shipped doctrines (Plan 8 transverse contract).
+// All four MUST be `true` in shipped doctrines.
 type TransverseConfig struct {
 	NoTechDebt        bool `toml:"no_tech_debt" tighten:"truth"`
 	NoStubs           bool `toml:"no_stubs" tighten:"truth"`

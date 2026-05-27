@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18a_integration_test
 
 import (
@@ -14,39 +13,39 @@ import (
 )
 
 // TestPlan18aFoundation_CoverageGate asserts D-8: per-package + per-
-// function coverage thresholds for the Plan 18a foundation packages.
+// function coverage thresholds for the foundation packages.
 //
-// Per master §"Coverage targets (consolidated)" + plan-D's Stage 0 reality
+// Per master §"Coverage targets (consolidated)" + plan-D's reality
 // reconciliation:
 //
-//   - cmd/hades/...                            ≥40% (PACKAGE; doctrine-correct
-//     per Phase A completion
-//     notes lines 141-144)
-//   - internal/migrate/writer/...              ≥85% (master target, currently
-//     90.4%)
+// - cmd/hades/... ≥40% (PACKAGE; doctrine-correct
+// per completion
+// notes lines 141-144)
+// - internal/migrate/writer/... ≥85% (master target, currently
+// 90.4%)
 //
 // Plan-template drift note: the plan-D file proposes ≥90% for cmd/hades
-// at the package level. Phase A's completion notes (master lines 141-144)
+// at the package level. completion notes (master lines 141-144)
 // explicitly accepted 39.7% statement coverage as the correct outcome:
 //
-//	main, execHermes, execZen: 0.0% (subprocess-pattern artifact — every
-//	behavioural branch is exhaustively gated by 8 subprocess tests with
-//	18 subtests; in-process instrumentation would test mocks rather than
-//	production code, an anti-pattern)
+// main, execHermes, execZen: 0.0% (subprocess-pattern artifact — every
+// behavioural branch is exhaustively gated by 8 subprocess tests with
+// 18 subtests; in-process instrumentation would test mocks rather than
+// production code, an anti-pattern)
 //
 // D-8 enforces what is ACHIEVABLE without anti-pattern in-process mocks:
-//  1. PACKAGE-level cmd/hades ≥40% (current ~44%, well above floor).
-//  2. PER-FUNCTION cmd/hades: printVersion, printHelp, maybeEmitDaemonHint
-//     MUST be at 100% (the in-process testable surface).
-//  3. PACKAGE-level internal/migrate/writer ≥85% (master target).
+// 1. PACKAGE-level cmd/hades ≥40% (current ~44%, well above floor).
+// 2. PER-FUNCTION cmd/hades: printVersion, printHelp, maybeEmitDaemonHint
+// MUST be at 100% (the in-process testable surface).
+// 3. PACKAGE-level internal/migrate/writer ≥85% (master target).
 //
 // This is the doctrinally-correct enforcement: code paths gated by
 // subprocess tests are NOT covered in -cover output but ARE exercised
-// exhaustively at the integration boundary (Phase D's D-1..D-7 tests).
+// exhaustively at the integration boundary.
 // A more nuanced coverage gate would require Go 1.20+ GOCOVERDIR
 // instrumentation to attribute subprocess execution back to the binary's
-// source; that's out of scope for Plan 18a (forward-looking item for
-// Plan 18b/c if instrumentation grows valuable).
+// source; that's out of scopea (forward-looking item for
+// if instrumentation grows valuable).
 func TestPlan18aFoundation_CoverageGate(t *testing.T) {
 	cases := []struct {
 		name      string
@@ -94,25 +93,25 @@ func TestPlan18aFoundation_CoverageGate(t *testing.T) {
 
 // TestPlan18aFoundation_HadesPerFunctionCoverage asserts the in-process
 // testable surface of cmd/hades is at 100%. This is the doctrinally-
-// correct enforcement of the Plan 18 spec §Q3 brand identity + the master
+// correct enforcement of the spec §Q3 brand identity + the master
 // "≥90% for security/correctness-critical" CLAUDE.md hard-rule 5, applied
 // to the FUNCTIONS where in-process testing is actually meaningful.
 //
 // The three target functions:
-//   - printVersion   — emits the brand string (inv-zen-XXX-V1 sentinel)
-//   - printHelp      — emits the help / 80-col discipline gate
-//   - maybeEmitDaemonHint — emits the placeholder daemon-down recovery hint
+// - printVersion — emits the brand string (inv-zen-XXX-V1 sentinel)
+// - printHelp — emits the help / 80-col discipline gate
+// - maybeEmitDaemonHint — emits the placeholder daemon-down recovery hint
 //
 // All three take an io.Writer parameter so tests can assert their output
-// in-process. Their behaviour is fully covered by Phase A's existing
+// in-process. Their behaviour is fully covered by existing
 // TestPrintVersion_InProcess + TestPrintHelp_InProcess + the D-6
 // preparatory commit's TestMaybeEmitDaemonHint_* sister tests.
 //
-// Functions explicitly NOT enforced at 100% (per Phase A completion notes
+// Functions explicitly NOT enforced at 100% (per completion notes
 // master lines 141-144):
-//   - main, execHermes, execZen — subprocess-pattern coverage, exercised
-//     via cmd/hades/main_test.go's exec.Command subprocess tests + Phase
-//     D-1..D-7 integration tests. In-process mocks would be an anti-pattern.
+// - main, execHermes, execZen — subprocess-pattern coverage, exercised
+// via cmd/hades/main_test.go's exec.Command subprocess tests + Phase
+// D-1..D-7 integration tests. In-process mocks would be an anti-pattern.
 func TestPlan18aFoundation_HadesPerFunctionCoverage(t *testing.T) {
 	root := repoRoot(t)
 	profile := filepath.Join(t.TempDir(), "hades.cov")

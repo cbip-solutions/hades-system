@@ -53,7 +53,7 @@ func TestInvZen298_DockerfileStructure(t *testing.T) {
 	}
 	text := string(data)
 	required := map[string]string{
-		"FROM golang:1.25":                              "builder must use golang:1.25 base",
+		"FROM golang:1.26":                              "builder must use golang:1.26 base",
 		"AS builder":                                    "multi-stage marker missing",
 		"FROM gcr.io/distroless/cc-debian12":            "runtime must be distroless cc-debian12",
 		"COPY --from=builder":                           "no COPY --from=builder; builder outputs not consumed",

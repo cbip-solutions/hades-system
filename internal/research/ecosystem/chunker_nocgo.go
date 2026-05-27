@@ -1,3 +1,4 @@
+// go:build !cgo
 //go:build !cgo
 // +build !cgo
 
@@ -11,7 +12,7 @@ import (
 )
 
 // ErrCGORequired is returned from Chunker methods when CGO is disabled.
-// Callers (Phase B ingester) MUST handle this gracefully — typically by
+// Callers MUST handle this gracefully — typically by
 // logging + skipping the chunk-and-embed pipeline (the package is then
 // stored without chunk-level indexing, retrievable only at coarse package
 // granularity).

@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -16,56 +17,56 @@ import (
 
 const SchemaVersion = 2
 
-// migrationsFS embeds the .sql files under migrations/ (8 at Phase A,
-// 9 at Phase G G-5 after 009_ecosystem_versions_indefinite_retain).
+// migrationsFS embeds the.sql files under migrations/ (8 at,
+// 9 at G-5 after 009_ecosystem_versions_indefinite_retain).
 // The embed directive is relative to this source file's directory;
 // go:embed + SQL files together compile into the binary at build time
 // so there is no runtime filesystem dependency.
 //
-//go:embed migrations/*.sql
+// go:embed migrations/*.sql
 var migrationsFS embed.FS
 
-// ApplyMigrations applies all embedded migration .sql files to db in
+// ApplyMigrations applies all embedded migration.sql files to db in
 // numerical order. Idempotent: re-applying on an already-migrated DB
 // is a no-op (the ecosystem_schema_meta single-row meta table tracks
 // the current version and ApplyMigrations short-circuits when
 // currentVersion >= SchemaVersion).
 //
 // Pre-conditions:
-//   - db is non-nil + opened. Foreign-key enforcement (PRAGMA
-//     foreign_keys = ON) is RECOMMENDED — the schema declares FK
-//     constraints (ecosystem_chunks.package_id REFERENCES
-//     ecosystem_packages(id), etc.) but SQLite defaults FK enforcement
-//     OFF; callers MUST enable it in the DSN (_foreign_keys=on) or via
-//     PRAGMA foreign_keys = ON. Tests (openTestDB) demonstrate the
-//     DSN pattern.
-//   - Process linked with CGO_ENABLED=1 (this file is build-tagged
-//     cgo because sqlite-vec is a CGO bridge). The no-cgo build
-//     omits this file entirely; callers in that build must not invoke
-//     this package.
+// - db is non-nil + opened. Foreign-key enforcement (PRAGMA
+// foreign_keys = ON) is RECOMMENDED — the schema declares FK
+// constraints (ecosystem_chunks.package_id REFERENCES
+// ecosystem_packages(id), etc.) but SQLite defaults FK enforcement
+// OFF; callers MUST enable it in the DSN (_foreign_keys=on) or via
+// PRAGMA foreign_keys = ON. Tests (openTestDB) demonstrate the
+// DSN pattern.
+// - Process linked with CGO_ENABLED=1 (this file is build-tagged
+// cgo because sqlite-vec is a CGO bridge). The no-cgo build
+// omits this file entirely; callers in that build must not invoke
+// this package.
 //
 // Post-conditions on nil error:
-//   - All 9 production tables/virtual-tables exist (ecosystem_packages,
-//     ecosystem_versions, ecosystem_chunks, ecosystem_chunks_fp32,
-//     ecosystem_symbols, ecosystem_changes, ecosystem_chunks_fts,
-//     ecosystem_chunks_vec_bin, ecosystem_audit_chain).
-//   - All 5 spec-named indexes exist (idx_chunks_pkg_version,
-//     idx_chunks_symbol_path, idx_chunks_fingerprint, idx_symbols_path,
-//     idx_changes_versions).
-//   - ecosystem_schema_meta single-row meta table contains version =
-//     SchemaVersion.
-//   - sqlite-vec auto-extension is registered (idempotently) for any
-//     subsequent connection from any *sql.DB in this process.
+// - All 9 production tables/virtual-tables exist (ecosystem_packages,
+// ecosystem_versions, ecosystem_chunks, ecosystem_chunks_fp32,
+// ecosystem_symbols, ecosystem_changes, ecosystem_chunks_fts,
+// ecosystem_chunks_vec_bin, ecosystem_audit_chain).
+// - All 5 spec-named indexes exist (idx_chunks_pkg_version,
+// idx_chunks_symbol_path, idx_chunks_fingerprint, idx_symbols_path,
+// idx_changes_versions).
+// - ecosystem_schema_meta single-row meta table contains version =
+// SchemaVersion.
+// - sqlite-vec auto-extension is registered (idempotently) for any
+// subsequent connection from any *sql.DB in this process.
 //
 // Failure modes:
-//   - nil db → returns error (no panic).
-//   - schema_meta create failure → returned wrapped.
-//   - read of current version failure → returned wrapped.
-//   - embed.FS ReadDir failure (should never happen with successful
-//     compile) → returned wrapped.
-//   - per-file db.Exec failure → returned wrapped with the offending
-//     file name (e.g., "apply \"007_ecosystem_chunks_fts.sql\": no
-//     such module: vec0" when sqlite-vec is unavailable at link time).
+// - nil db → returns error (no panic).
+// - schema_meta create failure → returned wrapped.
+// - read of current version failure → returned wrapped.
+// - embed.FS ReadDir failure (should never happen with successful
+// compile) → returned wrapped.
+// - per-file db.Exec failure → returned wrapped with the offending
+// file name (e.g., "apply \"007_ecosystem_chunks_fts.sql\": no
+// such module: vec0" when sqlite-vec is unavailable at link time).
 //
 // ApplyMigrations does NOT wrap the work in a single TRANSACTION
 // because CREATE VIRTUAL TABLE (FTS5 + vec0) is implicitly outside a

@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_289_test.go
 //
-// Compliance gate for inv-zen-289 (v0.20.6 fix #2): the
+// Compliance gate for invariant (v0.20.6 fix #2): the
 // internal/workforce/subprocess openClaudeSession.readLoop MUST treat
 // fs.ErrClosed (a.k.a. os.ErrClosed; the OS-level "file already
 // closed" wrap) as benign end-of-stream during normal shutdown
@@ -32,14 +32,14 @@
 // readLoop call site).
 //
 // Sister-test bite check: remove the guard (the `if !errors.Is(err,
-// fs.ErrClosed) { ... }` wrap) — Anchor 2 fails; if "io/fs" is also
+// fs.ErrClosed) {... }` wrap) — Anchor 2 fails; if "io/fs" is also
 // removed (the natural follow-up cleanup), Anchor 1 fails as well.
 // The behavioural sister-test
 // `TestOpenClaudeSession_Close_BenignReadLoopErrClosed` in the
 // internal subprocess package independently catches the regression
 // at test-run time (Close returns non-nil after pre-closing stdout).
 //
-// inv-zen-289 (v0.20.6 fix #2).
+// invariant (v0.20.6 fix #2).
 package compliance
 
 import (

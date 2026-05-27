@@ -212,7 +212,7 @@ def test_slack_render_xss_in_payload_neutralised() -> None:
 def test_audit_event_id_with_path_traversal_does_not_inject_javascript() -> None:
     """Path-traversal in audit_event_id must not enable javascript: scheme injection.
 
-    The Plan 11 substrate is responsible for upstream audit_event_id format
+    The  substrate is responsible for upstream audit_event_id format
     validation. Renderers must additionally never produce a runnable
     ``javascript:`` scheme regardless of what the field contains.
     """

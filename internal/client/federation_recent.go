@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-// Package client — federation_recent.go (Plan 20 Phase J Task J-5).
+// Package client — federation_recent.go.
 //
-// Phase J client extensions for the F7 TUI Contract Federation
+// client extensions for the F7 TUI Contract Federation
 // sub-panel: FederationRecentBreakingChanges + FederationRecentDispatches.
 // Both proxy through the daemon's narrow ContractFederationForDaemon
-// + ContractCoordinatorForDaemon interfaces (Phase J wiring; data
-// originates from the Phase A WorkspaceFederationDB +
-// Phase H OrchestratorCoordinator).
+// + ContractCoordinatorForDaemon interfaces ( wiring; data
+// originates from the WorkspaceFederationDB +
+// OrchestratorCoordinator).
 //
-// Routes
+// # Routes
 //
-//	POST /v1/mcpgateway/federation/recent-breaking-changes
-//	POST /v1/mcpgateway/federation/recent-dispatches
+// POST /v1/mcpgateway/federation/recent-breaking-changes
+// POST /v1/mcpgateway/federation/recent-dispatches
 //
-// inv-zen-088 single-egress preserved: every round-trip proxies through
-// the daemon. inv-zen-129 enforced: this file uses ONLY c.postJSON —
+// invariant single-egress preserved: every round-trip proxies through
+// the daemon. invariant enforced: this file uses ONLY c.postJSON —
 // never net/http directly.
 package client
 

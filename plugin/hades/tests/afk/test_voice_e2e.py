@@ -79,7 +79,7 @@ async def test_voice_e2e_sync_path() -> None:
 
 @pytest.mark.asyncio
 async def test_voice_e2e_async_path_with_inbox_notification() -> None:
-    """Long query → async dispatch → audit emit + Plan 7 inbox notification."""
+    """Long query → async dispatch → audit emit +  inbox notification."""
     captured_audit: list[dict[str, Any]] = []
     captured_inbox: list[dict[str, Any]] = []
 
@@ -194,7 +194,7 @@ async def test_voice_e2e_explicit_sync_override_skips_inbox() -> None:
 @pytest.mark.asyncio
 async def test_voice_e2e_audit_emit_5xx_raises_runtime_error() -> None:
     """Daemon 5xx surfaces as RuntimeError so caller can re-route on
-    audit chain outage (inv-zen-051 chain-integrity floor)."""
+    audit chain outage."""
     daemon_url = "http://localhost:4471"
 
     def _handler(request: httpx.Request) -> httpx.Response:

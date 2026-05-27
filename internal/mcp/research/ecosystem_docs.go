@@ -1,38 +1,38 @@
 // SPDX-License-Identifier: MIT
-// ecosystem_docs.go — Plan 14 SHIPPED; backed by internal/research/ecosystem/Dispatcher.
+// ecosystem_docs.go — SHIPPED; backed by internal/research/ecosystem/Dispatcher.
 //
-// index, simple name/description/tag scoring). Plan 14 Phase F Task F-1 rewires
+// index, simple name/description/tag scoring). Task F-1 rewires
 // to the full corpus Dispatcher (embeddings, FTS5, RRF fusion, BGE reranker,
 // Bayesian abstention, citation grammar validation, symbol verification cascade,
 // LLM-judge re-pass) while preserving the existing Search() surface non-breakingly
-// (additive migration per spec §3.6 "Plan 4 partial replacement migration").
+// .
 //
 // Migration strategy:
-//   - Search() maps QueryResult.Chunks → []SourceHit (backward-compat shape so
-//     existing Plan 4 callers dispatch.go, server.go and main.go see no API drift).
-//   - Query() delegates directly to Dispatcher.Query() (new full-RAG path,
-//     exposes citations, verification, abstention, provenance, audit-chain seq).
-//   - When Dispatcher is nil (e.g. pre-Phase-F daemon-init or unit test path),
-//     both methods return zero results without error (graceful degradation,
-//     inv-zen-202 contract).
+// - Search() maps QueryResult.Chunks → []SourceHit (backward-compat shape so
+// existing callers dispatch.go, server.go and main.go see no API drift).
+// - Query() delegates directly to Dispatcher.Query() (new full-RAG path,
+// exposes citations, verification, abstention, provenance, audit-chain seq).
+// - When Dispatcher is nil,
+// both methods return zero results without error (graceful degradation,
+// invariant contract).
 //
 // Plan-file F-1 deviation — narrow-interface seam (ecosystemQueryer):
 //
-//	The plan-file F-1 verbatim code typed the dispatcher field as
-//	*ecosystem.Dispatcher and referenced a `mockEcosystemDispatcher.asDispatcher()`
-//	helper located in F-9 (not yet shipped at F-1 dispatch time, and which
-//	would require building a real *ecosystem.Dispatcher with stub embedder +
-//	stub reranker + stub aggregators + stub versionDetector). Constructing a
-//	real Dispatcher for unit tests requires more plumbing than the seam itself.
+// The plan-file F-1 verbatim code typed the dispatcher field as
+// *ecosystem.Dispatcher and referenced a `mockEcosystemDispatcher.asDispatcher()`
+// helper located in F-9 (not yet shipped at F-1 dispatch time, and which
+// would require building a real *ecosystem.Dispatcher with stub embedder +
+// stub reranker + stub aggregators + stub versionDetector). Constructing a
+// real Dispatcher for unit tests requires more plumbing than the seam itself.
 //
-//	F-1 introduces a one-method narrow seam `ecosystemQueryer` typed as the
-//	ecosystem_docs.go private dependency. *ecosystem.Dispatcher satisfies it
-//	trivially (it already has Query). Unit tests can implement it directly
-//	(see mockEcosystemDispatcher in ecosystem_docs_test.go). This matches the
-//	narrow-interface pattern proven at scale in Phase D D-4 (CohereForwarder),
-//	D-7 (AnswerGenerator), D-8 (JudgeBackend) — see HANDOFF lesson #5.
+// F-1 introduces a one-method narrow seam `ecosystemQueryer` typed as the
+// ecosystem_docs.go private dependency. *ecosystem.Dispatcher satisfies it
+// trivially (it already has Query). Unit tests can implement it directly
+// (see mockEcosystemDispatcher in ecosystem_docs_test.go). This matches the
+// narrow-interface pattern proven at scale in D-4 (CohereForwarder),
+// D-7 (AnswerGenerator), D-8 (JudgeBackend) — see HANDOFF lesson #5.
 //
-// Boundary (spec §3.5 + inv-zen-031): this file imports
+// Boundary: this file imports
 // internal/research/ecosystem only. It never accesses ecosystem.db directly,
 // never imports net/http, never imports internal/store. Confirmed by grep CI gate.
 package research

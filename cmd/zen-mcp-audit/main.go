@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // cmd/zen-mcp-audit/main.go
 //
-// zen-mcp-audit — audit MCP binary (Plan 4 Phase K).
+// zen-mcp-audit — audit MCP binary.
 //
 // Invoked by OpenCode plugin via stdio transport (Q9 B: stdio canonical).
 // Reads daemon socket path, auth-token-path, reviewer pool, and min pool size
@@ -10,11 +10,11 @@
 //
 // Usage (by plugin):
 //
-//	zen-mcp-audit --socket /var/run/zen-swarm/zen-swarm.sock --auth-token-path /path/to/token
+// zen-mcp-audit --socket /var/run/zen-swarm/zen-swarm.sock --auth-token-path /path/to/token
 //
 // Usage (operator debug with TCP URL):
 //
-//	zen-mcp-audit --daemon-url http://localhost:4471 --auth-token-path /path/to/token
+// zen-mcp-audit --daemon-url http://localhost:4471 --auth-token-path /path/to/token
 package main
 
 import (

@@ -1,32 +1,32 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_knowledge_p9.go
 //
-// Adds `zen doctor knowledge aggregator` subcommand — a leaf under the Plan 7
+// Adds `zen doctor knowledge aggregator` subcommand — a leaf under the
 // `zen doctor knowledge` group. RunKnowledgeAggregatorProbe delegates to
 // AggregatorProber declared in probe.go; 4 results:
 //
-//   - knowledge.aggregator.sqlite_vec_loaded
-//   - knowledge.aggregator.embedding_model_active
-//   - knowledge.aggregator.fts5_index_size
-//   - knowledge.aggregator.pinned_notes_count
+// - knowledge.aggregator.sqlite_vec_loaded
+// - knowledge.aggregator.embedding_model_active
+// - knowledge.aggregator.fts5_index_size
+// - knowledge.aggregator.pinned_notes_count
 //
 // Architecture (J-1 precedent):
 //
-//	AggregatorProber interface declared in probe.go (CLI side).
-//	Substrate prober.go files are NOT modified per J-1 pattern.
-//	Production wiring in cmd/zen-swarm-ctld/main.go assigns the concrete
-//	substrate adapter satisfying AggregatorProber.
+// AggregatorProber interface declared in probe.go (CLI side).
+// Substrate prober.go files are NOT modified per J-1 pattern.
+// Production wiring in cmd/zen-swarm-ctld/main.go assigns the concrete
+// substrate adapter satisfying AggregatorProber.
 //
-// Boundary (inv-zen-031):
+// Boundary:
 //
-//	This file imports only cli-internal types + cobra + context + stdlib.
-//	Does NOT import internal/knowledge/aggregator concrete types.
+// This file imports only cli-internal types + cobra + context + stdlib.
+// Does NOT import internal/knowledge/aggregator concrete types.
 //
-// Naming
+// # Naming
 //
-//	File suffix _p9 because doctor_knowledge.go already ships from Plan 7
-//	(Phase J Task J-3: 5-aspect KnowledgeProber for the per-project knowledge
-//	index). This file extends the same `zen doctor knowledge` group with the
+// File suffix _p9 because doctor_knowledge.go already ships
+// ( Task J-3: 5-aspect KnowledgeProber for the per-project knowledge
+// index). This file extends the same `zen doctor knowledge` group with the
 package cli
 
 import (
@@ -42,7 +42,7 @@ import (
 )
 
 // RunKnowledgeAggregatorProbe orchestrates the knowledge.aggregator doctor
-// check (Plan 9 Phase J Task J-2, spec §6.2).
+// check.
 //
 // Delegates to DoctorDeps.AggregatorProber.Probe(ctx) and returns the
 // resulting ProbeResult slice unchanged. Returns a non-nil error if

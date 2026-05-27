@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 // Package echo implements the labstack/echo HTTP route extractor for Plan
-// 20 Phase D.
+// 20
 //
 // Strategy identical to the gin extractor (go/parser AST + syntactic
 // receiver-type inference + value-returning Group binding); only the
 // receiver type set + import path differ:
-//   - *echo.Echo (top-level router from echo.New())
-//   - *echo.Group (value returned by e.Group(prefix, ...))
+// - *echo.Echo (top-level router from echo.New())
+// - *echo.Group (value returned by e.Group(prefix,...))
 //
 // echo's `Reverse(...)` is NOT a route registration — it's a reverse-URL
 // lookup helper; the extractor never emits a row for Reverse calls (the
 // httpMethods set excludes it).
 //
-// Boundary (inv-zen-230 + inv-zen-271): no internal/store import; no
+// Boundary: no internal/store import; no
 // golang.org/x/tools/go/packages.
 package echo
 

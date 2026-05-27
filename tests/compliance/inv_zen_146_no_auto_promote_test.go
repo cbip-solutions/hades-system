@@ -1,21 +1,21 @@
 // tests/compliance/inv_zen_146_no_auto_promote_test.go
 //
-// Compliance gate for inv-zen-146: Promote and Unpromote are OPERATOR-GATED
+// Compliance gate for invariant: Promote and Unpromote are OPERATOR-GATED
 // actions. The reason argument MUST NOT be an empty string literal at any
 // callsite inside internal/. Passing an empty string bypasses the runtime
 // guard (ErrPromoteReasonRequired) and breaks the audit trail.
 //
 // AST walk strategy:
 //
-//	Walk every non-test .go file under internal/ recursively. For each
-//	function call expression where the selector name is "Promote" or
-//	"Unpromote", inspect the last positional argument:
+// Walk every non-test.go file under internal/ recursively. For each
+// function call expression where the selector name is "Promote" or
+// "Unpromote", inspect the last positional argument:
 //
-//	  - If it is an *ast.BasicLit of kind token.STRING whose Value is `""`,
-//	    fail immediately: this is a literal empty-reason callsite.
-//	  - All other argument shapes (variables, constants, non-empty literals,
-//	    composite expressions) are accepted: the runtime guard
-//	    (ErrPromoteReasonRequired) is the second line of defence for those.
+// - If it is an *ast.BasicLit of kind token.STRING whose Value is `""`,
+// fail immediately: this is a literal empty-reason callsite.
+// - All other argument shapes (variables, constants, non-empty literals,
+// composite expressions) are accepted: the runtime guard
+// (ErrPromoteReasonRequired) is the second line of defence for those.
 //
 // Why AST not grep: grep would false-positive on variable declarations that
 // happen to contain `Promote("` in a comment or string constant. The AST
@@ -23,11 +23,11 @@
 //
 // Why last argument: the Promote signature is
 //
-//	Promote(ctx, noteID, projectID, operatorID, reason string)
+// Promote(ctx, noteID, projectID, operatorID, reason string)
 //
 // and Unpromote is
 //
-//	Unpromote(ctx, noteID, operatorID, reason string)
+// Unpromote(ctx, noteID, operatorID, reason string)
 //
 // In both cases `reason` is the last positional argument. The test checks
 // len(call.Args) >= 2 (ctx + at least one real arg) before indexing.
@@ -36,22 +36,22 @@
 // is the job of the ErrPromoteReasonRequired sentinel and its unit tests.
 // This test catches the static case where a developer hard-codes `""`.
 //
-// inv-zen-146: Promote/Unpromote reason required.
+// invariant: Promote/Unpromote reason required.
 //
-//	Plan-file requested a runtime Promote(reason="") rejection test
-//	(Step 1) here in compliance/. That assertion is fully covered at
-//	the unit level by internal/knowledge/aggregator/promote_test.go's
-//	TestPromoteEmptyReasonReturnsErrPromoteReasonRequired and
-//	TestPromoteRequiresReasonSentinelReachable. Adding a duplicate in
-//	compliance/ would import internal/knowledge/aggregator which
-//	links mattn/go-sqlite3; the compliance package already links
-//	github.com/ncruces/go-sqlite3/driver (via inv_zen_073_test.go),
-//	and registering both drivers in one binary panics with "Register
-//	called twice for driver sqlite3" (documented in
-//	inv_zen_148_research_dispatch_metadata_privacy_test.go header).
-//	The AST-callsite scan below + the aggregator unit test together
-//	provide complete inv-zen-146 coverage (Step 2 + Step 1
-//	respectively). No extension needed.
+// Plan-file requested a runtime Promote(reason="") rejection test
+// (Step 1) here in compliance/. That assertion is fully covered at
+// the unit level by internal/knowledge/aggregator/promote_test.go's
+// TestPromoteEmptyReasonReturnsErrPromoteReasonRequired and
+// TestPromoteRequiresReasonSentinelReachable. Adding a duplicate in
+// compliance/ would import internal/knowledge/aggregator which
+// links mattn/go-sqlite3; the compliance package already links
+// github.com/ncruces/go-sqlite3/driver (via inv_zen_073_test.go),
+// and registering both drivers in one binary panics with "Register
+// called twice for driver sqlite3" (documented in
+// inv_zen_148_research_dispatch_metadata_privacy_test.go header).
+// The AST-callsite scan below + the aggregator unit test together
+// provide complete invariant coverage (Step 2 + Step 1
+// respectively). No extension needed.
 package compliance
 
 import (

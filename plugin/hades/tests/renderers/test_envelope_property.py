@@ -49,7 +49,7 @@ _doctrines = st.sampled_from(["max-scope", "default", "capa-firewall"])
 
 
 def _citation_id_strategy() -> st.SearchStrategy[str]:
-    """Generate ``c-XXX..`` citation IDs that pass Phase D Validate format."""
+    """Generate ``c-XXX..`` citation IDs that pass  Validate format."""
     return st.text(
         alphabet="abcdefghijklmnopqrstuvwxyz0123456789",
         min_size=2,

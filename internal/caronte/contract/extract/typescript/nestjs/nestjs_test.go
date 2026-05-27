@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -208,7 +209,7 @@ func TestEndpointsApiOperation(t *testing.T) {
 
 // TestEndpointsApiTagsNotInHandlerNodeID is the sister-test for the I-2
 // review fix: the implementation comment in endpointsFromAST claims
-// "classTags is intentionally unused in this phase (Phase F wires the
+// "classTags is intentionally unused in this phase ( wires the
 // doc surface)". Pin that claim: a controller decorated with
 // `@ApiTags('billing')` MUST NOT leak the tag value into HandlerNodeID.
 // If a future refactor accidentally appends tags to the handler id, this
@@ -231,7 +232,7 @@ func TestEndpointsApiTagsNotInHandlerNodeID(t *testing.T) {
 		t.Fatal("HandlerNodeID empty; expected <module>.<class>.<method>")
 	}
 	// The tag value MUST NOT appear anywhere in HandlerNodeID — the I-2
-	// contract is "classTags collected for Phase F, not surfaced here".
+	// contract is "classTags collected for, not surfaced here".
 	if strings.Contains(eps[0].HandlerNodeID, "billing") {
 		t.Errorf("HandlerNodeID = %q contains tag 'billing'; classTags must NOT leak into HandlerNodeID (I-2 contract)", eps[0].HandlerNodeID)
 	}
@@ -298,7 +299,7 @@ func TestEndpointsControllerAndModule(t *testing.T) {
 // produce len(eps) == 2 for export-wrapped classes (caught by existing
 // fixtures) BUT len(eps) == 1 for non-export classes (passes silently).
 // This fixture + test covers the symmetric non-export side: a bare
-// `class FooController { ... }` MUST emit exactly 1 endpoint and the
+// `class FooController {... }` MUST emit exactly 1 endpoint and the
 // walker MUST process it via the class_declaration path (not via any
 // export-statement walker that would otherwise miss it entirely).
 //

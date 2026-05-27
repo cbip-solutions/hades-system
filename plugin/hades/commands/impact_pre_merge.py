@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:impact-pre-merge — Pre-merge blast radius analysis
 
-You are analyzing the blast radius of merging **{branch}** into the active HADES project's main branch. This wraps Plan 11 augmentation pipeline (`/v1/augment` mode=preflight per spec §4.3) with pre-merge specifics.
+You are analyzing the blast radius of merging **{branch}** into the active HADES project's main branch. This wraps  augmentation pipeline (`/v1/augment` mode=preflight per spec §4.3) with pre-merge specifics.
 
 ## 1. Identify diff scope
 
@@ -59,14 +59,14 @@ Render operator-friendly report:
 ...
 
 ## Doctrine threshold check
-Per Plan 8 doctrine.preflight.impact_thresholds.high:
+Per  doctrine.preflight.impact_thresholds.high:
 - Files exceeding threshold: <count>
 - Recommended: reviewer depth INCREASE proportional to impact
 ```
 
 ## 4. Doctrine integration
 
-Per spec §4.3 + Plan 8 doctrine schema `[doctrine.preflight]`:
+Per spec §4.3 +  doctrine schema `[doctrine.preflight]`:
 - `impact_timeout_ms` per-doctrine (max-scope=2000, default=500, capa-firewall=5000)
 - `impact_thresholds.high/medium` per-doctrine cutoffs
 - `on_timeout = "warn-proceed"` (constant)
@@ -81,19 +81,19 @@ Each preflight call emits `AugmentationStarted` + `AugmentationCompleted` events
 Audit chain: zen://audit/<aggregate_event_id>
 ```
 
-## 6. Plan 6 integration (MergeEngine)
+## 6.  integration (MergeEngine)
 
-Per spec §4.4, Plan 6 winner selection extends with:
+Per spec §4.4,  winner selection extends with:
 ```
 winner = max(test_pass) + max(reviewer_agreement) + min(unintended_blast_radius)
 ```
 
 ## Cross-references
 
-- spec §4.3 Plan 5 orchestrator pre-flight extension
-- spec §4.4 Plan 6 MergeEngine winner extension
+- spec §4.3  orchestrator pre-flight extension
+- spec §4.4  MergeEngine winner extension
 - spec §3.4 doctrine.preflight schema
-- inv-zen-167 augmentation budget gated via Plan 4 budget MCP
+- invariant augmentation budget gated budget MCP
 """
 
 _PROMPT_NO_BRANCH = """# /hades:impact-pre-merge — Pre-merge blast radius analysis

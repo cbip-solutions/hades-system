@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package client — quiet.go (Plan 7 Phase E Task E-13).
+// Package client — quiet.go.
 //
 // Three methods + supporting wire types for the daemon's
 // /v1/quiet/* surface backing the operator-facing
 // `zen quiet` CLI:
 //
-//	QuietGet         GET  /v1/quiet                 — decode QuietGetResponse
-//	QuietUrgentPause POST /v1/quiet/urgent-pause    — set UrgentPauseUntil
-//	QuietCancel      POST /v1/quiet/cancel          — clear active pause
+// QuietGet GET /v1/quiet — decode QuietGetResponse
+// QuietUrgentPause POST /v1/quiet/urgent-pause — set UrgentPauseUntil
+// QuietCancel POST /v1/quiet/cancel — clear active pause
 //
 // Field names + JSON tags align with the daemon-side handler in
 // internal/daemon/handlers/quiet_p7.go. Times use RFC3339 over the

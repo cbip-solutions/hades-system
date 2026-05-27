@@ -42,7 +42,7 @@ def get_renderer_registry() -> RendererRegistry:
     builder, slash command handlers) to dispatch citation envelopes
     through the 6 platform renderers + markdown fallback.
 
-    Phase A this returns a registry pre-populated with the 6 default
+     this returns a registry pre-populated with the 6 default
     platform renderers (Ink/Telegram/Slack/Email/Voice/Web) and the
     universal markdown fallback (registry-internal)."""
     return _RENDERER_REGISTRY
@@ -69,7 +69,7 @@ def register(ctx: Any) -> None:
       /hades:audit-impact, /hades:doctrine-drift-check,
       /hades:knowledge-{query,promote}, /hades:full, /hades:voice,
       /hades:openspec-{apply,archive,propose,resume},
-      /hades:status (Plan 18c C), /hades:dashboard + /hades:panel (Plan 18c D)
+      /hades:status, /hades:dashboard + /hades:panel
     """
                                                                                
     ctx.register_hook("on_session_start", on_session_start)

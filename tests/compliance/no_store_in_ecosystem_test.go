@@ -1,25 +1,25 @@
 // tests/compliance/no_store_in_ecosystem_test.go
 //
 // The internal/research/ecosystem/... package tree MUST NOT transitively
-// import any of the following (per spec §3.5 + inv-zen-031 + inv-zen-191):
-//   - internal/store (direct DB ops — use aggregator abstraction)
-//   - internal/daemon/budget (budget's AuditChainEmitter — declare own narrow interface)
-//   - net/http (HTTP egress — use Revalidator.Fetch)
-//   - internal/caronte/* (project code-graph is orthogonal per ADR-0007/Plan 19; inv-zen-201)
+// import any of the following:
+// - internal/store (direct DB ops — use aggregator abstraction)
+// - internal/daemon/budget (budget's AuditChainEmitter — declare own narrow interface)
+// - net/http (HTTP egress — use Revalidator.Fetch)
+// - internal/caronte/*
 //
 // Note on net/http + revalidator transitive: the ecosystem package imports
 // internal/research/cache/Revalidator. The Revalidator itself imports net/http.
-// BUT: `go list -deps ./internal/research/ecosystem/...` will include the
+// BUT: `go list -deps./internal/research/ecosystem/...` will include the
 // transitive net/http import via the revalidator. The boundary enforced here is:
-//   - DIRECT import of net/http in ecosystem files: zero (enforced by noWebInEcosystem vet analyzer)
-//   - TRANSITIVE net/http via revalidator: ACCEPTABLE (revalidator is the legal gateway)
+// - DIRECT import of net/http in ecosystem files: zero (enforced by noWebInEcosystem vet analyzer)
+// - TRANSITIVE net/http via revalidator: ACCEPTABLE (revalidator is the legal gateway)
 //
 // Therefore this test checks for DIRECT net/http imports via AST (not go list).
 // For store/budget/caronte: go list -deps is used (any transitive = violation).
 //
-// inv-zen-031: aggregator/ecosystem do not import internal/store.
-// inv-zen-191: ecosystem does not import net/http directly.
-// inv-zen-201: caronte boundary preserved (formerly: gitnexus boundary; Plan 19 renamed).
+// invariant: aggregator/ecosystem do not import internal/store.
+// invariant: ecosystem does not import net/http directly.
+// invariant: caronte boundary preserved.
 package compliance
 
 import (

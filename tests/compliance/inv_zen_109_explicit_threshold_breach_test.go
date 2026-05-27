@@ -1,9 +1,9 @@
 // tests/compliance/inv_zen_109_explicit_threshold_breach_test.go
 //
-// Compliance gate for inv-zen-109: every emitted EvtMergeAnomalyDetected
+// Compliance gate for invariant: every emitted EvtMergeAnomalyDetected
 // MUST carry non-empty ThresholdBreach + non-empty Evidence + non-Unknown
 // Severity. The "no silent emission" contract is the runtime expression
-// of spec §8.3 inv-zen-109: subscribers (Plan 5 amendment.proposer,
+// of spec §8.3 invariant: subscribers ( amendment.proposer,
 // observability dashboards, ADR drafter) decode the payload and reason
 // about the breach; an emission missing any of the three fields would
 // either misroute a template, drop the operator-facing context, or hide
@@ -11,16 +11,16 @@
 //
 // Two sibling assertions — one per anomaly subtype the AnomalyDetector
 // emits via rolling-window evaluators (C-4):
-//  1. TestInvZen109ModeDegradationCarriesThresholdBreachMetadata —
-//     drives 50% Degraded60 sessions (above the 40% threshold) and
-//     scans every AnomalyModeDegradationPersistent payload for the
-//     metadata triplet. If no anomaly emits during the test window
-//     (e.g. evaluator semantics drift in C-4), the test t.Skips with
-//     a pointer to anomaly_test.go which has the unit-level coverage.
-//  2. TestInvZen109FlakeRateCarriesThresholdBreachMetadata — drives
-//     20% flake rate across 50 sessions (above the 5% threshold) and
-//     scans every AnomalyFlakeRateAboveThreshold payload for the same
-//     triplet.
+// 1. TestInvZen109ModeDegradationCarriesThresholdBreachMetadata —
+// drives 50% Degraded60 sessions (above the 40% threshold) and
+// scans every AnomalyModeDegradationPersistent payload for the
+// metadata triplet. If no anomaly emits during the test window
+// (e.g. evaluator semantics drift in C-4), the test t.Skips with
+// a pointer to anomaly_test.go which has the unit-level coverage.
+// 2. TestInvZen109FlakeRateCarriesThresholdBreachMetadata — drives
+// 20% flake rate across 50 sessions (above the 5% threshold) and
+// scans every AnomalyFlakeRateAboveThreshold payload for the same
+// triplet.
 //
 // The compliance scope here is the EMISSION CONTRACT, not the
 // evaluation logic. Per-evaluator unit semantics live in
@@ -40,7 +40,7 @@
 // declared locally to avoid clashing with the b7-prefixed siblings,
 // since clocks are sub-test-suite-specific.
 //
-// Reference: docs/superpowers/specs/2026-05-01-zen-swarm-plan-6-merge-engine-design.md §8.3 inv-zen-109
+// Reference: internal design record §8.3 invariant
 package compliance
 
 import (

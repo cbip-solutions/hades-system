@@ -1,26 +1,26 @@
 // SPDX-License-Identifier: MIT
 // Package main implements the `hades` CLI wrapper binary.
 //
-// `hades` is the HADES system entry point per Plan 18 spec. It is a
+// `hades` is the HADES system entry point spec. It is a
 // thin Go wrapper that:
 //
-//   - Sets HERMES_SKIN=hades env when invoked with no positional args,
-//     then exec's `hermes` (Hermes Agent) with whatever flags the
-//     operator passed.
-//   - Translates `hades dashboard|tui|panels [--panel=NAME]` to
-//     `zen tui [--panel=NAME]` (legacy CLI subcommand under the hood).
-//   - Translates `hades <other-subcommand> <args>` to
-//     `zen <other-subcommand> <args>` (passthrough).
-//   - Handles `--version` / `--help` / `--no-wizard` locally.
+// - Sets HERMES_SKIN=hades env when invoked with no positional args,
+// then exec's `hermes` (Hermes Agent) with whatever flags the
+// operator passed.
+// - Translates `hades dashboard|tui|panels [--panel=NAME]` to
+// `zen tui [--panel=NAME]` (legacy CLI subcommand under the hood).
+// - Translates `hades <other-subcommand> <args>` to
+// `zen <other-subcommand> <args>` (passthrough).
+// - Handles `--version` / `--help` / `--no-wizard` locally.
 //
-// Architecture constraints (per Plan 18a master + spec §3.2):
-//   - Stdlib ONLY: os, os/exec, flag, fmt. NO Cobra/spf13. NO
-//     imports from internal/. Rationale: keep wrapper minimal and
-//     isolated from daemon-side type churn.
-//   - inv-zen-088 single-egress: wrapper NEVER bypasses `zen` for
-//     daemon access; only os/exec's the existing entry points.
+// Architecture constraints:
+// - Stdlib ONLY: os, os/exec, flag, fmt. NO Cobra/spf13. NO
+// imports from internal/. Rationale: keep wrapper minimal and
+// isolated from daemon-side type churn.
+// - invariant single-egress: wrapper NEVER bypasses `zen` for
+// daemon access; only os/exec's the existing entry points.
 //
-// See docs/operations/hades-entry-point.md (Phase E) for operator-
+// See docs/operations/hades-entry-point.md for operator-
 // facing reference.
 package main
 
@@ -78,7 +78,7 @@ func printVersion(w io.Writer) {
 }
 
 // printHelp writes the HADES-branded usage block to the supplied
-// io.Writer. Hand-curated for the Plan 18 UX bar (Hermes / Claude Code
+// io.Writer. Hand-curated for the UX bar (Hermes / Claude Code
 // parity per spec §1).
 //
 // Caller passes os.Stdout from main(); tests pass *bytes.Buffer for
@@ -86,7 +86,7 @@ func printVersion(w io.Writer) {
 // coverage-lift rationale.
 //
 // Subcommand modes documented here MUST match the dispatch logic in
-// main(); any new subcommand added in Phase B or Plan 18b/c MUST also
+// main(); any new subcommand added in or MUST also
 // be reflected here. The wrapper's --help is the single source of truth
 // for HADES-recognised subcommands (separate from `zen --help` which
 // lists zen's full surface and which the wrapper does NOT modify).
@@ -94,7 +94,7 @@ func printVersion(w io.Writer) {
 // Line-width discipline: every line below is ≤80 columns (operator
 // terminal compat). When extending, verify with:
 //
-//	bin/hades --help | awk '{print length}' | sort -nr | head -1
+// bin/hades --help | awk '{print length}' | sort -nr | head -1
 //
 // TestPrintHelp_InProcess in main_test.go enforces the ≤80-col rule
 // programmatically (so a future extension that overflows fails CI).
@@ -165,9 +165,9 @@ func execZen(args, extraEnv []string) int {
 // configs/launchd.plist.tmpl, and `zen daemon uninstall`. A hyphenated
 // variant (com.zen-swarm.<name>) is a phantom that launchctl never
 // registers; it was the source of the v0.17.2 wrong-label recovery hint
-// (see ADR-0099 + inv-zen-223 for the full story). NOTE: the sibling
+// . NOTE: the sibling
 // docs-cron agent genuinely uses a hyphenated label — a pre-existing
-// convention drift deferred to the Plan 19 boundary migration; do NOT
+// convention drift deferred to the boundary migration; do NOT
 // "fix" it here.
 const launchAgentLabel = "com.zenswarm.ctld"
 
@@ -220,13 +220,13 @@ func waitForUDS(udsPath string, timeout time.Duration) bool {
 // exec'ing hermes (the daily entry that most needs to "just work"). Per
 // ADR-0099 Option 1:
 //
-//   - UDS already present → no-op (daemon up).
-//   - UDS absent + LaunchAgent installed → kickstart + wait up to 5s; if the
-//     daemon comes up, proceed silently (the operator never sees the blip).
-//     If not, emit the hint and proceed anyway.
-//   - UDS absent + no LaunchAgent → emit the curated install/start hint and
-//     proceed. We do NOT silently spawn a non-persistent daemon — that would
-//     hide the missing-persistence state (see ADR-0099 Alt 1).
+// - UDS already present → no-op (daemon up).
+// - UDS absent + LaunchAgent installed → kickstart + wait up to 5s; if the
+// daemon comes up, proceed silently (the operator never sees the blip).
+// If not, emit the hint and proceed anyway.
+// - UDS absent + no LaunchAgent → emit the curated install/start hint and
+// proceed. We do NOT silently spawn a non-persistent daemon — that would
+// hide the missing-persistence state (see ADR-0099 Alt 1).
 //
 // Always returns control to the caller (never blocks the operator): a
 // still-down daemon is hermes' problem to degrade around, not a hard stop.

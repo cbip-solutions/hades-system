@@ -1,30 +1,29 @@
 // SPDX-License-Identifier: MIT
 
-// Package integration_test — Plan 15 Phase D-8 (operator) brew Formula
+// Package integration_test — (operator) brew Formula
 // correctness.
 //
 // Three verification surfaces:
 //
-//  1. Static config gate: .goreleaser.yml brews[0] block declares the
-//     canonical fields (name, repository, license, dependencies, caveats
-//     sentinels). Runs in this file always; no external tooling needed.
+// 1. Static config gate:.goreleaser.yml brews[0] block declares the
+// canonical fields (name, repository, license, dependencies, caveats
+// sentinels). Runs in this file always; no external tooling needed.
 //
-//  2. Live mirror: Formula/hades.rb (the local mirror referenced by
-//     scripts/verify_brew_formula.sh baseline) contains the load-bearing
-//     keywords + class shape. Mirrors the shell-script lint via Go-level
-//     parsing so a typo in Formula/hades.rb fails this test alongside the
-//     shell lint.
+// 2. Live mirror: Formula/hades.rb (the local mirror referenced by
+// scripts/verify_brew_formula.sh baseline) contains the load-bearing
+// keywords + class shape. Mirrors the shell-script lint via Go-level
+// parsing so a typo in Formula/hades.rb fails this test alongside the
+// shell lint.
 //
-//  3. (Optional) Snapshot-time integration: when goreleaser is available
-//     locally, run a snapshot build and inspect the would-be Formula at
-//     dist/homebrew/Formula/hades.rb. Asserts ldflag-injected version +
-//     url + sha256 + dependencies + caveats sentinels are all rendered.
+// 3. (Optional) Snapshot-time integration: when goreleaser is available
+// locally, run a snapshot build and inspect the would-be Formula at
+// dist/homebrew/Formula/hades.rb. Asserts ldflag-injected version +
+// url + sha256 + dependencies + caveats sentinels are all rendered.
 //
 // All tests skip cleanly when goreleaser is absent (CI dev hosts) so the
 // gates that DON'T need it stay enforced.
 //
-//go:build integration
-
+// go:build integration
 package integration_test
 
 import (
@@ -91,8 +90,8 @@ func TestBrewsConfig_DesiredFields(t *testing.T) {
 	if b.Name != "hades" {
 		t.Errorf("D-8: brews[0].name=%q, want 'hades' (Formula filename + class)", b.Name)
 	}
-	if b.Repository.Owner != "hades-system" {
-		t.Errorf("D-8: brews[0].repository.owner=%q, want 'hades-system'", b.Repository.Owner)
+	if b.Repository.Owner != "cbip-solutions" {
+		t.Errorf("D-8: brews[0].repository.owner=%q, want 'cbip-solutions'", b.Repository.Owner)
 	}
 	if b.Repository.Name != "homebrew-tap" {
 		t.Errorf("D-8: brews[0].repository.name=%q, want 'homebrew-tap'", b.Repository.Name)

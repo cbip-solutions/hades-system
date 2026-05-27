@@ -4,14 +4,14 @@ package scheduleradapter
 //
 // Bridges *store.Store CRUD primitives (internal/store/schedules.go)
 // for the schedules + schedule_history tables (migration 063) to the
-// scheduler subsystem. Phase D-1 ships the adapter operating directly
+// scheduler subsystem. ships the adapter operating directly
 // on store.ScheduleRow / store.ScheduleHistoryRow value types; Phase
 // D-2 lands the internal/scheduler package with its own Schedule +
 // HistoryEntry types and adds a thin translation layer on top.
 //
-// inv-zen-031 boundary: internal/scheduler MUST NEVER import
+// invariant boundary: internal/scheduler MUST NEVER import
 // internal/store. This adapter's import list is the single legitimate
-// co-location point — verified by the Phase K compliance test
+// co-location point — verified by the compliance test
 // inv_zen_122_inv_zen_031_plan7_packages_test.go.
 //
 // Constructor pattern: New(*store.Store) panics on nil. Same defensive

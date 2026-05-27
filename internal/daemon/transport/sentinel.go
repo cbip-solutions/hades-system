@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Compile-time anchors for inv-zen-164 (single-egress preservation) and
-// inv-zen-088 (Plan 3 dispatcher remains the single LLM chokepoint).
+// Compile-time anchors for invariant (single-egress preservation) and
+// invariant.
 //
-// These sentinels exist so the compliance test (Phase F) can grep the
+// These sentinels exist so the compliance test can grep the
 // package for the canonical anchor lines and prove the wiring is in place.
 // Removing any of them breaks the compliance test build — that is the
 // invariant.

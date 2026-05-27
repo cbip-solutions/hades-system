@@ -1,6 +1,6 @@
-//go:build chaos
+// go:build chaos
 
-// Toxiproxy-driven chaos package (inv-zen-305).
+// Toxiproxy-driven chaos package.
 //
 // edge_invariants_test.go pins the per-edge × per-category invariant
 // table semantics: lookup precedence ((edge, category) over

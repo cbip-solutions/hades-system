@@ -319,7 +319,7 @@ def test_telegram_metadata_carries_wrapper_provenance(
 def test_telegram_render_no_zen_swarm_brand_string_in_messages(
     sample_augmentation_result: AugmentationResult,
 ) -> None:
-    """Plan 18b Phase D regression guard: the Telegram renderer carries
+    """  regression guard: the Telegram renderer carries
     NO `zen-swarm` substring in its rendered message payloads.
 
     The Telegram renderer emits a list of `sendMessage` dicts; brand

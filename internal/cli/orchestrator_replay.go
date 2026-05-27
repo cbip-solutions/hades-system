@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — orchestrator_replay.go (Plan 5 Phase N N-2).
+// Package cli — orchestrator_replay.go.
 //
 // `zen orchestrator replay <FILE>` re-runs a captured fixture against
 // an in-memory orchestrator and reports any divergence (Q14 C tier).

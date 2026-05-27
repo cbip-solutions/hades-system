@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/providers/translate.go
 //
-// Canonical ↔ provider wire-format translation for the Plan 16 backends
+// Canonical ↔ provider wire-format translation for the backends
 // that do NOT speak the Anthropic Messages API natively.
 //
 // The CANONICAL format is the Anthropic /v1/messages JSON shape — it is
@@ -9,11 +9,11 @@
 // so the dispatcher's TierRequest.Body always carries a canonical-encoded
 // request and every backend must return a canonical-encoded response.
 //
-//   - anthropic_paygo speaks canonical natively → no function here.
-//   - openai_compat:  anthropicToOpenAIRequest / openAIToAnthropicResponse
-//   - gemini:         anthropicToGeminiRequest / geminiToAnthropicResponse
+// - anthropic_paygo speaks canonical natively → no function here.
+// - openai_compat: anthropicToOpenAIRequest / openAIToAnthropicResponse
+// - gemini: anthropicToGeminiRequest / geminiToAnthropicResponse
 //
-// Scope (Plan 16 Phase A): text-only request/response + token usage.
+// Scope: text-only request/response + token usage.
 // Tool-use blocks, vision parts, and SSE streaming are NOT translated —
 // a request carrying a non-text content block is rejected by the
 // backend (Capabilities advertises SupportsToolUse=false /

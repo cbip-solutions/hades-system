@@ -4,7 +4,7 @@
 // Build tag: adversarial (per the tests/adversarial/ precedent).
 // Runs under `make test-adversarial`.
 //
-// Scenario (spec §13.4 eighth bullet + inv-zen-266 + master C-8/C-9
+// Scenario (spec §13.4 eighth bullet + invariant + master C-8/C-9
 // §8.4): the autonomy oracle returns ModeAutonomy (the "Allow" case),
 // but the workspace policy is PrivacyLocked. The Coordinator MUST
 // defer to the capa-firewall (Workspace.AuthorizeProjects denies
@@ -13,25 +13,24 @@
 // The compliance test inv_zen_266_integration_test.go already pins
 // the single-shot scenario; this adversarial sibling stress-tests
 // the double-gate ORDER (capa-firewall MUST run BEFORE oracle —
-// inv-zen-266 ordering claim) under N concurrent dispatches with
+// invariant ordering claim) under N concurrent dispatches with
 // mixed roster + oracle setups.
 //
 // Adversarial corpus:
-//   - 10 concurrent goroutines each fire a Dispatch with:
-//       (a) PrivacyLocked workspace,
-//       (b) ModeAutonomy oracle,
-//       (c) cross-project consumers (both projects on roster);
-//   - assert EVERY dispatch returns err wrapping
-//     store.ErrCrossProjectDenied (NOT ModeAutonomy success);
-//   - assert NO dispatch's DispatchedRepos is non-empty.
+// - 10 concurrent goroutines each fire a Dispatch with:
+// (a) PrivacyLocked workspace,
+// (b) ModeAutonomy oracle,
+// (c) cross-project consumers (both projects on roster);
+// - assert EVERY dispatch returns err wrapping
+// store.ErrCrossProjectDenied (NOT ModeAutonomy success);
+// - assert NO dispatch's DispatchedRepos is non-empty.
 //
 // Bite-check: temporarily flip the gate order in
 // orchestrator.Dispatch (oracle BEFORE authorize, with oracle Allow
 // winning) → the test must fail (ModeAutonomy result on a locked
 // workspace). Restoring the canonical order returns the gate green.
 
-//go:build adversarial
-
+// go:build adversarial
 package adversarial
 
 import (

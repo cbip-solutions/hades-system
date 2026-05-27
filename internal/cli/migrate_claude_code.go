@@ -204,7 +204,7 @@ func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
 	if err := w.Apply(plan); err != nil {
 		return err
 	}
-	// evt.migrate.claude_code.permission.unmapped per spec §3.7 + Phase E
+	// evt.migrate.claude_code.permission.unmapped per spec §3.7 +
 	// §5979-5982 + CHANGELOG.md:38. Best-effort: daemon-down does not block
 	// the apply itself (the writer already succeeded). Surface warning so
 	// operators know forensic trace failed.
@@ -388,7 +388,7 @@ func parseCSV(s string) map[string]bool {
 	return out
 }
 
-// emitMigrateClaudeCodeAudit fires the canonical Plan 13 audit events for
+// emitMigrateClaudeCodeAudit fires the canonical audit events for
 // a successful `zen migrate claude-code` apply: one
 // evt.migrate.claude_code.run summarising the migration + one
 // evt.migrate.claude_code.permission.unmapped per unrecognised permission
@@ -399,7 +399,7 @@ func parseCSV(s string) map[string]bool {
 // the operator knows forensic trace dropped, but the apply itself is
 // already complete and the CLI continues to success-exit.
 //
-// Spec §3.7 line 629 + Phase E plan §5979-5982 + CHANGELOG.md:38.
+// Spec §3.7 line 629 + plan §5979-5982 + CHANGELOG.md:38.
 func emitMigrateClaudeCodeAudit(cmd *cobra.Command, plan *mapping.Plan, f *claudeCodeFlags, backupRoot string) {
 	ctx := cmd.Context()
 	if ctx == nil {

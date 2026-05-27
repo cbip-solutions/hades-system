@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -72,11 +73,11 @@ type federatedFixture struct {
 }
 
 // setupFederatedFixture creates:
-//   - 3 per-project DBs (internal-platform-x / zen / hotel), each seeded with one note that
-//     has a non-empty audit_chain_anchor.
-//   - 1 aggregator pin-index DB seeded with a note from "internal-platform-x".
-//   - A mockFederatedStore wiring the 3 project DBs.
-//   - An Aggregator with a 384-d mock embedder wired to the pin-index DB.
+// - 3 per-project DBs (internal-platform-x / zen / hotel), each seeded with one note that
+// has a non-empty audit_chain_anchor.
+// - 1 aggregator pin-index DB seeded with a note from "internal-platform-x".
+// - A mockFederatedStore wiring the 3 project DBs.
+// - An Aggregator with a 384-d mock embedder wired to the pin-index DB.
 //
 // Cleanup is registered via t.Cleanup — callers do not need to close DBs.
 func setupFederatedFixture(t *testing.T) *federatedFixture {

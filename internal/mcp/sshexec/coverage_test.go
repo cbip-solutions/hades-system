@@ -2,9 +2,13 @@ package sshexec
 
 import (
 	"context"
+	"crypto/rand"
+	"crypto/rsa"
+	"encoding/base64"
 	"errors"
 	"net"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -185,13 +189,51 @@ func TestSSHUserFromEnvOverride(t *testing.T) {
 	}
 }
 
-func TestHostKeyCallbackProductionRefusal(t *testing.T) {
+func TestHostKeyCallbackRejectsWhenKnownHostsMissing(t *testing.T) {
 	t.Setenv("ZEN_SSH_INSECURE_TEST", "")
+	t.Setenv("ZEN_SSH_KNOWN_HOSTS", filepath.Join(t.TempDir(), "missing_known_hosts"))
 	cb := hostKeyCallback()
 	err := cb("h", &net.TCPAddr{}, nil)
 	if err == nil {
 		t.Error("production callback accepted host key without known_hosts")
 	}
+}
+
+func TestHostKeyCallbackUsesKnownHostsFile(t *testing.T) {
+	t.Setenv("ZEN_SSH_INSECURE_TEST", "")
+	signer, err := testHostSigner()
+	if err != nil {
+		t.Fatalf("testHostSigner: %v", err)
+	}
+	host := "127.0.0.1:2222"
+	knownHostsPath := filepath.Join(t.TempDir(), "known_hosts")
+	line := knownHostsLine(host, signer.PublicKey())
+	if err := os.WriteFile(knownHostsPath, []byte(line+"\n"), 0o600); err != nil {
+		t.Fatalf("write known_hosts: %v", err)
+	}
+	t.Setenv("ZEN_SSH_KNOWN_HOSTS", knownHostsPath)
+
+	cb := hostKeyCallback()
+	remote := &net.TCPAddr{IP: net.ParseIP("127.0.0.1"), Port: 2222}
+	if err := cb(host, remote, signer.PublicKey()); err != nil {
+		t.Fatalf("hostKeyCallback rejected matching known_hosts entry: %v", err)
+	}
+}
+
+func testHostSigner() (ssh.Signer, error) {
+	priv, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		return nil, err
+	}
+	return ssh.NewSignerFromKey(priv)
+}
+
+func knownHostsLine(host string, key ssh.PublicKey) string {
+	pattern := host
+	if hostOnly, port, err := net.SplitHostPort(host); err == nil {
+		pattern = "[" + hostOnly + "]:" + port
+	}
+	return pattern + " " + key.Type() + " " + base64.StdEncoding.EncodeToString(key.Marshal())
 }
 
 func TestSSHAuthMethodPaths(t *testing.T) {

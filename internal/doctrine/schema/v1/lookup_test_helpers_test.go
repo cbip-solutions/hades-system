@@ -1,5 +1,4 @@
-//go:build test_helpers
-
+// go:build test_helpers
 package v1
 
 import (

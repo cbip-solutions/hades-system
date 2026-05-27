@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package client — budget.go (Plan 4 Phase N Task N-4).
+// Package client — budget.go.
 //
-// Typed wrappers for the Plan 4 budget HTTP surface (Phase G handlers in
+// Typed wrappers for the budget HTTP surface ( handlers in
 // internal/daemon/handlers/budget_plan4.go). The CLI in
 // internal/cli/budget.go uses these to expose:
 //
-//	rollup, caps {show, set}, anomalies, pause, resume,
-//	events, axes, pause-modes
+// rollup, caps {show, set}, anomalies, pause, resume,
+// events, axes, pause-modes
 //
-// read-only spend-rollup over CostCounters; Plan 4 retains the call site
-// because zen day + zen doctor (Plan 3 K-6/K-7) still consume it.
+// read-only spend-rollup over CostCounters; retains the call site
+// because zen day + zen doctor still consume it.
 package client
 
 import (
@@ -26,10 +26,10 @@ import (
 // requiring a flag.
 //
 // reused that name for the morning-brief summary endpoint
-// (plan4_summary.go), so this Plan-3 read-rollup has been renamed to
+// (plan4_summary.go), so this read-rollup has been renamed to
 // `BudgetSummaryRollup` to keep both surfaces compilable. The wire
 // path (`GET /v1/budget?range=`) is unchanged. Callers: zen doctor
-// orchestrator checks (Plan 3 K-6).
+// orchestrator checks.
 func (c *Client) BudgetSummaryRollup(ctx context.Context, rng string) (*BudgetSummaryResp, error) {
 	path := "/v1/budget"
 	if rng != "" {

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — citation_probe.go (Plan 11 Phase E completion).
+// Package handlers — citation_probe.go.
 //
 // GET /v1/citation/probe?check=<name> — diagnostic probe surface for
 // the `zen doctor citation` CLI section.
 //
-// Background — Plan 11 substrate gap closure (mirrors hermes_probe.go):
+// Background — substrate gap closure (mirrors hermes_probe.go):
 //
 // (internal/client/citation.go::CitationProbe) + CLI dispatch in
 // internal/cli/doctor_citation.go, but never registered the daemon-side
@@ -13,12 +13,12 @@
 // closes the gap.
 //
 // Probe checks (closed enum on ?check=):
-//   - "audit-handler-functional" — self-introspection that the
-//     /v1/audit/event/* route family is wired (Plan 9 Phase B-1 audit
-//     chain + Plan 11 Phase D D-5 audit-event resolver). Checked via
-//     CitationProbeCtx.HasAuditEventRoute() — non-nil auditWriter
-//     implies the startAuditInfra boot succeeded and the route is
-//     registered (registerRoutes line 782).
+// - "audit-handler-functional" — self-introspection that the
+// /v1/audit/event/* route family is wired ( audit
+// chain + D-5 audit-event resolver). Checked via
+// CitationProbeCtx.HasAuditEventRoute() — non-nil auditWriter
+// implies the startAuditInfra boot succeeded and the route is
+// registered (registerRoutes line 782).
 //
 // Unknown probe names return status=ok with a hint string — same posture
 // as AugmentProbeHandler/HermesProbeHandler. 405 on non-GET.

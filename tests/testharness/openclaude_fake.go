@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package testharness — Phase C creates the fake OpenClaude subprocess so
+// Package testharness — creates the fake OpenClaude subprocess so
 // internal/workforce/subprocess/ unit + integration tests can exercise the
 // stdio JSON-RPC contract without depending on the real openclaude binary
-// (Phase H' Task #55).
+// .
 //
 // The fake is invoked by re-execing the calling test binary with the env
 // variables GO_WANT_HELPER_OPENCLAUDE_FAKE=1 + ZEN_FAKE_OPENCLAUDE_*. The
@@ -11,14 +11,14 @@
 //
 // Scenarios (selected by ZEN_FAKE_OPENCLAUDE_SCENARIO):
 //
-//	"happy-path"       -> echo each request as a JSON-RPC result; exit on EOF
-//	"hang"             -> read all input, never write, ignore SIGTERM for 30s
-//	                      (used to test SubprocessManager TTL evictor escalation
-//	                      from SIGTERM to SIGKILL after 10s grace)
-//	"crash"            -> after the first request, write nothing and exit 7
-//	                      (used to test SIGCHLD detector + persistent-spec replay)
-//	"interactive-mock" -> emit 4 tool_use events then a final result; exits 0
-//	                      on EOF
+// "happy-path" -> echo each request as a JSON-RPC result; exit on EOF
+// "hang" -> read all input, never write, ignore SIGTERM for 30s
+// (used to test SubprocessManager TTL evictor escalation
+// from SIGTERM to SIGKILL after 10s grace)
+// "crash" -> after the first request, write nothing and exit 7
+// (used to test SIGCHLD detector + persistent-spec replay)
+// "interactive-mock" -> emit 4 tool_use events then a final result; exits 0
+// on EOF
 //
 // Each scenario is deterministic and self-contained — no external network,
 // no temp files.

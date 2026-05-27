@@ -10,29 +10,29 @@
 // the loaded Sidecars value and registers a SidecarBackend by name into
 // providers.Registry when the sidecar's /health probe succeeds. A missing
 // sidecars.toml is a NORMAL state — the daemon falls through to the
-// providers.toml cascade. inv-zen-280 graceful degradation is preserved by
+// providers.toml cascade. invariant graceful degradation is preserved by
 // the dispatcher: a SidecarBackend that returns ErrSidecarUnavailable causes
 // the cascade to proceed to the next named provider.
 //
-// inv-zen-031 boundary: this file does NOT import internal/store; it is a
+// invariant boundary: this file does NOT import internal/store; it is a
 // pure configuration loader. The companion XDGConfigDir helper lives in
 // internal/onboard/plugin/ — reused here to keep the XDG-resolution rule
 // in one place.
 //
 // Validation rules (fail-fast at load):
 //
-//   - url MUST start with "http://127.0.0.1:" or "http://localhost:"
-//     (loopback only; defense-in-depth vs operator mis-config pointing at
-//     a remote host; mirrors the sidecar's bind discipline).
-//   - tier MUST equal 1 for the [tier1.bypass] table (table-name encodes
-//     the tier number; mismatch would silently mis-route).
-//   - health_probe_interval_s MUST be in [5, 3600] seconds (5s lower bound
-//     prevents probe-storm; 3600s upper bound prevents a never-probing
-//     sidecar masquerading as healthy).
-//   - request_timeout_s MUST be in [1, 600] seconds (1s lower bound is
-//     useful for ChaosNet smoke tests; 600s upper bound caps any single
-//     stuck request below 10 minutes).
-//   - required is optional bool (default false → graceful degrade allowed).
+// - url MUST start with "http://127.0.0.1:" or "http://localhost:"
+// (loopback only; defense-in-depth vs operator mis-config pointing at
+// a remote host; mirrors the sidecar's bind discipline).
+// - tier MUST equal 1 for the [tier1.bypass] table (table-name encodes
+// the tier number; mismatch would silently mis-route).
+// - health_probe_interval_s MUST be in [5, 3600] seconds (5s lower bound
+// prevents probe-storm; 3600s upper bound prevents a never-probing
+// sidecar masquerading as healthy).
+// - request_timeout_s MUST be in [1, 600] seconds (1s lower bound is
+// useful for ChaosNet smoke tests; 600s upper bound caps any single
+// stuck request below 10 minutes).
+// - required is optional bool (default false → graceful degrade allowed).
 package config
 
 import (

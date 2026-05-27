@@ -5,8 +5,8 @@
 // Vite is special-cased: vite.config.{js,mjs,ts} alone is ambiguous — could
 // be powering Vue, React, Svelte, or Astro. Disambiguation reads package.json
 // dependencies + devDependencies for framework signals. Per spec §2.4:
-//   - Canonical config file + matching dep: confidence 1.0
-//   - Only config file (no matching dep): confidence 0.7
+// - Canonical config file + matching dep: confidence 1.0
+// - Only config file (no matching dep): confidence 0.7
 //
 // Table-driven Vercel-style detection; one row per framework with predicate.
 package config

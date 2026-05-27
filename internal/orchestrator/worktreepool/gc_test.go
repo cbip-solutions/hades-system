@@ -30,7 +30,7 @@ func gcPruneCallCount(exec *recordingExec) int {
 // the cadence deterministically via *clock.Fake.Advance() so the test
 // neither racey nor wall-clock-bound.
 //
-// Phase A Clock seam (Q14 C, IMP-2): every orchestrator-tier component
+// Clock seam (Q14 C, IMP-2): every orchestrator-tier component
 // that consumes time MUST take a Clock seam. B-7's gcLoop reads the
 // ticker via p.clk.NewTicker so this test injects clock.Fake to drive
 // exactly N fires without sleeping.
@@ -76,8 +76,8 @@ func TestGC_PrunesOnCadence(t *testing.T) {
 }
 
 // TestGC_PruneFailureEmitsDegraded verifies a failing `git worktree prune`
-// (e.g., ENOSPC writing the .git/worktrees ref-update lock) drives a
-// WorktreePoolDegraded event emission so HRA Phase I Q8 cost-pressure
+// (e.g., ENOSPC writing the.git/worktrees ref-update lock) drives a
+// WorktreePoolDegraded event emission so HRA Q8 cost-pressure
 // downgrade can react. The event MUST carry doctrine + pool_id + reason
 // for downstream filtering (mirrors leaseSlowPath + prewarm precedent).
 func TestGC_PruneFailureEmitsDegraded(t *testing.T) {

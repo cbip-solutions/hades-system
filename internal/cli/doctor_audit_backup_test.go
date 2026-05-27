@@ -46,7 +46,7 @@ func TestDoctorAuditBackupRunEEmitsRow(t *testing.T) {
 // MUST emit a single fail row whose Hint points at the daemon
 // endpoint so operators can self-diagnose without reading the source.
 //
-// Phase C-10 ships AuditDoctorBackup as a stub that returns nil error;
+// ships AuditDoctorBackup as a stub that returns nil error;
 // to exercise the error branch under unit test we wrap a custom client
 // that returns an error. The cleanest seam is: extract the body into
 // a small free function, then re-test it with a fake Client. That

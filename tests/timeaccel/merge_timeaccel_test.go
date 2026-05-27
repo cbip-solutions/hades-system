@@ -1,48 +1,49 @@
-// tests/timeaccel/merge_timeaccel_test.go (Plan 6 Phase E Task E-4).
+// tests/timeaccel/merge_timeaccel_test.go.
 //
-// Time-accelerated tier (//go:build timeaccel) for the Plan 6 merge engine.
+// Time-accelerated tier (//go:build timeaccel) for the merge engine.
 // Validates timing-sensitive contracts that the default unit-test pass
 // cannot bound deterministically without sleep budgets:
 //
-//  1. Per-stage timeouts (BaselineConfig.Timeout / CandidateConfig.Timeout
-//     surface ErrBaselineFailed / wrap context.DeadlineExceeded paths).
-//  2. Flake-rerun budget exhaustion under the canonical Mode taxonomy
-//     (ModeNormal=2 → recovers; ModeDegraded80=0 → no rerun).
-//  3. inv-zen-108 SIGKILL grace under a hanging candidate (ctx 50ms +
-//     grace 30ms → EvtMergeStragglerKilled emitted).
+// 1. Per-stage timeouts (BaselineConfig.Timeout / CandidateConfig.Timeout
+// surface ErrBaselineFailed / wrap context.DeadlineExceeded paths).
+// 2. Flake-rerun budget exhaustion under the canonical Mode taxonomy
+// (ModeNormal=2 → recovers; ModeDegraded80=0 → no rerun).
+// 3. invariant SIGKILL grace under a hanging candidate (ctx 50ms +
+// grace 30ms → EvtMergeStragglerKilled emitted).
 //
 // Wiring:
 //
-//   - tCExec implements merge.TestExecutor with a `scripts []RunResult`
-//     stream + an optional per-call `delay`. The flake-rerun cases use
-//     scripts to drive the smoke / full / rerun cadence; the timeout +
-//     inv-zen-108 cases use `delay` to push beyond the configured budget.
-//   - tCEmitter implements merge.EventEmitter with a mutex-guarded slice
-//     and Snapshot() defensive copy (mirror of the b7Emitter / replay
-//     emitter pattern used in adversarial / replay / compliance tiers).
-//   - tCPool implements merge.WorktreePool by returning a stub
-//     LeasedWorktree on every Lease and a no-op Release; the production
-//     path (Phase D engine) is not exercised here — these tests target
-//     the per-candidate runner + per-stage runner contracts directly.
+// - tCExec implements merge.TestExecutor with a `scripts []RunResult`
+// stream + an optional per-call `delay`. The flake-rerun cases use
+// scripts to drive the smoke / full / rerun cadence; the timeout +
+// invariant cases use `delay` to push beyond the configured budget.
+// - tCEmitter implements merge.EventEmitter with a mutex-guarded slice
+// and Snapshot() defensive copy (mirror of the b7Emitter / replay
+// emitter pattern used in adversarial / replay / compliance tiers).
+// - tCPool implements merge.WorktreePool by returning a stub
+// LeasedWorktree on every Lease and a no-op Release; the production
+// path is not exercised here — these tests target
+// the per-candidate runner + per-stage runner contracts directly.
 //
 // Plan deviation notes:
 //
-//   - inv-zen-108 (TestTimeaccel_InvZen108StragglerEmittedAfterGrace):
-//     the plan template uses a ctx-honoring `tCExec.Run` (`select { case
-//     <-ctx.Done(): return; case <-time.After(delay): ... }`). Under the
-//     production runner's defer LIFO (close(done) before ccancel), a ctx-
-//     honoring exec returns at the ctx-fire boundary; close(done) then
-//     runs BEFORE the supervisor's first-select observes cctx.Done —
-//     making the grace-fire branch racy (Go's select picks `done` OR
-//     `cctx.Done` pseudo-randomly). The same race adaptation was applied
-//     in D-8 (`tests/compliance/inv_zen_108_straggler_grace_test.go`) and
-//     in the D-3 internal `runner_straggler_test.go`. We mirror that
-//     deviation here: `tCExec.Run` honors ctx for the flake-rerun + base-
-//     line-timeout cases (so cancellation is observable), and the
-//     dedicated `hangingExec` helper does a non-ctx-honoring time.Sleep
-//     for the inv-zen-108 case so the supervisor sees a still-running
-//     candidate when the grace timer fires.
+// - invariant (TestTimeaccel_InvZen108StragglerEmittedAfterGrace):
+// the plan template uses a ctx-honoring `tCExec.Run` (`select { case
+// <-ctx.Done(): return; case <-time.After(delay):... }`). Under the
+// production runner's defer LIFO (close(done) before ccancel), a ctx-
+// honoring exec returns at the ctx-fire boundary; close(done) then
+// runs BEFORE the supervisor's first-select observes cctx.Done —
+// making the grace-fire branch racy (Go's select picks `done` OR
+// `cctx.Done` pseudo-randomly). The same race adaptation was applied
+// in D-8 (`tests/compliance/inv_zen_108_straggler_grace_test.go`) and
+// in the D-3 internal `runner_straggler_test.go`. We mirror that
+// deviation here: `tCExec.Run` honors ctx for the flake-rerun + base-
+// line-timeout cases (so cancellation is observable), and the
+// dedicated `hangingExec` helper does a non-ctx-honoring time.Sleep
+// for the invariant case so the supervisor sees a still-running
+// candidate when the grace timer fires.
 //
+// go:build timeaccel
 //go:build timeaccel
 // +build timeaccel
 

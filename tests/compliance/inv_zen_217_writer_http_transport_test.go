@@ -1,21 +1,21 @@
-// Compliance test for inv-zen-217: the migrate writer's mcp_servers block
+// Compliance test for invariant: the migrate writer's mcp_servers block
 // MUST emit HTTP transport (NOT stdio) for the gateway-default zen-swarm
 // entry pointing at the zen-swarm-ctld daemon.
 //
 // Methodology: dual-layer.
-//  1. SOURCE-LEVEL (AST): parse internal/migrate/writer/write_hermes_config.go
-//     and walk every basic-literal string. Assert NONE matches the stdio
-//     forbidden patterns ("command: zen-swarm-ctld" + the stdio args literal).
-//     This catches a future edit that copies the old stdio form back in.
-//     Comments are excluded — a doc comment explaining the bug history is
-//     acceptable; only EMITTED string literals are dangerous.
-//  2. RUNTIME (rendered output): call RenderMCPServersBlockForCompliance(nil)
-//     via the writer package import and walk the returned lines. Assert the
-//     zen-swarm: section contains "transport: http" and NOT
-//     "command: zen-swarm-ctld".
+// 1. SOURCE-LEVEL (AST): parse internal/migrate/writer/write_hermes_config.go
+// and walk every basic-literal string. Assert NONE matches the stdio
+// forbidden patterns ("command: zen-swarm-ctld" + the stdio args literal).
+// This catches a future edit that copies the old stdio form back in.
+// Comments are excluded — a doc comment explaining the bug history is
+// acceptable; only EMITTED string literals are dangerous.
+// 2. RUNTIME (rendered output): call RenderMCPServersBlockForCompliance(nil)
+// via the writer package import and walk the returned lines. Assert the
+// zen-swarm: section contains "transport: http" and NOT
+// "command: zen-swarm-ctld".
 //
-// Plan 18a Phase C C-10. Replaces the Plan 13 emission contract; preserved
-// across all subsequent plans (Plan 18b rename of plugin/zen-swarm/ →
+// C-10. Replaces the emission contract; preserved
+// across all subsequent plans ( rename of plugin/zen-swarm/ →
 // plugin/hades/ does NOT touch the daemon's MCP form; this invariant survives).
 package compliance
 

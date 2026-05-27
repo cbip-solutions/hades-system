@@ -1,61 +1,62 @@
 // + urgent bypass.
 //
-// Drives inv-zen-125: urgent severity ALWAYS bypasses quiet hours
+// Drives invariant: urgent severity ALWAYS bypasses quiet hours
 // (when `UrgentBypass=true` and no `UrgentPauseUntil` is active);
 // non-urgent severities are deferred while inside the quiet window.
 //
 // The implementation surface (internal/inbox/quiet_hours.go) is two
 // pure predicates:
 //
-//   - InQuietHours(QuietHours, now) bool — wallclock-only quiet-window
-//     evaluator. Honors wrap-midnight (Start > End) and
-//     WeekendExtended.
-//   - ShouldEmit(Notification, QuietConfig, now) bool — composes the
-//     per-severity policy: urgent returns true even inside quiet hours
-//     (unless UrgentBypass=false OR UrgentPauseUntil is active);
-//     non-urgent returns false inside quiet hours.
+// - InQuietHours(QuietHours, now) bool — wallclock-only quiet-window
+// evaluator. Honors wrap-midnight (Start > End) and
+// WeekendExtended.
+// - ShouldEmit(Notification, QuietConfig, now) bool — composes the
+// per-severity policy: urgent returns true even inside quiet hours
+// (unless UrgentBypass=false OR UrgentPauseUntil is active);
+// non-urgent returns false inside quiet hours.
 //
 // Drift notes (vs plan-template heredoc):
 //
-//   - The plan template referenced fictional surfaces:
-//     `inbox.NewDeliveryGate`, `inbox.DeliveryGateDeps{Store, Emitter,
-//     Clock, QuietHours}`, `gate.Submit(ctx, evt)`, `gate.Run(ctx)`,
-//     `eventlog.TypeInboxDelivered`, `inbox.SeverityInfoBatched`,
-//     `projectctx.ProjectID(testhelpers.MakeProjectID(0))`,
-//     `testhelpers.NewMigratedStore(t)`. None exist. Reality:
+// - The plan template referenced fictional surfaces:
+// `inbox.NewDeliveryGate`, `inbox.DeliveryGateDeps{Store, Emitter,
+// Clock, QuietHours}`, `gate.Submit(ctx, evt)`, `gate.Run(ctx)`,
+// `eventlog.TypeInboxDelivered`, `inbox.SeverityInfoBatched`,
+// `projectctx.ProjectID(testhelpers.MakeProjectID(0))`,
+// `testhelpers.NewMigratedStore(t)`. None exist. Reality:
 //
-//   - There is NO `DeliveryGate` daemon goroutine; quiet-hours
-//     gating is a pure function executed at notification-emit time
-//     (the plug site is the daemon's emitter, which calls
-//     `ShouldEmit` and either delivers immediately or stores in the
-//     inbox table for the operator to read at zen-day-time).
-//   - Severity has 4 tiers — the 4th is `SeverityInfoDigest`, NOT
-//     `SeverityInfoBatched`. Reality wins.
-//   - There is no defer-and-release-at-end-of-quiet pipeline yet;
-//     non-urgent during quiet hours is simply NOT emitted at the
-//     channel layer (Plan 11 handles channel adapters; until then,
-//     the contract is "ShouldEmit returns false" which the daemon
-//     interprets as "store row, do not push notification"). The
-//     plan template's "release all deferred at 09:00" is an
-//     external-channel concern (Plan 11), not an inbox-level one.
-//     We pin the load-bearing claim that ShouldEmit is correct
-//     across the boundary; channel-side release semantics are out
-//     of scope for K-16.
+// - There is NO `DeliveryGate` daemon goroutine; quiet-hours
+// gating is a pure function executed at notification-emit time
+// (the plug site is the daemon's emitter, which calls
+// `ShouldEmit` and either delivers immediately or stores in the
+// inbox table for the operator to read at zen-day-time).
+// - Severity has 4 tiers — the 4th is `SeverityInfoDigest`, NOT
+// `SeverityInfoBatched`. Reality wins.
+// - There is no defer-and-release-at-end-of-quiet pipeline yet;
+// non-urgent during quiet hours is simply NOT emitted at the
+// channel layer ( handles channel adapters; until then,
+// the contract is "ShouldEmit returns false" which the daemon
+// interprets as "store row, do not push notification"). The
+// plan template's "release all deferred at 09:00" is an
+// external-channel concern, not an inbox-level one.
+// We pin the load-bearing claim that ShouldEmit is correct
+// across the boundary; channel-side release semantics are out
+// of scope for K-16.
 //
-//   - The plan template asserted "exactly 5 InboxDelivered events
-//     at 09:00 ± 1s (3 from 21:00 batch + 2 mid-night non-urgent)".
-//     That assertion presupposes a deferred-release pipeline that
-//     does not exist. Reality wins: we instead assert ShouldEmit's
-//     pure semantics across virtual time boundaries (boundary
-//     21:00 → quiet starts; boundary 09:00 → quiet ends; mid-night
-//     03:00 → still quiet; 09:30 → no longer quiet). The semantic
-//     is identical to the plan template's intent at the predicate
-//     level.
+// - The plan template asserted "exactly 5 InboxDelivered events
+// at 09:00 ± 1s (3 from 21:00 batch + 2 mid-night non-urgent)".
+// That assertion presupposes a deferred-release pipeline that
+// does not exist. Reality wins: we instead assert ShouldEmit's
+// pure semantics across virtual time boundaries (boundary
+// 21:00 → quiet starts; boundary 09:00 → quiet ends; mid-night
+// 03:00 → still quiet; 09:30 → no longer quiet). The semantic
+// is identical to the plan template's intent at the predicate
+// level.
 //
-//   - WeekendExtended scenario tested with Saturday 12:00
-//     timestamps; the WeekendExtended flag forces ALL of Saturday +
-//     Sunday into quiet, regardless of Start/End.
+// - WeekendExtended scenario tested with Saturday 12:00
+// timestamps; the WeekendExtended flag forces ALL of Saturday +
+// Sunday into quiet, regardless of Start/End.
 //
+// go:build timeaccel
 //go:build timeaccel
 // +build timeaccel
 

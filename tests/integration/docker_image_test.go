@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 
-// Package integration_test — Plan 15 Phase D-9 Docker image build
+// Package integration_test — Docker image build
 // integration. Exercises `docker buildx build` against the in-tree
 // Dockerfile when docker is available; otherwise skips cleanly.
 //
-//go:build integration
-
+// go:build integration
 package integration_test
 
 import (
@@ -53,7 +52,7 @@ func TestDockerfileMultiStage(t *testing.T) {
 	}
 	text := string(data)
 	required := []string{
-		"FROM golang:1.25",
+		"FROM golang:1.26",
 		"AS builder",
 		"FROM gcr.io/distroless/cc-debian12",
 	}

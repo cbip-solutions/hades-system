@@ -14,7 +14,7 @@ The reason arg is required. Denial is a doctrinal NO; the rationale is load-bear
 ## 2. POST to daemon
 
 ```bash
-# pending endpoint registration: amendment deny (POST) anchored via inv-zen-072
+# pending endpoint registration: amendment deny (POST) anchored via invariant
 curl --unix-socket /tmp/zen-swarm.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
@@ -48,8 +48,8 @@ Same as /amendment-ack — operator's reason MUST NOT contain Claude/Anthropic/A
 
 ## Cross-references
 
-- Plan 5 + Plan 8 amendment lifecycle
-- inv-zen-072 amendment audit chain anchor
+-  +  amendment lifecycle
+- invariant amendment audit chain anchor
 - /amendment-list, /amendment-show, /amendment-ack
 """
 

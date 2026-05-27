@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator — exit_codes.go ships the Plan 13 Phase F bitmask
+// Package aggregator — exit_codes.go ships the bitmask
 // exit-code computation per Q5=C+ + spec §5.2.
 //
-//   - bit 0 (1) = any warn
-//   - bit 1 (2) = any fail
-//   - bit 2 (4) = any skip-unable-to-check
+// - bit 0 (1) = any warn
+// - bit 1 (2) = any fail
+// - bit 2 (4) = any skip-unable-to-check
 //
 // OR'd: 3 = warn+fail, 5 = warn+skip, 6 = fail+skip, 7 = all-three.
 //
 // SOTA-4 anti-pattern #5 ("exit-code-as-mask undiscoverable") avoided via
 // explicit documentation in `zen doctor full --help` EXIT CODES section
-// shipped by Phase F5.
+// shipped by
 package aggregator
 
 import "github.com/cbip-solutions/hades-system/internal/doctor/check"

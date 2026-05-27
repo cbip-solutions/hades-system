@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package caronteembedadapter bridges the caronte intent layer's narrow
-// CodeEmbedder + Reranker seams to the real Plan 14 ecosystem implementations
+// CodeEmbedder + Reranker seams to the real ecosystem implementations
 // (JinaCodeEmbeddings + BGEReRankerV2M3). It lives in internal/daemon (the
 // composition-root layer) because internal/caronte must NOT import
-// internal/research/ecosystem — inv-zen-129 (the embed path is a local
+// internal/research/ecosystem — invariant (the embed path is a local
 // subprocess, no net/http) is preserved structurally by keeping caronte's
 // dependency on a pure interface. The daemon wires these adapters into
 // caronte.Deps at main.go.
@@ -13,7 +13,7 @@
 // internal/research/ecosystem (the Jina/BGE implementations). The daemon
 // orchestrator, dispatcher, and mcpgateway MUST NOT import either side
 // directly — they receive the wired intent.CodeEmbedder / intent.Reranker
-// values from the composition root (inv-zen-031 + inv-zen-129).
+// values from the composition root.
 package caronteembedadapter
 
 import (

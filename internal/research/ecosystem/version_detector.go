@@ -3,7 +3,7 @@
 //
 // VersionDetector — 5-layer version-context detection cascade.
 //
-// Invariant inv-zen-192: VersionDetector.Detect is deterministic for the same
+// Invariant invariant: VersionDetector.Detect is deterministic for the same
 // (req.Query, req.Version, req.ProjectPath) triple — no random elements, no
 // per-call state mutation. Layer 4 (Haiku classifier) is gated by
 // VersionDetectorOptions.SkipLLMDetection; when enabled the cascade falls
@@ -11,11 +11,11 @@
 //
 // Layer priority (first-match-wins):
 //
-//	Layer 1 — explicit req.Version != "" → return as-is  (deterministic)
-//	Layer 2 — project-file parser (go.mod / pyproject.toml / package.json / Cargo.toml)
-//	Layer 3 — in-query regex /(go|python|node|react|rust)\s+\d+(\.\d+)+/i
-//	Layer 4 — Claude Haiku classifier via Plan 3 dispatcher (confidence > 0.7)
-//	Layer 5 — default "latest_stable"
+// Layer 1 — explicit req.Version != "" → return as-is (deterministic)
+// Layer 2 — project-file parser (go.mod / pyproject.toml / package.json / Cargo.toml)
+// Layer 3 — in-query regex /(go|python|node|react|rust)\s+\d+(\.\d+)+/i
+// Layer 4 — Claude Haiku classifier dispatcher (confidence > 0.7)
+// Layer 5 — default "latest_stable"
 package ecosystem
 
 import (
@@ -81,7 +81,7 @@ func (vd *VersionDetector) Detect(ctx context.Context, req QueryRequest) (versio
 	if !vd.opts.SkipLLMDetection && vd.opts.HaikuClassifier != nil {
 		v, confidence, classifyErr := vd.opts.HaikuClassifier.Classify(ctx, req.Query, req.Ecosystem)
 		if classifyErr != nil {
-			// Absorbed Layer 4 is best-effort. The audit emitter in Phase D
+			// Absorbed Layer 4 is best-effort. The audit emitter in
 			// captures these via the RAGAuditChainEmitter; we do not surface
 			// the error to the caller — connectivity loss must not break the
 			// query path (spec §2.5 Q5=A: "graceful degradation").

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// engine. Gate.Check is the function the Plan 3 dispatcher MUST call
-// before any backend.Forward(...) — that is inv-zen-076's call-site
+// engine. Gate.Check is the function the dispatcher MUST call
+// before any backend.Forward(...) — that is invariant's call-site
 // contract. The Decision struct returned by Check carries:
 //
-//   - Allowed:           true iff no scope is blocked (cap or pause)
-//   - BlockedScopes:     scopes that blocked the call, sorted MOST
-//     restrictive first (inv-zen-079; worker_id <
-//     stage < doctrine < project)
-//   - RemainingPerScope: USD remaining per scope (positive when allowed,
-//     negative when over-cap; useful for telemetry)
+// - Allowed: true iff no scope is blocked (cap or pause)
+// - BlockedScopes: scopes that blocked the call, sorted MOST
+// restrictive first (invariant; worker_id <
+// stage < doctrine < project)
+// - RemainingPerScope: USD remaining per scope (positive when allowed,
+// negative when over-cap; useful for telemetry)
 //
 // Pause + cap on the same scope deduplicate: one entry per scope max.
 //

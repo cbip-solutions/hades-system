@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — verifier.go
 //
-// 3-stage symbol existence verifier per spec §2.7 Q7=A Layer 2 (Plan 14
-// Phase D task D-5).
+// 3-stage symbol existence verifier per spec §2.7 Q7=A Layer 2 (
+// task D-5).
 //
 // Stages (sequential; first hit wins):
 //
-//	A — SymbolIndex.Contains: O(1) in-memory hash-set lookup (sub-μs).
-//	     Populated by Phase C at daemon startup + incremental Register on
-//	     ingest. ~99% of canonical-symbol queries hit here.
+// A — SymbolIndex.Contains: O(1) in-memory hash-set lookup (sub-μs).
+// Populated by at daemon startup + incremental Register on
+// ingest. ~99% of canonical-symbol queries hit here.
 //
-//	B — 24h LRU cache: in-process LRU keyed by (ecosystem, version,
-//	     symbol_path). Records live-cmd outputs for symbols that miss
-//	     the index (typically third-party packages not yet indexed).
-//	     TTL aligns with Q9=A 24h revalidation cadence; TTL exceeded →
-//	     eviction-on-read, fall to C. Negative results are also cached
-//	     so we don't re-shell-out on every hallucinated symbol.
+// B — 24h LRU cache: in-process LRU keyed by (ecosystem, version,
+// symbol_path). Records live-cmd outputs for symbols that miss
+// the index (typically third-party packages not yet indexed).
+// TTL aligns with Q9=A 24h revalidation cadence; TTL exceeded →
+// eviction-on-read, fall to C. Negative results are also cached
+// so we don't re-shell-out on every hallucinated symbol.
 //
-//	C — live cmd: per-ecosystem shellout via LiveCmdRunner abstraction.
-//	     Production runner (execLiveCmdRunner in verifier_live_cmd.go)
-//	     calls `go doc`, `python -c`, `npm view`, `cargo search`. Result
-//	     written into the LRU before returning, so the next call for
-//	     the same symbol within TTL hits stage B.
+// C — live cmd: per-ecosystem shellout via LiveCmdRunner abstraction.
+// Production runner (execLiveCmdRunner in verifier_live_cmd.go)
+// calls `go doc`, `python -c`, `npm view`, `cargo search`. Result
+// written into the LRU before returning, so the next call for
+// the same symbol within TTL hits stage B.
 //
 // Verify-at-answer-time is the deterministic anchor against package-
 // hallucination. USENIX Sec 2025 (arXiv 2406.10279) finds 5.2%
@@ -30,10 +30,10 @@
 // (sub-μs); LRU absorbs repeated cold-misses; live cmd is the cold-start
 // path with strict 24h TTL.
 //
-// inv-zen-195 partial: Verify(symbols) hot path on stage-A is O(1) per
-// ref; goroutine-safe; bench in Phase C covers the symbol_index leaf.
+// invariant partial: Verify(symbols) hot path on stage-A is O(1) per
+// ref; goroutine-safe; bench in covers the symbol_index leaf.
 //
-// inv-zen-205 (D-13): doctrine-knob can downgrade verify (default
+// invariant (D-13): doctrine-knob can downgrade verify (default
 // doctrine skips stage C on cold misses) — see VerifierConfig.SkipStageC.
 //
 // Concurrency Verifier.Verify is goroutine-safe. A single mutex
@@ -129,18 +129,18 @@ type lruEntry struct {
 //
 // Separator alternatives:
 //
-//	`.`   — Go, Python, TypeScript member access (e.g., `pkg.Sym`).
-//	`/`   — Go import paths (e.g., `crypto/sha256`).
-//	`:`   — reserved separator (some symbol-table formats use it).
-//	`::`  — Rust path separator (e.g., `tokio::spawn`, `std::sync::Mutex`).
+// `.` — Go, Python, TypeScript member access (e.g., `pkg.Sym`).
+// `/` — Go import paths (e.g., `crypto/sha256`).
+// `:` — reserved separator (some symbol-table formats use it).
+// `::` — Rust path separator (e.g., `tokio::spawn`, `std::sync::Mutex`).
 //
 // Allowed shapes (D-5 fix-cycle 2):
 //
-//	go         "crypto/sha256.Sum256"          "encoding/json.Marshal"
-//	go modules "github.com/zen-swarm/zen"      "k8s.io/api/core/v1.Pod"
-//	python     "functools.partial"             "asyncio"
-//	typescript "react.useState"
-//	rust       "tokio::spawn"                  "std::async::spawn"
+// go "crypto/sha256.Sum256" "encoding/json.Marshal"
+// go modules "github.com/zen-swarm/zen" "k8s.io/api/core/v1.Pod"
+// python "functools.partial" "asyncio"
+// typescript "react.useState"
+// rust "tokio::spawn" "std::async::spawn"
 //
 // Each segment starts with [A-Za-z_] and may contain [A-Za-z0-9_-]
 // thereafter. Hyphens are allowed mid-segment (npm + go-module names

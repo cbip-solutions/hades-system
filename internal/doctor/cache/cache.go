@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package cache ships the Plan 13 Phase F doctor freshness cache layer
+// Package cache ships the doctor freshness cache layer
 // per Q5=C+ + Q12=D state model. Last-run JSON output is persisted at
 // `$XDG_CACHE_HOME/zen-swarm/doctor/last-run.json` (default
 // `~/.cache/zen-swarm/doctor/last-run.json`). Per-operator freshness ≤5min
-// TTL (configurable via Q5=C+ `--cache-ttl=N` flag, Phase F5).
+// TTL.
 //
-// Boundary (inv-zen-031): cache writes ONLY to XDG paths; no DB; no
+// Boundary: cache writes ONLY to XDG paths; no DB; no
 // internal/store import.
 //
-// Cross-platform: tests inject t.TempDir() + t.Setenv("HOME", ...)
-// + t.Setenv("XDG_CACHE_HOME", ...) for deterministic state. Production
+// Cross-platform: tests inject t.TempDir() + t.Setenv("HOME",...)
+// + t.Setenv("XDG_CACHE_HOME",...) for deterministic state. Production
 // honours $XDG_CACHE_HOME first, then $HOME/.cache.
 package cache
 

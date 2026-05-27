@@ -50,9 +50,9 @@ func AllFileTypes() []FileType {
 // indexer → query → ranker → output formatter. Field set is the contract.
 //
 // Extension-hook fields (AuditChainAnchor, EcosystemJoinKeys,
-// CaronteSymbolRefs) ship as sql.NullString so "Plan 9 / Plan 14 /
+// CaronteSymbolRefs) ship as sql.NullString so " / /
 // caronte has not yet filled this" is structurally distinct from "filled
-// with the empty string". Per inv-zen-130: Plan 7 INSERT statements MUST
+// with the empty string". Per invariant: INSERT statements MUST
 // NEVER populate these three fields. Compliance test enforces.
 type Doc struct {
 	FilePath        string

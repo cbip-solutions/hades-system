@@ -37,12 +37,12 @@ func DoctrineMissPolicy(d doctrine.Name) MissPolicy {
 //
 // Implications for callers:
 //
-//   - To downgrade a max-scope routine from CatchUpBounded to Skip,
-//     the operator must set a different non-zero value (e.g.
-//     NotifyOnly) — explicit Skip on max-scope is interpreted as
-//     "use doctrine default".
-//   - aggregate routines on max-scope set MissPolicyCoalesce
-//     explicitly; this is non-zero so resolution is unambiguous.
+// - To downgrade a max-scope routine from CatchUpBounded to Skip,
+// the operator must set a different non-zero value (e.g.
+// NotifyOnly) — explicit Skip on max-scope is interpreted as
+// "use doctrine default".
+// - aggregate routines on max-scope set MissPolicyCoalesce
+// explicitly; this is non-zero so resolution is unambiguous.
 //
 // nil-safe: a nil receiver returns DoctrineMissPolicy(d) directly so
 // adapter paths that may construct a Schedule from a partial

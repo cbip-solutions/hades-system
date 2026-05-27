@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — quiet_p7.go (Plan 7 Phase E Task E-13).
+// Package handlers — quiet_p7.go.
 //
-// Three routes for the Plan 7 quiet-hours operator surface:
+// Three routes for the quiet-hours operator surface:
 //
-//	GET  /v1/quiet                — render quiet config + active pause
-//	POST /v1/quiet/urgent-pause   — set UrgentPauseUntil for a duration
-//	POST /v1/quiet/cancel         — clear active urgent-pause
+// GET /v1/quiet — render quiet config + active pause
+// POST /v1/quiet/urgent-pause — set UrgentPauseUntil for a duration
+// POST /v1/quiet/cancel — clear active urgent-pause
 //
 // The persistent quiet-hours config (~/.config/zen-swarm/notifications.toml)
 // is operator-edited; this surface ONLY exposes the read view + the
@@ -15,14 +15,14 @@
 //
 // Status-code mapping (mirrors the inbox_p7 + schedule_p7 patterns):
 //
-//	503  — QuietStore() not yet wired (cmd/zen-swarm-ctld registers
-//	       the store at boot; tests inject fakes via SetQuietStore).
-//	400  — invalid JSON / missing required fields (until on pause).
-//	422  — validation rejected the input (zero / past until).
-//	500  — opaque backend error.
-//	200  — success; bodies documented per route below.
+// 503 — QuietStore() not yet wired (cmd/zen-swarm-ctld registers
+// the store at boot; tests inject fakes via SetQuietStore).
+// 400 — invalid JSON / missing required fields (until on pause).
+// 422 — validation rejected the input (zero / past until).
+// 500 — opaque backend error.
+// 200 — success; bodies documented per route below.
 //
-// inv-zen-031 boundary: this handler imports internal/inbox value types
+// invariant boundary: this handler imports internal/inbox value types
 // only (QuietConfig / QuietHours). No internal/store imports — the
 // QuietStore interface is structural and the daemon-side accessor
 // returns it as the same interface, keeping the boundary at the
@@ -30,9 +30,9 @@
 //
 // CLI surface (handled in internal/cli/quiet.go):
 //
-//	zen quiet [--list]                  # default: list
-//	zen quiet --urgent-pause <duration>
-//	zen quiet --cancel
+// zen quiet [--list] # default: list
+// zen quiet --urgent-pause <duration>
+// zen quiet --cancel
 package handlers
 
 import (

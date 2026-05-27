@@ -21,8 +21,7 @@ from hermes_plugins.hades.renderers.types import (
 def sample_envelope_caronte() -> Envelope:
     """Single caronte-source per-citation envelope, frozen-time deterministic.
 
-    Plan 19: source renamed gitnexus_query → caronte_query (Plan 11 §3.1 tool
-    name `mcp_zen-swarm_caronte_query`). Wire value ``caronte_query`` matches Go
+    : source renamed gitnexus_query → caronte_query. Wire value ``caronte_query`` matches Go
     ``SourceCaronteQuery``.
     """
     return Envelope(
@@ -47,16 +46,16 @@ def sample_envelope_caronte() -> Envelope:
 def sample_envelope_gitnexus(sample_envelope_caronte: Envelope) -> Envelope:
     """Backward-compat alias for sample_envelope_caronte.
 
-    Pre-Plan-19 tests referenced this fixture by the old name; keeping the
+    Pre- tests referenced this fixture by the old name; keeping the
     alias avoids a cascade rename across all renderer tests. The fixture now
-    returns a CARONTE_QUERY envelope (the canonical post-Plan-19 source).
+    returns a CARONTE_QUERY envelope.
     """
     return sample_envelope_caronte
 
 
 @pytest.fixture
 def sample_envelope_aggregator() -> Envelope:
-    """Plan 9 D aggregator-source per-citation envelope."""
+    """ D aggregator-source per-citation envelope."""
     return Envelope(
         id="c-5678efgh4567",
         type=CitationType.FILE_SLICE,

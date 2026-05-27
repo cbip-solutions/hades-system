@@ -1,14 +1,14 @@
-// Package ci tests — Plan 15 Phase A A-5/A-9 — rolling window unit tests.
+// Package ci tests — A-5/A-9 — rolling window unit tests.
 //
 // Tests the 50/45/2 elite-DORA-CFR-aligned rolling window semantics
-// (spec §7.3; amendment §2.5 D-5; inv-zen-275). Covers:
-//   - default thresholds match canonical 50/45/2
-//   - all-success → pass
-//   - sample <30 → fail with "sample" diagnostic
-//   - real-fail count > MaxRealFails → fail with "real" diagnostic
-//   - infra-bucketed failures excluded from denominator
-//   - flake-bucketed failures excluded from denominator
-//   - ratio below threshold → fail
+// . Covers:
+// - default thresholds match canonical 50/45/2
+// - all-success → pass
+// - sample <30 → fail with "sample" diagnostic
+// - real-fail count > MaxRealFails → fail with "real" diagnostic
+// - infra-bucketed failures excluded from denominator
+// - flake-bucketed failures excluded from denominator
+// - ratio below threshold → fail
 //
 // Coverage target ≥90% (rolling_window.go is correctness-critical per
 // CLAUDE.md security/correctness list: validator + cost_ledger family).
@@ -124,8 +124,8 @@ func TestRollingWindow_Evaluate_RatioGate(t *testing.T) {
 	// To trigger ratio gate alone: need real ≤ 2 + denom ≥ 30 + ratio < 0.9.
 	// With real=2, success=18 → denom=20<30. With real=2, success=28 → denom=30, ratio 0.933.
 	// Cannot trigger ratio<0.9 with real≤2 + denom≥30 because:
-	//   ratio = success / (success+2) < 0.9 → success < 0.9*(success+2) → 0.1*success < 1.8 → success < 18.
-	//   With success<18 + real=2 → denom<20 → fails on sample first.
+	// ratio = success / (success+2) < 0.9 → success < 0.9*(success+2) → 0.1*success < 1.8 → success < 18.
+	// With success<18 + real=2 → denom<20 → fails on sample first.
 	// This is BY DESIGN — the real-fail cap is the binding constraint at MinSampleSize.
 	// We document this invariant via the test: the implementation MUST gate
 	// on real-fail before computing ratio, so the test verifies the gate

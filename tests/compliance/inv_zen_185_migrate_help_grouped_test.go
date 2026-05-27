@@ -9,9 +9,9 @@ import (
 )
 
 // TestInvZen185_MigrateHelpGrouped asserts `zen migrate --help` emits the
-// canonical two-group structure per Q11=C (spec §7.2). inv-zen-185.
+// canonical two-group structure per Q11=C (spec §7.2). invariant.
 //
-// Doctrine: any future Phase F subcommand additions to `zen migrate` MUST
+// Doctrine: any future subcommand additions to `zen migrate` MUST
 // land in the CONFIGURATION group (claude-code/hermes-config/doctrine/config).
 // Future schema-migration subcommands (up/down/status) MUST land in DATABASE
 // SCHEMA. The order DATABASE SCHEMA before CONFIGURATION is load-bearing UX.

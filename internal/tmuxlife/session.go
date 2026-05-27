@@ -72,9 +72,9 @@ func isValidSha8(s string) bool {
 	return true
 }
 
-// SessionStore is the inv-zen-031 boundary interface: tmuxlife declares
+// SessionStore is the invariant boundary interface: tmuxlife declares
 // what it needs from storage; the daemon implements via *store.Store
-// (Phase I `internal/daemon/handlers/sessions.go`).
+// .
 //
 // Implementations MUST be safe for concurrent use (multiple goroutines
 // from drift poller + idle reaper + CLI handlers). Implementation-side
@@ -98,20 +98,20 @@ type SessionStore interface {
 	// the live `tmux list-panes` output.
 	//
 	// Contract
-	//   - Returns a non-nil (possibly empty) map on success. An empty
-	//     map means "no panes registered yet" (pre-CreateWindows or
-	//     stale row); the poller treats this as "no expectation" and
-	//     emits no drift, NOT as an error.
-	//   - The poller iterates DaemonOwnedWindows; only those keys are
-	//     consulted. inv-zen-118: implementations MUST never return
-	//     WindowScratch as a key (compile-time guarded by the poller's
-	//     iteration over DaemonOwnedWindows, but a defense-in-depth
-	//     check at the implementation site is good practice).
-	//   - Errors surface storage-layer failures (e.g., daemon.db
-	//     unavailable). The DriftPoller logs and continues to the
-	//     next session — one bad row must not block the sweep.
+	// - Returns a non-nil (possibly empty) map on success. An empty
+	// map means "no panes registered yet" (pre-CreateWindows or
+	// stale row); the poller treats this as "no expectation" and
+	// emits no drift, NOT as an error.
+	// - The poller iterates DaemonOwnedWindows; only those keys are
+	// consulted. invariant: implementations MUST never return
+	// WindowScratch as a key (compile-time guarded by the poller's
+	// iteration over DaemonOwnedWindows, but a defense-in-depth
+	// check at the implementation site is good practice).
+	// - Errors surface storage-layer failures (e.g., daemon.db
+	// unavailable). The DriftPoller logs and continues to the
+	// next session — one bad row must not block the sweep.
 	//
-	// Wiring (Phase I): the daemon's *store.Store implements via a
+	// Wiring: the daemon's *store.Store implements via a
 	// JOIN over tmux_session_state and the (future) tmux_session_pane
 	// child table populated by Manager.CreateWindows + spawn paths.
 	ExpectedPanesFor(sessionName string) (map[WindowName][]string, error)
@@ -226,11 +226,11 @@ func (m *Manager) resolveAlias(alias string) (Session, error) {
 // directly to syscall.Exec.
 //
 // Side effects:
-//   - validates window argument (must be in AllWindows);
-//   - resolves alias → Session via daemon.db scan;
-//   - verifies the tmux session is alive via has-session (transitions row
-//     to StatusOrphaned and returns error if not);
-//   - updates LastAttachAt in daemon.db (best-effort).
+// - validates window argument (must be in AllWindows);
+// - resolves alias → Session via daemon.db scan;
+// - verifies the tmux session is alive via has-session (transitions row
+// to StatusOrphaned and returns error if not);
+// - updates LastAttachAt in daemon.db (best-effort).
 //
 // Why this signature instead of m.Attach being interactive: the CLI
 // process MUST replace itself with tmux to inherit the operator's TTY.
@@ -238,13 +238,13 @@ func (m *Manager) resolveAlias(alias string) (Session, error) {
 // boundary; tested in C-12 (CLI integration).
 //
 // Returns
-//   - ErrSessionNotFound if alias is absent from daemon.db.
-//   - non-sentinel wrapped error if has-session reports the tmux session
-//     is missing (row is flipped to StatusOrphaned for drift poller / Phase F
-//     brief generator to surface).
-//   - non-sentinel wrapped error if has-session itself fails for transport
-//     reasons (socket unreachable etc.); row is NOT flipped to Orphaned
-//     because we don't know whether the session is actually gone.
+// - ErrSessionNotFound if alias is absent from daemon.db.
+// - non-sentinel wrapped error if has-session reports the tmux session
+// is missing (row is flipped to StatusOrphaned for drift poller /
+// brief generator to surface).
+// - non-sentinel wrapped error if has-session itself fails for transport
+// reasons (socket unreachable etc.); row is NOT flipped to Orphaned
+// because we don't know whether the session is actually gone.
 func (m *Manager) Attach(ctx context.Context, alias string, window WindowName) ([]string, error) {
 	if !IsValidWindowName(window) {
 		return nil, fmt.Errorf("tmuxlife.Attach: window %q invalid (allowed: %v)",

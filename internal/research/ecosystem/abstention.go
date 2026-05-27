@@ -5,13 +5,13 @@
 //
 // # Algorithm
 //
-//	threshold = μ − λ(ecosystem) × σ
+// threshold = μ − λ(ecosystem) × σ
 //
 // where:
 //
-//	μ — arithmetic mean of top-K retriever scores
-//	σ — sample stdev (Bessel's correction) of top-K retriever scores
-//	λ — ecosystem-tuned coefficient (Go=0.3, Python=0.5, TS=0.8, Rust=0.4)
+// μ — arithmetic mean of top-K retriever scores
+// σ — sample stdev (Bessel's correction) of top-K retriever scores
+// λ — ecosystem-tuned coefficient (Go=0.3, Python=0.5, TS=0.8, Rust=0.4)
 //
 // Decision threshold < 0 → abstain (no answer faithful enough to ground).
 // Operator may tune at runtime via DoctrineProfile.AbstentionThresholds
@@ -44,18 +44,18 @@
 //
 // # Doctrine override path
 //
-// DoctrineProfile.AbstentionThresholds (Phase A doctrine.go) carries the
+// DoctrineProfile.AbstentionThresholds carries the
 // per-doctrine multiplier table (max-scope ×1.5, capa-firewall ×2.0 of
 // the baseline). Dispatcher resolves DoctrineProfile per query and passes
 // AbstentionThresholds as the override map. Override absent for a given
 // ecosystem → base λ from PerEcoLambda applied.
 //
-// # inv-zen-196
+// # invariant
 //
 // "Per-ecosystem λ tunable via providers config." Owned by this file:
 // the defaultPerEcoLambda table is the v0.14.0 baseline; the override
 // map (DoctrineProfile.AbstentionThresholds, populated from
-// providers TOML via Phase F F-8) is the runtime mutability surface.
+// providers TOML via F-8) is the runtime mutability surface.
 // Test TestAbstention_DefaultPerEcoLambda_AllFourEcosystemsCovered
 // enforces the 4-ecosystem coverage at compile/run time.
 //
@@ -67,11 +67,11 @@
 //
 // # Sensitivity / re-tuning
 //
-// Re-tuned post-corpus-rebuild on the adversarial held-out set per Phase H.
-// Phase H ships the calibration protocol in tests/adversarial/ecosystem/.
+// Re-tuned post-corpus-rebuild on the adversarial held-out set per
+// ships the calibration protocol in tests/adversarial/ecosystem/.
 //
-// Spec docs/superpowers/specs/2026-05-14-zen-swarm-plan-14-research-design.md §2.7 Q7=A Layer 3.
-// Master invariant: inv-zen-196.
+// Spec internal design record §2.7 Q7=A Layer 3.
+// Master invariant: invariant.
 package ecosystem
 
 import (
@@ -118,13 +118,13 @@ func defaultPerEcoLambda() map[Ecosystem]float64 {
 // NewAbstentionPolicy constructs a policy with the given config.
 //
 // Validation
-//   - PerEcoLambda empty/nil → seeded with defaultPerEcoLambda()
-//   - Each λ value must be finite and ≥ 0 (else
-//     ErrAbstentionInvalidLambda wrapped via %w)
-//   - MeanTopK == 0 → 50; StdevTopK == 0 → 50 (cannot be negative; we
-//     do not validate negative here because the type is int and the
-//     constructor's zero default handles the common case — callers
-//     passing negative get clamped behavior at use-time via min())
+// - PerEcoLambda empty/nil → seeded with defaultPerEcoLambda()
+// - Each λ value must be finite and ≥ 0 (else
+// ErrAbstentionInvalidLambda wrapped via %w)
+// - MeanTopK == 0 → 50; StdevTopK == 0 → 50 (cannot be negative; we
+// do not validate negative here because the type is int and the
+// constructor's zero default handles the common case — callers
+// passing negative get clamped behavior at use-time via min())
 //
 // Post returned policy has a non-nil perEco table and positive top-K
 // windows. Subsequent ShouldAbstain* calls do not mutate any field.
@@ -229,8 +229,8 @@ func arithmeticMean(v []float64) float64 {
 // Numerical note: this is the textbook two-pass formulation (mean then
 // deviations). It is accurate enough for K ≤ 50 typical scores in [0,1].
 // We do not use Welford's because:
-//   - the input is bounded and small
-//   - the two-pass form is easier to audit + verify against spec
+// - the input is bounded and small
+// - the two-pass form is easier to audit + verify against spec
 func sampleStdev(v []float64, mean float64) float64 {
 	if len(v) < 2 {
 		return 0

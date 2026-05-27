@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // budget_pauses + budget_anomalies + budget_anomaly_samples. Engine
 // access is mediated via internal/daemon/dispatcheradapter/budget_hooks.go;
-// internal/budget/ never imports this package directly (inv-zen-031).
+// internal/budget/ never imports this package directly.
 //
 // This file is the storage-layer counterpart to internal/budget/pause.go.
-// Migration 052 (committed in Phase F Task F-1) declared the three tables;
+// Migration 052 declared the three tables;
 // these wrappers expose typed Go-level access.
 package store
 

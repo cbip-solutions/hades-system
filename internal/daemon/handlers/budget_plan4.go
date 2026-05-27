@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — budget_plan4.go (Plan 4 Phase G Task G-3).
+// Package handlers — budget_plan4.go.
 //
 // 7 routes proxying to internal/budget/ engine:
 //
-//	GET  /v1/budget/cap_status   — pre-call cap check
-//	POST /v1/budget/record       — post-call axis tagging
-//	GET  /v1/budget/axes         — read axis tags for a cost_id
-//	GET  /v1/budget/anomaly      — z-score inspection
-//	GET  /v1/budget/events       — event log query
-//	POST /v1/budget/pause        — operator manual pause
-//	POST /v1/budget/resume       — operator manual resume
+// GET /v1/budget/cap_status — pre-call cap check
+// POST /v1/budget/record — post-call axis tagging
+// GET /v1/budget/axes — read axis tags for a cost_id
+// GET /v1/budget/anomaly — z-score inspection
+// GET /v1/budget/events — event log query
+// POST /v1/budget/pause — operator manual pause
+// POST /v1/budget/resume — operator manual resume
 //
-// Note existing Plan 3 routes /v1/budget, /v1/budget/{project}, /v1/budget/{project}/raise
-// remain in budget.go unchanged. Plan 4 routes use sub-path keys (cap_status, record, etc.)
+// Note existing routes /v1/budget, /v1/budget/{project}, /v1/budget/{project}/raise
+// remain in budget.go unchanged. routes use sub-path keys (cap_status, record, etc.)
 // to avoid collision.
 //
-// inv-zen-031: never imports internal/budget directly; all access via BudgetCtx interface.
+// invariant: never imports internal/budget directly; all access via BudgetCtx interface.
 package handlers
 
 import (

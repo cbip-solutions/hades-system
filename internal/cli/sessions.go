@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
-// Package cli — sessions.go (Plan 7 Phase C Task C-12).
+// Package cli — sessions.go.
 //
 // `zen sessions ls` lists all daemon-tracked tmux sessions in tabular
 // form (5 columns: ALIAS, SHA8, STATUS, LAST-ATTACH, PANES).
 //
 // Cobra layout:
 //
-//	zen sessions
-//	  ls    list known sessions + status + last attach time
+// zen sessions
+// ls list known sessions + status + last attach time
 //
 // Format is stable across releases so scripts can grep / awk the output;
-// changes will land via a new --json output format flag in Phase L,
+// changes will land via a new --json output format flag in,
 // never by mutating the column set.
 //
 // Exit-code mapping (per spec §6.2):
-//   - 0 success (any row count, including zero)
-//   - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503 Phase I gap
+// - 0 success (any row count, including zero)
+// - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503 gap
 //
-// Phase I gap: until the daemon ships GET /v1/sessions in Phase I, the
+// gap: until the daemon ships GET /v1/sessions in, the
 // route returns 503. The CLI surfaces 503 as exit 2.
 package cli
 

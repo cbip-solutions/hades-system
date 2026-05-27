@@ -1,34 +1,34 @@
 // SPDX-License-Identifier: MIT
 // Package semantic is Caronte's L2 resolution layer for Go: it turns the
-// syntactic symbol table Phase B parsed into a semantically resolved
+// syntactic symbol table parsed into a semantically resolved
 // call/implements graph, attaching a store.Confidence tier to EVERY edge
-// (inv-zen-233 — precision > recall for agents).
+// .
 //
 // Resolution paths, precision-ordered (§6):
 //
-//	buildable Go     → go/packages → SSA → VTA call graph + types.Implements
-//	                   ⇒ ConfExactVTA, Reachable = &true
-//	non-buildable Go → CHA fallback (sound over-approximation)
-//	                   ⇒ ConfExactCHA, Reachable = nil (NULL; CHA has no
-//	                     reachable set), OR last-valid VTA snapshot (stale)
-//	residual tail    → reflection / DI / dynamic dispatch the static
-//	                   analyser flags ambiguous ⇒ the C-2 single-egress seam
-//	                   (CaronteDispatcher.Forward, Profile "local-code")
-//	                   ⇒ ConfLLMHint, bounded to the unresolved tail
+// buildable Go → go/packages → SSA → VTA call graph + types.Implements
+// ⇒ ConfExactVTA, Reachable = &true
+// non-buildable Go → CHA fallback (sound over-approximation)
+// ⇒ ConfExactCHA, Reachable = nil (NULL; CHA has no
+// reachable set), OR last-valid VTA snapshot (stale)
+// residual tail → reflection / DI / dynamic dispatch the static
+// analyser flags ambiguous ⇒ the C-2 single-egress seam
+// (CaronteDispatcher.Forward, Profile "local-code")
+// ⇒ ConfLLMHint, bounded to the unresolved tail
 //
-// Boundary (inv-zen-031/230): this package NEVER imports internal/store. It
-// writes edges through the injected *store.Store (Phase A locked API) and
-// reaches the LLM ONLY through the CaronteDispatcher seam (inv-zen-088/236);
+// Boundary: this package NEVER imports internal/store. It
+// writes edges through the injected *store.Store and
+// reaches the LLM ONLY through the CaronteDispatcher seam;
 // the daemon wires the real *orchestrator.Orchestrator at the composition
-// root (Phase J). No net/http, no direct backend dial lives here — the
+// root. No net/http, no direct backend dial lives here — the
 // compliance test tests/compliance/inv_zen_236_caronte_single_egress_test.go
 // enforces that.
 //
 // Scheduling (§21 risk register): ResolveProject runs ON-DEMAND + cached,
 // NEVER during initial indexing — the go/types cold load is 10-60 s on
-// 500 k LOC; the fast indexing path (Phase B parse) does not block on it.
+// 500 k LOC; the fast indexing path does not block on it.
 //
-// inv-zen-129: this package makes NO web calls of its own (the dispatcher
+// invariant: this package makes NO web calls of its own (the dispatcher
 // seam is the single egress; embeddings are not used here).
 package semantic
 

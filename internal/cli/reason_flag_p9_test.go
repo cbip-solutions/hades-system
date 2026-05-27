@@ -1,14 +1,14 @@
-// Package cli — reason_flag_p9_test.go (Plan 9 Phase I Task I-12).
+// Package cli — reason_flag_p9_test.go.
 //
-// Cross-cutting compliance test for inv-zen-146:
+// Cross-cutting compliance test for invariant:
 // every operator-gated transition MUST require a non-empty --reason.
 //
 // The 8 gated leaves are tested against 2 rejection paths each:
-//  1. Missing flag entirely (cobra MarkFlagRequired catches it).
-//  2. Empty or whitespace-only string (RunE non-empty check catches it).
+// 1. Missing flag entirely (cobra MarkFlagRequired catches it).
+// 2. Empty or whitespace-only string (RunE non-empty check catches it).
 //
 // Total 8 leaves × 2 inputs = 16 sub-cases.
-// If any leaf returns err == nil, inv-zen-146 is violated at the CLI layer.
+// If any leaf returns err == nil, invariant is violated at the CLI layer.
 //
 // NOTE(plan-15): filename uses _p9 (not _plan9) to avoid Go's GOOS=plan9 build
 // constraint pattern that excludes *_plan9.go on darwin/linux.
@@ -26,7 +26,7 @@ import (
 )
 
 // TestInvZen146_AllGatedLeavesRequireNonEmptyReason iterates over the 8
-// operator-gated leaves defined in inv-zen-146 (spec §7.2). Each leaf fires
+// operator-gated leaves defined in invariant (spec §7.2). Each leaf fires
 // twice — once with no --reason flag and once with a whitespace-only value.
 // The mock daemon catches any request that leaks through; if reached, the test
 // fails immediately because the validation MUST happen before HTTP dispatch.

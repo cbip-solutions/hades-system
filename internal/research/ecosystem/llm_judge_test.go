@@ -3,27 +3,27 @@
 // Coverage strategy (security/correctness-critical — gates max-scope answer
 // emission per spec §2.7 Q7=A Layer 5; target ≥90%):
 //
-//   - Happy path: acceptable=true judgement.
-//   - Reject path with SuspiciousChunkIDs populated.
-//   - Malformed response (ErrJudgeResponseMalformed sentinel).
-//   - Backend error propagation.
-//   - Context cancellation (caller ctx).
-//   - Latency-budget timeout (configurable maxLatency).
-//   - Prompt contains all input markers (QUERY, ANSWER, CHUNK, citation IDs,
-//     symbol-paths).
-//   - NewHaikuLLMJudge nil-Backend validation.
-//   - NewHaikuLLMJudge default MaxLatencyMs when zero.
-//   - CountJudgements observability counter.
-//   - stripCodeFence handles ```json...``` and ```...``` wrappers.
-//   - abbreviate truncates long chunk content (incl. UTF-8 boundary safety
-//     post-IMP-1 fix-cycle).
-//   - Compile-time guarantee: *HaikuLLMJudge satisfies LLMJudge interface.
-//   - Race: parallel Judge() calls increment counter atomically.
-//   - Post-parse contract enforcement: Reason length clamp + Acceptable ↔
-//     SuspiciousChunks empty (post-IMP-2 fix-cycle).
-//   - Prompt-injection mitigation: nonce-bounded envelopes, per-call
-//     uniqueness, adversarial chunk content delimited safely (post-IMP-3
-//     fix-cycle).
+// - Happy path: acceptable=true judgement.
+// - Reject path with SuspiciousChunkIDs populated.
+// - Malformed response (ErrJudgeResponseMalformed sentinel).
+// - Backend error propagation.
+// - Context cancellation (caller ctx).
+// - Latency-budget timeout (configurable maxLatency).
+// - Prompt contains all input markers (QUERY, ANSWER, CHUNK, citation IDs,
+// symbol-paths).
+// - NewHaikuLLMJudge nil-Backend validation.
+// - NewHaikuLLMJudge default MaxLatencyMs when zero.
+// - CountJudgements observability counter.
+// - stripCodeFence handles ```json...``` and ```...``` wrappers.
+// - abbreviate truncates long chunk content (incl. UTF-8 boundary safety
+// post-IMP-1 fix-cycle).
+// - Compile-time guarantee: *HaikuLLMJudge satisfies LLMJudge interface.
+// - Race: parallel Judge() calls increment counter atomically.
+// - Post-parse contract enforcement: Reason length clamp + Acceptable ↔
+// SuspiciousChunks empty (post-IMP-2 fix-cycle).
+// - Prompt-injection mitigation: nonce-bounded envelopes, per-call
+// uniqueness, adversarial chunk content delimited safely (post-IMP-3
+// fix-cycle).
 package ecosystem
 
 import (

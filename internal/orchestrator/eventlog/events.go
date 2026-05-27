@@ -113,8 +113,8 @@ const (
 
 	EvtDoctrineAccessorAuditPassed EventType = 70
 
-	// inv-zen-197: canonical ordering; numbers MUST NOT change post-declaration.
-	// See docs/superpowers/specs/2026-05-14-zen-swarm-plan-14-ecosystem-rag-design.md §4.6.
+	// invariant: canonical ordering; numbers MUST NOT change post-declaration.
+	// See internal design record §4.6.
 	EvtRAGQuery         EventType = 92
 	EvtRAGRetrieval     EventType = 93
 	EvtRAGCitation      EventType = 94
@@ -182,9 +182,9 @@ const (
 // A-3) MUST reject events with !IsValid() Type() to prevent silent
 // zero-value emit.
 //
-// Phase J (Plan 5 J-2) wired the apply-engine slots
+// wired the apply-engine slots
 // (EvtApplyFixStarted/Succeeded/Reverted) into AllEventTypes() — they
-// are now valid wire codes that the Phase N
+// are now valid wire codes that the
 // internal/daemon/orchestratoradapter bridge translates from
 // apply-package-local apply.Event values.
 func (et EventType) IsValid() bool {
@@ -413,10 +413,10 @@ func AllEventTypes() []EventType {
 // Decode returns the value form (not pointer). Type-switch consumers MUST
 // match on the value type, not pointer:
 //
-//	switch ev := decoded.(type) {
-//	case eventlog.WorkerDispatched: // correct
-//	case *eventlog.WorkerDispatched: // never matches
-//	}
+// switch ev := decoded.(type) {
+// case eventlog.WorkerDispatched: // correct
+// case *eventlog.WorkerDispatched: // never matches
+// }
 //
 // Rationale avoids a nil-pointer hazard if a future Decode arm forgets to
 // dereference; trades a small-value copy for type-switch safety.
@@ -454,11 +454,11 @@ func (e OrchestratorRestarting) Type() EventType { return EvtOrchestratorRestart
 func (e OrchestratorRestarting) Payload() ([]byte, error) { return json.Marshal(e) }
 
 // OrchestratorRestoreFromReplay is the audit-trail event RecoveryEngine
-// emits via ReconstructInFlight (Phase E-6) when a replay-resume scan
-// completes — successful or HardPause-aborted. Phase A originally
+// emits via ReconstructInFlight when a replay-resume scan
+// completes — successful or HardPause-aborted. originally
 // declared the struct with {SessionID, RecoveryMs, EventsReplayed,
 // EventsCorrupted}; Task E-6 extends it with structured replay-result
-// fields so downstream audit consumers + Plan 9 hash-chain replay can
+// fields so downstream audit consumers + hash-chain replay can
 // observe the recovered task count and HardPause flag without re-
 // scanning the eventlog.
 //
@@ -468,8 +468,8 @@ func (e OrchestratorRestarting) Payload() ([]byte, error) { return json.Marshal(
 // {RecoveredTaskCount, HardPause, Reason} as well. JSON tags use
 // omitempty on the new fields so pre-E-6 audit_events_raw rows (if any
 // existed) round-trip cleanly through json.Unmarshal — missing keys
-// zero-initialise without error. RecoveryMs is left zero in Phase E
-// (the recovery latency observability surface lands in Phase L).
+// zero-initialise without error. RecoveryMs is left zero in
+// .
 //
 // Pattern mirrors the E-2 (WorkerRedispatched) and E-5 (WorkerDeath)
 // extensions: typed struct grows additively; JSON wire stays stable;
@@ -532,11 +532,11 @@ func (e WorkerDeath) Payload() ([]byte, error) { return json.Marshal(e) }
 
 // WorkerRedispatched is the audit-trail event RecoveryEngine emits when a
 // worker death triggers a redispatch decision (RedispatchSameTier or
-// RedispatchNextTier). Phase A defines the schema; Phase E (recovery.go)
-// emits it. Phase E-6 (replay) reads it.
+// RedispatchNextTier). defines the schema; (recovery.go)
+// emits it. (replay) reads it.
 //
-// Field set is the FROZEN integration contract between Phase E recovery
-// engine and downstream replay (Phase E-6) + audit consumers (Plan 9
+// Field set is the FROZEN integration contract between recovery
+// engine and downstream replay + audit consumers (
 // hash-chain). Adding fields is non-breaking; renaming or removing
 // requires schema-version coordination.
 //
@@ -871,13 +871,13 @@ func (e ReplayCorruptionDetected) Type() EventType { return EvtReplayCorruptionD
 func (e ReplayCorruptionDetected) Payload() ([]byte, error) { return json.Marshal(e) }
 
 // BudgetSnapshotError is the audit-trail event the cost-gating evaluator
-// (Plan 5 G-2 Run goroutine) emits when BudgetSnapshotReader.Snapshot
+// emits when BudgetSnapshotReader.Snapshot
 // returns a non-nil error during a poll cycle. Run continues to the
-// next tick; this event is the diagnostic seam for transient Plan 4
+// next tick; this event is the diagnostic seam for transient
 // budget-engine read failures.
 //
 // Privacy contract (IMP-3 carry-forward): Error is the wrapped
-// error.Error() string; callers (Plan 4 dispatcheradapter Snapshot
+// error.Error() string; callers ( dispatcheradapter Snapshot
 // implementation) MUST ensure the error message never echoes
 // secret-shaped bytes (API tokens, raw URLs with embedded credentials,
 // etc.). The cost-gating engine does NOT redact — it forwards verbatim.
@@ -916,31 +916,31 @@ func (e PhaseBoundaryRecorded) Type() EventType { return EvtPhaseBoundaryRecorde
 
 func (e PhaseBoundaryRecorded) Payload() ([]byte, error) { return json.Marshal(e) }
 
-// FMVDegradedToPlurality is the audit-trail event the FMV (Plan 5 I-5)
+// FMVDegradedToPlurality is the audit-trail event the FMV
 // emits when a mid-run Pool.Lease returns ErrPoolExhausted (or, in I-7,
 // when the orchestrator preemptively skips FMV under cost-pressure)
 // and the algorithm degrades to plurality voting on the candidates'
 // SupportingReviewers axis (Q8 A pattern under Q8 B regime).
 //
 // Field semantics:
-//   - Reason — degradation cause (closed vocab today: "pool_exhausted";
-//     I-7 reuses with "cost_pressure"). Audit dashboards group fires by
-//     this field.
-//   - CandidateCount — total fix proposals supplied to FMV.Run
-//     (len(candidates)); independent of how many were actually evaluated
-//     before degradation fired.
-//   - CompletedCount — number of candidates evaluated (lease+apply+test)
-//     before the lease error caused degradation. Plurality picks the
-//     winner from the FULL set, not this subset; CompletedCount exists
-//     so audit consumers can reason about the partial trace shape
-//     (Trace length on the result equals CompletedCount).
-//   - WinnerID — the picked FixProposal.ID; empty string when the
-//     plurality fallback itself tied (Tie==true ⇒ caller escalates to
-//     L3 with ErrFMVTie).
-//   - Tie — true when the top two candidates share the highest
-//     SupportingReviewers count; the caller MUST escalate. The audit
-//     row is emitted regardless of Tie (the "we degraded" signal is
-//     independent of the plurality outcome).
+// - Reason — degradation cause (closed vocab today: "pool_exhausted";
+// I-7 reuses with "cost_pressure"). Audit dashboards group fires by
+// this field.
+// - CandidateCount — total fix proposals supplied to FMV.Run
+// (len(candidates)); independent of how many were actually evaluated
+// before degradation fired.
+// - CompletedCount — number of candidates evaluated (lease+apply+test)
+// before the lease error caused degradation. Plurality picks the
+// winner from the FULL set, not this subset; CompletedCount exists
+// so audit consumers can reason about the partial trace shape
+// (Trace length on the result equals CompletedCount).
+// - WinnerID — the picked FixProposal.ID; empty string when the
+// plurality fallback itself tied (Tie==true ⇒ caller escalates to
+// L3 with ErrFMVTie).
+// - Tie — true when the top two candidates share the highest
+// SupportingReviewers count; the caller MUST escalate. The audit
+// row is emitted regardless of Tie (the "we degraded" signal is
+// independent of the plurality outcome).
 //
 // Privacy contract (IMP-3 carry-forward): WinnerID is the sanitised
 // proposal identifier emitted by the L2 aggregator (same surface as
@@ -977,7 +977,7 @@ func (e ApplyFixSucceeded) Type() EventType { return EvtApplyFixSucceeded }
 
 func (e ApplyFixSucceeded) Payload() ([]byte, error) { return json.Marshal(e) }
 
-// ApplyFixReverted is the canonical wire shape Phase N emits when the
+// ApplyFixReverted is the canonical wire shape emits when the
 // apply-package engine fires apply.EventApplyReverted — TestCmd failed
 // after a successful apply + commit, and the engine ran
 // `git reset --hard <priorSHA>` to roll back. CommitSHA carries the
@@ -986,7 +986,7 @@ func (e ApplyFixSucceeded) Payload() ([]byte, error) { return json.Marshal(e) }
 // failure case, the revert's own stderr) for diagnosis.
 //
 // Privacy contract: Stderr is forwarded verbatim from the child
-// process; callers (Phase N adapter) MUST ensure the test command
+// process; callers MUST ensure the test command
 // itself does not echo secret-shaped bytes (the apply package does not
 // redact at this seam).
 type ApplyFixReverted struct {
@@ -1011,42 +1011,42 @@ func (e ADRRangeExhausted) Type() EventType { return EvtADRRangeExhausted }
 func (e ADRRangeExhausted) Payload() ([]byte, error) { return json.Marshal(e) }
 
 // HandoffPostedEvent records a project /handoff slash command invocation.
-// 8-field schema frozen by Plan 7 master plan §"HandoffPosted event
-// coordination" + spec §1 Q15 + §6.6 + §6.8. inv-zen-128 enforces
+// 8-field schema frozen master plan §"HandoffPosted event
+// coordination" + spec §1 Q15 + §6.6 + §6.8. invariant enforces
 // schema integrity (compliance test round-trips Marshal/Unmarshal +
-// asserts field set; Phase K extends with fuzz N=100 random payloads).
+// asserts field set; extends with fuzz N=100 random payloads).
 //
 // Producer/consumer wiring (cross-phase load-bearing):
-//   - Producer: plugin /handoff slash command (Phase H) emits via daemon
-//     HTTP POST /v1/events/handoff_posted (Phase I). The plugin also
-//     continues to write HANDOFF.md to disk (existing behaviour
-//     preserved); the event is the cross-project signal surface.
-//   - Consumer A: `zen day --eod` (Phase F) reads per-project event-log
-//     entries to compose ProjectStatusSection blocks in the EOD digest.
-//   - Consumer B: Plan 8 doctrine notification routing + Plan 11
-//     multi-channel delivery may opt-in for operator-channel surfacing.
+// - Producer: plugin /handoff slash command emits via daemon
+// HTTP POST /v1/events/handoff_posted. The plugin also
+// continues to write HANDOFF.md to disk (existing behaviour
+// preserved); the event is the cross-project signal surface.
+// - Consumer A: `zen day --eod` reads per-project event-log
+// entries to compose ProjectStatusSection blocks in the EOD digest.
+// - Consumer B: doctrine notification routing +
+// multi-channel delivery may opt-in for operator-channel surfacing.
 //
 // Field semantics:
-//   - ProjectID       — opaque project identifier (typically a 64-char
-//     hex hash); load-bearing for cross-source dedup +
-//     per-project event-log routing.
-//   - ProjectAlias    — human-readable alias (e.g. "internal-platform-x") for
-//     digest rendering. NOT used for routing.
-//   - Timestamp       — handoff posting time (UTC).
-//   - Summary         — 1-2 sentence synopsis of session outcome.
-//     Free-form; emitter MUST pre-redact secrets.
-//   - RecentCommits   — list of recent commit short SHAs + summaries
-//     (typically last 5-10). Free-form lines.
-//   - AutonomousState — project's autonomous-mode state at handoff
-//     time. Daemon HTTP handler (Phase I) validates the
-//     enum {active|paused|idle|complete} runtime per
-//     defense-in-depth Layer 3; the typed struct here
-//     accepts any string for forward-compat with future
-//     state additions.
-//   - Blockers        — free-form per-blocker descriptions; empty
-//     slice when no blockers reported.
-//   - NextSession     — single-line operator-friendly hint for the
-//     next session start.
+// - ProjectID — opaque project identifier (typically a 64-char
+// hex hash); load-bearing for cross-source dedup +
+// per-project event-log routing.
+// - ProjectAlias — human-readable alias (e.g. "internal-platform-x") for
+// digest rendering. NOT used for routing.
+// - Timestamp — handoff posting time (UTC).
+// - Summary — 1-2 sentence synopsis of session outcome.
+// Free-form; emitter MUST pre-redact secrets.
+// - RecentCommits — list of recent commit short SHAs + summaries
+// (typically last 5-10). Free-form lines.
+// - AutonomousState — project's autonomous-mode state at handoff
+// time. Daemon HTTP handler validates the
+// enum {active|paused|idle|complete} runtime per
+// defense-in-depth Layer 3; the typed struct here
+// accepts any string for forward-compat with future
+// state additions.
+// - Blockers — free-form per-blocker descriptions; empty
+// slice when no blockers reported.
+// - NextSession — single-line operator-friendly hint for the
+// next session start.
 //
 // Privacy contract: Summary, RecentCommits, Blockers, NextSession are
 // free-text fields that MAY contain leaked secrets if emitted verbatim

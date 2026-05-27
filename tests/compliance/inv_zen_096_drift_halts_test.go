@@ -1,17 +1,17 @@
 // inv_zen_096_drift_halts_test.go
 //
-// Compliance test for inv-zen-096 (Plan 5 Phase M Task M-8):
+// Compliance test for invariant:
 //
-//	"Substrate drift halts the build at severity=hard via the orchestrator
-//	 state-machine transition to HARD_PAUSED."
+// "Substrate drift halts the build at severity=hard via the orchestrator
+// state-machine transition to HARD_PAUSED."
 //
 // End-to-end contract:
-//  1. safetynet.Drift detects a doctrine violation (e.g., non-conventional
-//     commit subject) and produces a Report with MaxSeverity=SeverityHard.
-//  2. The drift detector emits SubstrateDriftDetected with payload
-//     severity="hard" via the eventlog Appender.
-//  3. The state-machine subscriber consumes the event and transitions
-//     from StateRunning to StateHardPaused with a drift-related reason.
+// 1. safetynet.Drift detects a doctrine violation (e.g., non-conventional
+// commit subject) and produces a Report with MaxSeverity=SeverityHard.
+// 2. The drift detector emits SubstrateDriftDetected with payload
+// severity="hard" via the eventlog Appender.
+// 3. The state-machine subscriber consumes the event and transitions
+// from StateRunning to StateHardPaused with a drift-related reason.
 //
 // The subscriber's automatic registration on NewStateMachine lives in a
 // later phase that owns the eventlog→state-machine fan-out wiring; this
@@ -22,7 +22,7 @@
 //
 // The test is intentionally written against the public surface of both
 // packages (no internal helpers) so it doubles as living documentation
-// for inv-zen-096.
+// for invariant.
 package compliance
 
 import (

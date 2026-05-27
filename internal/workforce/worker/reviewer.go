@@ -430,12 +430,12 @@ func parseAmendments(text string) ([]amendmentItem, error) {
 // Verdict aliases (NOT mentioned in the explicit L2/L3/L4 prompt
 // contracts, but observed empirically + accepted defensively):
 //
-//   - "strategic"     — L3-style verdict the LLM may emit when the
-//     prompt asks for strategic review; mapped to SeverityMajor
-//     because strategic concerns escalate the same as major.
-//   - "architectural" — L4-style verdict the LLM may emit when the
-//     prompt asks for architectural review; mapped to SeverityMajor
-//     for the same reason.
+// - "strategic" — L3-style verdict the LLM may emit when the
+// prompt asks for strategic review; mapped to SeverityMajor
+// because strategic concerns escalate the same as major.
+// - "architectural" — L4-style verdict the LLM may emit when the
+// prompt asks for architectural review; mapped to SeverityMajor
+// for the same reason.
 //
 // The L2/L3/L4 prompts ask for {clean|minor|major|reject}; the
 // aliases above absorb LLM verdict drift without surfacing as

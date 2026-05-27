@@ -1,6 +1,6 @@
-// root_p7_c12_test.go — Plan 7 Phase C Task C-12 wiring tests.
+// root_p7_c12_test.go — Task C-12 wiring tests.
 //
-// Mirrors the C-2.5 fix from Plan 6 (NewMergeCmd was orphan-shipped):
+// Mirrors the C-2.5 fix (NewMergeCmd was orphan-shipped):
 // the C-12 commands MUST be registered on the root via NewRootCmd so
 // `zen attach`, `zen sessions`, `zen layout` are real reachable paths.
 package cli

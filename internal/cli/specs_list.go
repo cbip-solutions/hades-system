@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// specs_list.go — Plan 14 Phase F Task F-5 subcommand `zen specs list`.
+// specs_list.go — Task F-5 subcommand `zen specs list`.
 //
 // Pure filesystem read of openspec/specs/ — no daemon call. Walks the
 // directory for *.md files, extracts the first non-empty title-line,
 // renders as text (tabwriter) or json.
 //
 // Read-only boundary per spec §0.2: specs are read-only at the CLI
-// surface in Plan 14. Write-back deferred to post-v0.14.0.
+// surface in Write-back deferred to post-v0.14.0.
 package cli
 
 import (

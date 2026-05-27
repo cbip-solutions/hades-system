@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package conventional_commit implements conventionalCommitAnalyzer for
-// zen-swarm Plan 8 (spec §1 Q4 B). Enforces CLAUDE.md hard rule 2 +
-// inv-zen-004.
+// zen-swarm (spec §1 Q4 B). Enforces CLAUDE.md hard rule 2 +
+// invariant.
 //
 // Mechanism shell out to `git log --pretty=%H %s` in the cwd OR a
 // configured git directory; validate each subject against the
@@ -10,12 +10,12 @@
 //
 // Two scan modes are supported (see RunWithGitDir):
 //
-//   - -base-ref=<ref> mode (Plan 11 redesign, canonical for pre-merge gates):
-//     scopes the scan to "<base-ref>..HEAD" so only branch-local commits
-//     are validated. Pre-existing commits on the base-ref are ignored;
-//     operators amend new violations instead of skip-hashing them.
-//   - -depth=N mode (legacy, default when -base-ref="" ): scans the last N
-//     commits via "git log -n<depth>". Retained for backward compat.
+// - -base-ref=<ref> mode:
+// scopes the scan to "<base-ref>..HEAD" so only branch-local commits
+// are validated. Pre-existing commits on the base-ref are ignored;
+// operators amend new violations instead of skip-hashing them.
+// - -depth=N mode (legacy, default when -base-ref="" ): scans the last N
+// commits via "git log -n<depth>". Retained for backward compat.
 package conventional_commit
 
 import (
@@ -32,17 +32,17 @@ import (
 // conventionalCommitRegex matches the canonical conventional-commit subject
 // format per CLAUDE.md hard rule 2:
 //
-//	type(scope): subject
+// type(scope): subject
 //
 // Where
 //
-//	type   = one of feat|fix|refactor|test|docs|chore|style|build|ci
-//	scope  = lowercase letter followed by lowercase letters/digits/hyphens;
-//	         optionally a comma-separated list of scopes (e.g., "cli, daemon")
-//	subject= starts with lowercase letter OR a path-like leading `/`, `(`, or
-//	         backtick (these legitimately appear in subjects describing
-//	         routes / files / code constructs); MUST NOT start with uppercase
-//	         letter
+// type = one of feat|fix|refactor|test|docs|chore|style|build|ci
+// scope = lowercase letter followed by lowercase letters/digits/hyphens;
+// optionally a comma-separated list of scopes (e.g., "cli, daemon")
+// subject= starts with lowercase letter OR a path-like leading `/`, `(`, or
+// backtick (these legitimately appear in subjects describing
+// routes / files / code constructs); MUST NOT start with uppercase
+// letter
 var conventionalCommitRegex = regexp.MustCompile(
 	`^(feat|fix|refactor|test|docs|chore|style|build|ci)\(([a-z][a-z0-9-]*(?:,\s*[a-z][a-z0-9-]*)*)\):\s+[a-z` + "`" + `/(]`)
 

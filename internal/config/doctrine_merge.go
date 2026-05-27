@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: MIT
 // internal/config/doctrine_merge.go
 //
-// Doctrine TOML loader extension for the merge engine (Plan 6 Phase F-5).
+// Doctrine TOML loader extension for the merge engine.
 //
 // This file extends the existing doctrine TOML schema with the [merge.*]
 // sub-tree per spec §2.5 (zen-swarm-plan-6-merge-engine-design). It supports:
 //
-//   - Loading a [merge] block from a TOML blob (LoadMergeDoctrineFromTOML).
-//   - Per-project TIGHTEN-only overrides (ApplyOverride):
-//   - Scoring fields delegate to merge.ValidateTightenOnly
-//     (Beta/Gamma penalties: tighter == higher).
-//   - Timeouts: tighter == lower (shorter timeout == more strict).
-//     ApplyOverride wraps merge.ErrLooseAttemptRejected on any loosening
-//     attempt so callers (CLI, daemon doctor, bootstrap) can errors.Is
-//     them and surface a doctrine-misconfig diagnostic.
-//   - Adapter to Phase F-1 bootstrap inputs (MergeDoctrineToBoot):
-//     int-seconds → time.Duration; the doctrine TOML schema deliberately
-//     stores integers (operator ergonomics) and the converter keeps the
-//     duration math out of every consumer.
+// - Loading a [merge] block from a TOML blob (LoadMergeDoctrineFromTOML).
+// - Per-project TIGHTEN-only overrides (ApplyOverride):
+// - Scoring fields delegate to merge.ValidateTightenOnly
+// (Beta/Gamma penalties: tighter == higher).
+// - Timeouts: tighter == lower (shorter timeout == more strict).
+// ApplyOverride wraps merge.ErrLooseAttemptRejected on any loosening
+// attempt so callers (CLI, daemon doctor, bootstrap) can errors.Is
+// them and surface a doctrine-misconfig diagnostic.
+// - Adapter to bootstrap inputs (MergeDoctrineToBoot):
+// int-seconds → time.Duration; the doctrine TOML schema deliberately
+// stores integers (operator ergonomics) and the converter keeps the
+// duration math out of every consumer.
 //
-// inv-zen-111: TIGHTEN-only doctrine override on per-project overrides.
-// inv-zen-112: ADR range — see docs/decisions/0030-0038 for the substantive
-// + reservation ADRs covering Plan 6 doctrine-tunable surfaces.
+// invariant: TIGHTEN-only doctrine override on per-project overrides.
+// invariant: ADR range — see architecture records for the substantive
+// + reservation ADRs covering doctrine-tunable surfaces.
 package config
 
 import (

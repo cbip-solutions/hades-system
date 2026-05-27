@@ -1,8 +1,8 @@
 // internal/research/ecosystem/doctrine_test.go
 //
-// Tests for DoctrineProfile + DoctrineResolver (Plan 14 Phase A Task A-8;
+// Tests for DoctrineProfile + DoctrineResolver ( Task A-8;
 // see plan-file lines 5005-5253 for canonical test set, revised
-// 2026-05-17 Stage 2 amendment to reflect v1.Schema Name-field absence).
+// 2026-05-17 amendment to reflect v1.Schema Name-field absence).
 //
 // Plan-template drift reconciliation: the original plan-file assumed
 // v1.Schema carried a `Name string` field. It does not (verified via

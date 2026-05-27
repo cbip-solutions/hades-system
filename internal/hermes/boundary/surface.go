@@ -11,7 +11,7 @@ import (
 // feature-detect via Is*Supported() helpers before calling capability-gated
 // methods.
 //
-// inv-zen-322: every G2/G3/G5 capability-gated method MUST return this
+// invariant: every G2/G3/G5 capability-gated method MUST return this
 // sentinel when feature-detection finds the underlying API absent. The
 // boundary lint (scripts/verify_no_direct_hermes_imports.sh) enforces
 // no consumer touches Hermes directly; the Surface contract enforces

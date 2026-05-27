@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 // Package mcp (internal/doctor/mcp) ships the `curated-MCP-availability`
-// doctor check (inv-zen-181 MCP risk tiers + curated catalog availability).
+// doctor check.
 //
 // Per Q7=D 4-tier curated MCP set, the check probes per-MCP availability
-// via the package-manager-specific seam (npm / pip / binary). Phase A
+// via the package-manager-specific seam (npm / pip / binary).
 // catalog (`internal/onboard/mcp/catalog.go`) is the source-of-truth for
 // the curated entries; this check is a consumer (a translation adapter
 // from internal/onboard/mcp.Entry to MCPSpec lives in production wiring,
-// shipped by Phase F5 CLI surface).
+// shipped by CLI surface).
 //
-// Boundary (inv-zen-031): mcp doctor consumes ONLY internal/doctor/check;
-// MUST NOT import internal/store. The Phase A catalog dependency is
+// Boundary: mcp doctor consumes ONLY internal/doctor/check;
+// MUST NOT import internal/store. The catalog dependency is
 // avoided here — the doctor's MCPSpec is a self-contained projection of
 // the catalog Entry fields needed for the availability probe.
 package mcp

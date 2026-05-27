@@ -27,7 +27,7 @@ import (
 // "project_id on every row" — empirically enforced by these wrappers).
 //
 // Wrapper pattern preserves the queue.SharedTaskList / CheckpointQueue /
-// FixPromptQueue interfaces unchanged (Phase B signatures stay ratified).
+// FixPromptQueue interfaces unchanged.
 
 type ScopedSharedTaskList struct {
 	impl      *SharedTaskListImpl

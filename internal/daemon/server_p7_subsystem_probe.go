@@ -4,19 +4,19 @@
 // `cmd/zen-swarm-ctld/main.go` invokes Server.SubsystemProbe every 5
 // minutes per subsystem ("knowledge", "scheduler", "inbox", "tmux") and
 // emits a structured slog line with the per-status counts. The output
-// timeline is the substrate Plan 9 hash-chain extension hooks anchor
-// against (per Q17 D); for Plan 7 the slog output lands in stderr /
+// timeline is the substrate hash-chain extension hooks anchor
+// against (per Q17 D); the slog output lands in stderr /
 // the launchd log file.
 //
 // J-7 ships the dispatcher contract + a no-op fallback that returns an
-// empty slice. Phase A-G's probers (concrete types living in
+// empty slice. probers (concrete types living in
 // internal/{knowledge,scheduler,inbox,tmuxlife}) wire via SetXxxProber
 // setters in a follow-up; until then SubsystemProbe returns []ProbeRow{}
 // and the snapshot logger emits "subsystem unwired" with status counts
 // all zero — operationally inert but observable.
 //
-// inv-zen-031 boundary: this file lives in internal/daemon (which already
-// imports internal/store + every Plan 7 subsystem package indirectly via
+// invariant boundary: this file lives in internal/daemon (which already
+// imports internal/store + every subsystem package indirectly via
 // the adapters). The per-subsystem prober concrete types do not violate
 // the boundary because they are dependency-injected (SetXxxProber); the
 // Server treats them as opaque interfaces.
@@ -84,7 +84,7 @@ func (s *Server) setSubsystemProber(name string, p SubsystemProber) {
 //
 // J-7 contract: the dispatcher MUST NOT return an error for "prober not
 // configured" — that condition is operationally normal during the
-// pre-Phase-I bring-up window. Errors are reserved for actual probe
+// pre- bring-up window. Errors are reserved for actual probe
 // invocation failures (the prober returned a non-nil error).
 func (s *Server) SubsystemProbe(ctx context.Context, name string) ([]ProbeRow, error) {
 	s.mu.Lock()

@@ -3,16 +3,16 @@
 // for POST /v1/messages.
 //
 // dispatches via the orchestrator → dispatcher → Tier 1 (bypass) /
-// Tier 2+ (OpenClaude) chain. Plan 2 functionality preserved end-to-end:
-// Idempotency-Key auto-generation (inv-zen-058), X-Zen-Conversation-Id
+// Tier 2+ (OpenClaude) chain. functionality preserved end-to-end:
+// Idempotency-Key auto-generation, X-Zen-Conversation-Id
 // extraction, multi-value header preservation (Anthropic-Beta etc).
 //
-// inv-zen-080 (single-egress-point): this file MUST NOT call
+// invariant (single-egress-point): this file MUST NOT call
 // bypass.Client.Forward directly. ALL LLM traffic flows through the
 // orchestrator. The dispatcher then chooses tier 1 vs tier 2+ and emits
 // CostEvents for the ledger.
 //
-// inv-zen-031 (boundary): this file imports daemon/orchestrator (for
+// invariant (boundary): this file imports daemon/orchestrator (for
 // the Call type) and providers (for TierResponse) but NOT internal/store
 // — persistence concerns sit on the dispatcher side via dispatcheradapter.
 package daemon
@@ -71,39 +71,39 @@ var hopByHopHeaders = map[string]struct{}{
 // NewAnthropicProxy builds an http.Handler that proxies POST /v1/messages
 // through the orchestrator → dispatcher chain. Behaviour:
 //
-//   - Method must be POST; everything else → 405 with Allow: POST.
-//   - Reads the request body fully (Anthropic /v1/messages is small JSON;
-//     the orchestrator forwards Body verbatim into the dispatcher chain).
-//   - Constructs an orchestrator.Call:
-//     Method=POST, Path=/v1/messages, Body=[]byte slurp,
-//     IdempotencyKey=Idempotency-Key header or uuid.NewString(),
-//     ConversationID=X-Zen-Conversation-Id (may be empty),
-//     Model=parsed JSON "model" field (may be empty if unparseable —
-//     non-fatal; backends fall back to req.Model when upstream omits it).
-//   - Headers are flattened to map[string]string. Single-value headers
-//     take v[0]; known multi-value headers (Anthropic-Beta, X-Forwarded-For,
-//     etc. — see multiValueHeaders) are comma-joined per RFC 7230 §3.2.2.
-//     Hop-by-hop and control-plane (Idempotency-Key, X-Zen-Conversation-Id)
-//     headers are dropped — they live in the typed Call fields above.
-//   - Forwards via the orchestrator which stamps X-Zen-* correlation
-//     headers, resolves the routing profile, and dispatches to Tier 1 /
-//     Tier 2+ via the dispatcher. Per ADR-0008: Plan 3 dispatcher chooses
-//     tier-of-tier (in-house bypass vs OpenClaude substrate); provider-
-//     level routing within Tier 2+ is OpenClaude's responsibility.
-//   - Mirrors upstream status + headers verbatim, drops hop-by-hop on
-//     the response side, echoes the resolved Idempotency-Key, and stamps
-//     X-Zen-Tier-Used so clients (zen doctor, observability dashboards)
-//     can see which tier handled the call.
-//   - On orchestrator/dispatcher error: writes 502 Bad Gateway except
-//     for ErrAllTiersUnavailable which writes 503 (graceful-degradation
-//     contract: every tier is in breaker-open or unhealthy state). The
-//     error message is included verbatim because the dispatcher layer
-//     already wraps backend errors with truncated upstream bodies (cap
-//     512 bytes per provider backend convention) and CostEvents redact
-//     credentials at emission. Phase 2 redact module (internal/redact)
-//     confirms zero-secret leakage on this path.
+// - Method must be POST; everything else → 405 with Allow: POST.
+// - Reads the request body fully (Anthropic /v1/messages is small JSON;
+// the orchestrator forwards Body verbatim into the dispatcher chain).
+// - Constructs an orchestrator.Call:
+// Method=POST, Path=/v1/messages, Body=[]byte slurp,
+// IdempotencyKey=Idempotency-Key header or uuid.NewString(),
+// ConversationID=X-Zen-Conversation-Id (may be empty),
+// Model=parsed JSON "model" field (may be empty if unparseable —
+// non-fatal; backends fall back to req.Model when upstream omits it).
+// - Headers are flattened to map[string]string. Single-value headers
+// take v[0]; known multi-value headers (Anthropic-Beta, X-Forwarded-For,
+// etc. — see multiValueHeaders) are comma-joined per RFC 7230 §3.2.2.
+// Hop-by-hop and control-plane (Idempotency-Key, X-Zen-Conversation-Id)
+// headers are dropped — they live in the typed Call fields above.
+// - Forwards via the orchestrator which stamps X-Zen-* correlation
+// headers, resolves the routing profile, and dispatches to Tier 1 /
+// Tier 2+ via the dispatcher. Per ADR-0008: dispatcher chooses
+// tier-of-tier (in-house bypass vs OpenClaude substrate); provider-
+// level routing within Tier 2+ is OpenClaude's responsibility.
+// - Mirrors upstream status + headers verbatim, drops hop-by-hop on
+// the response side, echoes the resolved Idempotency-Key, and stamps
+// X-Zen-Tier-Used so clients (zen doctor, observability dashboards)
+// can see which tier handled the call.
+// - On orchestrator/dispatcher error: writes 502 Bad Gateway except
+// for ErrAllTiersUnavailable which writes 503 (graceful-degradation
+// contract: every tier is in breaker-open or unhealthy state). The
+// error message is included verbatim because the dispatcher layer
+// already wraps backend errors with truncated upstream bodies (cap
+// 512 bytes per provider backend convention) and CostEvents redact
+// credentials at emission. Phase 2 redact module (internal/redact)
+// confirms zero-secret leakage on this path.
 //
-// inv-zen-080: this handler is the single egress point for /v1/messages.
+// invariant: this handler is the single egress point for /v1/messages.
 // It MUST NOT call bypass.Client.Forward directly — all LLM traffic flows
 // via the orchestrator → dispatcher chain.
 func NewAnthropicProxy(forwarder OrchestratorForwarder) http.HandlerFunc {
@@ -129,12 +129,12 @@ func NewAnthropicProxy(forwarder OrchestratorForwarder) http.HandlerFunc {
 		profile := r.Header.Get("X-Zen-Profile")
 
 		// Extract the requested model from the JSON body for cost-ledger
-		// attribution (Phase F). Best-effort: a body that fails to parse
+		// attribution. Best-effort: a body that fails to parse
 		// (e.g. an Anthropic SDK that adds an unexpected wrapper) MUST
 		// NOT abort the request. Backends fall back to req.Model when
 		// the upstream response omits a model field; an empty Model here
 		// just means the cost ledger has no requested-model field, which
-		// Phase F treats as known-unknown rather than dropping the row.
+		// treats as known-unknown rather than dropping the row.
 		model := extractModel(bodyBytes)
 
 		hdrs := make(map[string]string, len(r.Header))
@@ -208,7 +208,7 @@ func NewAnthropicProxy(forwarder OrchestratorForwarder) http.HandlerFunc {
 // request body. Best-effort: returns "" on parse failure or absent field.
 // The proxy MUST NOT abort the request just because the model field is
 // missing — the upstream may still accept it (Anthropic supports a
-// default-model deployment shape) and the Phase F cost ledger handles
+// default-model deployment shape) and the cost ledger handles
 // empty Model as known-unknown.
 //
 // Capped to a small JSON struct: we only care about the model field, so

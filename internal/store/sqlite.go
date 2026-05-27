@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package store wraps SQLite for zen-swarm-ctld.
 //
-// Uses ncruces/go-sqlite3 (pure-Go via wasm, no CGO) per inv-zen-031
+// Uses ncruces/go-sqlite3 (pure-Go via wasm, no CGO) per invariant
 // (auditable; zero supply chain via CGO toolchain) and verified by
 // design v1.2 R3.
 //
 // This package owns the schema and exposes one Go file per table with
-// typed CRUD. Plan 1 establishes the full schema (all ~16 tables) and
+// typed CRUD. establishes the full schema (all ~16 tables) and
 // type signatures; most CRUD bodies are stubs returning
 // errors.ErrNotImplementedPlan{N} (subsequent plans fill them in). The
-// EXCEPTION is events.go, which is fully implemented in Plan 1 because
+// EXCEPTION is events.go, which is fully implemented in because
 // the daemon's batched event writer needs it from day 1.
 package store
 

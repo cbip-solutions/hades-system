@@ -1,10 +1,11 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
 // Package aggregator owns aggregator.db (knowledge_pin_index + FTS5 +
-// sqlite-vec + wikilinks) per Plan 9 spec §"Knowledge aggregator".
+// sqlite-vec + wikilinks) spec §"Knowledge aggregator".
 //
-// inv-zen-129 NOTE: this package and its tests do NOT make web calls;
+// invariant NOTE: this package and its tests do NOT make web calls;
 // sqlite-vec is a local C extension. The compliance test in
 // tests/compliance/inv_zen_129_aggregator_no_web_test.go enforces the
 // package's web-egress prohibition by static import inspection.

@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_citation.go
 //
-//   - citation.envelope.serialize-roundtrip
-//   - citation.renderers (7 platforms tested)
-//   - citation.audit-chain.zen://audit-handler-functional
+// - citation.envelope.serialize-roundtrip
+// - citation.renderers (7 platforms tested)
+// - citation.audit-chain.zen://audit-handler-functional
 //
-// Phase D ships the daemon-side citation envelope + zen://audit handler
+// ships the daemon-side citation envelope + zen://audit handler
 // + markdown_fallback renderer. The "7 platforms tested" check counts
-// the markdown_fallback renderer (Plan 11) + 6 platform renderers
-// (Plan 12) — at Plan 11 ship time the count is 1; reading 1/7 is
-// expected and rendered as warn until Plan 12 ships the remaining 6.
+// the markdown_fallback renderer + 6 platform renderers
+// — at ship time the count is 1; reading 1/7 is
+// expected and rendered as warn until ships the remaining 6.
 package cli
 
 import (

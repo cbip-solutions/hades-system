@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
 // AdaptPool wraps a *worktreepool.Pool so it satisfies the FMV-package
 // Pool + Lease interfaces. The adapter exists in production (not under
-// a _test.go) because Phase H/D will wire FMV into the live orchestrator
+// a _test.go) because will wire FMV into the live orchestrator
 // via this surface — production callers MUST be able to reach FMV from
 // a real worktreepool without depending on test-package symbols.
 //
 // Mapping discipline:
-//   - worktreepool.ErrPoolExhausted → hra.ErrPoolExhausted (package-
-//     local sentinel) so callers errors.Is against the FMV-package
-//     surface uniformly.
-//   - All other lease errors propagate unchanged so substrate-bug
-//     diagnostics (ErrInvalidConfig, ErrPoolClosed, classified
-//     subprocess errors) are preserved across the adapter boundary.
-//   - Release routes through worktreepool.Pool.Release(ctx, *Worktree)
-//     because Worktree itself has no Release method (the pool owns the
-//     reset/clean lifecycle).
+// - worktreepool.ErrPoolExhausted → hra.ErrPoolExhausted (package-
+// local sentinel) so callers errors.Is against the FMV-package
+// surface uniformly.
+// - All other lease errors propagate unchanged so substrate-bug
+// diagnostics (ErrInvalidConfig, ErrPoolClosed, classified
+// subprocess errors) are preserved across the adapter boundary.
+// - Release routes through worktreepool.Pool.Release(ctx, *Worktree)
+// because Worktree itself has no Release method (the pool owns the
+// reset/clean lifecycle).
 
 package hra
 

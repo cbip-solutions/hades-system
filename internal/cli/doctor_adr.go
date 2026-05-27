@@ -4,25 +4,25 @@
 // `zen doctor adr index` delegates to ADRProber declared in probe.go;
 // 3 results:
 //
-//   - adr.index.dual_manifest_freshness
-//   - adr.index.json_schema_validation_status
-//   - adr.index.id_collision_count
+// - adr.index.dual_manifest_freshness
+// - adr.index.json_schema_validation_status
+// - adr.index.id_collision_count
 //
 // Architecture (J-1 precedent):
 //
-//	ADRProber interface declared in probe.go (CLI side).
-//	Substrate prober.go files (internal/adr/) are NOT modified per J-1 pattern.
-//	Production wiring in cmd/zen-swarm-ctld/main.go.
+// ADRProber interface declared in probe.go (CLI side).
+// Substrate prober.go files (internal/adr/) are NOT modified per J-1 pattern.
+// Production wiring in cmd/zen-swarm-ctld/main.go.
 //
-// Naming
+// # Naming
 //
-//	doctor_adr.go is a new file — Plan 4's doctor_audit.go covers audit events;
-//	there is no prior Plan doctor_adr.go. No _p9 suffix needed.
+// doctor_adr.go is a new file — doctor_audit.go covers audit events;
+// there is no prior Plan doctor_adr.go. No _p9 suffix needed.
 //
-// Boundary (inv-zen-031):
+// Boundary:
 //
-//	This file imports only cli-internal types + cobra + context + stdlib.
-//	Does NOT import internal/adr concrete types.
+// This file imports only cli-internal types + cobra + context + stdlib.
+// Does NOT import internal/adr concrete types.
 package cli
 
 import (
@@ -37,7 +37,7 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunAdrIndexProbe orchestrates the adr.index doctor check (Plan 9 Phase J
+// RunAdrIndexProbe orchestrates the adr.index doctor check (
 // Task J-2, spec §6.2).
 //
 // Delegates to DoctorDeps.ADRProber.Probe(ctx) and returns the resulting

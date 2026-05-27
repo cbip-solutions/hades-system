@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package mcpgateway — contract_get_workspace.go (Plan 20 Phase I).
+// Package mcpgateway — contract_get_workspace.go.
 //
 // Handler for the `get_workspace` MCP tool. Validates required `workspace`
 // arg + dispatches to engine.GetWorkspace; returns the WorkspaceSnapshot

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package cli — recognize.go (Plan 13 Phase B Task B7).
+// Package cli — recognize.go.
 //
 // `zen recognize` thin wrapper consuming internal/recognize public API.
 // Surface per spec §7.4:
 //
-//	zen recognize [PATH] [--json] [--no-audit]
+// zen recognize [PATH] [--json] [--no-audit]
 //
 // PATH defaults to cwd. --json emits Result JSON (schemaVersion="1.0");
 // default renders human-readable table. --no-audit skips Tessera emit per

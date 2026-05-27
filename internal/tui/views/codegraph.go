@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
-// Package views — codegraph.go (Plan 12 Phase C Tasks C-1 + C-2 + C-3).
+// Package views — codegraph.go.
 //
 // F7 Code Graph panel per spec §7.3. Surfaces caronte-derived
 // structural insight for the operator's currently-edited file:
 //
-//   - symbols defined in current file
-//   - callers (last-30d touch count)
-//   - graph community ID + community-summary excerpt
-//   - recent churn (commits last 7d)
-//   - blast radius score (Plan 11 mcpgateway)
-//   - last KG index timestamp
+// - symbols defined in current file
+// - callers (last-30d touch count)
+// - graph community ID + community-summary excerpt
+// - recent churn (commits last 7d)
+// - blast radius score
+// - last KG index timestamp
 //
 // Key bindings (Task C-3):
 //
-//	[Q] cypher-style free-text query
-//	[I] pre-merge impact preview
-//	[W] open community wiki for current file
-//	[C] cross-project cone (Plan 9 D federated query)
+// [Q] cypher-style free-text query
+// [I] pre-merge impact preview
+// [W] open community wiki for current file
+// [C] cross-project cone
 //
 // Live data wiring routes via internal/client typed methods (Task
-// C-4) — never net/http directly (inv-zen-129).
+// C-4) — never net/http directly.
 //
 // C-1 ships skeleton, C-2 adds full layout per spec §7.3 example,
 // C-3 adds key handling + sub-panel state machine.

@@ -15,16 +15,16 @@ import (
 //
 // Two algorithms are available:
 //
-//   - Default (sha256+sin): preserves cross-position variation but does NOT
-//     produce realistic cosine semantics for overlapping tokens. Use when
-//     tests only care about determinism + dimensionality, not similarity.
+// - Default (sha256+sin): preserves cross-position variation but does NOT
+// produce realistic cosine semantics for overlapping tokens. Use when
+// tests only care about determinism + dimensionality, not similarity.
 //
-//   - Token-sum (opt-in via WithTokenSumMode): tokenize on whitespace +
-//     strip non-alphanumeric → per-token sha256-seeded contribution vector
-//     → sum across tokens → L2-normalize. Two queries that share tokens
-//     produce vectors with high cosine similarity (≥0.85 for fully-shared
-//     vocabularies, <0.5 for disjoint). Required by Phase F sqlite-vec
-//     KNN semantic-match unit tests.
+// - Token-sum (opt-in via WithTokenSumMode): tokenize on whitespace +
+// strip non-alphanumeric → per-token sha256-seeded contribution vector
+// → sum across tokens → L2-normalize. Two queries that share tokens
+// produce vectors with high cosine similarity (≥0.85 for fully-shared
+// vocabularies, <0.5 for disjoint). Required by sqlite-vec
+// KNN semantic-match unit tests.
 //
 // Default-mode algorithm: sha256(text) → 8 uint32 seeds; per-dimension value
 // derived via math.Sin(seed/100 + i*0.137) for stable cross-position

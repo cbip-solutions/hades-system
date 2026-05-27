@@ -2,21 +2,21 @@
 // cmd/zen-swarm-ctld/providers_init.go
 //
 // BuildProviderRegistry constructs the providers.Registry from
-// providers.toml — completing Plan 3's never-shipped Phase J registry
+// providers.toml — completing never-shipped registry
 // build. It is the cross-package wiring point (orchestrator_wiring.go's
 // sibling) that:
 //
-//  1. registers a BackendConstructor for every provider type, each a
-//     closure capturing the production keychain.SystemResolver{} so the
-//     providers.BackendConstructor signature stays Keychain-free
-//     (master contract C5);
-//  2. loads providers.toml and registers each declared provider —
-//     a provider whose Keychain key is absent is registered as a
-//     disabled stub (the cascade skips the provider by name and
-//     `zen providers verify` surfaces it) rather than failing the
-//     whole daemon.
+// 1. registers a BackendConstructor for every provider type, each a
+// closure capturing the production keychain.SystemResolver{} so the
+// providers.BackendConstructor signature stays Keychain-free
+// (master contract C5);
+// 2. loads providers.toml and registers each declared provider —
+// a provider whose Keychain key is absent is registered as a
+// disabled stub (the cascade skips the provider by name and
+// `zen providers verify` surfaces it) rather than failing the
+// whole daemon.
 //
-// inv-zen-211 cascade-completeness is intentionally NOT enforced here:
+// invariant cascade-completeness is intentionally NOT enforced here:
 // the "bypass" backend is registered by buildOrchestrator (master C5)
 // AFTER BuildProviderRegistry returns, so a gate that runs at registry
 // construction time would always reject any profile that names "bypass"
@@ -25,7 +25,7 @@
 // verifyCascadeCompleteness (orchestrator_wiring.go), invoked from
 // main.go after buildOrchestrator wires bypass.
 //
-// inv-zen-031: cross-package wiring lives here, in package main — no
+// invariant: cross-package wiring lives here, in package main — no
 // internal/* package wires providers + config + keychain together.
 package main
 

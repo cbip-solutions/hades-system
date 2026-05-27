@@ -11,14 +11,14 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/scheduler"
 )
 
-// fakeSession is a deterministic stand-in for Phase C's
+// fakeSession is a deterministic stand-in for
 // `tmuxlife.Session`. It satisfies `scheduler.LoopBinding` (the local
 // interface declared in loop.go) and exposes a Kill() method that
 // closes the Done channel — the canonical "session died" trigger that
 // Loop.Bind listens for.
 //
-// Why a fake (not a real tmuxlife.Session): Phase D's loop.go MUST NOT
-// import internal/tmuxlife/ (interface segregation; inv-zen-031 spirit
+// Why a fake (not a real tmuxlife.Session): loop.go MUST NOT
+// import internal/tmuxlife/ (interface segregation; invariant spirit
 // — keep scheduler decoupled from process orchestration). Tests
 // therefore use an in-package fake, which both proves the abstraction
 // is sound (any LoopBinding works) and removes the test from the tmux

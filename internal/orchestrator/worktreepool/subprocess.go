@@ -7,31 +7,31 @@
 //
 // Why a single os/exec entry-point?
 //
-//   - **Audit (inv-zen-089/090 ⊥)**: subprocess.go has no awareness of
-//     internal/store, internal/workforce/queue, internal/eventlog. Any
-//     attempt to import them is a hard compile failure visible in CR.
-//   - **Privacy (Phase A IMP-3)**: stderr from git subprocesses can contain
-//     absolute filesystem paths, env values, refs that disclose host
-//     layout. The [classify] function builds public Error() strings that
-//     redact paths; raw stderr is preserved in [subprocessErr.rawStderr]
-//     for in-process audit emission only and is NEVER concatenated into
-//     the public Error() output.
-//   - **Determinism**: every wrapper has a single os/exec call site, so
-//     fault injection happens at the [Executor] seam in tests, never via
-//     monkey-patching exec.CommandContext.
+// - **Audit**: subprocess.go has no awareness of
+// internal/store, internal/workforce/queue, internal/eventlog. Any
+// attempt to import them is a hard compile failure visible in CR.
+// - **Privacy**: stderr from git subprocesses can contain
+// absolute filesystem paths, env values, refs that disclose host
+// layout. The [classify] function builds public Error() strings that
+// redact paths; raw stderr is preserved in [subprocessErr.rawStderr]
+// for in-process audit emission only and is NEVER concatenated into
+// the public Error() output.
+// - **Determinism**: every wrapper has a single os/exec call site, so
+// fault injection happens at the [Executor] seam in tests, never via
+// monkey-patching exec.CommandContext.
 //
 // Sentinel error classes:
 //
-//   - errClassENOSPC, errClassWorktreeLocked, errClassBranchExists,
-//     errClassNotARepo, errClassNetwork, errClassOther — stderr-pattern
-//     classifications.
-//   - errClassTimeout — ctx.Canceled / ctx.DeadlineExceeded (deliberate
-//     kill from caller; retry-with-backoff semantics).
-//   - errClassSignal — external SIGKILL / SIGABRT (`signal: killed`,
-//     `signal: aborted`); possibly disk/memory pressure; retry-once
-//     semantics.
-//   - errClassPanic — in-process Go runtime error (`runtime error: ...`);
-//     deterministic bug; do-not-retry semantics.
+// - errClassENOSPC, errClassWorktreeLocked, errClassBranchExists,
+// errClassNotARepo, errClassNetwork, errClassOther — stderr-pattern
+// classifications.
+// - errClassTimeout — ctx.Canceled / ctx.DeadlineExceeded (deliberate
+// kill from caller; retry-with-backoff semantics).
+// - errClassSignal — external SIGKILL / SIGABRT (`signal: killed`,
+// `signal: aborted`); possibly disk/memory pressure; retry-once
+// semantics.
+// - errClassPanic — in-process Go runtime error (`runtime error:...`);
+// deterministic bug; do-not-retry semantics.
 //
 // Plus the two exported sentinels ([ErrPoolDegraded],
 // [ErrSubprocessTimeout]) drive callers' degradation paths via errors.Is.
@@ -265,14 +265,14 @@ func sanitize(stderr []byte) string {
 	}
 
 	// 1. Extract refs + URLs into ordered placeholder slots so we can
-	//    restore them after path redaction. We scan refs first then URLs
-	//    (refs cannot match the URL pattern; URLs starting with `https://`
-	//    do not contain the literal `refs/heads|tags|remotes/` prefix in
-	//    practice, so the two pattern domains are disjoint for our
-	//    inputs). Using FindAllStringIndex would let us interleave
-	//    correctly if needed; the simpler ReplaceAllString-with-counter
-	//    pattern below is sufficient because each placeholder is unique
-	//    per occurrence.
+	// restore them after path redaction. We scan refs first then URLs
+	// (refs cannot match the URL pattern; URLs starting with `https://`
+	// do not contain the literal `refs/heads|tags|remotes/` prefix in
+	// practice, so the two pattern domains are disjoint for our
+	// inputs). Using FindAllStringIndex would let us interleave
+	// correctly if needed; the simpler ReplaceAllString-with-counter
+	// pattern below is sufficient because each placeholder is unique
+	// per occurrence.
 	const refSentinel = "\x00ZENREF\x00"
 	const urlSentinel = "\x00ZENURL\x00"
 

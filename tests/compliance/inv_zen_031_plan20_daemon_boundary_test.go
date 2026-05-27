@@ -1,17 +1,17 @@
 // tests/compliance/inv_zen_031_plan20_daemon_boundary_test.go
 //
-// Compliance gate for inv-zen-031 (Plan 20 Phase J extension): the
-// internal/daemon package MUST NOT transitively import the Plan 20
+// Compliance gate for invariant: the
+// internal/daemon package MUST NOT transitively import the
 // concrete substrate packages (internal/caronte/store/federation +
 // internal/caronte/coordinated + internal/caronte/contract/bcdetect).
 // The cmd/zen-swarm-ctld composition root (contract_federation_wiring.go)
 // is the ONLY layer that bridges the daemon's narrow
 // ContractFederationForDaemon + ContractCoordinatorForDaemon interfaces
-// with the Plan 20 concretes — verified via the wiring adapters below.
+// with the concretes — verified via the wiring adapters below.
 //
-// Mirrors the existing inv-zen-089 (orchestrator no store) +
-// inv-zen-090 (substrate separation) pattern: shells out to
-// `go list -deps -json` against ./internal/daemon/... and walks the
+// Mirrors the existing invariant (orchestrator no store) +
+// invariant (substrate separation) pattern: shells out to
+// `go list -deps -json` against./internal/daemon/... and walks the
 // transitive closure asserting the forbidden imports are absent.
 package compliance
 
@@ -26,12 +26,12 @@ import (
 // both the live scan TestInvZen031Plan20DaemonNoFederationOrCoordinator
 // Import AND the sister-test TestInvZen031Plan20DaemonBoundary_
 // ForbiddenSetIsComplete. Defense-in-depth: the bcdetect / extract /
-// link entries below mirror the OUTBOUND inv-zen-271 boundary
-// (master spec §"Risk register" — Plan-20 packages the daemon MUST
+// link entries below mirror the OUTBOUND invariant boundary
+// (master spec §"Risk register" — packages the daemon MUST
 // NOT consume from). Today's go list closure is CLEAN of all five
 // entries (verified by the live scan); the defensive entries prevent
 // future drift where a daemon handler accidentally consumes a
-// Plan-20 value type by direct import. The sister-test below pins
+// value type by direct import. The sister-test below pins
 // the slice contents so a future shrink fires a compliance error
 // rather than silently shrinking the boundary surface.
 var plan20DaemonBoundaryForbidden = []string{
@@ -76,8 +76,8 @@ func TestInvZen031Plan20DaemonBoundary_ForbiddenSetIsComplete(t *testing.T) {
 	}
 }
 
-// TestInvZen031Plan20DaemonNoFederationOrCoordinatorImport — Plan 20
-// Phase J narrow-interface boundary: internal/daemon/* MUST NOT import
+// TestInvZen031Plan20DaemonNoFederationOrCoordinatorImport —
+// narrow-interface boundary: internal/daemon/* MUST NOT import
 // internal/caronte/store/federation or internal/caronte/coordinated,
 // directly or transitively. Bridge via the wiring adapters in
 // cmd/zen-swarm-ctld/contract_federation_wiring.go.

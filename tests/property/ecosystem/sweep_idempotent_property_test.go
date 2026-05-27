@@ -1,8 +1,8 @@
-//go:build property && cgo
+// go:build property && cgo
 
-// tests/property/ecosystem/sweep_idempotent_property_test.go (Plan 14 Phase H Task H-7-10)
+// tests/property/ecosystem/sweep_idempotent_property_test.go
 //
-// inv-zen-204: weekly Sunday sweep idempotent — re-running the same
+// invariant: weekly Sunday sweep idempotent — re-running the same
 // sweep on the same dataset produces zero schema diff.
 //
 // Full DB-side coverage lives in
@@ -10,13 +10,13 @@
 // (TestSweepChangeNodes_Idempotent). This file enforces the
 // algebraic FLOOR that the sweep's idempotency rests on:
 //
-//  1. Order-independence — the schema fingerprint must be invariant
-//     under column reordering (the sweep walks columns in arbitrary
-//     order; the produced hash must not).
-//  2. Idempotency — hashing the same column-set twice produces the
-//     same digest (no clock/PID/random noise leaks in).
-//  3. Sensitivity — different column-sets MUST produce different
-//     hashes (the sweep must DETECT diffs, not silently agree).
+// 1. Order-independence — the schema fingerprint must be invariant
+// under column reordering (the sweep walks columns in arbitrary
+// order; the produced hash must not).
+// 2. Idempotency — hashing the same column-set twice produces the
+// same digest (no clock/PID/random noise leaks in).
+// 3. Sensitivity — different column-sets MUST produce different
+// hashes (the sweep must DETECT diffs, not silently agree).
 //
 // If any of these algebraic properties fail, the production sweep
 // cannot be idempotent — the test is the canary that catches a

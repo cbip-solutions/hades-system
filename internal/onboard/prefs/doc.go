@@ -6,14 +6,14 @@
 //
 // # Cross-phase canonical (C3 reconciliation 2026-05-14)
 //
-// Phase C (`zen config init`) and Phase D (`zen new` / `zen init`)
+// (`zen config init`) and (`zen new` / `zen init`)
 // invoke prefs.Load(prefs.Path()) at engine entry and prefs.Save when
 // the wizard ends with SavePreferences=true. The subpackage owns the
 // persisted shape AND the Path() resolver; parent package onboard
 // re-exports OnboardPrefsPath() (internal/onboard/paths.go, A-8) for
 // callers that imported onboard but not onboard/prefs.
 //
-// # Inverted-dependency pattern (A-1 Stage 0 finding 2)
+// # Inverted-dependency pattern
 //
 // The persistable subset of onboard.WizardAnswers is mapped into
 // *Prefs via FromAnswers (this package) rather than a ToPrefs() method
@@ -26,24 +26,24 @@
 //
 // # Schema versioning (ADR-0050 + spec §2.12 Q12=D)
 //
-//   - CurrentSchemaVersion ("1.0") is stamped by every Save regardless
-//     of the input value.
-//   - MAJOR bump in the file (e.g. "2.0") → Load returns
-//     onboard.ErrUnsupportedSchemaVersion; operator runs
-//     `zen migrate config` (Phase F task F7) to upgrade.
-//   - MINOR bump (e.g. "1.99") → Load auto-migrates by tolerating the
-//     higher version; the next Save normalises to CurrentSchemaVersion.
-//   - Empty schema_version (legacy / first run) → tolerated; treated
-//     as fresh.
-//   - Malformed schema_version (non-MAJOR.MINOR shape) → Load returns
-//     onboard.ErrCorruptPrefs.
+// - CurrentSchemaVersion ("1.0") is stamped by every Save regardless
+// of the input value.
+// - MAJOR bump in the file (e.g. "2.0") → Load returns
+// onboard.ErrUnsupportedSchemaVersion; operator runs
+// `zen migrate config` to upgrade.
+// - MINOR bump (e.g. "1.99") → Load auto-migrates by tolerating the
+// higher version; the next Save normalises to CurrentSchemaVersion.
+// - Empty schema_version (legacy / first run) → tolerated; treated
+// as fresh.
+// - Malformed schema_version (non-MAJOR.MINOR shape) → Load returns
+// onboard.ErrCorruptPrefs.
 //
 // # Atomic save + corrupt detection (SOTA-2 #6 crash-only)
 //
 // Save writes the encoded bytes to `<path>.tmp` (via os.WriteFile,
 // mode 0600) then renames to the canonical path so a crash mid-write
 // leaves the previous prefs file intact. The rename is the atomicity
-// invariant; a crash before the rename leaves the .tmp staging file
+// invariant; a crash before the rename leaves the.tmp staging file
 // which the next Save's WriteFile overwrites cleanly.
 //
 // Durability (fsync) is deliberately NOT invoked — onboarding prefs
@@ -70,10 +70,10 @@
 //
 // # File mode
 //
-// Save persists with mode 0600 (operator-private). Mirrors Plan 2 +
+// Save persists with mode 0600 (operator-private). Mirrors +
 // hints or provider URLs leaking on a shared host.
 //
-// # Boundary discipline (inv-zen-031)
+// # Boundary discipline
 //
 // This subpackage NEVER imports internal/store. The prefs shape is a
 // pure TOML round-trip; persistence beyond a single file is the

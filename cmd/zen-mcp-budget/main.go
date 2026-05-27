@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // cmd/zen-mcp-budget/main.go
 //
-// zen-mcp-budget — budget MCP binary (Plan 4 Phase J).
+// zen-mcp-budget — budget MCP binary.
 //
 // Invoked by OpenCode plugin via stdio transport (Q9 B: stdio canonical).
 // Reads daemon socket path, auth-token-path from flags. On missing or
@@ -9,11 +9,11 @@
 //
 // Usage (by plugin):
 //
-//	zen-mcp-budget --socket /var/run/zen-swarm/zen-swarm.sock --auth-token-path /path/to/token
+// zen-mcp-budget --socket /var/run/zen-swarm/zen-swarm.sock --auth-token-path /path/to/token
 //
 // Usage (operator debug with TCP URL):
 //
-//	zen-mcp-budget --daemon-url http://localhost:4471 --auth-token-path /path/to/token
+// zen-mcp-budget --daemon-url http://localhost:4471 --auth-token-path /path/to/token
 package main
 
 import (

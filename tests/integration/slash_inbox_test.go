@@ -1,20 +1,20 @@
-//   - Task H-3: Structural assertion that the /inbox slash command
-//     markdown contains the YAML frontmatter, the canonical CLI invo-
-//     cation (`bin/zen inbox`), every documented flag passthrough
-//     (`--severity`, `--since`, `--project`), every value of the 4-tier
-//     severity enum (`urgent`, `action-needed`, `info-immediate`,
-//     `info-digest` — inv-zen-124 enforces enum exhaustiveness), and
-//     the output-render instruction.
-//   - Task H-6: End-to-end integration tests that exercise the slash
-//     command bash body against a stubbed `bin/zen` binary (PATH stub
-//     pattern shared with H-5 via the PluginSlashRunner testhelper).
-//     Seven scenarios cover default / severity / since / project /
-//     all-filters-combined / daemon-down abort / empty-exit pass-
-//     through per spec §1 Q11 + §1 Q12 + §2.6 + §6.8 + §6.9 +
-//     inv-zen-124.
+// - Task H-3: Structural assertion that the /inbox slash command
+// markdown contains the YAML frontmatter, the canonical CLI invo-
+// cation (`bin/zen inbox`), every documented flag passthrough
+// (`--severity`, `--since`, `--project`), every value of the 4-tier
+// severity enum (`urgent`, `action-needed`, `info-immediate`,
+// `info-digest` — invariant enforces enum exhaustiveness), and
+// the output-render instruction.
+// - Task H-6: End-to-end integration tests that exercise the slash
+// command bash body against a stubbed `bin/zen` binary (PATH stub
+// pattern shared with H-5 via the PluginSlashRunner testhelper).
+// Seven scenarios cover default / severity / since / project /
+// all-filters-combined / daemon-down abort / empty-exit pass-
+// through per spec §1 Q11 + §1 Q12 + §2.6 + §6.8 + §6.9 +
+// invariant.
 //
-// Anti-pattern guard: this file also enforces inv-zen-004 (no Claude
-// attribution in production artifacts) and inv-zen-080 (no bare
+// Anti-pattern guard: this file also enforces invariant (no Claude
+// attribution in production artifacts) and invariant (no bare
 // provider-API URLs in slash command bodies — slash commands MUST
 // route through `bin/zen` so the daemon dispatcher is the single
 // egress point for LLM traffic) on the plugin slash command markdown.

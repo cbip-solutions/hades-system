@@ -5,10 +5,10 @@
 //
 // # Invariant
 //
-// inv-zen-191: Plan 14 ingester / ecosystem code NEVER imports net/http
+// invariant: ingester / ecosystem code NEVER imports net/http
 // (or crypto/tls). ALL outbound egress goes via
 // internal/research/cache/Revalidator.Fetch (the sole legal HTTP callsite
-// per inv-zen-152 + ADR-0087 amendment). The boundary is enforced both
+// per invariant + ADR-0087 amendment). The boundary is enforced both
 // at the package level (no file under internal/research/ecosystem/...
 // may import net/http or crypto/tls) and at the callsite level
 // (defense-in-depth catch for aliased imports).
@@ -24,7 +24,7 @@
 //
 // # Why also crypto/tls
 //
-// inv-zen-191 prevents direct outbound HTTPS. crypto/tls is the layer
+// invariant prevents direct outbound HTTPS. crypto/tls is the layer
 // beneath net/http; if a future contributor reaches for tls.Dial or
 // tls.Client directly (a vector that bypasses net/http entirely) the
 // single-egress invariant is just as violated. Flagging crypto/tls is
@@ -41,10 +41,10 @@
 //
 // # Pattern
 //
-// Mirrors the Plan 9 Phase J Task J-7 `noWebInAggregator` analyzer in
+// Mirrors the Task J-7 `noWebInAggregator` analyzer in
 // shape (`golang.org/x/tools/go/analysis.Analyzer`) for consistency.
 // Registered in `cmd/zen-doctrine-lint/plan14_extension.go` alongside
-// the Plan 9 extension surface.
+// the extension surface.
 //
 // # Known-uncaught callsite shape (acknowledged limitation)
 //
@@ -58,14 +58,14 @@
 // arbitrary depths of selector nesting yields diminishing returns
 // versus false-positives on aliased struct fields). If a future
 // adversarial case slips through, the runtime egress also fails the
-// daemon's dispatcher routing (inv-zen-152) and the cron worker's
-// allowlist (inv-zen-191 runtime side).
+// daemon's dispatcher routing and the cron worker's
+// allowlist.
 //
 // References
-//   - Spec §7.3 Plan 14 ingester invariants
-//   - ADR-0087 Revalidator.Fetch single-egress amendment
-//   - Plan 14 Phase H Task H-1 spec (docs/superpowers/plans/2026-05-14-plan-14-phase-H-tests.md)
-//   - Plan 9 J-7 `noWebInAggregator` precedent
+// - Spec §7.3 ingester invariants
+// - ADR-0087 Revalidator.Fetch single-egress amendment
+// - Task H-1 spec (internal design record)
+// - J-7 `noWebInAggregator` precedent
 package lint
 
 import (

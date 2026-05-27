@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 //
 // Every method in this file satisfies one of the handlers.*Ctx interfaces.
-// The defaults are sufficient for end-to-end Phase G testing (handlers
+// The defaults are sufficient for end-to-end testing (handlers
 // return shape-correct JSON) but are intentionally minimal — they do
 // NOT call into the eventual production subsystems. Each method carries
 // the PHASE_G_DEFAULT marker plus a reference to the Phase that wires
 // the real engine, so a `grep PHASE_G_DEFAULT` enumerates every place
 // the daemon still holds a placeholder.
 //
-// Production assertion: tests that exercise post-Phase-G behaviour must
+// Production assertion: tests that exercise post- behaviour must
 // inject a real Ctx via subagent stubs OR be excluded from this file via
-// a build tag. Phase L will fail-closed on calls to any default still
+// a build tag. will fail-closed on calls to any default still
 // living in this file once its scope is in.
 //
 // Post-review I-8 fix: prior code interleaved these defaults with the
@@ -21,6 +21,7 @@
 package daemon
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -28,6 +29,7 @@ import (
 
 	"github.com/cbip-solutions/hades-system/internal/daemon/handlers"
 	"github.com/cbip-solutions/hades-system/internal/doctrine"
+	"github.com/cbip-solutions/hades-system/internal/workforce/gate"
 )
 
 func (s *Server) ResearchCacheGet(hash string) (string, int64, bool, error) {
@@ -124,11 +126,52 @@ func (s *Server) WorkforceAggregations(layer string, windowSec int64, limit int)
 	return nil, nil
 }
 
-func (s *Server) OperatorGateState() (string, error) { return "running", nil }
+func (s *Server) OperatorGateState() (string, error) {
+	g := s.OperatorGate()
+	if g == nil {
+		return string(gate.StateRunning), nil
+	}
+	return string(g.State()), nil
+}
 
-func (s *Server) OperatorGatePause(mode, reason string) (string, error) { return mode, nil }
+func (s *Server) OperatorGatePause(mode, reason string) (string, error) {
+	pauseMode, pauseState, err := parseOperatorGatePauseMode(mode)
+	if err != nil {
+		return "", err
+	}
+	g := s.OperatorGate()
+	if g == nil {
+		return string(pauseState), nil
+	}
+	if err := g.Pause(context.Background(), pauseMode, reason); err != nil {
+		return "", err
+	}
+	return string(g.State()), nil
+}
 
-func (s *Server) OperatorGateResume() (string, error) { return "running", nil }
+func (s *Server) OperatorGateResume() (string, error) {
+	g := s.OperatorGate()
+	if g == nil {
+		return string(gate.StateRunning), nil
+	}
+	if err := g.Resume(context.Background()); err != nil {
+		return "", err
+	}
+	return string(g.State()), nil
+}
+
+func parseOperatorGatePauseMode(mode string) (gate.PauseMode, gate.State, error) {
+	switch mode {
+	case "", string(gate.StatePausedDescriptive):
+		return gate.PauseDescriptive, gate.StatePausedDescriptive, nil
+	case string(gate.StatePausedQuiet):
+		return gate.PauseQuiet, gate.StatePausedQuiet, nil
+	case string(gate.StatePausedAfterApply):
+		return gate.PauseAfterApply, gate.StatePausedAfterApply, nil
+	default:
+		return 0, "", errors.New("unknown operator gate pause mode: " + mode)
+	}
+}
 
 func (s *Server) RateLimitThreshold(endpoint string) int {
 	defaults := handlers.Defaults()

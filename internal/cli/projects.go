@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — projects.go (Plan 7 Phase L Task L-1).
+// Package cli — projects.go.
 //
 // `zen projects ls` lists every project the daemon's project registry
 // knows about, including archived (autonomous_state="complete") rows so
@@ -7,11 +7,11 @@
 //
 // Cobra layout:
 //
-//	zen projects
-//	  ls    list known projects (alias, sha8, path, last-active, state)
+// zen projects
+// ls list known projects (alias, sha8, path, last-active, state)
 //
 // Distinction from `zen project` (singular): `zen project doctor / archive
-// / rm / priority` (Phase A + B) operate on a single alias; `zen projects
+// / rm / priority` operate on a single alias; `zen projects
 // ls` is the cross-fleet view. The split mirrors `git remote` (singular
 // management) vs `git remote ls` (plural inspection) — both surfaces
 // matter and live as siblings, neither subsumes the other.
@@ -20,10 +20,10 @@
 // awk the output): ALIAS, SHA8, PATH, LAST-ACTIVE, STATE.
 //
 // Drift from spec §6.2 example output: the spec shows a "QUOTA" + "PRIORITY"
-// pair. Those columns belong to Plan 7 Phase B's quota substrate (live in
-// `zen project priority --ls` per Phase B-10) and would require a daemon-side
-// JOIN that GET /v1/projects intentionally avoids (Phase I cap: pure project
-// registry; quota state surfaces via /v1/priority/* in Phase B). Adding
+// pair. Those columns belong to quota substrate (live in
+// `zen project priority --ls` per ) and would require a daemon-side
+// JOIN that GET /v1/projects intentionally avoids ( cap: pure project
+// registry; quota state surfaces via /v1/priority/* in ). Adding
 // QUOTA + PRIORITY here would either widen the wire shape (cross-cutting
 // concern, breaks SRP) or trigger a second round-trip per row (N+1 query).
 // Operators wanting both views chain: `zen projects ls && zen project
@@ -31,12 +31,12 @@
 // that operators need to spot dead aliases.
 //
 // Exit-code mapping (per spec §6.2 + the project.go ErrRecoverable sentinel):
-//   - 0 success (any row count, including zero)
-//   - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503/501 Phase I gap
+// - 0 success (any row count, including zero)
+// - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503/501 gap
 //
-// Phase I gap acknowledgment: the daemon-side `GET /v1/projects` is still
-// the Plan 1 501-stub at HEAD (`internal/daemon/handlers/projects.go
-// ProjectsList` returns notImplemented). Plan 7 Phase I plan §"Step 4"
+// gap acknowledgment: the daemon-side `GET /v1/projects` is still
+// the 501-stub at HEAD (`internal/daemon/handlers/projects.go
+// ProjectsList` returns notImplemented). plan §"Step 4"
 // scheduled the replacement (ProjectsP7List) but that closeout has not
 // landed at HEAD f4b69c6. Until it does, operators see exit 2 with the
 // 501 body — the CLI surface is final-shape day 1 nonetheless, mirroring

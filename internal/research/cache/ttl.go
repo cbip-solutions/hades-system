@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -11,21 +12,21 @@
 // matching rule wins ("first-match-wins"). Pattern matching uses simple
 // host/path string checks (no regex) for predictability and speed.
 //
-// DefaultTTLRules is exported package-level so Phase J doctrine extension
+// DefaultTTLRules is exported package-level so doctrine extension
 // can wrap it with operator overrides from the [research.cache.ttl] TOML
 // schema without modifying the cache package (open/closed principle).
 //
 // Rule order rationale:
-//  1. rfc-permanent   — RFC host + /rfc/ path; must precede docs-7d because
-//     rfc-editor.org pages often contain "/docs/" in sub-paths.
-//  2. arxiv-permanent — arxiv.org host; no /docs/ overlap but placed early
-//     to keep permanent rules grouped.
-//  3. github-state-1d — github.com + /issues/ | /pulls/ | /commits/ path;
-//     MUST precede docs-7d because github.com/*/docs/* would otherwise match
-//     docs-7d before reaching this rule.
-//  4. docs-7d         — readthedocs, docs.* host prefix, */docs/* path,
-//     developer.mozilla.org, pkg.go.dev.
-//  5. default-1d      — catch-all; always returns true.
+// 1. rfc-permanent — RFC host + /rfc/ path; must precede docs-7d because
+// rfc-editor.org pages often contain "/docs/" in sub-paths.
+// 2. arxiv-permanent — arxiv.org host; no /docs/ overlap but placed early
+// to keep permanent rules grouped.
+// 3. github-state-1d — github.com + /issues/ | /pulls/ | /commits/ path;
+// MUST precede docs-7d because github.com/*/docs/* would otherwise match
+// docs-7d before reaching this rule.
+// 4. docs-7d — readthedocs, docs.* host prefix, */docs/* path,
+// developer.mozilla.org, pkg.go.dev.
+// 5. default-1d — catch-all; always returns true.
 package cache
 
 import (
@@ -144,10 +145,10 @@ var DefaultTTLRules = []TTLRule{
 // If sourceURL cannot be parsed, matching falls back to rules that do not
 // require a parsed URL (ultimately the catch-all default-1d).
 //
-// Example
+// # Example
 //
-//	ttl := LookupTTL("https://arxiv.org/abs/2509.17360")
-//	// ttl == TTLPermanent
+// ttl := LookupTTL("https://arxiv.org/abs/2509.17360")
+// // ttl == TTLPermanent
 func LookupTTL(sourceURL string) time.Duration {
 	return LookupTTLRule(sourceURL).TTL
 }

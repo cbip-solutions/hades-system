@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package cli — memory_pin.go (Plan 14 Phase F Task F-4).
+// Package cli — memory_pin.go.
 //
 // `zen memory pin` is the operator-ergonomics alias for `zen memory promote`
 // at the CLI surface. Both call MemoryPromote (aggregator promote endpoint).
 //
-// inv-zen-146 gates apply identically:
-//  1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
-//  2. strings.TrimSpace check in RunE — rejects whitespace-only values.
+// invariant gates apply identically:
+// 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
+// 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 package cli
 
 import (

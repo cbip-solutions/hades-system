@@ -142,7 +142,7 @@ func TestMaterializeRendersProjectName(t *testing.T) {
 	}
 }
 
-// TestPostGenScriptHasNoClaudeAttribution verifies inv-zen-004 propagates
+// TestPostGenScriptHasNoClaudeAttribution verifies invariant propagates
 // to scaffolded projects: the embedded post_gen.sh files MUST NOT contain
 // AI-attribution strings. The doctrine that zen-swarm commits never carry
 // AI attribution propagates to every project we scaffold, by construction

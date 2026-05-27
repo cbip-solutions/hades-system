@@ -1,9 +1,10 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
 // Package cache — revalidator_fetch_coverage_test.go
 //
-// Coverage extension for revalidator_fetch.go (Plan 14 Phase A Task A-2).
+// Coverage extension for revalidator_fetch.go.
 //
 // The base suite (revalidator_fetch_test.go) covers the happy paths +
 // the 11 documented behavioural scenarios. This file extends coverage
@@ -11,20 +12,20 @@
 // security/correctness-critical floor (HTTP boundary).
 //
 // Branches covered here:
-//   - ErrCASUnset                              — NewRevalidator without CAS → Fetch error
-//   - 404 / 410 source-gone responses          — wrapped error with status
-//   - 5xx server error responses               — wrapped error
-//   - 4xx non-404/410 (unexpected status)      — wrapped error
-//   - http.NewRequestWithContext failure       — invalid URL parse
-//   - 304 without prior CAS entry (protocol)   — wrapped error
-//   - guessFetchExt all Content-Type branches  — html/plain/markdown/xml/json/binary
-//   - guessFetchExt URL-suffix fallback        — .pdf, .png etc.
-//   - lookupURLHash disk-fallback path         — entry on disk but not in memory
-//   - lookupURLHash not-found error            — neither memory nor disk
-//   - loadFetchMetadata round-trip persistence — write, re-construct, observe
-//   - loadFetchMetadata corrupted-json error   — non-JSON file in _url_index
-//   - loadFetchMetadata _url_index is a file   — not a directory
-//   - AcceptModSince adds If-Modified-Since    — exercises the header set
+// - ErrCASUnset — NewRevalidator without CAS → Fetch error
+// - 404 / 410 source-gone responses — wrapped error with status
+// - 5xx server error responses — wrapped error
+// - 4xx non-404/410 (unexpected status) — wrapped error
+// - http.NewRequestWithContext failure — invalid URL parse
+// - 304 without prior CAS entry (protocol) — wrapped error
+// - guessFetchExt all Content-Type branches — html/plain/markdown/xml/json/binary
+// - guessFetchExt URL-suffix fallback —.pdf,.png etc.
+// - lookupURLHash disk-fallback path — entry on disk but not in memory
+// - lookupURLHash not-found error — neither memory nor disk
+// - loadFetchMetadata round-trip persistence — write, re-construct, observe
+// - loadFetchMetadata corrupted-json error — non-JSON file in _url_index
+// - loadFetchMetadata _url_index is a file — not a directory
+// - AcceptModSince adds If-Modified-Since — exercises the header set
 package cache
 
 import (

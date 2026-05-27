@@ -4,7 +4,7 @@
 set -euo pipefail
 
 DRY_RUN=0
-REPO="hades-system/hades-system"
+REPO="cbip-solutions/hades-system"
 RULESET_FILE=".github/rulesets/main-branch.json"
 
 usage() {

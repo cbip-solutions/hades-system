@@ -8,8 +8,8 @@
 // declared cadence windows (24h amendment cooldown, 30min architectural
 // review) and would slow the default unit-test pass needlessly.
 //
-// Pattern: every cadence-sensitive Plan 5 component takes a clock.Clock
-// parameter (Phase A invariant). Tests inject *clock.Fake; production
+// Pattern: every cadence-sensitive component takes a clock.Clock
+// parameter. Tests inject *clock.Fake; production
 // uses clock.Real{}. The two canonical assertion shapes provided here
 // are AdvanceUntilFire (single-fire predicate) and AssertTickerFires
 // (cardinality assertion across N periods).

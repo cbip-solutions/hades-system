@@ -63,8 +63,7 @@ func (v *Verifier) VerifyAttestation(art ReleaseArtifact) error {
 	stdout, stderr, err := runner.Run(ctx, "gh",
 		"attestation", "verify",
 		art.Path,
-		"--owner", v.Owner,
-		"--repo", v.Repo,
+		"--repo", v.Owner+"/"+v.Repo,
 		"--format", "json",
 	)
 	if err != nil {

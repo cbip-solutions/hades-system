@@ -121,10 +121,47 @@ func TestDefaultContentHashForFileNotExist(t *testing.T) {
 	}
 }
 
-func TestDefaultPromoteIsNoOp(t *testing.T) {
+func TestDefaultPromoteRequiresExplicitHook(t *testing.T) {
+	err := defaultPromote("/tmp/staging", "zen-swarm")
+	if err == nil {
+		t.Fatal("expected defaultPromote to refuse unconfigured promotion")
+	}
+	if !strings.Contains(err.Error(), "promote hook not configured") {
+		t.Fatalf("err = %v, want promote hook not configured", err)
+	}
+}
 
-	if err := defaultPromote("/tmp/staging", "zen-swarm"); err != nil {
-		t.Errorf("defaultPromote: %v (expected nil no-op)", err)
+func TestWithPromoteOptionWiresCustomPromote(t *testing.T) {
+	dir := t.TempDir()
+	var promoted bool
+	r := NewRestorer(
+		&stubLitestreamRestorer{},
+		&stubS3Downloader{},
+		&stubVerifier{res: &VerifyResult{Clean: true, RecordsChecked: 7}},
+		&stubSealStoreFull{rowsForList: nil, rowByID: map[string]ColdArchiveMeta{}},
+		dir,
+		WithPromote(func(stagingDir, projectID string) error {
+			promoted = true
+			if projectID != "zen-swarm" {
+				t.Fatalf("projectID = %q, want zen-swarm", projectID)
+			}
+			if stagingDir == "" {
+				t.Fatal("stagingDir empty")
+			}
+			return nil
+		}),
+	)
+
+	var stdout bytes.Buffer
+	res, err := r.Restore(context.Background(), "zen-swarm", time.Unix(1700000000, 0), strings.NewReader("yes\n"), &stdout)
+	if err != nil {
+		t.Fatalf("Restore: %v", err)
+	}
+	if !promoted {
+		t.Fatal("custom promote hook was not called")
+	}
+	if !res.Approved || !res.Promoted {
+		t.Fatalf("Approved/Promoted = %v/%v, want true/true", res.Approved, res.Promoted)
 	}
 }
 
@@ -237,6 +274,31 @@ func TestRestoreAbortsOnColdArchiveMetaFailure(t *testing.T) {
 	}
 }
 
+func TestRestoreAbortsOnExtractorFailure(t *testing.T) {
+	dir := t.TempDir()
+	r := NewRestorer(
+		&stubLitestreamRestorer{},
+		&stubS3Downloader{},
+		&stubVerifier{res: &VerifyResult{Clean: true}},
+		&stubSealStoreFull{
+			rowsForList: []SealMeta{{PartitionID: "2026_05"}},
+			rowByID:     map[string]ColdArchiveMeta{"2026_05": {ContentHash: "abc"}},
+		},
+		dir,
+		WithColdArchiveExtractor(&stubExtractor{err: errors.New("tarball corrupt")}),
+	)
+	r.contentHashFor = func(_, _ string) (string, error) { return "abc", nil }
+
+	var stdout bytes.Buffer
+	_, err := r.Restore(context.Background(), "zen-swarm", time.Unix(1700000000, 0), strings.NewReader("y\n"), &stdout)
+	if err == nil {
+		t.Fatal("expected extractor error to propagate")
+	}
+	if !strings.Contains(err.Error(), "extract partition") {
+		t.Errorf("err = %v, want extract partition", err)
+	}
+}
+
 func TestRestoreAbortsOnVerifyChainError(t *testing.T) {
 	dir := t.TempDir()
 	r := NewRestorer(
@@ -247,6 +309,7 @@ func TestRestoreAbortsOnVerifyChainError(t *testing.T) {
 		dir,
 	)
 	r.contentHashFor = func(_, _ string) (string, error) { return "abc", nil }
+	r.extractor = &stubExtractor{}
 
 	r.seals = &stubSealStoreFull{
 		rowsForList: []SealMeta{{PartitionID: "2026_05"}},
@@ -275,6 +338,7 @@ func TestRestoreAbortsOnPromoteFnFailure(t *testing.T) {
 		dir,
 	)
 	r.contentHashFor = func(_, _ string) (string, error) { return "abc", nil }
+	r.extractor = &stubExtractor{}
 	r.promoteFn = func(_, _ string) error { return errors.New("atomic rename failed") }
 	var stdout bytes.Buffer
 
@@ -431,3 +495,26 @@ func TestSha256OfReaderMidStreamIOError(t *testing.T) {
 		t.Errorf("sha256OfReader mid-stream: got %v, want sentinel", err)
 	}
 }
+
+// NOTE(path-d/adr-0069): archive_extract.go contains four remaining
+// architecturally-unreachable statements after the local CI
+// workaround closed every portable testable branch:
+//
+// (1) archive_extract.go:39-41 filepath.Abs(dstDir) error. ExtractColdArchive
+// has already accepted a non-empty process-local destination path; making
+// filepath.Abs fail deterministically requires mutating global cwd/volume
+// state, which would make the package test suite order-dependent.
+// (2) archive_extract.go:62-64 filepath.Abs(entry) error. absDst is built
+// from a known absolute cleanRoot and a cleaned tar member name; there is
+// no package-local input that makes filepath.Abs return an error here.
+// (3) archive_extract.go:65-67 path-escape fallback. The preceding guard
+// rejects absolute paths, `..`, and `../...`; filepath.Join/Clean are
+// string operations and do not follow symlinks, so a remaining string-only
+// escape is a redundant defense-in-depth belt.
+// (4) archive_extract.go:84-86 os.File.Close error. After OpenFile succeeds
+// and io.Copy returns nil on a local temp filesystem, Close cannot be made
+// to fail without OS/filesystem fault injection.
+//
+// Count 4 statements. Recovery target is therefore amended from 100 to 99 in
+// scripts/coverage-validation.sh, matching the documented Path-D pattern used
+// by tessera, litestream, adr, auditadapter, and knowledgeadapter.

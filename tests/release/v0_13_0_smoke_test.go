@@ -1,4 +1,4 @@
-//go:build release_smoke
+// go:build release_smoke
 
 package release
 
@@ -6,10 +6,10 @@ import (
 	"testing"
 )
 
-// TestV0130ReleaseSmoke is the Plan 13 v0.13.0 release smoke test.
+// TestV0130ReleaseSmoke is the v0.13.0 release smoke test.
 //
-// Per Plan 13 Phase F-tail F10 line 7243-7247 spec: the release smoke
-// MUST exercise the 4 Plan 13 NEW surface invocations + the 3 F-tail
+// Per F10 line 7243-7247 spec: the release smoke
+// MUST exercise the 4 NEW surface invocations + the 3 F-tail
 // CLI surfaces (doctor full / state cleanup / doctor restore) +
 // migrate + onboard. Daemon-down graceful degradation is the canonical
 // failure mode tested.

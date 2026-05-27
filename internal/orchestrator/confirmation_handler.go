@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package orchestrator confirmation_handler — Plan 5 Phase F Tasks F-2 + F-3.
+// Package orchestrator confirmation_handler — Tasks F-2 + F-3.
 //
 // ConfirmationHandler is the stateful coordinator wiring
-// ConfirmationPolicy (F-1) + StateMachine (Phase C) + eventlog (Phase A)
-// + Plan 4 OperatorGate. RequestConfirmation evaluates the policy, and
+// ConfirmationPolicy (F-1) + StateMachine + eventlog
+// + OperatorGate. RequestConfirmation evaluates the policy, and
 // on a mandatory or optional pause verdict transitions
 // RUNNING → WAITING_FOR_CONFIRMATION, locks the operator gate
 // (PauseDescriptive), and emits an EvtConfirmationRequested event so
-// downstream operator UI + Plan 9 hash-chain replay can observe the
+// downstream operator UI + hash-chain replay can observe the
 // pause.
 //
-// Race-safety (inv-zen-093 spirit): all three side effects (state
+// Race-safety: all three side effects (state
 // transition, gate Pause, eventlog Append) execute under h.mu so that
 // concurrent RequestConfirmation calls see a single pendingRequest at a
 // time. Subsequent callers that arrive while a request is pending
@@ -26,13 +26,13 @@
 // so a cancelled caller-ctx does not block cleanup.
 //
 // Invariants
-//   - inv-zen-093 (race-safety): single pending request guarded by
-//     h.pending under h.mu (full enforcement in F-3 ack/deny).
-//   - inv-zen-031 (boundary): this file does NOT import internal/store;
-//     it depends only on eventlog (Phase A) + workforce/gate (Plan 4).
-//   - Privacy IMP-3 carry-forward: Summary + Alternatives strings are
-//     emitted verbatim into the audit-trail event payload; callers MUST
-//     pre-redact secrets before passing them in.
+// - invariant (race-safety): single pending request guarded by
+// h.pending under h.mu (full enforcement in F-3 ack/deny).
+// - invariant (boundary): this file does NOT import internal/store;
+// it depends only on eventlog + workforce/gate.
+// - Privacy IMP-3 carry-forward: Summary + Alternatives strings are
+// emitted verbatim into the audit-trail event payload; callers MUST
+// pre-redact secrets before passing them in.
 package orchestrator
 
 import (

@@ -7,7 +7,7 @@
 // before/equal-to now) are filtered on read AND swept periodically — so
 // the caller never honours a stale pin between sweep ticks.
 //
-// Boundary (inv-zen-031): this file imports stdlib only (context, errors,
+// Boundary: this file imports stdlib only (context, errors,
 // fmt, log/slog, sync, time). The orchestrator package MUST NOT import
 // internal/store (master plan v2.0 §92 + system-design umbrella §879 +
 // B-7 commit body). Pin row type is mirrored locally; the F-6-style
@@ -15,9 +15,9 @@
 // orchestrator.PinRow ↔ store.PinRow with a reflective parity test.
 //
 // Why mirror not import (F-5 / F-7 precedent):
-//   - F-5 pioneered the pattern with CostLedgerRow + ErrDuplicateIdempotency.
-//   - F-7 reused it for RebuildFromLedger.
-//   - I-2 continues the pattern for PinRow.
+// - F-5 pioneered the pattern with CostLedgerRow + ErrDuplicateIdempotency.
+// - F-7 reused it for RebuildFromLedger.
+// - I-2 continues the pattern for PinRow.
 //
 // Two type sets, intentionally identical in shape — keeps the boundary
 // clean and preserves unit-test independence (orchestrator tests do not
@@ -46,7 +46,7 @@ import (
 
 // PinRow orchestrator-side pin row shape. Mirror of store.PinRow
 // (intentionally identical) so dispatcheradapter performs 1:1 field-by-field
-// forwarding. Keeping the type local maintains inv-zen-031 boundary
+// forwarding. Keeping the type local maintains invariant boundary
 // (orchestrator MUST NOT import internal/store; bridge via dispatcheradapter).
 //
 // Why mirror not import: master plan v2.0 §92 + system-design §879
@@ -147,9 +147,9 @@ func (p *PinOverrides) Unset(scope, scopeID string) error {
 // (nil, err) wrapped.
 //
 // Boundary semantic for ExpiresAt:
-//   - ExpiresAt nil → permanent pin → match.
-//   - ExpiresAt.After(now) → not yet expired → match.
-//   - !ExpiresAt.After(now) → at-or-past boundary → expired, skip.
+// - ExpiresAt nil → permanent pin → match.
+// - ExpiresAt.After(now) → not yet expired → match.
+// - !ExpiresAt.After(now) → at-or-past boundary → expired, skip.
 //
 // The "at boundary" treatment matches I-1's PurgeExpiredPins strict-`<`
 // SQL boundary (a pin with ExpiresAt == now is filtered by Resolve but

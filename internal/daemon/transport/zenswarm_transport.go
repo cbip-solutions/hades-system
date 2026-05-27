@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // ZenSwarmTransport is the daemon-side counterpart of the Python
-// ProviderTransport ABC implementation. It exposes the Plan 3 dispatcher
+// ProviderTransport ABC implementation. It exposes the dispatcher
 // chain as a providers.TierBackend so the compile-anchor proves the Go
 // side honours the same contract the Python side enforces at the Hermes
 // boundary.
@@ -10,7 +10,7 @@
 // directly. ZenSwarmTransport.Forward exists so daemon-internal callers
 // (future MCP-internal LLM dispatch) can route through the same single-
 // egress chokepoint without instantiating the dispatcher directly. This is
-// the same defence-in-depth pattern Plan 3 uses for BypassBackend and the
+// the same defence-in-depth pattern uses for BypassBackend and the
 // providers.toml cascade backends (concrete types behind the
 // providers.TierBackend interface).
 
@@ -34,7 +34,7 @@ var _ providers.TierBackend = (*ZenSwarmTransport)(nil)
 // dispatcher. dispatcher MUST NOT be nil — passing nil is a wiring bug at
 // daemon bootstrap that fails fast here rather than at first Forward.
 //
-// anchor MAY be nil (graceful degradation when Plan 9 audit chain is offline);
+// anchor MAY be nil;
 // Forward checks for nil before calling Emit. Production wiring always
 // supplies a non-nil anchor (internal/audit/chain.New).
 func NewZenSwarmTransport(dispatcher Dispatcher, anchor AuditAnchor) *ZenSwarmTransport {
@@ -61,7 +61,7 @@ func (t *ZenSwarmTransport) Close() error { return nil }
 
 // Name returns the stable registry key for ZenSwarmTransport. MUST NOT
 // change across releases (cost_ledger.tier and audit-chain rows persist
-// this string verbatim). Plan 3 Phase A discipline applies.
+// this string verbatim). discipline applies.
 func (t *ZenSwarmTransport) Name() string { return "zenswarm-transport" }
 
 func (t *ZenSwarmTransport) Capabilities() providers.TierCapabilities {

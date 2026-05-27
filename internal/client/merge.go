@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — merge.go (Plan 6 Phase F Task F-4).
+// Package client — merge.go.
 //
 // MergeHTTPClient is the production HTTP client for the daemon's
 // /v1/merge/* surface (8 routes registered by the F-4 daemon handler in
@@ -14,19 +14,19 @@
 // transports (e.g. a future fake-keyed in-memory client for chaos
 // tests) can also satisfy MergeClient without name collision.
 //
-// Wire types live in merge_dto.go alongside the interface; inv-zen-104
+// Wire types live in merge_dto.go alongside the interface; invariant
 // boundary preserved (no internal/orchestrator/merge import here).
 //
 // Routes
 //
-//	GET  /v1/merge/inspect?id=<generation|hash>
-//	POST /v1/merge/replay         (body: {"session_id": "..."})
-//	GET  /v1/merge/score-explain?outcome_id=<id>
-//	GET  /v1/merge/baseline?session_id=<id>
-//	GET  /v1/merge/cache/status
-//	POST /v1/merge/cache/clear
-//	GET  /v1/merge/config
-//	GET  /v1/merge/anomaly?since=<duration>
+// GET /v1/merge/inspect?id=<generation|hash>
+// POST /v1/merge/replay (body: {"session_id": "..."})
+// GET /v1/merge/score-explain?outcome_id=<id>
+// GET /v1/merge/baseline?session_id=<id>
+// GET /v1/merge/cache/status
+// POST /v1/merge/cache/clear
+// GET /v1/merge/config
+// GET /v1/merge/anomaly?since=<duration>
 package client
 
 import (

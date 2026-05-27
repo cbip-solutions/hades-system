@@ -4,7 +4,7 @@
 // Build tag: adversarial (per the tests/adversarial/ precedent).
 // Runs under `make test-adversarial`.
 //
-// Scenario (spec §13.4 third bullet + master C-6 + inv-zen-268): a
+// Scenario: a
 // hostile caronte.yaml ships a `base_url_pattern` regex designed to
 // trigger exponential backtracking (`(a+)+$`, `(a|a)*b`, deep nested
 // alternation `(a(b(c(d(e))))){10}`, or simply over-long literal). The
@@ -15,20 +15,19 @@
 //
 // Adversarial corpus walks the four failure modes:
 //
-//   - over-MaxPatternRunes literal (length gate);
-//   - classic catastrophic-backtracking `(a+)+$`;
-//   - nested-repetition product over MaxPatternComplexity;
-//   - alternation × repetition combined.
+// - over-MaxPatternRunes literal (length gate);
+// - classic catastrophic-backtracking `(a+)+$`;
+// - nested-repetition product over MaxPatternComplexity;
+// - alternation × repetition combined.
 //
 // Bite-check candidates:
-//   - Raise yaml.MaxPatternRunes from 512 to 65536 → over-length input
-//     escapes the length gate. The complexity guard catches some but
-//     not all length-only hostile inputs.
-//   - Disable the regexp/syntax probe entirely → the
-//     catastrophic-backtracking cases compile + reach the manifest.
+// - Raise yaml.MaxPatternRunes from 512 to 65536 → over-length input
+// escapes the length gate. The complexity guard catches some but
+// not all length-only hostile inputs.
+// - Disable the regexp/syntax probe entirely → the
+// catastrophic-backtracking cases compile + reach the manifest.
 
-//go:build adversarial
-
+// go:build adversarial
 package adversarial
 
 import (

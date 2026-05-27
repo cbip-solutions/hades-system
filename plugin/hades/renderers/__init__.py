@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
                                     
-"""HADES citation renderers — 6 platform-specific (Plan 12 Phase A) +"""
+"""HADES citation renderers — 6 platform-specific +"""
 
 from __future__ import annotations
 
@@ -70,9 +70,9 @@ def _derive_audit_endpoint(daemon_url: str | None) -> str:
 
     Drift note: pre-C-1 fix-cycle this composed a legacy anchor-style
     path that the daemon never registered (``internal/daemon/server.go:737``
-    binds the canonical ``AUDIT_EMIT_PATH`` only). Stage 2 cross-phase
+    binds the canonical ``AUDIT_EMIT_PATH`` only).  cross-phase
     code reviewer surfaced the drift; this helper now matches the
-    Phase D AFK contract (``plugin/hades/afk/audit.py``).
+     AFK contract (``plugin/hades/afk/audit.py``).
     """
     if not daemon_url:
         return DEFAULT_AUDIT_ENDPOINT
@@ -223,7 +223,7 @@ class Renderer(ABC):
         ``kg_token_count``, ``emitted_at`` (RFC 3339 string), and
         ``citation_count``. Renderers that previously emitted a subset
         now emit the full set — strictly additive, so downstream
-        consumers (TUI panels, AFK card, Phase D AFK richness builder)
+        consumers
         gain context, never lose it.
 
         ``include_cache_key=True`` adds ``cache_key_hash``. Ink uses this
@@ -310,12 +310,12 @@ class Renderer(ABC):
 
         Failure mode: log a warning and return an empty string. Audit
         anchoring is a side channel; rendering is non-fatal under audit
-        failure to preserve operator-visible output (inv-zen-166).
+        failure to preserve operator-visible output.
 
         Subclasses may override to add platform-specific payload fields
         (e.g., voice may attach ``duration_ms``); the canonical contract
         keys must remain present so the daemon's hash-chain stays
-        well-formed (inv-zen-051).
+        well-formed.
         """
         endpoint = audit_endpoint if audit_endpoint is not None else self._audit_endpoint
                                                                          
@@ -419,11 +419,10 @@ class RendererRegistry:
             return self._emit_markdown_fallback(result)
 
     def _emit_markdown_fallback(self, result: AugmentationResult) -> RenderResult:
-        """Emit markdown fallback rendering (byte-exact parity with Plan 11
-        substrate ``internal/citation/markdown_fallback.go::renderFootnote``).
+        """Emit markdown fallback rendering.
 
         This is a TRUE fallback — the operator never sees an unhandled
-        error. Output matches what the Plan 11 Go substrate would emit if
+        error. Output matches what the  Go substrate would emit if
         no plugin renderers were registered at all (universal degradation).
 
         Per-citation footnote (matches Go renderFootnote byte-for-byte):
@@ -520,7 +519,7 @@ def register_default_renderers(
     *,
     daemon_url: str | None = None,
 ) -> None:
-    """Register the 6 platform-specific renderers shipped en Plan 12 Phase A.
+    """Register the 6 platform-specific renderers shipped en  
 
     Called from the plugin's ``__init__.py register(ctx)`` function on
     plugin load. Imports are deferred to avoid circular dependencies

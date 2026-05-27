@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package stdlib implements the Go stdlib net/http route extractor for Plan
-// 20 Phase D, covering Go 1.22's "METHOD HOST/path/{param}" pattern syntax
+// 20, covering Go 1.22's "METHOD HOST/path/{param}" pattern syntax
 // + the pre-1.22 legacy catch-all "/path" form. Both `http.HandleFunc /
 // http.Handle` (against the default ServeMux) and `mux.HandleFunc /
 // mux.Handle` (against an explicit *http.ServeMux) are extracted.
@@ -8,16 +8,16 @@
 // Detect(file, content): the file imports `net/http` AND does NOT import a
 // higher-level router (chi/gin/echo) — co-resident files with chi/gin/echo
 // imports are owned by those extractors; the stdlib extractor only catches
-// the residual (Phase F's linker merges across extractors).
+// the residual.
 //
 // Pattern parsing (parseGo122Pattern): the 1.22 grammar is "[METHOD ][HOST]
 // /path[{wildcard}|{wildcard...}]". We decompose left-to-right:
-//   - "GET /health"             → ("GET",      "/health")
-//   - "POST example.com/x/{id}" → ("POST",     "/x/{id}")  (host stripped)
-//   - "/legacy"                 → ("",         "/legacy")  (catch-all)
-//   - "/{$}"                    → ("",         "/{$}")
+// - "GET /health" → ("GET", "/health")
+// - "POST example.com/x/{id}" → ("POST", "/x/{id}") (host stripped)
+// - "/legacy" → ("", "/legacy") (catch-all)
+// - "/{$}" → ("", "/{$}")
 //
-// Boundary (inv-zen-230 + inv-zen-271): no internal/store import; no
+// Boundary: no internal/store import; no
 // golang.org/x/tools/go/packages.
 package stdlib
 

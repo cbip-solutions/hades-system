@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package cli — notify.go (Plan 2 Phase L Task L-4).
+// Package cli — notify.go.
 //
-// notification ledger. Plan 11 will widen this surface to multi-channel
+// notification ledger. will widen this surface to multi-channel
 // routing (mute, rules, history per-channel).
 package cli
 

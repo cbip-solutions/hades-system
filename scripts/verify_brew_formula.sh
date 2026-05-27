@@ -3,8 +3,8 @@
 set -euo pipefail
 
 MODE="${1:-baseline}"
-TAP_URL="${TAP_URL:-https://raw.githubusercontent.com/hades-system/homebrew-tap/main/Formula/hades.rb}"
-RELEASES_BASE="${RELEASES_BASE:-https://github.com/hades-system/hades-system/releases/download}"
+TAP_URL="${TAP_URL:-https://raw.githubusercontent.com/cbip-solutions/homebrew-tap/main/Formula/hades.rb}"
+RELEASES_BASE="${RELEASES_BASE:-https://github.com/cbip-solutions/hades-system/releases/download}"
 
 case "${MODE}" in
   baseline|"")

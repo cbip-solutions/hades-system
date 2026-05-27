@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — ecosystem_prune_preview.go (Plan 14 Phase G fix-cycle).
+// Package handlers — ecosystem_prune_preview.go.
 //
 // EcosystemPrunePreview implements GET /v1/ecosystem/prune-preview.
 //
@@ -11,16 +11,16 @@
 //
 // Query parameters (NOT body — GET):
 //
-//	ecosystem  (required) — one of go, python, typescript, rust
-//	version    (required) — semver string (e.g., "1.22.0")
+// ecosystem (required) — one of go, python, typescript, rust
+// version (required) — semver string (e.g., "1.22.0")
 //
 // Status codes:
 //
-//	200 OK — JSON body with row counts + pinned flag.
-//	400 Bad Request — missing/invalid query param.
-//	404 Not Found — unknown (ecosystem, version) tuple.
-//	500 Internal Server Error — opaque seam failure.
-//	503 Service Unavailable — EcosystemHandler not wired.
+// 200 OK — JSON body with row counts + pinned flag.
+// 400 Bad Request — missing/invalid query param.
+// 404 Not Found — unknown (ecosystem, version) tuple.
+// 500 Internal Server Error — opaque seam failure.
+// 503 Service Unavailable — EcosystemHandler not wired.
 //
 // Wire mirror: matches client.EcosystemPrunePreview(ctx, eco, ver) →
 // GET /v1/ecosystem/prune-preview?ecosystem=<X>&version=<Y> →

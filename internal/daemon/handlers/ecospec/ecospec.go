@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package ecospec declares the wire-side contracts for the Plan 14
+// Package ecospec declares the wire-side contracts for the
 // ecosystem HTTP surface — the EcosystemHandler interface that the
 // daemon's per-route handlers consult, the PrunePreviewResult shape
 // returned by PrunePreview, and the three sentinel errors handlers
 // translate into status codes.
 //
-// Why this package exists (Plan 14 followup wiring extract):
+// Why this package exists:
 //
 // The cmd/zen-swarm-ctld/ecosystemwiring adapter that implements
 // EcosystemHandler in production lives in a sub-package whose test

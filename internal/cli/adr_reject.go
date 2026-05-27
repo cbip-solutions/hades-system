@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_reject.go (Plan 9 Phase I Task I-7).
+// Package cli — adr_reject.go.
 //
 // `zen adr reject <id> --reason <X>` calls POST /v1/adr/reject.
-// --reason is mandatory per inv-zen-146 (mirrors adr_accept.go pattern).
+// --reason is mandatory per invariant (mirrors adr_accept.go pattern).
 package cli
 
 import (

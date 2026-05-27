@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package cli — research_history.go (Plan 9 Phase I Task I-9).
+// Package cli — research_history.go.
 //
-// NEW Plan 9 leaf: `zen research history` — query the research dispatch event
+// NEW leaf: `zen research history` — query the research dispatch event
 // log (GET /v1/research/history) and render a table with cache outcome.
 //
 // Deviation from plan-file: plan-file sketched ResearchHistoryEntry with
 // ID/Type/EmittedAt/QueryHash fields. H-9 actually shipped:
 //
-//	ResearchHistoryEntry{Query, DispatchedAt, FindingsCount, Source}
-//	ResearchHistory(ctx, ResearchHistoryFilter) ([]ResearchHistoryEntry, error)
+// ResearchHistoryEntry{Query, DispatchedAt, FindingsCount, Source}
+// ResearchHistory(ctx, ResearchHistoryFilter) ([]ResearchHistoryEntry, error)
 //
 // This file uses H-9 actuals. ResearchHistoryFilter.Filter is the event-type
 // prefix filter passed to the daemon.

@@ -44,7 +44,7 @@ func TestPlan14AnalyzersAreCanonical(t *testing.T) {
 
 // TestPlan14RegisteredAnalyzersLen verifies the slice length is exactly 1.
 // A length mismatch indicates either a duplicate was added or one was
-// omitted. Subsequent Plan 14 phases that ship additional analyzers
+// omitted. Subsequent phases that ship additional analyzers
 // MUST update this assertion to match.
 func TestPlan14RegisteredAnalyzersLen(t *testing.T) {
 	got := Plan14RegisteredAnalyzers()

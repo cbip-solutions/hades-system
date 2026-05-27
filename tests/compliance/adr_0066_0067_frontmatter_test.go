@@ -1,3 +1,4 @@
+// go:build !race
 //go:build !race
 // +build !race
 
@@ -125,7 +126,7 @@ func TestADR0066_StructuredMADRADRMachineReadableIndex(t *testing.T) {
 		t.Errorf("ADR-0066 missing state machine documentation (transitions.go state machine)")
 	}
 
-	// ID stability MUST be covered: inv-zen-147 + filename-is-hint.
+	// ID stability MUST be covered: invariant + filename-is-hint.
 	if !strings.Contains(bodyStr, "inv-zen-147") {
 		t.Errorf("ADR-0066 missing inv-zen-147 reference (ADR ID uniqueness invariant)")
 	}
@@ -289,7 +290,7 @@ func TestADR0067_ResearchFindingsGlobalCacheContentAddressedDualLayer(t *testing
 		}
 	}
 
-	// 6 Plan 8 typed events MUST be listed verbatim per spec §1 Q8 A.
+	// 6 typed events MUST be listed verbatim per spec §1 Q8 A.
 	events := []string{
 		"research.dispatch_initiated",
 		"research.cache_hit_exact",
@@ -308,17 +309,17 @@ func TestADR0067_ResearchFindingsGlobalCacheContentAddressedDualLayer(t *testing
 		t.Errorf("ADR-0067 missing Plan 4 Research MCP integration reference (spec Q8 A consumer)")
 	}
 
-	// inv-zen-088 (LLM via orchestrator — no direct provider calls from cache) MUST be cited.
+	// invariant (LLM via orchestrator — no direct provider calls from cache) MUST be cited.
 	if !strings.Contains(bodyStr, "inv-zen-088") {
 		t.Errorf("ADR-0067 missing inv-zen-088 reference (single-egress-LLM: research cache never calls LLM providers directly)")
 	}
 
-	// inv-zen-148 (dispatch metadata privacy — project_id filter mandatory) MUST be cited.
+	// invariant (dispatch metadata privacy — project_id filter mandatory) MUST be cited.
 	if !strings.Contains(bodyStr, "inv-zen-148") {
 		t.Errorf("ADR-0067 missing inv-zen-148 reference (dispatch metadata privacy: project_id filter mandatory)")
 	}
 
-	// inv-zen-152 (Plan 14 boundary — research cache stores, never dispatches ecosystem) MUST be cited.
+	// invariant MUST be cited.
 	if !strings.Contains(bodyStr, "inv-zen-152") {
 		t.Errorf("ADR-0067 missing inv-zen-152 reference (Plan 14 boundary: research cache stores, never dispatches)")
 	}

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctrine.go (Plan 4 Phase N Task N-7).
+// Package cli — doctrine.go.
 //
 // `zen doctrine` exposes the doctrine config system. Three commands
 // hit the daemon (state, validate, reload); the rest (list, which,
@@ -7,13 +7,13 @@
 //
 // Cobra layout (7 leaves):
 //
-//	zen doctrine show                  (alias: state)
-//	zen doctrine list                  (built-in catalog)
-//	zen doctrine validate --file <toml>
-//	zen doctrine which                 (active doctrine name)
-//	zen doctrine reload --yes          (atomic-swap; security-grade)
-//	zen doctrine diff --from <a> --to <b>
-//	zen doctrine schema                (canonical TOML schema text)
+// zen doctrine show (alias: state)
+// zen doctrine list (built-in catalog)
+// zen doctrine validate --file <toml>
+// zen doctrine which (active doctrine name)
+// zen doctrine reload --yes (atomic-swap; security-grade)
+// zen doctrine diff --from <a> --to <b>
+// zen doctrine schema (canonical TOML schema text)
 package cli
 
 import (

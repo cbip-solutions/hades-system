@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -8,24 +9,24 @@
 // Open, applySchema, SchemaVersion, and sqlite-vec registration for
 // research_cache.db.
 //
-// Driver choice: mattn/go-sqlite3 (CGO) — identical to Phase D's
+// Driver choice: mattn/go-sqlite3 (CGO) — identical to
 // internal/knowledge/aggregator/db.go. Both packages call
 // sqlite_vec.Auto() to register the sqlite-vec C extension via
 // sqlite3_auto_extension. The auto-extension fires on every new
 // connection in the pool, so the vec0 virtual table and vec_version()
 // scalar function are available immediately after Open.
 //
-// The plan-file (F-1 line 520) specified a forward declaration
+// # The plan-file (F-1 line 520) specified a forward declaration
 //
-//	func registerSqliteVecOnDB(*sql.DB) error
+// func registerSqliteVecOnDB(*sql.DB) error
 //
 // without a body — which is illegal in Go (non-cgo functions require a
-// body). Stage 0 reality-check identified this as a plan-file error.
+// body). reality-check identified this as a plan-file error.
 // Adaptation (option b): implement the extension registration directly
-// in this file via sqlite_vec.Auto(), mirroring Phase D's pattern
+// in this file via sqlite_vec.Auto(), mirroring pattern
 // exactly. No forward declaration; no cross-package symbol import.
 //
-// inv-zen-031: this package MUST NOT import internal/store. Enforced
+// invariant: this package MUST NOT import internal/store. Enforced
 // by the post-implementation boundary check in the workflow and the
 // compliance test at tests/compliance/.
 package cache
@@ -69,9 +70,9 @@ type DB struct {
 // extension point for standalone test harnesses in future phases (F-3+)
 // that need explicit control over extension registration order.
 //
-// Example
+// # Example
 //
-//	db, err := Open(ctx, ":memory:", WithLocalSqliteVec())
+// db, err := Open(ctx, ":memory:", WithLocalSqliteVec())
 type Option func(*openConfig)
 
 type openConfig struct {
@@ -89,28 +90,28 @@ func WithLocalSqliteVec() Option {
 // schema version.
 //
 // Pre-conditions:
-//   - dbPath is a non-empty path (absolute or relative). Empty path is
-//     rejected up-front; ":memory:" is accepted for tests.
-//   - Process linked with CGO_ENABLED=1 (this file does not compile under
-//     CGO_ENABLED=0 — see package doc.go for rationale).
+// - dbPath is a non-empty path (absolute or relative). Empty path is
+// rejected up-front; ":memory:" is accepted for tests.
+// - Process linked with CGO_ENABLED=1 (this file does not compile under
+// CGO_ENABLED=0 — see package doc.go for rationale).
 //
 // Post-conditions:
-//   - Parent directory exists (os.MkdirAll 0o700). Skipped for ":memory:".
-//   - sqlite-vec C extension is registered as a SQLite auto-extension
-//     (via sqlite_vec.Auto) BEFORE any connection is opened.
-//   - *DB.SQL is configured with MaxOpenConns=1, MaxIdleConns=1
-//     (single-writer WAL discipline).
-//   - Schema is materialised (research_dispatches + research_findings +
-//     research_validation_log + research_query_vec vec0 virtual table +
-//     _cache_schema_version).
-//   - _cache_schema_version contains exactly one row with version=1.
-//   - DB.Version == cacheSchemaVersionV1.
+// - Parent directory exists (os.MkdirAll 0o700). Skipped for ":memory:".
+// - sqlite-vec C extension is registered as a SQLite auto-extension
+// (via sqlite_vec.Auto) BEFORE any connection is opened.
+// - *DB.SQL is configured with MaxOpenConns=1, MaxIdleConns=1
+// (single-writer WAL discipline).
+// - Schema is materialised (research_dispatches + research_findings +
+// research_validation_log + research_query_vec vec0 virtual table +
+// _cache_schema_version).
+// - _cache_schema_version contains exactly one row with version=1.
+// - DB.Version == cacheSchemaVersionV1.
 //
 // Callers MUST call DB.SQL.Close() when done. Typical usage:
 //
-//	cacheDB, err := cache.Open(ctx, cfg.ResearchCacheDBPath)
-//	if err != nil { ... }
-//	defer cacheDB.SQL.Close()
+// cacheDB, err := cache.Open(ctx, cfg.ResearchCacheDBPath)
+// if err != nil {... }
+// defer cacheDB.SQL.Close()
 func Open(ctx context.Context, dbPath string, opts ...Option) (*DB, error) {
 	// Apply options. forceVecRegistration is currently no-op (Open always
 	// registers sqlite-vec unconditionally) but the loop exercises the
@@ -171,6 +172,10 @@ func Open(ctx context.Context, dbPath string, opts ...Option) (*DB, error) {
 	if err := applyMigrationV5(ctx, sqlDB); err != nil {
 		_ = sqlDB.Close()
 		return nil, fmt.Errorf("cache: applyMigrationV5: %w", err)
+	}
+	if err := applyMigrationV6(ctx, sqlDB); err != nil {
+		_ = sqlDB.Close()
+		return nil, fmt.Errorf("cache: applyMigrationV6: %w", err)
 	}
 
 	ver, err := SchemaVersion(ctx, sqlDB)

@@ -42,7 +42,7 @@ func TestRebuildFromEmptySources(t *testing.T) {
 // TestRebuildFromMultipleSources covers the typical daemon-boot path: N
 // per-project Stores, each with a few rows. Rebuild MUST union them into
 // the cache, MUST discard pre-seeded rows that no longer originate from
-// any source, and MUST preserve inv-zen-113 (every cache row's ProjectID
+// any source, and MUST preserve invariant (every cache row's ProjectID
 // matches its origin source — no cross-project leak through the cold
 // rehydration code path).
 func TestRebuildFromMultipleSources(t *testing.T) {
@@ -136,7 +136,7 @@ func TestRebuildIsIdempotent(t *testing.T) {
 // synchronously and return. Run is started AFTER Recover so live drain
 // never races against the cold rehydration write path. Without this
 // ordering, a drain goroutine could observe a half-populated cache and
-// emit an inv-zen-113 false positive in the doctor probe.
+// emit an invariant false positive in the doctor probe.
 func TestOutboxRecoverRebuildsBeforeDrain(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

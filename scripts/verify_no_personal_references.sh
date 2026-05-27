@@ -51,18 +51,20 @@ fi
 cd "$PROJECT_ROOT"
 
 FILE_LIST="$(mktemp -t verify_no_personal_refs.XXXXXX)"
-trap "rm -f \"$FILE_LIST\"" EXIT
+trap 'rm -f "$FILE_LIST"' EXIT
 
 if [[ $CHANGED_PATHS_ONLY -eq 1 ]]; then
     if [[ -z "${ZEN_SCRUB_CHANGED_PATHS:-}" ]]; then
         echo "ERROR: --changed-paths-only requires ZEN_SCRUB_CHANGED_PATHS env var" >&2
         exit 2
     fi
+    # shellcheck disable=SC2086
     printf '%s\n' $ZEN_SCRUB_CHANGED_PATHS > "$FILE_LIST"
 else
     find "$TARGET_DIR" \
         -type d \( \
             -name .git -o -name vendor -o -name node_modules \
+            -o -name .agents -o -name .claude \
             -o -name .venv -o -name venv -o -name .tox \
             -o -name .mypy_cache -o -name .pytest_cache -o -name __pycache__ \
         \) -prune -o \

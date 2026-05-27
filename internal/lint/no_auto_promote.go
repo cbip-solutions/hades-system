@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_auto_promote.go
 //
-// Phase J Task J-8: custom go vet analyzer enforcing inv-zen-146
+// Task J-8: custom go vet analyzer enforcing invariant
 // (knowledge promote operator-gated; no auto-promote code path).
 //
 // Scans all packages for callsites of Promote() on receiver types named
 // Adapter (or aggregator package) lacking a non-empty reason string arg.
 //
-// Heuristics (per spec §7.3 + inv-zen-146):
-//  1. Empty string literal `""` as last arg → REJECT.
-//  2. Wrong arity (<3 args) → REJECT (signature violation).
-//  3. Non-string-literal reason → WARN (runtime panic Layer 2 active).
+// Heuristics:
+// 1. Empty string literal `""` as last arg → REJECT.
+// 2. Wrong arity (<3 args) → REJECT (signature violation).
+// 3. Non-string-literal reason → WARN (runtime panic Layer 2 active).
 //
 // Pattern golang.org/x/tools/go/analysis.Analyzer + analysistest.
-// Loaded via cmd/zen-doctrine-lint module plugin (Plan 8 Q4 B).
+// Loaded via cmd/zen-doctrine-lint module plugin.
 package lint
 
 import (

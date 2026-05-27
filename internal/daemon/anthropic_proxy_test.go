@@ -1,21 +1,21 @@
 // internal/daemon/anthropic_proxy_test.go
 //
-// Tests for NewAnthropicProxy after Plan 3 Phase B-8 wiring. The handler
+// Tests for NewAnthropicProxy after wiring. The handler
 // no longer calls bypass.Client.Forward directly; ALL LLM traffic flows
 // through orchestrator → dispatcher → Tier 1 (bypass) / Tier 2+ (OpenClaude).
 //
 // Coverage targets:
-//   - Idempotency-Key generation when missing + propagation when supplied
-//   - X-Zen-Conversation-Id propagation to orchestrator.Call.ConversationID
-//   - Caller upstream-bound headers (Anthropic-Beta multi-value, etc.) flow
-//     into orchestrator.Call.Headers; control-plane headers do NOT
-//   - Method/Path stamped on the Call (B-8 typed flow)
-//   - Model extracted from request body (best-effort, non-fatal on parse fail)
-//   - TierResponse.Status/Headers/Body mirrored to HTTP response; X-Zen-Tier-Used stamped
-//   - Non-POST → 405 Method Not Allowed
-//   - Orchestrator error → 502 Bad Gateway (single-tier failure shape)
-//   - dispatcher.ErrAllTiersUnavailable → 503 Service Unavailable
-//     (graceful-degradation contract)
+// - Idempotency-Key generation when missing + propagation when supplied
+// - X-Zen-Conversation-Id propagation to orchestrator.Call.ConversationID
+// - Caller upstream-bound headers (Anthropic-Beta multi-value, etc.) flow
+// into orchestrator.Call.Headers; control-plane headers do NOT
+// - Method/Path stamped on the Call (B-8 typed flow)
+// - Model extracted from request body (best-effort, non-fatal on parse fail)
+// - TierResponse.Status/Headers/Body mirrored to HTTP response; X-Zen-Tier-Used stamped
+// - Non-POST → 405 Method Not Allowed
+// - Orchestrator error → 502 Bad Gateway (single-tier failure shape)
+// - dispatcher.ErrAllTiersUnavailable → 503 Service Unavailable
+// (graceful-degradation contract)
 
 package daemon
 
@@ -273,7 +273,7 @@ func TestAnthropicProxy_ExtractsModelFromBody(t *testing.T) {
 
 // TestAnthropicProxy_ModelExtractionBestEffort — an unparseable body MUST
 // NOT abort the request. Empty Model on the Call is acceptable; backends
-// fall back gracefully and Phase F treats it as known-unknown.
+// fall back gracefully and treats it as known-unknown.
 func TestAnthropicProxy_ModelExtractionBestEffort(t *testing.T) {
 	fake := &fakeOrchestrator{respStatus: 200, respTier: providers.TierInHouse}
 	h := NewAnthropicProxy(fake)

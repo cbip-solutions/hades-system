@@ -1,5 +1,4 @@
-//go:build chaos
-
+// go:build chaos
 package chaos
 
 import (

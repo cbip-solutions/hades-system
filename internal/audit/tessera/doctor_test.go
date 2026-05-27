@@ -78,7 +78,7 @@ func TestSeverityStringPinsCanonicalTags(t *testing.T) {
 
 // TestWitnessDoctorReportsNilWitness verifies the nil-witness fast
 // path. cmd/zen-swarm-ctld is the only producer of WitnessDoctor in
-// production and always sets Witness — but Phase J's doctor surface is
+// production and always sets Witness — but doctor surface is
 // constructed by struct-literal in the renderer, so a future call site
 // that forgets to wire Witness MUST fail loud here rather than NPE.
 func TestWitnessDoctorReportsNilWitness(t *testing.T) {
@@ -126,7 +126,7 @@ func TestWitnessDoctorReportsCadenceExceeded(t *testing.T) {
 }
 
 // TestCheckpointDoctorReportsNilCheckpoint verifies the nil-Checkpoint
-// fast path. Phase J's renderer constructs CheckpointDoctor from the
+// fast path. renderer constructs CheckpointDoctor from the
 // Manager's checkpoint accessor; a nil-checkpoint Manager (impossible
 // today but enforced via this test) MUST fail loud.
 func TestCheckpointDoctorReportsNilCheckpoint(t *testing.T) {

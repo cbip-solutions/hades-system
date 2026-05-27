@@ -12,24 +12,24 @@ import (
 // =============================================================================
 // Source interface (master §3.3)
 //
-// Source is the per-ecosystem-per-fetcher contract. Plan 14 ships 7
+// Source is the per-ecosystem-per-fetcher contract. ships 7
 // concrete implementations in internal/research/ecosystem/sources/ at
-// Phase B:
+// :
 //
-//   pkgdev.go   — pkg.go.dev module proxy (EcoGo, SrcPackageDoc)
-//   pypi.go     — PyPI JSON API (EcoPython, SrcPackageDoc)
-//   npm.go      — npm registry API (EcoTypeScript, SrcPackageDoc)
-//   cratesio.go — crates.io API (EcoRust, SrcPackageDoc)
-//   mdn.go      — MDN Web Platform (EcoTypeScript, SrcMDN)
-//   arxiv.go    — arXiv API (all 4 ecosystems via tag filter, SrcArXiv)
-//   github.go   — GitHub READMEs (all 4 ecosystems, SrcGitHub)
+// pkgdev.go — pkg.go.dev module proxy (EcoGo, SrcPackageDoc)
+// pypi.go — PyPI JSON API (EcoPython, SrcPackageDoc)
+// npm.go — npm registry API (EcoTypeScript, SrcPackageDoc)
+// cratesio.go — crates.io API (EcoRust, SrcPackageDoc)
+// mdn.go — MDN Web Platform (EcoTypeScript, SrcMDN)
+// arxiv.go — arXiv API (all 4 ecosystems via tag filter, SrcArXiv)
+// github.go — GitHub READMEs (all 4 ecosystems, SrcGitHub)
 //
 // Every concrete Source MUST call internal/research/cache.Revalidator.Fetch
-// for HTTP egress; direct net/http imports are blocked by Phase H vet
-// analyzer no_web_in_ecosystem (inv-zen-191).
+// for HTTP egress; direct net/http imports are blocked by vet
+// analyzer no_web_in_ecosystem.
 //
 // Concurrency implementations MUST be safe for concurrent calls from
-// multiple goroutines (Phase B ingester fan-out N concurrent FetchPackageDoc
+// multiple goroutines ( ingester fan-out N concurrent FetchPackageDoc
 // per package). Each FetchManifest / FetchPackageDoc / FetchChangelog call
 // is a single network round-trip via Revalidator.
 //

@@ -20,16 +20,16 @@ func CorruptPayloadCount() uint64 {
 	return corruptPayloadCount.Load()
 }
 
-// Event is the canonical in-memory shape consumers across Plan 5 phases
+// Event is the canonical in-memory shape consumers across phases
 // (B, D, E, F, G, H, K, M) construct + emit. It is the LOAD-BEARING wire
 // shape between orchestrator subsystems.
 //
 // Distinction from Record (the durable wire shape from Task A-3):
-//   - Event carries an unmarshaled Payload map for ergonomics; Append
-//     marshals to JSON before writing the Record.
-//   - Event.Timestamp is time.Time for caller convenience; Record.Timestamp
-//     is unix nanoseconds for storage compactness.
-//   - Both share Type/SessionID/ProjectID/CausalChain identity.
+// - Event carries an unmarshaled Payload map for ergonomics; Append
+// marshals to JSON before writing the Record.
+// - Event.Timestamp is time.Time for caller convenience; Record.Timestamp
+// is unix nanoseconds for storage compactness.
+// - Both share Type/SessionID/ProjectID/CausalChain identity.
 //
 // READ-ONLY contract (N-2 carry-forward from Record): Event.Payload and
 // Event.CausalChain are shared by reference once an Event is delivered via

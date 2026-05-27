@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Shared test harness for slash command handler registration (Plan 12 Phase B B-2..B-8)."""
+"""Shared test harness for slash command handler registration."""
 
 from __future__ import annotations
 
@@ -111,9 +111,9 @@ def loaded_plugin(fake_ctx: FakePluginContext) -> FakePluginContext:
 
 
 def test_start_command_registered(loaded_plugin: FakePluginContext) -> None:
-    """Phase H' Task H'-7 wired start; Phase B renames to hades: namespace.
+    """ Task H'-7 wired start;  renames to hades: namespace.
 
-    After Phase B (Plan 18b) all commands are registered as "hades:<name>".
+    After  all commands are registered as "hades:<name>".
     """
     assert "hades:start" in loaded_plugin.commands, (
         "Phase B should have wired start as 'hades:start' via ctx.register_command(). "
@@ -122,7 +122,7 @@ def test_start_command_registered(loaded_plugin: FakePluginContext) -> None:
 
 
 def test_handoff_command_registered(loaded_plugin: FakePluginContext) -> None:
-    """Phase H' Task H'-8 wired handoff; Phase B renames to hades: namespace."""
+    """ Task H'-8 wired handoff;  renames to hades: namespace."""
     assert "hades:handoff" in loaded_plugin.commands, (
         "Phase B should have wired handoff as 'hades:handoff' via ctx.register_command()"
     )
@@ -210,7 +210,7 @@ def test_doctrine_command_registered(name: str, loaded_plugin: FakePluginContext
 def test_doctrine_handler_references_audit_chain(
     loaded_plugin: FakePluginContext,
 ) -> None:
-    """/hades:doctrine override flow must reference Plan 9 audit chain + daemon endpoint."""
+    """/hades:doctrine override flow must reference  audit chain + daemon endpoint."""
     handler = loaded_plugin.commands["hades:doctrine"]["handler"]
                               
     output = handler("max-scope")
@@ -264,7 +264,7 @@ def test_knowledge_command_registered(
 def test_knowledge_query_handler_references_aggregator(
     loaded_plugin: FakePluginContext,
 ) -> None:
-    """/hades:knowledge-query output must reference Plan 9 D aggregator + privacy."""
+    """/hades:knowledge-query output must reference  D aggregator + privacy."""
     handler = loaded_plugin.commands["hades:knowledge-query"]["handler"]
     output = handler("test query")
     assert output is not None
@@ -330,7 +330,7 @@ def test_openspec_command_registered(name: str, loaded_plugin: FakePluginContext
 
 
 def test_openspec_propose_loads_brainstorming(loaded_plugin: FakePluginContext) -> None:
-    """openspec-propose must explicitly invoke brainstorming skill per inv-zen-015."""
+    """openspec-propose must explicitly invoke brainstorming skill per invariant."""
     handler = loaded_plugin.commands["hades:openspec-propose"]["handler"]
     output = handler("my-feature")
     assert output is not None
@@ -342,7 +342,7 @@ def test_openspec_propose_loads_brainstorming(loaded_plugin: FakePluginContext) 
 def test_openspec_archive_references_inv_zen_004(
     loaded_plugin: FakePluginContext,
 ) -> None:
-    """openspec-archive must reference inv-zen-004 (no Claude attribution)."""
+    """openspec-archive must reference invariant (no Claude attribution)."""
     handler = loaded_plugin.commands["hades:openspec-archive"]["handler"]
     output = handler("my-feature")
     assert output is not None
@@ -497,7 +497,7 @@ def test_openspec_archive_no_feature_returns_error(bad_input: str) -> None:
 
 
 def test_openspec_archive_with_feature_returns_happy_path() -> None:
-    """openspec-archive with feature name interpolates it + references inv-zen-004."""
+    """openspec-archive with feature name interpolates it + references invariant."""
     result = openspec_archive_handler("my-feature")
     assert result is not None
     assert "my-feature" in result
@@ -517,7 +517,7 @@ def test_openspec_propose_no_feature_returns_error(bad_input: str) -> None:
 
 
 def test_openspec_propose_with_feature_returns_happy_path() -> None:
-    """openspec-propose with feature name must load brainstorming skill (inv-zen-015)."""
+    """openspec-propose with feature name must load brainstorming skill."""
     result = openspec_propose_handler("my-feature")
     assert result is not None
     assert "my-feature" in result

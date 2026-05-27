@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -8,7 +9,7 @@
 // ecosystem only. Implements ecosystem.Source (master plan §3.3).
 //
 // MDN (developer.mozilla.org) is the canonical web-platform documentation.
-// Phase B's MDNSource only fires for the typescript ecosystem since MDN
+// MDNSource only fires for the typescript ecosystem since MDN
 // covers JavaScript/TypeScript Web APIs (Array, Promise, fetch, DOM, etc.)
 // — Go/Python/Rust have no MDN equivalent. The 1-instance-total topology
 // (single MDNSource registered under Source[EcoTypeScript][SrcMDN])
@@ -27,22 +28,22 @@
 // h1/h2 sections via golang.org/x/net/html to emit DocSection entries
 // (Kind=KindGuide). When the page exposes no h1/h2 boundaries the
 // implementation falls back to a single bulk section so the downstream
-// chunker (Phase B chunker.go) still receives non-empty input.
+// chunker still receives non-empty input.
 //
 // FetchChangelog returns Changelog{FormatDetected: "not-available"} for
 // every (package, version) pair — MDN has no per-API changelog; cross-doc
 // changes happen via the MDN content git repo at
-// github.com/mdn/content (out of scope for Phase B; defer to operator
+// github.com/mdn/content (out of scope for ; defer to operator
 // manual reindex via `zen research mdn reindex` post-v0.14.0).
 //
 // All HTTP egress routes via the narrow FetchClient interface declared in
-// pkgdev.go (inv-zen-152 + inv-zen-191 — single egress point for the
+// pkgdev.go (invariant + invariant — single egress point for the
 // research data plane; no direct net/http imports in this package).
 //
-// Per-source TTL = 30d (registered in Phase A A-10 source-ttls.toml; MDN
+// Per-source TTL = 30d (registered in A-10 source-ttls.toml; MDN
 // updates slowly so the polling cadence is the lowest of any source).
 //
-// Boundary (inv-zen-031): this file MAY import
+// Boundary: this file MAY import
 // internal/research/cache + internal/research/ecosystem (parent) +
 // golang.org/x/net/html. It MUST NOT import internal/store, internal/
 // providers, internal/daemon, or any net/http symbols.

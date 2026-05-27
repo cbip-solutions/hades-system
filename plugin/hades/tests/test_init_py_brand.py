@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Sentinel brand-pass tests for surfaces missed by Phase E inv-zen-219 scope."""
+"""Sentinel brand-pass tests for surfaces missed by  invariant scope."""
 
 from __future__ import annotations
 
@@ -117,7 +117,7 @@ def test_f5_skills_list_uses_hades_skill_name() -> None:
     """F-5: The wiring summary docstring in ``__init__.py`` lists the
     meta-skill as ``hades`` (not ``zen-swarm``).
 
-    Phase A renamed ``skills/zen-swarm/`` → ``skills/hades/``, so the skill
+     renamed ``skills/zen-swarm/`` → ``skills/hades/``, so the skill
     is resolvable as ``hades:hades``, not ``hades:zen-swarm``.
     """
     source = _INIT_PY.read_text(encoding="utf-8")
@@ -175,8 +175,7 @@ def test_f6_conftest_docstring_uses_hades_brand() -> None:
 
 def test_f7_conftest_path_comment_uses_hades_path() -> None:
     """F-7: The inline comment ``# plugin/zen-swarm/providers/ does NOT shadow``
-    in conftest.py must reference the current path ``plugin/hades/providers/``
-    (Phase A renamed plugin/zen-swarm/ → plugin/hades/).
+    in conftest.py must reference the current path ``plugin/hades/providers/``.
     """
     source = _CONFTEST_PY.read_text(encoding="utf-8")
     for lineno, line in enumerate(source.splitlines(), start=1):

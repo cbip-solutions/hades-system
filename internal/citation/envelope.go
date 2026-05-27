@@ -139,7 +139,7 @@ func marshalSortedMap(m map[string]any) ([]byte, error) {
 // Used for cache-lookup + dedup; NOT a security primitive. Truncated
 // SHA-256 over canonical JSON.
 //
-// inv-zen-166 corollary: two envelopes with identical fields produce
+// invariant corollary: two envelopes with identical fields produce
 // identical hashes; one field difference produces different hash with
 // near-100% probability (collision space 64 bits ≈ 1.8e19).
 func (e *Envelope) Hash() uint64 {

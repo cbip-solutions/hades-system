@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -20,19 +21,19 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/research/ecosystem"
 )
 
-//go:embed github_testdata/search_response.json
+// go:embed github_testdata/search_response.json
 var ghSearchJSON []byte
 
-//go:embed github_testdata/rate_limited_response.json
+// go:embed github_testdata/rate_limited_response.json
 var ghRateLimitedJSON []byte
 
-//go:embed github_testdata/sample_README.md
+// go:embed github_testdata/sample_README.md
 var ghReadme []byte
 
-//go:embed github_testdata/sample_CHANGELOG.md
+// go:embed github_testdata/sample_CHANGELOG.md
 var ghChangelog []byte
 
-//go:embed github_testdata/docs_contents_response.json
+// go:embed github_testdata/docs_contents_response.json
 var ghDocsContentsJSON []byte
 
 type statefulRevalidator struct {

@@ -5,8 +5,8 @@
 // (`config.Sidecars`), probes the declared sidecar's /health endpoint, and
 // registers the SidecarBackend by name into the providers.Registry.
 //
-// Architectural choice — name-based registration (per inv-zen-066 frozen
-// contract C8): the Plan 3 → Plan 16 cascade refactor moved from a
+// Architectural choice — name-based registration (per invariant frozen
+// contract C8): the → cascade refactor moved from a
 // 2-tier hard-wire ("tier1 + tier2") to a name-based ProfileResolver
 // model. RegisterSidecars MUST register backends by name into
 // providers.Registry; the operator's profiles.toml determines which
@@ -14,20 +14,20 @@
 // position. There is NO "RegisterTier1" method anywhere in the codebase
 // (an earlier plan version cited one — that is plan-template drift).
 //
-// Graceful-degradation discipline (inv-zen-280):
-//   - cfg == nil OR cfg.Tier1Bypass == nil → no-op; the Plan 16 cascade
-//     handles the path. Operators without sidecars.toml are the common
-//     case.
-//   - /health probe fails (5xx, transport error, ctx cancel) → log a
-//     warning + skip registration. The daemon boots successfully and
-//     the cascade handles dispatches. The operator's `zen status` (a
-//     future surface) reports the sidecar as DOWN.
-//   - duplicate "bypass-sidecar" name (e.g. a wiring race with a
-//     pre-registered backend) → log a warning + keep the existing
-//     instance (mirrors the bypass-backend idempotency precedent at
-//     cmd/zen-swarm-ctld/orchestrator_wiring.go:438).
+// Graceful-degradation discipline:
+// - cfg == nil OR cfg.Tier1Bypass == nil → no-op; the cascade
+// handles the path. Operators without sidecars.toml are the common
+// case.
+// - /health probe fails (5xx, transport error, ctx cancel) → log a
+// warning + skip registration. The daemon boots successfully and
+// the cascade handles dispatches. The operator's `zen status` (a
+// future surface) reports the sidecar as DOWN.
+// - duplicate "bypass-sidecar" name (e.g. a wiring race with a
+// pre-registered backend) → log a warning + keep the existing
+// instance (mirrors the bypass-backend idempotency precedent at
+// cmd/zen-swarm-ctld/orchestrator_wiring.go:438).
 //
-// inv-zen-031 boundary: this file imports internal/config + internal/providers +
+// invariant boundary: this file imports internal/config + internal/providers +
 // stdlib. It does NOT import internal/store.
 //
 // Concurrency RegisterSidecars is invoked once at daemon boot from
@@ -63,19 +63,19 @@ type SidecarRegistry interface {
 // this function with additional probe + register branches.
 //
 // Pre-conditions:
-//   - reg MUST be non-nil (panics otherwise — same fail-fast posture as
-//     dispatcher.New / dispatcheradapter.New).
-//   - log MUST be non-nil.
-//   - ctx is forwarded to the probe HTTP request; a cancelled ctx causes
-//     skip rather than hang.
+// - reg MUST be non-nil (panics otherwise — same fail-fast posture as
+// dispatcher.New / dispatcheradapter.New).
+// - log MUST be non-nil.
+// - ctx is forwarded to the probe HTTP request; a cancelled ctx causes
+// skip rather than hang.
 //
 // Post-conditions:
-//   - On healthy probe: reg has "bypass-sidecar" registered with a
-//     SidecarBackend whose Forward/Probe target cfg.Tier1Bypass.URL +
-//     RequestTimeoutSeconds.
-//   - On any failure (nil cfg, nil Tier1Bypass, probe failure, register
-//     failure): reg is unchanged (no partial registration); a log line
-//     describes the outcome.
+// - On healthy probe: reg has "bypass-sidecar" registered with a
+// SidecarBackend whose Forward/Probe target cfg.Tier1Bypass.URL +
+// RequestTimeoutSeconds.
+// - On any failure (nil cfg, nil Tier1Bypass, probe failure, register
+// failure): reg is unchanged (no partial registration); a log line
+// describes the outcome.
 func RegisterSidecars(ctx context.Context, reg SidecarRegistry, cfg *config.Sidecars, log *slog.Logger) {
 	if reg == nil {
 		panic("dispatcheradapter.RegisterSidecars: reg is nil")

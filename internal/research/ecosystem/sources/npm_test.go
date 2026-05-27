@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -16,13 +17,13 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/research/ecosystem"
 )
 
-//go:embed npm_testdata/express_metadata.json
+// go:embed npm_testdata/express_metadata.json
 var npmExpressJSON []byte
 
-//go:embed npm_testdata/npms_top.json
+// go:embed npm_testdata/npms_top.json
 var npmTopJSON []byte
 
-//go:embed npm_testdata/express_README.md
+// go:embed npm_testdata/express_README.md
 var npmExpressREADME []byte
 
 func TestNpmSource_Ecosystem(t *testing.T) {

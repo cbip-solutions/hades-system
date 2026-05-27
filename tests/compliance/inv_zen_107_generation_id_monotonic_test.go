@@ -1,11 +1,11 @@
 // tests/compliance/inv_zen_107_generation_id_monotonic_test.go
 //
-// Compliance gate for inv-zen-107: GenerationID strict monotonicity across
+// Compliance gate for invariant: GenerationID strict monotonicity across
 // sequential Merge() invocations.
 //
 // merge.GenerationCounter (events.go:220) that produces a strictly
 // monotonic, concurrency-safe int64 sequence used to tag every Event
-// emitted within a single Merge() invocation. Plan 5
+// emitted within a single Merge() invocation.
 // amendment.proposer relies on the monotonic property when
 // reconstructing causal chains across replay (Q9 D vocabulary): two
 // merges executed back-to-back MUST carry distinct, strictly-increasing
@@ -27,7 +27,7 @@
 // two outputs per merge: RevParse(refs/heads/<TargetBranch>) and the
 // Step-7 update-ref. 10 merges × 2 outputs = 20 pre-loaded FakeOutputs.
 //
-// Reference: docs/superpowers/specs/2026-05-01-zen-swarm-plan-6-merge-engine-design.md §8.3 inv-zen-107
+// Reference: internal design record §8.3 invariant
 //
 // Drift adaptation per task instructions: package compliance (not
 // _test) to match the predominant tests/compliance convention (matches
@@ -59,7 +59,7 @@ func (pool107) Release(_ context.Context, _ *merge.LeasedWorktree) error {
 
 // complianceBaseline107 is a minimal merge.BaselineRunner fake. Returns
 // an empty PassingSet + nil error so the engine reaches Step 5 (Runner)
-// on every call. The PassingSet contents do not affect inv-zen-107: this
+// on every call. The PassingSet contents do not affect invariant: this
 // invariant is about per-Merge() generation IDs, not baseline state.
 type complianceBaseline107 struct{}
 
@@ -113,15 +113,15 @@ func (complianceCache107) Store(_ merge.MergeRequest, _ merge.MergeOutcome) {}
 //
 // Assertions:
 //
-//   - At least 10 EvtMergeStartedWithMode events emitted (one per merge).
-//   - Each event's MergeStartedWithModePayload.GenerationID is strictly
-//     larger than the previous one.
-//   - GenerationIDs are non-zero (Phase A's GenerationCounter.Next()
-//     starts at 1, reserving 0 as "unassigned" — engine.go:286 calls
-//     gen := e.gen.Next() before any emit, so the first merge's
-//     GenerationID MUST be ≥1).
+// - At least 10 EvtMergeStartedWithMode events emitted (one per merge).
+// - Each event's MergeStartedWithModePayload.GenerationID is strictly
+// larger than the previous one.
+// - GenerationIDs are non-zero
+// starts at 1, reserving 0 as "unassigned" — engine.go:286 calls
+// gen := e.gen.Next() before any emit, so the first merge's
+// GenerationID MUST be ≥1).
 //
-// Reference: docs/superpowers/specs/2026-05-01-zen-swarm-plan-6-merge-engine-design.md §8.3 inv-zen-107
+// Reference: internal design record §8.3 invariant
 func TestInvZen107GenerationIDMonotonic(t *testing.T) {
 	const numMerges = 10
 
@@ -209,7 +209,7 @@ func TestInvZen107GenerationIDMonotonic(t *testing.T) {
 		t.Fatalf("EvtMergeStartedWithMode count = %d, want >= %d", len(started), numMerges)
 	}
 
-	// Phase A's GenerationCounter starts at 1 (events.go:226 — Next()
+	// GenerationCounter starts at 1 (events.go:226 — Next()
 	// reserves 0 as "unassigned"). The first merge's gen MUST be ≥1.
 	if started[0].genID < 1 {
 		t.Errorf("first EvtMergeStartedWithMode GenerationID = %d, want >= 1 (zero is reserved as 'unassigned')", started[0].genID)

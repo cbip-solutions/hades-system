@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-// Package cli — knowledge_p9_query.go (Plan 9 Phase I Task I-5).
+// Package cli — knowledge_p9_query.go.
 //
-// `zen knowledge-p9 query <q>` — federated/pinned/chain-verified search.
+// `zen knowledge-p9 query <q>` — federated/pinned/chain-anchored search.
 //
 // Four orthogonal flags:
 //
-//	--global       query the global pin index across all projects
-//	--pinned-only  restrict to pinned notes (Scope="pinned-only")
-//	--project      restrict to one project (mutually exclusive with --global)
-//	--audit-chain  filter to notes whose audit_chain_anchor Tessera leaf verifies
+// --global query the global pin index across all projects
+// --pinned-only restrict to pinned notes (Scope="pinned-only")
+// --project restrict to one project (mutually exclusive with --global)
+// --audit-chain filter to notes with a non-empty audit_chain_anchor
 //
 // --global and --project are enforced as mutually exclusive via cobra's
 // MarkFlagsMutuallyExclusive (cobra ≥ v1.5); additional manual check in RunE
 // ensures a consistent error message across cobra versions.
 //
 // Wire method: KnowledgeQueryP9 (client/knowledge_p9.go H-8).
-// Response type: []client.KnowledgeResult (NoteID, ProjectID, Path, Snippet, Score, ChainProof).
+// Response type: []client.KnowledgeResult (NoteID, ProjectID, Path, Snippet, Score, AuditChainAnchor).
 package cli
 
 import (
@@ -51,7 +51,7 @@ Scope flags (mutually exclusive):
   (No flag = default scope: federated across all project vaults.)
 
 Chain flag:
-  --audit-chain  Filter to notes whose audit_chain_anchor Tessera leaf verifies.
+  --audit-chain  Filter to notes whose audit_chain_anchor is present.
 
 inv-zen-129: NEVER queries the web — Plan 14 territory.`,
 		Example: `  # Default federated query
@@ -109,7 +109,7 @@ inv-zen-129: NEVER queries the web — Plan 14 territory.`,
 					r.NoteID,
 					r.ProjectID,
 					strconv.FormatFloat(r.Score, 'f', 3, 64),
-					strconv.FormatBool(r.ChainProof != ""),
+					strconv.FormatBool(r.AuditChainAnchor != ""),
 					truncateKnowledge9(r.Snippet, 60),
 				)
 			}

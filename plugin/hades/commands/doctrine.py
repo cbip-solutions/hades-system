@@ -10,7 +10,7 @@ You are showing the currently-active doctrine for the current HADES project + se
 ## 1. Identify active project + session
 
 ```bash
-# pending endpoint registration: /v1/project/active resolves active project alias from .zen-swarm.toml
+# pending endpoint registration: /v1/project/active resolves active project alias from.zen-swarm.toml
 PROJECT=$(curl --unix-socket /tmp/zen-swarm.sock -s http://unix/v1/project/active 2>&1)
 SESSION=$(echo "$HERMES_SESSION_ID")
 ```
@@ -61,8 +61,8 @@ Format the daemon response as operator-friendly summary:
 ## Cross-references
 
 - spec §3.4 Doctrine schema extensions
-- inv-zen-084 doctrine ceiling enforcement (Plan 8)
-- Plan 9 audit chain (Tessera-anchored DoctrineOverridden event)
+- invariant doctrine ceiling enforcement
+-  audit chain (Tessera-anchored DoctrineOverridden event)
 """
 
 _OVERRIDE_PROMPT = """# /hades:doctrine — Runtime doctrine override
@@ -72,7 +72,7 @@ You are overriding the active doctrine to **{name}** for the current HADES sessi
 ## 1. Identify active project + session
 
 ```bash
-# pending endpoint registration: /v1/project/active resolves active project alias from .zen-swarm.toml
+# pending endpoint registration: /v1/project/active resolves active project alias from.zen-swarm.toml
 PROJECT=$(curl --unix-socket /tmp/zen-swarm.sock -s http://unix/v1/project/active 2>&1)
 SESSION=$(echo "$HERMES_SESSION_ID")
 ```
@@ -88,7 +88,7 @@ Allowed values: `max-scope`, `default`, `capa-firewall`.
 ### POST to daemon /v1/doctrine/override
 
 ```bash
-# pending endpoint registration: doctrine runtime override per session (audit-anchored via inv-zen-072)
+# pending endpoint registration: doctrine runtime override per session
 curl --unix-socket /tmp/zen-swarm.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
@@ -96,9 +96,9 @@ curl --unix-socket /tmp/zen-swarm.sock \\
      http://unix/v1/doctrine/override
 ```
 
-The override is **audit-logged via Plan 9 chain** — Tessera-anchored event `DoctrineOverridden` with payload (project, session, prior-doctrine, new-doctrine, reason, operator-identity-from-keychain). Per inv-zen-072 (Plan 8 amendment-anchored audit), every override appears in the Hermes Ink TUI F10 panel + `zen day` morning brief.
+The override is **audit-logged chain** — Tessera-anchored event `DoctrineOverridden` with payload (project, session, prior-doctrine, new-doctrine, reason, operator-identity-from-keychain). Per invariant, every override appears in the Hermes Ink TUI F10 panel + `zen day` morning brief.
 
-Per Plan 8 doctrine ceiling enforcement (inv-zen-084): override can ONLY tighten beyond project ceiling, not loosen. If `{name}` is more permissive than project ceiling → daemon refuses with 409 Conflict + actionable error.
+Per  doctrine ceiling enforcement: override can ONLY tighten beyond project ceiling, not loosen. If `{name}` is more permissive than project ceiling → daemon refuses with 409 Conflict + actionable error.
 
 ## 3. Display result
 
@@ -116,8 +116,8 @@ Format the daemon response as operator-friendly summary:
 ## Cross-references
 
 - spec §3.4 Doctrine schema extensions
-- inv-zen-084 doctrine ceiling enforcement (Plan 8)
-- Plan 9 audit chain (Tessera-anchored DoctrineOverridden event)
+- invariant doctrine ceiling enforcement
+-  audit chain (Tessera-anchored DoctrineOverridden event)
 """
 
 _VALID_DOCTRINES = {"max-scope", "default", "capa-firewall"}

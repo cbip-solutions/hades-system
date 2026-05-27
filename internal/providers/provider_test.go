@@ -148,7 +148,7 @@ func TestTierCapabilitiesZeroValue(t *testing.T) {
 
 // TierBackend interface compile guard. fakeBackend MUST satisfy
 // TierBackend — if it does not, this file fails to compile and the
-// inv-zen-067 documentation is broken.
+// invariant documentation is broken.
 type fakeBackend struct{ name string }
 
 func (f *fakeBackend) Forward(ctx context.Context, req TierRequest) (*TierResponse, error) {

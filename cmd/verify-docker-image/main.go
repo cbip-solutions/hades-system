@@ -101,7 +101,7 @@ func validateDockerfile(opts runOptions) error {
 	}
 	text := string(data)
 	required := map[string]string{
-		"FROM golang:1.25":                              "builder stage must use golang:1.25 base",
+		"FROM golang:1.26":                              "builder stage must use golang:1.26 base",
 		"AS builder":                                    "multi-stage marker missing",
 		"FROM gcr.io/distroless/cc-debian12":            "runtime stage must be distroless cc-debian12",
 		"COPY --from=builder":                           "no COPY --from=builder line; builder stage outputs not consumed",
@@ -118,7 +118,7 @@ func validateDockerfile(opts runOptions) error {
 		}
 	}
 
-	// ldflags injection — both -X main.* AND -X .../internal/buildinfo.*
+	// ldflags injection — both -X main.* AND -X.../internal/buildinfo.*
 	// MUST be present so the produced image's --version output parses.
 	for _, ldflag := range []string{
 		"-X main.version=",

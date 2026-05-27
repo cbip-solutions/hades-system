@@ -10,7 +10,7 @@ import (
 
 // ExecTmux is the canonical wrapper for invoking the tmux binary.
 //
-// inv-zen-117 enforcement (layer 2): every invocation MUST include "-S".
+// invariant enforcement (layer 2): every invocation MUST include "-S".
 // The wrapper panics if "-S" is absent in args; this surfaces the
 // programmer error immediately rather than silently spawning on the
 // operator's default socket /tmp/tmux-<uid> and contaminating their

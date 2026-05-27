@@ -560,7 +560,7 @@ func TestRecordRestartCountersPreserved(t *testing.T) {
 // TestRebuildFromLedgerStoreErrorPropagates — when the store's
 // QueryAllRecentCosts returns an error, RebuildFromLedger MUST wrap it
 // (so the daemon refuses to start with a clear root cause) rather than
-// silently leaving counters empty. inv-zen-065 is load-bearing; degrading
+// silently leaving counters empty. invariant is load-bearing; degrading
 // to "empty counters because the query failed" would let cap-checks pass
 // that ought to fail.
 func TestRebuildFromLedgerStoreErrorPropagates(t *testing.T) {
@@ -579,7 +579,7 @@ func TestRebuildFromLedgerStoreErrorPropagates(t *testing.T) {
 // TestVerifyRebuildDetectsDesync — simulate a corrupted in-memory state
 // (counters mutated independently from the ledger source-of-truth).
 // verifyRebuild MUST return an error so the daemon refuses to start
-// (mismatch is fatal per inv-zen-065).
+// .
 //
 // Construction seed the ledger with one row totaling $5; do NOT call
 // applyToCounters (so the in-memory total is 0, but the ledger says $5);

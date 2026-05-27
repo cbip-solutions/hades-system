@@ -4,41 +4,41 @@
 // Build tag: adversarial (per the tests/adversarial/ precedent).
 // Runs under `make test-adversarial`.
 //
-// Scenario (spec §13.4 first bullet + inv-zen-265): a hostile / careless
+// Scenario: a hostile / careless
 // extractor produces an api_call whose `base_url_ref` points at a
 // runtime-resolved value (e.g., `UNKNOWN_BACKEND` env-name, or a literal
 // URL that no caronte.yaml service entry covers). The linker MUST:
 //
-//   - never silently drop the row (PolicySurface is doctrine-default
-//     per spec §6);
-//   - never false-link by fabricating a low-confidence contract_links
-//     row (the schema CHECK on (confidence, link_method) refuses the
-//     forged shape; the Go-layer guard refuses BEFORE the CHECK);
-//   - persist an UnresolvedRow that surfaces to the operator with the
-//     original base_url_ref preserved (so the operator can repair the
-//     caronte.yaml manifest).
+// - never silently drop the row (PolicySurface is doctrine-default
+// per spec §6);
+// - never false-link by fabricating a low-confidence contract_links
+// row (the schema CHECK on (confidence, link_method) refuses the
+// forged shape; the Go-layer guard refuses BEFORE the CHECK);
+// - persist an UnresolvedRow that surfaces to the operator with the
+// original base_url_ref preserved (so the operator can repair the
+// caronte.yaml manifest).
 //
-// This is the inv-zen-265 normative statement under hostile input.
+// This is the invariant normative statement under hostile input.
 //
 // Adversarial pattern (post code-review I-2):
-//   - Drive the inv-zen-265 contract through the PUBLIC linker entry
-//     point (link.NewLinker + Linker.LinkProject) so a regression that
-//     ROUTES around UnresolvedStore (e.g., a future tier-4 path that
-//     forgot to call the surfacer) FAILS this test. The previous shape
-//     called UnresolvedStore.Insert directly, which bypassed the linker
-//     and would have left such a regression undetected.
-//   - The per-call source store is a thin in-file fake (mirrors
-//     internal/caronte/contract/link/link_test.go::fakeProjectStore;
-//     re-declared package-local for the adversarial-test self-contained
-//     posture) returning 4 hostile api_calls each with a base_url_ref
-//     the manifest does NOT cover.
-//   - The UnresolvedStorePort fake adapts onto a REAL
-//     federation.WorkspaceFederationDB so the test verifies BOTH (a) the
-//     linker invoked the port for every hostile call (linker side), AND
-//     (b) the federation store persists the rows queryable via
-//     ListUnresolvedByWorkspace (persistent side). Double-gating is the
-//     "no false-link AND no silent-drop AND the persistent surface
-//     reaches the operator" full chain.
+// - Drive the invariant contract through the PUBLIC linker entry
+// point (link.NewLinker + Linker.LinkProject) so a regression that
+// ROUTES around UnresolvedStore (e.g., a future tier-4 path that
+// forgot to call the surfacer) FAILS this test. The previous shape
+// called UnresolvedStore.Insert directly, which bypassed the linker
+// and would have left such a regression undetected.
+// - The per-call source store is a thin in-file fake (mirrors
+// internal/caronte/contract/link/link_test.go::fakeProjectStore;
+// re-declared package-local for the adversarial-test self-contained
+// posture) returning 4 hostile api_calls each with a base_url_ref
+// the manifest does NOT cover.
+// - The UnresolvedStorePort fake adapts onto a REAL
+// federation.WorkspaceFederationDB so the test verifies BOTH (a) the
+// linker invoked the port for every hostile call (linker side), AND
+// (b) the federation store persists the rows queryable via
+// ListUnresolvedByWorkspace (persistent side). Double-gating is the
+// "no false-link AND no silent-drop AND the persistent surface
+// reaches the operator" full chain.
 //
 // Bite-check: short-circuit the linker's Unresolved Surface invocation
 // (replace `l.unresolved.Surface(ctx, call, policy, …)` in link.go::linkOne
@@ -47,8 +47,7 @@
 // the per-case error is "0 unresolved rows persisted; want 4"). Restoring
 // the Surface call turns the gate green again.
 
-//go:build adversarial
-
+// go:build adversarial
 package adversarial
 
 import (
@@ -110,7 +109,7 @@ func (f *l8FakeProjectStore) GetNode(_ context.Context, nodeID string) (store.No
 }
 
 // l8FakeWorkspace observes every link.WorkspaceLinkPort.CrossRepoLink call.
-// The inv-zen-265 contract requires the linker NEVER call CrossRepoLink for
+// The invariant contract requires the linker NEVER call CrossRepoLink for
 // an unresolved tier; len(persisted) MUST be 0 post-LinkProject.
 type l8FakeWorkspace struct {
 	persisted []store.ContractLink
@@ -249,7 +248,7 @@ func TestPlan20AdversarialDynamicBaseURLUnresolved(t *testing.T) {
 	}
 
 	// Assertion 3 (linker-side): NO contract_links persisted (the
-	// inv-zen-265 no-false-link guarantee). The linker MUST NOT route a
+	// invariant no-false-link guarantee). The linker MUST NOT route a
 	// hostile call to the workspace CrossRepoLink port.
 	if len(ws.persisted) != 0 {
 		t.Errorf("plan20 adv L-8: linker called workspace.CrossRepoLink %d times; want 0 (false-link guarantee violated)", len(ws.persisted))
@@ -282,7 +281,7 @@ func TestPlan20AdversarialDynamicBaseURLUnresolved(t *testing.T) {
 		}
 	}
 
-	// Assertion 5 (persistent-side, the inv-zen-265 anti-false-link
+	// Assertion 5 (persistent-side, the invariant anti-false-link
 	// guarantee at the federation layer): NO contract_links rows exist
 	// for these hostile refs. The schema CHECK on contract_links.
 	// confidence + link_method enforces the closed enum, so a fabricated

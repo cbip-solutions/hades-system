@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — impl.go (Plan 19 Phase K).
+// Package cli — impl.go.
 //
 // `zen impl <interface>` lists the concrete implementations of an interface
 // (static polymorphism resolution: VTA/CHA + types.Implements), each with a

@@ -39,23 +39,23 @@ func (e *RequiresOperatorConfirmation) Error() string {
 	return fmt.Sprintf("doctrine: rule %s change requires operator confirmation: %s", e.RulePath, e.Reason)
 }
 
-// ValidateTighten enforces inv-zen-136 — per-project overrides MUST be
+// ValidateTighten enforces invariant — per-project overrides MUST be
 // tighten-only relative to baseline. Returns nil if all leaves pass; returns
 // an error wrapping every offending field's *TightenViolation otherwise.
 //
 // Special handling:
-//   - DoctrineVersion: lex-comparable semver — override may bump but not regress.
-//   - SchemaVersion: must match exactly (truth); enforced by registry's "truth" tag.
-//   - Bidirectional fields: always pass; if RequiresOperator, an informational
-//     RequiresOperatorConfirmation is appended (not joined under ErrTightenViolation).
+// - DoctrineVersion: lex-comparable semver — override may bump but not regress.
+// - SchemaVersion: must match exactly (truth); enforced by registry's "truth" tag.
+// - Bidirectional fields: always pass; if RequiresOperator, an informational
+// RequiresOperatorConfirmation is appended (not joined under ErrTightenViolation).
 //
 // Pure function — no I/O, no globals. Safe for concurrent invocation.
 //
 // Method form (not free function): consumers call as
 // `override.ValidateTighten(baseline)`. The receiver is the override
 // schema; the parameter is the baseline against which override is
-// compared. This is the canonical shape standardized across Phase G/H
-// post Stage 2 self-review CRITICAL #1.
+// compared. This is the canonical shape standardized across
+// post self-review CRITICAL #1.
 func (override *Schema) ValidateTighten(baseline *Schema) error {
 	if baseline == nil || override == nil {
 		return fmt.Errorf("%w: nil schema (baseline=%v override=%v)", ErrTightenViolation, baseline == nil, override == nil)

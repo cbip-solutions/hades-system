@@ -23,7 +23,7 @@ If file missing, abort with: "ERROR: openspec/changes/{feature_name}/tasks.md mi
 ## 2. POST to daemon
 
 ```bash
-TASKS_JSON=$(jq -R -s . < openspec/changes/{feature_name}/tasks.md)
+TASKS_JSON=$(jq -R -s. < openspec/changes/{feature_name}/tasks.md)
 # pending endpoint registration: /v1/project/active resolves active project alias
 PROJECT=$(curl --unix-socket /tmp/zen-swarm.sock -s http://unix/v1/project/active)
 
@@ -34,7 +34,7 @@ curl --unix-socket /tmp/zen-swarm.sock \\
      http://unix/v1/swarms
 ```
 
-Response includes `swarm_id`. HADES daemon spawns subagents per task following Plan 4 routing.toml + Plan 3 dispatcher.
+Response includes `swarm_id`. HADES daemon spawns subagents per task following  routing.toml +  dispatcher.
 
 ## 3. Stream SSE events
 
@@ -51,16 +51,16 @@ As tasks reach phases (codegen / tests / fix-loop / commit), surface summaries t
 
 Closing this Hermes session does NOT abort the swarm. Reopening this session re-attaches via `/hades:openspec-resume {feature_name}`.
 
-## 5. NO Claude attribution in any swarm-emitted commit (inv-zen-004)
+## 5. NO Claude attribution in any swarm-emitted commit
 
-Per inv-zen-004 + project CLAUDE.md "Hard rules" #1: every commit message emitted by swarm subagents MUST NOT contain Claude/Anthropic/AI attribution. Plan 11 substrate hook regex-rejects.
+Per invariant + project CLAUDE.md "Hard rules" #1: every commit message emitted by swarm subagents MUST NOT contain Claude/Anthropic/AI attribution.  substrate hook regex-rejects.
 
 ## 6. Cross-references
 
 - spec §3.2 apply phase
-- Plan 4 routing.toml + Plan 3 dispatcher
-- Plan 5 worktree manager
-- Plan 6 archive phase (next step)
+-  routing.toml +  dispatcher
+-  worktree manager
+-  archive phase (next step)
 - /hades:openspec-resume (resume mid-flight)
 - /hades:openspec-archive (post-implementation merge)
 """

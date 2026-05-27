@@ -139,14 +139,14 @@ const drainingSuffix = ".draining"
 // concurrently with Emit on the same EmitClient (review I-3).
 //
 // Rotation pattern:
-//  1. If <bufPath>.draining exists from a prior crashed run, process it
-//     first (orphan recovery).
-//  2. Otherwise (or after) rename the live <bufPath> to <bufPath>.draining
-//     so concurrent Emit calls keep appending to a fresh, empty live file.
-//  3. Walk the .draining snapshot line by line, calling emitDirect.
-//  4. On full success, remove .draining.
-//  5. On partial failure, rewrite .draining with only the un-drained lines
-//     (safe: live emits do not touch this file) and return (n, firstErr).
+// 1. If <bufPath>.draining exists from a prior crashed run, process it
+// first (orphan recovery).
+// 2. Otherwise (or after) rename the live <bufPath> to <bufPath>.draining
+// so concurrent Emit calls keep appending to a fresh, empty live file.
+// 3. Walk the.draining snapshot line by line, calling emitDirect.
+// 4. On full success, remove.draining.
+// 5. On partial failure, rewrite.draining with only the un-drained lines
+// (safe: live emits do not touch this file) and return (n, firstErr).
 //
 // DrainBuffer on daemon startup to recover buffered events; the same
 // rotation pattern handles in-process drains during normal operation.
@@ -184,7 +184,7 @@ func (ec *EmitClient) DrainBuffer(ctx context.Context) (int, error) {
 // MCP (matching pattern `zen-mcp-<MCPName>-emit-buffer-*.jsonl` plus
 // the `.draining` companion files left by crashed prior drains) and
 // drains each. Designed to be called once at process startup as part
-// of the Plan 9 (persistence + audit-trail subsystem) recovery hook.
+// of the (persistence + audit-trail subsystem) recovery hook.
 //
 // Returns the total events drained across all buffer files. If any one
 // file's drain returns an error, DrainAllBuffers continues with the
@@ -195,11 +195,11 @@ func (ec *EmitClient) DrainBuffer(ctx context.Context) (int, error) {
 // Emit on the same EmitClient — it operates on file paths derived
 // from MCPName + glob, not from ec.bufPath, and crash recovery assumes
 // no live writers are appending to the orphans being scanned. In
-// practice the Plan 9 startup hook calls this BEFORE the MCP enters
+// practice the startup hook calls this BEFORE the MCP enters
 // normal operation; once normal operation begins, ongoing emits use
 // DrainBuffer (which IS safe alongside Emit via the rotation pattern).
 //
-// Returns (0, nil) when bufDir does not exist (Plan 9 startup may run
+// Returns (0, nil) when bufDir does not exist ( startup may run
 // before bufDir is materialised).
 func (ec *EmitClient) DrainAllBuffers(ctx context.Context, bufDir string) (int, error) {
 	mcpName := ec.c.MCPName()

@@ -1,17 +1,17 @@
-// Package compliance — inv-zen-127: zen day items are ALWAYS rendered
+// Package compliance — invariant: zen day items are ALWAYS rendered
 // in canonical leverage rank order. Defense-in-depth: a compile-time
-// anchor (sentinel error referencing "inv-zen-127" + the literal
+// anchor (sentinel error referencing "invariant" + the literal
 // LeverageRank 1..7 enum) plus a runtime panic in zenday.Render() when
 // the slice is not pre-sorted via SortByLeverage.
 //
-// Spec §1 Q14 B + §7.2 inv-zen-127 wording (Plan 7 Phase F):
+// Spec §1 Q14 B + §7.2 invariant wording:
 //
-//	"zen day items sorted by canonical leverage rank (1..7).
-//	 Compile-check via _ = zenDayLeverageSortSentinel() anchor;
-//	 runtime via Render() re-asserts IsSorted(items, ByLeverage)
-//	 BEFORE rendering — Collect always calls SortByLeverage first;
-//	 the Render assertion catches contract violations from a
-//	 hypothetical caller bypassing Collect."
+// "zen day items sorted by canonical leverage rank (1..7).
+// Compile-check via _ = zenDayLeverageSortSentinel() anchor;
+// runtime via Render() re-asserts IsSorted(items, ByLeverage)
+// BEFORE rendering — Collect always calls SortByLeverage first;
+// the Render assertion catches contract violations from a
+// hypothetical caller bypassing Collect."
 //
 // In-package coverage in internal/zenday/leverage_test.go validates the
 // SortByLeverage / IsSorted contract on a hand-picked sample; this
@@ -23,34 +23,34 @@
 //
 // Coverage matrix:
 //
-//	(a) Property fuzz N=10000 with deterministic seed (127): random
-//	    item count [1..50], random rank [1..7], random CreatedAt
-//	    within a 24-hour window. Pre-sort: IsSorted may be false (the
-//	    scrambler intentionally feeds out-of-order input). Post-sort
-//	    via SortByLeverage: IsSorted MUST be true for every trial.
-//	(b) Pre-sort negative-control witness — at least one trial in the
-//	    fuzz must exhibit IsSorted=false BEFORE the sort call, proving
-//	    the test actually exercises the "scrambled input" path. A
-//	    100% pre-sorted-input run would be a vacuous green.
-//	(c) Rank range pinned 1..7 — LeverageRank(0) and LeverageRank(8+)
-//	    MUST report Valid()=false. The zero value rejection is
-//	    load-bearing: BriefItem.Validate() rejects rank=0, so
-//	    forgetting to set the rank in a downstream emitter surfaces
-//	    immediately rather than silently sorting to the front.
-//	(d) Sentinel error string contains both "inv-zen-127" and the
-//	    "LeverageRank 1..7" range descriptor — the verify-invariants
-//	    grep gate uses these substrings as the static-anchor witness.
-//	(e) Render panics on unsorted input — even a trivial 2-item
-//	    swap (rank 7 then rank 1) MUST panic with a message containing
-//	    "inv-zen-127". Closes the runtime defense-in-depth Layer 2
-//	    contract from the boundary side.
-//	(f) Stable-sort tiebreak: equal-rank items preserve relative
-//	    insertion order when CreatedAt is equal (sort.Stable
-//	    contract). A refactor that swaps Stable for Slice would still
-//	    pass IsSorted but break the deterministic ordering documented
-//	    in spec §1 Q14 B; this test pins it.
+// (a) Property fuzz N=10000 with deterministic seed (127): random
+// item count [1..50], random rank [1..7], random CreatedAt
+// within a 24-hour window. Pre-sort: IsSorted may be false (the
+// scrambler intentionally feeds out-of-order input). Post-sort
+// via SortByLeverage: IsSorted MUST be true for every trial.
+// (b) Pre-sort negative-control witness — at least one trial in the
+// fuzz must exhibit IsSorted=false BEFORE the sort call, proving
+// the test actually exercises the "scrambled input" path. A
+// 100% pre-sorted-input run would be a vacuous green.
+// (c) Rank range pinned 1..7 — LeverageRank(0) and LeverageRank(8+)
+// MUST report Valid()=false. The zero value rejection is
+// load-bearing: BriefItem.Validate() rejects rank=0, so
+// forgetting to set the rank in a downstream emitter surfaces
+// immediately rather than silently sorting to the front.
+// (d) Sentinel error string contains both "invariant" and the
+// "LeverageRank 1..7" range descriptor — the verify-invariants
+// grep gate uses these substrings as the static-anchor witness.
+// (e) Render panics on unsorted input — even a trivial 2-item
+// swap (rank 7 then rank 1) MUST panic with a message containing
+// "invariant". Closes the runtime defense-in-depth Layer 2
+// contract from the boundary side.
+// (f) Stable-sort tiebreak: equal-rank items preserve relative
+// insertion order when CreatedAt is equal (sort.Stable
+// contract). A refactor that swaps Stable for Slice would still
+// pass IsSorted but break the deterministic ordering documented
+// in spec §1 Q14 B; this test pins it.
 //
-// Boundary (inv-zen-031): this test imports only internal/zenday +
+// Boundary: this test imports only internal/zenday +
 // stdlib. internal/zenday is the load-bearing surface; the
 // dispatcheradapter / store layers are not touched.
 //
@@ -155,7 +155,7 @@ func TestInvZen127_SentinelErrorWording(t *testing.T) {
 // TestInvZen127_RenderPanicsOnUnsortedInput is the runtime defense-in-
 // depth Layer 2 boundary witness: when a hypothetical caller bypasses
 // SortByLeverage and feeds Render an out-of-order slice, Render MUST
-// panic with a message containing "inv-zen-127" so observability can
+// panic with a message containing "invariant" so observability can
 // route on the wire-stable substring per spec §7.3.
 //
 // The minimal failing input is a 2-item slice with rank 7 first and

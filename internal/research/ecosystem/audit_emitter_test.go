@@ -1,7 +1,7 @@
 // internal/research/ecosystem/audit_emitter_test.go
 //
 // Tests for RAGAuditEmitter + RAGAuditChainEmitter interface + InMemoryRAGAuditChain
-// (Plan 14 Phase A Task A-7; see plan-file lines 4279-4542 for canonical test set).
+// .
 //
 // Coverage discipline: per project doctrine `feedback_no_tech_debt.md`,
 // security/correctness-critical files require ≥90% per-function coverage.

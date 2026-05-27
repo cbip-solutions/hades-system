@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — ecosystem_new_versions.go (Plan 14 Phase G fix-cycle).
+// Package handlers — ecosystem_new_versions.go.
 //
 // EcosystemNewVersions implements GET /v1/ecosystem/new-versions/{eco}.
 //
@@ -11,14 +11,14 @@
 //
 // Path parameter:
 //
-//	{eco}  — one of: go, python, typescript, rust
+// {eco} — one of: go, python, typescript, rust
 //
 // Status codes:
 //
-//	200 OK — JSON body {"versions": ["1.23.0", ...]} (Versions non-nil; may be []).
-//	400 Bad Request — missing/unknown ecosystem path param.
-//	500 Internal Server Error — upstream fetch failure.
-//	503 Service Unavailable — EcosystemHandler not wired.
+// 200 OK — JSON body {"versions": ["1.23.0",...]} (Versions non-nil; may be []).
+// 400 Bad Request — missing/unknown ecosystem path param.
+// 500 Internal Server Error — upstream fetch failure.
+// 503 Service Unavailable — EcosystemHandler not wired.
 //
 // Wire mirror: matches daemonCronClient.DetectNewVersions(ctx, eco) →
 // GET /v1/ecosystem/new-versions/<eco> → 200 + JSON body. Note: the

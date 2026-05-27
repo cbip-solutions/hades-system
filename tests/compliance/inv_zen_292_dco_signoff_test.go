@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 
-// Package compliance — Plan 15 Phase C task C-14 compliance gates for DCO
+// Package compliance — task C-14 compliance gates for DCO
 // (Developer Certificate of Origin) sign-off enforcement.
 //
-// inv-zen-292 (decisión 15-2; 2026-05-24): every public-repo commit MUST
-// carry a Signed-off-by: trailer. Cascades from decisión 14 sub-c (community
+// invariant: every public-repo commit MUST
+// carry a Signed-off-by: trailer. Cascades policy sub-c (community
 // engagement strategy: best-effort no-SLA + dual-path PR triage + DCO).
 //
 // Three layers gate the invariant:
-//  1. Client-side: `.githooks/pre-commit-dco` aborts unsigned commits.
-//  2. Sync: operator installs via `scripts/install_git_hooks.sh` (Makefile
-//     target `install-git-hooks` invokes it).
-//  3. Server-side: `.github/workflows/dco-check.yml` rejects PRs whose
-//     commits lack the trailer (authoritative for the public repo).
+// 1. Client-side: `.githooks/pre-commit-dco` aborts unsigned commits.
+// 2. Sync: operator installs via `scripts/install_git_hooks.sh` (Makefile
+// target `install-git-hooks` invokes it).
+// 3. Server-side: `.github/workflows/dco-check.yml` rejects PRs whose
+// commits lack the trailer (authoritative for the public repo).
 //
 // These tests are intentionally surface-level (file presence + executable bit
 // + load-bearing markers); deep behavioral checks live in

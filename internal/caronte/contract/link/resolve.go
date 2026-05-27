@@ -36,14 +36,14 @@ const (
 // LinkMethod + artifact source hint. The mapping is the load-bearing
 // tier-precedence contract (master C-5):
 //
-//	(LinkArtifact, "proto_import")      → ConfExactProtoImport
-//	(LinkArtifact, "openapi"|"sdl"|"proto_spec") → ConfSpecArtifact
-//	(LinkStatic, _)                     → ConfStaticPath
-//	(LinkFuzzy, _)                      → ConfFuzzyPath
-//	(LinkCaronteYAML, _)                → ErrConfidenceTierDowngrade
-//	                                      (caronte_yaml MUST be paired with
-//	                                      a static / fuzzy path-match before
-//	                                      becoming a confidence-bearing tier)
+// (LinkArtifact, "proto_import") → ConfExactProtoImport
+// (LinkArtifact, "openapi"|"sdl"|"proto_spec") → ConfSpecArtifact
+// (LinkStatic, _) → ConfStaticPath
+// (LinkFuzzy, _) → ConfFuzzyPath
+// (LinkCaronteYAML, _) → ErrConfidenceTierDowngrade
+// (caronte_yaml MUST be paired with
+// a static / fuzzy path-match before
+// becoming a confidence-bearing tier)
 //
 // ErrConfidenceTierDowngrade is returned when the caller passes a
 // (Confidence, LinkMethod) tuple inconsistent with this table — the guard

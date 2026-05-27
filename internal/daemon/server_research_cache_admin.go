@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package daemon — server_research_cache_admin.go (Plan 4 Phase N Task N-3).
+// Package daemon — server_research_cache_admin.go.
 //
 // Operator-admin methods on *Server backing handlers.ResearchCacheAdminCtx.
 // These read/aggregate/delete on the research_cache table directly via

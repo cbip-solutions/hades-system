@@ -148,8 +148,8 @@ func TestCitationRenderedEventReadableByMaxScopeSession(t *testing.T) {
 	}
 
 	// 3. Cross-doctrine read: a capa-firewall session MUST be DENIED
-	//    against a max-scope row. Documents the inv-zen-172 invariant
-	//    at the level of the rendered-event payload.
+	// against a max-scope row. Documents the invariant invariant
+	// at the level of the rendered-event payload.
 	if handlers.DoctrineVisible(row.Doctrine, "capa-firewall") {
 		t.Errorf("DoctrineVisible(row=%q, session=capa-firewall) = true; "+
 			"capa-firewall session must NOT see max-scope rows", row.Doctrine)

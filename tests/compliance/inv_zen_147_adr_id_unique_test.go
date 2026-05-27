@@ -1,45 +1,45 @@
 package compliance
 
-// inv_zen_147_adr_id_unique_test.go — compliance gate for inv-zen-147
+// inv_zen_147_adr_id_unique_test.go — compliance gate for invariant
 //
-// inv-zen-147: every ADR in docs/decisions/ MUST have a globally-unique `id`
+// invariant: every ADR in architecture records MUST have a globally-unique `id`
 // frontmatter value. Duplicate IDs make the ADR corpus unreliable (two ADRs
 // appear identical to tooling, graph emitters, and CI checks).
 //
 // Three tests are defined:
 //
-//  1. TestInvZen147_SyntheticCollision — unit-level gate: two fixture ADR files
-//     written to TempDir with identical id (ADR-9999) must cause ValidateAll to
-//     return ErrIDCollision. The error message must name both file paths.
+// 1. TestInvZen147_SyntheticCollision — unit-level gate: two fixture ADR files
+// written to TempDir with identical id (ADR-9999) must cause ValidateAll to
+// return ErrIDCollision. The error message must name both file paths.
 //
-//  2. TestInvZen147_RealCorpusNoCollisions — corpus-level gate: walk
-//     docs/decisions/*.md; parse each file; skip legacy ADRs (no frontmatter);
-//     assert ValidateAll returns nil on the filtered corpus.
+// 2. TestInvZen147_RealCorpusNoCollisions — corpus-level gate: walk
+// architecture records parse each file; skip legacy ADRs (no frontmatter);
+// assert ValidateAll returns nil on the filtered corpus.
 //
-//     Pre-S1-migration note: all 22 current corpus ADRs are legacy markdown
-//     (no YAML frontmatter). Every one is skipped via HasFrontmatter(), making
-//     the parsed slice empty and the test vacuously pass. This is CORRECT
-//     behaviour — the test is the GATE for inv-zen-147 and fires meaningfully
-//     only after the S1 bulk-migration (operator-gated; not part of Phase E).
-//     Post-migration, when every ADR has structured frontmatter, this test
-//     becomes the live collision detector for the corpus.
+// Pre-S1-migration note: all 22 current corpus ADRs are legacy markdown
+// (no YAML frontmatter). Every one is skipped via HasFrontmatter(), making
+// the parsed slice empty and the test vacuously pass. This is CORRECT
+// behaviour — the test is the GATE for invariant and fires meaningfully
+// only after the S1 bulk-migration.
+// Post-migration, when every ADR has structured frontmatter, this test
+// becomes the live collision detector for the corpus.
 //
-//  3. TestInvZen147_InMemoryDuplication — regression check: two *adr.ADR
-//     structs with the same ID constructed entirely in-memory (no file I/O)
-//     must also trigger ErrIDCollision via ValidateAll.
+// 3. TestInvZen147_InMemoryDuplication — regression check: two *adr.ADR
+// structs with the same ID constructed entirely in-memory (no file I/O)
+// must also trigger ErrIDCollision via ValidateAll.
 //
 // Wired into: `make test` and `make verify-invariants` via the existing
-// `go test ./tests/compliance/...` pattern; no Makefile change needed.
+// `go test./tests/compliance/...` pattern; no Makefile change needed.
 //
 //
-//	Plan-file requested a single TestInvZen147_ADRIDUniqueRepoWide
-//	test invoking adr.NewValidator + ValidateAll on docs/decisions/.
-//	This file ships three tests instead: SyntheticCollision (fixture
-//	collision detection + actionable diagnostic), RealCorpusNoCollisions
-//	(corpus walk + legacy-frontmatter skip), and InMemoryDuplication
-//	(regression-safety against ValidateAll refactor). The three-test
-//	pattern EXCEEDS the plan-file requirement and stays within
-//	inv-zen-147's max-scope intent. No extension needed.
+// Plan-file requested a single TestInvZen147_ADRIDUniqueRepoWide
+// test invoking adr.NewValidator + ValidateAll on architecture records
+// This file ships three tests instead: SyntheticCollision (fixture
+// collision detection + actionable diagnostic), RealCorpusNoCollisions
+// (corpus walk + legacy-frontmatter skip), and InMemoryDuplication
+// (regression-safety against ValidateAll refactor). The three-test
+// pattern EXCEEDS the plan-file requirement and stays within
+// invariant's max-scope intent. No extension needed.
 
 import (
 	"context"

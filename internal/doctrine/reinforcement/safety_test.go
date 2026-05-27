@@ -220,7 +220,7 @@ func TestSafetyOverrideUnreadableSurfacesWrappedError(t *testing.T) {
 // T5-8a: doctrineName MUST be rejected when it contains path-separator or
 // traversal characters. CWE-22 path traversal: filepath.Join("/a/b",
 // "../../etc/passwd"+suffix) collapses to "/etc/passwd"+suffix, escaping
-// overrideDir entirely. The .system-prompt.md.tmpl suffix bounds the
+// overrideDir entirely. The.system-prompt.md.tmpl suffix bounds the
 // exploit corpus (target file must end in suffix) but does NOT eliminate
 // it. We reject any doctrineName containing "/", "\\", or ".." up front.
 //
@@ -231,8 +231,8 @@ func TestSafetyOverrideUnreadableSurfacesWrappedError(t *testing.T) {
 // legitimate operator override (CWE-22). With the fix, the engine
 // rejects the doctrineName up front and returns ErrTemplateNotFound.
 //
-// Per spec §1 Q12 C + Phase G fsnotify dependency: today doctrineName is
-// operator-controlled and trusted-but-not-validated; Phase G adds
+// Per spec §1 Q12 C + fsnotify dependency: today doctrineName is
+// operator-controlled and trusted-but-not-validated; adds
 // fsnotify on overrideDir, turning a path-traversal hole into a
 // watch-target hole. Lock the contract here.
 func TestSafetyDoctrineNameRejectsPathTraversal(t *testing.T) {
@@ -297,11 +297,11 @@ func TestSafetyDoctrineNameRejectsPathTraversal(t *testing.T) {
 // MUST verify that the final resolved override path lives inside
 // overrideDir. The HasPrefix containment check (with explicit trailing
 // separator) defends against:
-//   - A future Unicode-normalization quirk that lets a non-blacklisted
-//     character sequence resolve to a traversal path post-filepath.Clean.
-//   - An overrideDir whose lexical prefix matches a sibling directory
-//     (e.g. overrideDir="/tmp/abc", attacker reaching "/tmp/abcd/...").
-//     The trailing separator ensures "/tmp/abc/" never matches "/tmp/abcd".
+// - A future Unicode-normalization quirk that lets a non-blacklisted
+// character sequence resolve to a traversal path post-filepath.Clean.
+// - An overrideDir whose lexical prefix matches a sibling directory
+// (e.g. overrideDir="/tmp/abc", attacker reaching "/tmp/abcd/...").
+// The trailing separator ensures "/tmp/abc/" never matches "/tmp/abcd".
 //
 // We exercise the prefix-without-separator confusion directly: configure
 // engine with overrideDir="<parent>/abc" while a sibling "<parent>/abcd"
@@ -352,8 +352,8 @@ func TestSafetyOverridePathConfinedToDir(t *testing.T) {
 		t.Errorf("benign Render missing expected marker %q; output:\n%s", benignMarker, out)
 	}
 	// 2. doctrineName="trap" — overrideDir/trap.tmpl does NOT exist;
-	//    siblingDir/trap.tmpl DOES exist. Engine MUST NOT reach the
-	//    sibling. Expect ErrTemplateNotFound + no marker leakage.
+	// siblingDir/trap.tmpl DOES exist. Engine MUST NOT reach the
+	// sibling. Expect ErrTemplateNotFound + no marker leakage.
 	out2, err := e.Render(&v1.Schema{}, &reinforcement.Vars{
 		DoctrineName: "trap",
 	})

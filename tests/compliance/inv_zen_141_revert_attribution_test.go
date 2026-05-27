@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_141_revert_attribution_test.go
 //
-// Compliance gate for invariant inv-zen-141: telemetry-driven autonomous
+// Compliance gate for invariant invariant: telemetry-driven autonomous
 // revert MUST target the most-recent DoctrineAmendmentApplied for the
 // rule's category within the rolling window. The TelemetrySubscriber's
 // LIFO attribution rule prevents reverting a prior amendment when a
@@ -20,7 +20,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
 )
 
-// TestInvZen141RevertTargetsLastAppliedADR exercises inv-zen-141:
+// TestInvZen141RevertTargetsLastAppliedADR exercises invariant:
 // when multiple DoctrineAmendmentApplied events sit in the rolling
 // window, AutoRevert MUST target the MOST-RECENT one (LIFO
 // attribution).

@@ -99,7 +99,7 @@ func TestNewAggregatorAcceptsExplicitClockAndChain(t *testing.T) {
 }
 
 // TestAggregatorMarkDegraded asserts the degraded-mode toggle works.
-// Phase J (zen doctor) consults Degraded() to surface the warning
+// (zen doctor) consults Degraded() to surface the warning
 // banner. The internal markDegraded path is exercised by D-7
 // embedder-load-fails branch + Init's ErrCGODisabled detection.
 func TestAggregatorMarkDegraded(t *testing.T) {

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — notifications.go (Plan 2 Phase L Task L-4).
+// Package handlers — notifications.go.
 //
 // Real CRUD against the bypass-scoped notifications table (schema v9).
 // table is single-dispatcher, simple ack workflow with 1h CRITICAL repeat.

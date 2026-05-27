@@ -2,20 +2,20 @@
 //
 // tests/compliance/inv_zen_099_override_audit_test.go
 //
-// inv-zen-099 (operator override audit, spec §7.1):
+// invariant (operator override audit, spec §7.1):
 //
-//	Every authorized operator override MUST emit exactly one
-//	EvtOperatorOverrideApplied event carrying {OperatorUID, OverrideKind}
-//	in its payload. Failed authentication (UID mismatch) MUST emit zero
-//	events — the audit channel is reserved for authorized overrides only.
+// Every authorized operator override MUST emit exactly one
+// EvtOperatorOverrideApplied event carrying {OperatorUID, OverrideKind}
+// in its payload. Failed authentication (UID mismatch) MUST emit zero
+// events — the audit channel is reserved for authorized overrides only.
 //
 // Tests:
-//  1. TestInvZen099_EveryOverrideKindEmitsAuditEvent — t.Run subtests
-//     for all 5 OverrideKind constants. Each exercises Authenticate with
-//     matching UID and asserts exactly 1 EvtOperatorOverrideApplied with
-//     OverrideKind + OperatorUID populated correctly in the payload.
-//  2. TestInvZen099_MismatchedUIDDoesNotEmit — mismatched peer UID
-//     returns ErrOperatorIdentityMismatch and emits zero events.
+// 1. TestInvZen099_EveryOverrideKindEmitsAuditEvent — t.Run subtests
+// for all 5 OverrideKind constants. Each exercises Authenticate with
+// matching UID and asserts exactly 1 EvtOperatorOverrideApplied with
+// OverrideKind + OperatorUID populated correctly in the payload.
+// 2. TestInvZen099_MismatchedUIDDoesNotEmit — mismatched peer UID
+// returns ErrOperatorIdentityMismatch and emits zero events.
 //
 // Payload format: confirmation_audit.go emits map[string]any with keys
 // "operator_uid" (int), "operator_reason" (string), "override_kind"
@@ -23,7 +23,7 @@
 // field-level assertions — no type-assertion to eventlog.OperatorOverrideApplied
 // is needed (Event.Payload is map[string]any, not an interface value).
 //
-// No build tags: default `go test ./tests/compliance/` runs these.
+// No build tags: default `go test./tests/compliance/` runs these.
 package compliance_test
 
 import (

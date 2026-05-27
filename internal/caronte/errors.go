@@ -3,9 +3,9 @@
 // top-level Engine that assembles the six prior layers (store → parser →
 // semantic → structure → evolution → intent) into a per-project,
 // query-answering engine and satisfies research.GitnexusClient as a drop-in
-// for the retired gitnexus subprocess (inv-zen-239).
+// for the retired gitnexus subprocess.
 //
-// Boundary (inv-zen-031/230): this package and its subpackages NEVER import
+// Boundary: this package and its subpackages NEVER import
 // internal/store, internal/daemon/*, or internal/orchestrator. The daemon
 // composition root (cmd/zen-swarm-ctld) injects the real implementations of
 // the narrow seams the Engine declares in its Deps (the per-project DB opener
@@ -15,11 +15,11 @@
 // (semantic.CaronteDispatcher, intent.CodeEmbedder, intent.Reranker) — it does
 // NOT re-declare them (DECISION 7).
 //
-// Drop-in (inv-zen-239): *Engine satisfies research.GitnexusClient
+// Drop-in: *Engine satisfies research.GitnexusClient
 // (CodeGraph + Close); the compile anchor in engine.go binds it. The daemon
 // injects the engine where the gitnexus child went and refuses to boot
 // (os.Exit(1)) if the engine cannot construct (bootstrap-required, generalizes
-// inv-zen-206).
+// invariant).
 package caronte
 
 import "errors"

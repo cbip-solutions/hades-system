@@ -9,7 +9,7 @@ fi
 
 ARTIFACT="$1"
 OWNER="$2"
-REPO="${3:-zen-swarm}"
+REPO="${3:-hades-system}"
 
 if [[ ! -f "${ARTIFACT}" ]]; then
   echo "verify_cosign_signature.sh: artifact missing: ${ARTIFACT}" >&2

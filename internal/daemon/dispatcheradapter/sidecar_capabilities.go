@@ -2,29 +2,29 @@
 // internal/daemon/dispatcheradapter/sidecar_capabilities.go
 //
 // FetchSidecarCapabilities is the daemon-side capability-fetch entry
-// point per decisión 17-d ("/v1 frozen forever; forward-compat via
+// point policy ("/v1 frozen forever; forward-compat via
 // capability negotiation"). The sidecar serves `GET /v1/sidecar/info`
 // with a JSON capability vector (version + supported_features[] +
 // config_hash + bypass_configs_version + anthropic_api_envelope_version).
 // The daemon reads + feature-flags downstream behaviour accordingly.
 //
 // Forward-compat property (inv-zen-B7 placeholder; concrete inv-zen-NNN
-// allocated at Plan 15 merge-time renumber reconciliation):
+// allocated at merge-time renumber reconciliation):
 //
-//   - New sidecar releases announce new behaviour by adding entries to
-//     `supported_features[]`. Older daemons see the unknown flags as
-//     opaque strings (HasFeature returns true) but never branch on
-//     them — their feature-flag dispatch table only references known
-//     flag names.
-//   - This is what allows Anthropic upstream body-shape changes to be
-//     absorbed inside the sidecar without ever bumping `/v1` to `/v2`.
+// - New sidecar releases announce new behaviour by adding entries to
+// `supported_features[]`. Older daemons see the unknown flags as
+// opaque strings (HasFeature returns true) but never branch on
+// them — their feature-flag dispatch table only references known
+// flag names.
+// - This is what allows Anthropic upstream body-shape changes to be
+// absorbed inside the sidecar without ever bumping `/v1` to `/v2`.
 //
-// Graceful degradation (inv-zen-280): every error path returns a
+// Graceful degradation: every error path returns a
 // typed error so the daemon can continue without sidecar feature flags
-// — the Plan 16 cascade is the natural fallback when the sidecar is
+// — the cascade is the natural fallback when the sidecar is
 // unreachable / degraded / malformed.
 //
-// inv-zen-031 boundary: this file imports stdlib only (net/http,
+// invariant boundary: this file imports stdlib only (net/http,
 // encoding/json, context, errors, fmt, io, net/url, time). It does NOT
 // import internal/store, private-tier1-module, or
 // internal/providers — the capabilities vector is daemon-owned state

@@ -40,11 +40,11 @@ var inv080Table = []inv080TableRow{
 	{"capa-firewall", []string{"anthropic", "google", "deepseek"}, 2, "anthropic", "anthropic", false},
 }
 
-// TestInvZen080FamilyDisjoint is the primary compliance gate for inv-zen-080.
+// TestInvZen080FamilyDisjoint is the primary compliance gate for invariant.
 // Every row in the table verifies:
-//  1. If !wantErr: reviewer family != generator family (disjoint enforced)
-//  2. If !wantErr: pool.Choose() returns a non-empty string
-//  3. If wantErr: NewPool returns a non-nil error
+// 1. If !wantErr: reviewer family != generator family (disjoint enforced)
+// 2. If !wantErr: pool.Choose() returns a non-empty string
+// 3. If wantErr: NewPool returns a non-nil error
 //
 // This test MUST pass on every commit (no build tag — default test suite).
 func TestInvZen080FamilyDisjoint(t *testing.T) {

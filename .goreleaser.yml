@@ -176,7 +176,7 @@ nfpms:
 brews:
   - name: hades
     repository:
-      owner: hades-system
+      owner: cbip-solutions
       name: homebrew-tap
       branch: main
       token: '{{ .Env.HOMEBREW_TAP_TOKEN }}'
@@ -229,7 +229,7 @@ brews:
 
 release:
   github:
-    owner: hades-system
+    owner: cbip-solutions
     name: hades-system
   draft: false
   prerelease: auto  # rc / beta / alpha tags trigger prerelease=true
@@ -241,7 +241,7 @@ release:
 
 
     ```bash
-    gh attestation verify ./zen-swarm-{{ .Version }}-darwin-arm64.tar.gz --owner cbip-solutions
+    gh attestation verify ./zen-swarm-{{ .Version }}-darwin-arm64.tar.gz --repo cbip-solutions/hades-system
     cosign verify-blob \
       --certificate-identity-regexp "https://github.com/cbip-solutions/hades-system/.github/workflows/release.yml@.*" \
       --certificate-oidc-issuer https://token.actions.githubusercontent.com \

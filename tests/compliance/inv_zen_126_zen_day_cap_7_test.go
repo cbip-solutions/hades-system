@@ -1,16 +1,16 @@
-// Package compliance — inv-zen-126: zen day brief output enforces a
+// Package compliance — invariant: zen day brief output enforces a
 // 7-item HARD cap. Defense-in-depth: a compile-time anchor (sentinel
-// error referencing "inv-zen-126" + the literal MaxBriefItems = 7
+// error referencing "invariant" + the literal MaxBriefItems = 7
 // constant) plus a runtime panic in zenday.Render() when the slice
 // length exceeds the cap.
 //
-// Spec §1 Q14 B + §7.2 inv-zen-126 wording (Plan 7 Phase F):
+// Spec §1 Q14 B + §7.2 invariant wording:
 //
-//	"zen day brief output enforces 7-item hard cap. Compile-check via
-//	 _ = zenDayCap7Sentinel() anchor + const MaxBriefItems = 7
-//	 exported constant; runtime via Render() asserts
-//	 len(doc.Items) <= MaxBriefItems BEFORE writing markdown body,
-//	 panics otherwise (defense-in-depth Layer 2 per spec §7.3)."
+// "zen day brief output enforces 7-item hard cap. Compile-check via
+// _ = zenDayCap7Sentinel() anchor + const MaxBriefItems = 7
+// exported constant; runtime via Render() asserts
+// len(doc.Items) <= MaxBriefItems BEFORE writing markdown body,
+// panics otherwise (defense-in-depth Layer 2 per spec §7.3)."
 //
 // In-package coverage in internal/zenday/render_test.go pins the panic
 // message format on n=8 (just-over-cap); this cross-package boundary
@@ -21,27 +21,27 @@
 //
 // Coverage matrix:
 //
-//	(a) Adversarial item counts {8, 50, 500, 7777} — Render MUST panic
-//	    for every count > MaxBriefItems; the panic value MUST contain
-//	    "inv-zen-126" so observability tooling (and the operator's logs)
-//	    can route on the wire-stable substring per spec §7.3.
-//	(b) MaxBriefItems pinned to 7 — the exported constant is a
-//	    user-observable contract surface and must NOT drift; pinning
-//	    catches a stealth narrow-or-widen of the cap, which would
-//	    silently change brief output without a compliance failure.
-//	(c) Sentinel error string contains both "inv-zen-126" and
-//	    "MaxBriefItems = 7" — the verify-invariants grep target uses
-//	    this string as the static-anchor witness; collapsing or
-//	    rewording the sentinel breaks the cross-language audit trail.
-//	(d) Compile-time anchor reachable — exposing the sentinel via
-//	    zenday.Cap7SentinelForTest() proves the symbol is not
-//	    dead-code-stripped and the build retains the anchor across
-//	    cross-package boundaries. Lipo-stripped binaries that drop the
-//	    sentinel would fail this assertion at build time.
-//	(e) Boundary case n=7 (at-cap, valid) — Render MUST NOT panic on
-//	    exactly MaxBriefItems items; closes the cap-off-by-one loop.
+// (a) Adversarial item counts {8, 50, 500, 7777} — Render MUST panic
+// for every count > MaxBriefItems; the panic value MUST contain
+// "invariant" so observability tooling (and the operator's logs)
+// can route on the wire-stable substring per spec §7.3.
+// (b) MaxBriefItems pinned to 7 — the exported constant is a
+// user-observable contract surface and must NOT drift; pinning
+// catches a stealth narrow-or-widen of the cap, which would
+// silently change brief output without a compliance failure.
+// (c) Sentinel error string contains both "invariant" and
+// "MaxBriefItems = 7" — the verify-invariants grep target uses
+// this string as the static-anchor witness; collapsing or
+// rewording the sentinel breaks the cross-language audit trail.
+// (d) Compile-time anchor reachable — exposing the sentinel via
+// zenday.Cap7SentinelForTest() proves the symbol is not
+// dead-code-stripped and the build retains the anchor across
+// cross-package boundaries. Lipo-stripped binaries that drop the
+// sentinel would fail this assertion at build time.
+// (e) Boundary case n=7 (at-cap, valid) — Render MUST NOT panic on
+// exactly MaxBriefItems items; closes the cap-off-by-one loop.
 //
-// Boundary (inv-zen-031): this test imports only internal/zenday +
+// Boundary: this test imports only internal/zenday +
 // stdlib. internal/zenday is the load-bearing surface; the
 // dispatcheradapter / store layers are not touched (Render is pure).
 //
@@ -68,7 +68,7 @@ func zenDayCap7AnchorReference() error {
 // counts above MaxBriefItems = 7. For each count, an all-rank-1
 // items slice (legal sort order; the only failing invariant is the cap)
 // is constructed; Render MUST panic with a message containing the
-// "inv-zen-126" substring so observability can route on it. The cases
+// "invariant" substring so observability can route on it. The cases
 // span "just-over-cap" (8), "tens" (50), "hundreds" (500), and "well
 // past any plausible volume" (7777) — proving the runtime guard does
 // not degrade as item count grows.

@@ -1,35 +1,35 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — adr.go (Plan 9 Phase H Task H-3).
+// Package handlers — adr.go.
 //
-// 9 NEW operator-facing ADR endpoints surfacing Phase E substrate
+// 9 NEW operator-facing ADR endpoints surfacing substrate
 // (Structured MADR machine-readable index per Q7 A) over /v1/adr/*.
-// inv-zen-146: write endpoints (accept/reject/supersede) require non-empty
-// reason — 400 on violation. inv-zen-031: handler never imports
+// invariant: write endpoints (accept/reject/supersede) require non-empty
+// reason — 400 on violation. invariant: handler never imports
 // internal/store. Wire types (ADRDoc, ADRListFilter, ADRGraph, ADRTransition,
 // ADRManifest) are declared locally to keep the handler boundary decoupled
-// from internal/adr — Phase H-10 wires *daemon.Server to satisfy ADRIndex
+// from internal/adr — wires *daemon.Server to satisfy ADRIndex
 // via the production adr.Index implementation.
 //
-//	POST /v1/adr/propose    — draft + auto-assigned ID (non-interactive; CLI phase I prompts $EDITOR)
-//	GET  /v1/adr/show       — render frontmatter + body
-//	GET  /v1/adr/list       — filter by status/plan/risk_level
-//	GET  /v1/adr/graph      — supersede chain DAG (nodes + edges)
-//	GET  /v1/adr/history    — transition log for one ADR
-//	POST /v1/adr/accept     — emit adr.accepted event (reason mandatory; inv-zen-146)
-//	POST /v1/adr/reject     — emit adr.rejected event (reason mandatory)
-//	POST /v1/adr/supersede  — link old→new chain + emit adr.superseded (reason mandatory)
-//	POST /v1/adr/index      — regenerate dual manifest (check=true for CI gate dry-run)
+// POST /v1/adr/propose — draft + auto-assigned ID (non-interactive; CLI phase I prompts $EDITOR)
+// GET /v1/adr/show — render frontmatter + body
+// GET /v1/adr/list — filter by status/plan/risk_level
+// GET /v1/adr/graph — supersede chain DAG (nodes + edges)
+// GET /v1/adr/history — transition log for one ADR
+// POST /v1/adr/accept — emit adr.accepted event
+// POST /v1/adr/reject — emit adr.rejected event (reason mandatory)
+// POST /v1/adr/supersede — link old→new chain + emit adr.superseded (reason mandatory)
+// POST /v1/adr/index — regenerate dual manifest (check=true for CI gate dry-run)
 //
-// Graceful degradation (Plan 2 pattern): any nil ADRIndex passed to a
+// Graceful degradation: any nil ADRIndex passed to a
 // constructor returns an http.HandlerFunc that immediately responds with
 // HTTP 503 {"error":"feature not configured","code":"plan9_adr_unavailable"}.
-// Phase H-10 wires *daemon.Server once the Phase E adr.Index adapter is
+// wires *daemon.Server once the adr.Index adapter is
 // available; during development the 503 makes intent explicit.
 //
 // Boundary invariants:
 //
-//	inv-zen-031: handler never imports internal/store directly.
-//	inv-zen-146: accept/reject/supersede require non-empty reason; 400 on violation.
+// invariant: handler never imports internal/store directly.
+// invariant: accept/reject/supersede require non-empty reason; 400 on violation.
 package handlers
 
 import (
@@ -89,7 +89,7 @@ type ADRManifest struct {
 }
 
 type ADRCtx interface {
-	Propose(ctx context.Context, topic string) (ADRDoc, error)
+	Propose(ctx context.Context, topic, planRange string) (ADRDoc, error)
 
 	Show(ctx context.Context, id string) (ADRDoc, error)
 
@@ -134,7 +134,7 @@ func ADRPropose(s ADRCtx) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "topic required"})
 			return
 		}
-		doc, err := s.Propose(r.Context(), req.Topic)
+		doc, err := s.Propose(r.Context(), req.Topic, req.PlanRange)
 		if err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			return

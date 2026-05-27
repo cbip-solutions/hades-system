@@ -71,19 +71,19 @@ func TestInvZen129_KnowledgePackageHasNoTransitiveNetHTTP(t *testing.T) {
 // path), and calls Execute with Remote=true. The returned error MUST
 // satisfy two predicates:
 //
-//	(i)  errors.Is(err, knowledge.ErrRemoteNotShipped) — the typed
-//	     sentinel is preserved across the wrapping chain, so callers
-//	     can `errors.Is`-check at any layer (CLI, daemon HTTP, tests).
-//	(ii) The message contains "not yet shipped" AND "Plan 14" — the
-//	     deferred-message wording is operator-facing UX, surfaced by
-//	     the CLI G-12 layer. A refactor that drops "Plan 14" from the
-//	     sentinel would break the operator's roadmap-pointer
-//	     expectation; a refactor that drops "not yet shipped" would
-//	     mute the deferred-message clarity.
+// (i) errors.Is(err, knowledge.ErrRemoteNotShipped) — the typed
+// sentinel is preserved across the wrapping chain, so callers
+// can `errors.Is`-check at any layer (CLI, daemon HTTP, tests).
+// (ii) The message contains "not yet shipped" AND "" — the
+// deferred-message wording is operator-facing UX, surfaced by
+// the CLI G-12 layer. A refactor that drops "" from the
+// sentinel would break the operator's roadmap-pointer
+// expectation; a refactor that drops "not yet shipped" would
+// mute the deferred-message clarity.
 //
 // The wording assertion is intentionally permissive (substring match)
 // so a future spec revision can extend the sentinel (e.g., "shipping
-// in 2027 alongside Plan 14 Phase G") without breaking this test, as
+// in 2027 alongside ") without breaking this test, as
 // long as the two anchor phrases remain.
 func TestInvZen129_RemoteFlagReturnsErrRemoteNotShipped(t *testing.T) {
 	db := openKnowledgeIndexForTest(t)

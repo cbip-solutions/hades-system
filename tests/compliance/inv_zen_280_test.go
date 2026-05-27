@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_280_test.go
 //
-// Compliance gate for inv-zen-280 (Plan v0.20.0 Phase A): mcpgateway
+// Compliance gate for invariant: mcpgateway
 // HTTP ingress accepts project_id from BOTH the X-Zen-Project-ID header
 // AND the body arguments.project_id. The header takes precedence; the
 // body args is the fallback for clients that cannot set HTTP headers
@@ -9,23 +9,23 @@
 //
 // Three anchors per phase plan §Task A-5:
 //
-//  1. source-regex 1: `internal/daemon/mcpgateway/server.go` contains
-//     the `params.Arguments["project_id"]` literal that performs the
-//     body-args extraction.
-//  2. source-regex 2: the precedence pattern
-//     `rawProjectID == "" && params.Arguments != nil` is present —
-//     this is the load-bearing branch that consults body args only when
-//     the header is absent (NOT a different order, which would
-//     accidentally override the header).
-//  3. behavioural test: an in-process httptest.Server with the gateway
-//     dispatches three requests (header-only / body-only / both); the
-//     CallRequest.ProjectID delivered to the downstream handler MUST
-//     match the per-test expectation.
+// 1. source-regex 1: `internal/daemon/mcpgateway/server.go` contains
+// the `params.Arguments["project_id"]` literal that performs the
+// body-args extraction.
+// 2. source-regex 2: the precedence pattern
+// `rawProjectID == "" && params.Arguments != nil` is present —
+// this is the load-bearing branch that consults body args only when
+// the header is absent (NOT a different order, which would
+// accidentally override the header).
+// 3. behavioural test: an in-process httptest.Server with the gateway
+// dispatches three requests (header-only / body-only / both); the
+// CallRequest.ProjectID delivered to the downstream handler MUST
+// match the per-test expectation.
 //
 // Sister-test pattern (feedback_sister_test_pattern): bite-check is to
 // revert server.go to header-only ingress; this test MUST fail.
 //
-// inv-zen-280 (Plan v0.20.0 Phase A Task A-3 + A-5).
+// invariant.
 package compliance
 
 import (

@@ -6,35 +6,35 @@
 //
 // Q-decisions applied (per spec §1):
 //
-//   - Q2=C — Full 5-lane RRF in this plan (no MVP-then-extend)
-//   - Q3=C — Aggressive token budgets (max-scope=25k, default=10k, capa-firewall=0)
-//   - Q8=C — Aggressive performance budgets (timeout 2/1/0.5s; concurrency 20/10/5; queue 50)
-//   - Q11=α — Plan 9 D substrate consumption (Stage 0 reality-check applied)
+// - Q2=C — Full 5-lane RRF in this plan (no MVP-then-extend)
+// - Q3=C — Aggressive token budgets (max-scope=25k, default=10k, capa-firewall=0)
+// - Q8=C — Aggressive performance budgets (timeout 2/1/0.5s; concurrency 20/10/5; queue 50)
+// - Q11=α — D substrate consumption
 //
 // Invariants compile-checked + runtime-enforced (per spec §8.2):
 //
-//   - inv-zen-163: augmentation cross-project respects doctrine privacy boundaries
-//   - inv-zen-167: augmentation budget gated via Plan 4 budget MCP
-//   - inv-zen-170: capa-firewall doctrine disables augmentation by default
-//   - inv-zen-171: aggregator queries filter doctrine privacy
-//   - inv-zen-088 (transitively preserved): augmentation flows through daemon
-//   - inv-zen-031 (transitively preserved): no internal/store import
+// - invariant: augmentation cross-project respects doctrine privacy boundaries
+// - invariant: augmentation budget gated budget MCP
+// - invariant: capa-firewall doctrine disables augmentation by default
+// - invariant: aggregator queries filter doctrine privacy
+// - invariant (transitively preserved): augmentation flows through daemon
+// - invariant (transitively preserved): no internal/store import
 //
-// Boundary (inv-zen-031): this package depends ONLY on:
+// Boundary: this package depends ONLY on:
 //
-//   - stdlib
-//   - internal/knowledge/rrf (CGO-free RRF Fuse — Plan 11 Phase C fix-cycle
-//     Important-2; replaces the pre-fix inline 135 LOC and the
-//     pre-fix-cycle planned import of internal/knowledge/aggregator
-//     which transitively pulls CGO mattn/go-sqlite3 — incompatible with
-//     compliance-test fixtures using ncruces/go-sqlite3)
-//   - internal/citation (Plan 11 Phase D Envelope substrate)
+// - stdlib
+// - internal/knowledge/rrf (CGO-free RRF Fuse — fix-cycle
+// Important-2; replaces the pre-fix inline 135 LOC and the
+// pre-fix-cycle planned import of internal/knowledge/aggregator
+// which transitively pulls CGO mattn/go-sqlite3 — incompatible with
+// compliance-test fixtures using ncruces/go-sqlite3)
+// - internal/citation
 //
 // NO internal/store, internal/budget (the BudgetStore seam is satisfied by
 // daemon-side adapter only), internal/knowledge/aggregator (CGO sqlite3
 // driver collision), or internal/daemon/* imports. Compliance test scans
-// go list -deps. Phase C-7 (community_summarize.go) is pure-functional;
-// Phase C-3 (budget_gate.go) consumes via the BudgetStore interface in
+// go list -deps. (community_summarize.go) is pure-functional;
+// (budget_gate.go) consumes via the BudgetStore interface in
 // types.go without importing internal/budget.
 package augment
 

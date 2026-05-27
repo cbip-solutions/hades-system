@@ -1,5 +1,4 @@
-//go:build chaos && cgo
-
+// go:build chaos && cgo
 package chaos
 
 import (
@@ -328,7 +327,7 @@ func TestCaronteBuildBrokenFallsBackToCHAUnderLoad(t *testing.T) {
 	var reindexHardFailed atomic.Bool
 	go func() {
 		defer wg.Done()
-		// Re-index over the BROKEN source. Per inv-zen-234 this MUST NOT
+		// Re-index over the BROKEN source. Per invariant this MUST NOT
 		// hard-fail — it classifies to CHA and serves a sound over-approximation.
 		_, err := resolver.ResolveProject(ctx, projectID, brokenDir)
 		if err != nil {

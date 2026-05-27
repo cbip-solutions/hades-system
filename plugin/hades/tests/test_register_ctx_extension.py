@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""register(ctx) runtime compliance test — Plan 12 Phase B extensions."""
+"""register(ctx) runtime compliance test —   extensions."""
 
 from __future__ import annotations
 
@@ -107,7 +107,7 @@ def test_register_ctx_does_not_raise() -> None:
 
 
 def test_register_ctx_wires_phase_h_prime_baseline() -> None:
-    """Phase H' baseline (Task H'-2/H'-7/H'-8/H'-10) registrations preserved."""
+    """ baseline (Task H'-2/H'-7/H'-8/H'-10) registrations preserved."""
     fake = FakePluginContext()
     mod = _get_module()
     mod.register(fake)
@@ -120,7 +120,7 @@ def test_register_ctx_wires_phase_h_prime_baseline() -> None:
 
 
 def test_register_ctx_wires_plan_12_new_commands() -> None:
-    """All 19 NEW Plan 12 Phase B commands registered."""
+    """All 19 NEW   commands registered."""
     fake = FakePluginContext()
     mod = _get_module()
     mod.register(fake)
@@ -132,7 +132,7 @@ def test_register_ctx_wires_plan_12_new_commands() -> None:
 
 
 def test_register_ctx_wires_plan_12_new_skills() -> None:
-    """All 10 NEW Plan 12 Phase B skills registered."""
+    """All 10 NEW   skills registered."""
     fake = FakePluginContext()
     mod = _get_module()
     mod.register(fake)
@@ -144,7 +144,7 @@ def test_register_ctx_wires_plan_12_new_skills() -> None:
 
 
 def test_register_ctx_total_command_count() -> None:
-    """Total registered commands = Phase H' baseline (3) + Plan 12 NEW (19) + Plan 18c Phase C (1) + Plan 18c Phase D (2) = 25."""
+    """Total registered commands =  baseline (3) +  NEW (19) +   (1) +   (2) = 25."""
                                                                   
     PLAN_18C_D_COMMANDS = {"hades:dashboard", "hades:panel"}
     fake = FakePluginContext()

@@ -1,3 +1,4 @@
+// go:build ignore
 //go:build ignore
 // +build ignore
 
@@ -29,8 +30,8 @@
 //
 // Run:
 //
-//	cd tests/adversarial/ecosystem
-//	go run gen_seed.go
+// cd tests/adversarial/ecosystem
+// go run gen_seed.go
 //
 // Build-tag `ignore` excludes this file from the regular package
 // compilation; only `go run gen_seed.go` reaches it.

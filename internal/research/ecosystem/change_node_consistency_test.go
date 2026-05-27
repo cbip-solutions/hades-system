@@ -1,44 +1,45 @@
+// go:build integration && cgo
 //go:build integration && cgo
 // +build integration,cgo
 
 // Package ecosystem — change_node_consistency_test.go
 //
-// Integration tests for Plan 14 Phase E Task E-7 — Change-node graph
-// consistency verifier (inv-zen-193).
+// Integration tests Task E-7 — Change-node graph
+// consistency verifier.
 //
 // Scope (per E-7 task description):
-//   1. ChangeExtractor.WriteChangeNodes persists []ChangeNode with
-//      inv-zen-193 write-side enforcement (every (version_from, version_to)
-//      pair must have matching ecosystem_versions rows before INSERT).
-//   2. ChangeExtractor.SweepChangeNodes walks ecosystem_changes; asserts
-//      every row's (version_from, version_to) pair has corresponding
-//      ecosystem_versions rows; errors if orphans found. Phase G cron
-//      consumes this weekly.
-//   3. End-to-end pipeline: ParseChangelog → WriteChangeNodes →
-//      Indexer.QueryCrossVersion (E-6 surface) — verifies the full Phase E
-//      data flow lands rows the cross-version pivot can read back.
+// 1. ChangeExtractor.WriteChangeNodes persists []ChangeNode with
+// invariant write-side enforcement (every (version_from, version_to)
+// pair must have matching ecosystem_versions rows before INSERT).
+// 2. ChangeExtractor.SweepChangeNodes walks ecosystem_changes; asserts
+// every row's (version_from, version_to) pair has corresponding
+// ecosystem_versions rows; errors if orphans found. cron
+// consumes this weekly.
+// 3. End-to-end pipeline: ParseChangelog → WriteChangeNodes →
+// Indexer.QueryCrossVersion (E-6 surface) — verifies the full
+// data flow lands rows the cross-version pivot can read back.
 //
-// Drift reconciliation (Stage 0 reality-check 2026-05-18):
-//   1. NewIndexer is 2-value `(*Indexer, error)` and requires non-nil
-//      DB + Chain (E-6 ship + indexer.go:111). Test wires via
-//      fakeAuditEmitter (declared in indexer_test.go same package).
-//   2. Indexer.QueryCrossVersion is 4-arg: `(ctx, packageID, vFrom, vTo)`
-//      with no db parameter — E-6 frozen surface uses idx.opts.DB.
-//   3. package ecosystem (internal) to reuse fakeAuditEmitter — keeps
-//      drift-1 wiring local + avoids re-declaring the audit chain helper
-//      across `package ecosystem_test`.
-//   4. Build tag `integration && cgo` — sqlite3 driver requires CGO and
-//      the test is end-to-end (real DB + real migrations + real SQL),
-//      matching Phase B B-12 + Phase C integration test convention.
-//   5. ApplyMigrations(db) for tight fidelity vs the plan-file's
-//      stripped-down inline schema. Production migrations use
-//      `ecosystem` (not `language`) column and full UNIQUE/FK
-//      constraints — exercising the real schema catches column-name
-//      drift earlier than a synthetic schema would.
+// Drift reconciliation:
+// 1. NewIndexer is 2-value `(*Indexer, error)` and requires non-nil
+// DB + Chain (E-6 ship + indexer.go:111). Test wires via
+// fakeAuditEmitter (declared in indexer_test.go same package).
+// 2. Indexer.QueryCrossVersion is 4-arg: `(ctx, packageID, vFrom, vTo)`
+// with no db parameter — E-6 frozen surface uses idx.opts.DB.
+// 3. package ecosystem (internal) to reuse fakeAuditEmitter — keeps
+// drift-1 wiring local + avoids re-declaring the audit chain helper
+// across `package ecosystem_test`.
+// 4. Build tag `integration && cgo` — sqlite3 driver requires CGO and
+// the test is end-to-end (real DB + real migrations + real SQL),
+// matching B-12 + integration test convention.
+// 5. ApplyMigrations(db) for tight fidelity vs the plan-file's
+// stripped-down inline schema. Production migrations use
+// `ecosystem` (not `language`) column and full UNIQUE/FK
+// constraints — exercising the real schema catches column-name
+// drift earlier than a synthetic schema would.
 //
 // Coverage discipline (CLAUDE.md hard rule 5): `change_extractor.go` is
 // the cross-version graph-write surface, security/correctness-critical
-// for inv-zen-193. Suite aims for ≥85% per-fn coverage on the new
+// for invariant. Suite aims for ≥85% per-fn coverage on the new
 // symbols including defense-in-depth branches (nil DB, empty slice,
 // closed DB, ctx cancellation, partial orphans).
 
@@ -55,7 +56,7 @@ import (
 )
 
 // setupConsistencyTestDB opens a fresh tmp-file SQLite DB with
-// foreign_keys=ON + WAL journal_mode, applies all Phase A migrations,
+// foreign_keys=ON + WAL journal_mode, applies all migrations,
 // and registers cleanup.
 //
 // Why a distinct fixture name vs setupIndexerTestDB / setupQueryTestDB:

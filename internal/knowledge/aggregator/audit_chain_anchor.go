@@ -7,15 +7,15 @@
 // and delegates to PerProjectKnowledgeStore.UpdateAuditChainAnchor.
 //
 // Design notes:
-//   - partitionPattern enforces YYYY_MM (e.g. "2026_05"), matching the monthly
-//     audit_events_raw table naming convention from Phase B.
-//   - FillAuditChainAnchor explicitly allows anchor="" (clear semantics) so
-//     unpromote and pre-Plan-9 backfill can clear the column without producing
-//     a parse error on the empty string.
-//   - The boundary (inv-zen-031) is respected: no internal/store import.
-//     All DB access goes through the PerProjectKnowledgeStore interface.
+// - partitionPattern enforces YYYY_MM (e.g. "2026_05"), matching the monthly
+// audit_events_raw table naming convention from
+// - FillAuditChainAnchor explicitly allows anchor="" (clear semantics) so
+// unpromote and pre- backfill can clear the column without producing
+// a parse error on the empty string.
+// - The boundary is respected: no internal/store import.
+// All DB access goes through the PerProjectKnowledgeStore interface.
 //
-// Phase ownership: D-11. Phase B will wire a real ChainAnchorComputer at
+// Phase ownership: D-11. will wire a real ChainAnchorComputer at
 // daemon-boot time; FillAuditChainAnchor is the write-back seam that closes
 // the audit-trail loop (per-project knowledge_extension.audit_chain_anchor
 // updated after a successful promote + chain.Compute).

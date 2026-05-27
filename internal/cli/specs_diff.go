@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// specs_diff.go — Plan 14 Phase F Task F-5 subcommand `zen specs diff <id>`.
+// specs_diff.go — Task F-5 subcommand `zen specs diff <id>`.
 //
 // Renders OpenSpec deltas for a change directory. In OpenSpec's canonical
 // layout (openspec/changes/<id>/), the deltas/ subdirectory IS the diff —

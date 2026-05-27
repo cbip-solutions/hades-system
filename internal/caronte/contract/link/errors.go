@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-// Package link is Plan 20's per-workspace contract linker: for every api_calls
+// Package link is per-workspace contract linker: for every api_calls
 // row in scope, it tries the precision-ordered tier chain (artifact → spec →
 // static → fuzzy → unresolved) and either persists a contract_links row
-// (Confidence + LinkMethod per master C-5) through Phase A's federation
-// LinkStore (capa-firewall gated; inv-zen-264) + emits a Plan 14 Tessera
-// audit row via Phase A's federation.AuditEmitter (inv-zen-269), or records
+// (Confidence + LinkMethod per master C-5) through federation
+// LinkStore + emits a Tessera
+// audit row via federation.AuditEmitter, or records
 // an `unresolved` row (per caronte.yaml unresolved_policy; doctrine-default
-// surface; inv-zen-265).
+// surface; invariant).
 //
-// Boundary (inv-zen-031 mirror inv-zen-271): this package NEVER imports
+// Boundary: this package NEVER imports
 // internal/store; it imports only internal/caronte/store (Phase 19 + Plan
-// 20 Phase A/B), internal/caronte/contract/extract (Phase C/D/E), and
-// internal/caronte/contract/yaml (Plan 20 Phase F yaml subpkg).
+// 20 ), internal/caronte/contract/extract, and
+// internal/caronte/contract/yaml.
 package link
 
 import "errors"

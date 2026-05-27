@@ -10,29 +10,29 @@
 // prevents accidental driver double-registration and keeps test binaries
 // linking only what each tier needs.
 //
-// Capabilities (mirror the real Adapter — verified at Plan 9 HEAD against
+// Capabilities (mirror the real Adapter — verified at HEAD against
 // internal/audit/tessera/adapter.go):
 //
-//   - AppendLeaf, AppendSeal, VerifyMerkleInclusion, SubscribeSTH,
-//     Attach, WitnessCoSignSeal, VerifySealSignature, Close — same
-//     signatures + same error sentinels.
-//   - FlushAndPublishSTH — explicit STH publish (faster than real
-//     Tessera's batch-cadence-driven publication).
-//   - SetCorruption — fault injection to simulate disk-level corruption
-//     on a stored leaf; later VerifyMerkleInclusion returns (false, nil)
-//     to surface as a verify-failure rather than a missing-leaf error.
-//   - SetClock — replace the wall clock with a fixed function so STH
-//     timestamps are deterministic in tests.
+// - AppendLeaf, AppendSeal, VerifyMerkleInclusion, SubscribeSTH,
+// Attach, WitnessCoSignSeal, VerifySealSignature, Close — same
+// signatures + same error sentinels.
+// - FlushAndPublishSTH — explicit STH publish (faster than real
+// Tessera's batch-cadence-driven publication).
+// - SetCorruption — fault injection to simulate disk-level corruption
+// on a stored leaf; later VerifyMerkleInclusion returns (false, nil)
+// to surface as a verify-failure rather than a missing-leaf error.
+// - SetClock — replace the wall clock with a fixed function so STH
+// timestamps are deterministic in tests.
 //
 // In-memory storage:
 //
-//   - leaves []tessera.Leaf — append-only slice.
-//   - leafIDs map[LeafID]int — LeafID to index, deterministic format
-//     "mock-<projectID>-<index>" where index = len(leaves) BEFORE append.
-//   - sealCache map[partitionID]LeafID — backs AppendSeal idempotence on
-//     (projectID, partitionID); cross-project rejected before this map
-//     is consulted so the key is unambiguous.
-//   - corrupted map[LeafID]bool — simulated disk-level corruption marks.
+// - leaves []tessera.Leaf — append-only slice.
+// - leafIDs map[LeafID]int — LeafID to index, deterministic format
+// "mock-<projectID>-<index>" where index = len(leaves) BEFORE append.
+// - sealCache map[partitionID]LeafID — backs AppendSeal idempotence on
+// (projectID, partitionID); cross-project rejected before this map
+// is consulted so the key is unambiguous.
+// - corrupted map[LeafID]bool — simulated disk-level corruption marks.
 //
 // Merkle root + inclusion: encodeLeaf serializes a Leaf to canonical
 // bytes (NUL-separated fields, parity-shape to production's
@@ -47,7 +47,7 @@
 // mirroring the real Adapter's hot-path pattern.
 //
 // Boundary: this file lives in tests/testhelpers/tesseramock/ —
-// testhelpers may import internal/* freely (the inv-zen-031 boundary
+// testhelpers may import internal/* freely (the invariant boundary
 // forbids the OPPOSITE direction; assertion enforced at K-17).
 package tesseramock
 

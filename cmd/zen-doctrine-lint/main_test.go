@@ -1,6 +1,6 @@
 // Package main_test verifies the cmd/zen-doctrine-lint golangci-lint module
 // plugin contract per spec §1 Q4 B. The plugin's New constructor MUST return
-// a register.LinterPlugin whose BuildAnalyzers() yields the 3 Plan 8 analyzers
+// a register.LinterPlugin whose BuildAnalyzers() yields the 3 analyzers
 // (nostub, nostore, conventional_commit) in stable order.
 package main
 

@@ -1,3 +1,4 @@
+// go:build !race
 //go:build !race
 // +build !race
 
@@ -153,7 +154,7 @@ func TestADR0068_SystemStateTomlAutoDerivedManualFieldsChainIntegration(t *testi
 		}
 	}
 
-	// inv-zen-149 and inv-zen-151 MUST be cited (spec §7.2 state manifest invariants).
+	// invariant and invariant MUST be cited (spec §7.2 state manifest invariants).
 	for _, inv := range []string{"inv-zen-149", "inv-zen-151"} {
 		if !strings.Contains(bodyStr, inv) {
 			t.Errorf("ADR-0068 missing invariant %q (spec §7.2: state manifest invariants)", inv)
@@ -270,8 +271,8 @@ func TestADR0069_PerPackageCoverageTargetCeilingsUnderFinalFieldSetConstraints(t
 		}
 	}
 
-	// Each Stage 1.X amendment commit SHA MUST be present (load-bearing for audit trail).
-	// These are the 7 commits that form the Path D Stage 1 amendment sequence.
+	// Each amendment commit SHA MUST be present (load-bearing for audit trail).
+	// These are the 7 commits that form the Path D amendment sequence.
 	commitSHAs := []string{
 		"88331a3",
 		"e0e964f",
@@ -402,7 +403,7 @@ func TestADR0069_PerPackageCoverageTargetCeilingsUnderFinalFieldSetConstraints(t
 		t.Errorf("ADR-0069 missing ncruces/go-sqlite3 source reference (SOTA basis for Category 3)")
 	}
 
-	// SOTA references: B-9 CRITICAL-11 Phase B plan file MUST be cited.
+	// SOTA references: B-9 CRITICAL-11 plan file MUST be cited.
 	if !strings.Contains(bodyStr, "plan-9-phase-B-chain-integration") &&
 		!strings.Contains(bodyStr, "Phase B plan file") {
 		t.Errorf("ADR-0069 missing Phase B plan file reference (B-9 CRITICAL-11 source for Category 1)")

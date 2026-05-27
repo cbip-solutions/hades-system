@@ -8,15 +8,15 @@
 // binary is NOT on PATH (or PATH is rewritten to `/nonexistent` for the
 // test subprocess). The bcdetect/graphql.NodeFallback.MaybeRun MUST:
 //
-//   - resolve the binary via exec.LookPath;
-//   - on lookup failure emit ONE forensic audit row with
-//     spawn_outcome="binary_missing" + binary=<resolved name> (inv-zen-272
-//     + D10 mandate: audit even unreachable spawns);
-//   - return an error wrapping `bcdetect.ErrNodeBinaryMissing` (the
-//     actionable typed-error the caller surfaces to the operator);
-//   - NOT mask the goResult's SevInsufficient — the Go-path
-//     classification surfaces at the caller's level even when the
-//     fallback is unreachable.
+// - resolve the binary via exec.LookPath;
+// - on lookup failure emit ONE forensic audit row with
+// spawn_outcome="binary_missing" + binary=<resolved name> (invariant
+// + D10 mandate: audit even unreachable spawns);
+// - return an error wrapping `bcdetect.ErrNodeBinaryMissing` (the
+// actionable typed-error the caller surfaces to the operator);
+// - NOT mask the goResult's SevInsufficient — the Go-path
+// classification surfaces at the caller's level even when the
+// fallback is unreachable.
 //
 // The chaos pattern: many concurrent goroutines each invoke MaybeRun
 // against a path-stripped subprocess environment + assert each call
@@ -24,18 +24,17 @@
 // audit emitter counts emissions; mismatch → failure.
 //
 // Bite-check candidates:
-//   - Comment out the audit.Emit on the binary_missing path → the
-//     audit-count assertion fails.
-//   - Replace `fmt.Errorf("%w: %v", br.ErrNodeBinaryMissing, lookErr)`
-//     with bare `lookErr` → the errors.Is assertion fails (the typed
-//     error chain is broken).
+// - Comment out the audit.Emit on the binary_missing path → the
+// audit-count assertion fails.
+// - Replace `fmt.Errorf("%w: %v", br.ErrNodeBinaryMissing, lookErr)`
+// with bare `lookErr` → the errors.Is assertion fails (the typed
+// error chain is broken).
 //
 // Why TDD via revert-impl bite-check: the typed-error + audit-trail
 // behavior is the spec contract; this test pins it under concurrency
 // stress.
 
-//go:build chaos && cgo
-
+// go:build chaos && cgo
 package chaos
 
 import (

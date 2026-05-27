@@ -212,8 +212,8 @@ func TestReleaseWorkflowGoVersionPinned(t *testing.T) {
 	w := loadWorkflow(t, filepath.Join(root, ".github", "workflows", "release.yml"))
 
 	if envVer, ok := w.Env["GO_VERSION"]; ok {
-		if !strings.HasPrefix(envVer, "1.25") {
-			t.Errorf("workflow env.GO_VERSION=%q; want 1.25.x", envVer)
+		if !strings.HasPrefix(envVer, "1.26") {
+			t.Errorf("workflow env.GO_VERSION=%q; want 1.26.x", envVer)
 		}
 		return
 	}
@@ -232,8 +232,8 @@ func TestReleaseWorkflowGoVersionPinned(t *testing.T) {
 				found = true
 				continue
 			}
-			if !strings.HasPrefix(ver, "1.25") {
-				t.Errorf("job %s setup-go go-version=%q; want 1.25.x", jobName, ver)
+			if !strings.HasPrefix(ver, "1.26") {
+				t.Errorf("job %s setup-go go-version=%q; want 1.26.x", jobName, ver)
 			} else {
 				found = true
 			}

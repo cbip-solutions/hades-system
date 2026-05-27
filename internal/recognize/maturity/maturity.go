@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package maturity probes git + CI signals to surface project-maturity hints
-// per spec §4.2. Used by Phase B B6 orchestrator to enrich recognize.Result.
+// per spec §4.2. Used by B6 orchestrator to enrich recognize.Result.
 //
 // Strategy shell out to git for commit count + last-commit timestamp;
 // glob filesystem for CI files. Graceful zero-value on probe failure (not a
 // git repo, git missing, ctx cancelled) — downstream sees CommitCount=-1
 // signalling "we don't know".
 //
-// Per inv-zen-031 boundary discipline: this package does NOT import
+// Per invariant boundary discipline: this package does NOT import
 // internal/store; stdlib os/exec + os.Stat only.
 package maturity
 

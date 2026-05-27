@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package scheduleradapter — translate.go (Plan 7 Phase D Task D-13).
+// Package scheduleradapter — translate.go.
 //
 // Translation layer between scheduler.Schedule (canonical Go domain
 // type with typed enums) and store.ScheduleRow (SQLite-flat
 // representation with int enums + JSON-encoded TriggerConfig).
 //
-// inv-zen-031 boundary: this is the SINGLE bridge point between the
+// invariant boundary: this is the SINGLE bridge point between the
 // scheduler domain and SQLite persistence. internal/scheduler/* never
 // imports internal/store; the daemon-side handler stack consumes
 // scheduler.Schedule through the *Adapter satisfying the
@@ -18,19 +18,19 @@
 // boundary is preserved AT THE INTERFACE LEVEL, not via runtime cast.
 //
 // Encoding choices (load-bearing):
-//   - TriggerConfig is marshalled as JSON with empty-field elision
-//     (the zero scheduler.TriggerConfig must round-trip cleanly).
-//   - Time conversions are direct: scheduler.Schedule uses time.Time
-//     unzoned; store.ScheduleRow stores unix-seconds. Both adapters
-//     normalise to UTC.
-//   - Enum casts are int(scheduler.Tier) etc.; the constants share
-//     wire integer values across both packages.
+// - TriggerConfig is marshalled as JSON with empty-field elision
+// (the zero scheduler.TriggerConfig must round-trip cleanly).
+// - Time conversions are direct: scheduler.Schedule uses time.Time
+// unzoned; store.ScheduleRow stores unix-seconds. Both adapters
+// normalise to UTC.
+// - Enum casts are int(scheduler.Tier) etc.; the constants share
+// wire integer values across both packages.
 //
 // On miss semantics (callers branch on nil):
-//   - Get returns (nil, nil) when the underlying store row is absent.
-//   - SoftDelete returns nil when the row is already gone (idempotent).
-//   - List + ListDue return ([]*scheduler.Schedule{}, nil) on no rows
-//     (empty non-nil slice — stable len() semantics for handler render).
+// - Get returns (nil, nil) when the underlying store row is absent.
+// - SoftDelete returns nil when the row is already gone (idempotent).
+// - List + ListDue return ([]*scheduler.Schedule{}, nil) on no rows
+// (empty non-nil slice — stable len() semantics for handler render).
 
 package scheduleradapter
 

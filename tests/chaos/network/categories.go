@@ -1,4 +1,4 @@
-//go:build chaos
+// go:build chaos
 
 // SPDX-License-Identifier: MIT
 
@@ -16,7 +16,7 @@ import (
 // / partial-read path; a CORRUPT-class fault triggers the response-
 // validation / re-issue path.
 //
-// Per inv-zen-305 the 10-toxic taxonomy must be exhaustive — every
+// Per invariant the 10-toxic taxonomy must be exhaustive — every
 // canonical ToxicType MUST map to exactly one Category, and the union
 // of categories MUST equal AllToxicTypes(). The test
 // TestCategoriesPartitionAllToxicTypes pins this; a new toxic type

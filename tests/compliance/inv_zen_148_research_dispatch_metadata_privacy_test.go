@@ -1,15 +1,15 @@
 // tests/compliance/inv_zen_148_research_dispatch_metadata_privacy_test.go
 //
-// Compliance gate for inv-zen-148 (research dispatch metadata privacy):
+// Compliance gate for invariant (research dispatch metadata privacy):
 // every public lookup entry-point in internal/research/cache MUST contain a
 // project_id guard that returns ErrProjectIDRequired when project_id is empty.
 //
-// Invariant text (inv-zen-148):
+// Invariant text:
 //
-//	"The research cache MUST record the invoking project's identity
-//	 (project_id) on every dispatch and cache-hit.  An empty project_id
-//	 MUST be rejected at the API boundary — ErrProjectIDRequired — so that
-//	 the audit trail is never populated with anonymous lookups."
+// "The research cache MUST record the invoking project's identity
+// (project_id) on every dispatch and cache-hit. An empty project_id
+// MUST be rejected at the API boundary — ErrProjectIDRequired — so that
+// the audit trail is never populated with anonymous lookups."
 //
 // Implementation strategy:
 //
@@ -17,35 +17,35 @@
 // tests/compliance package links github.com/ncruces/go-sqlite3/driver (via
 // inv_zen_073_test.go) while internal/research/cache uses mattn/go-sqlite3.
 // Registering both drivers in the same binary panics ("Register called twice
-// for driver sqlite3").  The AST approach is equivalent for compliance purposes:
+// for driver sqlite3"). The AST approach is equivalent for compliance purposes:
 // it verifies that the guard is *structurally present* in every entry-point,
-// which is the load-bearing invariant (inv-zen-148 is about the source-code
+// which is the load-bearing invariant (invariant is about the source-code
 // contract, not runtime state).
 //
 // Four entry-points are verified, covering the complete public lookup surface:
 //
-//  1. LookupExact (lookup_exact.go) — exact hash match (spec §3.5 Step 1).
-//  2. LookupSemantic (lookup_semantic.go) — KNN embedding match (spec §3.5 Step 2).
-//  3. Lookup (lookup.go) — exact-then-semantic façade (spec §3.5).
-//  4. Dispatcher.LookupOrDispatch (dispatcher.go) — full cache+dispatch pipeline.
+// 1. LookupExact (lookup_exact.go) — exact hash match (spec §3.5 Step 1).
+// 2. LookupSemantic (lookup_semantic.go) — KNN embedding match (spec §3.5 Step 2).
+// 3. Lookup (lookup.go) — exact-then-semantic façade (spec §3.5).
+// 4. Dispatcher.LookupOrDispatch (dispatcher.go) — full cache+dispatch pipeline.
 //
 // For each file the test asserts:
 //
-//   - ErrProjectIDRequired sentinel is defined (errors.New(...)) OR referenced.
+// - ErrProjectIDRequired sentinel is defined (errors.New(...)) OR referenced.
 //
-//   - The function body contains a projectID / ProjectID / req.ProjectID == ""
-//     guard that references ErrProjectIDRequired (AST-level presence check).
+// - The function body contains a projectID / ProjectID / req.ProjectID == ""
+// guard that references ErrProjectIDRequired (AST-level presence check).
 //
-//     Plan-file requested a single TestInvZen148DispatchMetadataPrivacyEmptyRejected
-//     exercising cache.QueryDispatches(ctx, DispatchQuery{ProjectID:""})
-//     at runtime. That runtime path requires importing internal/research/
-//     cache + linking mattn/go-sqlite3, which collides with the
-//     compliance package's ncruces driver registration (see the
-//     driver-conflict comment above this header). The AST-level
-//     structural test below verifies all FOUR public lookup entry-points
-//     carry the ErrProjectIDRequired guard — strictly more comprehensive
-//     than the single runtime call the plan-file requested, and immune
-//     to driver-link conflicts. No extension needed.
+// Plan-file requested a single TestInvZen148DispatchMetadataPrivacyEmptyRejected
+// exercising cache.QueryDispatches(ctx, DispatchQuery{ProjectID:""})
+// at runtime. That runtime path requires importing internal/research/
+// cache + linking mattn/go-sqlite3, which collides with the
+// compliance package's ncruces driver registration (see the
+// driver-conflict comment above this header). The AST-level
+// structural test below verifies all FOUR public lookup entry-points
+// carry the ErrProjectIDRequired guard — strictly more comprehensive
+// than the single runtime call the plan-file requested, and immune
+// to driver-link conflicts. No extension needed.
 package compliance
 
 import (
@@ -90,22 +90,22 @@ func TestInvZen148LookupOrDispatchRequiresProjectID(t *testing.T) {
 }
 
 // checkInv148EntryPointOrDelegate is a variant of checkInv148EntryPoint for
-// functions that enforce inv-zen-148 by delegation: the function body MUST
+// functions that enforce invariant by delegation: the function body MUST
 // call delegateFunc (which carries the direct ErrProjectIDRequired guard).
 // This covers Lookup → LookupExact: Lookup propagates errors from LookupExact
 // including ErrProjectIDRequired, so the guard is not bypassed.
 //
 // The test asserts two things:
-//  1. delegateFunc call is present in the function body (the guard path is not
-//     bypassed by an early return that skips the delegating call).
-//  2. No early-return path exists that would skip the delegating call when
-//     projectID is empty (AST-level: we verify there is no `if projectID == ""`
-//     that returns a non-ErrProjectIDRequired error before the delegate call).
+// 1. delegateFunc call is present in the function body (the guard path is not
+// bypassed by an early return that skips the delegating call).
+// 2. No early-return path exists that would skip the delegating call when
+// projectID is empty (AST-level: we verify there is no `if projectID == ""`
+// that returns a non-ErrProjectIDRequired error before the delegate call).
 //
 // NOTE(plan-15): assertion (2) is omitted in this implementation — a full control-
 //
-//	flow analysis is out of scope for an AST-level compliance gate.  The unit
-//	tests in internal/research/cache/ cover the runtime behaviour directly.
+// flow analysis is out of scope for an AST-level compliance gate. The unit
+// tests in internal/research/cache/ cover the runtime behaviour directly.
 func checkInv148EntryPointOrDelegate(t *testing.T, ep inv148EntryPoint, delegateFunc string) {
 	t.Helper()
 	root := repoRoot(t)

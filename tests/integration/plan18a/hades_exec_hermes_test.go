@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18a_integration_test
 
 import (
@@ -84,7 +83,7 @@ func TestPlan18aFoundation_HadesNoWizardFlag(t *testing.T) {
 	if invs[0].Env["HADES_NO_WIZARD"] != "1" {
 		t.Errorf("HADES_NO_WIZARD=%q; want \"1\"", invs[0].Env["HADES_NO_WIZARD"])
 	}
-	// Sister-property: --no-wizard MUST be stripped from args (Phase A
+	// Sister-property: --no-wizard MUST be stripped from args (
 	// strips it before exec; the flag is wrapper-scoped, not hermes-scoped).
 	if len(invs[0].Argv) != 1 {
 		t.Errorf("stub hermes received argv=%v; want exactly 1 element (--no-wizard stripped)", invs[0].Argv)

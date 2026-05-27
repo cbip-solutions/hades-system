@@ -4,13 +4,13 @@
 // internal/doctrine/schema/v1/. These namespaces register via init()
 // into the open-extension schema registry.
 //
-// Tighten direction enforced per inv-zen-136: per-project overrides
+// Tighten direction enforced per invariant: per-project overrides
 // MAY tighten the doctrine baseline; loosening is rejected at parse.
 //
-// inv-zen-146 (knowledge.aggregator.promote_required_reason): LOCKED IN to
+// invariant (knowledge.aggregator.promote_required_reason): LOCKED IN to
 // true — operator override CANNOT set to false; validator REJECTS at parse.
 //
-// Boundary (inv-zen-133 pattern): this file imports only stdlib + BurntSushi
+// Boundary: this file imports only stdlib + BurntSushi
 // toml. No imports of internal/store, internal/orchestrator, etc.
 package doctrine
 
@@ -52,7 +52,7 @@ type ResearchCacheConfig struct {
 }
 
 type KnowledgeAggregatorConfig struct {
-	// PromoteRequiredReason is LOCKED IN per inv-zen-146: operator-gated promote
+	// PromoteRequiredReason is LOCKED IN per invariant: operator-gated promote
 	// REQUIRES a reason field. MUST be true. Validator rejects false at parse.
 	PromoteRequiredReason bool `toml:"promote_required_reason"`
 }
@@ -131,7 +131,7 @@ func ParseFullDoctrine(src string) (*DoctrineSchemaP9, error) {
 		return nil, fmt.Errorf("ParseFullDoctrine: %w", err)
 	}
 
-	// inv-zen-146: knowledge.aggregator.promote_required_reason MUST be true.
+	// invariant: knowledge.aggregator.promote_required_reason MUST be true.
 	if err := ValidateKnowledgeAggregatorConfig(wrapper.Knowledge.Aggregator); err != nil {
 		return nil, fmt.Errorf("ParseFullDoctrine: %w", err)
 	}
@@ -262,7 +262,7 @@ func ValidateResearchCacheTighten(baseline, override ResearchCacheConfig) error 
 	return nil
 }
 
-// ValidateKnowledgeAggregatorConfig enforces inv-zen-146:
+// ValidateKnowledgeAggregatorConfig enforces invariant:
 // promote_required_reason MUST be true. Returns error if false.
 func ValidateKnowledgeAggregatorConfig(cfg KnowledgeAggregatorConfig) error {
 	if !cfg.PromoteRequiredReason {

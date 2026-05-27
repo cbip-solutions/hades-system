@@ -1,3 +1,4 @@
+// go:build chaos && cgo
 //go:build chaos && cgo
 // +build chaos,cgo
 
@@ -31,12 +32,12 @@ import (
 // Recovery contract: cmd/zen-swarm-ctld/main.go calls chain.Backfill at
 // boot (C-fix-4); previously-unchained rows get prev_hash + record_hash
 // + partition_id set on restart. tessera_leaf_id remains NULL for rows
-// whose batch hadn't flushed pre-kill — recovered by Phase J's
-// recovery sweep (post-Plan-9 ships).
+// whose batch hadn't flushed pre-kill — recovered by
+// recovery sweep.
 //
 // This test verifies the BACKFILL contract: data on disk before crash
 // is recoverable post-crash. We do NOT verify tessera_leaf_id presence
-// here (that is the Phase J scope); we only assert chain integrity.
+// here; we only assert chain integrity.
 func TestChaos_KillDaemonMidBatch(t *testing.T) {
 	t.Setenv("ZEN_BYPASS_DISABLE_KEYCHAIN", "1")
 

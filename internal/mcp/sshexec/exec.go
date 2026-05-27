@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/exec.go
 //
-// Phase L Tasks L-5 (basic exec) + L-6 (streaming + truncation) +
+// Tasks L-5 (basic exec) + L-6 (streaming + truncation) +
 // L-7 wiring (interactive detector hook).
 //
 // Hard rules enforced by this file:
-//   - golang.org/x/crypto/ssh direct only; NO os/exec import.
-//   - SSH agent only via SSH_AUTH_SOCK; NEVER read ~/.ssh/*.
-//   - Run signature requires ValidationResult with OK=true (compile-check
-//     anchor for inv-zen-082).
-//   - PTY=false on every session (no interactive shells; sess.RequestPty
-//     never called).
+// - golang.org/x/crypto/ssh direct only; NO os/exec import.
+// - SSH credentials come only from SSH_AUTH_SOCK; private keys are
+// never read from disk.
+// - Host keys are verified through known_hosts unless the test-only
+// ZEN_SSH_INSECURE_TEST=1 escape is set.
+// - Run signature requires ValidationResult with OK=true (compile-check
+// anchor for invariant).
+// - PTY=false on every session (no interactive shells; sess.RequestPty
+// never called).
 
 package sshexec
 
@@ -21,12 +24,15 @@ import (
 	"io"
 	"net"
 	"os"
+	"path/filepath"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
 
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
+	"golang.org/x/crypto/ssh/knownhosts"
 )
 
 type AuthMethod struct {
@@ -373,10 +379,53 @@ func hostKeyCallback() ssh.HostKeyCallback {
 	if os.Getenv("ZEN_SSH_INSECURE_TEST") == "1" {
 		return ssh.InsecureIgnoreHostKey()
 	}
-
-	return func(hostname string, remote net.Addr, key ssh.PublicKey) error {
-		return errors.New("known_hosts unavailable; refusing to connect (set ZEN_SSH_INSECURE_TEST=1 only for tests)")
+	paths := knownHostsPaths()
+	if len(paths) == 0 {
+		return func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+			return errors.New("known_hosts unavailable; set ZEN_SSH_KNOWN_HOSTS or create ~/.ssh/known_hosts")
+		}
 	}
+	cb, err := knownhosts.New(paths...)
+	if err == nil {
+		return cb
+	}
+	msg := "known_hosts unavailable at " + strings.Join(paths, ", ") + ": " + err.Error()
+	return func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+		return errors.New(msg)
+	}
+}
+
+func knownHostsPaths() []string {
+	if raw := os.Getenv("ZEN_SSH_KNOWN_HOSTS"); raw != "" {
+		return splitKnownHostsEnv(raw)
+	}
+	home, err := os.UserHomeDir()
+	if err != nil || home == "" {
+		return nil
+	}
+	candidates := []string{
+		filepath.Join(home, ".ssh", "known_hosts"),
+		filepath.Join(home, ".ssh", "known_hosts2"),
+	}
+	var existing []string
+	for _, path := range candidates {
+		if _, err := os.Stat(path); err == nil {
+			existing = append(existing, path)
+		}
+	}
+	return existing
+}
+
+func splitKnownHostsEnv(raw string) []string {
+	parts := strings.Split(raw, string(os.PathListSeparator))
+	paths := make([]string, 0, len(parts))
+	for _, part := range parts {
+		part = strings.TrimSpace(part)
+		if part != "" {
+			paths = append(paths, part)
+		}
+	}
+	return paths
 }
 
 func sshUserFromEnv() string {

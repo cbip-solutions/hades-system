@@ -1,4 +1,4 @@
-//go:build integration
+// go:build integration
 
 package augment_integration_test
 
@@ -578,7 +578,7 @@ func (*e2eChainEventStore) BackfillScan(_ context.Context, _ int64, _ int) ([]ch
 // for 100% of events because augment used NUL-byte separators + nano
 // timestamps while chain.Compute uses pipe + unix-seconds.
 //
-// Phase C fix-cycle Critical-1 + Critical-2 + Important-4 + Important-7
+// fix-cycle Critical-1 + Critical-2 + Important-4 + Important-7
 // closure proof: this test passes ONLY when ALL four bugs are closed.
 func TestAugmentE2E_ChainWalkerVerifiesAllEvents(t *testing.T) {
 	env := setupE2E(t)

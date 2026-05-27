@@ -464,8 +464,8 @@ func TestPackageSingleton_ClearForProject(t *testing.T) {
 	}
 }
 
-// TestAccessor_ByName_ResolvesEachRegisteredName covers the Plan 11
-// Phase C fix-cycle Critical-3 contract: callers that hold an opaque
+// TestAccessor_ByName_ResolvesEachRegisteredName covers the
+// fix-cycle Critical-3 contract: callers that hold an opaque
 // doctrine name (e.g. augment.Pipeline reads req.Doctrine == "default"
 // while the daemon userDefault is "max-scope") MUST be able to resolve
 // that name against the registry, NOT silently get the userDefault

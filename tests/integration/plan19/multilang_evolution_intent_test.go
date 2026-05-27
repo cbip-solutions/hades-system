@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan19
 
 import (
@@ -141,16 +140,16 @@ func seedGetWhyData(t *testing.T, projectDir, nodeID, adrID, loreBody string) {
 }
 
 // TestMultiLangParseAndResolve starts the daemon with a fixture containing
-// TS + Python + Rust files and asserts (spec §5/§6/inv-zen-234):
-//   - The daemon boots and the caronte gateway answers (no hard-fail on missing
-//     SCIP indexer binaries — inv-zen-234).
-//   - get_health reports NodeCount=0 (empty graph, not an error) — the multi-lang
-//     files are present in the fixture but not indexed (no index path in the daemon).
-//   - The SCIP-tier assertion (scip_impl confidence) is logged-and-skipped when
-//     the indexer binary is absent (CI posture).
+// TS + Python + Rust files and asserts:
+// - The daemon boots and the caronte gateway answers (no hard-fail on missing
+// SCIP indexer binaries — invariant).
+// - get_health reports NodeCount=0 (empty graph, not an error) — the multi-lang
+// files are present in the fixture but not indexed (no index path in the daemon).
+// - The SCIP-tier assertion (scip_impl confidence) is logged-and-skipped when
+// the indexer binary is absent (CI posture).
 //
 // Sister-test: the daemon MUST NOT os.Exit on missing SCIP binaries. The daemon
-// booting and answering tools/list IS the inv-zen-234 witness — if the engine
+// booting and answering tools/list IS the invariant witness — if the engine
 // hard-failed on a missing indexer, the daemon would exit before the test
 // reaches any assertion.
 func TestMultiLangParseAndResolve(t *testing.T) {

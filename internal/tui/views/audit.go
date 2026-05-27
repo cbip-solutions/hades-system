@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package views — audit.go (Plan 12 Phase C Task C-7, F4 panel).
+// Package views — audit.go.
 //
-// Audit chain stream with Tessera anchoring (Plan 9). Live data from
+// Audit chain stream with Tessera anchoring. Live data from
 // /v1/audit/events (recent rolling window).
 package views
 

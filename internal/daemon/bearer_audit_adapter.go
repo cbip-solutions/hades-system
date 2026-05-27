@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// bearer_audit_adapter.go — Plan 7 Phase I Task I-9 production
+// bearer_audit_adapter.go — Task I-9 production
 // auth.AuditEmitter adapter. The auth package's middleware emits
 // authentication-failure events through the abstract auth.AuditEmitter
 // interface (Emit(ctx, map[string]any) error); production wires a real
@@ -21,7 +21,7 @@
 // slog is the canonical surface (ops grep daemon.log for
 // "auth: bearer mismatch" / "auth: schedule_not_found" lines).
 //
-// inv-zen-031 boundary: this file imports log/slog + internal/daemon/auth
+// invariant boundary: this file imports log/slog + internal/daemon/auth
 // (interface only). It NEVER imports internal/store directly.
 
 package daemon

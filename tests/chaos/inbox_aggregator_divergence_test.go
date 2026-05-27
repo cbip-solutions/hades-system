@@ -1,20 +1,20 @@
-//go:build chaos
+// go:build chaos
 
 // Drives the recovery contract from spec §4.4 row "Aggregator cache
 // divergence":
-//   - Per-project authoritative store (inbox.Store) is the source of
-//     truth (inv-zen-113).
-//   - The daemon-level cache (inbox.AggregatorCacheStore) is a
-//     denormalized read-optimization layer; rebuildable on detection
-//     of drift via Outbox.Recover (cache.Rebuild).
-//   - Detection: comparing per-project authoritative COUNT(*) to cache
-//     COUNT(*) reveals drift; production driver is inbox.Prober but
-//     here we synthesize it directly so the test is hermetic.
-//   - Recovery: cache.Rebuild discards every existing row + rehydrates
-//     from the per-project sources. Post-rebuild every cache row's
-//     ProjectID matches the source for that NotificationID.
-//   - Idempotency: a clean rebuild cycle (no further corruption) MUST
-//     produce a cache identical to the previous one — same row set.
+// - Per-project authoritative store (inbox.Store) is the source of
+// truth.
+// - The daemon-level cache (inbox.AggregatorCacheStore) is a
+// denormalized read-optimization layer; rebuildable on detection
+// of drift via Outbox.Recover (cache.Rebuild).
+// - Detection: comparing per-project authoritative COUNT(*) to cache
+// COUNT(*) reveals drift; production driver is inbox.Prober but
+// here we synthesize it directly so the test is hermetic.
+// - Recovery: cache.Rebuild discards every existing row + rehydrates
+// from the per-project sources. Post-rebuild every cache row's
+// ProjectID matches the source for that NotificationID.
+// - Idempotency: a clean rebuild cycle (no further corruption) MUST
+// produce a cache identical to the previous one — same row set.
 //
 // This test uses inbox.NewMemStore() (the public per-project fake) +
 // a chaos-local in-memory AggregatorCacheStore that allows surgical
@@ -246,7 +246,7 @@ func TestChaos_AggregatorCacheDivergence_CountDriftDetectedAndRebuilt(t *testing
 }
 
 // TestChaos_AggregatorCacheDivergence_ProjectIDCorruptionRepairedByRebuild
-// asserts that a cache row's ProjectID corruption (the inv-zen-113
+// asserts that a cache row's ProjectID corruption (the invariant
 // anchor — every cache row's ProjectID MUST match the authoritative
 // source for that NotificationID) is repaired by Outbox.Recover.
 func TestChaos_AggregatorCacheDivergence_ProjectIDCorruptionRepairedByRebuild(t *testing.T) {

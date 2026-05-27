@@ -1,18 +1,18 @@
-//go:build chaos
+// go:build chaos
 
 // Drives the contract from spec §4.6 row "Daemon panic":
-//   - A panic inside the dispatcher goroutine MUST NOT corrupt
-//     scheduler state. The goroutine wrapper (the daemon's errgroup)
-//     recover()s the panic, logs it, and the next tick fires fresh.
-//   - The eventlog records the failure trail (a structured Event for
-//     the panicking dispatch) so post-mortem can reconstruct.
-//   - Subsequent Fire calls with a healthy Dispatcher succeed: the
-//     panic does not leave Schedule, Store, or Eventlog in a bad
-//     state.
-//   - 3+ panics within 1h: the daemon's panic-budget guard would
-//     refuse autonomous mode (this surface is a daemon-level concern;
-//     the chaos test here verifies that the Fire-level state is sane
-//     so the daemon's guard sees the panic count it expects).
+// - A panic inside the dispatcher goroutine MUST NOT corrupt
+// scheduler state. The goroutine wrapper (the daemon's errgroup)
+// recover()s the panic, logs it, and the next tick fires fresh.
+// - The eventlog records the failure trail (a structured Event for
+// the panicking dispatch) so post-mortem can reconstruct.
+// - Subsequent Fire calls with a healthy Dispatcher succeed: the
+// panic does not leave Schedule, Store, or Eventlog in a bad
+// state.
+// - 3+ panics within 1h: the daemon's panic-budget guard would
+// refuse autonomous mode (this surface is a daemon-level concern;
+// the chaos test here verifies that the Fire-level state is sane
+// so the daemon's guard sees the panic count it expects).
 //
 // Drives REAL production code: scheduler.Fire + DispatchInput +
 // EventEmitter + Store interfaces. The Dispatcher we inject is a

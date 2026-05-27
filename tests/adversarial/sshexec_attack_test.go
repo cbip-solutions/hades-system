@@ -1,7 +1,8 @@
+// go:build adversarial
 //go:build adversarial
 // +build adversarial
 
-// Phase L Task L-2 — adversarial test runner for the ssh-exec validator.
+// Task L-2 — adversarial test runner for the ssh-exec validator.
 // Reads tests/adversarial/payloads/cmd_injection.txt and asserts every
 // payload is rejected by sshexec.Validate under a permissive allowlist.
 // Failure of any payload is a security regression.

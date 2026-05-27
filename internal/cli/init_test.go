@@ -295,7 +295,7 @@ func TestFindWorkspaceRoot_NoMarkersFallsBack(t *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// --with-sidecars-example flag (Plan 15 Phase B-5).
+// --with-sidecars-example flag.
 //
 // The flag is operator-convenience scaffolding: when set, `zen init` also
 // seeds ~/.config/hades/sidecars.toml from the bundled example IF the file

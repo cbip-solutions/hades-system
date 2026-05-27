@@ -4,21 +4,21 @@
 // Concrete adapter that bridges TWO independent boundaries between the
 // orchestrator/dispatcher half of the daemon and the SQLite store:
 //
-//  1. dispatcher.CostSink path (Plan 3 Phase B-7): receives a
-//     dispatcher.CostEvent (per-tier observability/audit, fired by the
-//     AsyncEmitter worker) and forwards it to an abstract `Store`
-//     interface. This path captures EVERY tier attempt — successes,
-//     failures, retries — so the Phase F drift audit can reconcile
-//     attribution. Field shape is dispatcher-flavoured (Status, LatencyMS,
-//     Err live here; cost-row idempotency lives in the OTHER path).
+// 1. dispatcher.CostSink path: receives a
+// dispatcher.CostEvent (per-tier observability/audit, fired by the
+// AsyncEmitter worker) and forwards it to an abstract `Store`
+// interface. This path captures EVERY tier attempt — successes,
+// failures, retries — so the drift audit can reconcile
+// attribution. Field shape is dispatcher-flavoured (Status, LatencyMS,
+// Err live here; cost-row idempotency lives in the OTHER path).
 //
-//  2. orchestrator.CostStore path (Plan 3 Phase C Task F-6): receives an
-//     orchestrator.CostLedgerRow (canonical cost ledger persistence with
-//     IdempotencyKey UNIQUE-enforced at the SQL layer for inv-zen-062 no-
-//     double-charge) and forwards it to the concrete *store.Store via
-//     1:1 field translation. Returning orchestrator.CostLedgerRow rather
-//     than store.CostLedgerRow is load-bearing: the orchestrator package
-//     never sees store types, preserving inv-zen-031.
+// 2. orchestrator.CostStore path: receives an
+// orchestrator.CostLedgerRow (canonical cost ledger persistence with
+// IdempotencyKey UNIQUE-enforced at the SQL layer for invariant no-
+// double-charge) and forwards it to the concrete *store.Store via
+// 1:1 field translation. Returning orchestrator.CostLedgerRow rather
+// than store.CostLedgerRow is load-bearing: the orchestrator package
+// never sees store types, preserving invariant.
 //
 // Both paths live on the same Adapter struct because the daemon
 // constructs one adapter at boot and shares it across the dispatcher
@@ -27,7 +27,7 @@
 // require synchronised lifecycle of two adapter instances over the same
 // underlying *store.Store — pointless duplication.
 //
-// Boundary (inv-zen-031): this file imports internal/store. That is the
+// Boundary: this file imports internal/store. That is the
 // architectural intent: dispatcheradapter IS the boundary that absorbs
 // the dependency. orchestrator / providers / dispatcher / bypass MUST
 // NOT import internal/store; verified by static-invariant checks.
@@ -73,7 +73,7 @@ type CostLedgerRow struct {
 // noop sink today (the concrete *store.Store is wired separately on
 // the CostStore path; CostSink ↔ store integration lands when the
 // dispatcher emitter is rewired to write to cost_ledger directly,
-// which is out of F-6 scope and tracked under the Phase F drift audit).
+// which is out of F-6 scope and tracked under the drift audit).
 //
 // Concurrency implementations MUST tolerate concurrent calls from
 // multiple goroutines. The Adapter forwards directly without locking

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Test infrastructure for Plan 11 Phase B integration tests. Provides a
+// Test infrastructure integration tests. Provides a
 // recording fake dispatcher and a fake AuditAnchor; the production
 // MessagesHandler wraps these so tests can assert the dispatcher saw the
 // expected TierRequest shape after the Python ZenSwarmTransport posts.
 //
 // Used by:
-//   - tests/integration/zenswarm_transport_test.go (Phase B-7)
-//   - tests/compliance/inv_zen_164_*_test.go (Phase B-8)
-//   - Phase F tests
+// - tests/integration/zenswarm_transport_test.go
+// - tests/compliance/inv_zen_164_*_test.go
+// - tests
 package testharness
 
 import (

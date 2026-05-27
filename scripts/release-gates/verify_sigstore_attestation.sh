@@ -9,7 +9,7 @@ fi
 
 ARTIFACT="$1"
 OWNER="$2"
-REPO="${3:-zen-swarm}"
+REPO="${3:-hades-system}"
 
 if [[ ! -f "${ARTIFACT}" ]]; then
   echo "verify_sigstore_attestation.sh: artifact missing: ${ARTIFACT}" >&2
@@ -21,7 +21,7 @@ if ! command -v gh &>/dev/null; then
   exit 1
 fi
 
-if gh attestation verify "${ARTIFACT}" --owner "${OWNER}" --repo "${REPO}" 2>&1; then
+if gh attestation verify "${ARTIFACT}" --repo "${OWNER}/${REPO}" 2>&1; then
   echo "verify_sigstore_attestation.sh: OK: ${ARTIFACT}"
   exit 0
 else

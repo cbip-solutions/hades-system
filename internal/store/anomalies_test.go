@@ -189,7 +189,7 @@ func TestListAnomaliesParentPath(t *testing.T) {
 }
 
 // TestRollingWindowDecaysCorrectly is the load-bearing regression test
-// for I-1 (post-Phase-F review): the rolling-window numerator MUST be
+// for I-1: the rolling-window numerator MUST be
 // computed from per-event observations whose ts lies in the window,
 // not from the row's lifetime count whenever last_seen is fresh. With
 // the old implementation 1000 historic observations would have

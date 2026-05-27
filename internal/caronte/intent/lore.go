@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -31,7 +32,7 @@ func (li *LoreIndexer) IndexLore(ctx context.Context, projectID, repoDir string)
 		return LoreIndexResult{}, fmt.Errorf("caronte/intent: build file-node index: %w", err)
 	}
 
-	// Read the full history through the Phase F GitRunner. The format is
+	// Read the full history through the GitRunner. The format is
 	// package-constructed (no user input); --name-only yields the touched
 	// files. We do NOT pass --since (Lore intent never expires).
 	out, err := li.runner.Log(ctx, repoDir,

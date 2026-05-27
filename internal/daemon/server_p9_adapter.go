@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-// Package daemon — server_p9_adapter.go (Plan 9 Phase H Task H-10).
+// Package daemon — server_p9_adapter.go.
 //
-// plan9Adapters is the dependency bundle every Phase H handler consumes.
+// plan9Adapters is the dependency bundle every handler consumes.
 // SetPlan9Adapters wires the bundle once at daemon boot; nil bundle
-// means Plan 9 features are disabled (each route returns 503 with
+// means features are disabled (each route returns 503 with
 // stable error code "plan9_<group>_unavailable").
 //
 // Pattern matches:
-//   - Plan 4 N: SetPlan4Adapters (workforce + budget + audit_emit)
-//   - Plan 5 N: SetPlan5OrchestratorService (orchestrator engine)
-//   - Plan 7 I: SetPlan7Adapters (projectctx + quota + tmuxlife + ...)
+// - N: SetPlan4Adapters (workforce + budget + audit_emit)
+// - N: SetPlan5OrchestratorService (orchestrator engine)
+// - I: SetPlan7Adapters (projectctx + quota + tmuxlife +...)
 //
-// inv-zen-031: this file imports internal/daemon/handlers only; it never
+// invariant: this file imports internal/daemon/handlers only; it never
 // imports internal/audit/*, internal/knowledge/*, internal/adr,
 // internal/research/cache, or internal/state/manifest directly. All
 // substrate calls flow through the handler-package Ctx interfaces.

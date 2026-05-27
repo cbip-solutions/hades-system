@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — ecosystem_version_delete.go (Plan 14 Phase G fix-cycle).
+// Package handlers — ecosystem_version_delete.go.
 //
 // EcosystemVersionDelete implements DELETE /v1/ecosystem/version.
 //
@@ -15,12 +15,12 @@
 //
 // Status codes:
 //
-//	204 No Content — cascade delete committed.
-//	400 Bad Request — invalid JSON body or missing field.
-//	404 Not Found — unknown (ecosystem, version) tuple.
-//	409 Conflict — version is pinned (operator must unpin first).
-//	500 Internal Server Error — opaque seam failure.
-//	503 Service Unavailable — EcosystemHandler not wired.
+// 204 No Content — cascade delete committed.
+// 400 Bad Request — invalid JSON body or missing field.
+// 404 Not Found — unknown (ecosystem, version) tuple.
+// 409 Conflict — version is pinned (operator must unpin first).
+// 500 Internal Server Error — opaque seam failure.
+// 503 Service Unavailable — EcosystemHandler not wired.
 //
 // Wire mirror: matches client.EcosystemPrune(ctx, eco, ver) →
 // DELETE /v1/ecosystem/version + JSON body

@@ -1,19 +1,19 @@
 // tests/compliance/inv_zen_290_test.go
 //
-// Compliance gate for inv-zen-290 (v0.20.7 fix #1): the
+// Compliance gate for invariant (v0.20.7 fix #1): the
 // "plan-1-h-prime-executed" probe in the daemon coordination handler
 // and the matching "plan-1-h-prime.executed" check in the CLI doctor
 // coordination section are RETIRED because the underlying landing test
 // (presence of plugin/zen-swarm/plugin.yaml + Hermes-format markers)
-// is obsolete per Plan 18b Hermes pivot (ADR-0080).
+// is obsoleteb Hermes pivot (ADR-0080).
 //
-// Why this gate exists: Plan 1 H' was the deferred Claude-Code-plugin
-// conversion path; Plan 18b replaced that path with the Hermes plugin
+// Why this gate exists: H' was the deferred Claude-Code-plugin
+// conversion path; replaced that path with the Hermes plugin
 // at plugin/hades/ (different canonical location + format). The
 // probe-target plugin/zen-swarm/plugin.yaml never existed at HEAD and
 // the probe always reported "fail" — a misleading active signal in
 // `zen doctor coordination` output. The Q1 substrate decision +
-// ADR-0080 supersede Plan 1 H', so the probe has no underlying
+// ADR-0080 supersede H', so the probe has no underlying
 // behaviour to assert.
 //
 // Anchor 1 (negative): internal/daemon/handlers/coordination_probe.go
@@ -37,7 +37,7 @@
 // asserts the runtime behaviour (the retired name falls into the
 // default branch with the unknown-check hint).
 //
-// inv-zen-290 (v0.20.7 fix #1).
+// invariant (v0.20.7 fix #1).
 package compliance
 
 import (

@@ -120,9 +120,9 @@ def test_panel_handler_valid_name_spawns_hades_dashboard_with_panel_flag(
 ) -> None:
     """Asserts /hades:panel <valid-name> spawns `hades dashboard --panel=<name>`.
 
-    Table-driven over all 12 valid names per spec §Q8 + Plan 12 view files.
+    Table-driven over all 12 valid names per spec §Q8 +  view files.
     Each name maps to a TUI view in internal/tui/views/*.go; the bubbletea
-    dashboard does the routing once it receives the --panel flag (Plan 12 ship).
+    dashboard does the routing once it receives the --panel flag.
 
     Verifies the SAME subprocess handoff pattern as /hades:dashboard (D-2),
     with argv extended by --panel=<name>.
@@ -195,7 +195,7 @@ def test_panel_handler_rejects_extra_args_after_panel_name(
 ) -> None:
     """Asserts /hades:panel handler rejects multi-token raw_args.
 
-    Per spec §Q8 + master Phase D scope, the panel slash command takes
+    Per spec §Q8 + master  scope, the panel slash command takes
     EXACTLY ONE positional arg (the panel name). Extra args indicate
     operator confusion or typo and render the catalog block locally with a
     recovery hint.
@@ -224,16 +224,16 @@ def test_panel_handler_rejects_extra_args_after_panel_name(
 
 
 def test_panel_validation_block_matches_phase_a_catalog_byte_for_byte() -> None:
-    """Sister-test: _PANEL_VALIDATION_HADES_BLOCK matches Phase A's catalog
+    """Sister-test: _PANEL_VALIDATION_HADES_BLOCK matches  catalog
     `cli.arg-validation-fail` Title + RecoveryHint byte-for-byte.
 
-    Per Stage 2 C-5 operator decision + plan Architecture lines 7/25: Phase D
-    renders the error block LOCALLY using Phase A catalog literals (no daemon
-    roundtrip). Phase A's catalog is the single source of truth — it lives in
+    Per  C-5 operator decision + plan Architecture lines 7/25: 
+    renders the error block LOCALLY using  catalog literals (no daemon
+    roundtrip).  catalog is the single source of truth — it lives in
     Go at internal/errors/codes.go → ErrorCode["cli.arg-validation-fail"].
 
     Per memory `feedback_sister_test_pattern.md`: this assertion gates drift.
-    If Phase A's RecoveryHint text changes in the Go catalog, the constant here
+    If  RecoveryHint text changes in the Go catalog, the constant here
     diverges and this test fails, forcing reconciliation. The expected literals
     (_PHASE_A_TITLE / _PHASE_A_RECOVERY) are hardcoded above with a comment
     pointing to the canonical Go source (option (a) per the C-5 rework brief).
@@ -241,7 +241,7 @@ def test_panel_validation_block_matches_phase_a_catalog_byte_for_byte() -> None:
     Bite-check: change a single character of _PANEL_VALIDATION_RECOVERY in
     panel.py and this test MUST fail (proves it gates the byte-for-byte claim).
     """
-    # The panel.py module's literals MUST equal the Phase A catalog literals.
+    # The panel.py module's literals MUST equal the  catalog literals.
     assert _PANEL_VALIDATION_TITLE == _PHASE_A_TITLE, (
         "panel.py _PANEL_VALIDATION_TITLE diverged from Phase A catalog "
         "cli.arg-validation-fail Title (internal/errors/codes.go)"
@@ -252,7 +252,7 @@ def test_panel_validation_block_matches_phase_a_catalog_byte_for_byte() -> None:
         "reconcile the constant with the Go source — Phase A is canonical"
     )
 
-    # The rendered block MUST embed the Phase A Title + RecoveryHint verbatim.
+    # The rendered block MUST embed the  Title + RecoveryHint verbatim.
     assert _PHASE_A_TITLE in _PANEL_VALIDATION_HADES_BLOCK, (
         "rendered HADES block missing Phase A catalog Title"
     )
@@ -264,9 +264,8 @@ def test_panel_validation_block_matches_phase_a_catalog_byte_for_byte() -> None:
 def test_panel_validation_block_has_hades_three_line_format() -> None:
     """Sister-test: the local block matches the spec §Q6 three-line HADES format.
 
-    Format: "HADES: <title>\\n  <body>\\n  → <recovery>\\n"  (mirrors Phase B's
-    Go-side Render()). Verifies headline / body / recovery-hint structure +
-    HADES branding (inv-zen-219).
+    Format: "HADES: <title>\\n  <body>\\n  → <recovery>\\n"). Verifies headline / body / recovery-hint structure +
+    HADES branding.
     """
     lines = _PANEL_VALIDATION_HADES_BLOCK.splitlines()
     assert len(lines) >= 3, (
@@ -299,7 +298,7 @@ def test_panel_handler_invalid_name_renders_local_block(
 ) -> None:
     """Asserts /hades:panel <invalid-name> renders the local catalog block.
 
-    Per Stage 2 C-5 operator decision (2026-05-21): NO daemon `/v1/errors/render`
+    Per  C-5 operator decision (2026-05-21): NO daemon `/v1/errors/render`
     roundtrip — the handler renders _PANEL_VALIDATION_HADES_BLOCK directly. The
     TUI is NOT spawned for invalid names.
 
@@ -331,7 +330,7 @@ def test_panel_handler_invalid_name_renders_local_block(
 def test_panel_handler_invalid_name_makes_no_network_calls(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Asserts the invalid-name path makes NO network calls at all (inv-zen-088).
+    """Asserts the invalid-name path makes NO network calls at all.
 
     Per C-5: the daemon `/v1/errors/render` roundtrip was dropped entirely.
     There is no urllib / http.client / socket machinery in panel.py. This test

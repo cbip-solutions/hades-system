@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -42,7 +43,7 @@ func (pe *projectEngine) decomposition(ctx context.Context) (structure.Decomposi
 }
 
 // indexSkipDirs is the closed set of directory base names the IndexProject
-// walker MUST NOT descend into. The list mirrors the Phase C plan §C-1:
+// walker MUST NOT descend into. The list mirrors the plan §C-1:
 // `.git`, `node_modules`, `.zen` (Caronte's own caronte.db lives there),
 // `vendor`, `target`. Hidden directories (any name starting with ".") are
 // also skipped — the dot-prefix check is applied in addition to this set so
@@ -83,7 +84,7 @@ func extToLanguageLabel(ext string) string {
 // upsert rows in place; no orphan data accumulates).
 //
 // projectID MUST be canonical id_sha256 (64 hex) — the engine consumes the
-// projects_alias resolution upstream (Phase A's ProjectsAliasResolver in the
+// projects_alias resolution upstream ( ProjectsAliasResolver in the
 // HTTP layer) and never sees aliases. Per spec §15, an unknown project
 // degrades to ErrProjectUnavailable + an IndexReport with ProjectID echoed
 // and Completed=false (NOT a panic).
@@ -96,7 +97,7 @@ func extToLanguageLabel(ext string) string {
 // walk from a clean empty pass.
 //
 // Returns IndexReport with totals, per-language file counts, duration, and
-// Completed=true on a clean walk. inv-zen-273.
+// Completed=true on a clean walk. invariant.
 func (e *Engine) IndexProject(ctx context.Context, projectID string) (IndexReport, error) {
 	started := time.Now()
 	rep := IndexReport{

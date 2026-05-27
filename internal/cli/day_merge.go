@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package cli — day_merge.go (Plan 6 Phase F F-3 + C-2 wiring).
+// Package cli — day_merge.go.
 //
 // renderMergeMorningBrief writes the [plan-6 merge] section of the
 // `zen day` morning brief per spec §6.3. Layout:
 //
-//	[plan-6 merge]
-//	  Cache size=N entries, hit_rate=P%
-//	  Anomalies pending review: K
-//	    ├─ [Severity] Type — Detail
-//	    └─ ...
+// [plan-6 merge]
+// Cache size=N entries, hit_rate=P%
+// Anomalies pending review: K
+// ├─ [Severity] Type — Detail
+// └─...
 //
 // Graceful degradation: a CacheStatus failure renders one
 // "daemon unreachable: <err>" line and the section returns — same

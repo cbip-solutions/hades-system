@@ -1,47 +1,47 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — doctrine.go (Plan 8 Phase J — REWRITE supersedes Plan 4 G-6).
+// Package handlers — doctrine.go.
 //
-// per spec §2.5, replacing the Plan 4 Phase G-6 3-route surface (state,
-// validate, reload — DoctrineCtx interface) with a Plan 8-doctrine-package-
+// per spec §2.5, replacing the 3-route surface (state,
+// validate, reload — DoctrineCtx interface) with a
 // aware DoctrineHandlerCtx interface. The 10 endpoints mirror the 15-command
 // CLI inventory at spec §6.1 (Q14 C: HTTP API mirrors CLI subcommand surface)
-// so Phase I CLI dispatches over Unix-socket HTTP.
+// so CLI dispatches over Unix-socket HTTP.
 //
-//	Read endpoints:
-//	  GET  /v1/doctrine/active                  active doctrine + version + source (per-project via ?project=X)
-//	  GET  /v1/doctrine/list                    enumerate doctrines (embed/user/project) [?source=...]
-//	  GET  /v1/doctrine/show?name=X             render doctrine in toml/json/markdown (?format= + ?section=)
-//	  GET  /v1/doctrine/status                  active + last_reload + watcher_healthy + pending_changes
-//	  GET  /v1/doctrine/history?since=X         doctrine event log slice (DoctrineLoaded..DoctrineAmendmentApplied..)
-//	  GET  /v1/doctrine/diff?a=X&b=Y            two doctrines section/path delta
+// Read endpoints:
+// GET /v1/doctrine/active active doctrine + version + source (per-project via ?project=X)
+// GET /v1/doctrine/list enumerate doctrines (embed/user/project) [?source=...]
+// GET /v1/doctrine/show?name=X render doctrine in toml/json/markdown (?format= + ?section=)
+// GET /v1/doctrine/status active + last_reload + watcher_healthy + pending_changes
+// GET /v1/doctrine/history?since=X doctrine event log slice (DoctrineLoaded..DoctrineAmendmentApplied..)
+// GET /v1/doctrine/diff?a=X&b=Y two doctrines section/path delta
 //
-//	Write/admin endpoints:
-//	  POST /v1/doctrine/validate                body: {against_baseline, toml_content}; response: {valid, errors[]}
-//	  POST /v1/doctrine/reload                  body: {path}; trigger reload.NotifyForce + wait DoctrineReloaded
-//	  POST /v1/doctrine/migrate                 body: {toml_content, from_schema_version}; IN-MEMORY ONLY (inv-zen-137)
-//	  POST /v1/doctrine/reinforce               body: {task_kind, project_alias, stage, phase, plan_id}; response: {rendered}
+// Write/admin endpoints:
+// POST /v1/doctrine/validate body: {against_baseline, toml_content}; response: {valid, errors[]}
+// POST /v1/doctrine/reload body: {path}; trigger reload.NotifyForce + wait DoctrineReloaded
+// POST /v1/doctrine/migrate body: {toml_content, from_schema_version}; IN-MEMORY ONLY
+// POST /v1/doctrine/reinforce body: {task_kind, project_alias, stage, phase, plan_id}; response: {rendered}
 //
-// Wire shapes follow Phase I client DTOs at internal/client/doctrine_v2.go
-// VERBATIM (Phase I shipped its CLI httptest mocks before Phase J landed; the
-// daemon shape is the contract). DoctrineHandlerCtx is the Phase J accessor
+// Wire shapes follow client DTOs at internal/client/doctrine_v2.go
+// VERBATIM ( shipped its CLI httptest mocks before landed; the
+// daemon shape is the contract). DoctrineHandlerCtx is the accessor
 // surface; *daemon.Server satisfies it via thin getter methods that route to
 // the doctrine package singletons (active.Active, builtin.LoadAll,
 // parser.ParseStrict, etc.). Defined here to avoid the daemon→handlers→daemon
 // import cycle (mirrors orchestratorAccessor pattern at handlers/orchestrator.go).
 //
-// Boundary discipline (inv-zen-031 generalized as inv-zen-133):
+// Boundary discipline:
 //
-//	handlers consume internal/doctrine/{errors,reload,schema/v1} +
-//	internal/client (DTO-only package; no orchestrator/store transitive
-//	pull); NEVER imports internal/store. Concrete doctrine accessors
-//	(active/builtin/parser/migrate/reinforcement) are reached through the
-//	*Server accessor methods, NOT through direct package imports here —
-//	the *Server lives in package daemon and IS allowed to import them.
+// handlers consume internal/doctrine/{errors,reload,schema/v1} +
+// internal/client (DTO-only package; no orchestrator/store transitive
+// pull); NEVER imports internal/store. Concrete doctrine accessors
+// (active/builtin/parser/migrate/reinforcement) are reached through the
+// *Server accessor methods, NOT through direct package imports here —
+// the *Server lives in package daemon and IS allowed to import them.
 //
-// Atomicity (inv-zen-138): the /reload handler does NOT mutate active.Accessor
+// Atomicity: the /reload handler does NOT mutate active.Accessor
 // directly — it delegates to ctx.DoctrineReload which forwards to
 // reload.Watcher.NotifyForce, going through the same atomic-Store path the
-// file-watcher uses. /migrate (inv-zen-137) is in-memory ONLY; the daemon
+// file-watcher uses. /migrate is in-memory ONLY; the daemon
 // never auto-writes; only the CLI's `zen doctrine-v2 migrate <path> --confirm`
 // writes back via os.Rename AFTER consuming this handler's response.
 //
@@ -555,29 +555,29 @@ func DoctrineReinforce(s any) http.HandlerFunc {
 
 // DoctrineReload implements POST /v1/doctrine/reload.
 //
-// Body (JSON): client.DoctrineV2ReloadReq{Path: string}  (empty = reload-all)
+// Body (JSON): client.DoctrineV2ReloadReq{Path: string} (empty = reload-all)
 //
-// Flow (inv-zen-138 atomic via reload.NotifyForce → sync.Pointer.Store path):
-//  1. Decode body.path
-//  2. Subscribe to DoctrineReloaded + DoctrineReloadFailed events BEFORE
-//     NotifyForce (avoid losing fast-publisher events; Phase G's
-//     Subscribe* returns a per-subscriber buffered channel)
-//  3. Call DoctrineReload(path) — kicks file-watcher's force-reload
-//  4. select { ev := <-success: respond reloaded=true with active state;
-//     ev := <-failure: respond per-phase status code (422/500);
-//     <-time.After(timeout): respond 408 }
-//  5. Always Unsubscribe before return (defer)
+// Flow:
+// 1. Decode body.path
+// 2. Subscribe to DoctrineReloaded + DoctrineReloadFailed events BEFORE
+// NotifyForce (avoid losing fast-publisher events;
+// Subscribe* returns a per-subscriber buffered channel)
+// 3. Call DoctrineReload(path) — kicks file-watcher's force-reload
+// 4. select { ev := <-success: respond reloaded=true with active state;
+// ev := <-failure: respond per-phase status code (422/500);
+// <-time.After(timeout): respond 408 }
+// 5. Always Unsubscribe before return (defer)
 //
 // Response shapes:
 //
-//	200 client.DoctrineV2ReloadResp{Reloaded:true, State:{...}}
-//	422 client.DoctrineV2ReloadResp{Reloaded:false, Errors:["..."]}     — parse/validate/tighten
-//	408 client.DoctrineV2ReloadResp{Reloaded:false, Error:"timeout..."}
-//	500 client.DoctrineV2ReloadResp{Reloaded:false, Error:"..."}        — IO/system or NotifyForce error
-//	400 {"error": "..."}                                                — bad json
+// 200 client.DoctrineV2ReloadResp{Reloaded:true, State:{...}}
+// 422 client.DoctrineV2ReloadResp{Reloaded:false, Errors:["..."]} — parse/validate/tighten
+// 408 client.DoctrineV2ReloadResp{Reloaded:false, Error:"timeout..."}
+// 500 client.DoctrineV2ReloadResp{Reloaded:false, Error:"..."} — IO/system or NotifyForce error
+// 400 {"error": "..."} — bad json
 //
 // Concurrency the handler subscribes to a NEW channel per request via
-// Phase G's SubscribeReloadEvents (per-subscriber fanout); concurrent
+// SubscribeReloadEvents (per-subscriber fanout); concurrent
 // requests do not steal each other's events.
 func DoctrineReload(s any) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -638,7 +638,7 @@ func DoctrineReload(s any) http.HandlerFunc {
 		if timeout <= 0 {
 			timeout = 5 * time.Second
 		}
-		// inv-zen-138 strictly: when two operators reload distinct files
+		// invariant strictly: when two operators reload distinct files
 		// concurrently, both subscribers see both events on the per-Watcher
 		// fan-out channels. The handler MUST consume only events whose
 		// Path matches the request body — otherwise concurrent /reload
@@ -649,7 +649,7 @@ func DoctrineReload(s any) http.HandlerFunc {
 		// success/failure event arrives, (b) the channel closes, or (c)
 		// the timeout fires. Cross-path events are discarded silently —
 		// they are intended for the OTHER subscriber. Note that each
-		// subscriber gets its OWN buffered channel (Phase G's per-call
+		// subscriber gets its OWN buffered channel ( per-call
 		// SubscribeReloadEvents), so discarding here does not starve the
 		// other request's subscription.
 		deadline := time.After(timeout)

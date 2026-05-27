@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package mcpgateway — contract_get_consumers.go (Plan 20 Phase I).
+// Package mcpgateway — contract_get_consumers.go.
 //
 // Handler for the `get_consumers` MCP tool. Validates required `endpoint` +
 // `workspace` args + dispatches to engine.GetConsumers; returns the
-// ConsumerList payload. Capa-firewall enforced upstream (inv-zen-031).
+// ConsumerList payload. Capa-firewall enforced upstream.
 package mcpgateway
 
 import "context"

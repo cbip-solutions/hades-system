@@ -51,8 +51,8 @@ func TestInvZen130_InsertSQLDoesNotMentionExtensionHookColumns(t *testing.T) {
 //
 // The Valid=true setup is a load-bearing trap: a naive implementation
 // could plausibly write the values when Doc fields are Valid. The spec
-// is explicit — Plan 7 INSERT NEVER populates them, even if the caller
-// supplies values. The data flows from Plan 9 / Plan 14 / caronte
+// is explicit — INSERT NEVER populates them, even if the caller
+// supplies values. The data flows / / caronte
 // writers (separate code paths, materialization time), NOT from this
 // INSERT. This test would fire if a developer "helpfully" forwarded
 // Doc.AuditChainAnchor into the INSERT bind list.
@@ -149,11 +149,11 @@ func TestInvZen130_SchemaSQLAndGoFileDeclareSameColumns(t *testing.T) {
 // TestInvZen130_SchemaCreateMetaDeclaresExtensionColumns is the in-DDL
 // schema witness — the schemaCreateMeta DDL section of index.go MUST
 // list all three columns. Tests (a) and (c) cover indexInsertSQL and
-// the .sql file respectively; this test covers the third declaration
+// the.sql file respectively; this test covers the third declaration
 // site, the runtime CREATE TABLE statement.
 //
 // Without this anchor, a refactor could remove a column from the
-// schemaCreateMeta DDL while leaving the Doc struct + .sql file +
+// schemaCreateMeta DDL while leaving the Doc struct +.sql file +
 // indexInsertSQL untouched. The runtime test (b) would catch it
 // (column doesn't exist → SQL error), but the failure message would be
 // confusing ("no such column: audit_chain_anchor"). This test surfaces

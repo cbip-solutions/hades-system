@@ -1,18 +1,18 @@
 // internal/daemon/dispatcher/cost_emit_test.go
 //
-// External-package tests for AsyncEmitter (Plan 3 Phase B-5). Verifies:
-//   - Emit is non-blocking even when the sink stalls (the response path
-//     must never wait on the cost ledger).
-//   - Buffer-full events are dropped (counter incremented) rather than
-//     blocking the caller.
-//   - Default buffer size kicks in when bufferSize <= 0.
-//   - Close is idempotent (safe to call twice; no panic).
-//   - Emit after Close is a silent no-op (no panic on send-to-closed-chan).
-//   - Sink errors do NOT terminate the worker; subsequent events still
-//     reach the sink.
-//   - Flush blocks until every event Emitted before the call has been
-//     delivered to the sink.
-//   - All of the above run clean under the race detector.
+// External-package tests for AsyncEmitter. Verifies:
+// - Emit is non-blocking even when the sink stalls (the response path
+// must never wait on the cost ledger).
+// - Buffer-full events are dropped (counter incremented) rather than
+// blocking the caller.
+// - Default buffer size kicks in when bufferSize <= 0.
+// - Close is idempotent (safe to call twice; no panic).
+// - Emit after Close is a silent no-op (no panic on send-to-closed-chan).
+// - Sink errors do NOT terminate the worker; subsequent events still
+// reach the sink.
+// - Flush blocks until every event Emitted before the call has been
+// delivered to the sink.
+// - All of the above run clean under the race detector.
 
 package dispatcher_test
 
@@ -403,7 +403,7 @@ func TestAsyncEmitterSinkPanicDoesNotKillWorker(t *testing.T) {
 	}
 }
 
-// TestAsyncEmitter_PreservesProvider pins the Plan 16 Phase B C8 contract:
+// TestAsyncEmitter_PreservesProvider pins the C8 contract:
 // dispatcher.CostEvent.Provider (Backend.Name() set by dispatcher.attempt())
 // MUST survive the asynchronous AsyncEmitter → CostSink hop. Without this
 // pin a future "field-aware" optimisation in AsyncEmitter (e.g. partial

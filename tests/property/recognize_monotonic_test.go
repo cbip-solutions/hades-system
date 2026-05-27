@@ -1,7 +1,8 @@
+// go:build property
 //go:build property
 // +build property
 
-// Package property — Plan 13 Phase B recognize confidence-monotonicity.
+// Package property — recognize confidence-monotonicity.
 //
 // Property: adding more in-language evidence (more bytes of the same language)
 // does NOT decrease the primaryConfidence for that language.

@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: MIT
-// Package client — research_p9.go (Plan 9 Phase H Task H-9).
+// Package client — research_p9.go.
 //
-// 4 typed wrappers for the Plan 9 Phase H-4 research endpoints declared in
+// 4 typed wrappers for the research endpoints declared in
 // internal/daemon/handlers/research_p9.go. Wire types mirror the handler
 // declarations; duplication is intentional (client compiles standalone without
-// importing internal/daemon — Plan 4 N convention).
+// importing internal/daemon — N convention).
 //
-//	GET  /v1/research/history          — ResearchHistory
-//	GET  /v1/research/cache/stats      — ResearchCacheStatsP9 (P9 suffix avoids
-//	                                     conflict with Plan 4 N ResearchCacheStatsCall)
-//	POST /v1/research/cache/invalidate — ResearchCacheInvalidate
-//	GET  /v1/research/cache/list       — ResearchCacheListP9 (P9 suffix avoids
-//	                                     conflict with Plan 4 N ResearchCacheList)
+// GET /v1/research/history — ResearchHistory
+// GET /v1/research/cache/stats — ResearchCacheStatsP9 (P9 suffix avoids
+// conflict with N ResearchCacheStatsCall)
+// POST /v1/research/cache/invalidate — ResearchCacheInvalidate
+// GET /v1/research/cache/list — ResearchCacheListP9 (P9 suffix avoids
+// conflict with N ResearchCacheList)
 //
-// inv-zen-031: this file imports stdlib only (context, net/url, strconv).
+// invariant: this file imports stdlib only (context, net/url, strconv).
 // No internal/daemon, internal/store, or internal/research imports.
 //
 // Method-name rationale (P9 suffix):
 //
-//	ResearchCacheStatsCall on *Client. Go does not support method overloading;
-//	different parameter signatures alone do not resolve the collision. The P9
-//	suffix is the same pattern used in knowledge_p9.go (KnowledgeQueryP9 etc.)
-//	and audit_p9.go for analogous collisions.
+// ResearchCacheStatsCall on *Client. Go does not support method overloading;
+// different parameter signatures alone do not resolve the collision. The P9
+// suffix is the same pattern used in knowledge_p9.go (KnowledgeQueryP9 etc.)
+// and audit_p9.go for analogous collisions.
 package client
 
 import (

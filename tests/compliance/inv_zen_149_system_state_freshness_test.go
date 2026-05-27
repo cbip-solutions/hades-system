@@ -9,7 +9,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-// inv-zen-149: docs/system-state.toml freshness < 7 days.
+// invariant: docs/system-state.toml freshness < 7 days.
 //
 // The system-state.toml manifest captures zen-swarm-level meta-state
 // (versions, plans, invariants, doctrines, MCPs, ADR count, autonomy

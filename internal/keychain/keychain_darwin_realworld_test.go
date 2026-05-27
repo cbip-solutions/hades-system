@@ -1,5 +1,4 @@
-//go:build darwin && realworld
-
+// go:build darwin && realworld
 package keychain
 
 import (

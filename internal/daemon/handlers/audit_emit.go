@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — audit_emit.go (Plan 4 Phase G Task G-2).
+// Package handlers — audit_emit.go.
 //
 // POST /v1/audit/emit — write one audit event to audit_events_raw.
 //
 // Design notes:
-//   - Handler generates UUIDv4 id + sets emitted_at to time.Now().Unix() so
-//     callers never need to supply these fields (reduces surface for drift).
-//   - AuditEmitCtx.AuditEmit() is called synchronously in the handler. The
-//     daemon implementation may use a buffered-write goroutine internally
-//     (1s/100-events batch); the handler contract is fire-and-accept (202).
-//   - Plan 9 wraps audit_events_raw with hash-chain WITHOUT migration;
-//     this file remains unchanged in Plan 9.
-//   - inv-zen-083: emit no-loss is enforced at the mcp/client layer (Phase H);
-//     the daemon itself returns 202 on successful enqueue.
-//   - inv-zen-001: Unix socket only — enforced at server.go listener level.
-//   - inv-zen-031: never imports internal/store directly.
+// - Handler generates UUIDv4 id + sets emitted_at to time.Now().Unix() so
+// callers never need to supply these fields (reduces surface for drift).
+// - AuditEmitCtx.AuditEmit() is called synchronously in the handler. The
+// daemon implementation may use a buffered-write goroutine internally
+// (1s/100-events batch); the handler contract is fire-and-accept (202).
+// - wraps audit_events_raw with hash-chain WITHOUT migration;
+// this file remains unchanged in
+// - invariant: emit no-loss is enforced at the mcp/client layer;
+// the daemon itself returns 202 on successful enqueue.
+// - invariant: Unix socket only — enforced at server.go listener level.
+// - invariant: never imports internal/store directly.
 package handlers
 
 import (

@@ -1,20 +1,20 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// Tests for RequireOperatorIdentity middleware (Plan 5 Phase F Task F-5,
-// inv-zen-099). Black-box (package orchestrator_test) so we exercise the
+// Tests for RequireOperatorIdentity middleware ( Task F-5,
+// invariant). Black-box (package orchestrator_test) so we exercise the
 // public surface (NewOperatorIdentityMiddleware + Authenticate +
-// OverrideKind* constants + ErrOperatorIdentityMismatch) the way Phase N
+// OverrideKind* constants + ErrOperatorIdentityMismatch) the way
 // daemon wiring will. PeerCredentials is dependency-injected so these
 // tests never touch a real Unix socket — that path is exercised by
 // cross-compile gates (GOOS=linux + GOOS=darwin) and live integration in
-// Phase N.
+//
 //
 // The middleware's audit-emission contract (per spec §7.1):
-//   - on UID match: emit exactly one EvtOperatorOverrideApplied with
-//     {OperatorUID, OperatorReason, OverrideKind} populated.
-//   - on UID mismatch OR peer-cred error: emit NOTHING via this audit
-//     channel. Failed-auth events live in daemon access logs to avoid
-//     drowning real overrides in noise.
+// - on UID match: emit exactly one EvtOperatorOverrideApplied with
+// {OperatorUID, OperatorReason, OverrideKind} populated.
+// - on UID mismatch OR peer-cred error: emit NOTHING via this audit
+// channel. Failed-auth events live in daemon access logs to avoid
+// drowning real overrides in noise.
 package orchestrator_test
 
 import (
@@ -31,7 +31,7 @@ import (
 
 // auditTestSession + auditTestProject are the canonical SessionID +
 // ProjectID the F-5 middleware stamps on every emitted
-// OperatorOverrideApplied event. The Phase A eventlog.Append validation
+// OperatorOverrideApplied event. The eventlog.Append validation
 // rejects empty session_id / project_id (lesson from F-2 fix-pass), so
 // the middleware's OperatorIdentityConfig MUST carry them.
 const (

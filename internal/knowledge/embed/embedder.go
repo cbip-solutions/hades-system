@@ -2,18 +2,18 @@
 // Package embed provides Embedder implementations for zen-swarm knowledge
 // search. Three implementations are shipped:
 //
-//   - MPSEmbedder: Mac M-series GPU path via Python sentence-transformers
-//     subprocess (JSON stdin/stdout; MPS inference; ~10-20ms warm latency).
-//   - CPUEmbedder: pure-Go deterministic-from-hash placeholder; functional
-//     contract complete (L2-normalized 384-dim); FTS5 + wikilink graph
-//     compensate quality gap via RRF (D-6). Phase L upgrade hook for real
-//     Model2Vec when a stable pure-Go port ships.
-//   - MockEmbedder: deterministic from sha256+sin; for unit tests only.
+// - MPSEmbedder: Mac M-series GPU path via Python sentence-transformers
+// subprocess (JSON stdin/stdout; MPS inference; ~10-20ms warm latency).
+// - CPUEmbedder: pure-Go deterministic-from-hash placeholder; functional
+// contract complete (L2-normalized 384-dim); FTS5 + wikilink graph
+// compensate quality gap via RRF (D-6). upgrade hook for real
+// Model2Vec when a stable pure-Go port ships.
+// - MockEmbedder: deterministic from sha256+sin; for unit tests only.
 //
 // Factory (NewEmbedder) auto-detects backend per Config.Backend:
 // "auto" → MPS on darwin if python3+script available, else CPU.
 //
-// inv-zen-129: NO net/http imports in this package — all embed operations
+// invariant: NO net/http imports in this package — all embed operations
 // are local-only. Compliance grep in tests/compliance enforces this.
 package embed
 

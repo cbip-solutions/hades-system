@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 //
 // Provides:
-//   - KillProcess(pid) — SIGKILL a subprocess.
-//   - WaitProcessGone(pid) — block until process is gone.
-//   - RegisterTrigger / FireTrigger — named callback events.
-//   - SendSignal(pid, sig) — arbitrary signal delivery.
+// - KillProcess(pid) — SIGKILL a subprocess.
+// - WaitProcessGone(pid) — block until process is gone.
+// - RegisterTrigger / FireTrigger — named callback events.
+// - SendSignal(pid, sig) — arbitrary signal delivery.
 //
 // Used by tests/chaos/audit_chain_chaos_test.go (K-7) to drive
 // daemon mid-operation kills (mid-batch, mid-seal, Litestream crash).

@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -6,7 +7,7 @@
 // Package cache — tier.go
 //
 // Body storage tier decision: inline (≤InlineThresholdBytes) vs CAS
-// (>InlineThresholdBytes). Plan 9 Phase F-4.
+// (>InlineThresholdBytes).
 //
 // # Design
 //
@@ -21,20 +22,20 @@
 //
 // ContentHash (SHA-256 hex) is always computed and set on Finding regardless of
 // tier, enabling:
-//   - Integrity verification without reading the blob.
-//   - CAS lookup dedup (the CAS key equals ContentHash).
-//   - Tier migration (a future gc pass can re-tier without re-downloading).
+// - Integrity verification without reading the blob.
+// - CAS lookup dedup (the CAS key equals ContentHash).
+// - Tier migration (a future gc pass can re-tier without re-downloading).
 //
 // # Invariants
 //
-//   - inv-zen-F4-01: InlineThresholdBytes == 102400 (100 KiB). Do not change
-//     without a schema migration and ADR, because existing inline blobs in
-//     research_findings.body_inline_blob were stored under this contract.
-//   - inv-zen-F4-02: ContentHash is always a 64-char lowercase hex SHA-256.
-//     An empty ContentHash means StoreBody was never called on this Finding.
-//   - inv-zen-F4-03: BodyInlineBlob != nil XOR BodyPath != "" (after StoreBody).
-//     Both empty means no body; both set simultaneously is a data corruption
-//     indicator and must never be produced by this package.
+// - inv-zen-F4-01: InlineThresholdBytes == 102400 (100 KiB). Do not change
+// without a schema migration and ADR, because existing inline blobs in
+// research_findings.body_inline_blob were stored under this contract.
+// - inv-zen-F4-02: ContentHash is always a 64-char lowercase hex SHA-256.
+// An empty ContentHash means StoreBody was never called on this Finding.
+// - inv-zen-F4-03: BodyInlineBlob != nil XOR BodyPath != "" (after StoreBody).
+// Both empty means no body; both set simultaneously is a data corruption
+// indicator and must never be produced by this package.
 package cache
 
 import (

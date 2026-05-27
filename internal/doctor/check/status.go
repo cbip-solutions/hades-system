@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package check — status.go ships the Status + FixMode enums declared in
-// the Plan 13 spec §3.3.
+// the spec §3.3.
 //
 // Status (4 levels per Q5=C+):
-//   - StatusPass (0) — check satisfied; nothing to remediate
-//   - StatusWarn (1) — check soft-failed; degraded operation; operator-actionable
-//   - StatusFail (2) — check hard-failed; blocking; remediation required
-//   - StatusSkip (3) — check unable to run (precondition missing; ctx cancelled;
-//     subsystem opt-out — bypass-config not extracted)
+// - StatusPass (0) — check satisfied; nothing to remediate
+// - StatusWarn (1) — check soft-failed; degraded operation; operator-actionable
+// - StatusFail (2) — check hard-failed; blocking; remediation required
+// - StatusSkip (3) — check unable to run (precondition missing; ctx cancelled;
+// subsystem opt-out — bypass-config not extracted)
 //
 // FixMode (4 levels per Q5=C+):
-//   - FixModeReadOnly — print fix suggestion (default behavior; no execution)
-//   - FixModeInteractive — execute with per-check `[y/N]` prompt
-//   - FixModeAutoSafe — execute idempotent ops only (skip destructive)
-//   - FixModeYes — skip all prompts (CI use; requires explicit operator authz)
+// - FixModeReadOnly — print fix suggestion (default behavior; no execution)
+// - FixModeInteractive — execute with per-check `[y/N]` prompt
+// - FixModeAutoSafe — execute idempotent ops only (skip destructive)
+// - FixModeYes — skip all prompts (CI use; requires explicit operator authz)
 package check
 
 type Status int

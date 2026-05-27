@@ -5,24 +5,24 @@ import (
 	"testing"
 )
 
-// migration_plan9_phaseB_audit_chain_test.go validates Plan 9 Phase B
+// migration_plan9_phaseB_audit_chain_test.go validates
 // migration 059 (audit_events_raw chain extension):
-//   - schemaVersion bumps from current baseline by exactly +1
-//   - Four chain columns exist on audit_events_raw with NOT NULL + DEFAULT
-//   - REFUSE triggers reject UPDATE on append-only columns and DELETE
-//   - audit_events_partitions view returns one row per partition
-//   - audit_partition_seals table exists with PK on partition_id
+// - schemaVersion bumps from current baseline by exactly +1
+// - Four chain columns exist on audit_events_raw with NOT NULL + DEFAULT
+// - REFUSE triggers reject UPDATE on append-only columns and DELETE
+// - audit_events_partitions view returns one row per partition
+// - audit_partition_seals table exists with PK on partition_id
 //
-// Phase B B-1 baseline (verified at task dispatch time per Sync Point S0):
-//   schemaVersion=28 (Plan 7 Phase E-1 058_inbox_aggregator_cache.sql)
-//   latest schema/ migration: 056_substrate_health.sql (058 lives in
-//   internal/store/migrations/ per Plan 7 numbering coordination).
-//   Scenario 2: Plan 7 shipped first → baseline 28 + 1 (migration 059) = 29.
-//   See methodology §4.7.1 plan-vs-reality drift handling.
+// B-1 baseline (verified at task dispatch time per Sync Point S0):
+// schemaVersion=28
+// latest schema/ migration: 056_substrate_health.sql (058 lives in
+// internal/store/migrations/ numbering coordination).
+// Scenario 2: shipped first → baseline 28 + 1 (migration 059) = 29.
+// See methodology §4.7.1 plan-vs-reality drift handling.
 //
 // Floor semantics: phaseBMinSchemaVersion is the minimum value that
 // proves migration 059 stayed applied. Later plans MUST be allowed to
-// bump schemaVersion further (Plan 16 Phase B Task 9 bumps 29 → 30 for
+// bump schemaVersion further ( Task 9 bumps 29 → 30 for
 // migration 064 cost_ledger.provider). The load-bearing assertion is
 // "≥29", not "==29"; an exact pin would force every later plan to edit
 // this file purely to acknowledge an unrelated bump, which is the

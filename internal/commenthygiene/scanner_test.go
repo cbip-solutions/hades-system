@@ -9,10 +9,9 @@ import (
 func TestScan_FlagsRotPatterns(t *testing.T) {
 	tmp := t.TempDir()
 	rotFile := filepath.Join(tmp, "rot.go")
-	if err := os.WriteFile(rotFile, []byte(`package x
-// inv-zen-031: load-bearing
-func A() {}
-`), 0o644); err != nil {
+	if err := os.WriteFile(rotFile, []byte("package x\n"+
+		"// Plan 5 dispatcher boundary\n"+
+		"func A() {}\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	reports, err := Scan(tmp)

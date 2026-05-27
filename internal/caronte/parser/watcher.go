@@ -56,7 +56,7 @@ func (r *realCPUSampler) Sample() float64 {
 // files on save through an IndexerSink. It mirrors internal/knowledge.Watcher
 // (same concurrency model: Run owns all event reads + timer ticks +
 // dispatches in one goroutine; enqueue/tick/dispatch take the mutex briefly)
-// with two Caronte deltas: the file filter is .go (not .md), and the debounce
+// with two Caronte deltas: the file filter is.go (not.md), and the debounce
 // + CPU budget are read per-dispatch from the DoctrineAccessor seam
 // ([doctrine.caronte.watcher]).
 //

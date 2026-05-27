@@ -52,9 +52,9 @@ func NewRegenerateWatcher(cfg WatcherConfig) *RegenerateWatcher {
 // debounce-loop goroutine.
 //
 // Returns an error when:
-//   - cfg.Walker is nil.
-//   - cfg.Regenerator is nil.
-//   - fsnotify.NewWatcher fails (OS-level file-descriptor exhaustion etc.).
+// - cfg.Walker is nil.
+// - cfg.Regenerator is nil.
+// - fsnotify.NewWatcher fails (OS-level file-descriptor exhaustion etc.).
 //
 // Once Start returns nil, Stop MUST eventually be called to release the
 // fsnotify file descriptor and drain the goroutine.

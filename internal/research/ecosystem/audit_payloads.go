@@ -4,56 +4,56 @@
 // JSON-serializable payload types for the 8 RAG audit events
 // (EventType slots 92-99, declared in internal/orchestrator/eventlog/events.go).
 //
-// Phase A (Task A-7) shipped the EventType constants + RAGAuditEmitter
+// (Task A-7) shipped the EventType constants + RAGAuditEmitter
 // skeleton (audit_emitter.go) + the in-memory test chain (mock_chain.go).
 // the emitter marshals on every Emit call, bound 1:1 to each EventType slot.
 //
 // Slot binding (spec §4.6):
 //
-//	EvtRAGQuery         = 92  → RAGQueryPayload
-//	EvtRAGRetrieval     = 93  → RAGRetrievalPayload
-//	EvtRAGCitation      = 94  → RAGCitationPayload
-//	EvtRAGVerify        = 95  → RAGVerifyPayload
-//	EvtRAGAbstain       = 96  → RAGAbstainPayload
-//	EvtRAGAnswer        = 97  → RAGAnswerPayload
-//	EvtRAGIngestPackage = 98  → RAGIngestPackagePayload (emitted by Phase B)
-//	EvtRAGIngestJoinKey = 99  → RAGIngestJoinKeyPayload (emitted by Phase F)
+// EvtRAGQuery = 92 → RAGQueryPayload
+// EvtRAGRetrieval = 93 → RAGRetrievalPayload
+// EvtRAGCitation = 94 → RAGCitationPayload
+// EvtRAGVerify = 95 → RAGVerifyPayload
+// EvtRAGAbstain = 96 → RAGAbstainPayload
+// EvtRAGAnswer = 97 → RAGAnswerPayload
+// EvtRAGIngestPackage = 98 → RAGIngestPackagePayload
+// EvtRAGIngestJoinKey = 99 → RAGIngestJoinKeyPayload
 //
 // Doctrine invariants:
 //
-//   - inv-zen-197 APPEND-ONLY audit chain (Plan 14 master §4.6): EventType
-//     slots 92-99 are reserved + their numeric values immutable. Payload
-//     schemas added here are forward-compatible (additive fields only;
-//     existing fields never renamed/retyped without an explicit ADR).
+// - invariant APPEND-ONLY audit chain: EventType
+// slots 92-99 are reserved + their numeric values immutable. Payload
+// schemas added here are forward-compatible (additive fields only;
+// existing fields never renamed/retyped without an explicit ADR).
 //
-//   - inv-zen-205 doctrine-emission strictness (Plan 14 §2.7 Q9=A): the
-//     8 payloads are emitted via RAGAuditEmitter.Emit which gates per
-//     DoctrineProfile.AuditEmissionLevel. Phase A audit_emitter.go owns
-//     the gate; D-12 ONLY supplies the payload schemas.
+// - invariant doctrine-emission strictness: the
+// 8 payloads are emitted via RAGAuditEmitter.Emit which gates per
+// DoctrineProfile.AuditEmissionLevel. audit_emitter.go owns
+// the gate; D-12 ONLY supplies the payload schemas.
 //
-//   - inv-zen-031 boundary: this file imports internal/orchestrator/eventlog
-//     for the EventType alias + slot constants. It does NOT import Plan 10
-//     budget primitives (the RAGAuditChainEmitter interface in
-//     audit_emitter.go is the boundary-respecting indirection).
+// - invariant boundary: this file imports internal/orchestrator/eventlog
+// for the EventType alias + slot constants. It does NOT import
+// budget primitives (the RAGAuditChainEmitter interface in
+// audit_emitter.go is the boundary-respecting indirection).
 //
 // JSON encoding contract:
 //
-//   - All field names use snake_case JSON tags for cross-language readers
-//     (auditor scripts, Phase H replay verifier).
-//   - Optional fields use `omitempty` to keep stored payloads compact;
-//     required fields are emitted even at zero value.
-//   - Embedded struct types (RoutingDecision, CitationRef, SymbolVerification)
-//     marshal with their own canonical shapes (declared in types.go +
-//     router.go). Any drift there auto-propagates here — intentional.
+// - All field names use snake_case JSON tags for cross-language readers
+// .
+// - Optional fields use `omitempty` to keep stored payloads compact;
+// required fields are emitted even at zero value.
+// - Embedded struct types (RoutingDecision, CitationRef, SymbolVerification)
+// marshal with their own canonical shapes (declared in types.go +
+// router.go). Any drift there auto-propagates here — intentional.
 //
 // What this file is NOT:
 //
-//   - Not a marker for "this type can be emitted as an audit payload" in
-//     the sense of restricting the emitter input. RAGAuditEmitter.Emit takes
-//     `interface{}` deliberately (test code passes maps, structs, raw bytes).
-//     The AuditPayload interface here is a documentation+grep convenience
-//     and a compile-time assertion that the 8 canonical types implement
-//     it — it imposes no production runtime constraint.
+// - Not a marker for "this type can be emitted as an audit payload" in
+// the sense of restricting the emitter input. RAGAuditEmitter.Emit takes
+// `interface{}` deliberately (test code passes maps, structs, raw bytes).
+// The AuditPayload interface here is a documentation+grep convenience
+// and a compile-time assertion that the 8 canonical types implement
+// it — it imposes no production runtime constraint.
 package ecosystem
 
 import "github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
@@ -154,7 +154,7 @@ func (RAGAbstainPayload) markerAuditPayload() bool { return auditPayloadKindAbst
 //
 // CitedChunkIDs MUST match the ChunkID set in the preceding
 // EvtRAGCitation payload (when AuditCitation was emitted under the
-// active doctrine). Phase H property test cross-references the two.
+// active doctrine). property test cross-references the two.
 //
 // TotalLatencyMs is wall-clock from query intake to answer return,
 // including verify + rerank + LLM stages. Sub-ms granularity is

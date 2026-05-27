@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit_chain_configure_s3.go (Plan 9 Phase I Task I-4).
+// Package cli — audit_chain_configure_s3.go.
 //
 // `zen audit-chain configure-s3 --project <id>` walks the operator through
 // interactively configuring per-project S3 backup credentials (endpoint,
@@ -10,16 +10,16 @@
 // Privacy-by-default: the success message confirms storage (project, bucket,
 // endpoint) but NEVER echoes the secret key or access key back to stdout or
 // stderr. If an error message from the daemon inadvertently contains the
-// secret, it is redacted before printing (defense-in-depth, Plan 2 pattern).
+// secret, it is redacted before printing.
 //
-// inv-zen-031 boundary: the CLI calls the daemon endpoint
+// invariant boundary: the CLI calls the daemon endpoint
 // POST /v1/audit-chain/configure-s3 (client.AuditConfigureS3); the CLI
 // NEVER touches Keychain directly.
 //
 // Plan deviation (implementer): plan-file used AuditConfigureS3Req struct and
 // AuditChainConfigureS3Resp return type. H-7 actually shipped:
 //
-//	client.AuditConfigureS3(ctx, projectID string, creds AuditS3Credentials) error
+// client.AuditConfigureS3(ctx, projectID string, creds AuditS3Credentials) error
 //
 // The daemon returns 204 No Content on success; the client method returns nil.
 // AuditS3Credentials{Endpoint, Bucket, Region, AccessKey, SecretKey, Prefix}.

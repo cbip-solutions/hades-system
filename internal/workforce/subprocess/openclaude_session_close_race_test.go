@@ -1,6 +1,6 @@
 // internal/workforce/subprocess/openclaude_session_close_race_test.go
 //
-// Behavioural sister-test for inv-zen-289 (v0.20.6 fix #2): readLoop
+// Behavioural sister-test for invariant (v0.20.6 fix #2): readLoop
 // MUST treat fs.ErrClosed on stdout reads as benign end-of-stream
 // during normal shutdown — surfacing it via closeErr falsifies the
 // graceful-shutdown contract (callers rely on Close returning nil on

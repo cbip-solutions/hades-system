@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package hra_test
 
 import (

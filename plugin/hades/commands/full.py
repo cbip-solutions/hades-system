@@ -52,7 +52,7 @@ Possible values per spec §3.1 Layer 5: `ink_desktop`, `telegram`, `slack`, `wha
 
 ## 3. Render full citation per active platform
 
-Use Phase A renderer for the active platform (per spec §3.2):
+Use  renderer for the active platform (per spec §3.2):
 - `ink_desktop` → `plugin/hades/renderers/ink_citation.py` `InkCitationRenderer.render(envelope)`
 - `telegram` → `plugin/hades/renderers/telegram_citation.py` `TelegramCitationRenderer.render(envelope)`
 - `slack` → `plugin/hades/renderers/slack_citation.py` `SlackCitationRenderer.render(envelope)`
@@ -91,14 +91,14 @@ Further actions:
 
 ## 6. Privacy filter
 
-Per inv-zen-163, if citation crosses doctrine boundary, daemon may return 403 Forbidden.
+Per invariant, if citation crosses doctrine boundary, daemon may return 403 Forbidden.
 
 ## Cross-references
 
 - spec §1 Q6=B AFK comprehensive
 - spec §1 Q9 citation envelope + platform renderings
 - spec §7.4 AFK UX
-- Phase A renderers (consumers; Phase B is UX entry)
+-  renderers
 - /voice (companion command for voice flow)
 """
 

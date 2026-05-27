@@ -1,4 +1,4 @@
-// Verifies the .githooks/pre-commit dispatcher invokes both
+// Verifies the.githooks/pre-commit dispatcher invokes both
 // pre-commit-bypass-token-scan AND pre-commit-doctrine, that
 // pre-commit-doctrine exists and is executable, and that the hook
 // blocks a synthetic violating diff via the

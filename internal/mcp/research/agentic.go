@@ -4,18 +4,18 @@
 // The agentic_deep wrapper iterates the deterministic dispatch
 // (Q4 C core) with LLM-driven gap detection between rounds:
 //
-//  1. Run dispatch(query) → raw findings + verified citations.
-//  2. Pass findings to Synthesizer with profile=research-gap-detection
-//     and ask "is there a gap? if yes, what followup_query?".
-//  3. If gap detected and budget allows and max_iter not exceeded,
-//     goto 1 with the followup query.
-//  4. Otherwise terminate.
+// 1. Run dispatch(query) → raw findings + verified citations.
+// 2. Pass findings to Synthesizer with profile=research-gap-detection
+// and ask "is there a gap? if yes, what followup_query?".
+// 3. If gap detected and budget allows and max_iter not exceeded,
+// goto 1 with the followup query.
+// 4. Otherwise terminate.
 //
 // Three terminate conditions (any one):
-//   - Saturation: new_findings_ratio < 0.1 (less than 10% of results
-//     in the new round are URLs we hadn't seen).
-//   - Budget exhaustion: BudgetClient.PreCall denies.
-//   - Max-iter exceeded.
+// - Saturation: new_findings_ratio < 0.1 (less than 10% of results
+// in the new round are URLs we hadn't seen).
+// - Budget exhaustion: BudgetClient.PreCall denies.
+// - Max-iter exceeded.
 //
 // The wrapper builds on top of the deterministic Dispatcher; it does
 // not call backends directly. This keeps the agentic refinement layer

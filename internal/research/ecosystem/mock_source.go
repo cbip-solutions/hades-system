@@ -2,7 +2,7 @@
 // internal/research/ecosystem/mock_source.go
 //
 // MockSource is the test-helper Source impl. Production-visible (NOT in
-// a _test.go file) because Phase D unit tests of dispatcher fan-out
+// a _test.go file) because unit tests of dispatcher fan-out
 // import MockSource from production-side code (helpers must be visible
 // outside _test.go in the same package to be importable by other
 // packages' tests).

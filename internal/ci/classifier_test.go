@@ -1,18 +1,18 @@
 // Coverage
-//   - ClassifierVersion non-empty (Phase G G-6 contract)
-//   - Classify success path
-//   - Classify infra patterns (all 9 in infraPatterns)
-//   - Classify flake quarantine match
-//   - Classify real fallback (failure + no infra + no flake)
-//   - Classify pending (treated as real for safety)
-//   - Classify with invalid regex in quarantine (skip, fallback real)
-//   - LoadFlakeQuarantine empty file
-//   - LoadFlakeQuarantine valid 3-token entries
-//   - LoadFlakeQuarantine 14d boundary rejection (inclusive)
-//   - LoadFlakeQuarantine malformed: 1-token, 2-token, invalid ts
-//   - LoadFlakeQuarantine multi-token reason recombines
-//   - LoadFlakeQuarantine missing file
-//   - LoadFlakeQuarantine invalid Last-review header timestamp
+// - ClassifierVersion non-empty
+// - Classify success path
+// - Classify infra patterns (all 9 in infraPatterns)
+// - Classify flake quarantine match
+// - Classify real fallback (failure + no infra + no flake)
+// - Classify pending (treated as real for safety)
+// - Classify with invalid regex in quarantine (skip, fallback real)
+// - LoadFlakeQuarantine empty file
+// - LoadFlakeQuarantine valid 3-token entries
+// - LoadFlakeQuarantine 14d boundary rejection (inclusive)
+// - LoadFlakeQuarantine malformed: 1-token, 2-token, invalid ts
+// - LoadFlakeQuarantine multi-token reason recombines
+// - LoadFlakeQuarantine missing file
+// - LoadFlakeQuarantine invalid Last-review header timestamp
 //
 // Coverage target ≥90% (security/correctness-critical per CLAUDE.md).
 package ci_test

@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package augment — DoctrineGate fast-path skip for forbidden doctrines.
 //
-// inv-zen-170: capa-firewall doctrine has [doctrine.augmentation] enable=false
+// invariant: capa-firewall doctrine has [doctrine.augmentation] enable=false
 // in the built-in TOML; DoctrineGate refuses augmentation for any session
 // whose doctrine matches.
 //
 // Three-tier reason ordering (load-bearing):
-//  1. doctrine name == "capa-firewall" → reason="capa-firewall-disabled"
-//     (canonical operator-visibility marker; even if TOML says Enable=true)
-//  2. Augmentation.Enable == false → reason="doctrine-disabled"
-//  3. Augmentation.MaxKGTokens == 0 → reason="max-tokens-zero"
+// 1. doctrine name == "capa-firewall" → reason="capa-firewall-disabled"
+// (canonical operator-visibility marker; even if TOML says Enable=true)
+// 2. Augmentation.Enable == false → reason="doctrine-disabled"
+// 3. Augmentation.MaxKGTokens == 0 → reason="max-tokens-zero"
 //
 // Order matters: (1) before (2) so canonical capa-firewall name wins over
 // operator-override attempts; (2) before (3) because explicit operator

@@ -2,22 +2,22 @@
 // Package main is the entrypoint for the zen CLI.
 // All subcommands defined in internal/cli.
 //
-// Exit codes (Plan 18c Phase B): the catalog severity drives the exit
+// Exit codes: the catalog severity drives the exit
 // code via cli.ExitCodeFromError. Mapping:
 //
-//	0 — success / warn / info (cmd.Execute returned nil; or returned
-//	    a *CodedError with Severity warn|info)
-//	1 — error: operator-recoverable; bad input; daemon 4xx; etc.
-//	2 — fatal: daemon unreachable; transport failure; uncaught error;
-//	    preflight environment missing.
+// 0 — success / warn / info (cmd.Execute returned nil; or returned
+// a *CodedError with Severity warn|info)
+// 1 — error: operator-recoverable; bad input; daemon 4xx; etc.
+// 2 — fatal: daemon unreachable; transport failure; uncaught error;
+// preflight environment missing.
 //
-// The legacy exit-code-3 path (Plan 7 ErrPreflightFailure) collapses
-// to exit 2 (fatal) under Plan 18c. Operator scripts depending on
+// The legacy exit-code-3 path collapses
+// to exit 2 (fatal)c. Operator scripts depending on
 // the 1/2/3 split must migrate to severity-based handling; see
 // docs/operations/hades-entry-point.md "Error UX" section (B-10).
 //
 // Defense-in-depth: a defer-recover() wraps cmd.Execute() so panics
-// are rendered via Phase A's internal-uncaught code with the panic
+// are rendered via internal-uncaught code with the panic
 // value + stack as body (verbose by default). See B-7.
 package main
 

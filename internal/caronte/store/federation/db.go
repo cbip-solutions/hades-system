@@ -1,4 +1,4 @@
-//go:build cgo
+// go:build cgo
 
 // SPDX-License-Identifier: MIT
 
@@ -40,20 +40,20 @@ func (w *WorkspaceFederationDB) DB() *sql.DB { return w.db }
 func federationBoundarySentinel() error { return nil }
 
 // Open creates (or opens) the workspace.db at statePath using the
-// mattn+sqlite-vec single-writer-WAL posture Plan 19 Phase A established
+// mattn+sqlite-vec single-writer-WAL posture established
 // (matches internal/knowledge/aggregator.Open exactly). Auto-creates the
 // parent directory at 0o700, opens the handle, pings, materializes the
 // C-2 schema via Init, then applies any caller-supplied Options (which
-// include the inv-zen-269 audit-emitter wiring per review I2).
+// include the invariant audit-emitter wiring per review I2).
 //
-// Pre  statePath is non-empty (callers MUST call WorkspaceDBPath first
+// # Pre statePath is non-empty (callers MUST call WorkspaceDBPath first
 //
-//	to resolve the canonical location; an empty statePath is a
-//	composition-root bug → ErrEmptyStatePath).
+// to resolve the canonical location; an empty statePath is a
+// composition-root bug → ErrEmptyStatePath).
 //
 // Post every C-2 table/index exists; FK enforcement is ON; PRAGMA WAL is
 //
-//	set; pool is sized for single-writer; every Option has been applied.
+// set; pool is sized for single-writer; every Option has been applied.
 //
 // Review I2: the audit-emitter wiring is an Option (WithAuditEmitter)
 // rather than a post-construction setter — the field is written once

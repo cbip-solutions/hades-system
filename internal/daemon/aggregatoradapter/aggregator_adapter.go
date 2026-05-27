@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-// Package aggregatoradapter bridges Plan 9 D's *aggregator.Aggregator
+// Package aggregatoradapter bridges D's *aggregator.Aggregator
 // (query surface) + aggregator.Embedder (DI'd at New(opts) time) <->
 // internal/augment's KnowledgeIndex + Embedder interfaces.
 //
-// inv-zen-031 boundary: this package lives in internal/daemon/ (NOT under
-// internal/augment/). The daemon owns the Plan 9 D lifecycle; the augment
+// invariant boundary: this package lives in internal/daemon/ (NOT under
+// internal/augment/). The daemon owns the D lifecycle; the augment
 // package consumes the augment.KnowledgeIndex / augment.Embedder interfaces
 // only. Compliance test sentinel `aggregatorAdapterBoundarySentinel`
 // verifies no internal/store import.
 //
-// Stage 2 fix (2026-05-10): replaces an earlier broken design where Phase C's
+// fix (2026-05-10): replaces an earlier broken design where
 // `Aggregator` interface incorrectly claimed an `Embed` method. The split
-// (KnowledgeIndex.Query{FTS,Vec,Graph} + separate Embedder) reflects Plan 9
+// (KnowledgeIndex.Query{FTS,Vec,Graph} + separate Embedder) reflects
 // D's actual API: *Aggregator has no Embed; Embedder is a Go interface
 // dependency-injected at aggregator.New(opts).
 package aggregatoradapter

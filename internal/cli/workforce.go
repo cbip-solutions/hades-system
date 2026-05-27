@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — workforce.go (Plan 4 Phase N Task N-2).
+// Package cli — workforce.go.
 //
 // `zen workforce` exposes the in-flight workforce surface: live status,
 // the OperatorGate state machine (pause/resume — security-grade), worker
@@ -8,22 +8,22 @@
 //
 // Cobra layout (8 §6.1 entries; 9 cobra leaves):
 //
-//	zen workforce
-//	  status
-//	  gate
-//	    state
-//	    pause   --mode --reason --yes
-//	    resume  --reason --yes
-//	  workers   --status --limit
-//	  checkpoints   --task --limit
-//	  specs
-//	    list
-//	    show <id>
+// zen workforce
+// status
+// gate
+// state
+// pause --mode --reason --yes
+// resume --reason --yes
+// workers --status --limit
+// checkpoints --task --limit
+// specs
+// list
+// show <id>
 //
 // All inherit the universal flags from format.AttachFlags on the namespace.
 //
 // Note (Option A adaptation): the plan referred to a `subprocesses {list,
-// inspect, kill}` triple but Phase G surfaces the canonical workforce
+// inspect, kill}` triple but surfaces the canonical workforce
 // primitive as `workers` (handlers.WorkforceWorkers). This wiring uses
 // `workers` to match the daemon contract; spec §6.1 enumeration count
 // remains 8 entries (status, gate{state,pause,resume}, workers, checkpoints,

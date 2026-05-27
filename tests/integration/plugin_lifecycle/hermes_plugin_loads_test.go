@@ -1,6 +1,5 @@
 // tests/integration/plugin_lifecycle/hermes_plugin_loads_test.go
-//go:build integration
-
+// go:build integration
 package plugin_lifecycle_test
 
 import (

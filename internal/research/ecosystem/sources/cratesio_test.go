@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -16,13 +17,13 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/research/ecosystem"
 )
 
-//go:embed cratesio_testdata/serde_metadata.json
+// go:embed cratesio_testdata/serde_metadata.json
 var cratesSerdeJSON []byte
 
-//go:embed cratesio_testdata/top_crates.json
+// go:embed cratesio_testdata/top_crates.json
 var cratesTopJSON []byte
 
-//go:embed cratesio_testdata/serde_docs.html
+// go:embed cratesio_testdata/serde_docs.html
 var cratesSerdeHTML []byte
 
 func TestCratesIOSource_Ecosystem(t *testing.T) {

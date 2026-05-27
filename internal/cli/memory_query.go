@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package cli — memory_query.go (Plan 14 Phase F Task F-4).
+// Package cli — memory_query.go.
 //
 // `zen memory query` cross-corpus retrieval with RRF k=60 fusion.
 //
-// Without --remote: only the Plan 9 D aggregator is queried (single source).
-// With --remote: both the aggregator + the Plan 14 ecosystem RAG dispatcher
+// Without --remote: only the D aggregator is queried (single source).
+// With --remote: both the aggregator + the ecosystem RAG dispatcher
 // are queried in parallel, then results are fused via Reciprocal Rank Fusion
-// (k=60, Plan 14 cross-corpus fusion constant).
+// .
 //
 // Soft-fail semantics:
-//   - both sources succeed → fused output
-//   - one source errors → render the other (no error surfaced to operator)
-//   - both sources error → return an error mentioning both
+// - both sources succeed → fused output
+// - one source errors → render the other (no error surfaced to operator)
+// - both sources error → return an error mentioning both
 //
-// The RRF formula `1.0 / float64(k+rank+1)` matches the Plan 14 D-10
+// The RRF formula `1.0 / float64(k+rank+1)` matches the D-10
 // cross-ecosystem fusion implementation (internal/research/ecosystem/dispatcher.go);
 // keeping the constant in sync across layers avoids re-ranking drift.
 package cli

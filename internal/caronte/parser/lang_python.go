@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -16,7 +17,7 @@ import (
 )
 
 // pyCaptures maps the python.scm @definition.<kind> capture names to
-// store.NodeKind. A Python class maps to KindStruct (Phase A froze no "class"
+// store.NodeKind. A Python class maps to KindStruct ( froze no "class"
 // kind; the language column disambiguates). Keys MUST match queries/python.scm.
 var pyCaptures = map[string]store.NodeKind{
 	"definition.function": store.KindFunction,

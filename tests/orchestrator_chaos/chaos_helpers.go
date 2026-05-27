@@ -3,7 +3,7 @@
 // build-tag-gated supervisor-failure suite. The helpers below spawn a
 // real bin/zen-swarm-ctld subprocess inside an isolated temp directory,
 // inject SIGKILL, and restart the daemon to validate replay-recovery
-// (spec §5.4 + inv-zen-095 integration-level).
+// .
 //
 // Helpers live without a build tag (they are reused by smoke-style
 // integration tests as well); the actual chaos cases hide behind
@@ -12,9 +12,9 @@
 //
 // Daemon flag contract (see cmd/zen-swarm-ctld/main.go):
 //
-//	--uds  <path>   Unix domain socket path
-//	--http <addr>   optional TCP HTTP address
-//	--db   <path>   SQLite path
+// --uds <path> Unix domain socket path
+// --http <addr> optional TCP HTTP address
+// --db <path> SQLite path
 //
 // The helpers SET --uds and --db explicitly (no --http) so the daemon
 // runs entirely over the per-test UDS without contending for TCP ports.
@@ -241,7 +241,7 @@ func (d *TestDaemon) Kill() error {
 	}
 	d.stopped = true
 	if runtime.GOOS == "windows" {
-		// SIGKILL is not portable to Windows; fall back to .Kill() which
+		// SIGKILL is not portable to Windows; fall back to.Kill() which
 		// uses TerminateProcess. Chaos tests do not target Windows
 		// today (the daemon is unix-only) but the helper stays portable
 		// at the API level.

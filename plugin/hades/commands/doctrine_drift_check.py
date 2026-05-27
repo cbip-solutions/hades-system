@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:doctrine-drift-check — Doctrine drift detection via caronte code-graph query
 
-You are detecting doctrine drift in the active HADES project. **Drift** = code/spec/docs that reference doctrine values inconsistent with current `.zen-swarm.toml` + Plan 8 doctrine schema. Wraps caronte code-graph query + cross-references current doctrine config.
+You are detecting doctrine drift in the active HADES project. **Drift** = code/spec/docs that reference doctrine values inconsistent with current `.zen-swarm.toml` +  doctrine schema. Wraps caronte code-graph query + cross-references current doctrine config.
 
 ## 1. Identify active project + current doctrine
 
@@ -20,7 +20,7 @@ DOCTRINE_CONFIG=$(curl --unix-socket /tmp/zen-swarm.sock -s \\
 
 ## 2. Query caronte code-graph for doctrine references
 
-For each known doctrine key, query via Plan 11 mcpgateway (caronte is in-process; no separate MCP entry):
+For each known doctrine key, query mcpgateway (caronte is in-process; no separate MCP entry):
 
 ```bash
 for KEY in $DOCTRINE_KEYS; do
@@ -32,7 +32,7 @@ for KEY in $DOCTRINE_KEYS; do
 done
 ```
 
-This uses the caronte code-graph (Plan 19 in-process engine, per Plan 11 §3.1) to find every code/spec/doc location referencing each doctrine key.
+This uses the caronte code-graph to find every code/spec/doc location referencing each doctrine key.
 
 ## 3. Cross-reference vs current config
 
@@ -52,14 +52,14 @@ For each (key, reference) pair:
 ### HIGH
 1. spec/2026-04-29-zen-swarm-design.md:842 references `max_kg_tokens=15000`
    - Current daemon config: `max_kg_tokens=25000` (max-scope doctrine)
-   - Likely outdated since Plan 11 ship; recommend doc update
+   - Likely outdated since  ship; recommend doc update
 
 ### MEDIUM
 2. tests/integration/augment_e2e_test.go:127 hardcodes `impact_threshold=20`
    - Current daemon config: `impact_threshold=10` (max-scope doctrine)
 
 ### LOW
-3. ...
+3....
 
 ## No drift
 - <K_clean> references match current config
@@ -88,8 +88,8 @@ Audit chain: zen://audit/<aggregate_event_id>
 
 ## Cross-references
 
-- Plan 8 doctrine schema (canonical source of truth)
-- Plan 11 §3.1 mcpgateway (caronte in-process; tool name mcp_zen-swarm_caronte_query)
+-  doctrine schema (canonical source of truth)
+-  §3.1 mcpgateway (caronte in-process; tool name mcp_zen-swarm_caronte_query)
 - spec §4.2 slash command flow
 - spec §11.3 cross-plan canon checklist (drift detection mechanism)
 """

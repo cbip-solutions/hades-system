@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_research.go (Plan 4 Phase N Task N-8).
+// Package cli — doctor_research.go.
 package cli
 
 import (

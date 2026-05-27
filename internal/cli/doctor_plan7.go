@@ -7,13 +7,13 @@
 //
 // The 4 subcommands share a small composition root (buildDoctorDeps) that
 // resolves the daemon HTTP client from the inherited --uds flag and wires
-// per-subsystem probers from the daemon HTTP responses (Phase I lands the
-// daemon-side HTTP probe endpoints; Phase J's J-7 ships the CLI seam with
+// per-subsystem probers from the daemon HTTP responses ( lands the
+// daemon-side HTTP probe endpoints; J-7 ships the CLI seam with
 // nil probers, RunFullProbe gracefully emits Warn rows for nil sections).
 //
-// inv-zen-031 boundary: NewDoctorKnowledgeCmd etc. live in internal/cli;
+// invariant boundary: NewDoctorKnowledgeCmd etc. live in internal/cli;
 // they instantiate KnowledgeProber implementations through the daemon's
-// HTTP layer (or, in Phase J pre-wiring, leave the prober nil and the
+// HTTP layer (or, in pre-wiring, leave the prober nil and the
 // helper emits a Warn no-op probe). Tests substitute a fake DoctorDeps
 // directly via the exported RunXxxProbeWithDeps helpers — no daemon
 // boot required.

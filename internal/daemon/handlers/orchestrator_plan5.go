@@ -1,37 +1,37 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — orchestrator_plan5.go (Plan 5 Phase N).
+// Package handlers — orchestrator_plan5.go.
 //
-// HTTP handler for the new Plan 5 routes the daemon exposes:
+// HTTP handler for the new routes the daemon exposes:
 //
-//	GET  /v1/orchestrator/state
-//	GET  /v1/orchestrator/pool
-//	POST /v1/orchestrator/pool/prune
-//	POST /v1/orchestrator/depth
-//	POST /v1/orchestrator/capture
-//	POST /v1/orchestrator/replay
-//	GET  /v1/autonomy/show
-//	GET  /v1/autonomy/check
-//	POST /v1/autonomy/mode
-//	GET  /v1/doctrine/propose-list
-//	GET  /v1/doctrine/propose-show
-//	POST /v1/doctrine/ack
-//	POST /v1/doctrine/deny
-//	POST /v1/doctrine/revert
-//	POST /v1/doctrine/propose         (Plan 8 Phase K-4 NEW)
-//	GET  /v1/safetynet/status
-//	POST /v1/safetynet/prev/install
-//	GET  /v1/safetynet/prev/show
-//	POST /v1/safetynet/prev/exec
-//	POST /v1/safetynet/divergence/run
-//	GET  /v1/safetynet/divergence/history
-//	GET  /v1/safetynet/regression/query
-//	POST /v1/safetynet/drift/run
-//	GET  /v1/safetynet/drift/history
-//	GET  /v1/orchestrator/health/event_log_writable
-//	GET  /v1/orchestrator/health/research_mcp_up
-//	GET  /v1/orchestrator/health/caronte_up
-//	GET  /v1/orchestrator/health/adapters_clean
-//	GET  /v1/orchestrator/health/last_session_clean
+// GET /v1/orchestrator/state
+// GET /v1/orchestrator/pool
+// POST /v1/orchestrator/pool/prune
+// POST /v1/orchestrator/depth
+// POST /v1/orchestrator/capture
+// POST /v1/orchestrator/replay
+// GET /v1/autonomy/show
+// GET /v1/autonomy/check
+// POST /v1/autonomy/mode
+// GET /v1/doctrine/propose-list
+// GET /v1/doctrine/propose-show
+// POST /v1/doctrine/ack
+// POST /v1/doctrine/deny
+// POST /v1/doctrine/revert
+// POST /v1/doctrine/propose
+// GET /v1/safetynet/status
+// POST /v1/safetynet/prev/install
+// GET /v1/safetynet/prev/show
+// POST /v1/safetynet/prev/exec
+// POST /v1/safetynet/divergence/run
+// GET /v1/safetynet/divergence/history
+// GET /v1/safetynet/regression/query
+// POST /v1/safetynet/drift/run
+// GET /v1/safetynet/drift/history
+// GET /v1/orchestrator/health/event_log_writable
+// GET /v1/orchestrator/health/research_mcp_up
+// GET /v1/orchestrator/health/caronte_up
+// GET /v1/orchestrator/health/adapters_clean
+// GET /v1/orchestrator/health/last_session_clean
 //
 // The handler accepts a service interface (Plan5OrchestratorService)
 // that wires to the live orchestrator at daemon-init time. Tests

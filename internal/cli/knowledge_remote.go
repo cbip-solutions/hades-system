@@ -1,29 +1,29 @@
 // SPDX-License-Identifier: MIT
-// Package cli — knowledge_remote.go (Plan 14 Phase F Task F-3).
+// Package cli — knowledge_remote.go.
 //
 // RunKnowledgeQueryRemote implements `zen knowledge query --remote`. Called
 // from RunKnowledgeQuery when flags.Remote=true. Dispatches to the daemon's
 // POST /v1/knowledge/ecosystem/query endpoint, which routes through the
 //
-// inv-zen-129 amendment (Plan 14 F-3): --remote is NOW OPERATIONAL.
+// invariant amendment: --remote is NOW OPERATIONAL.
 // The sentinel short-circuit previously rendered a deferred-message
 // pointer; it is replaced by a live round-trip to the daemon. The
-// inv-zen-129 boundary is preserved by routing distinction:
-//   - --remote=true  → ecosystem RAG over ingested corpus
-//     (daemon-side Dispatcher; no open-web queries from the daemon).
-//   - --remote=false → Plan 7 aggregator (FTS5 over local docs;
-//     internal/knowledge package returns ErrRemoteNotShipped if a
-//     caller bypasses the CLI and passes Query{Remote: true}).
+// invariant boundary is preserved by routing distinction:
+// - --remote=true → ecosystem RAG over ingested corpus
+// (daemon-side Dispatcher; no open-web queries from the daemon).
+// - --remote=false → aggregator (FTS5 over local docs;
+// internal/knowledge package returns ErrRemoteNotShipped if a
+// caller bypasses the CLI and passes Query{Remote: true}).
 //
 // Flags added by this task (only meaningful with --remote):
 //
-//	--ecosystem go|python|typescript|rust   filter to one ecosystem
-//	                                        (empty = router decides)
-//	--version   <semver>                    version context
-//	                                        (empty = 5-layer cascade)
-//	--doctrine  max-scope|default|capa-firewall
-//	--max-results N                         default 10
-//	--remote-format json|human              output format (default human)
+// --ecosystem go|python|typescript|rust filter to one ecosystem
+// (empty = router decides)
+// --version <semver> version context
+// (empty = 5-layer cascade)
+// --doctrine max-scope|default|capa-firewall
+// --max-results N default 10
+// --remote-format json|human output format (default human)
 package cli
 
 import (

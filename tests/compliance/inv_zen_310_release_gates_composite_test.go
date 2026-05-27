@@ -1,10 +1,10 @@
 // tests/compliance/inv_zen_310_release_gates_composite_test.go
 //
-// inv-zen-310 (Plan 15 Phase G G-1) — release-gates.yml composite passes all
-// required jobs (27 gates + 1 aggregate = 28 jobs total post Stage-0 + B-15).
+// invariant — release-gates.yml composite passes all
+// required jobs.
 //
-// Compile-check slice: the .github/workflows/release-gates.yml workflow file
-// MUST exist + parse as valid YAML + declare the 27 baseline+Stage-0+B-15
+// Compile-check slice: the.github/workflows/release-gates.yml workflow file
+// MUST exist + parse as valid YAML + declare the 27 baseline++B-15
 // gate jobs + aggregate roll-up + workflow_call reusable trigger; Makefile
 // `verify-release-gates` composite MUST list every gate as a prerequisite
 // (one-to-one parity vs the workflow job catalog).
@@ -12,35 +12,35 @@
 // Runtime check (deferred to G-7 integration smoke): `gh workflow run
 // release-gates --ref <head>` reaches success on all 27 gates + aggregate.
 //
-// Stage-0 reality-check note (per feedback_plan_template_drift.md): the
+// reality-check note (per feedback_plan_template_drift.md): the
 // master plan §2.1 and plan-file narrative both claim "27 gates + 1 aggregate
 // = 28 jobs total" but the actual enumeration in both documents historically
-// listed only 26 distinct gate targets (19 baseline + 7 Stage-0 additive).
-// The "8 Stage-0 additive" text-count was a plan-file inconsistency that
+// listed only 26 distinct gate targets.
+// The "8 additive" text-count was a plan-file inconsistency that
 // double-counted verify-license-compliance (which is in the 19-baseline AND
-// framed as "semantically new under MIT" per decisión 15). Phase B-15
-// (decisión 17-d capability-vector forward-compat; inv-zen-284) added
+// framed as "semantically new under MIT" policy).
+// added
 // verify-sidecar-capability-negotiation as the 27th gate — current cardinality
 // (27 + 1 = 28 jobs) now aligns with the original master-plan text. Reality
 // wins: this test asserts the actual enumeration cardinality (27 + 1 = 28).
 //
-// The 7 Stage-0 additive gates (per decisiones 7-b/8/9/10/12/15-2) compose on
+// The 7 additive gates compose on
 // top of the 19-baseline:
-//   - verify-changelog-completeness  (A-12; decisión 8 anti-recurrence)
-//   - verify-dco-signoff             (C-14; decisión 15-2 DCO sign-off)
-//   - verify-canonical-docs-hygiene  (I-8; decisión 9 canonical docs refresh)
-//   - verify-no-personal-references  (J-9; decisión 10 privacy scrub)
-//   - verify-no-task-context-comments (K-9; decisión 12 task-context rot)
-//   - verify-godoc-clean             (K-9; decisión 12 godoc presence)
-//   - verify-hermes-boundary         (H-12; decisión 7-b boundary consolidation)
+// - verify-changelog-completeness
+// - verify-dco-signoff
+// - verify-canonical-docs-hygiene
+// - verify-no-personal-references
+// - verify-no-task-context-comments
+// - verify-godoc-clean
+// - verify-hermes-boundary
 //
-// Phase B-15 additive gate (per decisión 17-d):
-//   - verify-sidecar-capability-negotiation (B-15; inv-zen-284 capability-vector
-//     forward-compat integration test promoted from standalone target into the
-//     composite at B-15 to lockstep with the aggregator + expectedGateJobs).
+// additive gate:
+// - verify-sidecar-capability-negotiation (B-15; invariant capability-vector
+// forward-compat integration test promoted from standalone target into the
+// composite at B-15 to lockstep with the aggregator + expectedGateJobs).
 //
 // verify-license-compliance is in the 19-baseline list and now MIT-canonical
-// per decisión 15 (supersedes Apache-2.0; surface count 4-redundant down from
+// policy (supersedes Apache-2.0; surface count 4-redundant down from
 // 5-redundant under Apache + NOTICE).
 //
 // Helper sharing: this file defines repoPath + mustReadFile + yaml unmarshal
@@ -49,9 +49,9 @@
 //
 // Three-place triple:
 //
-//	(1) spec §7.7 inv-zen-310 text
-//	(2) this compliance test (file existence + YAML structure + job catalog parity)
-//	(3) .github/workflows/release-gates.yml + Makefile verify-release-gates target
+// (1) spec §7.7 invariant text
+// (2) this compliance test (file existence + YAML structure + job catalog parity)
+// (3).github/workflows/release-gates.yml + Makefile verify-release-gates target
 package compliance_test
 
 import (

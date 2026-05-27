@@ -107,7 +107,7 @@ type Node struct {
 // Edge is a relation between two nodes. C-4 frozen field set; mirrors the
 // graph_edges columns (spec §4.2). Reachable is a *bool: nil ⇒ NULL
 // (CHA/SCIP, not pruned); &true/&false ⇒ VTA/RTA reachable-set result.
-// Confidence MUST be Valid() (inv-zen-233).
+// Confidence MUST be Valid().
 type Edge struct {
 	SourceID, TargetID, Kind string
 	Confidence               Confidence
@@ -145,7 +145,7 @@ type LoreTrailer struct {
 // (Phases C extractor-registry, D/E concrete extractors); persisted as the
 // bare string.
 //
-// inv-zen-263: every api_endpoints.kind value in storage MUST be one of
+// invariant: every api_endpoints.kind value in storage MUST be one of
 // these; the schema.go CHECK clause references these literals + the
 // compliance test tests/compliance/inv_zen_263_*.go asserts both halves
 // (schema-side + Go-side) stay in sync.
@@ -197,21 +197,21 @@ type APICall struct {
 	ExtractorID string
 }
 
-// BreakingChange is the CGO-agnostic value type for the Plan 20 Phase 20
-// breaking-change event (FIX-3 from Phase A code-review). Mirrors
+// BreakingChange is the CGO-agnostic value type for the Phase 20
+// breaking-change event. Mirrors
 // federation.BreakingChange columns exactly so federation can adapt freely
 // (federation.ToStoreBreakingChange is the cgo-tagged adapter that produces
-// this value from the on-disk row). Phase H's coordinated/ package consumes
+// this value from the on-disk row). coordinated/ package consumes
 // this (CGO-agnostic boundary — coordinated/ MUST stay CGO-clean per the
 //
 // Field set: identical to federation.BreakingChange but with JSON-blob
 // columns expressed as []byte (canonical-bytes preservation) instead of
-// the federation row's TEXT-typed string mirrors. Phase H reads the
+// the federation row's TEXT-typed string mirrors. reads the
 // JSON payloads through this byte-typed surface.
 //
-// Lives in this file rather than a fresh types.go (per Phase A Stage-0
-// drift report: this file pre-exists with the Plan 19 C confidence /
-// node-kind set + Phase B's APIEndpoint/APICall above; FIX-3 appends
+// Lives in this file rather than a fresh types.go (per
+// drift report: this file pre-exists with the C confidence /
+// node-kind set + APIEndpoint/APICall above; FIX-3 appends
 // additively so existing tests stay green).
 type BreakingChange struct {
 	ChangeID       string

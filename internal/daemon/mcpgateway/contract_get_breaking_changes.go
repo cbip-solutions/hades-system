@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package mcpgateway — contract_get_breaking_changes.go (Plan 20 Phase I).
+// Package mcpgateway — contract_get_breaking_changes.go.
 //
 // Handler for the `get_breaking_changes` MCP tool. Validates required
 // `workspace` arg + optional `since` (int unix-seconds; default 0 = unbounded)

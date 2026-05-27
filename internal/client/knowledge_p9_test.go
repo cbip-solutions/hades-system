@@ -132,6 +132,23 @@ func TestKnowledgePromote(t *testing.T) {
 	}
 }
 
+func TestKnowledgePromoteProject(t *testing.T) {
+	c, _ := startKnowledgeP9TestServer(t, "POST /v1/knowledge/promote",
+		func(w http.ResponseWriter, r *http.Request) {
+			var body map[string]string
+			if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+				t.Fatalf("decode: %v", err)
+			}
+			if body["project_id"] != "proj-1" {
+				t.Errorf("project_id = %q, want proj-1", body["project_id"])
+			}
+			w.WriteHeader(http.StatusNoContent)
+		})
+	if err := c.KnowledgePromoteProjectP9(context.Background(), "n1", "proj-1", "applies"); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+}
+
 func TestKnowledgePromote_ServerError(t *testing.T) {
 	c, _ := startKnowledgeP9TestServer(t, "POST /v1/knowledge/promote",
 		func(w http.ResponseWriter, r *http.Request) {
@@ -158,6 +175,23 @@ func TestKnowledgeUnpromote(t *testing.T) {
 			w.WriteHeader(http.StatusNoContent)
 		})
 	if err := c.KnowledgeUnpromoteP9(context.Background(), "n1", "no longer relevant"); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+}
+
+func TestKnowledgeUnpromoteProject(t *testing.T) {
+	c, _ := startKnowledgeP9TestServer(t, "POST /v1/knowledge/unpromote",
+		func(w http.ResponseWriter, r *http.Request) {
+			var body map[string]string
+			if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+				t.Fatalf("decode: %v", err)
+			}
+			if body["project_id"] != "proj-1" {
+				t.Errorf("project_id = %q, want proj-1", body["project_id"])
+			}
+			w.WriteHeader(http.StatusNoContent)
+		})
+	if err := c.KnowledgeUnpromoteProjectP9(context.Background(), "n1", "proj-1", "reason"); err != nil {
 		t.Fatalf("err: %v", err)
 	}
 }

@@ -1,3 +1,4 @@
+// go:build compliance
 //go:build compliance
 // +build compliance
 
@@ -178,7 +179,7 @@ func TestInvZen164ProviderPluginRegistersProfile(t *testing.T) {
 	// Anchor 5: base_url MUST point at a local-loopback HTTP URL by
 	// default (override via env). An external hostname here would let
 	// the operator's `hermes model zen` start talking to a foreign
-	// service — never permissible under inv-zen-088 single-egress.
+	// service — never permissible under invariant single-egress.
 	// We accept both literal default in source and env-var-override
 	// markers (operator can configure ZEN_SWARM_BASE_URL).
 	if !strings.Contains(src, "127.0.0.1") && !strings.Contains(src, "localhost") {

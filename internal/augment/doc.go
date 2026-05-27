@@ -9,15 +9,15 @@
 // github.com/cbip-solutions/hades-system/internal/augment` reports the package
 // docstring even when no other Go file is loaded.
 //
-// Phase ownership (per docs/superpowers/plans/2026-05-10-plan-11-phase-C-*):
-//   - C-1 (this file + types.go + sentinel.go): types + sentinels + doc
-//   - C-2 (doctrine_gate.go): DoctrineGate.Check
-//   - C-3 (budget_gate.go): BudgetGate.Check + Commit
-//   - C-4 (privacy.go): PrivacyFilter.FilterCrossProject
-//   - C-5 (aggregator_consumer.go): AggregatorConsumer.Lane{2,4,5}*
-//   - C-6 (pipeline.go): Pipeline.Run (5-lane orchestration)
-//   - C-7 (community_summarize.go): structural cluster summarization
-//   - C-8 (cache_split.go): static/volatile split
-//   - C-9 (truncation.go): graceful_truncate guard
-//   - C-10 (audit_anchor.go): Plan 9 Tessera leaf emission
+// Phase ownership (per internal design record):
+// - C-1 (this file + types.go + sentinel.go): types + sentinels + doc
+// - C-2 (doctrine_gate.go): DoctrineGate.Check
+// - C-3 (budget_gate.go): BudgetGate.Check + Commit
+// - C-4 (privacy.go): PrivacyFilter.FilterCrossProject
+// - C-5 (aggregator_consumer.go): AggregatorConsumer.Lane{2,4,5}*
+// - C-6 (pipeline.go): Pipeline.Run (5-lane orchestration)
+// - C-7 (community_summarize.go): structural cluster summarization
+// - C-8 (cache_split.go): static/volatile split
+// - C-9 (truncation.go): graceful_truncate guard
+// - C-10 (audit_anchor.go): Tessera leaf emission
 package augment

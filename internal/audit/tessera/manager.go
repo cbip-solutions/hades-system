@@ -69,20 +69,20 @@ func (m *Manager) CoSigner() *CoSigner { return m.cosigner }
 //
 // Side effects on first creation:
 //
-//  1. NewProjectAdapter constructs the per-project tile-log under
-//     <dataRoot>/projects/<projectID>/audit/tessera and wires the
-//     POSIX storage + Tessera Appender.
-//  2. The new Adapter is attached to the singleton witness via
-//     a.Attach(witness) so Adapter.WitnessCoSignSeal can produce
-//     daemon-witness signatures over partition-seal payloads (A-6b).
-//     Without Attach, every WitnessCoSignSeal call would return
-//     ErrWitnessKeyMissing.
-//  3. The cosigner subscribes to the new Adapter's STH stream via
-//     CoSigner.SubscribeAdapter(a). Subscription returns an error
-//     post-A-6 fix (the Adapter rejects subscription on a closed
-//     handle); we propagate it after closing the Adapter to avoid
-//     leaking the storage + background goroutines for an Adapter that
-//     would never reach the daemon-global path.
+// 1. NewProjectAdapter constructs the per-project tile-log under
+// <dataRoot>/projects/<projectID>/audit/tessera and wires the
+// POSIX storage + Tessera Appender.
+// 2. The new Adapter is attached to the singleton witness via
+// a.Attach(witness) so Adapter.WitnessCoSignSeal can produce
+// daemon-witness signatures over partition-seal payloads (A-6b).
+// Without Attach, every WitnessCoSignSeal call would return
+// ErrWitnessKeyMissing.
+// 3. The cosigner subscribes to the new Adapter's STH stream via
+// CoSigner.SubscribeAdapter(a). Subscription returns an error
+// post-A-6 fix (the Adapter rejects subscription on a closed
+// handle); we propagate it after closing the Adapter to avoid
+// leaking the storage + background goroutines for an Adapter that
+// would never reach the daemon-global path.
 //
 // Returns the cached or newly-created Adapter. Caller MUST NOT call
 // Close on the returned Adapter — Manager.Close handles the lifecycle.

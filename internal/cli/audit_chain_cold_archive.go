@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit_chain_cold_archive.go (Plan 9 Phase I Task I-3).
+// Package cli — audit_chain_cold_archive.go.
 //
 // `zen audit-chain cold-archive` manages the cold storage tier for archived
 // Tessera partitions (spec §6.1 Q5 A). Two leaf commands:
 //
-//	ls      List archived partitions (per-project, table by default)
-//	restore Pull a partition from cold archive back to local hot tier
+// ls List archived partitions (per-project, table by default)
+// restore Pull a partition from cold archive back to local hot tier
 //
 // `restore` is destructive (overwrites the local Tessera tile-log slice for
 // the named partition) and therefore requires an interactive y/N confirmation
@@ -16,12 +16,12 @@
 // request/response types and a /v1/audit-chain/cold-archive/ls endpoint.
 // H-7 actually shipped:
 //
-//   - client.AuditColdArchiveList(ctx, projectID) []AuditColdArchiveEntry
-//     with AuditColdArchiveEntry{PartitionID, SizeBytes, ArchivedAt, ContentHash}
-//     on endpoint GET /v1/audit-chain/cold-archive/list (note: "list" not "ls")
+// - client.AuditColdArchiveList(ctx, projectID) []AuditColdArchiveEntry
+// with AuditColdArchiveEntry{PartitionID, SizeBytes, ArchivedAt, ContentHash}
+// on endpoint GET /v1/audit-chain/cold-archive/list (note: "list" not "ls")
 //
-//   - client.AuditColdArchiveRestore(ctx, partitionID, projectID) AuditRestoreResult
-//     with AuditRestoreResult{Restored, BytesPulled, DurationSec}
+// - client.AuditColdArchiveRestore(ctx, partitionID, projectID) AuditRestoreResult
+// with AuditRestoreResult{Restored, BytesPulled, DurationSec}
 //
 // This file uses the H-7 actuals throughout.
 package cli

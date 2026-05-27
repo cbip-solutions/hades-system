@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 
-// Package main — doctrine_registry.go (Plan 11 Phase D fix-cycle
+// Package main — doctrine_registry.go ( fix-cycle
 // re-review pre-existing-gap fix).
 //
 // bootDoctrineRegistry wires the daemon's active.Accessor singleton with
@@ -9,13 +9,13 @@
 // # Why this exists
 //
 // The active.Accessor singleton's SetRegistry is documented as the
-// daemon-startup contract (inv-zen-134 init-order guard) in
+// daemon-startup contract in
 // internal/doctrine/active/active.go:53-65. server.go:511-512 also
 // explicitly references this contract:
 //
-//	"reloadWatcher is the daemon-owned *reload.Watcher singleton. nil
-//	 until SetReloadWatcher is called by cmd/zen-swarm-ctld AFTER
-//	 builtin.LoadAll + active.SetRegistry."
+// "reloadWatcher is the daemon-owned *reload.Watcher singleton. nil
+// until SetReloadWatcher is called by cmd/zen-swarm-ctld AFTER
+// builtin.LoadAll + active.SetRegistry."
 //
 // But the production main.go boot never invoked active.SetRegistry,
 // leaving the singleton zero-valued. Consequence: every consumer that
@@ -23,13 +23,13 @@
 // ErrDoctrineNotFound by Server.DoctrineActive's safeActive shim).
 // Surface-level effects:
 //
-//   - sessionDoctrine returns "" (init-order fail-closed) → every
-//     /v1/audit/event/<id> request returns 401 even for valid events
-//     (inv-zen-172 production breakage).
+// - sessionDoctrine returns "" (init-order fail-closed) → every
+// /v1/audit/event/<id> request returns 401 even for valid events
+// .
 //
-//   - /v1/doctrine/active returns 404 "doctrine: name not found in
-//     registry" (the daemon literally cannot name its own active
-//     doctrine).
+// - /v1/doctrine/active returns 404 "doctrine: name not found in
+// registry" (the daemon literally cannot name its own active
+// doctrine).
 //
 // The re-reviewer flagged this as a pre-existing daemon gap surfaced by
 // the Critical-3 fix-cycle. This file closes it daemon-wide; future
@@ -40,7 +40,7 @@
 // Called ONCE from main.go before srv.Start(). Subsequent calls
 // re-load the registry from the embedded TOMLs (atomic-swap semantics
 // per active.Accessor.SetRegistry); this matches the future
-// `zen doctrine reload` CLI surface (Plan 8 Phase G).
+// `zen doctrine reload` CLI surface.
 //
 // # Failure semantics
 //

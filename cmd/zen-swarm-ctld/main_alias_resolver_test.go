@@ -1,6 +1,6 @@
 // cmd/zen-swarm-ctld/main_alias_resolver_test.go
 //
-// Phase A Task A-4 — daemon-side wiring witness. The mcpgateway.Server
+// Task A-4 — daemon-side wiring witness. The mcpgateway.Server
 // constructed at main.go:609 MUST have a non-nil ProjectsAliasResolver
 // after Task A-4 wires the projectsaliasadapter. This test isolates the
 // wiring step (constructing the adapter from *store.Store + calling
@@ -94,8 +94,8 @@ func TestProjectsAliasAdapterSatisfiesResolverInterface(t *testing.T) {
 // regex stays robust against routine reformatting; it asserts the two
 // claims that matter:
 //
-//  1. projectsaliasadapter.New(...) is called somewhere in main.go
-//  2. *.SetAliasResolver(...) is called somewhere in main.go
+// 1. projectsaliasadapter.New(...) is called somewhere in main.go
+// 2. *.SetAliasResolver(...) is called somewhere in main.go
 //
 // Sister test pattern: revert either call site and this test fires.
 func TestMainWiresAliasResolverAtNewServerCallSite(t *testing.T) {

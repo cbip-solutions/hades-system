@@ -273,9 +273,9 @@ func TestInvZenF4SoakHandbookSection(t *testing.T) {
 	}
 }
 
-// ─── inv-zen-309: per-package property tests preserved ───────────────
+// ─── invariant: per-package property tests preserved ───────────────
 //
-// Per spec §6.2 the existing 13+ chaos files + Plan 7 K-tier property
+// Per spec §6.2 the existing 13+ chaos files + K-tier property
 // suite + replay/timeaccel suites MUST be preserved alongside the new
 // DST harness (DST extends, NOT replaces). F-5 asserts the canonical
 // baseline files all still exist; a regression here is the
@@ -323,7 +323,7 @@ func TestInvZenF5ExistingPropertyTestsPresent(t *testing.T) {
 
 func TestInvZenF5ChaosPlaceholderPreserved(t *testing.T) {
 	// The placeholder file's build tag is the canonical "chaos tag is
-	// wired" assertion from Plan 1. It MUST survive Phase F.
+	// wired" assertion. It MUST survive
 	root := repoRootF1(t)
 	data, err := os.ReadFile(filepath.Join(root, "tests", "chaos", "chaos_placeholder_test.go"))
 	if err != nil {

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package auth — unix_peer.go (Plan 7 Phase I Task I-1).
+// Package auth — unix_peer.go.
 //
 // PeerCred type + context propagation + PeerCredOnly middleware.
 // Per-OS extraction lives in unix_peer_{darwin,linux,other}.go behind
@@ -45,20 +45,20 @@ func IsLoopbackAddr(remoteAddr string) bool {
 	return ip.IsLoopback()
 }
 
-// PeerCredOnly is the middleware enforcing inv-zen-131: every
+// PeerCredOnly is the middleware enforcing invariant: every
 // /v1/* route (except the two bearer-only endpoints) MUST require
 // either Unix-socket peer-cred OR loopback TCP.
 //
 // Decision tree:
 //
-//	if r.RemoteAddr is loopback (TCP)     → accept (operator-explicit
-//	                                        --http 127.0.0.1:<port>).
-//	if r.RemoteAddr is non-loopback TCP   → reject 401.
-//	if r.RemoteAddr is "@" or empty (UDS) → require non-zero PeerCred
-//	                                        (server.go injects cred at
-//	                                        connection-time so empty here
-//	                                        means peer-cred extraction
-//	                                        failed → reject 401).
+// if r.RemoteAddr is loopback (TCP) → accept (operator-explicit
+// --http 127.0.0.1:<port>).
+// if r.RemoteAddr is non-loopback TCP → reject 401.
+// if r.RemoteAddr is "@" or empty (UDS) → require non-zero PeerCred
+// (server.go injects cred at
+// connection-time so empty here
+// means peer-cred extraction
+// failed → reject 401).
 //
 // The connection-time injection is wired in server.go.Start() via
 // http.Server.ConnContext.

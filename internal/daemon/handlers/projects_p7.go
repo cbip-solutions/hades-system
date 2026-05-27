@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — projects_p7.go (Plan 7 Phase A Task A-8).
+// Package handlers — projects_p7.go.
 //
-// Three POST routes for the Plan 7 project lifecycle surface:
+// Three POST routes for the project lifecycle surface:
 //
-//	POST /v1/projects/doctor   — diagnose project identity (alias OR cwd)
-//	POST /v1/projects/archive  — soft-delete (preserves path_history)
-//	POST /v1/projects/rm       — hard-delete (cascades path_history)
+// POST /v1/projects/doctor — diagnose project identity (alias OR cwd)
+// POST /v1/projects/archive — soft-delete (preserves path_history)
+// POST /v1/projects/rm — hard-delete (cascades path_history)
 //
-// These operate on the projects_alias / path_history substrate (Plan 7
+// These operate on the projects_alias / path_history substrate (
 // migration 057) via projectctx.ProjectStore (the daemon-side adapter
-// is internal/daemon/projectctxadapter.Adapter — inv-zen-031: this
+// is internal/daemon/projectctxadapter.Adapter — invariant: this
 // package never imports internal/store directly).
 //
 // File name uses the `_p7` suffix to avoid colliding with the legacy
-// projects.go in the same package, which carries Plan 1 stubs for the
+// projects.go in the same package, which carries stubs for the
 // older /v1/projects/{id}, /v1/projects, agents-md, and sync routes
 // (those operate on the original `projects` table — distinct schema).
 //
-// inv-zen-031 boundary: the only projectctx-side import is the
+// invariant boundary: the only projectctx-side import is the
 // ProjectStore interface + value types (Alias, ProjectID, Project,
 // PathHistoryEntry, MvDetection, Activate, FindProjectRoot,
 // CanonicalPath). No internal/store, no projectctxadapter direct

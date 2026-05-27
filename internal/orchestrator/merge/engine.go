@@ -1,26 +1,26 @@
 // SPDX-License-Identifier: MIT
-// Package merge — Phase D Task D-7 (engine pipeline complete).
+// Package merge — Task D-7 (engine pipeline complete).
 //
 // engine.go ships the MergeEngine SURFACE + the full pipeline body:
 //
-//	D-4 → MergeEngine interface + Deps + EngineConfig + realEngine + NewEngine.
-//	D-5 → Steps 1–3 (Validate + cache lookup + serialize-per-target).
-//	D-6 → Steps 4–6 (BaselineRunner.Run + Runner.RunCandidates + Scorer.Rank).
-//	D-7 → Steps 7–8 (winner lookup + fast-forward + Cache.Store +
-//	      EvtMergeCompleted emit). Pipeline complete after D-7 — Merge()
-//	      returns (MergeOutcome, nil) on the success path; no placeholder
-//	      tail remains (per CLAUDE.md doctrine §"no stubs / código completo").
+// D-4 → MergeEngine interface + Deps + EngineConfig + realEngine + NewEngine.
+// D-5 → Steps 1–3 (Validate + cache lookup + serialize-per-target).
+// D-6 → Steps 4–6 (BaselineRunner.Run + Runner.RunCandidates + Scorer.Rank).
+// D-7 → Steps 7–8 (winner lookup + fast-forward + Cache.Store +
+// EvtMergeCompleted emit). Pipeline complete after D-7 — Merge()
+// returns (MergeOutcome, nil) on the success path; no placeholder
+// tail remains (per CLAUDE.md doctrine §"no stubs / código completo").
 //
-// Per Plan 6 master plan §"Cross-phase interface vs struct collisions",
+// Per master plan §"Cross-phase interface vs struct collisions",
 // the lowercase narrow consumer interfaces (cacheClient, anomalyClient)
 // live HERE — engine.go is the only consumer in this package, so the
 // interface definitions sit beside the struct that consumes them.
 // Concrete impls (merge.Cache, merge.AnomalyDetector) satisfy
-// structurally without an explicit `var _ cacheClient = ...` at the
+// structurally without an explicit `var _ cacheClient =...` at the
 // impl site.
 //
-// Boundary note (inv-zen-031 / inv-zen-104): nothing in this file
-// imports internal/store. Phase D talks to Plan 5 only via the
+// Boundary note: nothing in this file
+// imports internal/store. talks to only via the
 // EventEmitter interface declared in events.go.
 
 package merge
@@ -71,19 +71,19 @@ type EngineConfig struct {
 
 // realEngine is the production MergeEngine impl. Three durable fields:
 //
-//   - deps     — collaborator wiring (immutable after NewEngine).
-//   - gen      — per-engine generation counter (atomic.Int64-backed)
-//     producing strictly monotonic event GenerationIDs across
-//     all Merge() invocations — Plan 5 amendment.proposer
-//     relies on the monotonic property when reconstructing
-//     causal chains across replay (Q9 D).
-//   - targetMu — sync.Map[string]*sync.Mutex providing
-//     per-TargetBranch serialization. Two concurrent
-//     Merge() calls against the same TargetBranch must
-//     run in declared order (spec §4.6 + Q8 D); concurrent
-//     calls against DIFFERENT targets MUST run in parallel
-//     (no global lock). sync.Map's LoadOrStore is the
-//     canonical lock-free init path.
+// - deps — collaborator wiring (immutable after NewEngine).
+// - gen — per-engine generation counter (atomic.Int64-backed)
+// producing strictly monotonic event GenerationIDs across
+// all Merge() invocations — amendment.proposer
+// relies on the monotonic property when reconstructing
+// causal chains across replay (Q9 D).
+// - targetMu — sync.Map[string]*sync.Mutex providing
+// per-TargetBranch serialization. Two concurrent
+// Merge() calls against the same TargetBranch must
+// run in declared order (spec §4.6 + Q8 D); concurrent
+// calls against DIFFERENT targets MUST run in parallel
+// (no global lock). sync.Map's LoadOrStore is the
+// canonical lock-free init path.
 type realEngine struct {
 	deps     Deps
 	gen      *GenerationCounter
@@ -279,7 +279,7 @@ func (e *realEngine) Merge(ctx context.Context, req MergeRequest) (MergeOutcome,
 
 	// C-1 fix (spec §3.4) — POST-FF ctx-cancel: the FF mutation already
 	// landed on refs/heads/<target>. If the caller cancelled the ctx
-	// mid-flight (e.g., Plan 5 cost_gating @ 90%+ per spec §3.3), we
+	// mid-flight, we
 	// MUST roll back the FF to honor the spec contract. Best-effort
 	// rollback: any rollback error surfaces in the EvtMergeFailed.Detail
 	// field but does NOT change the Reverted=true return — the caller's

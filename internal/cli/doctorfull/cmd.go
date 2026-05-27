@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
 // Package doctorfull ships the `zen doctor full` Cobra subcommand
-// (Plan 13 Phase F task F5).
+// .
 //
 // Lives in its own sub-package to avoid an import cycle: internal/cli →
 // internal/doctor/aggregator → internal/doctor/check → internal/cli
-// (the Plan 13 Phase F-start adapter shims import the cli ProbeResult/
+// (the adapter shims import the cli ProbeResult/
 // ProbeStatus types). By isolating the wiring code here, the cycle is
 // broken — doctorfull imports aggregator + check, but cli imports
 // doctorfull (one-way).
 //
 // Consumes
-//   - internal/doctor/aggregator (F1) — parallel orchestrator + Tessera
-//     audit emit + JSON schemaVersion=1.0 + bitmask exit codes
-//   - internal/doctor/check (F1) — Check interface + Status/FixMode
-//   - internal/doctor/fix (F3) — per-check Fix(ctx, mode) impls +
-//     destructive-confirm gate
-//   - internal/doctor/hermes (F2) — InstallCheck + PluginFormatCheck
-//   - internal/doctor/migrate (F2) — DetectCheck (claude-code presence)
-//   - internal/doctor/mcp (F2) — AvailabilityCheck (curated catalog)
+// - internal/doctor/aggregator (F1) — parallel orchestrator + Tessera
+// audit emit + JSON schemaVersion=1.0 + bitmask exit codes
+// - internal/doctor/check (F1) — Check interface + Status/FixMode
+// - internal/doctor/fix (F3) — per-check Fix(ctx, mode) impls +
+// destructive-confirm gate
+// - internal/doctor/hermes (F2) — InstallCheck + PluginFormatCheck
+// - internal/doctor/migrate (F2) — DetectCheck (claude-code presence)
+// - internal/doctor/mcp (F2) — AvailabilityCheck (curated catalog)
 //
 // Q5=C+ flag set: --fix, --auto-safe, --yes, --non-interactive, --quick,
 // --spotlight, --ascii, --format, --check-timeout, --no-color,
@@ -25,18 +25,18 @@
 //
 // Bitmask exit codes per spec §5.2 (per aggregator.ExitCode):
 //
-//	0 = all pass (incl. skip when --strict-skip is false)
-//	1 = any warn (OR'd)
-//	2 = any fail (OR'd)
-//	4 = any skip-unable-to-check (OR'd)
+// 0 = all pass (incl. skip when --strict-skip is false)
+// 1 = any warn (OR'd)
+// 2 = any fail (OR'd)
+// 4 = any skip-unable-to-check (OR'd)
 //
 // EXIT CODES section documented in --help text (SOTA-4 anti-pattern #5
 // avoidance).
 //
-// Catalog scope (Plan 13 v0.13.0):
-// The 4 NEW Plan 13 Phase F2 checks are wired by default. Plan 1-9
+// Catalog scope:
+// The 4 NEW checks are wired by default.
 // per-flag checks are adapter-wrappable via internal/doctor/check/cliadapter.NewCLIProbeAdapter
-// — wiring those into this catalog is forward-additive (Plan 14+
+// — wiring those into this catalog is forward-additive (+
 // orthogonal scope per spec §1.3); the doctor surface remains stable
 // because consumers only ever iterate Report.Diagnostics.
 package doctorfull

@@ -7,7 +7,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/doctrine"
 )
 
-// jitterDeterministicSentinel anchors inv-zen-120: Scheduler jitter
+// jitterDeterministicSentinel anchors invariant: Scheduler jitter
 // offset MUST be deterministic — hash(routine_id) % (10% × period),
 // capped at 15min recurring / 90s one-shot.
 //
@@ -22,7 +22,7 @@ func jitterDeterministicSentinel() bool {
 	return ComputeJitter("inv-zen-120-anchor", time.Hour) <= jitterRecurringCap
 }
 
-// missPolicyDoctrineSentinel anchors inv-zen-121: Per-doctrine miss
+// missPolicyDoctrineSentinel anchors invariant: Per-doctrine miss
 // policy MUST map max-scope=CatchUpBounded, default=Skip,
 // capa-firewall=NotifyOnly; rate-limit 1/30s/project enforced.
 //
@@ -45,7 +45,7 @@ func missPolicyDoctrineSentinel() bool {
 		DoctrineMissPolicy(doctrine.NameCapaFirewall) == MissPolicyNotifyOnly
 }
 
-// dispatcherSingleEgressSentinel anchors inv-zen-123 / inv-zen-080
+// dispatcherSingleEgressSentinel anchors invariant / invariant
 // (scheduler slice): scheduler.Fire MUST dispatch via the Dispatcher
 // interface only; never imports internal/providers or
 // private-tier1-module.
@@ -58,15 +58,15 @@ func missPolicyDoctrineSentinel() bool {
 // The function signature reference proves three things at the type
 // system level:
 //
-//  1. `Fire` is reachable from this package (cannot be deleted
-//     without breaking the build).
-//  2. `FireDeps.Dispatcher` is typed `Dispatcher` (cannot be retyped
-//     to `*providers.Client` or similar without breaking the build).
-//  3. The runtime indirection through `Dispatcher` is the only path
-//     by which a dispatch can occur from `Fire` (the boundary test
-//     in tests/compliance asserts the import graph; this sentinel
-//     pins the surface signature so the boundary test's assumption
-//     remains valid as the package evolves).
+// 1. `Fire` is reachable from this package (cannot be deleted
+// without breaking the build).
+// 2. `FireDeps.Dispatcher` is typed `Dispatcher` (cannot be retyped
+// to `*providers.Client` or similar without breaking the build).
+// 3. The runtime indirection through `Dispatcher` is the only path
+// by which a dispatch can occur from `Fire` (the boundary test
+// in tests/compliance asserts the import graph; this sentinel
+// pins the surface signature so the boundary test's assumption
+// remains valid as the package evolves).
 //
 // Returns true unconditionally — the contract is the call site, not
 // the boolean. The compliance test in tests/compliance/ greps for

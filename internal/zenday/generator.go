@@ -2,7 +2,7 @@
 // Package zenday — method-bound façade over the per-call free
 // functions.
 //
-// Generator is the canonical Phase I HTTP handler + CLI consumption
+// Generator is the canonical HTTP handler + CLI consumption
 // surface. It closes over the dependency bundle so handlers and
 // dispatchers can hold a single value-type and invoke briefs without
 // re-assembling deps each call.
@@ -12,7 +12,7 @@
 // Generator struct is the method-bound dispatch layer that closes over
 // MorningDeps + EODDeps + CheckPendingDeps at construction time.
 //
-// Stage 2 review CRITICAL #6 reconciliation (2026-05-01): Phase I HTTP
+// review CRITICAL #6 reconciliation (2026-05-01): HTTP
 // handlers (`internal/daemon/handlers/zenday.go`) reference
 // `zenday.NewGenerator(...)` returning `*Generator` with methods
 // `(*Generator).GenerateMorningBrief` / `(*Generator).GenerateEODDigest`

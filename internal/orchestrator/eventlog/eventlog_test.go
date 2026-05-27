@@ -347,8 +347,8 @@ func TestLogQueryRejectsCancelledContext(t *testing.T) {
 
 // I-2: since=0 is the documented public sentinel for "all events for
 // the session" — audit_events_raw event_ids are 1-indexed by the
-// Phase N adapter, so "strictly > 0" returns every row. Task A-4
-// Replay depends on this contract; Plan 9 hash-chain emitters MUST
+// adapter, so "strictly > 0" returns every row. Task A-4
+// Replay depends on this contract; hash-chain emitters MUST
 // preserve it.
 func TestLogQuerySinceZeroReturnsAll(t *testing.T) {
 	em := &inMemoryEmitter{}

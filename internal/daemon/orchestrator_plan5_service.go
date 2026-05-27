@@ -1,37 +1,37 @@
 // SPDX-License-Identifier: MIT
-// Package daemon — orchestrator_plan5_service.go (Plan 5 Phase N N-cleanup-1).
+// Package daemon — orchestrator_plan5_service.go.
 //
 // Plan5OrchestratorService is the daemon-side composition that satisfies
 // handlers.Plan5OrchestratorService. It is the wiring point between:
 //
-//   - the SQL adapter (audit_events_raw + substrate_health) at
-//     internal/daemon/orchestratoradapter
-//   - the eventlog Log (constructed via the adapter as RawEmitter)
-//   - the safetynet subsystems (Regression, Divergence, Drift, Prev)
-//   - the autonomy CheckEngine (with the production 11-check set)
-//   - the amendment Reverter (operator-initiated git revert path)
-//   - filesystem-backed ADR scan (docs/decisions/proposed/, applied/,
-//     rejected/) for doctrine propose-list / show
-//   - persisted autonomy mode (in-memory atomic; survives requests but
-//     not daemon restart — Plan 8 promotes to a persisted projects table
-//     entry per inv-zen-100)
+// - the SQL adapter (audit_events_raw + substrate_health) at
+// internal/daemon/orchestratoradapter
+// - the eventlog Log (constructed via the adapter as RawEmitter)
+// - the safetynet subsystems (Regression, Divergence, Drift, Prev)
+// - the autonomy CheckEngine (with the production 11-check set)
+// - the amendment Reverter (operator-initiated git revert path)
+// - filesystem-backed ADR scan (architecture records applied/,
+// rejected/) for doctrine propose-list / show
+// - persisted autonomy mode (in-memory atomic; survives requests but
+// not daemon restart — promotes to a persisted projects table
+// entry per invariant)
 //
 // Design ground rules:
 //
-//   - Methods that depend on data the daemon already owns (event log,
-//     substrate_health, ADR files, zen-prev binary) wire 100% to live
-//     subsystems. No stubs.
-//   - Methods that depend on a live in-flight Stage 4 build (Session,
-//     Pool, PrunePool, SetDepth, Capture, Replay) return the truthful
-//     "no active build session" answer (zero-value structs with
-//     State=idle, HealthOK=true, EventCount=0). This is NOT a stub —
-//     no in-process orchestrator runs at the daemon level today; the
-//     CLI surface displays "Leased: 0  Floor: 0" correctly when no
-//     build is underway.
-//   - Audit emit discipline: every emit uses context.WithoutCancel(ctx)
-//     so a cancelled caller cannot cause an audit gap.
-//   - Concurrency: the Service is goroutine-safe — every mutable field
-//     guarded by mu OR atomic; subsystems own their own synchronization.
+// - Methods that depend on data the daemon already owns (event log,
+// substrate_health, ADR files, zen-prev binary) wire 100% to live
+// subsystems. No stubs.
+// - Methods that depend on a live in-flight build (Session,
+// Pool, PrunePool, SetDepth, Capture, Replay) return the truthful
+// "no active build session" answer (zero-value structs with
+// State=idle, HealthOK=true, EventCount=0). This is NOT a stub —
+// no in-process orchestrator runs at the daemon level today; the
+// CLI surface displays "Leased: 0 Floor: 0" correctly when no
+// build is underway.
+// - Audit emit discipline: every emit uses context.WithoutCancel(ctx)
+// so a cancelled caller cannot cause an audit gap.
+// - Concurrency: the Service is goroutine-safe — every mutable field
+// guarded by mu OR atomic; subsystems own their own synchronization.
 package daemon
 
 import (
@@ -56,6 +56,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/clock"
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/safetynet"
+	"github.com/cbip-solutions/hades-system/internal/orchestrator/worktreepool"
 )
 
 type Plan5OrchestratorServiceConfig struct {
@@ -97,11 +98,82 @@ type Plan5OrchestratorService struct {
 	adaptersClean atomic.Bool
 
 	healthSampler *orchestrator.HealthSampler
+
+	worktreePool worktreepool.Pool
+
+	backgroundSupervisor *Plan5BackgroundSupervisor
 }
 
 func (s *Plan5OrchestratorService) SetHealthSampler(hs *orchestrator.HealthSampler) {
 	s.healthSampler = hs
 }
+
+func (s *Plan5OrchestratorService) SetWorktreePool(pool worktreepool.Pool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.worktreePool = pool
+}
+
+func (s *Plan5OrchestratorService) SetBackgroundSupervisor(supervisor *Plan5BackgroundSupervisor) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.backgroundSupervisor = supervisor
+}
+
+func (s *Plan5OrchestratorService) StartBackgroundSupervisor(ctx context.Context) (*Plan5BackgroundSupervisor, error) {
+	if ctx == nil {
+		return nil, fmt.Errorf("%w: parent context is nil", ErrPlan5BackgroundSupervisorInvalidConfig)
+	}
+	s.mu.Lock()
+	existing := s.backgroundSupervisor
+	s.mu.Unlock()
+	if existing != nil {
+		return existing, nil
+	}
+
+	driftWatcher, err := safetynet.NewDriftWatcher(safetynet.DriftWatcherConfig{
+		Validator: s.drift,
+		Clock:     s.cfg.Clock,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("daemon/plan5: drift watcher: %w", err)
+	}
+
+	supervisor := NewPlan5BackgroundSupervisor()
+	if err := supervisor.Start(ctx, Plan5BackgroundRunner{
+		Name:  "safetynet-drift-detector",
+		Slots: 1,
+		Run:   driftWatcher.Run,
+	}); err != nil {
+		return nil, err
+	}
+
+	s.mu.Lock()
+	if s.backgroundSupervisor == nil {
+		s.backgroundSupervisor = supervisor
+		s.mu.Unlock()
+		return supervisor, nil
+	}
+	existing = s.backgroundSupervisor
+	s.mu.Unlock()
+
+	stopCtx, stopCancel := context.WithTimeout(context.Background(), time.Second)
+	defer stopCancel()
+	_ = supervisor.Stop(stopCtx)
+	return existing, nil
+}
+
+func (s *Plan5OrchestratorService) EventLog() *eventlog.Log { return s.eventLog }
+
+func (s *Plan5OrchestratorService) DriftValidator() safetynet.DriftValidator { return s.drift }
+
+func (s *Plan5OrchestratorService) DoctrineName() string { return s.cfg.Doctrine }
+
+func (s *Plan5OrchestratorService) Plan5Clock() clock.Clock { return s.cfg.Clock }
+
+func (s *Plan5OrchestratorService) RegressionRecorder() *safetynet.Regression { return s.regression }
+
+func (s *Plan5OrchestratorService) RepoRoot() string { return s.repoRoot }
 
 func NewPlan5OrchestratorService(cfg Plan5OrchestratorServiceConfig) (*Plan5OrchestratorService, error) {
 	if cfg.Adapter == nil {
@@ -182,18 +254,50 @@ func NewPlan5OrchestratorService(cfg Plan5OrchestratorServiceConfig) (*Plan5Orch
 }
 
 func (s *Plan5OrchestratorService) Session() (client.SessionInfo, error) {
+	backgroundGoroutines := 0
+	if snap, ok := s.worktreePoolSnapshot(); ok {
+		backgroundGoroutines += snap.BackgroundGoroutines
+	}
+	backgroundGoroutines += s.backgroundSupervisorCount()
 	return client.SessionInfo{
 		State:                "idle",
 		Mode:                 s.effectiveAutonomyMode(),
 		StartedAt:            0,
 		LastTransitionAt:     0,
-		BackgroundGoroutines: 0,
+		BackgroundGoroutines: backgroundGoroutines,
 		RecentTransitions:    nil,
 	}, nil
 }
 
 func (s *Plan5OrchestratorService) Pool() (client.PoolStatus, error) {
+	if snap, ok := s.worktreePoolSnapshot(); ok {
+		elasticInUse := snap.Total - snap.Floor
+		if elasticInUse < 0 {
+			elasticInUse = 0
+		}
+		return client.PoolStatus{
+			Floor:         snap.Floor,
+			Maximum:       snap.ElasticMax,
+			CurrentLeased: snap.Leased,
+			ElasticInUse:  elasticInUse,
+			HealthOK:      !snap.Closed,
+		}, nil
+	}
 	return client.PoolStatus{HealthOK: true}, nil
+}
+
+func (s *Plan5OrchestratorService) worktreePoolSnapshot() (worktreepool.Snapshot, bool) {
+	s.mu.Lock()
+	pool := s.worktreePool
+	s.mu.Unlock()
+	return worktreepool.SnapshotOf(pool)
+}
+
+func (s *Plan5OrchestratorService) backgroundSupervisorCount() int {
+	s.mu.Lock()
+	supervisor := s.backgroundSupervisor
+	s.mu.Unlock()
+	return supervisor.Count()
 }
 
 func (s *Plan5OrchestratorService) PrunePool() (int, error) {

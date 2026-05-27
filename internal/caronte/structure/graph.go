@@ -4,12 +4,12 @@
 // the undirected projection), Tarjan SCC (cycles + condensation), and
 // package/directory labels. 100% deterministic by design: the same
 // (node-set, edge-set) yields byte-identical coreness/scc_id/package_id, the
-// inv-zen-232 contract asserted by the determinism golden. Only deterministic
+// invariant contract asserted by the determinism golden. Only deterministic
 // graph algorithms are used — no stochastic community detection.
 //
 // Boundary this package reads/writes the graph ONLY through the injected
-// *store.Store (Phase A LOCKED CRUD) and NEVER imports internal/store
-// (inv-zen-230, owned by Phase A). It performs no I/O of its own beyond the
+// *store.Store and NEVER imports internal/store
+// . It performs no I/O of its own beyond the
 // store calls, no LLM, no network, no embeddings — pure CPU graph logic.
 package structure
 

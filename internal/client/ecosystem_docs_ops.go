@@ -1,36 +1,36 @@
 // SPDX-License-Identifier: MIT
-// Package client — ecosystem_docs_ops.go (Plan 14 Phase F Task F-6 +
+// Package client — ecosystem_docs_ops.go ( Task F-6 +
 //
 // Typed client methods for the ecosystem docs management endpoints:
 //
-//	F-6 surface (still in place; daemon handlers land later in Phase G):
-//	  POST /v1/knowledge/ecosystem/reindex          — DocsReindex
-//	  GET  /v1/knowledge/ecosystem/status           — DocsStatus
-//	  GET  /v1/knowledge/ecosystem/sources          — DocsSources
-//	  POST /v1/knowledge/ecosystem/router/retrain   — DocsRouterRetrain
+// F-6 surface:
+// POST /v1/knowledge/ecosystem/reindex — DocsReindex
+// GET /v1/knowledge/ecosystem/status — DocsStatus
+// GET /v1/knowledge/ecosystem/sources — DocsSources
+// POST /v1/knowledge/ecosystem/router/retrain — DocsRouterRetrain
 //
-//	G-5 surface (operator-confirmed retention; spec §2.9 Q9=A):
-//	  POST   /v1/ecosystem/pin                      — EcosystemPin
-//	  GET    /v1/ecosystem/prune-preview            — EcosystemPrunePreview
-//	  DELETE /v1/ecosystem/version                  — EcosystemPrune
+// G-5 surface (operator-confirmed retention; spec §2.9 Q9=A):
+// POST /v1/ecosystem/pin — EcosystemPin
+// GET /v1/ecosystem/prune-preview — EcosystemPrunePreview
+// DELETE /v1/ecosystem/version — EcosystemPrune
 //
 // G-5 SUPERSEDES F-6 pin/prune: F-6 shipped chunk-id-based pin + dry-run /
 // confirm prune (POST /v1/knowledge/ecosystem/pin|prune). G-5 evolves to
 // version-level pin (sets ecosystem_versions.indefinite_retain=true) +
 // retention-aware prune (refuses pinned versions; preview before commit).
 // The /v1/knowledge/... pin+prune paths are retired; daemon-side handlers
-// land under /v1/ecosystem/... in a later Phase G task.
+// land under /v1/ecosystem/... in a later task.
 //
 // These power `zen docs reindex / pin / prune / status / sources /
 // router-retrain` (internal/cli/docs_*.go). The daemon-side handlers land
-// in Phase G — until then the endpoints surface as 503 and the CLI layer
+// in — until then the endpoints surface as 503 and the CLI layer
 // classifies that as unrecoverable (exit 2).
 //
-// Boundary stdlib only. No internal/research/ecosystem import (inv-zen-031);
+// Boundary stdlib only. No internal/research/ecosystem import;
 // the daemon-side handler is responsible for invoking the trainer (Q15-Q20
 // orchestrator-enforced — see ADR-0067) and for ingester/pruner orchestration.
 //
-// Wire shapes are the single source of truth for Phase G handler authors —
+// Wire shapes are the single source of truth for handler authors —
 // any drift between this file and the daemon side breaks the contract.
 package client
 
@@ -155,7 +155,7 @@ func (c *Client) EcosystemPrunePreview(ctx context.Context, ecosystem, version s
 // the gate.
 //
 // SUPERSEDES F-6 POST /v1/knowledge/ecosystem/prune (retired DryRun-based
-// flow). The Plan 14 G-5 contract splits preview (GET prune-preview) from
+// flow). The G-5 contract splits preview (GET prune-preview) from
 // commit (DELETE version) so the operator-confirmation gate is naturally
 // staged: preview → prompt → commit.
 func (c *Client) EcosystemPrune(ctx context.Context, ecosystem, version string) error {

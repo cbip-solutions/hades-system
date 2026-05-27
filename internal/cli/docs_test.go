@@ -1,8 +1,8 @@
-// Package cli — docs_test.go (Plan 14 Phase F Task F-6).
+// Package cli — docs_test.go.
 //
 // Coverage for the six `zen docs *` management subcommands:
 //
-//	reindex / pin / prune / status / sources / router-retrain
+// reindex / pin / prune / status / sources / router-retrain
 //
 // Each subcommand's testable Run* function takes a DocsClient seam; tests
 // inject *fakeDocsClient to assert wire-call shape + classify the
@@ -10,15 +10,15 @@
 //
 // CRITICAL invariant tests (load-bearing):
 //
-//	TestDocsPruneRequiresExplicitFlag — `zen docs prune` with neither
-//	  --dry-run nor --confirm MUST return ErrRecoverable so the process
-//	  exit-code maps to 1 (operator-recoverable). No accidental deletion.
+// TestDocsPruneRequiresExplicitFlag — `zen docs prune` with neither
+// --dry-run nor --confirm MUST return ErrRecoverable so the process
+// exit-code maps to 1 (operator-recoverable). No accidental deletion.
 //
-//	TestDocsPruneDryRun — `--dry-run` invokes the daemon with DryRun=true
-//	  and prints a "(dry-run) would prune:" preview line.
+// TestDocsPruneDryRun — `--dry-run` invokes the daemon with DryRun=true
+// and prints a "(dry-run) would prune:" preview line.
 //
-//	TestDocsPruneConfirm — `--confirm` invokes the daemon with DryRun=false
-//	  and prints the post-prune summary.
+// TestDocsPruneConfirm — `--confirm` invokes the daemon with DryRun=false
+// and prints the post-prune summary.
 package cli
 
 import (

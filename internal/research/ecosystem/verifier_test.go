@@ -1,7 +1,7 @@
 package ecosystem
 
 // Tests for verifier.go — 3-stage verify-at-answer-time
-// (spec §2.7 Q7=A Layer 2; Plan 14 Phase D task D-5).
+// .
 //
 // Doctrine verifier is security/correctness-critical (≥90% coverage).
 // Test matrix covers all 3 stages, LRU eviction + TTL expiry, concurrent

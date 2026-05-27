@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package recovery implements the auto-recovery layer (spec §9).
 // One file per error category (Cat-A through Cat-G) plus this
-// top-level dispatcher. Plan 11 implements; Plan 1 declares shape.
+// top-level dispatcher. implements; declares shape.
 package recovery
 
 import zerrors "github.com/cbip-solutions/hades-system/internal/errors"

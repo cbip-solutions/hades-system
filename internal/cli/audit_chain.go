@@ -1,33 +1,33 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit_chain.go (Plan 9 Phase I Task I-1; wired by I-2/I-3/I-4).
+// Package cli — audit_chain.go.
 //
-// `zen audit-chain` is the Plan 9 umbrella for chain-integrity, backup,
-// witness, and recovery operations. Distinct from Plan 4's `zen audit`
+// `zen audit-chain` is the umbrella for chain-integrity, backup,
+// witness, and recovery operations. Distinct's `zen audit`
 // event-emit/query surface (which lives in audit.go and serves the
 // audit_events_raw row-level read API).
 //
 // Spec §6.1 enumerates 7 direct subcommands; cobra registers them here:
-//   - verify-chain: walk the tile-log Merkle + record_hash + witness sig   [I-2]
-//   - history: query Plan 5 eventlog with chain proofs                      [I-2]
-//   - recover: interactive recovery (Litestream + cold archive + verify)    [I-2]
-//   - checkpoint: capa-firewall manual checkpoint (inv-zen-145 §1 Q4 B)    [I-3]
-//   - cold-archive: nested group → ls | restore                             [I-3]
-//   - configure-s3: interactive Keychain-integrated S3 credential setup     [I-4]
-//   - witness: nested group → rotate | pubkey                               [I-4]
+// - verify-chain: walk the tile-log Merkle + record_hash + witness sig [I-2]
+// - history: query eventlog with chain proofs [I-2]
+// - recover: interactive recovery (Litestream + cold archive + verify) [I-2]
+// - checkpoint: capa-firewall manual checkpoint [I-3]
+// - cold-archive: nested group → ls | restore [I-3]
+// - configure-s3: interactive Keychain-integrated S3 credential setup [I-4]
+// - witness: nested group → rotate | pubkey [I-4]
 //
 // Cobra layout:
 //
-//	zen audit-chain verify-chain  --project <id>
-//	zen audit-chain history       [--filter <type>] [--since <ts>] [--project <id>]
-//	zen audit-chain recover       --project <id> --from <ts>
-//	zen audit-chain checkpoint    --reason "<X>"
-//	zen audit-chain cold-archive  ls       [--project <id>]
-//	zen audit-chain cold-archive  restore  --partition <YYYY_MM> [--project <id>]
-//	zen audit-chain configure-s3  --project <id>
-//	zen audit-chain witness       rotate   --reason "<X>"
-//	zen audit-chain witness       pubkey
+// zen audit-chain verify-chain --project <id>
+// zen audit-chain history [--filter <type>] [--since <ts>] [--project <id>]
+// zen audit-chain recover --project <id> --from <ts>
+// zen audit-chain checkpoint --reason "<X>"
+// zen audit-chain cold-archive ls [--project <id>]
+// zen audit-chain cold-archive restore --partition <YYYY_MM> [--project <id>]
+// zen audit-chain configure-s3 --project <id>
+// zen audit-chain witness rotate --reason "<X>"
+// zen audit-chain witness pubkey
 //
-// inv-zen-146 (--reason mandatory) is enforced per leaf inside the individual
+// invariant (--reason mandatory) is enforced per leaf inside the individual
 // constructors (checkpoint, witness rotate); see Tasks I-3, I-4.
 // Cross-cutting reason-flag enforcement test lives in reason_flag_test.go (I-12).
 //

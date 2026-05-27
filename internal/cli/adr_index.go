@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_index.go (Plan 9 Phase I Task I-8).
+// Package cli — adr_index.go.
 //
 // `zen adr index [--check]` calls POST /v1/adr/index. Without --check it
 // regenerates _index.json + _graph.json on disk. With --check it

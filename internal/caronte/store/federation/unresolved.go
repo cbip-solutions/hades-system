@@ -1,4 +1,4 @@
-//go:build cgo
+// go:build cgo
 
 // SPDX-License-Identifier: MIT
 
@@ -35,7 +35,7 @@ func (w *WorkspaceFederationDB) UnresolvedStore() UnresolvedStore {
 // Insert upserts one unresolved_calls row. PK = (workspace_id, call_id,
 // call_repo) ⇒ a re-linker pass on the same gap overwrites; rows do not
 // stack. The insert transits the same per-DB sql handle the LinkStore
-// uses; the caller (Phase F surfacer) coordinates the policy gating.
+// uses; the caller coordinates the policy gating.
 func (u *unresolvedStoreImpl) Insert(ctx context.Context, row UnresolvedRow) error {
 	if u.parent == nil || u.parent.db == nil {
 		return ErrEmptyDB

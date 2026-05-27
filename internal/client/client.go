@@ -2,7 +2,7 @@
 // Package client is the typed HTTP client for talking to zen-swarm-ctld
 // over its UDS socket. Used by the zen CLI and TUI.
 //
-// Phase L Task L-2 extends this surface with /v1/bypass/* helpers in
+// Task L-2 extends this surface with /v1/bypass/* helpers in
 // bypass.go and a base-URL constructor for tests.
 package client
 
@@ -123,7 +123,7 @@ func (c *Client) getJSON(ctx context.Context, path string, out any) error {
 //
 // send `X-Zen-Project-ID: <alias>` so the daemon mcpgateway dispatcher
 // can resolve the alias canonically (header) instead of pulling it
-// from request body args (which is the fallback per Phase A).
+// from request body args.
 //
 // Per-call header map MUST NOT be mutated after the call returns (the
 // implementation iterates it once on a copy of the request header set).
@@ -167,14 +167,14 @@ func (c *Client) postJSON(ctx context.Context, path string, body any, out any) e
 //
 // `X-Zen-Project-ID: <alias>` through this surface so the daemon
 // mcpgateway dispatcher resolves the alias canonically per the MCP
-// protocol convention (the body-args path is Phase A's fallback only).
+// protocol convention.
 //
 // Header semantics:
-//   - The Content-Type header is set to application/json automatically
-//     whenever body is non-nil (preserved from postJSON).
-//   - Per-call headers from the headers map are set AFTER Content-Type
-//     so a deliberate Content-Type override (rare) is honored.
-//   - The headers map MUST NOT be mutated after the call returns.
+// - The Content-Type header is set to application/json automatically
+// whenever body is non-nil (preserved from postJSON).
+// - Per-call headers from the headers map are set AFTER Content-Type
+// so a deliberate Content-Type override (rare) is honored.
+// - The headers map MUST NOT be mutated after the call returns.
 func (c *Client) postJSONH(ctx context.Context, path string, headers map[string]string, body any, out any) error {
 	var rdr io.Reader
 	if body != nil {

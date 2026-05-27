@@ -1,4 +1,4 @@
-//go:build e2e
+// go:build e2e
 
 package e2e
 
@@ -33,15 +33,15 @@ func openE2EStore(t *testing.T, path string) *store.Store {
 // state survive the restart.
 //
 // Session 1 (pre-restart):
-//   - Open an aggregation stream window, publish 3 events, do NOT close.
-//   - Pause the OperatorGate (StatePausedDescriptive).
-//   - Close the store (simulates daemon shutdown).
+// - Open an aggregation stream window, publish 3 events, do NOT close.
+// - Pause the OperatorGate (StatePausedDescriptive).
+// - Close the store (simulates daemon shutdown).
 //
 // Session 2 (post-restart):
-//   - Open the same DB file.
-//   - LoadOpenWindows → must find exactly 1 open L2 window.
-//   - GateAdapter.LoadState → must return StatePausedDescriptive.
-//   - OperatorGate.IsPaused(ScopeWorkerDispatch) → true.
+// - Open the same DB file.
+// - LoadOpenWindows → must find exactly 1 open L2 window.
+// - GateAdapter.LoadState → must return StatePausedDescriptive.
+// - OperatorGate.IsPaused(ScopeWorkerDispatch) → true.
 func TestPlan4ERestartDurability(t *testing.T) {
 	dir := t.TempDir()
 	dbPath := filepath.Join(dir, "e2e-restart.db")

@@ -29,7 +29,7 @@ window remains the firm public-disclosure deadline.
 
 ## Out Of Scope
 
-- Vulnerabilities in optional private sidecar implementations.
+- Vulnerabilities in third-party or locally supplied sidecar implementations.
 - Upstream dependency issues that should be reported directly upstream.
 - User-specific configuration mistakes.
 - Social-engineering, phishing, spam, or theoretical reports without a

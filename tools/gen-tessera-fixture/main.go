@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 //
-// Usage: go run ./tools/gen-tessera-fixture --size N --out <dir>
+// Usage: go run./tools/gen-tessera-fixture --size N --out <dir>
 //
 // Emits two files into <dir>:
 //
-//   - leaves.json: ordered slice of Leaf records (event_id, event_type,
-//     payload_hash_hex, record_hash_hex, project_id). Lets consumers
-//     reload deterministic fixture state without re-running the mock.
-//   - sth.json: the STH captured AFTER appending all leaves and calling
-//     FlushAndPublishSTH (size, root_hash_hex, timestamp_unix_nanos,
-//     project_id). Pinned timestamp for byte-for-byte determinism.
+// - leaves.json: ordered slice of Leaf records (event_id, event_type,
+// payload_hash_hex, record_hash_hex, project_id). Lets consumers
+// reload deterministic fixture state without re-running the mock.
+// - sth.json: the STH captured AFTER appending all leaves and calling
+// FlushAndPublishSTH (size, root_hash_hex, timestamp_unix_nanos,
+// project_id). Pinned timestamp for byte-for-byte determinism.
 //
 // Determinism: clock pinned to 2026-05-07T00:00:00Z; payload/record
 // hashes derived from sha256("leaf-%05d") so the same --size always

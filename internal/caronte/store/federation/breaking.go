@@ -1,4 +1,4 @@
-//go:build cgo
+// go:build cgo
 
 // SPDX-License-Identifier: MIT
 
@@ -150,11 +150,11 @@ func (w *WorkspaceFederationDB) DeleteBreakingChangesByWorkspace(ctx context.Con
 // breaking_changes row plus its full consumer fan-out (breaking_change_consumers
 // rows joined by change_id). The two-query pattern uses a single
 // transaction at the SQL layer so a concurrent consumer-INSERT can't
-// straddle the read (Phase H's Coordinator MUST see a coherent snapshot
+// straddle the read ( Coordinator MUST see a coherent snapshot
 // to drive coordinated-fix dispatch).
 //
 // Returns ErrNotFound when the breaking_changes row is absent; the
-// consumer slice is empty when present-but-no-consumers (legal — Phase G
+// consumer slice is empty when present-but-no-consumers (legal —
 // may emit a breaking-change before the linker has surfaced consumers).
 func (w *WorkspaceFederationDB) GetBreakingChangeWithConsumers(ctx context.Context, changeID string) (BreakingChange, []BreakingChangeConsumer, error) {
 	if w.db == nil {

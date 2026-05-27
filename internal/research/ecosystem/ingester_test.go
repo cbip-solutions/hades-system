@@ -1,6 +1,6 @@
 // internal/research/ecosystem/ingester_test.go
 //
-// Tests for Ingester (Plan 14 Phase B Task B-10).
+// Tests for Ingester.
 //
 // Coverage discipline: per project doctrine `feedback_no_tech_debt.md`,
 // security/correctness-critical concurrent orchestration files require
@@ -1391,9 +1391,9 @@ func (c *cancelTriggerSource) FetchPackageDoc(ctx context.Context, pkg PackageRe
 // "audit events for in-flight packages NOT emitted on cancel".
 //
 // Strategy cancelTriggerSource deterministically:
-//  1. Fires triggerCancel on first FetchPackageDoc call.
-//  2. Blocks on ctx.Done until cancelled (workers wait deterministically).
-//  3. Returns ctx.Err() — worker's processPackage returns ctx.Err.
+// 1. Fires triggerCancel on first FetchPackageDoc call.
+// 2. Blocks on ctx.Done until cancelled (workers wait deterministically).
+// 3. Returns ctx.Err() — worker's processPackage returns ctx.Err.
 //
 // This forces the worker loop's err != nil branch to execute with
 // errors.Is(err, context.Canceled) == true, which the pre-fix code
@@ -1567,7 +1567,7 @@ func TestIngester_Ingest_AuditPayloadFormat_AllTenFields(t *testing.T) {
 // IMPORTANT-2 fix-cycle test: started_at and completed_at MUST be distinct
 // timestamps (started_at captured at processPackage entry; completed_at at
 // emit time). Pre-fix: both used the SAME time.Now() at emit (identical
-// timestamps semantically misleading for Phase G ops dashboards).
+// timestamps semantically misleading for ops dashboards).
 //
 // Resolution timestamps emitted in RFC3339Nano (sub-second) so the
 // processPackage→emit gap (≥ 1µs realistic) is measurable. With a docDelay

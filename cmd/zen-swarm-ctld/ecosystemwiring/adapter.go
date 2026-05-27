@@ -1,16 +1,17 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
 // SPDX-License-Identifier: MIT
 
 // Package ecosystemwiring assembles the production-side
-// handlers.EcosystemHandler adapter for the Plan 14 daemon HTTP surface.
+// handlers.EcosystemHandler adapter for the daemon HTTP surface.
 //
 // Adapter satisfies handlers.EcosystemHandler by composing per-ecosystem
-// *sql.DB handles + the Plan 14 substrate primitives (*Ingester,
+// *sql.DB handles + the substrate primitives (*Ingester,
 // *ChangeExtractor, *SymbolIndex, per-ecosystem Source maps).
 //
-// Phase G G-7 fix-cycle shipped the daemon-side EcosystemHandler interface
+// G-7 fix-cycle shipped the daemon-side EcosystemHandler interface
 // + 8 handlers + 1 GET; production wiring was deferred per option B
 // graceful-degradation (handlers return 503 when SetEcosystemHandler hasn't
 // run). This package ships the deferred adapter + the boot-time wiring
@@ -18,46 +19,46 @@
 //
 // Architecture (per task spec "option B-realized"):
 //
-//   - One *sql.DB per ecosystem ("go", "python", "typescript", "rust") opened
-//     at <dataRoot>/global/ecosystem/<eco>/ecosystem.db with sqlite-vec auto-
-//     extension + foreign_keys=ON + WAL journal mode. Migrations applied via
-//     internal/research/ecosystem.ApplyMigrations on each open.
+// - One *sql.DB per ecosystem ("go", "python", "typescript", "rust") opened
+// at <dataRoot>/global/ecosystem/<eco>/ecosystem.db with sqlite-vec auto-
+// extension + foreign_keys=ON + WAL journal mode. Migrations applied via
+// internal/research/ecosystem.ApplyMigrations on each open.
 //
-//   - Pin / PrunePreview / Prune execute SQL directly against the per-eco DB
-//     because these are pure storage ops (ecosystem_versions UPDATE/DELETE
-//     with FK cascade to chunks / fp32 / symbols / changes / fts / vec_bin).
-//     No upstream call, no LLM, no embedder required.
+// - Pin / PrunePreview / Prune execute SQL directly against the per-eco DB
+// because these are pure storage ops (ecosystem_versions UPDATE/DELETE
+// with FK cascade to chunks / fp32 / symbols / changes / fts / vec_bin).
+// No upstream call, no LLM, no embedder required.
 //
-//   - IngestDelta delegates to *Ingester.Ingest(IngestRequest{DeltaOnly:true}).
-//     Requires Source map registered for the requested ecosystem; absent
-//     sources surface as wrapped error.
+// - IngestDelta delegates to *Ingester.Ingest(IngestRequest{DeltaOnly:true}).
+// Requires Source map registered for the requested ecosystem; absent
+// sources surface as wrapped error.
 //
-//   - SweepChunkFingerprints recomputes sha256(content_text) per chunk and
-//     re-writes chunk_fingerprint where drift detected (inv-zen-202
-//     fingerprint-stability sweep).
+// - SweepChunkFingerprints recomputes sha256(content_text) per chunk and
+// re-writes chunk_fingerprint where drift detected (invariant
+// fingerprint-stability sweep).
 //
-//   - SweepChangeNodes delegates to *ChangeExtractor.SweepChangeNodes which
-//     rejects orphan (version_from, version_to) tuples against
-//     ecosystem_versions (inv-zen-193).
+// - SweepChangeNodes delegates to *ChangeExtractor.SweepChangeNodes which
+// rejects orphan (version_from, version_to) tuples against
+// ecosystem_versions.
 //
-//   - RebuildSymbolIndex delegates to *SymbolIndex.Rebuild — atomic reload
-//     of the per-ecosystem in-memory symbol set from ecosystem_symbols.
+// - RebuildSymbolIndex delegates to *SymbolIndex.Rebuild — atomic reload
+// of the per-ecosystem in-memory symbol set from ecosystem_symbols.
 //
-//   - CASGarbageCollect deletes unreferenced ecosystem_chunks_vec_bin rows
-//     where the chunk_id no longer exists in ecosystem_chunks (FK CASCADE
-//     handles the normal case; this sweep catches inconsistency introduced
-//     by partial-write recovery). The DB-level CAS GC for Plan 9 F
-//     (research-findings CAS dir) is orthogonal and lives in a different
-//     subsystem; this method scopes only to ecosystem.db.
+// - CASGarbageCollect deletes unreferenced ecosystem_chunks_vec_bin rows
+// where the chunk_id no longer exists in ecosystem_chunks (FK CASCADE
+// handles the normal case; this sweep catches inconsistency introduced
+// by partial-write recovery). The DB-level CAS GC F
+// (research-findings CAS dir) is orthogonal and lives in a different
+// subsystem; this method scopes only to ecosystem.db.
 //
-//   - DetectNewVersions invokes Source.FetchManifest on every registered
-//     source for the ecosystem, collects all upstream Manifest.Packages[].
-//     Versions, diffs against ecosystem_versions, returns the new set.
+// - DetectNewVersions invokes Source.FetchManifest on every registered
+// source for the ecosystem, collects all upstream Manifest.Packages[].
+// Versions, diffs against ecosystem_versions, returns the new set.
 //
 // Boundary this package is in cmd/zen-swarm-ctld/ (composition root); it
 // imports internal/store transitively via internal/research/ecosystem's
 // migrations (sqlite_vec auto-extension) but not internal/store directly.
-// inv-zen-031 enforces the boundary at internal/research/ecosystem/*
+// invariant enforces the boundary at internal/research/ecosystem/*
 // (compliance test tests/compliance/no_store_in_ecosystem_test.go), not
 // at cmd/.
 //
@@ -511,7 +512,7 @@ func (a *Adapter) SweepChunkFingerprints(ctx context.Context, ecoName string) er
 // per-ecosystem DB. Returns wrapped error if ChangeExtractor wasn't
 // wired at construction.
 //
-// The underlying sweep verifies inv-zen-193 (Change-node graph
+// The underlying sweep verifies invariant (Change-node graph
 // consistency): every (version_from, version_to) pair MUST have
 // matching ecosystem_versions rows. Orphans surface as a wrapped error
 // listing the affected ids.

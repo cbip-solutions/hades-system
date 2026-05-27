@@ -1,38 +1,38 @@
-// Package compliance — inv-zen-118: tmux-resurrect snapshot privacy
+// Package compliance — invariant: tmux-resurrect snapshot privacy
 //
-// Spec §7.2 inv-zen-118 wording:
+// Spec §7.2 invariant wording:
 //
-//	"scratch window contents NEVER serialized to tmux-resurrect snapshot"
+// "scratch window contents NEVER serialized to tmux-resurrect snapshot"
 //
 // Three-layer test mirrors the three-layer enforcement in
 // internal/tmuxlife/resurrect.go (Manager.Save):
 //
-//  1. Layer 1 (config-time): tmux session is configured with the
-//     @resurrect-strategy directive that instructs the plugin to skip
-//     scratch. Layer 1 is asserted indirectly — by ensuring the
-//     DaemonOwnedWindows list does NOT include WindowScratch. The
-//     CreateWindows path uses this list to construct the tmux config; if
-//     scratch were daemon-owned, it would be subject to all the
-//     resurrect-related directives applied to daemon windows. The
-//     compliance test asserts the static enumeration excludes scratch,
-//     locking the exclusion at the type level.
+// 1. Layer 1 (config-time): tmux session is configured with the
+// @resurrect-strategy directive that instructs the plugin to skip
+// scratch. Layer 1 is asserted indirectly — by ensuring the
+// DaemonOwnedWindows list does NOT include WindowScratch. The
+// CreateWindows path uses this list to construct the tmux config; if
+// scratch were daemon-owned, it would be subject to all the
+// resurrect-related directives applied to daemon windows. The
+// compliance test asserts the static enumeration excludes scratch,
+// locking the exclusion at the type level.
 //
-//  2. Layer 2 (pre-tar strip): tarResurrectFiltered strips lines whose
-//     tab-separated columns reference the scratch window. Layer 2 is
-//     asserted by feeding a payload containing a "\tscratch\t" line
-//     through Save and verifying the post-scan rejects (or that the
-//     persisted tarball never contains the scratch sentinel).
+// 2. Layer 2 (pre-tar strip): tarResurrectFiltered strips lines whose
+// tab-separated columns reference the scratch window. Layer 2 is
+// asserted by feeding a payload containing a "\tscratch\t" line
+// through Save and verifying the post-scan rejects (or that the
+// persisted tarball never contains the scratch sentinel).
 //
-//  3. Layer 3 (post-tar scan): scratchInPayload rejects any payload that
-//     bypassed layer 2 and still contains a scratch reference. Layer 3
-//     is asserted by feeding a payload containing the "@scratch-window-content"
-//     test-mode sentinel and verifying Save returns ErrScratchExclusionViolated.
+// 3. Layer 3 (post-tar scan): scratchInPayload rejects any payload that
+// bypassed layer 2 and still contains a scratch reference. Layer 3
+// is asserted by feeding a payload containing the "@scratch-window-content"
+// test-mode sentinel and verifying Save returns ErrScratchExclusionViolated.
 //
 // The compliance fake (ResurrectExecForCompliance) injects deterministic
 // payloads through the public Save path; the helper file in
 // internal/tmuxlife/compliance_helpers.go provides the seam.
 //
-// inv-zen-118 is privacy-load-bearing: the scratch window may contain
+// invariant is privacy-load-bearing: the scratch window may contain
 // REPL state, sensitive paste-ins, dictation logs, or operator-private
 // notes. A snapshot tarball that the operator shares (debugging, restore,
 // support) MUST NOT carry that content. The three-layer enforcement is

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package views — inbox.go (Plan 12 Phase C Task C-7, F12 panel).
+// Package views — inbox.go.
 //
-// Notifications inbox (Plan 7 + Hermes routing). Live data from
+// Notifications inbox. Live data from
 // /v1/inbox/list.
 package views
 

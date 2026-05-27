@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-// Package cli — merge.go (Plan 6 Phase F F-2; F-4 type-relocation).
+// Package cli — merge.go.
 //
-// `zen merge` exposes 8 operator subcommands surfacing the Plan 6
+// `zen merge` exposes 8 operator subcommands surfacing the
 // merge.MergeEngine (Phases A-E) into the CLI:
 //
-//	zen merge inspect <generation_id|request_hash>   # outcome + scoring + events
-//	zen merge replay <session_id>                    # re-run from captured eventlog
-//	zen merge score-explain <outcome_id>             # why this winner
-//	zen merge baseline show <session_id>             # passing_set + duration
-//	zen merge cache status                           # size + hit rate + last rebuild
-//	zen merge cache clear                            # in-memory clear (warns)
-//	zen merge config show                            # effective doctrine merge config
-//	zen merge anomaly list [--since <duration>]      # rolling-window anomaly events
+// zen merge inspect <generation_id|request_hash> # outcome + scoring + events
+// zen merge replay <session_id> # re-run from captured eventlog
+// zen merge score-explain <outcome_id> # why this winner
+// zen merge baseline show <session_id> # passing_set + duration
+// zen merge cache status # size + hit rate + last rebuild
+// zen merge cache clear # in-memory clear (warns)
+// zen merge config show # effective doctrine merge config
+// zen merge anomaly list [--since <duration>] # rolling-window anomaly events
 //
 // Each subcommand calls a daemon HTTP endpoint via the MergeClient
 // interface. F-2 originally declared the wire DTOs + interface IN this
-// file; Phase F.4 hoisted them to internal/client/merge_dto.go because
+// file; hoisted them to internal/client/merge_dto.go because
 // the production HTTP client (internal/client/merge.go MergeHTTPClient)
 // must satisfy the interface, and Go's package-isolation requires
 // either the types live with the impl or with the interface — placing
@@ -25,14 +25,14 @@
 // continues to compile unchanged.
 //
 // Drift resolutions structurally enforced (per plan §"Drift resolutions"):
-//   - Drift C — output references Evt* constants only (no Event* / EventType*).
-//   - Drift D — anomaly list decodes EvtMergeAnomalyDetected payload via
-//     AnomalyDetectedPayload.Type discriminator (one EventType, switch on Type).
-//   - Drift E — cache status surfaces RebuildError from MergeCacheRebuiltPayload
-//     (no separate EvtMergeCacheRebuildFailed).
-//   - Drift F — Event/Payload shape consumed verbatim via json.Unmarshal.
+// - Drift C — output references Evt* constants only (no Event* / EventType*).
+// - Drift D — anomaly list decodes EvtMergeAnomalyDetected payload via
+// AnomalyDetectedPayload.Type discriminator (one EventType, switch on Type).
+// - Drift E — cache status surfaces RebuildError from MergeCacheRebuiltPayload
+// (no separate EvtMergeCacheRebuildFailed).
+// - Drift F — Event/Payload shape consumed verbatim via json.Unmarshal.
 //
-// inv-zen-104 preserved: this CLI never imports internal/orchestrator/merge/
+// invariant preserved: this CLI never imports internal/orchestrator/merge/
 // — wire DTOs are pure JSON-tagged value types, decoupled from domain types.
 package cli
 

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Tests for plugin/hades/hooks/wizard_handler.py (Plan 18c Phase E)."""
+"""Tests for plugin/hades/hooks/wizard_handler.py."""
 
 from __future__ import annotations
 
@@ -32,7 +32,7 @@ def _assume_tty_stdin(monkeypatch):
     Production behavior is TTY-detection (E-8 guard); test fixtures
     that need non-TTY behavior explicitly override via their own patch.
     Uses module-object form (monkeypatch.setattr(module, attr, val))
-    because the hermes_plugins namespace package does not expose .hades
+    because the hermes_plugins namespace package does not expose.hades
     as a direct attribute (it's registered in sys.modules only).
     """
     monkeypatch.setattr(
@@ -139,7 +139,7 @@ def test_maybe_launch_wizard_spawns_subprocess_when_trigger_conditions_met(
     """Hook spawns wizard subprocess when first-run + no escape detected.
 
     Mock subprocess.run to capture the call; assert subprocess is invoked
-    with `config init` args (Plan 13 wizard surface).
+    with `config init` args.
     """
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.delenv("HADES_NO_WIZARD", raising=False)
@@ -218,11 +218,11 @@ def test_maybe_launch_wizard_preserves_home_env_for_migrate_detection(
     monkeypatch, tmp_path
 ):
     """Step 1 (migrate detection): wizard subprocess inherits HOME so
-    Plan 13's `~/.claude/` lookup logic works correctly.
+     `~/.claude/` lookup logic works correctly.
 
     Per spec §Q7 step 1: if `~/.claude/` exists, the wizard offers
     `hades migrate claude-code` inline. The hook's responsibility is
-    to NOT clobber the HOME env when subprocessing; Plan 13's
+    to NOT clobber the HOME env when subprocessing; 
     `~/.claude/` detection reads HOME via os.UserHomeDir().
     """
     monkeypatch.setenv("HOME", str(tmp_path))
@@ -271,7 +271,7 @@ def test_maybe_launch_wizard_preserves_home_env_for_migrate_detection(
 def test_maybe_launch_wizard_does_not_pass_no_migrate_detection_flag(
     monkeypatch, tmp_path
 ):
-    """The hook MUST NOT pass any flag that suppresses Plan 13 step 1
+    """The hook MUST NOT pass any flag that suppresses  step 1
     migrate detection (e.g., no `--no-migrate-detection`, no
     `--skip-migrate`). The wizard owns the step-1 prompt logic; the
     hook only ensures the wizard has the data it needs.
@@ -399,7 +399,7 @@ def test_maybe_launch_wizard_does_not_recheck_config_after_subprocess(
 ):
     """The hook MUST NOT re-stat config.toml after subprocess returns.
 
-    Rationale: Plan 13's wizard writer is the authoritative source. The
+    Rationale:  wizard writer is the authoritative source. The
     hook re-checking would create a TOCTOU race (config written → hook
     re-stat → file disappears via concurrent cleanup → hook logs error
     despite wizard succeeding). The hook trusts exit code 0 as the
@@ -612,7 +612,7 @@ def test_maybe_launch_wizard_treats_sigterm_as_cancel(monkeypatch, tmp_path, cap
 def test_maybe_launch_wizard_resumes_next_session_when_config_still_missing(
     monkeypatch, tmp_path
 ):
-    """Crash-only re-ask (per Plan 13 spec §2.3 + E-1 reality check):
+    """Crash-only re-ask:
     after SIGINT cancel, config.toml is still missing → next session
     sees the trigger condition + re-launches the wizard.
     """
@@ -692,7 +692,7 @@ def test_maybe_launch_wizard_logs_error_with_catalog_hint_on_non_cancel_failure(
 ):
     """Non-cancel non-zero exit → hook logs WARN + structured catalog hint.
 
-    Per Plan 18c Phase B: the wrapper's cobra RunE catch has ALREADY
+    Per  : the wrapper's cobra RunE catch has ALREADY
     invoked Render(err) → stderr by the time the subprocess returns
     to the Python hook. The hook does NOT re-render; it only logs
     a structured trace entry for operator traceability.
@@ -771,9 +771,8 @@ def test_maybe_launch_wizard_log_references_known_catalog_codes(
     monkeypatch, tmp_path, caplog
 ):
     """The WARN log on non-zero exit mentions the canonical wizard.*
-    catalog codes for grep-friendly observability + inv-zen-220
-    compliance (Phase G compliance test asserts every error log
-    references a catalog code).
+    catalog codes for grep-friendly observability + invariant
+    compliance.
     """
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.delenv("HADES_NO_WIZARD", raising=False)
@@ -823,7 +822,7 @@ def test_maybe_launch_wizard_subprocess_oserror_routes_via_internal_uncaught(
 
     Per spec §Q6: defense-in-depth uncaught fallback. The hook's WARN
     log identifies the failure path as internal-uncaught so operator
-    can correlate with Phase A reserved overflow code.
+    can correlate with  reserved overflow code.
     """
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.delenv("HADES_NO_WIZARD", raising=False)

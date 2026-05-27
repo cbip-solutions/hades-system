@@ -8,10 +8,10 @@ import (
 	"fmt"
 )
 
-// ReplayCorruptionBudget is the inv-zen-095 cap: at most this many
+// ReplayCorruptionBudget is the invariant cap: at most this many
 // corrupted events tolerated per session replay before the orchestrator
 // MUST transition to HARD_PAUSED. Surfaced as an exported constant so
-// callers (Phase D HARD_PAUSED handler, Phase E recovery, Phase H
+// callers ( HARD_PAUSED handler, recovery,
 // observability dashboards) read the same magic number that doc.go
 // references — never duplicate the literal "5" elsewhere.
 const ReplayCorruptionBudget = 5
@@ -19,7 +19,7 @@ const ReplayCorruptionBudget = 5
 // ErrCorruptionBudgetExceeded is returned by Replay on the
 // (ReplayCorruptionBudget+1)th corrupted event encountered for a given
 // session. The caller MUST transition the orchestrator to HARD_PAUSED
-// (Phase D wires this; Phase E uses it as a recovery signal). Replay
+// . Replay
 // returns the partial ReplayState alongside this error so the caller
 // can audit how far reconstruction progressed before halting.
 var ErrCorruptionBudgetExceeded = errors.New("eventlog: replay corruption budget exceeded (inv-zen-095)")
@@ -32,7 +32,7 @@ type ReplayState struct {
 	// LastEventID is the highest event_id consumed by the row-fold loop
 	// (NIT-3). 0 when no rows were processed (empty session, pre-start
 	// cancel). Advances even across corrupt rows because the cursor
-	// MUST move past them — Phase E warm-resume + Phase H recovery_progress
+	// MUST move past them — warm-resume + recovery_progress
 	// metrics use this as the since= cursor for an incremental
 	// Query(since=LastEventID) on the next read.
 	LastEventID int64
@@ -83,7 +83,7 @@ type ReplayState struct {
 //
 // Performance for sessions <1000 events, replay completes in <500ms
 // (spec target). The hot loop is Decode + a small switch; allocation
-// is bounded by the row count. Phase A asserts <2s in CI as the
+// is bounded by the row count. asserts <2s in CI as the
 // upper-bound guard.
 func (l *Log) Replay(ctx context.Context, sessionID string) (*ReplayState, error) {
 	if err := ctx.Err(); err != nil {
@@ -104,7 +104,7 @@ func (l *Log) Replay(ctx context.Context, sessionID string) (*ReplayState, error
 	}
 	for i, r := range rows {
 		// IMP-1 mid-loop cancel honor: large sessions (10k events) push
-		// the <5s recovery spec; daemon shutdown / Phase E timeout MUST
+		// the <5s recovery spec; daemon shutdown / timeout MUST
 		// preempt the row-fold. We check every 256 iterations starting
 		// at i=256 (the top-of-Replay check above already covers i=0).
 		// 256 is chosen so the per-check overhead is amortized across

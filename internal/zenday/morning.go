@@ -2,24 +2,24 @@
 // Package zenday — morning-brief idempotent composer.
 //
 // GenerateMorningBrief is the user-facing entry point invoked by both
-// the cron firing (Phase D scheduler at 0 8 * * 1-5) and the operator-
+// the cron firing and the operator-
 // pull (`bin/zen day`). Per spec §1 Q13 C: idempotent — skips regen
 // when today's archive `~/.config/zen-swarm/zen-day-YYYY-MM-DD.md`
 // already exists, unless `force == true`.
 //
-// Pipeline
+// # Pipeline
 //
-//  1. Compute today UTC midnight from deps.Clock.Now().
-//  2. Resolve archive path via deps.Paths.MorningBriefPath.
-//  3. If !force and os.Stat(path) succeeds → return ErrAlreadyGenerated.
-//  4. Collect(ctx, deps.CollectDeps, since=now-24h, eod=false).
-//  5. SortByLeverage + truncate to MaxBriefItems.
-//  6. Build BriefDoc{Type: BriefTypeMorning, Date: today, …}.
-//  7. Render → MkdirAll(parent) → WriteFile(path).
-//  8. Emit MorningBriefReadyEvent (best-effort: emit-failure does NOT
-//     void the brief; the file is on disk regardless).
+// 1. Compute today UTC midnight from deps.Clock.Now().
+// 2. Resolve archive path via deps.Paths.MorningBriefPath.
+// 3. If !force and os.Stat(path) succeeds → return ErrAlreadyGenerated.
+// 4. Collect(ctx, deps.CollectDeps, since=now-24h, eod=false).
+// 5. SortByLeverage + truncate to MaxBriefItems.
+// 6. Build BriefDoc{Type: BriefTypeMorning, Date: today, …}.
+// 7. Render → MkdirAll(parent) → WriteFile(path).
+// 8. Emit MorningBriefReadyEvent (best-effort: emit-failure does NOT
+// void the brief; the file is on disk regardless).
 //
-// inv-zen-126 (7-cap) + inv-zen-127 (canonical sort) are enforced by
+// invariant (7-cap) + invariant (canonical sort) are enforced by
 // Render's defense-in-depth Layer 2 panics; the truncation step here is
 // Layer 1.
 package zenday
@@ -35,7 +35,7 @@ import (
 
 // EventEmitter is the contract zenday.GenerateMorningBrief +
 // GenerateEODDigest invoke after successful Render + WriteFile.
-// Production wiring satisfies via Plan 5 eventlog.Recorder.
+// Production wiring satisfies eventlog.Recorder.
 //
 // kind is the canonical EventType.String() value (e.g.
 // "MorningBriefReady"); payload is the JSON-encoded typed event body.
@@ -70,8 +70,8 @@ type MorningDeps struct {
 
 // MorningBriefReadyPayload mirrors eventlog.MorningBriefReadyEvent's
 // wire shape locally so zenday does not import eventlog (avoids the
-// circular-import concern when Phase F is composed before Plan 5 lands;
-// keeps inv-zen-031 boundary discipline as zenday → eventlog only via
+// circular-import concern when is composed before lands;
+// keeps invariant boundary discipline as zenday → eventlog only via
 // the EventEmitter interface).
 //
 // JSON tags MUST match eventlog.MorningBriefReadyEvent exactly so the
@@ -91,19 +91,19 @@ type MorningBriefReadyPayload struct {
 // archive path (idempotent unless force), and emits
 // MorningBriefReadyEvent on success.
 //
-// Returns
+// # Returns
 //
-//   - doc — the rendered BriefDoc value (post-truncation Items + final
-//     TruncatedCount). Zero-value on early returns.
-//   - error — ErrAlreadyGenerated when today's archive exists and
-//     !force; ErrCollectCancelled wrapped from Collect on ctx cancel;
-//     wrapped os errors from MkdirAll / WriteFile. Emit failure is
-//     silent (the file is written regardless).
+// - doc — the rendered BriefDoc value (post-truncation Items + final
+// TruncatedCount). Zero-value on early returns.
+// - error — ErrAlreadyGenerated when today's archive exists and
+// !force; ErrCollectCancelled wrapped from Collect on ctx cancel;
+// wrapped os errors from MkdirAll / WriteFile. Emit failure is
+// silent (the file is written regardless).
 //
 // Note on partial-tolerance: the morning path treats every read-leg
 // failure as a soft warning (legErrors slice from Collect). When every
 // read leg fails the brief is still produced as zero-items content
-// (the eventlog leg is a no-op-success on eod=false per Phase F-5
+// (the eventlog leg is a no-op-success on eod=false per
 // collect.go semantics, so successes >=1 always holds for morning).
 // Operators see an empty-brief signal rather than a hard failure —
 // the brief itself is the outage indicator.

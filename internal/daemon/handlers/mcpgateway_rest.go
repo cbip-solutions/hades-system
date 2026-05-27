@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — mcpgateway_rest.go (Plan 12 Phase E MAJOR-2 fix; Plan 19
-// Phase J Task J-11 distinct-ops repoint).
+// Package handlers — mcpgateway_rest.go ( MAJOR-2 fix;
+// Task J-11 distinct-ops repoint).
 //
 // REST sub-route adapters for /v1/mcpgateway/{codegraph,impact,context,wiki}.
 //
-// Background — Plan 11 substrate gap closure:
+// Background — substrate gap closure:
 //
-// (Q1=B "single HTTP MCP endpoint"). Plan 11 Phase E Task E-3 then shipped
+// (Q1=B "single HTTP MCP endpoint"). Task E-3 then shipped
 // the client wrappers (internal/client/codegraph.go::CodegraphQuery / Impact /
 // Context360 / Wiki) which call REST sub-routes — /v1/mcpgateway/codegraph,
 // /v1/mcpgateway/impact, /v1/mcpgateway/context, /v1/mcpgateway/wiki — that
-// the daemon never registered. Plan 12 Phase C built the TUI F7 panel on
+// the daemon never registered. built the TUI F7 panel on
 // top of those client wrappers (CodegraphFile composes three of the four
 // sub-routes into one round-trip). In production every F7 [Q]/[I]/[W]/[C]
 // subpanel returned 404; the gap was masked because the client tests use
@@ -24,29 +24,29 @@
 // audit emission, doctrine + mode header propagation, panic recovery, and
 // caronte per-mode escalation all flow through unchanged.
 //
-// Cherry-pick narrative: this file completes the Plan 11 substrate gap
-// inherited by Plan 12 Phase C; if a backport branch is ever needed, the
-// commit can be cherry-picked to a Plan 11.1 follow-up release.
+// Cherry-pick narrative: this file completes the substrate gap
+// inherited; if a backport branch is ever needed, the
+// commit can be cherry-picked to a follow-up release.
 //
-// With the CaronteProxy registered under the "caronte" slot (Plan 19 Phase L
+// With the CaronteProxy registered under the "caronte" slot (
 // renamed the segment gitnexus->caronte), the `context`, `impact`, and `wiki`
 // tools return GENUINELY DISTINCT payload shapes (DECISION 6) — no longer the
 // collapsed {hits} alias.
 //
-//   - context → ContextResult JSON (Symbol/Callers/Callees/Neighbors/Community)
-//   - impact  → RiskScore JSON (Score/Level/TopAffected)
-//   - wiki    → {module, markdown} JSON (per-module auto-generated markdown)
+// - context → ContextResult JSON (Symbol/Callers/Callees/Neighbors/Community)
+// - impact → RiskScore JSON (Score/Level/TopAffected)
+// - wiki → {module, markdown} JSON (per-module auto-generated markdown)
 //
 // The `query` (codegraph) op still uses the {hits} shape — CodegraphQueryREST
 // is unchanged. Only context/impact/wiki are repointed; they now call
 // callGatewayRaw (which returns the raw content-text bytes) rather than
 // callGateway (which parses the {hits} shape).
 //
-// inv-zen-031 boundary: this file imports only stdlib. It does NOT import
+// invariant boundary: this file imports only stdlib. It does NOT import
 // internal/caronte or internal/daemon/mcpgateway — the payload structs are
 // local anonymous types parsed from the JSON the gateway returns. The gateway
 // is consumed via the http.Handler interface threaded through
-// MCPGatewayCtx.MCPGateway() — same pattern used by Plan 5 N + Plan 6
+// MCPGatewayCtx.MCPGateway() — same pattern used N +
 // merge gates.
 package handlers
 

@@ -1,63 +1,64 @@
 // catch-up across virtual time.
 //
-// Drives inv-zen-120 + inv-zen-121:
+// Drives invariant + invariant:
 //
-//   - inv-zen-120 jitter: scheduler.ComputeJitter(routineID, period) is
-//     deterministic per routine ID, capped (90s for sub-1h periods,
-//     15min for ≥1h periods), and bounded by 10% of the period.
-//   - inv-zen-121 miss policy: under doctrine.NameMaxScope the
-//     scheduler's MissPolicyCatchUpBounded gates the catch-up burst via
-//     deps.RateLimit.Allow (1/30s/project). Under default doctrine the
-//     miss policy is MissPolicySkip; under capa-firewall it is
-//     MissPolicyNotifyOnly.
+// - invariant jitter: scheduler.ComputeJitter(routineID, period) is
+// deterministic per routine ID, capped (90s for sub-1h periods,
+// 15min for ≥1h periods), and bounded by 10% of the period.
+// - invariant miss policy: under doctrine.NameMaxScope the
+// scheduler's MissPolicyCatchUpBounded gates the catch-up burst via
+// deps.RateLimit.Allow (1/30s/project). Under default doctrine the
+// miss policy is MissPolicySkip; under capa-firewall it is
+// MissPolicyNotifyOnly.
 //
 // Drift notes (vs plan-template heredoc):
 //
-//   - The plan template referenced fictional surfaces:
-//     `clock.NewVirtual`, `eventlog.NewRecorder`,
-//     `scheduler.New(scheduler.Deps{...})`, `scheduler.Routine`,
-//     `sch.Insert(...)`, `testhelpers.NewFireRecorder`,
-//     `scheduler.MissPolicy{MaxCatchUp:1}`, `scheduler.DoctrineMaxScope`.
-//     None of these exist. The actual surface:
+// - The plan template referenced fictional surfaces:
+// `clock.NewVirtual`, `eventlog.NewRecorder`,
+// `scheduler.New(scheduler.Deps{...})`, `scheduler.Routine`,
+// `sch.Insert(...)`, `testhelpers.NewFireRecorder`,
+// `scheduler.MissPolicy{MaxCatchUp:1}`, `scheduler.DoctrineMaxScope`.
+// None of these exist. The actual surface:
 //
-//   - `scheduler.ComputeJitter(routineID, period)` is the
-//     inv-zen-120 carrier; it is a pure function with no clock
-//     dependency.
-//   - `scheduler.Fire(ctx, *Schedule, FireDeps)` is the dispatch
-//     entry point; FireDeps takes a `Now func() time.Time` callback
-//     so the test can drive virtual time.
-//   - `scheduler.EffectiveMissPolicy(s, doctrine)` resolves the
-//     per-doctrine miss policy without invoking the scheduler.
-//   - `scheduler.ComputeMissed(s, now)` reports the missed-fire gap
-//     for the current schedule + virtual now.
+// - `scheduler.ComputeJitter(routineID, period)` is the
+// invariant carrier; it is a pure function with no clock
+// dependency.
+// - `scheduler.Fire(ctx, *Schedule, FireDeps)` is the dispatch
+// entry point; FireDeps takes a `Now func() time.Time` callback
+// so the test can drive virtual time.
+// - `scheduler.EffectiveMissPolicy(s, doctrine)` resolves the
+// per-doctrine miss policy without invoking the scheduler.
+// - `scheduler.ComputeMissed(s, now)` reports the missed-fire gap
+// for the current schedule + virtual now.
 //
-//   - The plan template asserted "100 routines × 30 days × 6/hour =
-//     432_000 fires; offset within ±60s of canonical cron boundary;
-//     mean ~0; stddev 5..50s". The actual implementation:
+// - The plan template asserted "100 routines × 30 days × 6/hour =
+// 432_000 fires; offset within ±60s of canonical cron boundary;
+// mean ~0; stddev 5..50s". The actual implementation:
 //
-//   - Jitter is constant per routine ID (does NOT change across
-//     fires). The "30-day distribution" assertion is therefore the
-//     same as "100 routine ID samples"; we assert the 100-sample
-//     distribution directly.
-//   - For a 10-min period, the 10% bucket is 60s and the cap is 90s
-//     (one-shot since 10min < 1h). The bucket dominates → jitter ∈
-//     [0, 60s). We assert this bound.
-//   - Mean and stddev: the bucket is uniform on [0, 60s) when
-//     hash-mod-bucket is uniform; expected mean 30s, stddev ~17s
-//     (uniform on [0,60]: μ=30, σ=60/√12≈17.3). The plan template
-//     said "mean ~0" — that is wrong (jitter is non-negative;
-//     subtracting bucket/2 is one possible centring, but the actual
-//     ComputeJitter does NOT centre). Reality wins: we assert mean
-//     ∈ [25, 35] and stddev ∈ [10, 25].
+// - Jitter is constant per routine ID (does NOT change across
+// fires). The "30-day distribution" assertion is therefore the
+// same as "100 routine ID samples"; we assert the 100-sample
+// distribution directly.
+// - For a 10-min period, the 10% bucket is 60s and the cap is 90s
+// (one-shot since 10min < 1h). The bucket dominates → jitter ∈
+// [0, 60s). We assert this bound.
+// - Mean and stddev: the bucket is uniform on [0, 60s) when
+// hash-mod-bucket is uniform; expected mean 30s, stddev ~17s
+// (uniform on [0,60]: μ=30, σ=60/√12≈17.3). The plan template
+// said "mean ~0" — that is wrong (jitter is non-negative;
+// subtracting bucket/2 is one possible centring, but the actual
+// ComputeJitter does NOT centre). Reality wins: we assert mean
+// ∈ [25, 35] and stddev ∈ [10, 25].
 //
-//   - Catch-up bounded: the actual implementation does NOT take a
-//     `MaxCatchUp:1` knob. Instead, the catch-up loop in
-//     `internal/scheduler/fire.go:147` iterates over `missed.MissedCount`
-//     and breaks on `RateLimit.Allow == false`. The bound emerges
-//     from the rate-limiter (1/30s/project per spec §1 Q9 C); we
-//     model that with a one-shot RateLimit fake whose first Allow
-//     returns true and subsequent calls return false.
+// - Catch-up bounded: the actual implementation does NOT take a
+// `MaxCatchUp:1` knob. Instead, the catch-up loop in
+// `internal/scheduler/fire.go:147` iterates over `missed.MissedCount`
+// and breaks on `RateLimit.Allow == false`. The bound emerges
+// from the rate-limiter (1/30s/project per spec §1 Q9 C); we
+// model that with a one-shot RateLimit fake whose first Allow
+// returns true and subsequent calls return false.
 //
+// go:build timeaccel
 //go:build timeaccel
 // +build timeaccel
 

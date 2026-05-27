@@ -1,33 +1,33 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_audit_p9.go
 //
-//   - audit.tessera        — tessera tile-log: witness key + STH age + daemon-global checkpoint
-//   - audit.backup         — Litestream replication lag + cold archive age + S3 reachability
-//   - audit.chain-integrity — last verify-chain age + tamper events count + last recovery action
+// - audit.tessera — tessera tile-log: witness key + STH age + daemon-global checkpoint
+// - audit.backup — Litestream replication lag + cold archive age + S3 reachability
+// - audit.chain-integrity — last verify-chain age + tamper events count + last recovery action
 //
-// Architecture
+// # Architecture
 //
-//	RunAuditTesseraProbe, RunAuditBackupProbe, RunAuditChainIntegrityProbe are
-//	the exported orchestration functions consumed by NewDoctorAuditCmd's RunE
-//	closures and (future) RunFullProbe integration. Each function delegates to
-//	the typed prober interfaces declared in probe.go (TesseraProber,
-//	LitestreamProber, ChainProber, RecoveryProber) injected via DoctorDeps.
+// RunAuditTesseraProbe, RunAuditBackupProbe, RunAuditChainIntegrityProbe are
+// the exported orchestration functions consumed by NewDoctorAuditCmd's RunE
+// closures and (future) RunFullProbe integration. Each function delegates to
+// the typed prober interfaces declared in probe.go (TesseraProber,
+// LitestreamProber, ChainProber, RecoveryProber) injected via DoctorDeps.
 //
-// Boundary (inv-zen-031):
+// Boundary:
 //
-//	This file imports only cli-internal types + cobra + context. It does NOT
-//	import internal/store, internal/audit/tessera, internal/audit/chain,
-//	internal/audit/litestream, or internal/audit/recovery concrete types.
-//	Substrate adapters are wired by cmd/zen-swarm-ctld/main.go via the
-//	DoctorDeps fields declared in probe.go.
+// This file imports only cli-internal types + cobra + context. It does NOT
+// import internal/store, internal/audit/tessera, internal/audit/chain,
+// internal/audit/litestream, or internal/audit/recovery concrete types.
+// Substrate adapters are wired by cmd/zen-swarm-ctld/main.go via the
+// DoctorDeps fields declared in probe.go.
 //
 // Naming note:
 //
-//	The Plan 4 doctor_audit.go declares `doctorAuditCmd()` with Use="audit"
-//	(the Plan 4 audit events / family-disjoint / criteria section). This file
-//	exports NewDoctorAuditCmd() as a SEPARATE exportable group builder that
-//	callers (cmd/zen) may register under a parent command. The two commands do
-//	not collide when registered at different levels of the cobra tree.
+// The doctor_audit.go declares `doctorAuditCmd()` with Use="audit"
+// . This file
+// exports NewDoctorAuditCmd() as a SEPARATE exportable group builder that
+// callers (cmd/zen) may register under a parent command. The two commands do
+// not collide when registered at different levels of the cobra tree.
 package cli
 
 import (

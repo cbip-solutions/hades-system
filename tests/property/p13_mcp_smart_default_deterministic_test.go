@@ -1,8 +1,9 @@
+// go:build property
 //go:build property
 // +build property
 
 // Package property — p13_mcp_smart_default_deterministic_test.go (Plan
-// 13 Phase F-tail IMPORTANT 7 missing-tests completion).
+// 13 IMPORTANT 7 missing-tests completion).
 //
 // Property: onboard.GetDefaults(kind) is deterministic — invoking N times
 // with the same kind produces byte-identical WizardDefaults output. The

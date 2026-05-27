@@ -1,30 +1,30 @@
 // tests/compliance/inv_zen_129_aggregator_no_web_test.go
 //
-// Compliance gate for inv-zen-129 (Plan 9 D-14 extension): the knowledge
+// Compliance gate for invariant: the knowledge
 // aggregator and embed packages MUST NOT make any web calls. This test
-// covers the Plan 9 Phase D aggregator + embed subsystem, which is distinct
-// from the Plan 7 knowledge package gate in inv_zen_129_knowledge_no_remote_test.go.
+// covers the aggregator + embed subsystem, which is distinct
+// from the knowledge package gate in inv_zen_129_knowledge_no_remote_test.go.
 //
 // Two defense-in-depth layers:
 //
-//	(a) AST-import scan: for every non-test .go file in
-//	    internal/knowledge/aggregator/ and internal/knowledge/embed/,
-//	    parse the file's import block and assert "net/http" is absent.
-//	    This catches a direct import of the HTTP client surface.
+// (a) AST-import scan: for every non-test.go file in
+// internal/knowledge/aggregator/ and internal/knowledge/embed/,
+// parse the file's import block and assert "net/http" is absent.
+// This catches a direct import of the HTTP client surface.
 //
-//	(b) Callsite grep: raw file scan for http.{Get,Post,Do,PostForm,Head,
-//	    Client} identifiers via regexp. Catches a case where net/http is
-//	    imported transitively (and thus escaped layer (a)) but a callsite
-//	    is present in the source text — defence in depth, not a substitute
-//	    for the import scan.
+// (b) Callsite grep: raw file scan for http.{Get,Post,Do,PostForm,Head,
+// Client} identifiers via regexp. Catches a case where net/http is
+// imported transitively (and thus escaped layer (a)) but a callsite
+// is present in the source text — defence in depth, not a substitute
+// for the import scan.
 //
 // These two layers defend against distinct drift modes:
-//   - Layer (a): developer adds `import "net/http"` directly.
-//   - Layer (b): developer adds a vendor shim that re-exports http.Client
-//     without the net/http import path appearing in the aggregator source.
+// - Layer (a): developer adds `import "net/http"` directly.
+// - Layer (b): developer adds a vendor shim that re-exports http.Client
+// without the net/http import path appearing in the aggregator source.
 //
-// inv-zen-129: no web queries from the aggregator or embed worker.
-// inv-zen-080: single-egress-point for LLM traffic (corollary: no ad-hoc HTTP).
+// invariant: no web queries from the aggregator or embed worker.
+// invariant: single-egress-point for LLM traffic (corollary: no ad-hoc HTTP).
 package compliance
 
 import (

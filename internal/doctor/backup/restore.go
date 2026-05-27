@@ -8,7 +8,7 @@
 // operator may have made.
 //
 // Defense-in-depth: tar extraction rejects path-traversal entries via
-// isPathWithin guard (catches ../etc/passwd entries even on hostile
+// isPathWithin guard (catches../etc/passwd entries even on hostile
 // tarballs that bypass writeTarGz's symlink-skip on the source side).
 package backup
 

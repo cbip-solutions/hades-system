@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctrine_revert.go (Plan 5 Phase N N-4).
+// Package cli — doctrine_revert.go.
 //
 // `zen doctrine revert <ADR-NNNN>` rolls back a previously applied
 // amendment via the daemon's amendment.Reverter wiring. Optional
-// --reason is recorded into the eventlog (inv-zen-099 operator-override
+// --reason is recorded into the eventlog (invariant operator-override
 // audit) when supplied.
 package cli
 

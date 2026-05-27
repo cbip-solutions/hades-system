@@ -155,10 +155,10 @@ func TestParseFileBinaryDataRejected(t *testing.T) {
 	}
 }
 
-// TestParseExtensionHookFieldsZeroValue — inv-zen-130 prerequisite:
+// TestParseExtensionHookFieldsZeroValue — invariant prerequisite:
 // even when YAML frontmatter contains keys that COLLIDE with the three
 // extension-hook field names, the parser MUST leave the corresponding
-// sql.NullString fields with Valid=false. Plan 9 / Plan 14 / Caronte
+// sql.NullString fields with Valid=false. / / Caronte
 // are the authoritative writers.
 func TestParseExtensionHookFieldsZeroValue(t *testing.T) {
 	tmp := t.TempDir()

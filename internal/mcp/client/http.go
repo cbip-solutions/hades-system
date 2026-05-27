@@ -190,8 +190,8 @@ func (c *Client) Close() error {
 
 const daemonSentinel = ""
 
-// defaultAllowedHostsSealed is the authoritative whitelist (inv-zen-085).
-// Changes to this set require an ADR (see docs/decisions/ADR-080-research-mcp-firecrawl-host.md
+// defaultAllowedHostsSealed is the authoritative whitelist.
+// Changes to this set require an ADR (see architecture records
 // for the precedent on how to extend it).
 //
 // Treat as immutable. Callers MUST go through cloneDefaultAllowedHosts()

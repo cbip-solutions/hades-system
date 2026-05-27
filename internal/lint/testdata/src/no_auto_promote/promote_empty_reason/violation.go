@@ -7,5 +7,5 @@ func (a *Adapter) Promote(noteID, operatorID, reason string) error { return nil 
 
 func runBad() {
 	a := &Adapter{}
-	_ = a.Promote("note-1", "the-operator", "") // want `inv-zen-146: Promote\(\) reason MUST be non-empty operator-supplied string`
+	_ = a.Promote("note-1", "the-operator", "") // want `invariant: Promote\(\) reason MUST be non-empty operator-supplied string`
 }

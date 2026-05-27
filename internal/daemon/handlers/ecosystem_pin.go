@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — ecosystem_pin.go (Plan 14 Phase G fix-cycle).
+// Package handlers — ecosystem_pin.go.
 //
 // EcosystemPin implements POST /v1/ecosystem/pin.
 //
@@ -10,12 +10,12 @@
 //
 // Status codes:
 //
-//	204 No Content — pin committed (and seam returns nil error).
-//	400 Bad Request — invalid JSON body or missing field.
-//	404 Not Found — unknown (ecosystem, version) tuple.
-//	409 Conflict — already pinned (idempotent failure; CLI maps to recoverable).
-//	500 Internal Server Error — opaque seam failure.
-//	503 Service Unavailable — EcosystemHandler not wired.
+// 204 No Content — pin committed (and seam returns nil error).
+// 400 Bad Request — invalid JSON body or missing field.
+// 404 Not Found — unknown (ecosystem, version) tuple.
+// 409 Conflict — already pinned (idempotent failure; CLI maps to recoverable).
+// 500 Internal Server Error — opaque seam failure.
+// 503 Service Unavailable — EcosystemHandler not wired.
 //
 // Wire mirror: matches client.EcosystemPin(eco, ver) → POST body
 // {"ecosystem": "<X>", "version": "<Y>"} → 204 on success.

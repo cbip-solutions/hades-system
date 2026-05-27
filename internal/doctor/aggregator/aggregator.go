@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator ships the Plan 13 Phase F doctor aggregator
+// Package aggregator ships the doctor aggregator
 // orchestrator: parallel execution via errgroup bounded min(numCPU, 8),
 // per-check context timeout, Tessera audit emit, JSON schemaVersion=1.0
 // serialization, bitmask exit-code computation.
 //
-// Phase F Task F1 baseline; F3-F4-F5 extend with Fix() loop + backup +
+// Task F1 baseline; F3-F4-F5 extend with Fix() loop + backup +
 // CLI surface.
 //
-// Boundary (inv-zen-031): aggregator consumes only check.Check (interface)
+// Boundary: aggregator consumes only check.Check (interface)
 // + Emitter (interface; satisfied by internal/audit/chain in production);
 // MUST NOT import internal/store.
 //
 // Audit-pending queue (per spec §3.4 chaos test daemon-disconnect):
 // when the daemon is down, the production Emitter implementation buffers
-// to ~/.local/state/zen-swarm/audit-pending.jsonl (Plan 9 substrate). The
+// to ~/.local/state/zen-swarm/audit-pending.jsonl. The
 // aggregator's contract is "best-effort emit": on Emitter error, the
 // aggregator logs but does NOT fail Run() — the diagnostic is still
 // surfaced to the operator.

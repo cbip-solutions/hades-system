@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
 // Package hooks executes lifecycle hooks + transactional materialization
-// for Plan 13 templates.
+// templates.
 //
 // Lifecycle (per spec §3.5):
 //
-//  1. pre_prompt.{sh,py} — validate host env (BEFORE the wizard runs).
-//     In the Phase D entry-point flow, this hook is invoked BY THE CLI
-//     (zen new / zen init) BEFORE calling onboard.Wizard.Run via a
-//     separate hooks.RunPreflight() function so the wizard never sees a
-//     host that fails preflight.
-//  2. pre_gen.{sh,py} — validate wizard answers (BEFORE materialize).
-//     Receives templates.Answers as JSON on stdin. Non-zero exit halts.
-//  3. Materialize — write rendered files to a temp dir (NOT dst).
-//  4. post_gen.{sh,py} — run init scripts (git init, plugin link, etc.).
-//     Receives templates.Answers as JSON on stdin AND cwd is the temp
-//     dir so `git init` inits the staged tree.
-//  5. Swap — atomic rename temp → dst. Failure removes temp.
+// 1. pre_prompt.{sh,py} — validate host env (BEFORE the wizard runs).
+// In the entry-point flow, this hook is invoked BY THE CLI
+// (zen new / zen init) BEFORE calling onboard.Wizard.Run via a
+// separate hooks.RunPreflight() function so the wizard never sees a
+// host that fails preflight.
+// 2. pre_gen.{sh,py} — validate wizard answers (BEFORE materialize).
+// Receives templates.Answers as JSON on stdin. Non-zero exit halts.
+// 3. Materialize — write rendered files to a temp dir (NOT dst).
+// 4. post_gen.{sh,py} — run init scripts (git init, plugin link, etc.).
+// Receives templates.Answers as JSON on stdin AND cwd is the temp
+// dir so `git init` inits the staged tree.
+// 5. Swap — atomic rename temp → dst. Failure removes temp.
 //
 // All errors cause rollback: temp dir removed, dst untouched.
 package hooks
@@ -123,10 +123,10 @@ func runHook(ctx context.Context, tmpl t.Template, scriptPath string, answers t.
 	// pre_prompt.sh + pre_gen.sh + post_gen.sh files that all start with
 	// `#!/usr/bin/env bash` and use bash-only constructs:
 	//
-	//   - `set -euo pipefail` (the `-o pipefail` flag is bash/ksh-only;
-	//     POSIX sh / Debian dash / Alpine busybox-ash do NOT support it)
-	//   - `[[ ... =~ ... ]]` regex matching (bash builtin; POSIX sh has
-	//     no `[[` and no `=~`)
+	// - `set -euo pipefail` (the `-o pipefail` flag is bash/ksh-only;
+	// POSIX sh / Debian dash / Alpine busybox-ash do NOT support it)
+	// - `[[... =~... ]]` regex matching (bash builtin; POSIX sh has
+	// no `[[` and no `=~`)
 	//
 	// On Debian (where /bin/sh is `dash`) or Alpine (busybox-ash), invoking
 	// these scripts via `sh` errors out with `[[: not found` or

@@ -1,3 +1,4 @@
+// go:build integration && cgo
 //go:build integration && cgo
 // +build integration,cgo
 

@@ -22,7 +22,7 @@ import fnmatch
 def parse_allowlist(path):
     """Parse the personal-references-allowlist.yaml schema.
 
-    Returns: list of (pattern_string, [file_glob, ...]).
+    Returns: list of (pattern_string, [file_glob,...]).
 
     The schema is fixed (we control it); the parser is a 30-line
     state machine over indented YAML so we don't depend on pyyaml.

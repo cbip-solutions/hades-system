@@ -1,43 +1,43 @@
 // SPDX-License-Identifier: MIT
-// Package cli — knowledge.go (Plan 7 Phase G Task G-11).
+// Package cli — knowledge.go.
 //
 // `zen knowledge <subcommand>` is the operator-facing entry point for
 // the cross-project knowledge aggregator (spec §6.6). Three leaves
 // under one root:
 //
-//	zen knowledge query <free-text>    [--type X] [--project Y]
-//	                                   [--since 7d] [--limit N]
-//	                                   [--format text|json|md]
-//	                                   [--remote] [--audit-chain]
-//	                                   [--code-symbol foo]
-//	zen knowledge reindex              [--full] [--project alias]
-//	zen knowledge stats                [--schema]
+// zen knowledge query <free-text> [--type X] [--project Y]
+// [--since 7d] [--limit N]
+// [--format text|json|md]
+// [--remote] [--audit-chain]
+// [--code-symbol foo]
+// zen knowledge reindex [--full] [--project alias]
+// zen knowledge stats [--schema]
 //
-// inv-zen-129 boundary: --remote SHORT-CIRCUITS at this CLI layer
+// invariant boundary: --remote SHORT-CIRCUITS at this CLI layer
 // BEFORE the daemon round-trip. The deferred-message text + roadmap
 // pointer is rendered locally; the daemon never sees the flag. The
 // knowledge.NoRemoteSentinel() anchor is invoked from the production
 // path so the G-16 compliance test asserts production-reachability.
 //
-// inv-zen-129 boundary (symmetric): --audit-chain SHORT-CIRCUITS at
-// this CLI layer with a Plan 9 deferred-message pointer. Same anchor
+// invariant boundary (symmetric): --audit-chain SHORT-CIRCUITS at
+// this CLI layer with a deferred-message pointer. Same anchor
 // pattern via knowledge.NoAuditChainSentinel().
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
-// newClientFromCmd (mirrors the Plan 7 C-12 attach/sessions/layout +
+// newClientFromCmd (mirrors the C-12 attach/sessions/layout +
 // D-13 schedule + E-12 inbox + F-10 zen-day patterns). Tests inject a
 // fake client via the KnowledgeClientFactory parameter to NewKnowledgeCmd;
 // production wires through NewKnowledgeCmdProd which adapts *client.Client
 // → KnowledgeClient.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract from
-// Phase A):
-//   - 0 success
-//   - 1 operator-recoverable: invalid --since, malformed --type,
-//     malformed --format, daemon 422 (validation rejected).
-//   - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
-//     (until SetKnowledgeIndex wires; mirrors the inbox/quiet/zen-day
-//     graceful-degradation pattern).
+// ):
+// - 0 success
+// - 1 operator-recoverable: invalid --since, malformed --type,
+// malformed --format, daemon 422 (validation rejected).
+// - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
+// (until SetKnowledgeIndex wires; mirrors the inbox/quiet/zen-day
+// graceful-degradation pattern).
 package cli
 
 import (

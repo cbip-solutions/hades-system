@@ -1,27 +1,27 @@
-// Package cli — help_v0_7_0_test.go (Plan 7 Phase L Task L-2).
+// Package cli — help_v0_7_0_test.go.
 //
-// Golden audit: every Plan 7 cobra subcommand MUST ship man-page-quality
+// Golden audit: every cobra subcommand MUST ship man-page-quality
 // help text per spec §6 ("operator UX") and the project doctrine
 // "build the final product, not the stages". This test walks the
-// command tree under `zen` and asserts that for every Plan 7 path the
+// command tree under `zen` and asserts that for every path the
 // `Long` description is multi-paragraph (≥80 chars after trim) and the
-// `Example` block contains at least one runnable `zen <path> ...` line.
+// `Example` block contains at least one runnable `zen <path>...` line.
 //
 // Why three checks (presence + minimum length + binary-name marker):
-//   - presence catches accidental drops where a phase-writer left the
-//     field empty.
-//   - minimum length (80 chars) catches the trivial "Long is just a
-//     copy of Short" anti-pattern that would technically pass a non-empty
-//     check.
-//   - "zen " marker catches Examples that show flags-only or pseudocode
-//     instead of an actual paste-able invocation.
+// - presence catches accidental drops where a phase-writer left the
+// field empty.
+// - minimum length (80 chars) catches the trivial "Long is just a
+// copy of Short" anti-pattern that would technically pass a non-empty
+// check.
+// - "zen " marker catches Examples that show flags-only or pseudocode
+// instead of an actual paste-able invocation.
 //
-// CI gating: this file runs as part of `go test ./internal/cli/...`,
-// so any future phase that adds a Plan 7 subcommand without filling
+// CI gating: this file runs as part of `go test./internal/cli/...`,
+// so any future phase that adds a subcommand without filling
 // Long+Example breaks this test before merge. Future plans (8+) extend
 // the audit set by appending paths to `plan7HelpAuditPaths`.
 //
-// Earlier subcommand families (the foundational Plan 1-6 paths) are
+// Earlier subcommand families are
 // intentionally excluded — they are policed by their own release-time
 // tests; this file is the equivalent for the audit/inbox/scheduler
 // substrate added later.

@@ -17,7 +17,7 @@ var posixDriverFactory = func(ctx context.Context, cfg posix.Config) (tessera.Dr
 
 // posixStorage wraps transparency-dev/tessera/storage/posix.
 //
-// Phase A defines the shape; A-5 wires the appender atop this type via
+// defines the shape; A-5 wires the appender atop this type via
 // the Driver() accessor. The wrapper exists so unit tests can mock the
 // storage layer (without standing up Tessera) AND so future phases can
 // swap the backend (hosted Tessera, etc.) without touching Adapter.

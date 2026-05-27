@@ -88,8 +88,8 @@ func (d *Divergence) Compare(ctx context.Context, pathA, pathB string) (Divergen
 
 	if !rep.Equal {
 		// Audit-pipe degradation MUST NOT block the report; emit error
-		// is intentionally swallowed (Phase N's structured emitter logs
-		// emit failures separately for inv-zen-095 observability).
+		// is intentionally swallowed ( structured emitter logs
+		// emit failures separately for invariant observability).
 		_ = d.emit.Emit(ctx, Event{
 			Type: EventConfigDivergenceDetected,
 			Payload: map[string]any{

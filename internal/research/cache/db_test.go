@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -93,8 +94,8 @@ func TestSchemaVersionRecorded(t *testing.T) {
 	if err != nil {
 		t.Fatalf("SchemaVersion: %v", err)
 	}
-	if got != cacheSchemaVersionV5 {
-		t.Errorf("SchemaVersion = %d, want %d", got, cacheSchemaVersionV5)
+	if got != cacheSchemaVersionV6 {
+		t.Errorf("SchemaVersion = %d, want %d", got, cacheSchemaVersionV6)
 	}
 }
 
@@ -180,9 +181,8 @@ func TestWithLocalSqliteVecOption(t *testing.T) {
 	if err != nil {
 		t.Fatalf("SchemaVersion: %v", err)
 	}
-
-	if ver != cacheSchemaVersionV5 {
-		t.Errorf("SchemaVersion = %d, want %d", ver, cacheSchemaVersionV5)
+	if ver != cacheSchemaVersionV6 {
+		t.Errorf("SchemaVersion = %d, want %d", ver, cacheSchemaVersionV6)
 	}
 }
 

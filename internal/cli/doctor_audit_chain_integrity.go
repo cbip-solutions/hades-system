@@ -10,11 +10,11 @@
 // it can be unit-tested under -race -count=2 against stub ChainStatus
 // implementations; the CLI just adapts the daemon response.
 //
-// As with audit.backup, the Phase C-10 surface ships the call-site in
-// internal/client.AuditDoctorChainIntegrity; Phase H wires the
+// As with audit.backup, the surface ships the call-site in
+// internal/client.AuditDoctorChainIntegrity; wires the
 // daemon-side handler that invokes RunDoctorAuditChainIntegrity with
 // the production ChainStatus adapter (in-memory verify-cache populated
-// by tamper.scheduler + Plan 5 eventlog tamper-count query).
+// by tamper.scheduler + eventlog tamper-count query).
 package cli
 
 import (

@@ -1,5 +1,4 @@
-//go:build test
-
+// go:build test
 package apply_test
 
 import (
@@ -66,9 +65,9 @@ func TestMergeEngineFake_RuntimeGuardPasses_UnderGoTest(t *testing.T) {
 const planSixSkipMsg = "Plan 6 not yet shipped — MergeEngine fake-only mode"
 
 // TestMergeEngineFake_CrossWorkerScenarioSkippedUntilPlanSix demonstrates
-// the canonical t.Skip(planSixSkipMsg) usage Phase H + future test
+// the canonical t.Skip(planSixSkipMsg) usage + future test
 // suites MUST adopt for any scenario that requires the real
-// MergeEngine to make a winner-decision. Plan 6's first commit greps
+// MergeEngine to make a winner-decision. first commit greps
 // for the planSixSkipMsg literal and removes the guards once the real
 // engine is wired.
 func TestMergeEngineFake_CrossWorkerScenarioSkippedUntilPlanSix(t *testing.T) {

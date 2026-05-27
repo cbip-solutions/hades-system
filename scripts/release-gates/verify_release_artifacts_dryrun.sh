@@ -7,7 +7,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "${REPO_ROOT}"
 
 DIST_DIR="${DIST_DIR:-dist}"
-OWNER="${OWNER:-hades-system}"
+OWNER="${OWNER:-cbip-solutions}"
 REPO="${REPO:-hades-system}"
 PLATFORM="${PLATFORM:-}"  # optional scope flag (e.g., darwin-arm64)
 

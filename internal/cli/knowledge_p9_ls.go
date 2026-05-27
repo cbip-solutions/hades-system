@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package cli — knowledge_p9_ls.go (Plan 9 Phase I Task I-5).
+// Package cli — knowledge_p9_ls.go.
 //
-// `zen knowledge-p9 ls` — list notes from the Plan 9 aggregator.
+// `zen knowledge-p9 ls` — list notes from the aggregator.
 //
 // Wire method: KnowledgeListP9(ctx, projectID, pinnedOnly) → ([]KnowledgeNote, error).
 // KnowledgeNote fields: NoteID, ProjectID, Path, Pinned, UpdatedAt (no Title).
 //
 // Flags
 //
-//	--project <id>    Scope to one project (empty = all).
-//	--pinned-only     Only list pinned notes.
+// --project <id> Scope to one project (empty = all).
+// --pinned-only Only list pinned notes.
 package cli
 
 import (

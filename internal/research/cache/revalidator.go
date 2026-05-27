@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -6,27 +7,27 @@
 // Package cache — revalidator.go
 //
 // This file is the SOLE legal HTTP callsite in internal/research/cache/.
-// The Phase J noWebInCache AST analyzer (Plan 9 Phase J) enforces this
+// The noWebInCache AST analyzer enforces this
 // boundary via an allowlist that names this file specifically. All other
 // files in this package MUST NOT import net/http; the analyzer treats any
-// other file-level net/http import as a violation of inv-zen-152.
+// other file-level net/http import as a violation of invariant.
 //
 // # Revalidator
 //
 // Revalidator implements the HEAD-based revalidation protocol per spec §7.4
 // (T5 mitigation). Given a Finding with a SourceURL and ContentHash, it:
 //
-//  1. Issues a HEAD request to SourceURL with If-None-Match + If-Modified-Since
-//     conditional headers (if available from the Finding).
-//  2. Interprets the response status:
-//     - 304 Not Modified → FreshnessFresh (content unchanged).
-//     - 200 OK           → fetchAndCompare (GET + sha256 vs ContentHash).
-//     - 404 / 410        → FreshnessStale, nil error (source gone; demote).
-//     - 5xx              → error (caller retries per failure mode #11 §7.1).
-//     - other            → error (unexpected response).
-//  3. fetchAndCompare GETs the final URL (after any redirects followed by
-//     stdlib http.Client), reads the body, computes sha256, and compares to
-//     finding.ContentHash: match → FreshnessFresh; mismatch → FreshnessStale.
+// 1. Issues a HEAD request to SourceURL with If-None-Match + If-Modified-Since
+// conditional headers (if available from the Finding).
+// 2. Interprets the response status:
+// - 304 Not Modified → FreshnessFresh (content unchanged).
+// - 200 OK → fetchAndCompare (GET + sha256 vs ContentHash).
+// - 404 / 410 → FreshnessStale, nil error (source gone; demote).
+// - 5xx → error (caller retries per failure mode #11 §7.1).
+// - other → error (unexpected response).
+// 3. fetchAndCompare GETs the final URL (after any redirects followed by
+// stdlib http.Client), reads the body, computes sha256, and compares to
+// finding.ContentHash: match → FreshnessFresh; mismatch → FreshnessStale.
 //
 // Redirects are followed automatically by http.Client (stdlib default;
 // up to 10 hops). ValidateResult.FinalURL is set to the final URL after
@@ -37,7 +38,7 @@
 // (ValidateOpts.Timeout, default 5 s). The tighter of the two wins per
 // context.WithTimeout semantics.
 //
-// inv-zen-152: SourceURL must be non-empty. Validate returns
+// invariant: SourceURL must be non-empty. Validate returns
 // ErrSourceURLRequired when finding.URL is empty.
 package cache
 

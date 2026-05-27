@@ -4,20 +4,20 @@
 // sources behind GetWhy(symbol|file): (1) ADR-linking (explicit references +
 // a caronte-intent.toml coverage manifest + semantic similarity), (2)
 // staleness (a linked ADR is flagged when its linked code's content_hash
-// changes after the ADR's last git-touch — inv-zen-237), and (3) semantic
+// changes after the ADR's last git-touch — invariant), and (3) semantic
 // correlation (Jina-code 1536-d embeddings of ADR/spec chunks + code-node
 // text, KNN-retrieved from code_node_vec and BGE-reranked). GetWhy also
-// surfaces Lore git-trailers (populated by Phase I; read here via
+// surfaces Lore git-trailers (populated by ; read here via
 // store.ListLoreTrailersForNode).
 //
-// Boundary (inv-zen-230): this package and its callers never import
-// internal/store; it operates over the Phase A *store.Store (whose *sql.DB
+// Boundary: this package and its callers never import
+// internal/store; it operates over the *store.Store (whose *sql.DB
 // is opened only by internal/daemon/caronteadapter). It declares three
 // narrow seams — CodeEmbedder (master C-6), Reranker, GitProber — and the
-// daemon wires the real Plan 14 embedder/reranker + an os/exec git prober at
+// daemon wires the real embedder/reranker + an os/exec git prober at
 // the composition root; tests inject deterministic fakes.
 //
-// inv-zen-129: the embed path makes NO web calls. The CodeEmbedder interface
+// invariant: the embed path makes NO web calls. The CodeEmbedder interface
 // has no Forward/HTTP method — the real impl (ecosystem.JinaCodeEmbeddings)
 // is a local stdin/stdout MPS subprocess. Embeddings do NOT route through the
 // dispatcher.

@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-// Package client — codegraph_plan19.go (Plan 19 Phase K).
+// Package client — codegraph_plan19.go.
 //
-// Thin pass-throughs for the daemon's Plan 19 caronte REST sub-routes:
-// /v1/mcpgateway/{why,risk,cochange,impl}. The daemon side (Phase K Task
+// Thin pass-throughs for the daemon's caronte REST sub-routes:
+// /v1/mcpgateway/{why,risk,cochange,impl}. The daemon side ( Task
 // K-5, handlers/mcpgateway_rest.go) translates each into a JSON-RPC
-// tools/call against the now-native Caronte engine (Phase J backed the
+// tools/call against the now-native Caronte engine ( backed the
 // caronte segment with the engine). CLI is operator-side; LLM traffic is
 // not involved (these are structural queries, not generation).
 //
-// inv-zen-088 single-egress preserved: every round-trip proxies through
-// the daemon. inv-zen-129 enforced: this file uses ONLY c.postJSON /
+// invariant single-egress preserved: every round-trip proxies through
+// the daemon. invariant enforced: this file uses ONLY c.postJSON /
 // c.postJSONH — never net/http directly.
 //
 // ProjectAlias as the canonical X-Zen-Project-ID header so the daemon
 // mcpgateway alias resolver picks it up per MCP protocol convention.
-// Body still includes ProjectAlias (Phase A body-fallback compat).
+// Body still includes ProjectAlias.
 package client
 
 import "context"

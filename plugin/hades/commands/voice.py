@@ -65,7 +65,7 @@ RESPONSE=$(curl --unix-socket /tmp/zen-swarm.sock \\
                 http://unix/v1/augment)
 ```
 
-Render via voice TTS renderer (Phase A `plugin/hades/renderers/voice_citation.py`).
+Render via voice TTS renderer.
 
 ## 6. Async flow (estimated ≥10s)
 
@@ -79,7 +79,7 @@ JOB_ID=$(curl --unix-socket /tmp/zen-swarm.sock \\
               | jq -r '.job_id')
 ```
 
-Result will be in Plan 7 inbox + push notification per Hermes routing.
+Result will be in  inbox + push notification per Hermes routing.
 
 When operator returns:
 ```
@@ -101,15 +101,15 @@ Cache holds last 50 queries + community summaries (doctrine-tunable size per spe
 
 ## 8. Privacy filter
 
-Per inv-zen-163, voice TTS NEVER reads aloud capa-firewall sensitive content per spec §6.4 (privacy filter never leaks).
+Per invariant, voice TTS NEVER reads aloud capa-firewall sensitive content per spec §6.4 (privacy filter never leaks).
 
 ## Cross-references
 
 - spec §1 Q6=B AFK comprehensive
 - spec §7.4 AFK UX
 - spec §7.6 notification routing
-- Phase A renderers/voice_citation.py
-- Phase D AFK richness substrate (offline cache; sync/async flow logic)
+-  renderers/voice_citation.py
+-  AFK richness substrate (offline cache; sync/async flow logic)
 - /full (companion command for citation expansion)
 """
 

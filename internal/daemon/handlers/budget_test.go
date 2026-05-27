@@ -1,13 +1,13 @@
-// Package handlers — budget_test.go (Plan 3 Phase F K-4).
+// Package handlers — budget_test.go.
 //
 // Coverage targets:
-//   - parseRange: "24h" / "30d" / "Xd" / "Xm" / Go duration / errors
-//   - supportedBudgetWindow: 24h + 30d allowed; others rejected
-//   - BudgetSummary: nil server → empty shape; nil counters → empty
-//     shape; seeded counters → correct totals + sort order; unsupported
-//     range → 400; bad range syntax → 400
-//   - shape stability: ByTier MUST be a non-nil empty slice on no data
-//     (never JSON null)
+// - parseRange: "24h" / "30d" / "Xd" / "Xm" / Go duration / errors
+// - supportedBudgetWindow: 24h + 30d allowed; others rejected
+// - BudgetSummary: nil server → empty shape; nil counters → empty
+// shape; seeded counters → correct totals + sort order; unsupported
+// range → 400; bad range syntax → 400
+// - shape stability: ByTier MUST be a non-nil empty slice on no data
+// (never JSON null)
 package handlers
 
 import (

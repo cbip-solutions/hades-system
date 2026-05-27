@@ -26,11 +26,11 @@ def render_short(envelope: dict[str, Any]) -> MobileSummaryCard:
 
     Drops ``top_fields`` beyond the first 3 (``MobileSummaryCard``'s
     invariant). Preserves ``cache_state`` + ``audit_event_id`` +
-    ``project_id`` verbatim — these fields drive Phase A's renderer
-    dispatch and Plan 9 audit chain anchor.
+    ``project_id`` verbatim — these fields drive  renderer
+    dispatch and  audit chain anchor.
 
     Args:
-        envelope: The citation envelope JSON (Plan 11 substrate shape) —
+        envelope: The citation envelope JSON —
             see ``internal/citation/envelope.go`` for the canonical Go
             type. Python consumes via daemon HTTP round-trip.
 
@@ -88,16 +88,14 @@ async def expand(
 
     Implements the ``/expand <citation-id>`` slash command flow per spec
     §1 Q6=B. Operator on AFK platform issues ``/expand evt-1234abcd``;
-    Hermes' slash command parser (Phase B registers the command; this
-    function executes it) invokes this coroutine. The daemon's
-    ``GET /v1/audit/event/<id>`` endpoint (Plan 11 substrate shipped per
-    ``internal/daemon/handlers/audit_event.go``) returns the full
+    Hermes' slash command parser invokes this coroutine. The daemon's
+    ``GET /v1/audit/event/<id>`` endpoint returns the full
     envelope JSON; the AFK module emits an
-    ``AUDIT_MOBILE_EXPANSION_REQUESTED`` audit event for Plan 9 chain
+    ``AUDIT_MOBILE_EXPANSION_REQUESTED`` audit event chain
     anchoring before returning to the platform renderer.
 
     Args:
-        citation_id: The Plan 11 citation envelope ID (e.g.
+        citation_id: The  citation envelope ID (e.g.
             ``"evt-1234abcd"``).
         operator_id: The session operator's id (audit chain attribution).
         platform: The active AFK platform (audit event payload).

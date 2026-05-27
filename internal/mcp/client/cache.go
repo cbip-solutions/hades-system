@@ -44,7 +44,7 @@ func hashForQuery(query string) string {
 }
 
 // CacheClient wraps *Client to provide typed access to the daemon
-// /v1/research/cache/{get,set} endpoints (Phase G handler).
+// /v1/research/cache/{get,set} endpoints.
 //
 // Concurrency safe for concurrent use after construction. CacheClient
 // holds only an immutable *Client reference; Get and Set are stateless

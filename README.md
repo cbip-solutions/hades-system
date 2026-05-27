@@ -12,11 +12,9 @@ terminal CLI, a TUI, a Hermes plugin, four MCP servers, release gates, audit
 trails, and Caronte, an in-process code-graph engine for impact, intent, and
 contract-federation analysis.
 
-The public repository is a curated v1.0 release snapshot. It contains the
-runtime, tests, release infrastructure, and root-level public documentation
-needed to build and evaluate the system. Private operator history, historical
-design records, and environment-specific material are not part of this
-distribution.
+This repository contains the HADES v1.0 source distribution: runtime code,
+tests, release tooling, and user-facing documentation needed to build, run, and
+evaluate the system.
 
 ## What It Does
 
@@ -28,10 +26,9 @@ distribution.
   the Hermes plugin.
 - Embeds Caronte for code-graph queries, blast-radius scoring, design-intent
   lookup, co-change analysis, and API-contract federation.
-- Ships a public Tier 1 sidecar contract for advanced Anthropic integrations
-  without bundling a private implementation.
+- Ships a Tier 1 sidecar contract for advanced local Anthropic integrations.
 - Publishes reproducible release gates for licensing, SBOM, chaos, DCO,
-  security disclosure, and public snapshot hygiene.
+  security disclosure, and artifact verification.
 
 ## Quick Start
 
@@ -55,7 +52,7 @@ Use the CLI:
 ```bash
 bin/hades status
 bin/zen doctor
-bin/zen codegraph health
+bin/zen doctor caronte
 ```
 
 See [INSTALL.md](INSTALL.md) for platform prerequisites and packaging notes.
@@ -72,18 +69,44 @@ See [INSTALL.md](INSTALL.md) for platform prerequisites and packaging notes.
   contract federation.
 - `plugin/hades` - Hermes plugin commands, hooks, renderers, and interactive
   UX.
-- `tests` - public verification fixtures and release-gate coverage.
-- `configs` - curated public runtime and release-gate configuration.
+- `tests` - verification fixtures and release-gate coverage.
+- `configs` - runtime and release-gate configuration examples.
 
-## Public Documentation
+## Architecture At A Glance
+
+HADES runs as a local daemon with CLI and plugin frontends. The daemon owns
+work queues, project state, audit emission, budget checks, and recovery hooks.
+Execution surfaces connect through explicit adapters: MCP servers expose narrow
+tool contracts, the Hermes plugin renders operator UX, and Caronte provides
+in-process code graph and contract-federation queries without a sidecar process.
+
+The repository keeps runtime code, tests, documentation, and release tooling
+together so users can inspect build inputs and gate logic from one tree.
+
+## Security Model
+
+- Local-first control plane: sensitive operations go through localhost daemon
+  APIs, stdio MCP transports, or explicit SSH targets.
+- Bearer-protected daemon endpoints use constant-time token comparison.
+- SSH execution uses the Go SSH client directly, requires agent credentials,
+  verifies host keys with `known_hosts`, does not request a PTY, and revalidates
+  commands against allowlists before execution.
+- Release verification includes license checks, DCO, secret scanning, SBOM/CGO
+  material, checksums, signatures, and security-advisory templates.
+
+## Documentation
 
 - [Installation](INSTALL.md)
+- [Architecture](ARCHITECTURE.md)
+- [Threat model](THREAT_MODEL.md)
+- [Configuration reference](CONFIGURATION.md)
+- [End-to-end examples](EXAMPLES.md)
 - [Release notes](CHANGELOG.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 
-The docs tree is intentionally not shipped in this public snapshot. The root
-documents above are the supported public documentation surface for v1.0.
+Use these guides as the v1.0 handbook for installing, configuring, operating,
+and contributing to HADES.
 
 ## License
 

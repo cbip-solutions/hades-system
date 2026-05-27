@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package client — research.go (Plan 4 Phase N Task N-3).
+// Package client — research.go.
 //
-// Typed wrappers for /v1/research/cache/* endpoints (Phase G + Phase N).
+// Typed wrappers for /v1/research/cache/* endpoints.
 //
 // The plan-doc additionally describes /v1/research/dispatch and
 // /v1/research/agentic-deep streaming endpoints; these are scheduled
-// for Phase I (research MCP wiring) and intentionally NOT exposed by
-// the daemon today. Phase N adapts: ship the cache admin surface as
+// for (research MCP wiring) and intentionally NOT exposed by
+// the daemon today. adapts: ship the cache admin surface as
 // the operator-reachable research subset, deliver real CLI commands
 // with real round-trips. Dispatch/agentic-deep land in a follow-up
 // phase WITHOUT changing this client wrapper (additive only).

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// TestSocketPathCanonical asserts the const matches inv-zen-117 spec.
+// TestSocketPathCanonical asserts the const matches invariant spec.
 // SocketPath MUST be /tmp/zen-swarm.sock; deviation breaks tmux contamination
 // prevention layer 1 (compile-time const).
 func TestSocketPathCanonical(t *testing.T) {

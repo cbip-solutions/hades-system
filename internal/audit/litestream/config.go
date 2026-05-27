@@ -11,11 +11,11 @@ import (
 )
 
 // Config mirrors the Litestream-on-disk YAML config schema (subset
-// relevant to Plan 9 Phase C: per-project SQLite + per-project S3
+// relevant to : per-project SQLite + per-project S3
 // prefix replica). Field names + yaml tags MUST match the upstream
 // litestream binary's expectations; see https://litestream.io/reference/config/
 //
-// Phase C does NOT import the upstream library's internal types
+// does NOT import the upstream library's internal types
 // because they are unexported and would couple us to litestream's
 // internal package layout. We pin to documented YAML field names
 // instead, which the upstream maintainer has held stable since v0.3.x.

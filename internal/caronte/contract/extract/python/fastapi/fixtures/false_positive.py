@@ -5,7 +5,7 @@
 """
 Example usage:
     @app.get("/foo")
-    def foo(): ...
+    def foo():...
 """
 
 x = 1

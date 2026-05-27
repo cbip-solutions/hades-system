@@ -1,11 +1,11 @@
 // tests/compliance/inv_zen_098_doctrine_validate_first_test.go
 //
-// Compliance test for inv-zen-098 (Plan 5 Phase K-3):
+// Compliance test for invariant:
 //
-//	AmendmentApplier.Apply MUST call DoctrineValidator.ValidateTOML
-//	BEFORE any git operation. On validate failure: zero filesystem
-//	mutation beyond the ADR move-to-rejected; no commit; no zenswarm.toml
-//	change. Spec §6.3, plan §"Invariants compile-checked + runtime-enforced".
+// AmendmentApplier.Apply MUST call DoctrineValidator.ValidateTOML
+// BEFORE any git operation. On validate failure: zero filesystem
+// mutation beyond the ADR move-to-rejected; no commit; no zenswarm.toml
+// change. Spec §6.3, plan §"Invariants compile-checked + runtime-enforced".
 package compliance
 
 import (

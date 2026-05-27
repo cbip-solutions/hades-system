@@ -2,11 +2,11 @@
 // Package tui implements the zen-swarm dashboard TUI.
 //
 // Per spec §7.1 (k9s shape, calm-by-default) and R5 verification:
-//   - Use lipgloss WithStandardStyleName("dark") — never WithAutoStyle
-//     inside bubbletea (Glamour issue #405).
-//   - Hybrid render: Glamour for prose, custom lipgloss for tables /
-//     ASCII art (Glamour issues #109, #177, #486).
-//   - Strip YAML frontmatter pre-render (Glamour issue #205).
+// - Use lipgloss WithStandardStyleName("dark") — never WithAutoStyle
+// inside bubbletea (Glamour issue #405).
+// - Hybrid render: Glamour for prose, custom lipgloss for tables /
+// ASCII art (Glamour issues #109, #177, #486).
+// - Strip YAML frontmatter pre-render (Glamour issue #205).
 //
 // Palette is spec §Q2 charcoal-monochrome-with-crimson. Color constants
 // are delegated to the leaf internal/tui/palette package to avoid

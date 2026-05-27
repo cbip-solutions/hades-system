@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — debug.go (Plan 8 Phase I Task I-7).
+// Package cli — debug.go.
 //
 // Debug group commands. Surface internal mechanisms for operator inspection;
 // no state mutation.

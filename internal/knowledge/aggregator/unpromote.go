@@ -4,17 +4,17 @@
 // Unpromote is the symmetric reverse of Promote: it removes a note from the
 // cross-project knowledge_pin_index (and its satellite tables pin_fts, pin_vec,
 // pin_wikilinks). Like Promote, it:
-//   - Requires a non-empty reason (inv-zen-146 — ErrPromoteReasonRequired is
-//     reused verbatim; the sentinel is declared in promote.go and must NOT be
-//     redeclared here).
-//   - Is idempotent on nonexistent pins: if the note is not in knowledge_pin_index
-//     the call returns UnpromoteResult{Idempotent: true} with no error.
-//   - Computes a chain anchor for the vault.note_unpromoted_from_global event
-//     BEFORE deleting the row so the anchor can be written to the audit trail
-//     even if the per-project vault update (soft-fail) is skipped.
-//   - Performs a transactional cascade DELETE across 4 tables in order:
-//     pin_fts → pin_vec → pin_wikilinks → pin_index (see note below on ordering).
-//   - Clears the per-project vault's audit_chain_anchor (best-effort soft-fail).
+// - Requires a non-empty reason (invariant — ErrPromoteReasonRequired is
+// reused verbatim; the sentinel is declared in promote.go and must NOT be
+// redeclared here).
+// - Is idempotent on nonexistent pins: if the note is not in knowledge_pin_index
+// the call returns UnpromoteResult{Idempotent: true} with no error.
+// - Computes a chain anchor for the vault.note_unpromoted_from_global event
+// BEFORE deleting the row so the anchor can be written to the audit trail
+// even if the per-project vault update (soft-fail) is skipped.
+// - Performs a transactional cascade DELETE across 4 tables in order:
+// pin_fts → pin_vec → pin_wikilinks → pin_index (see note below on ordering).
+// - Clears the per-project vault's audit_chain_anchor (best-effort soft-fail).
 //
 // Delete ordering note: knowledge_pin_fts and knowledge_pin_vec reference
 // knowledge_pin_index.rowid. Once the pin_index row is deleted the rowid is
@@ -22,9 +22,9 @@
 // returns nothing, making the satellite-table deletes silent no-ops. The order
 // MUST therefore be pin_fts → pin_vec → pin_wikilinks → pin_index.
 //
-// Boundary (inv-zen-031): this file does NOT import internal/store.
-// inv-zen-129: no web calls.
-// inv-zen-146: ErrPromoteReasonRequired (from promote.go) is returned for
+// Boundary: this file does NOT import internal/store.
+// invariant: no web calls.
+// invariant: ErrPromoteReasonRequired (from promote.go) is returned for
 // empty reason — symmetric to Promote.
 package aggregator
 
@@ -101,11 +101,11 @@ func (a *Aggregator) Unpromote(
 	now := a.clock.Now().UTC()
 
 	// 5. Compute event ID: "evt-" + hex[:8] of SHA-256(noteID:operatorID:ts).
-	//    Reuse computeEventID from promote.go — do NOT redeclare.
+	// Reuse computeEventID from promote.go — do NOT redeclare.
 	eventID := computeEventID(noteID, operatorID, now)
 
 	// 6. Payload for chain.ComputeAnchor.
-	//    Reuse mustMarshal from promote.go — do NOT redeclare.
+	// Reuse mustMarshal from promote.go — do NOT redeclare.
 	payload := mustMarshal(map[string]any{
 		"note_id":       noteID,
 		"project_id":    projectID,
@@ -140,10 +140,10 @@ func (a *Aggregator) Unpromote(
 	}
 
 	// 9. Cascade DELETE — order is load-bearing (see delete ordering note in
-	//    package doc): pin_fts → pin_vec → pin_wikilinks → pin_index.
+	// package doc): pin_fts → pin_vec → pin_wikilinks → pin_index.
 	//
-	//    pin_fts: FTS5 external-content vtab DELETE keyed on rowid from pin_index.
-	//    This MUST run before the pin_index row is deleted.
+	// pin_fts: FTS5 external-content vtab DELETE keyed on rowid from pin_index.
+	// This MUST run before the pin_index row is deleted.
 	if _, err := execCtx(unpromoteHooks.execFTS,
 		`DELETE FROM knowledge_pin_fts WHERE rowid = (SELECT rowid FROM knowledge_pin_index WHERE note_id = ?)`,
 		noteID,

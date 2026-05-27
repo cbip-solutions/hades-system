@@ -1,6 +1,6 @@
 // internal/orchestrator/recovery_heartbeat_test.go
 //
-//go:build timeaccel
+// go:build timeaccel
 
 package orchestrator
 

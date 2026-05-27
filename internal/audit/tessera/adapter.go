@@ -58,7 +58,7 @@ type sthSubscriber interface {
 // opens the POSIX storage backend, and wires the Tessera Appender +
 // LogReader.
 //
-// Returns ErrEmptyProjectID if projectID is empty (inv-zen-144),
+// Returns ErrEmptyProjectID if projectID is empty,
 // ErrInvalidConfig if cfg.Validate fails, and any os/Tessera error
 // surfacing during construction. On any error the partially-allocated
 // resources (storage, appender) are released before return so we
@@ -238,11 +238,11 @@ func (a *Adapter) WitnessCoSignSeal(ctx context.Context, leafID LeafID, payload 
 // Used by chain.VerifySeal (C-fix-2 closing the gap CRITICAL-2
 // surfaced: pre-fix VerifySeal returned nil silently when the stored
 // daemon_witness_signature was missing, forged, or bytes-corrupted).
-// Phase J's seal-verify worker + Phase C's recovery callers consume
+// seal-verify worker + recovery callers consume
 // it through chain.SealAppender; this method is the production
 // implementation behind the interface.
 //
-// inv-zen-145 alignment: only signing surface is Witness.Sign; this
+// invariant alignment: only signing surface is Witness.Sign; this
 // adds a VERIFY surface (read-only, separate concern) — the witness
 // private key never leaves the backend on this path. The verify uses
 // the public-half via Witness.Load + tessera.VerifyWithPubkey, which

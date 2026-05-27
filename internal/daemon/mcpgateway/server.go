@@ -3,33 +3,33 @@
 //
 // Server — HTTP MCP endpoint Hermes consumes (Q1=B single endpoint).
 // Wire format: JSON-RPC 2.0 over HTTP per MCP 2024-11-05 Streamable HTTP
-// transport. Phase A is request/response only (no SSE streaming).
+// transport. is request/response only (no SSE streaming).
 //
 // Routes (mounted via daemon registerRoutes in main.go A-7):
 //
-//	POST /v1/mcpgateway   — JSON-RPC 2.0 endpoint
+// POST /v1/mcpgateway — JSON-RPC 2.0 endpoint
 //
 // Methods supported:
 //
-//	initialize    — returns server capabilities envelope
-//	tools/list    — returns Dispatcher.ListTools as MCP-spec tools array
-//	tools/call    — routes to Dispatcher.Dispatch and re-encodes response
+// initialize — returns server capabilities envelope
+// tools/list — returns Dispatcher.ListTools as MCP-spec tools array
+// tools/call — routes to Dispatcher.Dispatch and re-encodes response
 //
-// Header conventions (Hermes side forwards via ZenSwarmTransport, Plan 11
-// Phase B):
+// Header conventions (Hermes side forwards via ZenSwarmTransport,
+// ):
 //
-//	X-Zen-Doctrine    — active doctrine slug (max-scope / default / capa-firewall)
-//	X-Zen-Mode        — call mode (interactive / autonomy / afk)
-//	X-Zen-Session-ID  — Hermes session id
-//	X-Zen-Project-ID  — active project id
+// X-Zen-Doctrine — active doctrine slug (max-scope / default / capa-firewall)
+// X-Zen-Mode — call mode (interactive / autonomy / afk)
+// X-Zen-Session-ID — Hermes session id
+// X-Zen-Project-ID — active project id
 //
 // JSON-RPC 2.0 error codes used:
 //
-//	-32700 Parse error    (invalid JSON in request body)
-//	-32600 Invalid Request (missing method or jsonrpc != "2.0")
-//	-32601 Method not found
-//	-32602 Invalid params (includes unrecognised X-Zen-Mode / X-Zen-Doctrine header)
-//	-32000 Server error    (RBAC denies, gitnexus unreachable, etc.)
+// -32700 Parse error (invalid JSON in request body)
+// -32600 Invalid Request (missing method or jsonrpc != "2.0")
+// -32601 Method not found
+// -32602 Invalid params (includes unrecognised X-Zen-Mode / X-Zen-Doctrine header)
+// -32000 Server error (RBAC denies, gitnexus unreachable, etc.)
 package mcpgateway
 
 import (
@@ -63,7 +63,7 @@ var ErrInvalidDoctrine = errors.New("mcpgateway: invalid X-Zen-Doctrine header")
 // tools/call (defensive operator-recovery posture per spec §22.4
 // graceful degradation).
 //
-// inv-zen-280 (project_id dual-source), inv-zen-277 (alias resolution).
+// invariant (project_id dual-source), invariant (alias resolution).
 type Server struct {
 	d             *Dispatcher
 	aliasResolver ProjectsAliasResolver

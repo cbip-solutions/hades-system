@@ -1,22 +1,23 @@
-// tests/replay/replay_test.go (Plan 5 Phase O Task O-3).
+// tests/replay/replay_test.go.
 //
 // Sample replay test that exercises the LoadJSONL + AssertEquivalentEvents
 // helpers (Task O-2) against a minimal hand-built capture fixture.
-// Phase O ships the test infrastructure; the recovery-driven replay-
+// ships the test infrastructure; the recovery-driven replay-
 // rebuild (which would feed captured events back through the orchestrator
 // state machine) lands in a follow-up phase that exposes a
 // recovery.ReplayFromFixture entry point. Until then, this test:
 //
-//  1. Loads the fixture (round-trips header sha + footer).
-//  2. Asserts each event decodes to the expected eventlog.Event shape
-//     (Type + Payload-key set).
-//  3. Verifies the captured baseline is bit-equivalent to a re-loaded
-//     copy (replay determinism floor).
-//  4. Pins a 50ms hard cap on load latency so regressions surface early.
+// 1. Loads the fixture (round-trips header sha + footer).
+// 2. Asserts each event decodes to the expected eventlog.Event shape
+// (Type + Payload-key set).
+// 3. Verifies the captured baseline is bit-equivalent to a re-loaded
+// copy (replay determinism floor).
+// 4. Pins a 50ms hard cap on load latency so regressions surface early.
 //
-// Cross-worker integration paths (Plan 6 MergeEngine) are out of scope
+// Cross-worker integration paths are out of scope
 // and skipped explicitly.
 //
+// go:build replay
 //go:build replay
 // +build replay
 

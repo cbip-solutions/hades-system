@@ -1,5 +1,5 @@
-// Compliance test for inv-zen-074: SubprocessManager TTL eviction
-// enforcement (Plan 4 spec §5.4). Synthetic past-TTL persistent
+// Compliance test for invariant: SubprocessManager TTL eviction
+// enforcement. Synthetic past-TTL persistent
 // subprocess; the evictor goroutine MUST send SIGTERM-then-SIGKILL and
 // remove the SQLite row.
 

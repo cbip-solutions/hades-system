@@ -5,9 +5,9 @@ import (
 )
 
 // TestTrailerKeyOfMatchesIntentParserSemantics is the sister test gating
-// equivalence between the in-package trailerKeyOf and Plan 19 I's
+// equivalence between the in-package trailerKeyOf and I's
 // intent.trailerKeyOf (which is unexported and cannot be called directly
-// from outside its package). Per the Phase G plan + master C-10 escape
+// from outside its package). Per the plan + master C-10 escape
 // clause: we replicate the 15-line helper here AND maintain a documented
 // input/output corpus that mirrors intent's expected behavior. Any drift
 // in either implementation would surface as a test failure.
@@ -19,8 +19,8 @@ import (
 // strings, malformed shapes.
 //
 // lines; the SAME shape detection MUST hold here so the contiguous-run
-// algorithm in Phase G's extractAttributionTrailers (lore.go) produces the
-// same trailer block as Plan 19 I's parseTrailerLines for any given body.
+// algorithm in extractAttributionTrailers (lore.go) produces the
+// same trailer block as I's parseTrailerLines for any given body.
 func TestTrailerKeyOfMatchesIntentParserSemantics(t *testing.T) {
 	cases := []struct {
 		line string

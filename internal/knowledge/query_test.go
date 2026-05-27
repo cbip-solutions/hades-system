@@ -359,7 +359,7 @@ func TestExecuteScoreFromBM25Stub(t *testing.T) {
 // query MUST round-trip the values inserted by Index. Cross-cutting check
 // that the scanResults helper covers every column (including the three
 // extension-hook columns, which are NullString and ship NULL by default
-// per inv-zen-130).
+// per invariant).
 func TestExecuteResultDocFieldsRoundTrip(t *testing.T) {
 	db, _ := openTestIndex(t)
 	indexFixtureCorpus(t, db)

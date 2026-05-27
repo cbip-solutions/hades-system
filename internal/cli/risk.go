@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — risk.go (Plan 19 Phase K).
+// Package cli — risk.go.
 //
 // `zen risk <symbols-or-files…>` computes the blast-radius of a change set:
 // a composite risk score (cone + coreness + churn + coupling) graded

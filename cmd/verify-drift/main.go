@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// verify-drift — Plan 5 Phase M Q2 C drift CI lint surface.
+// verify-drift — Q2 C drift CI lint surface.
 //
 // Wraps a real git-backed safetynet.CommitSource around the safetynet.Drift
 // detector and calls safetynet.RunPreCommitDrift. Used by:
 //
-//	make verify-drift     # CI gate; fails build on severity=hard
-//	.githooks/pre-commit  # local pre-commit gate (spec §6.3)
+// make verify-drift # CI gate; fails build on severity=hard
+// .githooks/pre-commit # local pre-commit gate (spec §6.3)
 //
 // Exit codes (delegated to safetynet.RunPreCommitDrift):
 //
-//	0 — clean OR only soft findings
-//	1 — at least one severity=hard finding OR validate-error (fail-closed)
+// 0 — clean OR only soft findings
+// 1 — at least one severity=hard finding OR validate-error (fail-closed)
 package main
 
 import (

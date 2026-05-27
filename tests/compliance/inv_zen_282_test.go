@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_282_test.go
 //
-// Compliance gate for inv-zen-282 (v0.20.1 fix #2): the `zen doctor`
+// Compliance gate for invariant (v0.20.1 fix #2): the `zen doctor`
 // aggregator distinguishes "daemon is reachable but probes failed"
 // from "daemon transport failure" when wrapping the final non-zero
 // exit. Before v0.20.1, BOTH paths returned the `daemon.unreachable`
@@ -10,7 +10,7 @@
 //
 // Why: the regression surfaced empirically against v0.20.0 — operators
 // running `zen doctor caronte` against a healthy daemon (with per-probe
-// failures from `project_id required` responses, see inv-zen-281) saw
+// failures from `project_id required` responses, see invariant) saw
 // "HADES daemon unreachable. The socket may be stale: rm
 // /tmp/zen-swarm.sock" as the suggested fix. Following the hint would
 // crash the daemon. The error catalog already exposes the right code
@@ -20,21 +20,21 @@
 //
 // Three source-regex anchors:
 //
-//  1. Aggregator imports/references the `daemon.responded-with-error`
-//     catalog code in `internal/cli/doctor.go`. Without this reference,
-//     the conditional dispatch is impossible.
-//  2. Conditional dispatch based on `daemonReachable`: when true, the
-//     responded-with-error code wraps the error; when false, the
-//     unreachable code is used (existing behavior preserved).
-//  3. Anchor lives on BOTH return paths (json/yaml render + table
-//     render); a fix that only touches one path silently regresses the
-//     other format.
+// 1. Aggregator imports/references the `daemon.responded-with-error`
+// catalog code in `internal/cli/doctor.go`. Without this reference,
+// the conditional dispatch is impossible.
+// 2. Conditional dispatch based on `daemonReachable`: when true, the
+// responded-with-error code wraps the error; when false, the
+// unreachable code is used (existing behavior preserved).
+// 3. Anchor lives on BOTH return paths (json/yaml render + table
+// render); a fix that only touches one path silently regresses the
+// other format.
 //
 // Sister-test bite check: revert the conditional and force
 // `daemon.unreachable` on both branches; this test MUST fail because
 // the responded-with-error reference disappears.
 //
-// inv-zen-282 (v0.20.1 fix #2).
+// invariant (v0.20.1 fix #2).
 package compliance
 
 import (

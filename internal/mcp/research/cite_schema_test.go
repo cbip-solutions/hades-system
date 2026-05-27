@@ -1,5 +1,5 @@
-// cite_schema_test.go — regression tests for C-15 (CodeReview Plan 4
-// Phase I): the cite tool's wire schema MUST advertise the optional
+// cite_schema_test.go — regression tests for C-15 (CodeReview
+// ): the cite tool's wire schema MUST advertise the optional
 // url + title properties that the handler reads from args. Pre-fix
 // the schema only declared source_id, so MCP clients had no way of
 // knowing they could pass url + title — and a strict client would

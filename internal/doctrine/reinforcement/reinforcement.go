@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package reinforcement implements the doctrine reinforcement template engine
-// per Plan 8 design spec §1 Q12 C and §7.1 T5.
+// design spec §1 Q12 C and §7.1 T5.
 //
 // The engine renders role-aware system-prompt blocks for LLM worker subprocesses,
 // sourcing Go text/template content from a closed //go:embed embed/*.md.tmpl set
@@ -8,30 +8,30 @@
 // fallthrough at <overrideDir>/<doctrineName>.system-prompt.md.tmpl.
 //
 // Safety contract (T5 mitigation):
-//   - text/template (NOT html/template) — fewer auto-escape sinks; intentional plain-text output.
-//   - No Sprig functions registered — only stdlib template functions (eq/ne/and/or/index/len/not/printf).
-//   - Var allowlist: only Vars struct fields are accessible to templates; any
-//     template referring to a field outside Vars returns ErrReinforcementTemplateExec.
-//     Enforcement is structural: text/template's reflect-based field lookup
-//     rejects unknown struct fields automatically with no opt-in needed.
-//     Option("missingkey=error") is set as defense-in-depth for any future
-//     Vars-via-map paths; Vars is currently a struct so reflect rejects
-//     unknown fields automatically.
-//   - Operator override file is loaded via os.ReadFile and parsed by the same
-//     text/template parser; identical safety guarantees apply.
-//   - doctrineName is validated up front (no path separators, no traversal)
-//     and the resolved override path is confined to overrideDir — see
-//     validateOverridePath for the CWE-22 defense-in-depth.
+// - text/template (NOT html/template) — fewer auto-escape sinks; intentional plain-text output.
+// - No Sprig functions registered — only stdlib template functions (eq/ne/and/or/index/len/not/printf).
+// - Var allowlist: only Vars struct fields are accessible to templates; any
+// template referring to a field outside Vars returns ErrReinforcementTemplateExec.
+// Enforcement is structural: text/template's reflect-based field lookup
+// rejects unknown struct fields automatically with no opt-in needed.
+// Option("missingkey=error") is set as defense-in-depth for any future
+// Vars-via-map paths; Vars is currently a struct so reflect rejects
+// unknown fields automatically.
+// - Operator override file is loaded via os.ReadFile and parsed by the same
+// text/template parser; identical safety guarantees apply.
+// - doctrineName is validated up front (no path separators, no traversal)
+// and the resolved override path is confined to overrideDir — see
+// validateOverridePath for the CWE-22 defense-in-depth.
 //
-// Boundary discipline (inv-zen-133): imports stdlib + internal/doctrine/schema/v1
+// Boundary discipline: imports stdlib + internal/doctrine/schema/v1
 // + internal/doctrine/errors only. No internal/store, no internal/orchestrator,
 // no internal/daemon, no internal/redact, no private-tier1-module.
 //
 // Concurrency Engine.cache is sync.Map (lock-free read after first Parse).
 // Render is goroutine-safe; concurrent calls on different doctrines load
-// templates concurrently (each into its own cache slot). Phase G reload
+// templates concurrently (each into its own cache slot). reload
 // extends the package with InvalidateCache(name) for operator-override file
-// changes — Phase F leaves the cache structurally compatible.
+// changes — leaves the cache structurally compatible.
 package reinforcement
 
 import (
@@ -91,7 +91,7 @@ func (e *Engine) Render(s *v1.Schema, vars *Vars) (string, error) {
 // Resolution order is operator-override-first then embedded, per spec §1 Q12 C.
 //
 // loadTemplate is exported via lowercase-package-internal name only; callers
-// MUST go through Render. Phase G reload extends loadTemplate's caller surface
+// MUST go through Render. reload extends loadTemplate's caller surface
 // via InvalidateCache(name); F-2 + F-3 fill in the actual lookup logic. F-1
 // stub returns ErrTemplateNotFound for any name not pre-injected via
 // InjectTemplateForTest (which the test fixtures use).
@@ -177,7 +177,7 @@ func ValidateOverridePathForTest(overrideDir, doctrineName string) (string, erro
 	return validateOverridePath(overrideDir, doctrineName)
 }
 
-//go:embed embed/*.md.tmpl
+// go:embed embed/*.md.tmpl
 var embeddedFS embed.FS
 
 func embeddedTemplate(doctrineName string) (string, bool) {

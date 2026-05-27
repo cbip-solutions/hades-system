@@ -5,10 +5,10 @@
 //
 // Diagnostic IDs (emitted via analysis.Pass.Reportf):
 //
-//   - nostub-panic   : panic("not implemented") or similar
-//   - nostub-errnotimpl : return errors.ErrNotImplementedPlanN
-//   - nostub-todo    : // TODO implement later comment
-//   - nostub-empty-method : empty method body on concrete type
+// - nostub-panic : panic("not implemented") or similar
+// - nostub-errnotimpl : return errors.ErrNotImplementedPlanN
+// - nostub-todo : // TODO implement later comment
+// - nostub-empty-method : empty method body on concrete type
 //
-// Phase L Task L-2 owns the full implementation.
+// Task L-2 owns the full implementation.
 package nostub

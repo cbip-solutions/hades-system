@@ -38,19 +38,19 @@ func (m *Manifest) AddPatternService(pattern, targetRepo string) error {
 // BaseURL / BaseURLEnv / BaseURLPattern MUST be set (validateBaseURLExclusive
 // in Task F-3 enforces this with ErrMultipleBaseURLVariants).
 //
-//   - BaseURL: literal URL prefix the client hardcodes (e.g., `http://billing-svc`).
-//     Matched against api_calls.base_url_ref EXACTLY (Plan 20 resolve.go treats
-//     base_url_ref as the prefix the extractor saw in the source code).
-//   - BaseURLEnv: env var NAME the client reads at runtime (e.g., `AUTH_SVC_URL`
-//     for a `os.Getenv("AUTH_SVC_URL")` call). The runtime env VALUE is
-//     irrelevant — only the NAME is the federation key (spec §6 base_url_env
-//     resolution semantics).
-//   - BaseURLPattern: regex pattern (e.g., `^https?://shipping-[a-z0-9]+\.internal/`)
-//     compiled at Load time AFTER MaxPatternRunes + regexp/syntax DoS probe.
-//     Useful for sharded/regional services.
-//   - TargetRepo: workspace member project_id (Workspace.Projects() roster). A
-//     non-member yields ErrUnknownTargetRepo at Load time.
-//   - Notes: optional human note (operator-only; not used by the linker).
+// - BaseURL: literal URL prefix the client hardcodes (e.g., `http://billing-svc`).
+// Matched against api_calls.base_url_ref EXACTLY ( resolve.go treats
+// base_url_ref as the prefix the extractor saw in the source code).
+// - BaseURLEnv: env var NAME the client reads at runtime (e.g., `AUTH_SVC_URL`
+// for a `os.Getenv("AUTH_SVC_URL")` call). The runtime env VALUE is
+// irrelevant — only the NAME is the federation key (spec §6 base_url_env
+// resolution semantics).
+// - BaseURLPattern: regex pattern (e.g., `^https?://shipping-[a-z0-9]+\.internal/`)
+// compiled at Load time AFTER MaxPatternRunes + regexp/syntax DoS probe.
+// Useful for sharded/regional services.
+// - TargetRepo: workspace member project_id (Workspace.Projects() roster). A
+// non-member yields ErrUnknownTargetRepo at Load time.
+// - Notes: optional human note (operator-only; not used by the linker).
 type Service struct {
 	BaseURL        string `yaml:"base_url,omitempty"`
 	BaseURLEnv     string `yaml:"base_url_env,omitempty"`

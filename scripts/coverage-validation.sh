@@ -71,7 +71,25 @@ internal/audit/chain 100
 # Documented in internal/audit/litestream/coverage_gap_test.go (Phase B section).
 # Pending formalisation in ADR-0069 (Stage 5 Plan 9 Phase L).
 internal/audit/litestream 88
-internal/audit/recovery 100
+# internal/audit/recovery: target lowered from 100 to 99 after the Plan 5
+# Phase Y local CI workaround investigation confirmed 4 statements in
+# TarGzipExtractor are architecturally unreachable without OS/stdlib fault
+# injection or a test-only filesystem seam:
+#   - archive_extract.go:39-41  filepath.Abs(dstDir) error — destination has
+#     already been accepted as a process-local path; deterministic failure
+#     requires breaking cwd/volume state globally.
+#   - archive_extract.go:62-64  filepath.Abs(entry) error — entry path is built
+#     from a clean destination root plus a cleaned relative tar name.
+#   - archive_extract.go:65-67  path-escape fallback — prior guards reject
+#     absolute paths and `..` traversal before Join; filepath.Join/Clean do
+#     not evaluate symlinks, so the string-only escape check is redundant
+#     defense-in-depth.
+#   - archive_extract.go:84-86  os.File.Close error — after successful local
+#     OpenFile + io.Copy, deterministic close failure requires filesystem fault
+#     injection (for example NFS/disk failure), not a portable unit test.
+# Documented in internal/audit/recovery/coverage_gap_test.go NOTE block.
+# Pending formalisation in ADR-0069 (Stage 5 Plan 9 Phase L).
+internal/audit/recovery 99
 # internal/adr: target lowered from 100 to 97 after Plan 9 L-1.5
 # investigation confirmed 12 statements (10 ranges) are architecturally
 # unreachable. All instances are infallible-stdlib-call wraps that cannot

@@ -1,12 +1,12 @@
 // tests/compliance/inv_zen_110_anomaly_typed_test.go
 //
-// Compliance gate for inv-zen-110: anomaly events MUST be typed via the
+// Compliance gate for invariant: anomaly events MUST be typed via the
 // Go enum AnomalyType (int kind) — NO string-typed Type field. The Plan
 // 5 amendment.proposer dispatches by switch on AnomalyType so a typo or
 // string concat would be a compile error, not a runtime ADR misroute.
 //
 // The same dispatch-table-must-be-compile-time-resolvable reasoning
-// applies to EventType: subscribers (Plan 5 amendment.proposer,
+// applies to EventType: subscribers ( amendment.proposer,
 // observability) decode payloads statically against the EventType
 // discriminator. A string-typed event taxonomy would push that
 // dispatch to runtime where typos drift silently. Hence the sibling
@@ -14,17 +14,17 @@
 // they apply the same principle to the broader event surface.
 //
 // Two scans per type:
-//  1. Reflection scan: AnomalyType / EventType underlying Kind() must
-//     be reflect.Int. Catches the silent refactor "let's just make it
-//     a string for cleaner JSON" — which we explicitly forbid by spec
-//     §2.6 Q10 C / Q11 D.
-//  2. Closed-set scan: AllAnomalyTypes() and AllEventTypes() must
-//     enumerate the Phase A frozen lists (5 anomaly subtypes; 16
-//     event types per spec §2.6). Adding a value without updating the
-//     frozen list (or vice versa) trips the test, forcing the spec/
-//     code/test triplet to stay in lockstep.
+// 1. Reflection scan: AnomalyType / EventType underlying Kind() must
+// be reflect.Int. Catches the silent refactor "let's just make it
+// a string for cleaner JSON" — which we explicitly forbid by spec
+// §2.6 Q10 C / Q11 D.
+// 2. Closed-set scan: AllAnomalyTypes() and AllEventTypes() must
+// enumerate the frozen lists (5 anomaly subtypes; 16
+// event types per spec §2.6). Adding a value without updating the
+// frozen list (or vice versa) trips the test, forcing the spec/
+// code/test triplet to stay in lockstep.
 //
-// String() values are the load-bearing mapping the Plan 5 amendment.
+// String() values are the load-bearing mapping the amendment.
 // proposer uses to select per-type templates; the closed-set scan
 // asserts every expected String() name appears exactly once.
 package compliance
@@ -77,7 +77,7 @@ func TestInvZen110EventTypeIsIntKind(t *testing.T) {
 	}
 }
 
-// TestInvZen110AllEventTypesCovered enforces the Phase A frozen list of
+// TestInvZen110AllEventTypesCovered enforces the frozen list of
 // 16 EventType values (spec §2.6: 5 merge lifecycle, 3 baseline, 4
 // candidate, 1 scoring, 1 cache rebuild, 1 straggler kill, 1 anomaly).
 // EvtUnknown (the zero value) is excluded from AllEventTypes per spec

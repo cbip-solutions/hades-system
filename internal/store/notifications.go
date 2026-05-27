@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package store — notifications.go (Plan 2 Phase L Task L-4).
+// Package store — notifications.go.
 //
 // Typed CRUD on the notifications table (schema v9). Distinct from
-// notifications_queue (Plan 11 multi-channel routing). This table is
+// notifications_queue. This table is
 // bypass-scoped: severity ∈ {INFO, WARN, CRITICAL}, single dispatcher
 // (osascript on darwin), simple ack workflow with 1h CRITICAL repeat.
 package store

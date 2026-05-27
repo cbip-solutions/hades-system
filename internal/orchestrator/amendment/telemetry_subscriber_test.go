@@ -221,7 +221,7 @@ func TestTelemetrySubscriberSkipsBelowMinSessions(t *testing.T) {
 	}
 }
 
-// TestTelemetrySubscriberSkipsWhenNoLastApplied verifies inv-zen-141:
+// TestTelemetrySubscriberSkipsWhenNoLastApplied verifies invariant:
 // if no DoctrineAmendmentApplied is in the window (lastApplied == ""),
 // revert MUST NOT fire.
 func TestTelemetrySubscriberSkipsWhenNoLastApplied(t *testing.T) {

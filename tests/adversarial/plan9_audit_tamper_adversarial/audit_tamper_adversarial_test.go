@@ -1,3 +1,4 @@
+// go:build adversarial && cgo
 //go:build adversarial && cgo
 // +build adversarial,cgo
 

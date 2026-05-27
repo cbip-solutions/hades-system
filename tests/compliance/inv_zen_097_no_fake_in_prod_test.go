@@ -1,25 +1,25 @@
 // tests/compliance/inv_zen_097_no_fake_in_prod_test.go
 //
-// Compliance test for inv-zen-097: MergeEngineFake (apply package) is
+// Compliance test for invariant: MergeEngineFake (apply package) is
 // gated by `//go:build test` AND the runtime mustBeTestRun() panic
 // guard, so the fake never reaches a production binary.
 //
 // Four enforcement layers exercised here:
 //
-//  1. TestInvZen097_BuildTagOnFakeFile — `go list -json -f '{{.GoFiles}}'`
-//     comparison: merge_fake.go MUST be invisible in the default build
-//     and visible under `-tags test`.
-//  2. TestInvZen097_NoFakeSymbolInProdBinary — build the daemon
-//     (no `-tags test`), run `go tool nm`, assert the symbol
-//     `MergeEngineFake` is absent.
-//  3. TestInvZen097_IsTestRunFalseInProdBinary — build a tiny standalone
-//     program that calls apply.IsTestRun() and exits with the result;
-//     run it (NOT under `go test`) and assert exit code reports false.
-//  4. TestInvZen097_NoFakeReferenceInProdSources — `git grep` for the
-//     literal `MergeEngineFake` in non-test, non-tag sources; the only
-//     allowed locations are merge_fake*.go + this file + docs/.
+// 1. TestInvZen097_BuildTagOnFakeFile — `go list -json -f '{{.GoFiles}}'`
+// comparison: merge_fake.go MUST be invisible in the default build
+// and visible under `-tags test`.
+// 2. TestInvZen097_NoFakeSymbolInProdBinary — build the daemon
+// (no `-tags test`), run `go tool nm`, assert the symbol
+// `MergeEngineFake` is absent.
+// 3. TestInvZen097_IsTestRunFalseInProdBinary — build a tiny standalone
+// program that calls apply.IsTestRun() and exits with the result;
+// run it (NOT under `go test`) and assert exit code reports false.
+// 4. TestInvZen097_NoFakeReferenceInProdSources — `git grep` for the
+// literal `MergeEngineFake` in non-test, non-tag sources; the only
+// allowed locations are merge_fake*.go + this file + docs/.
 //
-// Spec §6.3 inv-zen-097. Plan 5 Phase J ships the contract; Plan 6
+// Spec §6.3 invariant. ships the contract;
 // implements the real MergeEngine and removes the fake guards once
 // MergeEngineRealEngine is wired.
 package compliance

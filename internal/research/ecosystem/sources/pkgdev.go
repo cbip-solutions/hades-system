@@ -1,9 +1,10 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
 // SPDX-License-Identifier: MIT
 
-// Package sources implements concrete fetchers for the Phase B ecosystem
+// Package sources implements concrete fetchers for the ecosystem
 // ingestion pipeline.
 //
 // PkgGoDevSource implements the ecosystem.Source interface (master plan
@@ -11,17 +12,17 @@
 // import count (per spec §2.1 Q1=D corpus matrix).
 //
 // All HTTP egress routes via a narrow FetchClient interface that wraps
-// cache.Revalidator.Fetch (inv-zen-152 + inv-zen-191 — single egress
+// cache.Revalidator.Fetch (invariant + invariant — single egress
 // point for the research data plane; no direct net/http imports in this
-// package). The narrow-interface pattern mirrors Plan 10 B-6 and B-2
+// package). The narrow-interface pattern mirrors B-6 and B-2
 // chunker contextual-prefix wiring: production wires *cache.Revalidator;
 // tests wire a stub that pre-populates url→body and url→err maps.
 //
-// Per-source TTL = 7d (registered in Phase A A-10 source-ttls.toml and
+// Per-source TTL = 7d (registered in A-10 source-ttls.toml and
 // honored automatically by the Revalidator cache layer; no extra wiring
 // is required here).
 //
-// Boundary (inv-zen-031): this package MAY import internal/research/cache
+// Boundary: this package MAY import internal/research/cache
 // + internal/research/ecosystem (parent) + golang.org/x/net/html (DOM
 // parser, read-only stdlib-adjacent). It MUST NOT import internal/store
 // or internal/providers.

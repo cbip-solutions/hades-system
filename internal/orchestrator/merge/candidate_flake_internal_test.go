@@ -5,14 +5,14 @@
 // Run pipeline shape. These cover defensive / future-proof branches that
 // guard against:
 //
-//   - len(failed) == 0 with TestFailCount > 0 (invariant violation upstream)
-//   - smoke-tier mode reaching the rerun loop (cfg with budget>0 +
-//     TestTier=Smoke, which the canonical taxonomy doesn't pair but the
-//     impl supports cleanly for future Mode extensions)
-//   - "baseline_breaker_post_flake" reason assignment when prior reason
-//     was empty or "smoke_failed*" AND post-flake still misses baseline
+// - len(failed) == 0 with TestFailCount > 0 (invariant violation upstream)
+// - smoke-tier mode reaching the rerun loop (cfg with budget>0 +
+// TestTier=Smoke, which the canonical taxonomy doesn't pair but the
+// impl supports cleanly for future Mode extensions)
+// - "baseline_breaker_post_flake" reason assignment when prior reason
+// was empty or "smoke_failed*" AND post-flake still misses baseline
 //
-// These branches MUST stay covered for the inv-zen-106 compliance pass.
+// These branches MUST stay covered for the invariant compliance pass.
 // White-box construction: build a concreteCandidate directly and invoke
 // applyFlakeRerun with a constructed ModeConfig — applyFlakeRerun accepts
 // cfg as a parameter precisely so internal tests can drive any cfg shape

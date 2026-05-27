@@ -1,14 +1,14 @@
 // tests/compliance/inv_zen_090_substrate_separation_test.go
 //
-// Compliance gate for inv-zen-090: bidirectional substrate separation
-// between Plan 5's event log (state record) and Plan 4's workforce
-// queue (transient messaging) per Q5 C hybrid (Plan 4 = messages,
+// Compliance gate for invariant: bidirectional substrate separation
+// between event log (state record) and workforce
+// queue (transient messaging) per Q5 C hybrid ( = messages,
 //
 // Two scans, both compile-time:
-//  1. internal/orchestrator/eventlog/... MUST NOT import any package
-//     under internal/workforce/queue/
-//  2. internal/workforce/queue/... MUST NOT import any package under
-//     internal/orchestrator/eventlog/
+// 1. internal/orchestrator/eventlog/... MUST NOT import any package
+// under internal/workforce/queue/
+// 2. internal/workforce/queue/... MUST NOT import any package under
+// internal/orchestrator/eventlog/
 //
 // Mixing the two collapses the two-substrate hybrid (Q5 C) into the
 // rejected option B (single-table eventlog-as-queue) and would make

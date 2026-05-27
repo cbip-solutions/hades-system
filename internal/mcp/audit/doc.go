@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package audit implements the audit_review MCP tool (Plan 4 Phase K).
+// Package audit implements the audit_review MCP tool.
 //
 // # Scope
 //
@@ -8,20 +8,20 @@
 // a provider-family-disjoint LLM reviewer.
 //
 // This package does NOT write to any database. It is an outbound HTTP client
-// to the Plan 3 dispatcher.
+// to the dispatcher.
 //
-// # Invariant inv-zen-080
+// # Invariant invariant
 //
 // The reviewer provider family MUST be disjoint from the generator provider
 // family. The Pool sealed constructor enforces:
-//   - len(pool) >= 2 after excluding the generator family
-//   - generator family is absent from the chosen reviewer family
+// - len(pool) >= 2 after excluding the generator family
+// - generator family is absent from the chosen reviewer family
 //
 // This is a hard rule. Any code path that calls pool.Choose() without
-// first constructing Pool via NewPool() is a violation of inv-zen-080.
+// first constructing Pool via NewPool() is a violation of invariant.
 //
-// # Plan 9 boundary
+// # boundary
 //
 // NO imports of internal/store. NO SQL. NO hash-chain logic. NO OTel emit.
-// Those belong to Plan 9.
+// Those belong to
 package audit

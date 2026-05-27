@@ -5,29 +5,29 @@
 // docstring (commit de5def64 "fix(onboard): wire install_hermes +
 // enable_audit_chain answers + polish"):
 //
-//	Coverage gap (intentional, deferred to A-7): the happy path through
-//	tea.NewProgram().Run() + final model assertion + answer extraction
-//	requires a TTY simulator; A-7 integration scaffolding ships the
-//	harness (tests/testhelpers/onboard_testdaemon.go + buffered terminal
-//	stub) and is the obligated owner of that coverage.
+// Coverage gap (intentional, deferred to A-7): the happy path through
+// tea.NewProgram().Run() + final model assertion + answer extraction
+// requires a TTY simulator; A-7 integration scaffolding ships the
+// harness (tests/testhelpers/onboard_testdaemon.go + buffered terminal
+// stub) and is the obligated owner of that coverage.
 //
 // The simulator wires a *bytes.Buffer*-backed `io.Reader` (input) +
 // `io.Writer` (output) into a `tea.Program` via the public bubbletea
 // program options (`tea.WithInput`, `tea.WithOutput`). bubbletea
 // v1.3.10's Program.Run honours these options:
 //
-//   - `customInput` branch in `tea.go` line 624 skips the os.Stdin
-//     TTY probe and reads directly from the injected reader.
-//   - `tea.WithOutput` swaps the renderer's writer; no terminal
-//     control codes are emitted to the real stdout during tests.
+// - `customInput` branch in `tea.go` line 624 skips the os.Stdin
+// TTY probe and reads directly from the injected reader.
+// - `tea.WithOutput` swaps the renderer's writer; no terminal
+// control codes are emitted to the real stdout during tests.
 //
 // Usage:
 //
-//	sim := testhelpers.NewTTYSimulator(t)
-//	sim.WriteKey(testhelpers.KeyDown)
-//	sim.WriteKey(testhelpers.KeyEnter)
-//	prog := tea.NewProgram(model, sim.ProgramOptions()...)
-//	final, err := prog.Run()
+// sim := testhelpers.NewTTYSimulator(t)
+// sim.WriteKey(testhelpers.KeyDown)
+// sim.WriteKey(testhelpers.KeyEnter)
+// prog := tea.NewProgram(model, sim.ProgramOptions()...)
+// final, err := prog.Run()
 //
 // The simulator is safe for sequential use within a single test (no
 // goroutine fan-out internally); callers that need t.Parallel() should

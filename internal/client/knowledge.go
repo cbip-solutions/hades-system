@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package client — knowledge.go (Plan 7 Phase G Task G-11).
+// Package client — knowledge.go.
 //
 // Three methods + supporting wire types for the daemon's
 // /v1/knowledge/* surface backing the operator-facing
 // `zen knowledge` CLI:
 //
-//	KnowledgeQuery   POST /v1/knowledge/query   — hybrid FTS5 + structured filter
-//	KnowledgeReindex POST /v1/knowledge/reindex — cold rebuild dispatch
-//	KnowledgeStats   GET  /v1/knowledge/stats   — index statistics
+// KnowledgeQuery POST /v1/knowledge/query — hybrid FTS5 + structured filter
+// KnowledgeReindex POST /v1/knowledge/reindex — cold rebuild dispatch
+// KnowledgeStats GET /v1/knowledge/stats — index statistics
 //
 // Field names + JSON tags align with the daemon-side handler in
 // internal/daemon/handlers/knowledge.go. Times use Unix seconds at the
 // wire boundary (rather than RFC3339) for the stats payload — the
 // LastIndexedUnix is a single scalar, kept compact for shell pipelines
-// (`jq .last_indexed_unix`). The query payload's LastModified is RFC3339
+// (`jq.last_indexed_unix`). The query payload's LastModified is RFC3339
 // per Go's encoding/json default for time.Time.
 //
 // Wire shapes are decoupled from internal/knowledge.Result at the client
@@ -21,7 +21,7 @@
 // hydrates rows back into a domain-friendly form for rendering — keeping
 // the wire boundary at strings, the domain layer at typed enums.
 //
-// inv-zen-129 boundary: this file imports stdlib + context + encoding/json
+// invariant boundary: this file imports stdlib + context + encoding/json
 // only — never net/http directly (the *Client transport handles it).
 // `--remote` and `--audit-chain` are intercepted at the CLI BEFORE this
 // layer runs, so neither flag ever reaches a wire payload (per spec §1

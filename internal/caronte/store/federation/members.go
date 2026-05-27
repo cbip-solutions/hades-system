@@ -1,4 +1,4 @@
-//go:build cgo
+// go:build cgo
 
 // SPDX-License-Identifier: MIT
 
@@ -11,7 +11,7 @@ import (
 
 // MemberRow is the on-disk row shape for caronte_workspace_members. The
 // PK on (workspace_id, project_id) makes a re-add of the same pair fail at
-// the SQL layer; callers MUST use the Plan 20 §10.2 zen workspace link CLI
+// the SQL layer; callers MUST use the §10.2 zen workspace link CLI
 // to grow a roster (which validates ordering + capa-firewall + audit).
 type MemberRow struct {
 	WorkspaceID  string

@@ -670,8 +670,8 @@ func TestServer_DoctrineDiff_NotFoundB(t *testing.T) {
 // The current accessor parses the input then re-emits TOML; target version
 // is the constant currentSchemaVersion="1.0".
 //
-// NOTE(plan-15) on Plan-J FIX-PASS scope: a future Phase N task should wire
-// MigrateChain into DoctrineMigrate so downgrade-rejection (inv-zen-142)
+// NOTE(plan-15) on Plan-J FIX-PASS scope: a future task should wire
+// MigrateChain into DoctrineMigrate so downgrade-rejection
 // flows through the HTTP API. The current accessor is identity-passthrough;
 // we do NOT add a downgrade-rejection test against the present
 // implementation because that would be testing speculative future

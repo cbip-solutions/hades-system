@@ -1,29 +1,29 @@
 // tests/compliance/inv_zen_278_test.go
 //
-// Compliance gate for inv-zen-278 (Plan v0.20.0 Phase F): BGE reranker
+// Compliance gate for invariant: BGE reranker
 // auto-detect + log-level convention.
 //
 // The invariant pins five load-bearing properties:
 //
-//  1. cmd/zen-swarm-ctld/main.go invokes bgeModelAvailable("") as the
-//     pre-check guard before constructing the BGE reranker. (Source
-//     regex 1.)
-//  2. main.go emits BOTH log lines that encode the WARN→INFO convention:
-//     INFO when the model is missing (documented degraded default) AND
-//     WARN when files are present but ONNX construction still failed
-//     (anomaly path). (Source regex 2.)
-//  3. internal/cli/doctor_caronte.go has the "rerank.available" probe
-//     entry whose hint mentions scripts/download-bge-model.sh. (Source
-//     regex 3.)
-//  4. scripts/download-bge-model.sh exists, is executable, has
-//     `set -euo pipefail`, references both model + tokenizer filenames,
-//     and includes the SHA recording + idempotent-skip logic. (Source
-//     regex 4.)
-//  5. Behavioural sister-test: a clean tempdir with both files present
-//     → bgeModelAvailable returns true; tokenizer absent → returns
-//     false. The helper IS the gate driving the log-level branch; a
-//     refactor that collapses the branches back to unconditional WARN
-//     would silently break the convention.
+// 1. cmd/zen-swarm-ctld/main.go invokes bgeModelAvailable("") as the
+// pre-check guard before constructing the BGE reranker. (Source
+// regex 1.)
+// 2. main.go emits BOTH log lines that encode the WARN→INFO convention:
+// INFO when the model is missing (documented degraded default) AND
+// WARN when files are present but ONNX construction still failed
+// (anomaly path). (Source regex 2.)
+// 3. internal/cli/doctor_caronte.go has the "rerank.available" probe
+// entry whose hint mentions scripts/download-bge-model.sh. (Source
+// regex 3.)
+// 4. scripts/download-bge-model.sh exists, is executable, has
+// `set -euo pipefail`, references both model + tokenizer filenames,
+// and includes the SHA recording + idempotent-skip logic. (Source
+// regex 4.)
+// 5. Behavioural sister-test: a clean tempdir with both files present
+// → bgeModelAvailable returns true; tokenizer absent → returns
+// false. The helper IS the gate driving the log-level branch; a
+// refactor that collapses the branches back to unconditional WARN
+// would silently break the convention.
 //
 // Sister-test pattern: revert the WARN→INFO switch back to unconditional
 // `logger.Warn` (no pre-check) → this test MUST fail because the source
@@ -31,7 +31,7 @@
 // load-bearing for the operator UX (INFO is the documented degraded
 // default, not a noisy warning).
 //
-// inv-zen-278 (Plan v0.20.0 Phase F).
+// invariant.
 package compliance
 
 import (

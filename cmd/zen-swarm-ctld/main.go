@@ -2,7 +2,7 @@
 // Package main is the entrypoint for zen-swarm-ctld, the HADES system daemon.
 //
 // Lifecycle managed by launchd via configs/launchd.plist.tmpl.
-// HTTP API contract: /v1/* (versioned, inv-zen-024).
+// HTTP API contract: /v1/*.
 package main
 
 import (
@@ -28,6 +28,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/citation"
 	"github.com/cbip-solutions/hades-system/internal/config"
 	"github.com/cbip-solutions/hades-system/internal/daemon"
+	"github.com/cbip-solutions/hades-system/internal/daemon/aggregatorbridge"
 	"github.com/cbip-solutions/hades-system/internal/daemon/auditadapter"
 	"github.com/cbip-solutions/hades-system/internal/daemon/auth"
 	"github.com/cbip-solutions/hades-system/internal/daemon/citationadapter"
@@ -36,15 +37,23 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/daemon/inboxadapter"
 	"github.com/cbip-solutions/hades-system/internal/daemon/mcpgateway"
 	"github.com/cbip-solutions/hades-system/internal/daemon/orchestratoradapter"
+	"github.com/cbip-solutions/hades-system/internal/daemon/plan9adapter"
 	"github.com/cbip-solutions/hades-system/internal/daemon/projectctxadapter"
 	"github.com/cbip-solutions/hades-system/internal/daemon/projectsaliasadapter"
 	"github.com/cbip-solutions/hades-system/internal/daemon/quotaadapter"
 	"github.com/cbip-solutions/hades-system/internal/daemon/scheduleradapter"
+	"github.com/cbip-solutions/hades-system/internal/daemon/workforceadapter"
+	"github.com/cbip-solutions/hades-system/internal/doctrine/builtin"
+	"github.com/cbip-solutions/hades-system/internal/knowledge/aggregator"
+	"github.com/cbip-solutions/hades-system/internal/knowledge/embed"
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/clock"
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/merge"
+	"github.com/cbip-solutions/hades-system/internal/orchestrator/worktreepool"
+	"github.com/cbip-solutions/hades-system/internal/research/cache"
 	"github.com/cbip-solutions/hades-system/internal/research/ecosystem"
 	"github.com/cbip-solutions/hades-system/internal/store"
+	"github.com/cbip-solutions/hades-system/internal/workforce/gate"
 )
 
 var Version = "0.1.0-dev"
@@ -73,7 +82,7 @@ func main() {
 	// singleton registry from the embedded built-in TOMLs. Without
 	// this, every doctrine-aware endpoint reads "" from
 	// sessionDoctrine (init-order fail-closed) and /v1/doctrine/active
-	// surfaces 404 "name not found in registry". inv-zen-134
+	// surfaces 404 "name not found in registry". invariant
 	// init-order contract.
 	//
 	// MUST run before any handler can reach active.Active() / For():
@@ -128,14 +137,21 @@ func main() {
 			logger.Error("tesseraClose", "err", err)
 		}
 	}()
-
-	_ = tesseraMgr
 	logger.Info("Plan 9 tessera substrate live",
 		"data_root", dataRoot,
 		"checkpoint_dir", filepath.Join(dataRoot, "global", "daemon_checkpoint"),
 		"witness", "auto-generated on first run; loaded on subsequent boots")
 
 	srv := daemon.New(st, daemon.Config{UDSPath: *udsPath, HTTPAddr: *httpAddr})
+	operatorGate, err := gate.NewOperatorGate(context.Background(), workforceadapter.NewGateAdapter(st))
+	if err != nil {
+		logger.Error("gate.NewOperatorGate", "err", err)
+		os.Exit(1)
+	}
+	srv.SetOperatorGate(operatorGate)
+	logger.Info("operator gate live",
+		"state", string(operatorGate.State()),
+		"persistence", "operator_gate_state")
 
 	nfy := daemon.NewNotifier(st)
 	defer nfy.Close()
@@ -249,6 +265,9 @@ func main() {
 		}
 	}
 	doctrine := os.Getenv("ZEN_SWARM_DOCTRINE")
+	if doctrine == "" {
+		doctrine = "max-scope"
+	}
 	plan5Adapter, err := orchestratoradapter.New(st)
 	if err != nil {
 		logger.Error("orchestratoradapter.New", "err", err)
@@ -270,6 +289,71 @@ func main() {
 		"routes", "/v1/orchestrator/{state,pool,depth,capture,replay,health/*}, /v1/autonomy/*, /v1/doctrine/{propose-list,propose-show,ack,deny,revert}, /v1/safetynet/*",
 		"repo_root", repoRoot,
 		"doctrine", doctrine)
+
+	contractPoolDir := filepath.Join(dataRoot, "worktree-pool")
+	if err := os.MkdirAll(contractPoolDir, 0o700); err != nil {
+		logger.Error("worktree pool dir mkdir", "err", err, "path", contractPoolDir)
+		os.Exit(1)
+	}
+	contractPool, err := worktreepool.NewPool(worktreepool.PoolConfig{
+		RepoRoot:    repoRoot,
+		WorktreeDir: contractPoolDir,
+		BranchBase:  "main",
+		Floor:       3,
+		ElasticMax:  12,
+		GCCadence:   5 * time.Minute,
+		Doctrine:    doctrine,
+		PoolID:      "contract-federation",
+	}, eventlog.New(plan5Adapter, clock.Real{}), worktreepool.NewOSExecutor())
+	if err != nil {
+		logger.Error("worktreepool.NewPool", "err", err, "repo_root", repoRoot, "worktree_dir", contractPoolDir)
+		os.Exit(1)
+	}
+	plan5Svc.SetWorktreePool(contractPool)
+	defer func() {
+		closeCtx, closeCancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer closeCancel()
+		if err := contractPool.Close(closeCtx); err != nil {
+			logger.Error("worktree pool Close", "err", err)
+		}
+	}()
+	logger.Info("Plan 5 worktree pool live",
+		"pool", "contract-federation",
+		"repo_root", repoRoot,
+		"worktree_dir", contractPoolDir,
+		"floor", 3,
+		"elastic_max", 12,
+		"gc_cadence", "5m")
+
+	plan5Supervisor, err := startPlan5BackgroundSupervisor(ctx, plan5BackgroundRuntimeConfig{
+		Service: plan5Svc,
+		Gate:    operatorGate,
+		Budget: plan5BudgetSnapshotReader{
+			counters:   built.CostCounters,
+			repoRoot:   repoRoot,
+			projectID:  plan5DaemonProjectID,
+			doctrine:   doctrine,
+			paygActive: false,
+		},
+		Heartbeats: &plan5EventLogHeartbeatProbe{
+			log:       plan5Svc.EventLog(),
+			sessionID: plan5DaemonSessionID,
+		},
+	})
+	if err != nil {
+		logger.Error("Plan 5 background supervisor", "err", err)
+		os.Exit(1)
+	}
+	defer func() {
+		stopCtx, stopCancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer stopCancel()
+		if err := plan5Supervisor.Stop(stopCtx); err != nil {
+			logger.Error("Plan 5 background supervisor Stop", "err", err)
+		}
+	}()
+	logger.Info("Plan 5 background supervisor live",
+		"goroutines", plan5Supervisor.Count(),
+		"runners", plan5Supervisor.Names())
 
 	mergeCache := merge.NewCache()
 	mergeHandler := handlers.NewMergeHandler(
@@ -357,7 +441,7 @@ func main() {
 		srv,
 		tesseraMgr,
 		buildEnvSnapshot(os.Environ()),
-		wireContractFederationOpts{},
+		wireContractFederationOpts{Pool: contractPool},
 	)
 	if contractFedErr != nil {
 		logger.Error("contract-federation bootstrap (bootstrap-required, generalises inv-zen-206)",
@@ -372,7 +456,7 @@ func main() {
 	}()
 	logger.Info("Plan 20 contract-federation live",
 		"substrate", "workspace federation DB (Phase A) + L10 Coordinator (Phase H)",
-		"pool_present", false,
+		"pool_present", true,
 		"oracle", "default-policy (workspace-policy + ≤5 blast-radius → autonomy)")
 
 	caronteBlastCore := engineBlastCore{engine: caronteEngine}
@@ -395,10 +479,10 @@ func main() {
 
 	mcpgwSrv := mcpgateway.NewServer(mcpgwDispatcher)
 
-	// Plan v0.20.0 Phase A Task A-4: inject the projects_alias resolver
+	// Plan v0.20.0 Task A-4: inject the projects_alias resolver
 	// so handleToolsCall can translate alias → canonical id_sha256
-	// (inv-zen-277) and accept project_id from EITHER X-Zen-Project-ID
-	// header OR body arguments.project_id (inv-zen-280). The adapter
+	// and accept project_id from EITHER X-Zen-Project-ID
+	// header OR body arguments.project_id. The adapter
 	// wraps *store.Store (the daemon-shared SQLite) and caches resolved
 	// entries with a 60s TTL. Without this wiring the gateway falls
 	// back to legacy header pass-through — production daemons MUST
@@ -511,13 +595,13 @@ func main() {
 			"scheduleradapter to fully satisfy scheduler.Store")
 
 	//
-	// Every 5 minutes, invoke each Plan 7 subsystem's prober via
+	// Every 5 minutes, invoke each subsystem's prober via
 	// Server.SubsystemProbe and emit one structured slog line per
 	// subsystem with status counts. The output timeline is the substrate
 	//
 	// Probers are constructed by the per-subsystem adapters and registered
 	// via SetKnowledgeProber / SetSchedulerProber / SetInboxProber /
-	// SetTmuxProber (Phase I follow-up wires the concrete instances). On
+	// SetTmuxProber. On
 	// daemon startup before those wire, SubsystemProbe returns []ProbeRow{}
 	// for every name and the snapshot logger emits "subsystem unwired"
 	// with all-zero counts — operationally inert but observable.
@@ -535,22 +619,20 @@ func main() {
 	// per-project YAML.
 	//
 	// dbPathFor resolves to <dataRoot>/projects/<id>/audit/audit.db —
-	// the Phase A/B per-project audit SQLite path. doctrineFor returns
-	// the daemon-global doctrine name for now; Plan 9 Phase J wires
+	// the per-project audit SQLite path. doctrineFor returns
+	// the daemon-global doctrine name for now; wires
 	// per-project doctrine resolution from the doctrine TOML loader.
 	//
-	// knownProjectIDs: Phase H wires this from a project enumeration
-	// helper (projectctxadapter.ListProjects or equivalent). Until that
-	// lands, an empty slice is the documented placeholder — LifecycleManager
-	// handles the empty case gracefully (zero supervisors started; the
-	// SetEnvForProject closure is still bound so a Phase H follow-up can
-	// extend the project list at boot without further changes here).
+	// knownProjectIDs comes from the projectctx adapter already wired
+	// above. Empty remains a valid fresh-install state, but it is now the
+	// database result, not a hard-coded placeholder.
 	stateDirRoot := os.Getenv("XDG_STATE_HOME")
 	if stateDirRoot == "" {
 		stateDirRoot = filepath.Join(os.Getenv("HOME"), ".local", "state")
 	}
 	litestreamStateDir := filepath.Join(stateDirRoot, "zen-swarm")
 	litestreamMgr := litestream.NewManager(nil)
+	s3CredsStore := litestream.NewS3CredentialsStore()
 	defer func() { _ = litestreamMgr.StopAll(context.Background()) }()
 
 	dbPathFor := func(projectID string) string {
@@ -562,7 +644,7 @@ func main() {
 	}
 	litestreamLifecycle := litestream.NewLifecycleManager(
 		litestreamMgr,
-		litestream.NewS3CredentialsStore(),
+		s3CredsStore,
 		filepath.Join(litestreamStateDir, "litestream-configs"),
 		dbPathFor,
 		doctrineFor,
@@ -570,8 +652,15 @@ func main() {
 			logger.Warn("litestream skip", "project", projectID, "reason", reason)
 		},
 	)
-
-	knownProjectIDs := []string{}
+	projects, err := projectStoreAdapter.List(ctx, false)
+	if err != nil {
+		logger.Error("litestream project enumeration", "err", err)
+		os.Exit(1)
+	}
+	knownProjectIDs := make([]string, 0, len(projects))
+	for _, project := range projects {
+		knownProjectIDs = append(knownProjectIDs, string(project.ID))
+	}
 	if err := litestreamLifecycle.StartAllProjects(ctx, knownProjectIDs); err != nil {
 		logger.Error("litestream lifecycle start", "err", err)
 		os.Exit(1)
@@ -579,24 +668,121 @@ func main() {
 	logger.Info("Plan 9 litestream lifecycle live",
 		"state_dir", litestreamStateDir,
 		"projects_wired", len(knownProjectIDs),
-		"effect", "per-project supervisors will spawn on Phase H project-enumeration follow-up; "+
-			"keychain-rotation env injection is bound at boot")
+		"effect", "per-project supervisors spawned for projects with S3 credentials; keychain-rotation env injection is bound at boot")
 
 	go runSubsystemSnapshotLogger(ctx, srv, logger)
 
-	plan9 := &daemon.Plan9Adapters{}
+	var adrAdapter handlers.ADRCtx
+	adrStatus := "nil — ADRCtx facade init failed"
+	if adapter, err := plan9adapter.NewADRAdapter(plan9adapter.ADRAdapterDeps{
+		Dir:   filepath.Join(repoRoot, "docs", "decisions"),
+		Store: st,
+	}); err != nil {
+		logger.Error("Plan 9 ADR adapter init failed", "err", err)
+	} else {
+		adrAdapter = adapter
+		adrStatus = "live — ADRCtx facade backed by docs/decisions + audit_events_raw"
+	}
+	var stateAdapter handlers.StateService
+	stateStatus := "nil — StateService facade init failed"
+	if adapter, err := plan9adapter.NewStateAdapter(plan9adapter.StateAdapterDeps{
+		RepoRoot:           repoRoot,
+		AutonomyStampPath:  filepath.Join(dataRoot, "autonomy_check.json"),
+		Version:            buildinfo.Version(),
+		DoctrineRegistryFn: builtin.Names,
+		Store:              st,
+	}); err != nil {
+		logger.Error("Plan 9 state adapter init failed", "err", err)
+	} else {
+		stateAdapter = adapter
+		stateStatus = "live — StateService facade backed by docs/system-state.toml + audit_events_raw"
+	}
+	var researchAdapter handlers.ResearchStoreP9
+	researchStatus := "nil — ResearchStoreP9 facade init failed"
+	if researchDB, err := cache.Open(ctx, filepath.Join(dataRoot, "global", "research_cache.db")); err != nil {
+		logger.Error("Plan 9 research adapter DB init failed", "err", err)
+	} else {
+		defer func() { _ = researchDB.SQL.Close() }()
+		if adapter, err := plan9adapter.NewResearchAdapter(plan9adapter.ResearchAdapterDeps{DB: researchDB}); err != nil {
+			logger.Error("Plan 9 research adapter init failed", "err", err)
+		} else {
+			researchAdapter = adapter
+			researchStatus = "live — ResearchStoreP9 facade backed by global/research_cache.db"
+		}
+	}
+	var knowledgeAdapter handlers.KnowledgeAdapterP9
+	knowledgeStatus := "nil — KnowledgeAdapterP9 facade init failed"
+	if knowledgeDB, err := aggregator.Open(ctx, filepath.Join(dataRoot, "global", "aggregator.db")); err != nil {
+		logger.Error("Plan 9 knowledge aggregator DB init failed", "err", err)
+	} else {
+		defer func() { _ = knowledgeDB.Close() }()
+		if err := aggregator.Init(ctx, knowledgeDB); err != nil {
+			logger.Error("Plan 9 knowledge aggregator schema init failed", "err", err)
+		} else if knowledgeEmbedder, err := embed.NewEmbedder(embed.Config{
+			Backend:    "auto",
+			Dimensions: 384,
+			ScriptPath: filepath.Join(repoRoot, "internal", "knowledge", "embed", "scripts", "zen_embed.py"),
+		}); err != nil {
+			logger.Error("Plan 9 knowledge embedder init failed", "err", err)
+		} else {
+			if closer, ok := knowledgeEmbedder.(interface{ Close() error }); ok {
+				defer func() { _ = closer.Close() }()
+			}
+			knowledgeStore := srv.NewAdapterForKnowledge()
+			defer knowledgeStore.Close()
+			knowledgeAgg, err := aggregator.New(aggregator.Options{
+				DB:       knowledgeDB,
+				Embedder: knowledgeEmbedder,
+				Store:    knowledgeStore,
+			})
+			if err != nil {
+				logger.Error("Plan 9 knowledge aggregator init failed", "err", err)
+			} else if adapter, err := plan9adapter.NewKnowledgeAdapter(plan9adapter.KnowledgeAdapterDeps{Aggregator: knowledgeAgg}); err != nil {
+				logger.Error("Plan 9 knowledge adapter init failed", "err", err)
+			} else {
+				knowledgeAdapter = adapter
+				knowledgeStatus = "live — KnowledgeAdapterP9 facade backed by global/aggregator.db"
+				srv.RegisterKnowledgeAggregator(&handlers.KnowledgeAggregatorHandlers{
+					Agg: aggregatorbridge.New(knowledgeAgg),
+				})
+			}
+		}
+	}
+
+	var auditAdapter handlers.AuditCtxP9
+	auditStatus := "nil — AuditCtxP9 facade init failed"
+	if adapter, err := plan9adapter.NewAuditAdapter(plan9adapter.AuditAdapterDeps{
+		Store:   st,
+		Chain:   bootAuditAdapter,
+		Tessera: tesseraMgr,
+		S3Store: s3CredsStore,
+		ColdArchiveDownloader: litestream.NewColdArchiveDownloader(
+			nil,
+			s3CredsStore,
+		),
+		StagingRoot: filepath.Join(dataRoot, "global", "recovery"),
+	}); err != nil {
+		logger.Error("Plan 9 audit adapter init failed", "err", err)
+	} else {
+		auditAdapter = adapter
+		auditStatus = "live — AuditCtxP9 facade backed by audit_events_raw + tessera + litestream S3 credentials"
+	}
+
+	plan9 := &daemon.Plan9Adapters{
+		Audit:     auditAdapter,
+		ADR:       adrAdapter,
+		Knowledge: knowledgeAdapter,
+		Research:  researchAdapter,
+		State:     stateAdapter,
+	}
 	srv.SetPlan9Adapters(plan9)
-	logger.Warn("Plan 9 Phase H wired with nil substrates",
-		"audit", "nil — AuditCtxP9 facade not yet implemented",
-		"knowledge", "nil — KnowledgeAdapterP9 facade not yet implemented",
-		"adr", "nil — ADRCtx facade not yet implemented",
-		"research", "nil — ResearchStoreP9 facade not yet implemented",
-		"state", "nil — StateService facade not yet implemented",
-		"effect", "all /v1/audit-chain/*, /v1/knowledge/query(GET), "+
-			"/v1/knowledge/{promote,unpromote,list,rebuild}, "+
-			"/v1/adr/*, /v1/research/history, /v1/research/cache/stats, "+
-			"/v1/research/cache/list, /v1/research/cache/invalidate, "+
-			"/v1/state/* return 503 until Phase H facades ship")
+	logger.Warn("Plan 9 Phase H adapter status",
+		"audit", auditStatus,
+		"knowledge", knowledgeStatus,
+		"adr", adrStatus,
+		"research", researchStatus,
+		"state", stateStatus,
+		"effect", "Plan 9 facades report live/nil status above")
 
 	citBridge := citationadapter.New(srv)
 	citReg := citation.NewRegistry()

@@ -1,3 +1,4 @@
+// go:build !race
 //go:build !race
 // +build !race
 
@@ -92,7 +93,7 @@ func TestADR0062_PerEventLeafPerPartitionSealHybrid(t *testing.T) {
 		}
 	}
 
-	// inv-zen-143 (REFUSE triggers: audit_events_raw append-only) MUST be cited.
+	// invariant (REFUSE triggers: audit_events_raw append-only) MUST be cited.
 	if !strings.Contains(bodyStr, "inv-zen-143") {
 		t.Errorf("ADR-0062 missing invariant reference inv-zen-143 (REFUSE triggers)")
 	}
@@ -220,12 +221,12 @@ func TestADR0063_DoctrineTunableFederationCadenceAndTamperResponse(t *testing.T)
 		}
 	}
 
-	// inv-zen-150 (per-project blast radius) MUST be cited per spec §7.2.
+	// invariant (per-project blast radius) MUST be cited per spec §7.2.
 	if !strings.Contains(bodyStr, "inv-zen-150") {
 		t.Errorf("ADR-0063 missing inv-zen-150 (blast radius) reference")
 	}
 
-	// inv-zen-136 (Plan 8 validateTighten) MUST be cited per Q4 B per-project
+	// invariant MUST be cited per Q4 B per-project
 	// override rule.
 	if !strings.Contains(bodyStr, "inv-zen-136") {
 		t.Errorf("ADR-0063 missing inv-zen-136 (Plan 8 validateTighten) reference")

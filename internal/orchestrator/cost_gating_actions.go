@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-// Package orchestrator — cost-gating action dispatcher (Plan 5 Phase G-3).
+// Package orchestrator — cost-gating action dispatcher.
 //
 // G-3 ships:
-//   - CostActionContext value type (Reason, DecisionID, Snapshot, Threshold)
-//     carrying context for action dispatch.
-//   - ApplyAction(ctx, actuator, action, context) pure dispatch function
-//     routing each closed-vocabulary CostAction to its corresponding
-//     OrchestratorActuator method (idempotent under repeated invocation).
-//   - Engine.Apply wholesale-replacement: dispatch-based implementation
-//     replacing G-2's passthrough stub.
-//   - OrchestratorActuator interface widening to 9-method surface
-//     (G-1 declared 5 methods; G-3 expands to 9; forward-declaration
-//     discipline preserved in cost_gating.go).
+// - CostActionContext value type (Reason, DecisionID, Snapshot, Threshold)
+// carrying context for action dispatch.
+// - ApplyAction(ctx, actuator, action, context) pure dispatch function
+// routing each closed-vocabulary CostAction to its corresponding
+// OrchestratorActuator method (idempotent under repeated invocation).
+// - Engine.Apply wholesale-replacement: dispatch-based implementation
+// replacing G-2's passthrough stub.
+// - OrchestratorActuator interface widening to 9-method surface
+// (G-1 declared 5 methods; G-3 expands to 9; forward-declaration
+// discipline preserved in cost_gating.go).
 //
 // G-2 applyOverrideForTest seam: G-2's TestRun_ApplyError_EmitsEventAndContinues
 // used SetApplyOverrideForTest to inject a hook consumed by the G-2 stub.
@@ -35,7 +35,7 @@ type CostActionContext struct {
 
 // ApplyAction routes a CostAction to the corresponding OrchestratorActuator
 // method. Pure dispatch logic; concurrency safety + idempotency enforced
-// at the actuator level (Plan 4 worker infrastructure + Phase D core).
+// at the actuator level.
 //
 // All actions are idempotent under repeated invocation (e.g., HardPause
 // already-paused is a no-op + warn event emitted by the actuator, not here).

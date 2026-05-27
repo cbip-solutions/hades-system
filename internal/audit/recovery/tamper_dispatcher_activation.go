@@ -1,35 +1,35 @@
 // SPDX-License-Identifier: MIT
 // Package recovery — tamper_dispatcher_activation.go
 //
-// Phase C declared TamperDispatcher (tamper_dispatcher.go) with doctrine-name
-// routing ("max-scope" / "default" / "capa-firewall"). Phase J ACTIVATES the
-// dispatcher by binding it to the Plan 9 [audit.tamper_response] mode read
+// declared TamperDispatcher (tamper_dispatcher.go) with doctrine-name
+// routing ("max-scope" / "default" / "capa-firewall"). ACTIVATES the
+// dispatcher by binding it to the [audit.tamper_response] mode read
 // per-project from the active doctrine bundle at Dispatch() call time (hot —
-// respects Plan 8 doctrine reload mid-flight per Plan 8 Q10 C atomic-swap).
+// respects doctrine reload mid-flight Q10 C atomic-swap).
 //
-// DoctrineDispatcher is a NEW struct (separate from Phase C's TamperDispatcher)
-// that carries the three Plan 9 dependencies and its own halt state. Its
+// DoctrineDispatcher is a NEW struct
+// that carries the three dependencies and its own halt state. Its
 // Dispatch() method routes per [audit.tamper_response] mode:
 //
-//	halt-per-project:  HALT P only; emit audit.tamper_detected + Plan 7 inbox URGENT;
-//	                   emit audit.recovery_initiated (operator-gated recovery next step).
-//	log-continue:      NO halt; emit audit.tamper_detected + Plan 7 inbox URGENT;
-//	                   CONTINUE new appends.
-//	cascade-halt-all:  HALT P + HALT ALL other known projects; emit per-project
-//	                   audit.tamper_detected (one per affected project); emit
-//	                   once (for the originating project).
+// halt-per-project: HALT P only; emit audit.tamper_detected + inbox URGENT;
+// emit audit.recovery_initiated (operator-gated recovery next step).
+// log-continue: NO halt; emit audit.tamper_detected + inbox URGENT;
+// CONTINUE new appends.
+// cascade-halt-all: HALT P + HALT ALL other known projects; emit per-project
+// audit.tamper_detected (one per affected project); emit
+// once (for the originating project).
 //
-// inv-zen-150 enforced: empty ProjectID REJECTED at Dispatch() entry.
+// invariant enforced: empty ProjectID REJECTED at Dispatch() entry.
 // Per-project blast radius preserved unless mode=cascade-halt-all (capa-firewall
 // opt-in only).
 //
-// Recursive chain anchor: every event emitted flows into Plan 5 eventlog →
+// Recursive chain anchor: every event emitted flows into eventlog →
 // forensically anchored, not just the original tamper detection. Dispatcher
 // MUST emit events synchronously to ensure ordering:
 // detection → tamper_detected → recovery_initiated (if applicable).
 //
 // cmd/zen-swarm-ctld/main.go wiring is deferred to operator/ops boot path
-// post-Phase-L (TODO comment in main.go).
+// post- (TODO comment in main.go).
 package recovery
 
 import (

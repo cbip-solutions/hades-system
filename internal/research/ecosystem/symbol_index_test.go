@@ -1,38 +1,39 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
 // Package ecosystem — symbol_index_test.go
 //
-// Tests for SymbolIndex (Plan 14 Phase C Task C-4).
+// Tests for SymbolIndex.
 //
 // Coverage discipline: per project doctrine `feedback_no_tech_debt.md`,
 // security/correctness-critical files require ≥90% per-function coverage.
-// SymbolIndex is the first-line hallucination defence (inv-zen-195 enforces
+// SymbolIndex is the first-line hallucination defence (invariant enforces
 // p99 ≤1ms via benchmark) so EVERY method is exercised here:
 //
-//   - NewSymbolIndex                  TestSymbolIndex_Empty_NotContains
-//   - Register                        TestSymbolIndex_Register_Contains, _RegisterIdempotent
-//   - Contains (any-version)          TestSymbolIndex_VersionFilter
-//   - Contains (version-filtered)     TestSymbolIndex_VersionFilter
-//   - ContainsVersioned               TestSymbolIndex_ContainsVersioned
-//   - Load                            TestSymbolIndex_Load_FromDB, _Load_NilDB
-//   - Load (atomic publish)           TestSymbolIndex_Load_AtomicReplace
-//   - Load (ctx cancel)               TestSymbolIndex_Load_CtxCancel
-//   - Load (versionless rows)         TestSymbolIndex_Load_NullIntroducedIn
-//   - Rebuild                         TestSymbolIndex_Rebuild_Atomicity
-//   - Stats (loaded)                  TestSymbolIndex_Stats
-//   - Stats (unknown eco)             TestSymbolIndex_Stats_Unknown
-//   - getOrCreateSet (double-check)   TestSymbolIndex_Concurrent_RaceClean
+// - NewSymbolIndex TestSymbolIndex_Empty_NotContains
+// - Register TestSymbolIndex_Register_Contains, _RegisterIdempotent
+// - Contains (any-version) TestSymbolIndex_VersionFilter
+// - Contains (version-filtered) TestSymbolIndex_VersionFilter
+// - ContainsVersioned TestSymbolIndex_ContainsVersioned
+// - Load TestSymbolIndex_Load_FromDB, _Load_NilDB
+// - Load (atomic publish) TestSymbolIndex_Load_AtomicReplace
+// - Load (ctx cancel) TestSymbolIndex_Load_CtxCancel
+// - Load (versionless rows) TestSymbolIndex_Load_NullIntroducedIn
+// - Rebuild TestSymbolIndex_Rebuild_Atomicity
+// - Stats (loaded) TestSymbolIndex_Stats
+// - Stats (unknown eco) TestSymbolIndex_Stats_Unknown
+// - getOrCreateSet (double-check) TestSymbolIndex_Concurrent_RaceClean
 //
-// Drift reconciliation (Stage 0 reality-check, 2026-05-17):
-//   - plan-file Step 2 used column `language` for the UNIQUE on
-//     ecosystem_packages (lines 3193, 3217, 3304). Real Phase A
-//     migration 001 + indexer_test.go use `ecosystem` (A-9 rename).
-//     All SQL in this file uses the canonical `ecosystem` column.
-//   - plan-file setupTestDBForSymbolIndex hand-wrote a minimal schema;
-//     this file uses ApplyMigrations(db) for parity with indexer_test
-//     (same schema the daemon actually runs against — no inline DDL
-//     drift surface).
+// Drift reconciliation:
+// - plan-file Step 2 used column `language` for the UNIQUE on
+// ecosystem_packages (lines 3193, 3217, 3304). Real
+// migration 001 + indexer_test.go use `ecosystem` (A-9 rename).
+// All SQL in this file uses the canonical `ecosystem` column.
+// - plan-file setupTestDBForSymbolIndex hand-wrote a minimal schema;
+// this file uses ApplyMigrations(db) for parity with indexer_test
+// (same schema the daemon actually runs against — no inline DDL
+// drift surface).
 //
 // Build tag `cgo`: this file requires sqlite3 driver (mattn/go-sqlite3)
 // transitively via ApplyMigrations + sqlite-vec; mirrors indexer_test.go.

@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package cleanup ships the Plan 13 Phase F7 state-retention policy
-// enforcement per Q12=D + spec §2.12 + §4.6 + inv-zen-187.
+// Package cleanup ships the state-retention policy
+// enforcement per Q12=D + spec §2.12 + §4.6 + invariant.
 //
 // Default retention per spec §2.12 table:
 //
-//	doctor-backups       30d
-//	migrate-backups      30d
-//	spike-artifacts      indefinite
-//	cache                7d LRU
+// doctor-backups 30d
+// migrate-backups 30d
+// spike-artifacts indefinite
+// cache 7d LRU
 //
-// Override via Plan 8 doctrine TOML `[state.backup_retention]` (Plan 13
-// Phase F-tail F7 extends the Plan 8 schema with the override section
+// Override doctrine TOML `[state.backup_retention]` (
+// F7 extends the schema with the override section
 // shape). The override merges field-by-field via Policy.MergeOverride.
 //
-// Boundary (inv-zen-031): cleanup consumes ONLY stdlib + caller-injected
+// Boundary: cleanup consumes ONLY stdlib + caller-injected
 // Emitter; MUST NOT import internal/store. State enumeration uses
 // os.ReadDir on the XDG state root (no daemon HTTP round-trip).
 package cleanup

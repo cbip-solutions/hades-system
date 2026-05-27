@@ -1,29 +1,30 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
-// Package ecosystemwiring — adapter_test.go (Plan 14 followup wiring).
+// Package ecosystemwiring — adapter_test.go.
 //
 // Unit tests for Adapter:
 //
-//   - Pin: not-found → ecospec.ErrEcosystemVersionNotFound; already-pinned
-//     → ecospec.ErrEcosystemPinAlreadyPinned; fresh-pin → 204 + DB row
-//     reflects indefinite_retain=1.
-//   - PrunePreview: not-found → ecospec.ErrEcosystemVersionNotFound; happy
-//     path returns accurate counts + Pinned flag.
-//   - Prune: not-found → ecospec.ErrEcosystemVersionNotFound; pinned →
-//     ecospec.ErrEcosystemVersionPinned; happy path deletes cascade chain
-//     atomically.
-//   - IngestDelta: missing Ingester → typed error; missing source map for
-//     ecosystem → typed error; happy path runs Ingest with DeltaOnly=true.
-//   - SweepChunkFingerprints: detects drift + repairs to canonical sha256;
-//     idempotent on clean corpus.
-//   - SweepChangeNodes: orphan detected → returned error; clean → nil.
-//   - RebuildSymbolIndex: reloads from DB; symbol newly registered visible
-//     after Rebuild.
-//   - CASGarbageCollect: orphan vec_bin + fts rows deleted; clean corpus
-//     → no-op.
-//   - DetectNewVersions: returns upstream\ecosystem_versions diff; empty
-//     source set → typed error.
+// - Pin: not-found → ecospec.ErrEcosystemVersionNotFound; already-pinned
+// → ecospec.ErrEcosystemPinAlreadyPinned; fresh-pin → 204 + DB row
+// reflects indefinite_retain=1.
+// - PrunePreview: not-found → ecospec.ErrEcosystemVersionNotFound; happy
+// path returns accurate counts + Pinned flag.
+// - Prune: not-found → ecospec.ErrEcosystemVersionNotFound; pinned →
+// ecospec.ErrEcosystemVersionPinned; happy path deletes cascade chain
+// atomically.
+// - IngestDelta: missing Ingester → typed error; missing source map for
+// ecosystem → typed error; happy path runs Ingest with DeltaOnly=true.
+// - SweepChunkFingerprints: detects drift + repairs to canonical sha256;
+// idempotent on clean corpus.
+// - SweepChangeNodes: orphan detected → returned error; clean → nil.
+// - RebuildSymbolIndex: reloads from DB; symbol newly registered visible
+// after Rebuild.
+// - CASGarbageCollect: orphan vec_bin + fts rows deleted; clean corpus
+// → no-op.
+// - DetectNewVersions: returns upstream\ecosystem_versions diff; empty
+// source set → typed error.
 //
 // Per task spec: tests MUST NOT require a real Embedder / Reranker / Haiku
 // — adapter operations are pure SQL + Source.FetchManifest delegation;

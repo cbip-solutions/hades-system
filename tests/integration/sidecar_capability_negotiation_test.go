@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package integration_test — Phase B Task B-10 capability-negotiation
+// Package integration_test — Task B-10 capability-negotiation
 // integration test for the daemon ↔ sidecar HTTP contract.
 //
-// Per decisión 17-d, the sidecar↔daemon contract over `/v1` is FROZEN
-// FOREVER post-Phase-B-3 ship. Forward compatibility is achieved
+// policy, the sidecar↔daemon contract over `/v1` is FROZEN
+// FOREVER post- ship. Forward compatibility is achieved
 // exclusively via `GET /v1/sidecar/info` capability negotiation: new
 // sidecar releases announce features by adding entries to
 // `supported_features[]`; older daemons gracefully ignore unknown
@@ -16,20 +16,20 @@
 // merge-time renumber reconciliation per the renumber-on-merge playbook)
 // exercises an end-to-end flow:
 //
-//  1. Spin a FakeSidecar httptest.NewServer that serves
-//     `GET /v1/sidecar/info` with a capability vector advertising the
-//     5 required current flags PLUS a future-feature flag the daemon
-//     does not yet recognise.
-//  2. Invoke `dispatcheradapter.FetchSidecarCapabilities(baseURL)` —
-//     the canonical daemon-side capability-fetch entry point.
-//  3. Assert: the daemon returns the parsed `Capabilities`, does NOT
-//     crash on the unknown feature, AND `HasFeature` reports correctly
-//     for known + unknown flags (forward-compat property).
-//  4. Assert: when the sidecar returns 5xx / malformed JSON / no
-//     `/v1/sidecar/info` route, the daemon surfaces a typed error
-//     rather than crashing (graceful degradation per inv-zen-280).
+// 1. Spin a FakeSidecar httptest.NewServer that serves
+// `GET /v1/sidecar/info` with a capability vector advertising the
+// 5 required current flags PLUS a future-feature flag the daemon
+// does not yet recognise.
+// 2. Invoke `dispatcheradapter.FetchSidecarCapabilities(baseURL)` —
+// the canonical daemon-side capability-fetch entry point.
+// 3. Assert: the daemon returns the parsed `Capabilities`, does NOT
+// crash on the unknown feature, AND `HasFeature` reports correctly
+// for known + unknown flags (forward-compat property).
+// 4. Assert: when the sidecar returns 5xx / malformed JSON / no
+// `/v1/sidecar/info` route, the daemon surfaces a typed error
+// rather than crashing.
 //
-// inv-zen-031 boundary: this test imports
+// invariant boundary: this test imports
 // internal/daemon/dispatcheradapter (daemon-side capability fetch) +
 // stdlib. It does NOT import internal/store / private-tier1-module.
 package integration_test

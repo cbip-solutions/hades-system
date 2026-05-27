@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package cli — probe.go
 //
-// Phase J Task J-1 introduces the canonical ProbeResult value type that
-// every Plan 7 doctor probe returns. ProbeResult subsumes Plan 2's
+// Task J-1 introduces the canonical ProbeResult value type that
+// every doctor probe returns. ProbeResult subsumes
 // CheckResult (which stays in doctor_checks.go for the bypass.* slice;
 // the bridge in RunFullProbe adapts CheckResult → ProbeResult). The
 // rendering format mirrors `flutter doctor` / `brew doctor` and matches
-// the Plan 2 doctor output already in `internal/cli/doctor.go`.
+// the doctor output already in `internal/cli/doctor.go`.
 //
 // Why a fresh type instead of extending CheckResult: ProbeStatus is an
 // int enum (compile-time exhaustiveness; Glyph/String methods on the
@@ -25,11 +25,11 @@ import (
 )
 
 // ProbeStatus enumerates the three doctor outcomes. Numeric ordering
-// matters: callers MAY use `if a.Status > b.Status { ... }` to select
+// matters: callers MAY use `if a.Status > b.Status {... }` to select
 // the "worst" probe in a slice. ProbeOK = 0, ProbeWarn = 1, ProbeFail = 2.
 //
 // DO NOT renumber: tests + future migrations to a sqlite probe-history
-// table (Plan 9 hash-chain extension hook) depend on this ordering.
+// table depend on this ordering.
 type ProbeStatus int
 
 const (
@@ -180,24 +180,24 @@ type StateProber interface {
 	Probe(ctx context.Context) []ProbeResult
 }
 
-// EcosystemProber is the read-only doctor probe surface for the Plan 14
-// ecosystem RAG substrate (Plan 14 Phase G Task G-4).
+// EcosystemProber is the read-only doctor probe surface for the
+// ecosystem RAG substrate.
 //
 // Probe returns ≥15 ProbeResults covering per-eco DB size, storage budget,
 // CAS blobs, cron worker PID + last-run timestamps, symbol-index health, and
-// verifier live-cmd health. The exact count MAY grow as Phase G matures;
+// verifier live-cmd health. The exact count MAY grow as matures;
 // callers MUST NOT branch on a specific count. The minimum surface (per spec
 // §5 doctor surface example) is:
 //
-//	ecosystem.{go,python,typescript,rust}.db_size  per-ecosystem DB size on disk
-//	ecosystem.budget                                inv-zen-199 4-state classification
-//	ecosystem.cas_blobs_shared                      Plan 9 F CAS dedup count + total size
-//	ecosystem.last_upstream_poll                    last 6h cron upstream-poll timestamp
-//	ecosystem.last_weekly_sweep                     last Sunday 03:00 integrity sweep
-//	ecosystem.cron.pid                              zen-docs-cron worker PID (or "not running")
-//	ecosystem.symbol_index.count                    in-memory symbol-existence set cardinality × 4 eco
-//	ecosystem.symbol_index.last_rebuild             last weekly symbol-index rebuild timestamp
-//	ecosystem.verifier.{go,python,npm,cargo}        live cmd reachable + non-empty response
+// ecosystem.{go,python,typescript,rust}.db_size per-ecosystem DB size on disk
+// ecosystem.budget invariant 4-state classification
+// ecosystem.cas_blobs_shared F CAS dedup count + total size
+// ecosystem.last_upstream_poll last 6h cron upstream-poll timestamp
+// ecosystem.last_weekly_sweep last Sunday 03:00 integrity sweep
+// ecosystem.cron.pid zen-docs-cron worker PID (or "not running")
+// ecosystem.symbol_index.count in-memory symbol-existence set cardinality × 4 eco
+// ecosystem.symbol_index.last_rebuild last weekly symbol-index rebuild timestamp
+// ecosystem.verifier.{go,python,npm,cargo} live cmd reachable + non-empty response
 //
 // Inv-zen-031 boundary: implementations live in the daemon or in a CLI shim
 // that consumes the daemon HTTP surface — never in internal/cli directly.

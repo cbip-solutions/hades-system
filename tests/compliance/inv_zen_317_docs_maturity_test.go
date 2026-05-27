@@ -1,20 +1,21 @@
 // SPDX-License-Identifier: MIT
 
+// go:build !race
 //go:build !race
 // +build !race
 
-// Package compliance — Plan 15 Phase H task H-8 compliance umbrella test
-// for inv-zen-317 (H-full doc maturity bundle).
+// Package compliance — task H-8 compliance umbrella test
+// for invariant (H-full doc maturity bundle).
 //
-// inv-zen-317 is the umbrella invariant for the doc-maturity bundle that
+// invariant is the umbrella invariant for the doc-maturity bundle that
 // turns the v1.0 source tree into a portfolio-grade OSS surface. H-1..H-7
 // each shipped a slice of the bundle; H-8 composes the umbrella that
 // asserts every doc:
 //
-//   - is PRESENT at its canonical path,
-//   - is non-empty + within a sane size range,
-//   - carries at least one canonical-content sentinel string proving the
-//     intended content (not just an empty file matching the path).
+// - is PRESENT at its canonical path,
+// - is non-empty + within a sane size range,
+// - carries at least one canonical-content sentinel string proving the
+// intended content (not just an empty file matching the path).
 //
 // This umbrella sits ABOVE the finer-grained per-doc tests (which own
 // content-specific assertions like "Apache-2.0 sovereignty" absence in
@@ -30,20 +31,20 @@
 // A single umbrella gate ensures no doc is deleted, renamed, or left
 // empty by future refactors.
 //
-// Bundle composition (7 files; 1 already covered by inv-zen-219 via doc
+// Bundle composition (7 files; 1 already covered by invariant via doc
 // scan but verified here at the structural level):
 //
-//	docFile           Path                                  CanonicalSentinel
-//	─────────────────────────────────────────────────────────────────────────
-//	README.md         README.md                             "HADES system"
-//	INSTALL.md        INSTALL.md                            "Homebrew" or "brew"
-//	CHANGELOG.md      CHANGELOG.md                          "Keep a Changelog"
-//	LICENSE           LICENSE                               "MIT License"
-//	SECURITY.md       SECURITY.md                           "Reporting a vulnerability"
-//	CONTRIBUTING.md   CONTRIBUTING.md                       "DCO sign-off"
-//	CODE_OF_CONDUCT.md CODE_OF_CONDUCT.md                   "Contributor Covenant"
+// docFile Path CanonicalSentinel
+// ─────────────────────────────────────────────────────────────────────────
+// README.md README.md "HADES system"
+// INSTALL.md INSTALL.md "Homebrew" or "brew"
+// CHANGELOG.md CHANGELOG.md "Keep a Changelog"
+// LICENSE LICENSE "MIT License"
+// SECURITY.md SECURITY.md "Reporting a vulnerability"
+// CONTRIBUTING.md CONTRIBUTING.md "DCO sign-off"
+// CODE_OF_CONDUCT.md CODE_OF_CONDUCT.md "Contributor Covenant"
 //
-// (NOTICE is OPTIONAL per Plan 15 decisión 15 — operators MAY ship a
+// (NOTICE is OPTIONAL policy — operators MAY ship a
 // minimal NOTICE for inbound Apache-2.0 propagation; the umbrella does
 // NOT gate its presence to avoid false-positive on minimalist releases.)
 //

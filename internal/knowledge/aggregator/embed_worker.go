@@ -7,32 +7,32 @@
 // and the per-project vault DB.
 //
 // Design rationale:
-//   - Debounce coalesce: rapid successive edits to the same note produce a
-//     single embedding call per debounce window (3 s default). A sync.Mutex
-//     guards the pending map; the map is swapped atomically at each tick so
-//     the flush body does not hold the lock during slow embed calls.
-//   - Soft-fail on embedding errors (Failure mode #9): if Embed or the SQL
-//     UPDATE fails, the event is silently dropped. The next vault change will
-//     re-queue the same note, so the worst outcome is a stale vec row until
-//     the next edit.
-//   - Degraded-mode skip (Failure mode #8): if Aggregator.Degraded() is true
-//     at flush time, all pending events are dropped without calling Embed.
-//     This prevents useless embedding work when sqlite-vec is unavailable.
-//   - Two-DB update: embedAndUpdate writes to both aggregator.db
-//     (knowledge_pin_vec) and the per-project vault.db. The per-project
-//     UPDATE is a best-effort soft-fail: the note may not have been promoted
-//     yet (no row in knowledge_pin_vec) and that is not an error.
+// - Debounce coalesce: rapid successive edits to the same note produce a
+// single embedding call per debounce window (3 s default). A sync.Mutex
+// guards the pending map; the map is swapped atomically at each tick so
+// the flush body does not hold the lock during slow embed calls.
+// - Soft-fail on embedding errors (Failure mode #9): if Embed or the SQL
+// UPDATE fails, the event is silently dropped. The next vault change will
+// re-queue the same note, so the worst outcome is a stale vec row until
+// the next edit.
+// - Degraded-mode skip (Failure mode #8): if Aggregator.Degraded() is true
+// at flush time, all pending events are dropped without calling Embed.
+// This prevents useless embedding work when sqlite-vec is unavailable.
+// - Two-DB update: embedAndUpdate writes to both aggregator.db
+// (knowledge_pin_vec) and the per-project vault.db. The per-project
+// UPDATE is a best-effort soft-fail: the note may not have been promoted
+// yet (no row in knowledge_pin_vec) and that is not an error.
 //
-// vec0 UPDATE behaviour (per D-9 Stage 0 empirical finding): sqlite-vec
+// vec0 UPDATE behaviour: sqlite-vec
 // vec0 virtual tables do NOT support UPDATE via normal SQL UPDATE statements —
 // they require DELETE+INSERT. embedAndUpdate uses a DELETE+INSERT pattern for
 // both DBs to avoid "no such rowid" or "cannot UPDATE a virtual table" errors.
 // See the inline comment in embedAndUpdate for the full rationale.
 //
-// inv-zen-031: this file imports NO internal/store. The per-project DB is
+// invariant: this file imports NO internal/store. The per-project DB is
 // accessed via PerProjectKnowledgeStore.OpenProjectVault → type-assert to
 // *sql.DB (same pattern as query.go queryDB).
-// inv-zen-129: no net/http or network imports.
+// invariant: no net/http or network imports.
 package aggregator
 
 import (
@@ -154,9 +154,9 @@ func (w *EmbedWorker) flush(ctx context.Context) {
 // existing pins; it does not promote new notes.
 //
 // Pre
-//   - w.agg.db is non-nil and has been through Open+Init.
-//   - w.agg.embedder.Dimensions() == vecDimensions (enforced by New).
-//   - ev.Content is the current full text of the note.
+// - w.agg.db is non-nil and has been through Open+Init.
+// - w.agg.embedder.Dimensions() == vecDimensions (enforced by New).
+// - ev.Content is the current full text of the note.
 //
 // Returns wrapped error on embed failure or dimension mismatch; nil on
 // success or SQL soft-fail (row not pinned yet).
@@ -192,7 +192,7 @@ func (w *EmbedWorker) embedAndUpdate(ctx context.Context, ev VaultChangeEvent) e
 //
 // This is the correct mutation pattern for sqlite-vec v0.1.x vec0 virtual
 // tables, which do not support SQL UPDATE statements on the embedding column.
-// The empirical finding (D-9 Stage 0 probe): a plain UPDATE silently does
+// The empirical finding: a plain UPDATE silently does
 // nothing or raises "no such rowid"; DELETE+INSERT is the idiomatic workaround.
 //
 // The INSERT uses a correlated subquery to read the rowid from

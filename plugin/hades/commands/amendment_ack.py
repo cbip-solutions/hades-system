@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:amendment-ack — Acknowledge + apply HADES doctrine amendment
 
-Apply amendment **{amendment_id}**. This is **audit-logged** via Plan 9 chain (Tessera-anchored event `AmendmentAcknowledged`).
+Apply amendment **{amendment_id}**. This is **audit-logged** chain (Tessera-anchored event `AmendmentAcknowledged`).
 
 ## 1. Confirm intent
 
@@ -24,7 +24,7 @@ Wait for operator response before proceeding.
 ```bash
 REASON="{reason}"
 
-# pending endpoint registration: amendment ack (POST) anchored via inv-zen-072
+# pending endpoint registration: amendment ack (POST) anchored via invariant
 curl --unix-socket /tmp/zen-swarm.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
@@ -58,12 +58,12 @@ Run /amendment-show <dep-id> to investigate, or ack dependents first.
 
 ## 4. NEVER add Claude attribution to audit log entry
 
-The reason text becomes part of audit chain. Operator's reason MUST NOT contain Claude/Anthropic/AI attribution. Daemon's audit handler regex-rejects (Plan 11 substrate hook).
+The reason text becomes part of audit chain. Operator's reason MUST NOT contain Claude/Anthropic/AI attribution. Daemon's audit handler regex-rejects.
 
 ## Cross-references
 
-- Plan 5 + Plan 8 amendment lifecycle
-- inv-zen-072 amendment audit chain anchor
+-  +  amendment lifecycle
+- invariant amendment audit chain anchor
 - /amendment-list, /amendment-show, /amendment-deny
 """
 

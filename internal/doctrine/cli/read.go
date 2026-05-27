@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — read.go (Plan 8 Phase I Tasks I-2 + I-3).
+// Package cli — read.go.
 //
 // Read group commands. All hit the daemon HTTP API (read-only).
 //
@@ -15,15 +15,15 @@
 // any pending changes that the operator has authored but not yet
 // reloaded. --project narrows to a specific project alias.
 //
-// History queries the Plan 5 eventlog via daemon /v1/doctrine/history;
+// History queries the eventlog via daemon /v1/doctrine/history;
 // filter values follow spec §6.1 enumeration.
 //
 // Diff invokes daemon-side canonical diff to keep parity with HTTP API
-// consumers (avoids Plan 4 v1's locally-computed diff that drifts from
+// consumers (avoids v1's locally-computed diff that drifts from
 // server-side canonicalisation).
 //
 // Validate reads TOML from disk and posts to daemon /v1/doctrine/validate;
-// --against-baseline triggers tighten-only check (inv-zen-136 surface).
+// --against-baseline triggers tighten-only check.
 package cli
 
 import (

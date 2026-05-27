@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18a_integration_test
 
 import (
@@ -21,7 +20,7 @@ import (
 // duplicates of the same env key win.
 //
 // The closed set is intentionally LARGER than just "hades" to allow for
-// Plan 18b future-skin support (e.g., Hermes built-in `default` or `gold`
+// future-skin support (e.g., Hermes built-in `default` or `gold`
 // surviving a non-bare invocation path). Today's wrapper has only one
 // path that sets the env (bare invocation → "hades"); all other paths
 // (passthrough, dashboard) do NOT set the env at all, in which case the
@@ -29,8 +28,8 @@ import (
 //
 // D-7's property: for any random pre-exec HERMES_SKIN value v, the
 // post-exec value as observed by the child binary is EITHER:
-//   - "hades" (when the bare-invocation path runs), OR
-//   - v itself (when a non-env-setting path runs).
+// - "hades" (when the bare-invocation path runs), OR
+// - v itself (when a non-env-setting path runs).
 //
 // In both cases, the wrapper does NOT corrupt v into some third value.
 // This is the integration-level invariant the wrapper must preserve.

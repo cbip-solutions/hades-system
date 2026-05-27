@@ -4,15 +4,15 @@
 // Classification rules (spec §7.3; HANDOFF.md "permanent-red trap"
 // context):
 //
-//   - success → bucket "success"
-//   - failure + infra_pattern regex match → bucket "infra"
-//   - failure + flake quarantine match → bucket "flake"
-//   - otherwise failure → bucket "real"
+// - success → bucket "success"
+// - failure + infra_pattern regex match → bucket "infra"
+// - failure + flake quarantine match → bucket "flake"
+// - otherwise failure → bucket "real"
 //
 // ClassifierVersion is bumped on any classification-rule change. Cache
 // entries embed this version; classifier rejects stale-version entries
-// (forces re-classification when rules evolve). Referenced by Phase G
-// G-6 compliance tests (inv-zen-311 versioning semantics).
+// (forces re-classification when rules evolve). Referenced by
+// G-6 compliance tests.
 //
 // Coverage target ≥90% per CLAUDE.md security/correctness-critical list.
 package ci
@@ -40,15 +40,15 @@ type CommitStatus struct {
 }
 
 // FlakeQuarantine is the parsed form of scripts/release-gates/flake-
-// quarantine.txt (Phase G G-3). Consumed by Classify (via the simple
-// []string list of test-name regexes) AND by the Phase G validator
+// quarantine.txt. Consumed by Classify (via the simple
+// []string list of test-name regexes) AND by the validator
 // script + compliance tests.
 //
 // File format (spec §G.3.1):
 //
-//	# Last review: 2026-05-15T00:00:00Z
-//	TestExampleFlaky 2026-05-08T00:00:00Z network-timeout
-//	TestAnotherFlaky 2026-05-10T00:00:00Z gha-runner-flake
+// # Last review: 2026-05-15T00:00:00Z
+// TestExampleFlaky 2026-05-08T00:00:00Z network-timeout
+// TestAnotherFlaky 2026-05-10T00:00:00Z gha-runner-flake
 //
 // Each entry MUST have exactly 3 whitespace-separated tokens:
 // test-name, quarantined-since (RFC3339), reason-tag.

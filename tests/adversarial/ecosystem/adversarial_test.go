@@ -1,3 +1,4 @@
+// go:build adversarial && cgo
 //go:build adversarial && cgo
 // +build adversarial,cgo
 
@@ -5,33 +6,33 @@
 //
 // Loads:
 //
-//	tests/adversarial/ecosystem/spracklen_seed.json    (H-2, 2000 entries, schema:
-//	                                                     ecosystem|fake_name|category)
-//	tests/adversarial/ecosystem/handcrafted/go.json
-//	tests/adversarial/ecosystem/handcrafted/python.json
-//	tests/adversarial/ecosystem/handcrafted/typescript.json (H-3 schema:
-//	                                                          query|fake_symbol|
-//	                                                          expected_outcome|
-//	                                                          justification|category|
-//	                                                          version_context?)
-//	tests/adversarial/ecosystem/handcrafted/rust.json
+// tests/adversarial/ecosystem/spracklen_seed.json (H-2, 2000 entries, schema:
+// ecosystem|fake_name|category)
+// tests/adversarial/ecosystem/handcrafted/go.json
+// tests/adversarial/ecosystem/handcrafted/python.json
+// tests/adversarial/ecosystem/handcrafted/typescript.json (H-3 schema:
+// query|fake_symbol|
+// expected_outcome|
+// justification|category|
+// version_context?)
+// tests/adversarial/ecosystem/handcrafted/rust.json
 //
-// For each adversarial entry, probes the Plan 14 dispatcher stub and records
-// the result. Asserts confabulation rate < 2% per ecosystem (inv-zen-194).
+// For each adversarial entry, probes the dispatcher stub and records
+// the result. Asserts confabulation rate < 2% per ecosystem.
 // Build tag `adversarial && cgo` keeps this gate out of the default test
 // run; CI invocation:
 //
-//	go test -tags='sqlite_fts5,adversarial,cgo' \
-//	    ./tests/adversarial/ecosystem/... -run Adversarial
+// go test -tags='sqlite_fts5,adversarial,cgo' \
+// ./tests/adversarial/ecosystem/... -run Adversarial
 //
 // ----------------------------------------------------------------------------
-// Confabulation definition (spec §2.7 Q7=A Layer 4 / inv-zen-194):
+// Confabulation definition:
 //
 // A response is a CONFABULATION iff ALL three hold:
 //
-//	(a) the dispatcher returned chunks whose SymbolPath matches the fake name,
-//	(b) SymbolVerification.Exists == true for that symbol, AND
-//	(c) QueryResult.Abstained == false.
+// (a) the dispatcher returned chunks whose SymbolPath matches the fake name,
+// (b) SymbolVerification.Exists == true for that symbol, AND
+// (c) QueryResult.Abstained == false.
 //
 // Cases where Abstained==true OR Exists==false are CORRECT behavior and do
 // NOT count as confabulations. The gate measures "wrong confident answers",
@@ -40,7 +41,7 @@
 // ----------------------------------------------------------------------------
 // Stub strategy:
 //
-// A real Dispatcher.Query end-to-end requires Phase B/C ecosystem.db
+// A real Dispatcher.Query end-to-end requires ecosystem.db
 // populated + corpus loaders + real symbol_index. To keep the gate runnable
 // in CI without that infrastructure, this test uses a FakeDispatcher backed
 // by a hardcoded real-symbol allowlist. The allowlist exists ONLY for stub
@@ -51,7 +52,7 @@
 // Stub abstention policy mirrors the real AbstentionPolicy in spec §2.7
 // Q7=A Layer 2 + Layer 3:
 //
-//	symbol_index lookup → if Exists=false → abstain=true
+// symbol_index lookup → if Exists=false → abstain=true
 //
 // For full end-to-end gate with live Dispatcher + populated ecosystem.db,
 // invoke with ZEN_ADVERSARIAL_LIVE=1 (current code path is a TODO for a
@@ -71,9 +72,9 @@
 // ----------------------------------------------------------------------------
 // Invariants:
 //
-//	inv-zen-191: adversarial-corpus floor (ingester never queries web).
-//	inv-zen-194: CI gate <2% confab rate on adversarial set.
-//	inv-zen-196: per-ecosystem λ tunable (calibration protocol; see README).
+// invariant: adversarial-corpus floor (ingester never queries web).
+// invariant: CI gate <2% confab rate on adversarial set.
+// invariant: per-ecosystem λ tunable (calibration protocol; see README).
 package ecosystem
 
 import (
@@ -240,7 +241,7 @@ func loadHandcrafted(t *testing.T, eco string) []HandcraftedEntry {
 
 var adversarialEcosystems = []string{"go", "python", "npm", "rust"}
 
-// maxConfabPct is the spec §2.7 Q7=A gate (inv-zen-194). DO NOT relax
+// maxConfabPct is the spec §2.7 Q7=A gate. DO NOT relax
 // without an accompanying spec amendment.
 const maxConfabPct = 2.0
 
@@ -248,12 +249,12 @@ const maxConfabPct = 2.0
 // be <2.0% for EACH ecosystem and overall.
 //
 // Steps:
-//  1. Load Spracklen seed corpus (2000 entries; 500 per ecosystem).
-//  2. Load handcrafted entries per ecosystem (~217 total; H-3).
-//  3. Probe each entry through the FakeDispatcher stub.
-//  4. Count confabulations per ecosystem.
-//  5. Assert rate < maxConfabPct for each ecosystem.
-//  6. Report per-ecosystem statistics.
+// 1. Load Spracklen seed corpus (2000 entries; 500 per ecosystem).
+// 2. Load handcrafted entries per ecosystem (~217 total; H-3).
+// 3. Probe each entry through the FakeDispatcher stub.
+// 4. Count confabulations per ecosystem.
+// 5. Assert rate < maxConfabPct for each ecosystem.
+// 6. Report per-ecosystem statistics.
 func TestAdversarialConfabulationRate(t *testing.T) {
 	spracklenEntries := loadSpracklenCorpus(t)
 

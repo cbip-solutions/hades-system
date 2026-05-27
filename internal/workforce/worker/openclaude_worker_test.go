@@ -1171,7 +1171,7 @@ func TestRunComputeCheckpointDeadlineFallback(t *testing.T) {
 // TestRunFinalizeAdvanceErrorPropagates is the I-7 regression: when
 // finalizeTask's Advance to StatusReview fails (disk full, FK
 // violation, transition conflict against a concurrently-mutated row),
-// Run MUST surface the error so Plan 5 orchestrator can detect that
+// Run MUST surface the error so orchestrator can detect that
 // the SharedTaskList row never reached the terminal state — without
 // this, the row would stay stuck in_progress despite the worker
 // reporting Success=true, and the orchestrator would never dispatch

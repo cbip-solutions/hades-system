@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -21,7 +22,7 @@ import (
 var ErrONNXRuntimeNotProvisioned = errors.New("ecosystem: no ONNX runner factory registered; run `zen docs reindex --bootstrap-models` or install onnxruntime shared library")
 
 // ONNXRunner is the narrow ONNX Runtime interface BGEReRankerV2M3 depends
-// on. The daemon (Phase F) registers a factory that constructs a concrete
+// on. The daemon registers a factory that constructs a concrete
 // runner against github.com/yalue/onnxruntime_go (or any chosen library);
 // the daemon owns the dependency, this file is library-agnostic.
 //

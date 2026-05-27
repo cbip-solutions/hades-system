@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package client — augment.go
 //
-// /v1/augment/probe?check=<name>. Phase C ships the daemon-side
-// handler; Phase E only consumes for doctor checks.
+// /v1/augment/probe?check=<name>. ships the daemon-side
+// handler; only consumes for doctor checks.
 //
-// Phase E also adds AugmentSummary (consumed by zen day's Augmentation
+// also adds AugmentSummary (consumed by zen day's Augmentation
 // section) wrapping the already-shipped /v1/augment/summary endpoint.
 package client
 

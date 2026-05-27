@@ -67,7 +67,7 @@ type BudgetEvent struct {
 }
 
 // BudgetClient wraps *Client to provide typed access to the daemon
-// /v1/budget/* endpoints (Phase G handler, Q6 C).
+// /v1/budget/* endpoints.
 //
 // Concurrency safe for concurrent use after construction. BudgetClient
 // holds only an immutable *Client reference; all methods are stateless

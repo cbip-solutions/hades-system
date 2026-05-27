@@ -1,35 +1,36 @@
 // SPDX-License-Identifier: MIT
 
+// go:build !race
 //go:build !race
 // +build !race
 
-// Package compliance — Plan 15 Phase I task I-8 compliance test for
+// Package compliance — task I-8 compliance test for
 // the canonical-docs hygiene gate.
 //
 // Asserts the verify-canonical-docs-hygiene gate passes against the live
-// repo. The gate enforces five sub-invariants (one per Phase I sub-task
+// repo. The gate enforces five sub-invariants (one per sub-task
 // I-1..I-5 anti-regression surface):
 //
-//	inv-zen-324: canonical-docs hygiene gate operational + composes into
-//	             the verify-release-gates aggregator additively (Phase G
-//	             owns the aggregator; this test asserts the per-gate
-//	             entry-point binary works in isolation).
-//	inv-zen-325: frontmatter `last_updated` ≤180 days for docs with YAML
-//	             frontmatter (currently: AGENTS.md).
-//	inv-zen-326: docs/operations/gitnexus-ux.md MUST NOT exist (Plan 15
-//	             decisión 6; Plan 19 Caronte replaces gitnexus entirely).
-//	inv-zen-327: Plan-N body audit — no references to retired/decommissioned
-//	             plan numbers in canonical docs except those on the allowlist
-//	             at tests/testdata/plan_n_audit_allowlist.txt.
-//	inv-zen-328: docs/decisions/_index.json entries length == count of
-//	             on-disk ADRs that have YAML frontmatter (substrate-honest
-//	             formulation: WalkAndEmitIndex intentionally skips legacy
-//	             ADRs without frontmatter per internal/adr/index.go:69-72;
-//	             entries-count parity gates the regen-adr-index workflow).
+// invariant: canonical-docs hygiene gate operational + composes into
+// the verify-release-gates aggregator additively (
+// owns the aggregator; this test asserts the per-gate
+// entry-point binary works in isolation).
+// invariant: frontmatter `last_updated` ≤180 days for docs with YAML
+// frontmatter (currently: AGENTS.md).
+// invariant: docs/operations/gitnexus-ux.md MUST NOT exist (
+// policy; Caronte replaces gitnexus entirely).
+// invariant: Plan-N body audit — no references to retired/decommissioned
+// plan numbers in canonical docs except those on the allowlist
+// at tests/testdata/plan_n_audit_allowlist.txt.
+// invariant: architecture records entries length == count of
+// on-disk ADRs that have YAML frontmatter (substrate-honest
+// formulation: WalkAndEmitIndex intentionally skips legacy
+// ADRs without frontmatter per internal/adr/index.go:69-72;
+// entries-count parity gates the regen-adr-index workflow).
 //
-// Numeric ID inv-zen-329 is the umbrella for the canonical-docs hygiene
-// gate per Plan 15 spec §K Batch-4 sparse allocation (324-329 reserved
-// for Phase I sub-task anti-regression invariants). The umbrella test
+// Numeric ID invariant is the umbrella for the canonical-docs hygiene
+// gate spec §K Batch-4 sparse allocation (324-329 reserved
+// for sub-task anti-regression invariants). The umbrella test
 // runs all five sub-invariants as table-driven subtests.
 //
 // Why this test exists: even with the bash wrapper at
@@ -39,9 +40,9 @@
 // without a refresh, (c) gitnexus-ux.md gets re-introduced, (d) Plan-N
 // references drift, or (e) ADR manifest goes stale.
 //
-// Composes into the verify-release-gates Makefile composite once Phase G
-// G-1 ships the aggregator (Phase I-8 ships the per-gate target standalone;
-// Phase G refinement absorbs additively).
+// Composes into the verify-release-gates Makefile composite once
+// G-1 ships the aggregator ( ships the per-gate target standalone;
+// refinement absorbs additively).
 package compliance
 
 import (
@@ -111,7 +112,7 @@ func TestInvZen329_CanonicalDocsHygiene(t *testing.T) {
 	})
 
 	t.Run("inv-zen-326_gitnexus_ux_absent", func(t *testing.T) {
-		// Decisión 6: Caronte = sole code-graph; gitnexus retired entirely.
+		// policy: Caronte = sole code-graph; gitnexus retired entirely.
 		// The file docs/operations/gitnexus-ux.md MUST NOT exist on disk.
 		p := filepath.Join(root, "docs", "operations", "gitnexus-ux.md")
 		if _, err := os.Stat(p); err == nil {

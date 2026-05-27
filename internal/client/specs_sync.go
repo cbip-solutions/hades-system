@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package client — specs_sync.go (Plan 14 Phase F Task F-5).
+// Package client — specs_sync.go.
 //
 // SpecsSync wires the operator-facing `zen specs sync` subcommand to the
 // daemon's POST /v1/knowledge/ecosystem/specs-sync route. The daemon-side
-// handler is wired in Phase G (Plan 14); F-5 declares the client-side
+// handler is wired in ; F-5 declares the client-side
 // method + wire types so the CLI surface is final-shape day 1 per project
 // doctrine (build the final product, not the stages — no MVP-then-extend).
 //
@@ -14,11 +14,11 @@
 //
 // Error mapping at the CLI layer (see classifySpecsError in internal/cli/
 // specs_sync.go):
-//   - 404 → ErrRecoverable (route not yet wired in Phase G; transient
-//     operator-recoverable state — phase F can ship before Phase G lands
-//     the handler).
-//   - 422 → ErrRecoverable (daemon rejected operator input).
-//   - 5xx / transport / decode → bare err (exit 2 unrecoverable).
+// - 404 → ErrRecoverable (route not yet wired in ; transient
+// operator-recoverable state — phase F can ship before lands
+// the handler).
+// - 422 → ErrRecoverable (daemon rejected operator input).
+// - 5xx / transport / decode → bare err (exit 2 unrecoverable).
 package client
 
 import "context"

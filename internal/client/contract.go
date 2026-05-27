@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package client — contract.go (Plan 20 Phase I).
+// Package client — contract.go.
 //
-// Thin pass-throughs for the daemon's Plan 20 caronte REST sub-routes:
-// /v1/mcpgateway/contract{,/validate,/why}. The daemon side translates each
-// into a JSON-RPC tools/call against the native Caronte engine (Plan 19 J
-// backed the caronte segment with the engine; Plan 20 Phase I extends the
-// engine with 8 NEW federation tools). CLI is operator-side; LLM traffic is
-// not involved (these are structural queries, not generation).
+// Thin pass-throughs for the daemon's caronte REST sub-routes:
+// /v1/mcpgateway/contract{,/validate,/why}. Contract reads proxy through the
+// native Caronte engine; manifest validation uses the daemon-wired federation
+// validator. CLI is operator-side; LLM traffic is not involved (these are
+// structural queries, not generation).
 //
-// inv-zen-088 single-egress preserved: every round-trip proxies through the
-// daemon. inv-zen-129 enforced: this file uses ONLY c.postJSON — never
+// invariant single-egress preserved: every round-trip proxies through the
+// daemon. invariant enforced: this file uses ONLY c.postJSON — never
 // net/http directly.
 package client
 
@@ -46,7 +45,8 @@ func (c *Client) Contract(ctx context.Context, req ContractRequest) (*ContractRe
 }
 
 type ContractValidateRequest struct {
-	Repo string `json:"repo"`
+	Repo        string `json:"repo"`
+	WorkspaceID string `json:"workspace_id,omitempty"`
 }
 
 type ContractValidateService struct {

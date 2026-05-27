@@ -4,16 +4,16 @@
 // manual restart of one MCP child managed by the daemon's mcpgateway.
 // Use this when a stuck child needs a manual nudge; daemon's normal
 // health-probe + rate-limited auto-restart governor handles the
-// majority of cases automatically (per inv-zen-168).
+// majority of cases automatically.
 //
-// Closed set of valid MCP names (matches Phase A's tool registry):
-//   - research     (code_graph + research MCP)
-//   - budget       (4-axis budget MCP)
-//   - audit        (Tessera-anchored audit MCP)
-//   - sshexec      (Plan 6 SSH executor)
-//   - codegen      (Plan 5 codegen MCP)
+// Closed set of valid MCP names:
+// - research (code_graph + research MCP)
+// - budget (4-axis budget MCP)
+// - audit (Tessera-anchored audit MCP)
+// - sshexec
+// - codegen
 //
-// caronte is in-process (Plan 19) — no restart-mcp entry; use 'zen doctor caronte' for engine health.
+// caronte is in-process — no restart-mcp entry; use 'zen doctor caronte' for engine health.
 package cli
 
 import (

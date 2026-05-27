@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package recognize — orchestrator (Plan 13 Phase B Task B6).
+// Package recognize — orchestrator.
 //
 // Implements the three-tier cascade per spec §2.4 Q4=B:
-//   - Tier 1: manifest detection (highest confidence)
-//   - Tier 2: framework config detection (deps-disambiguated)
-//   - Tier 3: glob byte-ranking (linguist-filtered)
+// - Tier 1: manifest detection (highest confidence)
+// - Tier 2: framework config detection (deps-disambiguated)
+// - Tier 3: glob byte-ranking (linguist-filtered)
 //
 // Tier 1 short-circuits Tier 3 when a single ecosystem has confidence ≥ 0.8.
 // Monorepo walk-UP + maturity probe always run when RootAbsPath is provided.

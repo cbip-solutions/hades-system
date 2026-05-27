@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 
-//go:build darwin
+// go:build darwin
 
 package main
 

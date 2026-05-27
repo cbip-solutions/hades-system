@@ -1,15 +1,15 @@
-// contract per spec §1 Q8 (Q9 D × Q8 A interaction). Phase G's
+// contract per spec §1 Q8 (Q9 D × Q8 A interaction).
 // CostGatingEngine reports cost pressure; FMV.Run MUST skip the
 // lease/apply/test cycle entirely under that regime and decide by
 // plurality on SupportingReviewers. The doctrine signal:
 //
-//   - lease/apply/test is the cost-dominant operation (one subprocess
-//     per lease + one `make test` per candidate).
-//   - under budget pressure, spending 5x cost to pick the best fix
-//     when plurality picks a good fix is the wrong tradeoff.
-//   - audit emits EvtFMVDegradedToPlurality with reason="cost_pressure"
-//     so the morning brief surfaces every cost-pressure-induced
-//     degradation (spec §11.2).
+// - lease/apply/test is the cost-dominant operation (one subprocess
+// per lease + one `make test` per candidate).
+// - under budget pressure, spending 5x cost to pick the best fix
+// when plurality picks a good fix is the wrong tradeoff.
+// - audit emits EvtFMVDegradedToPlurality with reason="cost_pressure"
+// so the morning brief surfaces every cost-pressure-induced
+// degradation (spec §11.2).
 //
 // Schema design: I-5 introduced a single typed event family
 // (FMVDegradedToPlurality) discriminated by the Reason field

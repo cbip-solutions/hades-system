@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_ecosystem.go
 //
-// Reports per-ecosystem DB size, package/version/chunk counts, inv-zen-199
-// 4-state budget classification, Plan 9 F CAS blobs shared, cron worker
+// Reports per-ecosystem DB size, package/version/chunk counts, invariant
+// 4-state budget classification, F CAS blobs shared, cron worker
 // PID, last upstream-poll + weekly-sweep timestamps, symbol-index health,
 // and verifier live-cmd health (go doc / pip show / npm view / cargo doc).
 //
-// Architecture follows Plan 9 Phase J Task J-2 (mirror of doctor_state.go):
+// Architecture follows Task J-2 (mirror of doctor_state.go):
 //
-//   - EcosystemProber interface declared in probe.go (CLI side)
-//   - RunEcosystemProbe orchestrator declared here
-//   - Production wiring in cmd/zen-swarm-ctld/main.go (Phase F daemon-init or
-//     follow-up); buildDoctorDeps currently returns DoctorDeps with
-//     EcosystemProber=nil — RunEcosystemProbe surfaces that as a non-nil
-//     error so mis-wired daemon compositions fail loudly at first call
-//     rather than emitting an empty report
-//   - Tests inject fakeEcosystemProberG4 (zero internal/research/ecosystem
-//     import; inv-zen-031 clean)
+// - EcosystemProber interface declared in probe.go (CLI side)
+// - RunEcosystemProbe orchestrator declared here
+// - Production wiring in cmd/zen-swarm-ctld/main.go ( daemon-init or
+// follow-up); buildDoctorDeps currently returns DoctorDeps with
+// EcosystemProber=nil — RunEcosystemProbe surfaces that as a non-nil
+// error so mis-wired daemon compositions fail loudly at first call
+// rather than emitting an empty report
+// - Tests inject fakeEcosystemProberG4 (zero internal/research/ecosystem
+// import; invariant clean)
 //
-// Boundary (inv-zen-031): this file imports only cli-internal types + cobra +
+// Boundary: this file imports only cli-internal types + cobra +
 // context + stdlib. Does NOT import internal/research/ecosystem concrete types.
 package cli
 
@@ -34,7 +34,7 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunEcosystemProbe orchestrates the ecosystem doctor check (Plan 14 Phase G
+// RunEcosystemProbe orchestrates the ecosystem doctor check (
 // Task G-4, spec §5 doctor surface).
 //
 // Delegates to DoctorDeps.EcosystemProber.Probe(ctx) within a 10-second
@@ -44,12 +44,12 @@ import (
 //
 // Returns a non-nil error if:
 //
-//   - ctx is already cancelled on entry (per probe.go contract — propagates
-//     the operator's interrupt signal up the call stack).
-//   - DoctorDeps.EcosystemProber is nil. The error message names the field
-//     so the operator's first remediation step is "wire
-//     DoctorDeps.EcosystemProber in cmd/zen-swarm-ctld/main.go" (matching
-//     the J-1/J-2 nil-deps error surface).
+// - ctx is already cancelled on entry (per probe.go contract — propagates
+// the operator's interrupt signal up the call stack).
+// - DoctorDeps.EcosystemProber is nil. The error message names the field
+// so the operator's first remediation step is "wire
+// DoctorDeps.EcosystemProber in cmd/zen-swarm-ctld/main.go" (matching
+// the J-1/J-2 nil-deps error surface).
 //
 // Typical result count: ≥15 (see EcosystemProber docstring in probe.go).
 // Callers MUST NOT branch on len(results) == N; the contract is "any non-zero

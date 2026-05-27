@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 package ecosystem
 
-// verifier_live_cmd.go — production LiveCmdRunner (Plan 14 Phase D
+// verifier_live_cmd.go — production LiveCmdRunner (
 // task D-5, Appendix A.3).
 //
 // Shells out to per-ecosystem package-manager / doc-tool binaries:
 //
-//	Go        `go doc -short <symbolPath>`
-//	Python    `python3 -c "<argv-passed script>" <module> <attr>`
-//	npm/TS:    `npm view -- <pkg> name version` (package-existence proxy)
-//	Rust      `cargo search --limit 1 -- <crate>` (crate-existence proxy)
+// Go `go doc -short <symbolPath>`
+// Python `python3 -c "<argv-passed script>" <module> <attr>`
+// npm/TS: `npm view -- <pkg> name version` (package-existence proxy)
+// Rust `cargo search --limit 1 -- <crate>` (crate-existence proxy)
 //
 // Production correctness: every Cmd is rebuilt under exec.CommandContext
 // so ctx cancellation aborts the in-flight process. Exit code 1 is
@@ -20,27 +20,27 @@ package ecosystem
 // Security hardening (D-5 fix-cycle 2 — verifier is the LLM-hallucination
 // anchor per USENIX Sec 2025 arXiv 2406.10279 §5):
 //
-//   - validateSymbolRef (in verifier.go) gates SymbolPath at the cascade
-//     entry. The regex restricts paths to ASCII identifiers separated by
-//     '.', '/' or ':'. Leading '-' is structurally rejected.
+// - validateSymbolRef (in verifier.go) gates SymbolPath at the cascade
+// entry. The regex restricts paths to ASCII identifiers separated by
+// '.', '/' or ':'. Leading '-' is structurally rejected.
 //
-//   - Python branch: script no longer interpolates user input via
-//     fmt.Sprintf into the `-c` body. Module + attr are passed via
-//     sys.argv[1..2] so a malicious SymbolPath cannot smuggle Python
-//     statements into the interpreter (CRIT-1).
+// - Python branch: script no longer interpolates user input via
+// fmt.Sprintf into the `-c` body. Module + attr are passed via
+// sys.argv[1..2] so a malicious SymbolPath cannot smuggle Python
+// statements into the interpreter (CRIT-1).
 //
-//   - npm + cargo branches: end-of-options '--' separator inserted
-//     before the user-derived package name. Combined with the regex
-//     above, this neutralises argv-flag injection (CRIT-2).
+// - npm + cargo branches: end-of-options '--' separator inserted
+// before the user-derived package name. Combined with the regex
+// above, this neutralises argv-flag injection (CRIT-2).
 //
-//   - Run() wraps ctx with WithTimeout(defaultLiveCmdTimeout) so a hung
-//     subprocess cannot block the dispatcher indefinitely even when the
-//     caller passes a non-deadlined ctx (IMP-1).
+// - Run() wraps ctx with WithTimeout(defaultLiveCmdTimeout) so a hung
+// subprocess cannot block the dispatcher indefinitely even when the
+// caller passes a non-deadlined ctx (IMP-1).
 //
-//   - Stdout + stderr are written into a *limitedBuffer capped at
-//     defaultLiveCmdOutputCap (1 MiB). Truncation is reported back
-//     to the runner contract via liveCmdResult.Truncated so the
-//     dispatcher can surface partial-output provenance (IMP-2).
+// - Stdout + stderr are written into a *limitedBuffer capped at
+// defaultLiveCmdOutputCap (1 MiB). Truncation is reported back
+// to the runner contract via liveCmdResult.Truncated so the
+// dispatcher can surface partial-output provenance (IMP-2).
 //
 // Sandboxing note: in restricted environments where the per-ecosystem
 // binary is not on PATH, defaultCmdBuilder still constructs the Cmd

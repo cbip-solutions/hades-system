@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package augment — audit_anchor.go ships Plan 9 Tessera-anchored leaf
+// Package augment — audit_anchor.go ships Tessera-anchored leaf
 // emission for the 7 augmentation event types.
 //
 // Single chokepoint for audit-chain emission from internal/augment/:
 // AuditAnchor.Emit(ctx, eventType, payload, projectID) (anchor, err).
 // All other augment files invoke this method exclusively.
 //
-// Anchor format (matches Plan 9 B chain.Anchor): <partition>:<eventID>:<recordHash>
+// Anchor format: <partition>:<eventID>:<recordHash>
 // where:
-//   - partition = YYYY_MM from clock.Now().UTC() (chain.PartitionID convention)
-//   - eventID   = "evt-<unix_nano>-<hex(8 random bytes)>"
-//   - recordHash = chain.Compute(prevHash, eventType, payload, unix_seconds)
+// - partition = YYYY_MM from clock.Now().UTC() (chain.PartitionID convention)
+// - eventID = "evt-<unix_nano>-<hex(8 random bytes)>"
+// - recordHash = chain.Compute(prevHash, eventType, payload, unix_seconds)
 //
 // package shipped a private `computeRecordHash` using NUL-byte
 // separators + hex-encoded nano timestamps; chain.Compute (the canonical

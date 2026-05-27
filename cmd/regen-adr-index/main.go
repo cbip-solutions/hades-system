@@ -1,32 +1,32 @@
 // SPDX-License-Identifier: MIT
-// Command regen-adr-index regenerates docs/decisions/_index.json and
-// docs/decisions/_graph.json from the on-disk ADR files under
-// docs/decisions/*.md.
+// Command regen-adr-index regenerates architecture records and
+// architecture records from the on-disk ADR files under
+// architecture records
 //
-// Wraps the Plan 9 Q7 A Structured MADR substrate (internal/adr) which
+// Wraps the Q7 A Structured MADR substrate (internal/adr) which
 // provides WalkAndEmitIndex + WriteIndex + WalkAndEmitGraph + WriteGraph
 // but no CLI verb. Closes the cmd/zen-swarm-ctld/main.go:973 audit
-// comment per Plan 15 Phase I-3 (decisión 9 canonical docs refresh).
+// comment
 //
-// Composes inv-zen-151 (regenerate-and-diff infrastructure) — does NOT
+// Composes invariant (regenerate-and-diff infrastructure) — does NOT
 // replace; ADDS a manifest-regen CLI surface that exercises the
 // existing internal/adr package.
 //
 // Usage
 //
-//	regen-adr-index [--root <path>] [--check]
+// regen-adr-index [--root <path>] [--check]
 //
 // Flags
 //
-//	--root <path>  Project root containing docs/decisions/ (default: ".")
-//	--check        Dry-run: emit diffs if _index.json / _graph.json would
-//	               change; non-zero exit if stale. Otherwise write files.
+// --root <path> Project root containing architecture records (default: ".")
+// --check Dry-run: emit diffs if _index.json / _graph.json would
+// change; non-zero exit if stale. Otherwise write files.
 //
 // Exit codes:
 //
-//	0  success (writes done, or --check found manifests fresh)
-//	1  generation error (parse failure, IO error)
-//	2  --check found stale manifest (used by CI)
+// 0 success (writes done, or --check found manifests fresh)
+// 1 generation error (parse failure, IO error)
+// 2 --check found stale manifest (used by CI)
 package main
 
 import (

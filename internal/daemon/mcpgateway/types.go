@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/daemon/mcpgateway/types.go
 //
-// Closed-enum types every later task in Phase A consumes. Defined here so
+// Closed-enum types every later task in consumes. Defined here so
 // the type surface is stable across A-2..A-7 commits (tasks build on each
 // other; types frozen at A-1 prevents drift).
 package mcpgateway
@@ -41,24 +41,24 @@ var (
 // ProjectsAliasResolver maps a project identifier (either a 64-char
 // canonical id_sha256, OR a human alias of the form "<name>-<sha8>") to
 // its canonical id_sha256. The interface lives in mcpgateway (not
-// internal/store) because inv-zen-031 forbids this package from importing
+// internal/store) because invariant forbids this package from importing
 // internal/store directly — the concrete implementation
 // (internal/daemon/projectsaliasadapter) is the sanctioned bridge that
 // queries the daemon's projects_alias table.
 //
 // Implementations MUST:
-//   - be safe for concurrent use (handleToolsCall serves multiple goroutines)
-//   - return the supplied id_sha256 as-is when input already matches the
-//     canonical 64-char lowercase hex shape (no DB round-trip needed)
-//   - exclude archived rows (archived_at IS NOT NULL) from successful
-//     resolution; archived aliases return ErrAliasNotFound
+// - be safe for concurrent use (handleToolsCall serves multiple goroutines)
+// - return the supplied id_sha256 as-is when input already matches the
+// canonical 64-char lowercase hex shape (no DB round-trip needed)
+// - exclude archived rows (archived_at IS NOT NULL) from successful
+// resolution; archived aliases return ErrAliasNotFound
 //
 // Caching is implementation-defined (the daemon-side adapter uses a
-// 60-second TTL LRU). Phase A's frozen contract — DO NOT drift the
-// signature or semantics: Phase C (caronte reindex) and Phase E (CLI
+// 60-second TTL LRU). frozen contract — DO NOT drift the
+// signature or semantics: (caronte reindex) and (CLI
 // router) consume this interface.
 //
-// inv-zen-277.
+// invariant.
 type ProjectsAliasResolver interface {
 	Resolve(ctx context.Context, idOrAlias string) (string, error)
 }
@@ -179,7 +179,7 @@ func (d Doctrine) Resolved() Doctrine {
 
 // MaxConcurrent returns the Q8=C concurrency ceiling for d. Other
 // doctrines fall through to default. The values are constants here so
-// that gateway tests do not require Plan 8 doctrine TOML loader; main.go
+// that gateway tests do not require doctrine TOML loader; main.go
 // override-injects values from the doctrine config at boot.
 func (d Doctrine) MaxConcurrent() int {
 	switch d.Resolved() {

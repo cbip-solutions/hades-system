@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — recap.go (Plan 7 Phase F Task F-11).
+// Package cli — recap.go.
 //
 // `zen recap --since <duration>` walks past zen day archives in
 // `~/.config/zen-swarm/zen-day-*.md` (and `-eod.md`) within the
@@ -20,10 +20,10 @@
 // (weeks); the spec advertises `--since 7d` as a working example, so
 // the parser is extended on top of stdlib units. Format:
 //
-//   - `<int>d` → N * 24h (1d, 7d, 30d).
-//   - `<int>w` → N * 7 * 24h (1w, 2w).
-//   - everything else → delegated to time.ParseDuration unchanged
-//     (so `24h`, `90m`, `1h30m`, `45s` continue to work).
+// - `<int>d` → N * 24h (1d, 7d, 30d).
+// - `<int>w` → N * 7 * 24h (1w, 2w).
+// - everything else → delegated to time.ParseDuration unchanged
+// (so `24h`, `90m`, `1h30m`, `45s` continue to work).
 //
 // Negatives, fractionals, bare numbers, and unknown unit suffixes all
 // error — same posture as stdlib, no silent zero-duration fallthrough.
@@ -32,10 +32,10 @@
 //
 // Two shapes match the glob `zen-day-*.md`:
 //
-//   - `zen-day-YYYY-MM-DD.md` (morning brief)
-//   - `zen-day-YYYY-MM-DD-eod.md` (EOD digest)
+// - `zen-day-YYYY-MM-DD.md` (morning brief)
+// - `zen-day-YYYY-MM-DD-eod.md` (EOD digest)
 //
-// Both are parsed via `time.Parse("2006-01-02", ...)` against the
+// Both are parsed via `time.Parse("2006-01-02",...)` against the
 // `YYYY-MM-DD` slice. Anything else (`zen-day-bogus.md`,
 // `zen-day-2026-13-99.md`, `zen-day-archive-foo.md`) is silently
 // skipped.

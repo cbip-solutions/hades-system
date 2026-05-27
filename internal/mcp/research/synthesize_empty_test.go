@@ -1,5 +1,5 @@
-// synthesize_empty_test.go — regression test for C-5 (CodeReview Plan 4
-// Phase I): the synthesizer MUST reject both nil AND empty-slice
+// synthesize_empty_test.go — regression test for C-5 (CodeReview
+// ): the synthesizer MUST reject both nil AND empty-slice
 // findings. Pre-fix the nil-only check let an empty []any{} sneak
 // through and burn LLM tokens on a synthesis with no input.
 package research

@@ -1,58 +1,58 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — events_p7.go (Plan 7 Phase I Task I-2).
+// Package handlers — events_p7.go.
 //
 // HandoffPosted endpoint — POST /v1/events/handoff_posted.
 //
-// The plugin `/handoff` slash command (Phase H) writes HANDOFF.md and
+// The plugin `/handoff` slash command writes HANDOFF.md and
 // then emits a structured HandoffPostedEvent via this endpoint so
-// Phase F's `zen day --eod` digest can render a ProjectStatusSection
+// `zen day --eod` digest can render a ProjectStatusSection
 // per project. The endpoint:
 //
-//  1. Parses application/json body matching eventlog.HandoffPostedEvent
-//     (8-field schema, Phase F-1 declaration).
-//  2. Validates per-field defense-in-depth Layer 1 (sha256-hex
-//     project_id, alias regex, RFC3339 timestamp non-zero, length caps,
-//     state enum).
-//  3. Persists via HandoffEmitter (Phase F-shipped concrete writer
-//     adapter; in production *eventlog.Emitter / a daemon adapter
-//     that wraps it).
-//  4. Returns 202 Accepted on success — the underlying eventlog
-//     emitter is asynchronous (writes per-project state.db on its own
-//     goroutine; Phase E aggregator hot-update flows via the existing
-//     notification pipeline).
+// 1. Parses application/json body matching eventlog.HandoffPostedEvent
+// .
+// 2. Validates per-field defense-in-depth Layer 1 (sha256-hex
+// project_id, alias regex, RFC3339 timestamp non-zero, length caps,
+// state enum).
+// 3. Persists via HandoffEmitter ( concrete writer
+// adapter; in production *eventlog.Emitter / a daemon adapter
+// that wraps it).
+// 4. Returns 202 Accepted on success — the underlying eventlog
+// emitter is asynchronous (writes per-project state.db on its own
+// goroutine; aggregator hot-update flows via the existing
+// notification pipeline).
 //
-// Status-code contract (consumed by zen plugin Phase H + future
+// Status-code contract (consumed by zen plugin + future
 // retry/backoff machinery):
 //
-//	202 — accepted, event_id returned. Plugin logs success + done.
-//	400 — bad JSON or per-field validation rejection. Plugin surfaces
-//	      the stable error code (`bad_json`, `bad_project_id`,
-//	      `bad_alias`, `bad_timestamp`, `summary_too_long`,
-//	      `commits_too_many`, `commit_too_long`, `bad_state`,
-//	      `blockers_too_many`, `blocker_too_long`,
-//	      `next_session_too_long`) so the operator can fix the
-//	      offending field.
-//	401 — bearer auth (RequireDaemonBearer middleware in server.go;
-//	      not the handler's responsibility — middleware short-circuits
-//	      before the handler sees the request).
-//	500 — emitter returned an opaque error (sql I/O, encoding failure).
-//	      The upstream error text is NOT leaked in the response (avoids
-//	      surfacing internal disk paths / SQLite errno strings).
-//	503 — HandoffEmitter() returned nil (daemon boot race window — the
-//	      Phase F emitter / its daemon-side adapter has not been wired
-//	      via SetHandoffEmitter yet). Plugin surfaces "feature not
-//	      configured" rather than retrying indefinitely.
+// 202 — accepted, event_id returned. Plugin logs success + done.
+// 400 — bad JSON or per-field validation rejection. Plugin surfaces
+// the stable error code (`bad_json`, `bad_project_id`,
+// `bad_alias`, `bad_timestamp`, `summary_too_long`,
+// `commits_too_many`, `commit_too_long`, `bad_state`,
+// `blockers_too_many`, `blocker_too_long`,
+// `next_session_too_long`) so the operator can fix the
+// offending field.
+// 401 — bearer auth (RequireDaemonBearer middleware in server.go;
+// not the handler's responsibility — middleware short-circuits
+// before the handler sees the request).
+// 500 — emitter returned an opaque error (sql I/O, encoding failure).
+// The upstream error text is NOT leaked in the response (avoids
+// surfacing internal disk paths / SQLite errno strings).
+// 503 — HandoffEmitter() returned nil (daemon boot race window — the
+// emitter / its daemon-side adapter has not been wired
+// via SetHandoffEmitter yet). Plugin surfaces "feature not
+// configured" rather than retrying indefinitely.
 //
-// inv-zen-031 boundary: this handler imports
+// invariant boundary: this handler imports
 // internal/orchestrator/eventlog value types only (HandoffPostedEvent
 // type alias). It NEVER imports internal/store directly — the daemon
 // adapter that satisfies HandoffEmitter is the single bridge to the
-// Phase F write path.
+// write path.
 //
-// Stage 2 review IMPORTANT #15 reconciliation (2026-05-01): an earlier
+// review IMPORTANT #15 reconciliation (2026-05-01): an earlier
 // draft of this file declared its own `HandoffPostedEvent` struct with
-// a "// TODO sync with Phase F when it lands" marker. That violated
-// the no-defer doctrine; Phase F-1 ships the canonical type before any
+// a "// TODO sync with when it lands" marker. That violated
+// the no-defer doctrine; ships the canonical type before any
 // phase needs it; the current file uses a Go type alias
 // (`type HandoffPostedEvent = eventlog.HandoffPostedEvent`) so the wire
 // schema, validation, and downstream digest all consume the same
@@ -78,7 +78,7 @@ type HandoffPostedEvent = eventlog.HandoffPostedEvent
 // Emit is asynchronous in spirit: callers MUST NOT assume the event
 // has been durably persisted at the moment Emit returns. The contract
 // is "accepted for emission" — if the underlying write fails, the
-// event surfaces as a Phase F audit anomaly + the handler returns 500.
+// event surfaces as a audit anomaly + the handler returns 500.
 type HandoffEmitter interface {
 	Emit(ctx context.Context, ev HandoffPostedEvent) (eventID string, err error)
 }
@@ -91,7 +91,7 @@ var hexRe = regexp.MustCompile(`^[0-9a-f]{64}$`)
 
 var aliasRe = regexp.MustCompile(`^[a-z0-9-]{1,64}$`)
 
-// validStates is the canonical 4-value Phase F autonomous-state enum
+// validStates is the canonical 4-value autonomous-state enum
 // (spec §3 Q3 + feedback_eventlog_handoff_event.md). MUST stay in sync
 // with internal/orchestrator/eventlog AutonomousState constants
 // (active|paused|idle|complete) — drift would let a malformed value

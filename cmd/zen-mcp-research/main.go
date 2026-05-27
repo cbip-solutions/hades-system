@@ -6,17 +6,17 @@
 //
 // post-review I-2 hardening:
 //
-//   - C-16: when the daemon socket is unreachable, the server
-//     previously swallowed the error and ran with NoOp adapters
-//     (always-allow budget, drop-on-floor audit). Operators believed
-//     the MCP was working when every gate was disabled. Now the
-//     binary refuses to start unless --allow-fallback=true is passed
-//     explicitly. With --allow-fallback the server emits a
-//     prominent WARN log on startup so the degraded posture cannot
-//     hide.
-//   - C-17: startup line records which adapters are wired (NoOp vs
-//     real) so log-grep can confirm the production wiring posture
-//     without inspecting the binary's behaviour.
+// - C-16: when the daemon socket is unreachable, the server
+// previously swallowed the error and ran with NoOp adapters
+// (always-allow budget, drop-on-floor audit). Operators believed
+// the MCP was working when every gate was disabled. Now the
+// binary refuses to start unless --allow-fallback=true is passed
+// explicitly. With --allow-fallback the server emits a
+// prominent WARN log on startup so the degraded posture cannot
+// hide.
+// - C-17: startup line records which adapters are wired (NoOp vs
+// real) so log-grep can confirm the production wiring posture
+// without inspecting the binary's behaviour.
 package main
 
 import (

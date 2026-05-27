@@ -3,8 +3,8 @@
 //
 // Endpoint pattern (research Topic 3 + GH REST docs):
 //
-//	GET /repos/{owner}/{repo}/commits?sha={branch}&per_page={n}
-//	GET /repos/{owner}/{repo}/commits/{sha}/check-runs
+// GET /repos/{owner}/{repo}/commits?sha={branch}&per_page={n}
+// GET /repos/{owner}/{repo}/commits/{sha}/check-runs
 //
 // Authentication GITHUB_TOKEN env, with GH_TOKEN fallback for GitHub Actions
 // and gh-compatible local shells (read once per call; ok to be unset for public

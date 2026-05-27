@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — docs_reindex.go (Plan 14 Phase F Task F-6).
+// Package cli — docs_reindex.go.
 //
 // `zen docs reindex` rebuilds or refreshes the ecosystem-docs corpus.
 // By default the daemon performs a delta sweep (only docs that changed
@@ -8,20 +8,20 @@
 //
 // Flags
 //
-//	--ecosystem string   restrict to a single ecosystem (go|python|...; empty = all)
-//	--version string     restrict to a single version (empty = current + 2 prior)
-//	--full               force a complete reindex (default = delta-only)
+// --ecosystem string restrict to a single ecosystem (go|python|...; empty = all)
+// --version string restrict to a single version (empty = current + 2 prior)
+// --full force a complete reindex (default = delta-only)
 //
 // Output is a compact summary line with counts of ingested packages /
 // chunks / symbols + elapsed wall-clock. The format is grep-able for
-// CI gates; JSON output is intentionally deferred until Phase G surfaces
+// CI gates; JSON output is intentionally deferred until surfaces
 // progress streaming.
 //
 // Exit codes (per spec §6.2):
 //
-//	0  success
-//	1  operator-recoverable: 404 (unknown ecosystem) / 422 (validation)
-//	2  unrecoverable: transport, decode, daemon 5xx
+// 0 success
+// 1 operator-recoverable: 404 (unknown ecosystem) / 422 (validation)
+// 2 unrecoverable: transport, decode, daemon 5xx
 package cli
 
 import (

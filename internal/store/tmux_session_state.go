@@ -2,27 +2,27 @@
 package store
 
 //
-// Schema lives in migrations/062_tmux_session_state.sql (Phase C-11 ships
+// Schema lives in migrations/062_tmux_session_state.sql ( ships
 // the migration alongside the CRUD). Master plan §"Migration numbering
 // coordination" originally reserved slot 060 for a JOINT priority_overrides
-// + tmux_session_state migration; Phase B-6 split the joint payload (its
+// + tmux_session_state migration; split the joint payload (its
 // own forensic explanation lives in migrations/060_priority_overrides.sql)
-// so Phase C-11 picks the next free number — 062. (Slot 061 is reserved
-// for the Phase G knowledge-index database, which lives on a separate
+// so picks the next free number — 062. (Slot 061 is reserved
+// for the knowledge-index database, which lives on a separate
 // SQLite file and does not contribute to daemon.db schemaVersion.)
 //
-// inv-zen-031 boundary: internal/tmuxlife MUST NOT import internal/store.
+// invariant boundary: internal/tmuxlife MUST NOT import internal/store.
 // The interface tmuxlife.SessionStore declares the daemon-side contract;
-// internal/daemon/handlers/sessions.go (Phase I) is the only package
+// internal/daemon/handlers/sessions.go is the only package
 // permitted to bridge tmuxlife.SessionStore to *store.Store via these
 // CRUD primitives.
 //
 // Time handling:
-//   - INTEGER columns store UTC unix seconds (per inv-zen-005).
-//   - The Go-side TmuxSessionStateRow uses time.Time (matches Session
-//     value-type in internal/tmuxlife/session.go).
-//   - last_attach_at = 0 sentinel means "never attached"; the Go layer
-//     translates 0 → time.Time{} so callers can use IsZero() consistently.
+// - INTEGER columns store UTC unix seconds.
+// - The Go-side TmuxSessionStateRow uses time.Time (matches Session
+// value-type in internal/tmuxlife/session.go).
+// - last_attach_at = 0 sentinel means "never attached"; the Go layer
+// translates 0 → time.Time{} so callers can use IsZero() consistently.
 
 import (
 	"database/sql"

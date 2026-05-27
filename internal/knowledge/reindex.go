@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package knowledge — cold-rebuild orchestrator + incremental hot-path
-// (Plan 7 Phase G Tasks G-9 + G-10).
+// .
 //
 // Spec reference:
-//   - docs/superpowers/plans/2026-05-01-plan-7-phase-G-knowledge.md
-//     §"Task G-9"  lines 3144-3348 (ColdRebuild — full index rebuild)
-//     §"Task G-10" lines 3349-3437 (IncrementalUpdate — single-file).
+// - internal design record
+// §"Task G-9" lines 3144-3348 (ColdRebuild — full index rebuild)
+// §"Task G-10" lines 3349-3437 (IncrementalUpdate — single-file).
 //
 // `ColdRebuild` runs at daemon boot (and on operator request via
-// `zen knowledge reindex --full` once the CLI lands in Phase L). It
+// `zen knowledge reindex --full` once the CLI lands in ). It
 // idempotently re-populates the index from the given sources by
 // chaining Scanner → Parser → Indexer. Per spec §4.5 the function
 // honors `ctx.Deadline()` and returns `context.DeadlineExceeded`
@@ -31,7 +31,7 @@
 // the watcher glue can classify and act.
 //
 // Boundary stdlib + database/sql only — no internal/store import,
-// no net/http (inv-zen-129 no remote queries). Reuses package-internal
+// no net/http. Reuses package-internal
 // `Scanner`, `Parse`, and `IndexDoc`; does NOT introduce new dependencies.
 package knowledge
 
@@ -58,26 +58,26 @@ func (re ReindexError) Unwrap() error { return re.Err }
 // sources — produces the same row count post-rebuild.
 //
 // Phases
-//  1. Pre-flight ctx check (caller may have pre-cancelled).
-//  2. DELETE FROM knowledge_meta + DELETE FROM knowledge_fts under
-//     ctx — atomic-enough for the WAL-mode single-writer contract.
-//  3. Scanner.Scan() over all sources; per-source errors filter:
-//     ErrFileTooLarge is dropped (scanner already reported it via
-//     ScannerError; surfacing again here would double-count). All
-//     other scanner errors flow into the returned slice.
-//  4. For each scanned file: ctx check, then Parse, then IndexDoc. Any
-//     ctx error here returns the partial reindexErrs along with the
-//     ctx err — the partially-rebuilt index is still consistent
-//     because IndexDoc uses a per-file transaction.
+// 1. Pre-flight ctx check (caller may have pre-cancelled).
+// 2. DELETE FROM knowledge_meta + DELETE FROM knowledge_fts under
+// ctx — atomic-enough for the WAL-mode single-writer contract.
+// 3. Scanner.Scan() over all sources; per-source errors filter:
+// ErrFileTooLarge is dropped (scanner already reported it via
+// ScannerError; surfacing again here would double-count). All
+// other scanner errors flow into the returned slice.
+// 4. For each scanned file: ctx check, then Parse, then IndexDoc. Any
+// ctx error here returns the partial reindexErrs along with the
+// ctx err — the partially-rebuilt index is still consistent
+// because IndexDoc uses a per-file transaction.
 //
 // Per spec §4.5, the function MUST honor ctx.Deadline(); the per-file
 // loop checks ctx.Err() before each Parse so the operator-configured
 // 30 min cap is respected with at most one file's worth of overrun.
 //
-// Per inv-zen-130: ColdRebuild does not directly touch
+// Per invariant: ColdRebuild does not directly touch
 // audit_chain_anchor / ecosystem_join_keys / caronte_symbol_refs —
-// it delegates to IndexDoc, which is already inv-zen-130-compliant
-// (G-5 enforces). Future Plan 9 / Plan 14 / Caronte writers fill those
+// it delegates to IndexDoc, which is already invariant-compliant
+// (G-5 enforces). Future / / Caronte writers fill those
 // columns at materialization time without rebuild churn.
 //
 // Goroutine-safety: SQLite WAL mode allows concurrent readers during
@@ -152,16 +152,16 @@ func ColdRebuild(ctx context.Context, db *sql.DB, sources []ScannerSource) ([]Re
 // zero, IndexDoc does not bind). Belt-and-suspenders test in
 // reindex_test.go locks this against parser regressions.
 //
-// Error classification (for the Phase I daemon glue):
-//   - parse-side errors (binary content, read I/O failure, frontmatter
-//     edge cases that surface as hard errors) wrap as
-//     "knowledge: incremental parse: %w". errors.Is(err, ErrBinaryContent)
-//     works through the wrap;
-//   - index-side errors (schema CHECK violations, sql driver failures,
-//     ctx cancellation) propagate IndexDoc's own wrappers
-//     ("knowledge: insert meta: %w", "knowledge: begin tx: %w", etc.)
-//     verbatim — no double-wrap. Callers can errors.Is against
-//     context.Canceled / sql.ErrTxDone / etc. without string matching.
+// Error classification:
+// - parse-side errors (binary content, read I/O failure, frontmatter
+// edge cases that surface as hard errors) wrap as
+// "knowledge: incremental parse: %w". errors.Is(err, ErrBinaryContent)
+// works through the wrap;
+// - index-side errors (schema CHECK violations, sql driver failures,
+// ctx cancellation) propagate IndexDoc's own wrappers
+// ("knowledge: insert meta: %w", "knowledge: begin tx: %w", etc.)
+// verbatim — no double-wrap. Callers can errors.Is against
+// context.Canceled / sql.ErrTxDone / etc. without string matching.
 //
 // Goroutine-safety: SQLite WAL mode allows concurrent readers during the
 // single-file upsert; concurrent IncrementalUpdate calls against the SAME

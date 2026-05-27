@@ -4,31 +4,31 @@
 // Inv-zen-199: ingest budget ≤60 GB ceiling enforced; ≥ceiling → block all
 // writes. State machine:
 //
-//	BudgetGreen    < 80% target (< 32 GB default) — no action
-//	BudgetYellow   80-100% target (32-40 GB) — log + alert only
-//	BudgetRed      100-150% target (40-60 GB) — block NEW ingest; updates OK
-//	BudgetOverflow ≥ 150% target (≥60 GB) — block ALL writes; require operator prune
+// BudgetGreen < 80% target (< 32 GB default) — no action
+// BudgetYellow 80-100% target (32-40 GB) — log + alert only
+// BudgetRed 100-150% target (40-60 GB) — block NEW ingest; updates OK
+// BudgetOverflow ≥ 150% target (≥60 GB) — block ALL writes; require operator prune
 //
 // BudgetMonitor is goroutine-safe: mu protects lastStatus + lastCheckedAt +
 // priorState. Producer/consumers (Dispatcher.Ingest path, cron worker) gate on
 // BlockNewIngest / BlockAllWrites before issuing any write op.
 //
-// Boundary (inv-zen-031): this file does NOT import internal/store or net/http.
+// Boundary: this file does NOT import internal/store or net/http.
 // Sizer interface abstracts filesystem stat; AuditEmitter abstracts chain
-// emission. Production wiring (Phase F daemon-init) injects DBSizer + a thin
-// adapter over Phase A's RAGAuditChainEmitter.
+// emission. Production wiring injects DBSizer + a thin
+// adapter over RAGAuditChainEmitter.
 //
 // Inv-zen-199 three-place triple:
 //
-//	(1) Runtime: BudgetMonitor.Check() returns BudgetStatus.BlockAllWrites at
-//	    Overflow; ClassifyBudgetState() is the single-source-of-truth for the
-//	    threshold semantics.
-//	(2) Property test: budget_monitor_test.go TestBudgetMonitor_PropertyState
-//	    Classification samples 1000 random sizes and verifies classification
-//	    against an independent piecewise re-derivation.
-//	(3) Integration test: TestBudgetMonitor_StateTransitionCoverage walks the
-//	    full state machine (Green→Yellow→Red→Overflow→Red→Green) with injected
-//	    Sizer + AuditEmitter and verifies state, gates, and audit emission.
+// (1) Runtime: BudgetMonitor.Check() returns BudgetStatus.BlockAllWrites at
+// Overflow; ClassifyBudgetState() is the single-source-of-truth for the
+// threshold semantics.
+// (2) Property test: budget_monitor_test.go TestBudgetMonitor_PropertyState
+// Classification samples 1000 random sizes and verifies classification
+// against an independent piecewise re-derivation.
+// (3) Integration test: TestBudgetMonitor_StateTransitionCoverage walks the
+// full state machine (Green→Yellow→Red→Overflow→Red→Green) with injected
+// Sizer + AuditEmitter and verifies state, gates, and audit emission.
 package ecosystem
 
 import (

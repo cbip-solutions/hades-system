@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_286_test.go
 //
-// Compliance gate for inv-zen-286 (v0.20.3 fix): every test-side subprocess
+// Compliance gate for invariant (v0.20.3 fix): every test-side subprocess
 // builder that compiles cmd/zen, cmd/hades, or cmd/zen-swarm-ctld with the
 // `sqlite_fts5` build tag MUST also pass the ncruces driver-rename ldflags
 // so the spawned binary does NOT panic with `sql: Register called twice
@@ -8,7 +8,7 @@
 //
 // Why: cmd/zen + cmd/hades + cmd/zen-swarm-ctld unconditionally import
 // both github.com/ncruces/go-sqlite3/driver AND github.com/mattn/go-sqlite3.
-// Each driver's init.0 calls database/sql.Register("sqlite3", ...) — the
+// Each driver's init.0 calls database/sql.Register("sqlite3",...) — the
 // second registration panics. The Makefile (LDFLAGS_DRIVER_RENAME) renames
 // the ncruces driver to `sqlite3_ncruces` so the two coexist cleanly.
 // Test-side subprocess builders that omitted the ldflag silently shipped
@@ -18,14 +18,14 @@
 //
 // Source-regex anchors over each builder file:
 //
-//   - tests/integration/migrate_claude_code_test.go::buildZenForMigrate
-//   - tests/integration/plan18a/helpers_test.go::buildZenBinary +
-//     buildHadesBinary
-//   - tests/integration/plan18b/helpers_test.go::buildZenBinary +
-//     buildHadesBinary + buildZenSwarmCtldBinary (already-canonical anchor)
-//   - tests/adversarial/migrate_python_import_correctness_test.go::buildZen
-//   - tests/adversarial/migrate_hostile_cc_test.go::buildZenAdv
-//   - cmd/zen/main_subprocess_test.go::helperBuildZen
+// - tests/integration/migrate_claude_code_test.go::buildZenForMigrate
+// - tests/integration/plan18a/helpers_test.go::buildZenBinary +
+// buildHadesBinary
+// - tests/integration/plan18b/helpers_test.go::buildZenBinary +
+// buildHadesBinary + buildZenSwarmCtldBinary (already-canonical anchor)
+// - tests/adversarial/migrate_python_import_correctness_test.go::buildZen
+// - tests/adversarial/migrate_hostile_cc_test.go::buildZenAdv
+// - cmd/zen/main_subprocess_test.go::helperBuildZen
 //
 // Each builder MUST contain the literal substring
 // `github.com/ncruces/go-sqlite3/driver.driverName=sqlite3_ncruces`.
@@ -34,7 +34,7 @@
 // MUST fail. Inline a `make test` smoke run on the affected suite to
 // confirm the live panic returns.
 //
-// inv-zen-286 (v0.20.3 fix).
+// invariant (v0.20.3 fix).
 package compliance
 
 import (

@@ -1,3 +1,4 @@
+// go:build compliance
 //go:build compliance
 // +build compliance
 

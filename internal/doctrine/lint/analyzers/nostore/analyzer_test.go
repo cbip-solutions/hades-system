@@ -60,9 +60,9 @@ func TestAnalyzerDocMentionsBoundary(t *testing.T) {
 // TestDefaultAllowlistContainsCanonicalAdapters asserts the compile-baked
 // default allowlist includes every known adapter package. If a future plan
 // adds a new adapter (e.g., internal/daemon/eventlogadapter), the allowlist
-// MUST be extended HERE — silent allowlist gap = silent inv-zen-133 violation.
+// MUST be extended HERE — silent allowlist gap = silent invariant violation.
 //
-// Phase L IMPORTANT #2 (pre-flight to Phase M dogfood): widened from 4 to
+// IMPORTANT #2: widened from 4 to
 // 13 entries to cover every legitimate store-consumer surfaced by `git grep`
 // over production code. See nostore/analyzer.go DefaultAllowlist() doc-comment
 // for the categorization (bridge adapters / top-level daemon / cmd entry /

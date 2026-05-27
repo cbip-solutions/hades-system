@@ -1,6 +1,6 @@
-//go:build chaos
+// go:build chaos
 
-// DST regression-seed replay tests (Plan 15 Phase F sub-task F-5).
+// DST regression-seed replay tests.
 //
 // The single tracked regression-seed manifest lives at
 // tests/chaos/dst/seeds/regression/seeds.txt. Initially empty; each

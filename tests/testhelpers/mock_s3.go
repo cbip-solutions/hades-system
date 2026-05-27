@@ -7,7 +7,7 @@
 //
 // Boundary clarification: tests/testhelpers/ MAY import internal/* packages.
 // This file does not — it depends only on stdlib (net/http/httptest +
-// crypto/md5 + encoding/xml). Invariant inv-zen-031 forbids the OPPOSITE
+// crypto/md5 + encoding/xml). Invariant invariant forbids the OPPOSITE
 // direction (specific internal/* packages — bypass / providers / dispatcher
 // / orchestrator / aggregator / embed / lint / doctrine / audit-recovery —
 // MUST NOT import internal/store).

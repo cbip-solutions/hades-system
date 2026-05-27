@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package cli — safetynet.go (Plan 5 Phase N N-5).
+// Package cli — safetynet.go.
 //
 // `zen safetynet` exposes the 4 self-hosting safety-net elements from
 // Q2 C (Anthropic Apr 23 substrate-regression evidence):
 //
-//	zen safetynet status                                # 4-element overview
-//	zen safetynet prev {install,show,exec <argv>}       # bin/zen-prev mgmt
-//	zen safetynet divergence {run,history --since <d>}  # config-divergence
-//	zen safetynet regression {show,query --author --since}
-//	zen safetynet drift {run,history --since <d>}       # doctrine-drift
+// zen safetynet status # 4-element overview
+// zen safetynet prev {install,show,exec <argv>} # bin/zen-prev mgmt
+// zen safetynet divergence {run,history --since <d>} # config-divergence
+// zen safetynet regression {show,query --author --since}
+// zen safetynet drift {run,history --since <d>} # doctrine-drift
 //
 // Constructor lives here; nested sub-namespaces split into sibling
 // files for readability (safetynet_prev.go etc.).

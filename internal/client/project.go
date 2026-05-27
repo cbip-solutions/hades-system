@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — project.go (Plan 7 Phase A Task A-8).
+// Package client — project.go.
 //
 // Three POST methods for the daemon's /v1/projects/* lifecycle surface
 // (doctor / archive / rm). Wire types mirror the daemon-side response

@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-// Package check declares the Plan 13 Phase F canonical Check interface
+// Package check declares the canonical Check interface
 // + DiagnosticResult value type consumed by internal/doctor/aggregator
 // and internal/doctor/fix.
 //
-// Phase F Task F1 ships the interface contract; existing Plan 1-9 per-flag
+// Task F1 ships the interface contract; existing per-flag
 // checks compose via adapter shims in internal/doctor/check/adapters.go
-// (NO behavioural change to Plan 1-9 subsystems).
+// .
 //
-// Boundary (inv-zen-031): this package consumes ONLY internal/audit/chain/
+// Boundary: this package consumes ONLY internal/audit/chain/
 // (typed event emit) + internal/doctrine/ (active doctrine accessor) +
 // internal/cli (existing ProbeResult/ProbeStatus types via the adapter
 // shim); it MUST NOT import internal/store.
 //
-// Stage 2 review IMPORTANT: the Check interface is the load-bearing
-// contract for Plan 13 doctor aggregator. Adding a method requires
+// review IMPORTANT: the Check interface is the load-bearing
+// contract doctor aggregator. Adding a method requires
 // updating ALL adapter shims (adapters.go) + every concrete Check impl
-// (per spec §1.3 "Phase F doctor extends Plan 1-9" + spec §3.3). The
+// . The
 // 6-method set (Name/Category/Description/IsDestructive/Run/Fix) is
 // locked-in post-F1; growth requires ADR amendment.
 //

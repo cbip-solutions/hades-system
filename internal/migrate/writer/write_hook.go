@@ -61,7 +61,8 @@ func writeHook(path string, e mapping.PlanEntry) error {
 func renderHookWrapper(event, sidecarBasename string) string {
 	ident := pyIdentFromCommandName(event)
 	sb := strings.Builder{}
-	sb.WriteString("# Imported by `zen migrate claude-code` (Plan 13 Phase E).\n")
+	sb.WriteString("# SPDX-License-Identifier: MIT\n")
+	sb.WriteString("# Imported by `zen migrate claude-code`.\n")
 	sb.WriteString("# Event: ")
 	sb.WriteString(event)
 	sb.WriteString(" (Hermes VALID_HOOKS canonical, post-SOTA-5).\n")

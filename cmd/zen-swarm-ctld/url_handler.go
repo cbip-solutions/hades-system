@@ -1,21 +1,21 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 
-// cmd/zen-swarm-ctld/url_handler.go — Plan 11 Phase D Task D-6.
+// cmd/zen-swarm-ctld/url_handler.go — Task D-6.
 //
 // zen:// URL scheme registration + parse + forward-to-daemon translation.
 //
 // Cross-platform shell:
-//   - parseZenURL — validates scheme + host + path; only zen://audit/<id>
-//     supported in Plan 11 (Plan 12 may add zen://kg, zen://session).
-//   - zenURLToHTTPPath — maps zen://audit/evt-0001 → /v1/audit/event/evt-0001
-//     for forward to daemon HTTP via UDS or localhost.
-//   - RegisterZenScheme — calls the build-tagged registerZenScheme; macOS
-//     uses LaunchServices via synthesised Info.plist + lsregister; Linux
-//     uses xdg-mime + .desktop file; other platforms return
-//     ErrUnsupportedPlatform.
+// - parseZenURL — validates scheme + host + path; only zen://audit/<id>
+// supported in
+// - zenURLToHTTPPath — maps zen://audit/evt-0001 → /v1/audit/event/evt-0001
+// for forward to daemon HTTP via UDS or localhost.
+// - RegisterZenScheme — calls the build-tagged registerZenScheme; macOS
+// uses LaunchServices via synthesised Info.plist + lsregister; Linux
+// uses xdg-mime +.desktop file; other platforms return
+// ErrUnsupportedPlatform.
 //
 // Best-effort registration: daemon bootstrap MUST NOT abort on failure
-// (operators can fall back to copy/paste of `zen audit event <id>` Phase E).
+// .
 package main
 
 import (

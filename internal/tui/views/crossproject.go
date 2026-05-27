@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package views — crossproject.go (Plan 12 Phase C Task C-7, F11 panel).
+// Package views — crossproject.go.
 //
-// Cross-project switcher. Live data from /v1/projects (Plan 7).
+// Cross-project switcher. Live data from /v1/projects.
 //
 // The struct name `CrossProjectView` (rather than `Projects` or
 // similar) was chosen to distinguish the F11 panel from the
 // `client.Project` DTO it consumes; the name also documents the
 // federated cross-project intent the panel represents — capa-firewall
-// projects are filtered server-side per inv-zen-163, F11 renders
+// projects are filtered server-side per invariant, F11 renders
 // whatever the daemon returns.
 package views
 

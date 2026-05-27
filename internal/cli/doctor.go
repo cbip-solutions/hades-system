@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor.go
 //
-// Phase L Task L-3 added the Bypass section (10 checks per spec §8.5)
-// to the existing Plan 1 environment + daemon report.
+// Task L-3 added the Bypass section (10 checks per spec §8.5)
+// to the existing environment + daemon report.
 //
 // research, budget, audit, sshexec, doctrine, mcps, caronte) plus
 // preserves the aggregate `zen doctor` invocation that runs ALL
 // sections in canonical order.
 //
-// Review I-2 (Stage 2): the doctor namespace now wires
+// Review I-2: the doctor namespace now wires
 // format.AttachFlags so `--json`, `--yaml`, `--quiet`, `--verbose`,
-// `--filter` work the same as every other Plan 4 namespace. Output
+// `--filter` work the same as every other namespace. Output
 // switches to a structured `[]CheckResult` slice when --format != table
 // so operators automating `zen doctor --json | jq` get the same
 // machine-parseable shape every namespace ships.

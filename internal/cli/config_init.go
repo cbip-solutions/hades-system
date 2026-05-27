@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// config_init.go — Plan 13 Phase C — `zen config init` global wizard.
+// config_init.go — — `zen config init` global wizard.
 //
 // Thin Cobra subcommand that calls internal/onboard/qna/Wizard.Run with
 // WizardKindGlobal, persists outputs (config.toml + doctrine clone + plugin
 // install), and emits evt.onboard.config_init.run via daemon HTTP audit endpoint.
 //
-// inv-zen-188: every TOML written here includes schema_version = "1.0".
-// inv-zen-190: plugin install path resolved by internal/onboard/plugin/.
-// inv-zen-031: this file NEVER imports internal/store.
+// invariant: every TOML written here includes schema_version = "1.0".
+// invariant: plugin install path resolved by internal/onboard/plugin/.
+// invariant: this file NEVER imports internal/store.
 
 package cli
 

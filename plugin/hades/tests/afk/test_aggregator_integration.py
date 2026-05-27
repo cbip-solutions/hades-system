@@ -148,7 +148,7 @@ async def test_audit_emitter_raises_on_4xx() -> None:
 
 @pytest.mark.asyncio
 async def test_audit_emitter_accepts_200_ok() -> None:
-    """Plan 4 Phase G ships 202; future endpoints may return 200 — accept both."""
+    """  ships 202; future endpoints may return 200 — accept both."""
     transport = httpx.MockTransport(
         lambda request: httpx.Response(200, json={"id": "evt-ok"})
     )
@@ -261,7 +261,7 @@ async def test_post_inbox_notification_raises_on_5xx() -> None:
 @pytest.mark.asyncio
 async def test_post_inbox_notification_handles_non_dict_response() -> None:
     """Defensive: if the daemon returns a non-dict body (legacy or
-    misconfigured response), the helper wraps it in a {raw: ...} dict
+    misconfigured response), the helper wraps it in a {raw:...} dict
     so callers see a stable shape."""
 
     def _handler(_: httpx.Request) -> httpx.Response:

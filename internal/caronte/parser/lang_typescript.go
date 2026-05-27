@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -18,7 +19,7 @@ import (
 
 // tsCaptures maps the typescript.scm @definition.<kind> capture names to
 // store.NodeKind. A TS class maps to KindStruct and a TS interface to
-// KindInterface (Phase A froze no "class" kind; the language column
+// KindInterface ( froze no "class" kind; the language column
 // disambiguates). Keys MUST match queries/typescript.scm.
 var tsCaptures = map[string]store.NodeKind{
 	"definition.function":  store.KindFunction,

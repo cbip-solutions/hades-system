@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package cli — state_xdg.go (Plan 13 Phase F7).
+// Package cli — state_xdg.go.
 //
 // `zen state list` + `zen state cleanup` are the XDG state-retention
-// surface per Q12=D + inv-zen-187. The manifest leaves
+// surface per Q12=D + invariant. The manifest leaves
 // (show/regenerate/verify/pin/history) live in state.go + sibling
 // files; this file isolates the XDG-state retention leaves.
 //
 // XDG state paths resolved per spec §2.12:
 //
-//	$XDG_STATE_HOME/zen-swarm   (default ~/.local/state/zen-swarm)
-//	$XDG_CACHE_HOME/zen-swarm   (default ~/.cache/zen-swarm)
+// $XDG_STATE_HOME/zen-swarm (default ~/.local/state/zen-swarm)
+// $XDG_CACHE_HOME/zen-swarm (default ~/.cache/zen-swarm)
 //
 // Retention defaults: doctor-backups 30d / migrate-backups 30d /
-// spike-artifacts indefinite / cache 7d. Plan 8 doctrine TOML override
-// at [state.backup_retention] tunes per-subsystem (Plan 14+ wiring
+// spike-artifacts indefinite / cache 7d. doctrine TOML override
+// at [state.backup_retention] tunes per-subsystem (+ wiring
 // loads the override from the active doctrine bundle).
 package cli
 

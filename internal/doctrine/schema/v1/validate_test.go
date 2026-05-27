@@ -220,7 +220,7 @@ func TestValidate_MultipleViolations_AllReported(t *testing.T) {
 	}
 }
 
-// TestValidate_GarbageDoctrineVersion_Rejected — Phase H amendment Apply
+// TestValidate_GarbageDoctrineVersion_Rejected — amendment Apply
 // path can construct a candidate Schema in-memory bypassing the parser, so
 // Validate() MUST itself enforce ValidateDoctrineVersion (reviewer
 // IMPORTANT #1). A non-semver value must surface as ErrValidationFailed.
@@ -263,9 +263,9 @@ func TestValidate_AlphaSuffix_Rejected(t *testing.T) {
 	}
 }
 
-// TestValidate_SuccessSetsValidatedTrue — per spec line 872 (inv-zen-140
+// TestValidate_SuccessSetsValidatedTrue — per spec line 872 (invariant
 // applierMustValidateTighten): Validate() MUST set Schema.Validated = true
-// on success. Phase L analyzer reads this flag to enforce that the
+// on success. analyzer reads this flag to enforce that the
 // amendment Apply path called Validate before ValidateTighten.
 func TestValidate_SuccessSetsValidatedTrue(t *testing.T) {
 	s := goodSchema()
@@ -292,10 +292,10 @@ func TestValidate_FailureLeavesValidatedFalse(t *testing.T) {
 }
 
 // TestValidate_FailureAfterPriorSuccess_ResetsValidated — guards the
-// state-machine drift surfaced by Plan 8 Phase A code re-review: a Schema
+// state-machine drift surfaced code re-review: a Schema
 // that passes Validate() (Validated=true), is then mutated invalid, and
 // re-validated MUST have Validated reset to false. Without an explicit
-// reset on the failure path the field would lie to the Phase H amendment
+// reset on the failure path the field would lie to the amendment
 // Apply path's runtime precondition check.
 func TestValidate_FailureAfterPriorSuccess_ResetsValidated(t *testing.T) {
 	s := goodSchema()

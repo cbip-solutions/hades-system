@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package auditadapter — Phase C extension.
+// Package auditadapter — extension.
 //
-// Phase B routes audit-chain row queries through the umbrella Adapter
-// type (the EventStore implementation). Phase C extends auditadapter
+// routes audit-chain row queries through the umbrella Adapter
+// type (the EventStore implementation). extends auditadapter
 // with PartitionSealStore for the cold-archive metadata write-back
 // path AND for the recovery package's read paths (verify-chain seal
 // walk + restore cold-archive meta lookup). Both types live in the
-// same package because they share the same inv-zen-031 bridge boundary
+// same package because they share the same invariant bridge boundary
 // (audit substrate ↔ internal/store).
 //
-// inv-zen-031 boundary check: this file imports BOTH database/sql AND
+// invariant boundary check: this file imports BOTH database/sql AND
 // the audit/recovery package. recovery does NOT import auditadapter
 // (recovery defines interface surfaces; auditadapter is one concrete
 // impl). The import direction is therefore one-way and cycle-free.
@@ -103,7 +103,7 @@ var ErrSealRowMissing = errors.New("auditadapter: partition seal row missing")
 // Implements recovery.SealRowReader (verify-chain) and the list-half of
 // recovery.SealStoreReader (restore).
 //
-// Schema note (Plan 9 Phase B migration 059): audit_partition_seals
+// Schema note: audit_partition_seals
 // does NOT carry a project_id column. The projectID parameter is
 // therefore a NO-OP filter at the storage layer in the current schema:
 // this method returns ALL seal rows across all projects. A future
@@ -111,26 +111,21 @@ var ErrSealRowMissing = errors.New("auditadapter: partition seal row missing")
 // here AND the test TestListSealsProjectIDIsCurrentlyNoOp which pins
 // the current behaviour.
 //
-// EventCount + LastID gap (Plan 9 cross-phase review C-fix-3 follow-up):
-// recovery.SealMeta now carries EventCount + LastID so verify_chain can
-// reconstruct the canonical seal payload bytes for witness signature
-// verification. Phase B migration 059 does NOT persist these on
-// audit_partition_seals; they are filled with zero / "" here. The
-// recovery layer treats unverifiable seals as a tamper signal
-// (intentional fail-closed under spec §1.Q10), so the immediate runtime
-// effect is that VerifyChain reports PathWitnessSignatureInvalid on
-// seals built via this path until a follow-up migration adds the two
-// columns + a SealPartition update populates them. Tracked separately
-// from C-fix-3 because it is a Phase B schema change, not a recovery
-// realignment.
+// EventCount + LastID are reconstructed from audit_events_partitions,
+// because migration 059 persists the monthly partition statistics in a
+// view rather than duplicating them on audit_partition_seals. This keeps
+// recovery.VerifyChain able to rebuild the canonical seal payload without
+// weakening the seal table schema.
 func (s *PartitionSealStore) ListSeals(
 	ctx context.Context,
 	projectID string,
 ) ([]recovery.SealMeta, error) {
-	const q = `SELECT partition_id, final_record_hash,
-	                  tessera_seal_leaf_id, daemon_witness_signature
-	           FROM audit_partition_seals
-	           ORDER BY sealed_at ASC`
+	const q = `SELECT s.partition_id, s.final_record_hash,
+	                  s.tessera_seal_leaf_id, s.daemon_witness_signature,
+	                  COALESCE(p.event_count, 0), COALESCE(p.last_id, '')
+	           FROM audit_partition_seals s
+	           LEFT JOIN audit_events_partitions p ON p.partition_id = s.partition_id
+	           ORDER BY s.sealed_at ASC`
 	rows, err := s.db.QueryContext(ctx, q)
 	if err != nil {
 		return nil, fmt.Errorf("auditadapter: list seals: %w", err)
@@ -144,10 +139,11 @@ func (s *PartitionSealStore) ListSeals(
 			&m.FinalRecordHash,
 			&m.TesseraSealLeafID,
 			&m.DaemonWitnessSignature,
+			&m.EventCount,
+			&m.LastID,
 		); err != nil {
 			return nil, fmt.Errorf("auditadapter: scan seal: %w", err)
 		}
-
 		out = append(out, m)
 	}
 	if err := rows.Err(); err != nil {

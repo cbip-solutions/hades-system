@@ -1,25 +1,25 @@
-//   - Task H-2: Structural assertion that the /zen-day slash command
-//     markdown contains the YAML frontmatter, the canonical CLI invo-
-//     cation (`bin/zen day`), every documented flag passthrough
-//     (`--eod`, `--force`, `--check-pending`), the documented behaviour
-//     marker ("morning brief"), and the output-render instruction.
-//   - Task H-5: End-to-end integration tests that exercise the slash
-//     command bash body against a stubbed `bin/zen` binary (PATH stub
-//     at <ProjectDir>/bin/zen; argv recorded to a log file the test
-//     reads). Seven scenarios cover default / --eod / --force /
-//     --check-pending / multi-flag passthrough / daemon-down abort /
-//     non-zero exit propagation per spec §2.6 + §6.8 + §6.9 + §3.4
-//     step 6.
+// - Task H-2: Structural assertion that the /zen-day slash command
+// markdown contains the YAML frontmatter, the canonical CLI invo-
+// cation (`bin/zen day`), every documented flag passthrough
+// (`--eod`, `--force`, `--check-pending`), the documented behaviour
+// marker ("morning brief"), and the output-render instruction.
+// - Task H-5: End-to-end integration tests that exercise the slash
+// command bash body against a stubbed `bin/zen` binary (PATH stub
+// at <ProjectDir>/bin/zen; argv recorded to a log file the test
+// reads). Seven scenarios cover default / --eod / --force /
+// --check-pending / multi-flag passthrough / daemon-down abort /
+// non-zero exit propagation per spec §2.6 + §6.8 + §6.9 + §3.4
+// step 6.
 //
-// The PATH-stub pattern lets Phase H exercise its slash command body
-// without depending on Phase F (zen day implementation) shipping. When
-// Phase F + Phase L land and the real bin/zen exists, these tests
+// The PATH-stub pattern lets exercise its slash command body
+// without depending on (zen day implementation) shipping. When
+// + land and the real bin/zen exists, these tests
 // continue to pass because the fake binary's contract (record argv,
 // exit with given code, print stdout / stderr) matches the real
 // binary's documented behaviour.
 //
-// Anti-pattern guard: this file also enforces inv-zen-004 (no Claude
-// attribution in production artifacts) and inv-zen-080 (no bare
+// Anti-pattern guard: this file also enforces invariant (no Claude
+// attribution in production artifacts) and invariant (no bare
 // provider-API URLs in slash command bodies — slash commands MUST
 // route through `bin/zen` so the daemon dispatcher is the single
 // egress point for LLM traffic) on the plugin slash command markdown.

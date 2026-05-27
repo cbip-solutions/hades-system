@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package cli — caronte.go (Plan v0.20.0 Phase C Task C-3; inv-zen-273).
+// Package cli — caronte.go.
 //
 // `zen caronte` is the operator-facing Caronte code-graph engine
-// subcommand group. Plan v0.20.0 Phase C ships `reindex` as the first
+// subcommand group. Plan v0.20.0 ships `reindex` as the first
 // leaf (closing the dangling reference in doctor_caronte.go:52); future
 // phases may add `health`, `query`, `stats` etc. as direct caronte ops
 // (current `zen codegraph` / `zen impact` / `zen context` / `zen wiki`
 // route via the mcpgateway; the `caronte` group is for operations that
 // do not need a Hermes session).
 //
-// Subcommand registration is in caronte_reindex.go (the only Phase C
+// Subcommand registration is in caronte_reindex.go (the only
 // leaf); the group constructor is here for the canonical
 // "<group>.go + <group>_<verb>.go" pattern (mirrors audit_chain.go /
 // audit_chain_verify.go).

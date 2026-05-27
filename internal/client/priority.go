@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package client — priority.go (Plan 7 Phase B Task B-10).
+// Package client — priority.go.
 //
 // Three methods that mirror the daemon's priority-override surface:
 //
-//	PriorityBoost   POST /v1/priority/boost
-//	PriorityReset   POST /v1/priority/reset
-//	PriorityList    GET  /v1/priority/list
+// PriorityBoost POST /v1/priority/boost
+// PriorityReset POST /v1/priority/reset
+// PriorityList GET /v1/priority/list
 //
 // Wire types align field-for-field with the daemon-side handler in
 // internal/daemon/handlers/priority.go (PriorityBoostRequest,

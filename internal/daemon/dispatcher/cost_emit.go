@@ -3,41 +3,41 @@
 //
 // AsyncEmitter is the production implementation of dispatcher.CostEmitter.
 // It buffers CostEvents in a bounded channel and forwards them, in order,
-// to a CostSink (Phase B-7 dispatcheradapter writes them to Phase F's
+// to a CostSink ( dispatcheradapter writes them to
 // cost_ledger). Async by design: the response path NEVER blocks on the
 // ledger writer — a slow or stalled sink degrades to event drops, never
 // to caller backpressure.
 //
 // Concurrency contract:
 //
-//   - Emit is non-blocking. If the buffer is full, the event is dropped
-//     and DroppedCount is incremented; a structured log line is emitted
-//     so operators can spot ledger backpressure.
+// - Emit is non-blocking. If the buffer is full, the event is dropped
+// and DroppedCount is incremented; a structured log line is emitted
+// so operators can spot ledger backpressure.
 //
-//   - Emit is safe to call concurrently with Close. The naive approach
-//     (select on `ch <- evt` + `<-done` + default) is broken: when ch is
-//     closed, the send case is "ready" in the select sense (it will run
-//     and panic), and Go may pick it over the done case. We therefore
-//     guard sends with a sync.RWMutex: Emit holds RLock around its
-//     closed-flag check + send; Close holds the exclusive Lock around
-//     setting closed=true and close(ch). While Emit holds RLock, Close
-//     cannot acquire Lock — so a send on a closed channel is
-//     structurally impossible.
+// - Emit is safe to call concurrently with Close. The naive approach
+// (select on `ch <- evt` + `<-done` + default) is broken: when ch is
+// closed, the send case is "ready" in the select sense (it will run
+// and panic), and Go may pick it over the done case. We therefore
+// guard sends with a sync.RWMutex: Emit holds RLock around its
+// closed-flag check + send; Close holds the exclusive Lock around
+// setting closed=true and close(ch). While Emit holds RLock, Close
+// cannot acquire Lock — so a send on a closed channel is
+// structurally impossible.
 //
-//     Close is also wrapped in sync.Once to make double-close a no-op
-//     (idempotent), avoiding the classic close-of-closed-channel panic
-//     when shutdown is retried.
+// Close is also wrapped in sync.Once to make double-close a no-op
+// (idempotent), avoiding the classic close-of-closed-channel panic
+// when shutdown is retried.
 //
-//   - Flush blocks until every event Emitted prior to the Flush call has
-//     been delivered to the sink. Implementation: an internal flush-
-//     request channel; the worker sees the request, drains everything
-//     currently buffered in `ch`, then acks the requestor. This gives
-//     the caller a true happens-before barrier without forcing the
-//     worker to terminate (unlike the plan-reference's "Flush == Close"
-//     conflation, which would prevent post-flush emission).
+// - Flush blocks until every event Emitted prior to the Flush call has
+// been delivered to the sink. Implementation: an internal flush-
+// request channel; the worker sees the request, drains everything
+// currently buffered in `ch`, then acks the requestor. This gives
+// the caller a true happens-before barrier without forcing the
+// worker to terminate (unlike the plan-reference's "Flush == Close"
+// conflation, which would prevent post-flush emission).
 //
-// Boundary (inv-zen-031): this file imports stdlib only. The CostSink
-// interface is the seam that lets dispatcheradapter (Phase B-7) bridge
+// Boundary: this file imports stdlib only. The CostSink
+// interface is the seam that lets dispatcheradapter bridge
 // to internal/store without violating the no-direct-store rule for the
 // dispatcher package.
 
@@ -51,7 +51,7 @@ import (
 )
 
 // CostSink is the persistence seam between AsyncEmitter and the cost
-// ledger. Phase B-7 dispatcheradapter implements it on top of
+// ledger. dispatcheradapter implements it on top of
 // internal/store; tests use an in-memory recorder. Insert MUST be safe
 // for sequential calls from the worker goroutine; the AsyncEmitter
 // itself never invokes it concurrently. Implementations MAY return an
@@ -88,7 +88,7 @@ type AsyncEmitter struct {
 // worker goroutine is started immediately; the caller must Close the
 // emitter on shutdown to drain pending events and release the worker.
 //
-// Pre  sink != nil
+// Pre sink != nil
 // Post returned emitter is ready to Emit / Flush / Close
 //
 // Passing a nil sink panics — same fail-fast posture as dispatcher.New:
@@ -114,12 +114,12 @@ func NewAsyncEmitter(sink CostSink, bufferSize int) *AsyncEmitter {
 
 // Emit forwards evt to the worker without blocking. Three outcomes:
 //
-//   - emitter has been Closed         -> silently drops, returns nil
-//   - buffer has slack                -> enqueues, returns nil
-//   - buffer is full                  -> increments droppedCount, logs a
-//     Warn, returns nil (still nil:
-//     the response path MUST NOT see
-//     ledger errors)
+// - emitter has been Closed -> silently drops, returns nil
+// - buffer has slack -> enqueues, returns nil
+// - buffer is full -> increments droppedCount, logs a
+// Warn, returns nil (still nil:
+// the response path MUST NOT see
+// ledger errors)
 //
 // The error return is reserved for future use (e.g., a strict-mode
 // emitter that surfaces ctx cancellation); today it is always nil so
@@ -190,18 +190,18 @@ func (e *AsyncEmitter) DroppedCount() int64 {
 //
 // Loop body:
 //
-//   - Receive an event from ch -> Insert into sink, log on error,
-//     continue (sink errors MUST NOT kill the worker; the cost ledger
-//     can have transient failures and we owe it best-effort delivery
-//     of subsequent events).
+// - Receive an event from ch -> Insert into sink, log on error,
+// continue (sink errors MUST NOT kill the worker; the cost ledger
+// can have transient failures and we owe it best-effort delivery
+// of subsequent events).
 //
-//   - Receive a flush request -> drains everything currently buffered
-//     (and any events that arrive during the drain); events Emitted
-//     strictly after the drain returns are not awaited. The drain uses
-//     a default branch in the inner select to detect "no more events
-//     buffered right now" and closes the requester's ack chan.
-//     Flush's contract is a happens-before for events submitted prior
-//     to the Flush call; anything arriving after is best-effort.
+// - Receive a flush request -> drains everything currently buffered
+// (and any events that arrive during the drain); events Emitted
+// strictly after the drain returns are not awaited. The drain uses
+// a default branch in the inner select to detect "no more events
+// buffered right now" and closes the requester's ack chan.
+// Flush's contract is a happens-before for events submitted prior
+// to the Flush call; anything arriving after is best-effort.
 func (e *AsyncEmitter) run() {
 	defer e.wg.Done()
 	for {

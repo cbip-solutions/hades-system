@@ -2,12 +2,12 @@
 // Package ecosystem — citation.go
 //
 // Grammar-constrained citation enforcement per spec §2.7 Q7=A Layer 1 +
-// §4.2 step 10 + inv-zen-194 (citation grammar tokens validated before
+// §4.2 step 10 + invariant (citation grammar tokens validated before
 // answer emission).
 //
 // # Citation grammar
 //
-//	token: '[doc_id:' integer ']'
+// token: '[doc_id:' integer ']'
 //
 // Each token references a QueryChunk.ChunkID present in the retrieval
 // result set. Tokens MAY repeat in the answer; duplicates dedupe to a
@@ -17,14 +17,14 @@
 //
 // # Modes (DoctrineProfile.CitationMode)
 //
-//	CitationMandatoryGrammar — at least one valid token required.
-//	  missing      → reject + (optionally) reprompt + (persistent) abstain.
-//	  all invalid  → reject as ErrCitationInvalidID (first offending id).
-//	  ≥1 valid     → accept, dropping the invalid ones silently.
-//	CitationOptional         — tokens optional; valid ones populate
-//	  Citations; absent tokens → Accepted=true with empty Citations.
-//	CitationNone             — citations off entirely; Validate always
-//	  accepts.
+// CitationMandatoryGrammar — at least one valid token required.
+// missing → reject + (optionally) reprompt + (persistent) abstain.
+// all invalid → reject as ErrCitationInvalidID (first offending id).
+// ≥1 valid → accept, dropping the invalid ones silently.
+// CitationOptional — tokens optional; valid ones populate
+// Citations; absent tokens → Accepted=true with empty Citations.
+// CitationNone — citations off entirely; Validate always
+// accepts.
 //
 // # Retry policy
 //
@@ -50,7 +50,7 @@
 // ValidateWithRetry are safe under concurrent use (the only mutation is
 // to the AnswerGenerator, whose concurrency is the caller's problem).
 //
-// # inv-zen-194
+// # invariant
 //
 // "Citation grammar tokens [doc_id:N] validated before answer emission"
 // — this file is the validator. Any code path emitting QueryResult must
@@ -83,7 +83,7 @@ type CitationConfig struct {
 }
 
 // AnswerGenerator is the abstraction over the LLM call that produces an
-// answer. The production implementation wraps the Plan 3 dispatcher
+// answer. The production implementation wraps the dispatcher
 // (Haiku / DeepSeek / Ollama backend with grammar-mask where supported).
 // Tests inject a fake returning canned outputs. Generate MUST honor
 // ctx cancellation; the reprompt string is "" on the first attempt and

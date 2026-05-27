@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18b_integration_test
 
 import (
@@ -9,27 +8,27 @@ import (
 )
 
 // TestPlan18bJInt3_LegacyZenSwarmStartNotRegistered asserts J-int-3: the
-// legacy slash command `/zen-swarm:start` is NOT registered post-Phase-B.
+// legacy slash command `/zen-swarm:start` is NOT registered post-
 //
 // Per spec §Q4 hard cutover: `/zen-swarm:*` removed; legacy invocations
-// MUST hit Hermes' built-in command-not-found path. Plan 18b does NOT
-// install a custom recovery-hint handler — that's Plan 18c's error catalog
+// MUST hit Hermes' built-in command-not-found path. does NOT
+// install a custom recovery-hint handler — that's error catalog
 // per spec §Q6.
 //
 // Strategy: Python subprocess scans __init__.py source text via regex (same
 // source-text approach as J-int-1/J-int-2) to assert:
-//   - "zen-swarm:start", "zen-swarm:handoff", "zen-swarm:install-mcps" NOT present.
-//   - NO ctx.register_command call uses a "zen-swarm:" prefix.
-//   - All 22 register_command calls use "hades:" prefix.
+// - "zen-swarm:start", "zen-swarm:handoff", "zen-swarm:install-mcps" NOT present.
+// - NO ctx.register_command call uses a "zen-swarm:" prefix.
+// - All 22 register_command calls use "hades:" prefix.
 //
 // NOTE(plan-15): Full runtime import requires hermes_plugins which is not available in
-// CI. Source-text scanning is the correct granularity per the Plan 18b
+// CI. Source-text scanning is the correct granularity per the
 // integration test strategy.
 //
 // Regression guard: this test catches a future agent re-introducing a
 // custom legacy-alias handler ("for backward compat") — which would
-// violate spec §Q4 hard cutover doctrine. Plan 18c will ADD curated
-// command-not-found hints via internal/cli/error_render.go; Plan 18b
+// violate spec §Q4 hard cutover doctrine. will ADD curated
+// command-not-found hints via internal/cli/error_render.go;
 // leaves the legacy form purely unregistered.
 func TestPlan18bJInt3_LegacyZenSwarmStartNotRegistered(t *testing.T) {
 	t.Parallel()

@@ -1,38 +1,38 @@
 // SPDX-License-Identifier: MIT
-// Package knowledge — hybrid query API for Plan 7 Phase G Task G-6.
+// Package knowledge — hybrid query API Task G-6.
 //
-// Spec reference: docs/superpowers/plans/2026-05-01-plan-7-phase-G-knowledge.md
+// Spec reference: internal design record
 // §"Task G-6" lines 2056–2616. Per spec §3.5 the query flow is:
 //
-//	parse query → apply structured filters first (uses indexes)
-//	             → FTS5 MATCH on filtered subset
-//	             → rank
-//	             → limit
-//	             → format
+// parse query → apply structured filters first (uses indexes)
+// → FTS5 MATCH on filtered subset
+// → rank
+// → limit
+// → format
 //
 // "Filter first" matters: filtering by project_alias + file_type +
 // last_modified on indexed columns reduces the candidate set BEFORE FTS5
 // runs, keeping query latency O(log N) on the indexed prefix even when
 // the corpus grows to 5k+ docs (per spec §6.6 expected ceiling).
 //
-// inv-zen-129 (spec §7.2): aggregator NEVER queries web sources directly.
+// invariant (spec §7.2): aggregator NEVER queries web sources directly.
 // Query.Remote=true short-circuits to ErrRemoteNotShipped; the CLI layer
-// (G-12) translates the sentinel to the deferred-message UX. Plan 14
+// (G-12) translates the sentinel to the deferred-message UX.
 // owns the eventual --remote ecosystem RAG implementation.
 //
-// inv-zen-130 (spec §7.2): the three extension-hook columns
+// invariant (spec §7.2): the three extension-hook columns
 // (audit_chain_anchor, ecosystem_join_keys, caronte_symbol_refs) ship
-// NULL by default in Plan 7. The --code-symbol path uses a JSON-LIKE
-// filter on caronte_symbol_refs; in the Plan 7 baseline the column is
+// NULL by default in The --code-symbol path uses a JSON-LIKE
+// filter on caronte_symbol_refs; in the baseline the column is
 // NULL for all rows so the filter matches zero rows. The path is
-// preserved so Caronte can populate rows post-Plan 7 without
-// retrofit migration (Plan 19).
+// preserved so Caronte can populate rows post- without
+// retrofit migration.
 //
-// Boundary (inv-zen-031 documented exception): this file imports only
+// Boundary: this file imports only
 // stdlib + database/sql + the package's own SQLite driver registered in
-// index.go. No net/http (no remote queries; inv-zen-129). No
+// index.go. No net/http. No
 // internal/store (separate-DB boundary documented in
-// docs/operations/knowledge-aggregator-boundary.md, Phase J).
+// docs/operations/knowledge-aggregator-boundary.md, ).
 package knowledge
 
 import (

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #   1. LICENSE                  MIT canonical text + Copyright "Ika el Zur"
 #   2. per-file SPDX headers    "SPDX-License-Identifier: MIT"
-#   - LICENSE contains "MIT" + "Ika el Zur" copyright (decisión 15 + sub-15-1).
+#   - LICENSE contains "MIT" + "Ika el Zur" copyright.
 set -euo pipefail
 
 REQUIRED_SURFACES=(

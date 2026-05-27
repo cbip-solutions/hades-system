@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — operator_gate.go (Plan 4 Phase G Task G-5).
+// Package handlers — operator_gate.go.
 //
 // OperatorGate state transition endpoints:
 //
-//	GET  /v1/workforce/gate/state  — read current gate state
-//	POST /v1/workforce/gate/pause  — transition to paused_descriptive|paused_quiet|paused_after_apply
-//	POST /v1/workforce/gate/resume — transition back to running
+// GET /v1/workforce/gate/state — read current gate state
+// POST /v1/workforce/gate/pause — transition to paused_descriptive|paused_quiet|paused_after_apply
+// POST /v1/workforce/gate/resume — transition back to running
 //
-// Gate states (per spec §2.1 + Phase E gate.go):
+// Gate states:
 //
-//	running | paused_descriptive | paused_quiet | paused_after_apply
+// running | paused_descriptive | paused_quiet | paused_after_apply
 //
 // Pause is idempotent: calling pause on an already-paused gate returns the
 // current state with HTTP 200 (no error). This prevents race-condition 4xx
 // responses when multiple callers (budget anomaly + operator CLI) both pause.
 //
-// inv-zen-031: never imports internal/workforce/gate directly.
+// invariant: never imports internal/workforce/gate directly.
 package handlers
 
 import (

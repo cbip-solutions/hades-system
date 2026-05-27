@@ -4,17 +4,17 @@
 // doctrine TOML + Hermes config equivalents.
 //
 // Sub-packages:
-//   - source/   read-only walkers for ~/.claude/ surfaces
-//   - mapping/  source-to-target mapping table (Plan 13 spec §2.4)
-//   - writer/   Hermes/zen target writers (atomic + backup)
-//   - golden/   regression fixtures
+// - source/ read-only walkers for ~/.claude/ surfaces
+// - mapping/ source-to-target mapping table
+// - writer/ Hermes/zen target writers (atomic + backup)
+// - golden/ regression fixtures
 //
-// Boundary (inv-zen-031): this package NEVER imports internal/store. Audit
+// Boundary: this package NEVER imports internal/store. Audit
 // events emit via internal/audit/chain/. Filesystem mutations only happen in
 // writer/; source/ and mapping/ are pure functions.
 //
 // Invariants implemented in this phase:
-//   - inv-zen-177 (backup-before-modify; writer/backup.go)
-//   - inv-zen-183 (CC permissions 1:1 preservation; writer/doctrine_toml.go)
-//   - inv-zen-185 (zen migrate --help grouped; ../cli/migrate.go)
+// - invariant (backup-before-modify; writer/backup.go)
+// - invariant (CC permissions 1:1 preservation; writer/doctrine_toml.go)
+// - invariant (zen migrate --help grouped;../cli/migrate.go)
 package migrate

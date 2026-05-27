@@ -1,15 +1,15 @@
-//go:build chaos
+// go:build chaos
 
-// Package chaos — p13_fix_interrupt_test.go (Plan 13 Phase F-tail
+// Package chaos — p13_fix_interrupt_test.go (
 // IMPORTANT 7 missing-tests completion).
 //
 // Chaos: a destructive Fix interrupted mid-apply (ctx cancellation
 // between backup and modify) MUST leave the system in a recoverable
 // state — never partial-write. Per spec §3.4 destructive-fix contract +
-// inv-zen-177 backup-before-modify substrate.
+// invariant backup-before-modify substrate.
 //
 // Build tag `chaos` excludes this file from default CI; opt-in via
-// `make test-chaos` or `go test -tags=chaos ./tests/chaos/...`.
+// `make test-chaos` or `go test -tags=chaos./tests/chaos/...`.
 package chaos
 
 import (

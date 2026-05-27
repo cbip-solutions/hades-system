@@ -1,16 +1,16 @@
-// Package compliance — inv-zen-125: urgent severity ALWAYS bypasses
+// Package compliance — invariant: urgent severity ALWAYS bypasses
 // quiet hours when QuietHours.UrgentBypass is enabled (the Slack DND
 // pattern; default true). The only legitimate way to silence urgents
 // is QuietConfig.UrgentPauseUntil — the operator escape hatch
 // surfaced by the `zen quiet --urgent-pause` CLI.
 //
-// Spec §1 Q12 B + §7.2 inv-zen-125 wording (Plan 7 Phase E):
+// Spec §1 Q12 B + §7.2 invariant wording:
 //
-//	"Urgent severity emits at any wallclock time regardless of
-//	QuietHours.{Start, End, WeekendExtended} when UrgentBypass=true.
-//	The only carve-out is QuietConfig.UrgentPauseUntil; while now <
-//	UrgentPauseUntil, urgent defers like every other severity. After
-//	the pause expires, urgent emits again on the next ShouldEmit call."
+// "Urgent severity emits at any wallclock time regardless of
+// QuietHours.{Start, End, WeekendExtended} when UrgentBypass=true.
+// The only carve-out is QuietConfig.UrgentPauseUntil; while now <
+// UrgentPauseUntil, urgent defers like every other severity. After
+// the pause expires, urgent emits again on the next ShouldEmit call."
 //
 // This test is the cross-package, boundary-side property witness:
 // the in-package coverage in internal/inbox/quiet_hours_test.go locks
@@ -23,22 +23,22 @@
 //
 // Coverage matrix:
 //
-//	(a) 24-hour × 7-day × 4-min sweep: urgent MUST emit at every
-//	    wallclock under the canonical config (Start=21h, End=9h,
-//	    WeekendExtended=true, UrgentBypass=true) — 672 assertions.
-//	(b) Operator escape hatch: while UrgentPauseUntil is in the
-//	    future, urgent defers; once it expires, urgent emits again.
-//	(c) Per-project override: when a project's QuietHours specifies
-//	    a never-quiet window (Start == End), urgent emits regardless
-//	    of bypass-enabled state — proves PerProject lookup precedes
-//	    the bypass branch in ShouldEmit.
-//	(d) UrgentBypass=false override: when the operator explicitly
-//	    opts out of bypass (rare but supported), urgent observes
-//	    quiet hours like every other tier — closing the loop on
-//	    "always" being a function of the bypass flag, not a
-//	    structural guarantee.
+// (a) 24-hour × 7-day × 4-min sweep: urgent MUST emit at every
+// wallclock under the canonical config (Start=21h, End=9h,
+// WeekendExtended=true, UrgentBypass=true) — 672 assertions.
+// (b) Operator escape hatch: while UrgentPauseUntil is in the
+// future, urgent defers; once it expires, urgent emits again.
+// (c) Per-project override: when a project's QuietHours specifies
+// a never-quiet window (Start == End), urgent emits regardless
+// of bypass-enabled state — proves PerProject lookup precedes
+// the bypass branch in ShouldEmit.
+// (d) UrgentBypass=false override: when the operator explicitly
+// opts out of bypass (rare but supported), urgent observes
+// quiet hours like every other tier — closing the loop on
+// "always" being a function of the bypass flag, not a
+// structural guarantee.
 //
-// Boundary (inv-zen-031): this test imports only internal/inbox +
+// Boundary: this test imports only internal/inbox +
 // stdlib. internal/inbox owns the predicate; the adapter layer is
 // not touched (ShouldEmit is pure).
 //

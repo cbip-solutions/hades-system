@@ -2,55 +2,55 @@
 // internal/research/ecosystem/dispatcher.go
 //
 //
-// This is the load-bearing centerpiece of Phase D: every D-task (D-1..D-8 +
-// D-10..D-12 + Phase A audit emitter + Phase C indexer + Phase E version
-// detector + Plan 8 doctrine accessor) is wired here into a single
+// This is the load-bearing centerpiece of : every D-task (D-1..D-8 +
+// D-10..D-12 + audit emitter + indexer + version
+// detector + doctrine accessor) is wired here into a single
 // goroutine-safe Query method.
 //
 // Goroutine model:
-//   - Step 5 fans out 1..4 parallel goroutines (per ecosystem); all other steps
-//     execute in the caller goroutine.
-//   - All Dispatcher dependencies are injected via Options at construction and
-//     never mutated post-init; the Dispatcher is safe for concurrent Query calls.
-//   - Per-call state (latency map, fused candidates, validation result) lives on
-//     the call's stack — no shared mutable state between concurrent Query calls.
+// - Step 5 fans out 1..4 parallel goroutines (per ecosystem); all other steps
+// execute in the caller goroutine.
+// - All Dispatcher dependencies are injected via Options at construction and
+// never mutated post-init; the Dispatcher is safe for concurrent Query calls.
+// - Per-call state (latency map, fused candidates, validation result) lives on
+// the call's stack — no shared mutable state between concurrent Query calls.
 //
 // 14-step orchestration (verbatim spec §4.2 + plan-file §D-9):
 //
-//	 1. version-context detection cascade (5-layer; Phase E VersionDetector)
-//	 2. doctrine resolve → DoctrineProfile (Plan 8 Accessor; req.Doctrine
-//	    override applied per-call without mutating package-level state)
-//	 3. router.Classify(query) → single | top-2 | broadcast (D-1+D-2)
-//	 4. audit.Emit(EvtRAGQuery, 92)
-//	 5. parallel fan-out: per-eco BinaryTop200 ∥ FTS5Top200 → local RRF top-50
-//	 6. cross-eco RRF k=60 weighted-by-confidence (D-10 FuseWeighted)
-//	 7. audit.Emit(EvtRAGRetrieval, 93)
-//	 8. BGE-reranker-v2-m3 → top-K per profile.MaxResults (D-3; fallback D-4)
-//	 9. Bayesian abstention μ−λσ (D-6); if abstain → emit EvtRAGAbstain + return
-//	10. hydrate chunks + AnswerGenerator + citation grammar validation 3-retry
-//	    (D-7); on persistent failure → emit EvtRAGAbstain + return.
-//	    On accept: emit EvtRAGCitation (gated by doctrine).
-//	11. verifier.Verify() 3-stage cascade (D-5); emit EvtRAGVerify
-//	12. capa-firewall refuse-on-unverified gate (RefuseOnUnverified + !Strict);
-//	    if fire → emit EvtRAGAbstain + return.
-//	13. LLM-judge re-pass (max-scope only via DoctrineProfile.LLMJudgeEnabled;
-//	    D-8 HaikuLLMJudge); on reject → emit EvtRAGAbstain + return.
-//	14. audit.Emit(EvtRAGAnswer, 97) → return QueryResult.
+// 1. version-context detection cascade
+// 2. doctrine resolve → DoctrineProfile ( Accessor; req.Doctrine
+// override applied per-call without mutating package-level state)
+// 3. router.Classify(query) → single | top-2 | broadcast (D-1+D-2)
+// 4. audit.Emit(EvtRAGQuery, 92)
+// 5. parallel fan-out: per-eco BinaryTop200 ∥ FTS5Top200 → local RRF top-50
+// 6. cross-eco RRF k=60 weighted-by-confidence (D-10 FuseWeighted)
+// 7. audit.Emit(EvtRAGRetrieval, 93)
+// 8. BGE-reranker-v2-m3 → top-K per profile.MaxResults (D-3; fallback D-4)
+// 9. Bayesian abstention μ−λσ (D-6); if abstain → emit EvtRAGAbstain + return
+// 10. hydrate chunks + AnswerGenerator + citation grammar validation 3-retry
+// (D-7); on persistent failure → emit EvtRAGAbstain + return.
+// On accept: emit EvtRAGCitation (gated by doctrine).
+// 11. verifier.Verify() 3-stage cascade (D-5); emit EvtRAGVerify
+// 12. capa-firewall refuse-on-unverified gate (RefuseOnUnverified + !Strict);
+// if fire → emit EvtRAGAbstain + return.
+// 13. LLM-judge re-pass (max-scope only via DoctrineProfile.LLMJudgeEnabled;
+// D-8 HaikuLLMJudge); on reject → emit EvtRAGAbstain + return.
+// 14. audit.Emit(EvtRAGAnswer, 97) → return QueryResult.
 //
-// Owned invariants (Phase D D-9):
-//   - inv-zen-200 partial: 4-goroutine fan-out result merge is deterministic
-//     given fixed embedder / fixed classifier (verified by
-//     TestDispatcher_FanOut_Determinism_InvZen200). Full enforcement at Phase H.
-//   - inv-zen-197 partial: 6 query-side events emit in canonical order
-//     (Query → Retrieval → Citation → Verify → Abstain → Answer). Full
-//     chain-consistency property test at Phase H.
-//   - inv-zen-203 partial: live-fallback hook surface present (full impl D-11).
-//   - inv-zen-205 partial: doctrine strictness knob (LLMJudgeEnabled +
-//     RefuseOnUnverified + AuditEmissionLevel + CitationMode) applied per-call.
+// Owned invariants:
+// - invariant partial: 4-goroutine fan-out result merge is deterministic
+// given fixed embedder / fixed classifier (verified by
+// TestDispatcher_FanOut_Determinism_InvZen200). Full enforcement at
+// - invariant partial: 6 query-side events emit in canonical order
+// (Query → Retrieval → Citation → Verify → Abstain → Answer). Full
+// chain-consistency property test at
+// - invariant partial: live-fallback hook surface present (full impl D-11).
+// - invariant partial: doctrine strictness knob (LLMJudgeEnabled +
+// RefuseOnUnverified + AuditEmissionLevel + CitationMode) applied per-call.
 //
-// inv-zen-031 boundary: this file does NOT import internal/store; it consumes
+// invariant boundary: this file does NOT import internal/store; it consumes
 // per-ecosystem retrieval via the aggregatorAdapter interface (concrete impl
-// lives at indexer.go in Phase C, IndexerQueryAdapter satisfied by *Indexer).
+// lives at indexer.go in, IndexerQueryAdapter satisfied by *Indexer).
 
 package ecosystem
 
@@ -93,7 +93,7 @@ type auditEmitterAdapter interface {
 // dependencies (fail-loud at startup vs surface mid-Query as nil-deref panic).
 //
 // Optional fields (LLMJudge, Accessor, AuditChain): nil acceptable for
-// phased-construction during testing. Production wiring at Phase F satisfies
+// phased-construction during testing. Production wiring at satisfies
 // all fields.
 type Options struct {
 	Embedder Embedder
@@ -137,10 +137,10 @@ type Dispatcher struct {
 // NewDispatcher validates Options and constructs a Dispatcher.
 //
 // Validation
-//   - Embedder non-nil + NOT NoopEmbedder (production embedder required)
-//   - Router non-nil
-//   - Reranker non-nil (test code can inject NoopReranker via Options)
-//   - Verifier + AbstentionPolicy non-nil (security-critical paths)
+// - Embedder non-nil + NOT NoopEmbedder (production embedder required)
+// - Router non-nil
+// - Reranker non-nil (test code can inject NoopReranker via Options)
+// - Verifier + AbstentionPolicy non-nil (security-critical paths)
 //
 // Other dependencies (LLMJudge, AuditChain, AnswerGenerator,
 // DoctrineAccessor) may be nil at construction time and wired by the

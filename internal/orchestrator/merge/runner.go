@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-// Package merge — Phase D Task D-1.
+// Package merge — Task D-1.
 //
 // runner.go ships the Runner type's PUBLIC SURFACE — interface + Deps +
 // Config + sentinel + DefaultStragglerKillGracePeriod constant + the
 // NewRunner constructor. The goroutine fanout body lands in D-2 (per-
 // candidate goroutines + sibling isolation + all-fail aggregation) and
-// the straggler-kill supervisor lands in D-3 (inv-zen-108 SIGTERM →
+// the straggler-kill supervisor lands in D-3 (invariant SIGTERM →
 // 30s grace → SIGKILL escalation).
 //
 // This is an explicit multi-task TDD progression: D-1 ships the surface
 // so engine.go (D-4..D-7) can reference the types while D-2/D-3 fill
-// the body in the same Phase D.
+// the body in the same
 //
 // Layout note: Runner is the per-candidate fanout coordinator that
 // engine.go consumes via the lowercase narrow runnerClient interface
-// (master plan §"Cross-phase interface vs struct collisions"). Phase D
+// (master plan §"Cross-phase interface vs struct collisions").
 // engine constructs from this concrete; tests inject fakes.
 
 package merge
@@ -33,7 +33,7 @@ var ErrAllCandidatesFailed = errors.New("merge: all candidates failed")
 const DefaultStragglerKillGracePeriod = 30 * time.Second
 
 // Runner is the per-candidate goroutine fanout coordinator. engine.go
-// (Phase D pipeline Step 5) calls RunCandidates with the validated
+// calls RunCandidates with the validated
 // MergeCandidate slice and the BaselineRunner-derived passingSet; the
 // runner spawns one goroutine per candidate, collects outcomes via a
 // per-candidate result channel, and returns the slice in input order
@@ -48,7 +48,7 @@ const DefaultStragglerKillGracePeriod = 30 * time.Second
 // All-fail aggregation: if every returned CandidateOutcome has
 // HardRejected==true, RunCandidates wraps ErrAllCandidatesFailed via
 // %w. Partial-fail returns the per-candidate slice with failed entries
-// flagged via HardRejected — scoring (Phase C) filters those before
+// flagged via HardRejected — scoring filters those before
 // ranking.
 type Runner interface {
 	RunCandidates(ctx context.Context, candidates []MergeCandidate, baseSHA string, passingSet PassingSet, mode Mode, suite TestSuite) ([]CandidateOutcome, error)
@@ -98,28 +98,28 @@ func NewRunner(deps RunnerDeps, cfg RunnerConfig) (Runner, error) {
 //
 // Contract details (Q6 C + Q8 D):
 //
-//   - Empty input: returns (nil, error). Caller bug; phase D engine.go
-//     pre-validates 1..5 candidates per spec §4.1, this is defense-in-depth.
-//   - outcomes preserve input order (outcomes[i] aligns with candidates[i])
-//     so Phase C scoring can correlate by index against MergeRequest.Candidates.
-//   - Per-candidate context.WithCancel(ctx) gives the D-3 supervisor a
-//     handle to cancel a single candidate without disturbing siblings.
-//     Parent ctx cancellation still propagates (operator Ctrl-C / engine
-//     deadline) — that is the intentional cross-sibling cancellation path.
-//   - Per-candidate `done` channel is closed once Run returns; D-3's
-//     straggler supervisor consumes it as the stop signal so it does not
-//     fire SIGKILL escalation against a goroutine that completed normally.
-//   - On goroutine-level panic: outcomes[idx] is set to HardRejected with
-//     Reason="runner_panic: <recovered>". The recover keeps siblings alive
-//     (inv-zen-005 sibling isolation contract).
-//   - On Candidate.Run returning err: outcomes[idx].HardRejected = true and
-//     Reason = "runner_err: " + err.Error() (only if Reason was empty —
-//     respect any reason the runner already populated for diagnostics).
-//   - All-fail aggregation: when no outcome has HardRejected==false,
-//     emit EvtMergeAllCandidatesFailed (best-effort; emit-error is
-//     observability, never returned), then wrap ErrAllCandidatesFailed via
-//     %w with "%d/%d candidates failed" tail so subscribers see both the
-//     sentinel root AND the contextual detail via errors.Unwrap.
+// - Empty input: returns (nil, error). Caller bug; phase D engine.go
+// pre-validates 1..5 candidates per spec §4.1, this is defense-in-depth.
+// - outcomes preserve input order (outcomes[i] aligns with candidates[i])
+// so scoring can correlate by index against MergeRequest.Candidates.
+// - Per-candidate context.WithCancel(ctx) gives the D-3 supervisor a
+// handle to cancel a single candidate without disturbing siblings.
+// Parent ctx cancellation still propagates (operator Ctrl-C / engine
+// deadline) — that is the intentional cross-sibling cancellation path.
+// - Per-candidate `done` channel is closed once Run returns; D-3's
+// straggler supervisor consumes it as the stop signal so it does not
+// fire SIGKILL escalation against a goroutine that completed normally.
+// - On goroutine-level panic: outcomes[idx] is set to HardRejected with
+// Reason="runner_panic: <recovered>". The recover keeps siblings alive
+// .
+// - On Candidate.Run returning err: outcomes[idx].HardRejected = true and
+// Reason = "runner_err: " + err.Error() (only if Reason was empty —
+// respect any reason the runner already populated for diagnostics).
+// - All-fail aggregation: when no outcome has HardRejected==false,
+// emit EvtMergeAllCandidatesFailed (best-effort; emit-error is
+// observability, never returned), then wrap ErrAllCandidatesFailed via
+// %w with "%d/%d candidates failed" tail so subscribers see both the
+// sentinel root AND the contextual detail via errors.Unwrap.
 func (r *runner) RunCandidates(ctx context.Context, candidates []MergeCandidate, baseSHA string, passingSet PassingSet, mode Mode, suite TestSuite) ([]CandidateOutcome, error) {
 	if len(candidates) == 0 {
 		return nil, fmt.Errorf("merge.runner.RunCandidates: empty candidate slice")
@@ -132,7 +132,7 @@ func (r *runner) RunCandidates(ctx context.Context, candidates []MergeCandidate,
 		wg.Add(1)
 		go func(idx int, cand MergeCandidate) {
 			defer wg.Done()
-			// Sibling isolation (inv-zen-005 / Q8 D): a panic in this
+			// Sibling isolation: a panic in this
 			// goroutine MUST surface as a HardRejected outcome rather
 			// than crashing the runner or aborting siblings.
 			defer func() {

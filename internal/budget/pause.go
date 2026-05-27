@@ -5,16 +5,16 @@
 // engine guards.
 //
 // State semantics:
-//   - Trigger writes a row; auto_resume_at = 0 means "indefinite,
-//     requires explicit Resume"; positive value is the unix-ms moment
-//     after which the scheduler clears the row automatically.
-//   - Resume clears the row.
-//   - IsPaused returns true iff a row exists AND (auto_resume_at == 0
-//     OR auto_resume_at > now).
-//   - StartScheduler runs a goroutine that polls every `cadence` and
-//     clears expired rows. Stops on ctx.Done().
+// - Trigger writes a row; auto_resume_at = 0 means "indefinite,
+// requires explicit Resume"; positive value is the unix-ms moment
+// after which the scheduler clears the row automatically.
+// - Resume clears the row.
+// - IsPaused returns true iff a row exists AND (auto_resume_at == 0
+// OR auto_resume_at > now).
+// - StartScheduler runs a goroutine that polls every `cadence` and
+// clears expired rows. Stops on ctx.Done().
 //
-// Persist-first ordering (per Phase E I-6 lesson): Trigger calls
+// Persist-first ordering: Trigger calls
 // PauseSet BEFORE returning success; IsPaused reflects the persisted
 // state. There is no in-memory cache that can diverge from storage.
 //
@@ -25,7 +25,7 @@
 // serialised by the underlying store; the final state reflects the last
 // write (typical SQLite UPSERT semantics).
 //
-// inv-zen-079 anchor lives in enforce.go (precedence sort); this file
+// invariant anchor lives in enforce.go (precedence sort); this file
 // is the storage + state side of the same invariant.
 package budget
 
@@ -80,7 +80,7 @@ func NewPauser(store BudgetStore) *Pauser {
 // Tests MUST call SetClock before launching any goroutine that reads
 // from the Pauser; production code MUST NOT call SetClock at all
 // (the constructor seeds time.Now and that is the only production
-// clock). This matches the precedent set by Phase E
+// clock). This matches the precedent set by
 // Gate.SetRollupWindow.
 func (p *Pauser) SetClock(clock func() time.Time) {
 	if clock == nil {

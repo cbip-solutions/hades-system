@@ -1,38 +1,38 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — hermes_probe.go (Plan 12 Phase E MAJOR-2 fix).
+// Package handlers — hermes_probe.go.
 //
 // GET /v1/hermes/probe?check=<name> — diagnostic probe surface for the
-// F9 Skills panel (Plan 12 Phase C) and `zen doctor hermes` CLI.
+// F9 Skills panel and `zen doctor hermes` CLI.
 //
-// Background — Plan 11 substrate gap closure:
+// Background — substrate gap closure:
 //
 // (internal/client/hermes.go::HermesProbe). The daemon side was scoped
-// for follow-up but never landed; the route returned 404. Plan 12 Phase
+// for follow-up but never landed; the route returned 404. Phase
 // C C-7 wired the F9 Skills panel through that client wrapper, where
 // it manifested as "F9 Skills panel returns 404" in production.
 //
 // This handler closes the gap. Each probe check is a static introspection
 // against the daemon-known state:
 //
-//   - "plugin_installed"     — Hermes plugin (`zen-swarm`) is installable;
-//     status reflects whether the plugin manifest path is reachable on
-//     the operator's host. Since the daemon cannot detect Hermes's
-//     plugin runtime state at HEAD (a future Plan 13 'zen migrate' wires
-//     it via socket), the probe always returns "ok" with a detail
-//     describing the install path. Real state is surfaced via the
-//     `zen-swarm:install-mcps` slash command output.
-//   - "session_active"       — A Hermes session has registered with the
-//     daemon via /v1/sessions (Plan 4 Phase D). Status=ok when at least
-//     one active session exists; warn otherwise.
-//   - "transport_reachable"  — The /v1/messages transport (Plan 3
-//     dispatcher) is wired (Orchestrator() non-nil). Status=ok when
-//     wired; warn otherwise.
+// - "plugin_installed" — Hermes plugin (`zen-swarm`) is installable;
+// status reflects whether the plugin manifest path is reachable on
+// the operator's host. Since the daemon cannot detect Hermes's
+// plugin runtime state at HEAD (a future 'zen migrate' wires
+// it via socket), the probe always returns "ok" with a detail
+// describing the install path. Real state is surfaced via the
+// `zen-swarm:install-mcps` slash command output.
+// - "session_active" — A Hermes session has registered with the
+// daemon via /v1/sessions. Status=ok when at least
+// one active session exists; warn otherwise.
+// - "transport_reachable" — The /v1/messages transport (
+// dispatcher) is wired (Orchestrator() non-nil). Status=ok when
+// wired; warn otherwise.
 //
 // Unknown probe names return ok with a hint string — same posture as
-// BypassDoctor (Plan 2). 405 on non-GET.
+// BypassDoctor. 405 on non-GET.
 //
-// Cherry-pick narrative: this commit completes the Plan 11 substrate gap
-// inherited by Plan 12 Phase C; could be cherry-picked to a Plan 11.1
+// Cherry-pick narrative: this commit completes the substrate gap
+// inherited; could be cherry-picked to a
 // backport branch if needed.
 
 package handlers

@@ -16,7 +16,7 @@
 // orchestrator.Verdict at wiring time. Mirrors the master C-2 single-egress
 // pattern exactly.
 //
-// inv-zen-031 family: the inv-zen-235 compliance scan asserts that
+// invariant family: the invariant compliance scan asserts that
 // internal/orchestrator has ZERO internal/caronte imports. This file's design
 // is the reason that invariant can be asserted — the interface here is the
 // narrow seam the scanner validates.
@@ -37,6 +37,6 @@ type BlastRadiusProvider interface {
 	// BlastRadius scores a change (changed fully-qualified symbols + their
 	// files) for projectID. An error means the score is unavailable; callers
 	// degrade (they do NOT block the build on a scorer failure — mirrors the
-	// proxy escalate() degradation in Plan 11/J).
+	// proxy escalate() degradation in ).
 	BlastRadius(ctx context.Context, projectID string, changedSymbols, changedFiles []string) (Verdict, error)
 }

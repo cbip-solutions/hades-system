@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package views — codegraph_keys.go (Plan 12 Phase C Task C-3).
+// Package views — codegraph_keys.go.
 //
 // Sub-panel state machine + Update key handlers for the F7 Code
 // Graph panel. Split from codegraph.go to keep render + key paths
 // readable independently. Both files compile as one package.
 //
-// Privacy / inv-zen-163: the [C] cross-project key checks
+// Privacy / invariant: the [C] cross-project key checks
 // doctrineMode; "capa-firewall" disables the federated query
 // (daemon-side enforcement double-anchored at retrieval boundary).
 package views

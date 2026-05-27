@@ -158,9 +158,9 @@ func TestNewPoolDuplicates(t *testing.T) {
 
 // TestPoolChooseEmptyFamiliesPanics verifies the S-1 fix: when an internal
 // caller bypasses NewPool and constructs a Pool with an empty families
-// slice, Choose() MUST panic with an inv-zen-080 message rather than
+// slice, Choose() MUST panic with an invariant message rather than
 // returning an empty string. The pre-fix defensive empty-string return
-// hid the inv-zen-080 violation — Choose's contract is "always returns a
+// hid the invariant violation — Choose's contract is "always returns a
 // disjoint reviewer family"; returning "" violated that contract silently
 // and the empty string would propagate as an empty X-Zen-Family-Constraint
 // header, deferring the failure to the dispatcher (review S-1, max-scope:

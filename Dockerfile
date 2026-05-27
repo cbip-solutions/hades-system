@@ -2,7 +2,7 @@
 #
 # Multi-stage build for the zen-swarm v1.0+ public OSS release.
 #
-#   Builder stage  golang:1.25-bookworm  + build-essential for CGO
+#   Builder stage  golang:1.26-bookworm  + build-essential for CGO
 #                  (sqlite-vec + Plan-9 stubs + Caronte tree-sitter per
 #                   decisión 6).
 #   Runtime stage  gcr.io/distroless/cc-debian12  (minimal glibc +
@@ -11,7 +11,7 @@
 # Multi-arch: docker buildx build --platform linux/amd64,linux/arm64
 # produces a multi-arch manifest. The release.yml docker job invokes
 # this Dockerfile after the goreleaser release matrix completes; the
-# image is pushed to ghcr.io/hades-system/hades-system:v1.0.0 +
+# image is pushed to ghcr.io/cbip-solutions/hades-system:v1.0.0 +
 # :v1.0 + :latest with cosign-keyless signature + SLSA L2 attestation
 # attached to the OCI manifest digest. inv-zen-298 (Docker image multi-
 # arch published with sigstore signature).
@@ -36,9 +36,9 @@
 # (UID 65532); we run as nonroot:nonroot per CIS Docker Benchmark §4.1.
 
 # ---------------------------------------------------------------------------
-# Builder stage — Go 1.25 + build-essential for CGO
+# Builder stage — Go 1.26 + build-essential for CGO
 # ---------------------------------------------------------------------------
-FROM golang:1.25-bookworm AS builder
+FROM golang:1.26-bookworm AS builder
 
 # Build-essential is required because CGO is enabled for THREE in-tree
 # native sources:
@@ -129,7 +129,7 @@ RUN if [ "${TARGETARCH}" = "${BUILDARCH}" ] || [ -z "${BUILDARCH}" ]; then \
 FROM gcr.io/distroless/cc-debian12:latest
 
 # OCI standard labels (consumed by `docker inspect` + GHCR UI).
-LABEL org.opencontainers.image.source="https://github.com/hades-system/hades-system"
+LABEL org.opencontainers.image.source="https://github.com/cbip-solutions/hades-system"
 LABEL org.opencontainers.image.description="Multi-project agentic development orchestrator"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.vendor="hades-system"
@@ -145,7 +145,7 @@ COPY --from=builder /src/LICENSE /usr/share/doc/zen-swarm/LICENSE
 COPY --from=builder /src/README.md /usr/share/doc/zen-swarm/README.md
 
 # Default entry point: zen-swarm-ctld (the daemon). The default CMD is
-# --version so `docker run ghcr.io/hades-system/hades-system` prints
+# --version so `docker run ghcr.io/cbip-solutions/hades-system` prints
 # version info instead of hanging in daemon-boot mode without config.
 # Operators override CMD to run the daemon for real, e.g.
 #   docker run --rm ghcr.io/.../hades-system daemon start

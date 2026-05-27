@@ -1,11 +1,11 @@
-//go:build chaos
+// go:build chaos
 
-// Toxiproxy-driven chaos package (inv-zen-305).
+// Toxiproxy-driven chaos package.
 //
 // toxicity_test.go pins the 10-toxic-type set + the scenario
 // generator's Cartesian product contract. These tests do NOT need a
 // running Toxiproxy daemon — they exercise pure table semantics + the
-// scenario expansion. inv-zen-305 scenario count = 10 toxics × 8 edges
+// scenario expansion. invariant scenario count = 10 toxics × 8 edges
 // = 80 holds load-bearing across the suite, so each test is single-
 // responsibility.
 

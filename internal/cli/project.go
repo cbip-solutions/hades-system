@@ -1,33 +1,33 @@
 // SPDX-License-Identifier: MIT
-// Package cli — project.go (Plan 7 Phase A Task A-8).
+// Package cli — project.go.
 //
 // `zen project {doctor,archive,rm}` is the operator-facing project
-// lifecycle surface for Plan 7. Each subcommand sends a JSON-over-UDS
+// lifecycle surface. Each subcommand sends a JSON-over-UDS
 // request to the daemon (the daemon is the only process that holds
-// *store.Store; the CLI never touches storage directly — inv-zen-031).
+// *store.Store; the CLI never touches storage directly — invariant).
 //
-// Cobra layout (4 leaves; priority shipped Phase B Task B-10):
+// Cobra layout:
 //
-//	zen project
-//	  doctor   [<alias>] [--rebind]    # cwd-based or by alias
-//	  archive  <alias>                  # soft-delete (reversible via Phase J)
-//	  rm       <alias> --yes            # hard-delete (cascades path_history)
-//	  priority --boost|--reset|--ls     # Layer 3 WFQ override (Phase B-10)
+// zen project
+// doctor [<alias>] [--rebind] # cwd-based or by alias
+// archive <alias> # soft-delete
+// rm <alias> --yes # hard-delete (cascades path_history)
+// priority --boost|--reset|--ls # Layer 3 WFQ override
 //
 // Exit-code mapping (per spec §6.2):
 //
-//	0  — healthy / OK
-//	1  — alias not found OR mv-detection pending OR --yes omitted
-//	     OR daemon-side healthy:false (operator-recoverable)
-//	2  — unrecoverable error (transport, JSON, daemon crash, store error)
+// 0 — healthy / OK
+// 1 — alias not found OR mv-detection pending OR --yes omitted
+// OR daemon-side healthy:false (operator-recoverable)
+// 2 — unrecoverable error (transport, JSON, daemon crash, store error)
 //
 // Categorisation is implemented via the ErrRecoverable sentinel: every
 // recoverable error returned from this package wraps ErrRecoverable so
 // cmd/zen/main.go can decide via cli.IsRecoverable(err) whether to exit
 // 1 (recoverable) or 2 (everything else). See ErrRecoverable's docstring.
 //
-// Phase A reserves the `--rebind` flag on `doctor` so the command shape
-// is final-form day 1; the rebind body lands in Phase B/J. Operators
+// reserves the `--rebind` flag on `doctor` so the command shape
+// is final-form day 1; the rebind body lands in Operators
 // who pass --rebind today get the same diagnostic output as without it.
 package cli
 
@@ -46,13 +46,13 @@ import (
 )
 
 // ErrRecoverable is the sentinel root any operator-recoverable error in
-// the CLI MUST wrap (via fmt.Errorf("%w: ...", ErrRecoverable)). The
+// the CLI MUST wrap (via fmt.Errorf("%w:...", ErrRecoverable)). The
 // process entry point (cmd/zen/main.go) maps these to exit code 1, all
-// other non-nil errors to exit code 2 — per spec §6.2 Phase A:
+// other non-nil errors to exit code 2 — per spec §6.2 :
 //
-//	0 — success / healthy
-//	1 — operator-recoverable (mv-detected, alias-missing, --yes omitted)
-//	2 — unrecoverable (transport, decode, daemon crash, store error)
+// 0 — success / healthy
+// 1 — operator-recoverable (mv-detected, alias-missing, --yes omitted)
+// 2 — unrecoverable (transport, decode, daemon crash, store error)
 //
 // "Recoverable" means the operator can fix the situation by changing
 // invocation (pass --yes, use the right alias) or running a follow-up
@@ -60,17 +60,17 @@ import (
 // the CLI does not retry.
 //
 // Why a sentinel rather than a typed error: the wrap-and-detect pattern
-// composes cleanly with fmt.Errorf("%w: ...") so callers can still
+// composes cleanly with fmt.Errorf("%w:...") so callers can still
 // attach a per-call message ("mv-detection pending", "alias not found")
 // without losing the category. errors.Is unwraps the chain.
 //
 // Adoption today the only callers are runProjectDoctor / runProjectArchive
-// / runProjectRm (Plan 7 Phase A). New CLI commands joining the exit-code
+// / runProjectRm. New CLI commands joining the exit-code
 // contract should follow the same pattern.
 var ErrRecoverable = errors.New("operator-recoverable")
 
 // ErrPreflightFailure is the sentinel root any preflight-gate failure
-// (Plan 13 Phase C `zen config init`: Hermes not installed, plugin
+// ( `zen config init`: Hermes not installed, plugin
 // format remnant detected) MUST wrap. The process entry point
 // (cmd/zen/main.go) maps this category to exit code 3 — distinct from
 // generic recoverable errors (exit 1) and unrecoverable errors (exit 2)

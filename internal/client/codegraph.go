@@ -2,13 +2,13 @@
 // Package client — codegraph.go
 //
 // /v1/mcpgateway/{codegraph,impact,context,wiki} routes. Daemon side
-// ships in Phase A (mcpgateway) — these routes proxy to the in-daemon
-// Caronte engine (Plan 19, Apache-2.0). CLI is operator-side; LLM
+// ships in (mcpgateway) — these routes proxy to the in-daemon
+// Caronte engine. CLI is operator-side; LLM
 // traffic isn't involved (these are KG queries, not generation).
 //
 // ProjectAlias as the canonical `X-Zen-Project-ID` header so the daemon
 // mcpgateway alias resolver picks it up per the MCP protocol convention.
-// The body still includes ProjectAlias (Phase A's body-fallback path
+// The body still includes ProjectAlias ( body-fallback path
 // keeps operator-pinned behavior). CaronteProbe migrated from legacy
 // GET /v1/caronte/probe to POST /v1/mcpgateway JSON-RPC tools/call.
 package client

@@ -7,17 +7,17 @@
 //
 // Usage (called by Python callbacks via subprocess.run):
 //
-//	echo '{...payload JSON...}' | zen-event-poster <event_name>
+// echo '{...payload JSON...}' | zen-event-poster <event_name>
 //
 // Exit code semantics:
 //
-//	0 = success (event accepted by daemon)
-//	1 = warning (logged; never blocks Hermes' tool call)
-//	2 = block (defense-in-depth Go-side gate; only relevant for direct
-//	    subprocess invocation since the Python callback already returned a
-//	    block dict to Hermes if the Python gate matched)
+// 0 = success (event accepted by daemon)
+// 1 = warning (logged; never blocks Hermes' tool call)
+// 2 = block (defense-in-depth Go-side gate; only relevant for direct
+// subprocess invocation since the Python callback already returned a
+// block dict to Hermes if the Python gate matched)
 //
-// Per Phase H' D-5 cross-language Python+Go bridge contract (revised:
+// Per D-5 cross-language Python+Go bridge contract (revised:
 // in-process Python callback → subprocess Go binary; no separate Python
 // script layer). Verified against Hermes v0.13.0 contract per spike §10.
 package main

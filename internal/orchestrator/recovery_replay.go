@@ -11,22 +11,22 @@
 //
 // Two passes determine the redispatch set:
 //
-//  1. WorkerDispatched without subsequent matching WorkerCheckpoint
-//     (post-dispatch timestamp, same task_id) → "unmatched_dispatch".
-//     The dispatched worker either crashed, was reclaimed mid-run, or
-//     never reported a final result before the orchestrator stopped.
+// 1. WorkerDispatched without subsequent matching WorkerCheckpoint
+// (post-dispatch timestamp, same task_id) → "unmatched_dispatch".
+// The dispatched worker either crashed, was reclaimed mid-run, or
+// never reported a final result before the orchestrator stopped.
 //
-//  2. WorkerDeath without subsequent WorkerRedispatched (post-death
-//     timestamp, same worker_id) AND no subsequent Checkpoint covering
-//     the worker's last task → "worker_death_unrecovered". The
-//     RecoveryEngine.HandleWorkerDeath path crashed before emitting the
-//     Redispatched companion, so replay must finish the recovery.
+// 2. WorkerDeath without subsequent WorkerRedispatched (post-death
+// timestamp, same worker_id) AND no subsequent Checkpoint covering
+// the worker's last task → "worker_death_unrecovered". The
+// RecoveryEngine.HandleWorkerDeath path crashed before emitting the
+// Redispatched companion, so replay must finish the recovery.
 //
 // A seenTasks set deduplicates across passes — a task that triggers
 // both surfaces (dispatched-without-checkpoint AND worker-died-with-
 // no-recovery) is redispatched once.
 //
-// inv-zen-095 corruption budget (N=5): if the replay scan encounters
+// invariant corruption budget (N=5): if the replay scan encounters
 // more than 5 records whose payload fails to Decode, the whole replay
 // fails closed with HardPause=true and the OrchestratorRestoreFromReplay
 // audit row records the breach. The bound is per-call (Option B from
@@ -276,7 +276,7 @@ func (r *RecoveryEngine) emitRestoreFromReplay(ctx context.Context, plan Reconst
 		Timestamp: r.clk.Now(),
 		// Map keys MUST match eventlog.OrchestratorRestoreFromReplay
 		// json tags so the typed Decode round-trip yields all fields
-		// populated (Plan 9 hash-chain replay + audit-consumer
+		// populated ( hash-chain replay + audit-consumer
 		// contract).
 		Payload: map[string]any{
 			"session_id":           plan.SessionID,

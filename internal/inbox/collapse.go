@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// CollapseRule is the cross-project collapse policy (Plan 7 spec §3.3,
+// CollapseRule is the cross-project collapse policy ( spec §3.3,
 // Datadog Simple Alert pattern). When N distinct projects emit the
 // same EventType within Window, the N per-project notifications are
 // summarised as a single SimpleAlert.
@@ -38,7 +38,7 @@ func DefaultCollapseRule(eventType string) CollapseRule {
 // SimpleAlert is the collapsed cross-project summary. Carries the union
 // of distinct ProjectIDs (sorted ascending), the maximum severity
 // observed, and a human-readable Message — but NOT any per-project
-// payload. Downstream renderers (Plan 11 channel adapters) treat this
+// payload. Downstream renderers treat this
 // as an opaque bundle: they MUST NOT inspect ProjectIDs to fan-out
 // per-project payloads, because the whole point of the collapse is to
 // suppress that fan-out and avoid leaking cross-project state into a

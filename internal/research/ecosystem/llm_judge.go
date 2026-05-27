@@ -2,7 +2,7 @@
 // Package ecosystem — llm_judge.go
 //
 // LLM-judge re-pass for max-scope + capa-firewall doctrine per spec §2.7
-// Q7=A Layer 5 + §4.2 step 13 (Plan 14 Phase D Task D-8).
+// Q7=A Layer 5 + §4.2 step 13.
 //
 // # Doctrine gating
 //
@@ -15,42 +15,42 @@
 // HaikuLLMJudge.Judge itself imposes no doctrine check — it is a pure
 // "given inputs, return judgement" function. This separation keeps the
 // judge unit-testable without doctrine plumbing while preserving the
-// invariant (inv-zen-205) that default-doctrine queries never incur
+// invariant that default-doctrine queries never incur
 // Haiku latency / cost.
 //
 // # Backend routing
 //
-// Production Plan 3 dispatcher → Claude Haiku (`claude-haiku-4-6` per
-// spec §22.7 model table; Plan 3 ratecard ships pricing for this model
+// Production dispatcher → Claude Haiku (`claude-haiku-4-6` per
+// spec §22.7 model table; ratecard ships pricing for this model
 // at internal/providers/ratecard_test.go:400). Backend abstracted via
 // the small JudgeBackend interface so this package does NOT import the
 // daemon dispatcher (which would create an import cycle: research/ecosystem
 // is consumed BY the daemon, not the other way around). Daemon wiring
-// at Phase F builds a tiny adapter that translates JudgeBackend.Complete
+// at builds a tiny adapter that translates JudgeBackend.Complete
 // calls into providers.Dispatcher.Forward calls with the appropriate
 // TierRequest body. Same narrow-interface seam pattern used by Task D-4
-// (CohereRerankV4) and Phase B router (VoyageCode3).
+// (CohereRerankV4) and router (VoyageCode3).
 //
 // # Prompt design
 //
-//	System  : "You are a strict RAG faithfulness judge. Output ONLY a
-//	           JSON object with fields acceptable (bool), reason (string,
-//	           ≤120 chars), and suspicious_chunk_ids (array of int chunk
-//	           IDs that the answer misrepresents; empty if acceptable)."
-//	User    : structured payload containing
-//	            - QUERY (verbatim user prompt, wrapped in nonce envelope)
-//	            - ANSWER (the generation under evaluation, wrapped in nonce
-//	              envelope)
-//	            - CHUNKS (chunk_id | symbol_path | content_text — truncated
-//	              to 400 chars to bound prompt size, wrapped in nonce envelope)
-//	            - CITATIONS (id | symbol_path — only when citations
-//	              non-empty, wrapped in nonce envelope)
+// System : "You are a strict RAG faithfulness judge. Output ONLY a
+// JSON object with fields acceptable (bool), reason (string,
+// ≤120 chars), and suspicious_chunk_ids (array of int chunk
+// IDs that the answer misrepresents; empty if acceptable)."
+// User : structured payload containing
+// - QUERY (verbatim user prompt, wrapped in nonce envelope)
+// - ANSWER (the generation under evaluation, wrapped in nonce
+// envelope)
+// - CHUNKS (chunk_id | symbol_path | content_text — truncated
+// to 400 chars to bound prompt size, wrapped in nonce envelope)
+// - CITATIONS (id | symbol_path — only when citations
+// non-empty, wrapped in nonce envelope)
 //
 // All user-controlled regions are isolated by a per-call 16-byte hex nonce
 // (defense-in-depth against adversarial chunk content forging top-level
 // section markers — see buildJudgePrompt doc).
 //
-// Output strict JSON object. stripCodeFence handles ```json ... ```
+// Output strict JSON object. stripCodeFence handles ```json... ```
 // wrappers some chat-tuned models emit despite the "ONLY JSON" instruction.
 // Reason length and Acceptable↔SuspiciousChunks contract are enforced
 // post-parse in Judge (model is not load-bearing for invariants we
@@ -59,7 +59,7 @@
 // # Latency
 //
 // MaxLatencyMs (default 800ms) applied via context.WithTimeout. The
-// resulting deadline is respected by Plan 3 dispatcher HTTP client.
+// resulting deadline is respected dispatcher HTTP client.
 // Well within the doctrine-max-scope query latency envelope (~700-1000ms
 // P50 per spec §4.7).
 //
@@ -73,16 +73,16 @@
 //
 // # Invariants
 //
-//   - inv-zen-031: this file MUST NOT import internal/store directly.
-//     The JudgeBackend interface is the only seam to the daemon — no
-//     access to canonical store or audit chain from here.
-//   - inv-zen-004: no Claude attribution in source.
-//   - inv-zen-205 (Phase D doctrine table): default-doctrine queries
-//     MUST NOT incur judge cost — enforced at the dispatcher D-9 call
-//     site, not here.
-//   - inv-zen-021 (audit row size budget ≤8 KiB): Judgement.Reason is
-//     clamped to ≤120 bytes post-parse so EvtRAGAbstain payloads cannot
-//     blow the row budget on a verbose model response.
+// - invariant: this file MUST NOT import internal/store directly.
+// The JudgeBackend interface is the only seam to the daemon — no
+// access to canonical store or audit chain from here.
+// - invariant: no Claude attribution in source.
+// - invariant: default-doctrine queries
+// MUST NOT incur judge cost — enforced at the dispatcher D-9 call
+// site, not here.
+// - invariant (audit row size budget ≤8 KiB): Judgement.Reason is
+// clamped to ≤120 bytes post-parse so EvtRAGAbstain payloads cannot
+// blow the row budget on a verbose model response.
 package ecosystem
 
 import (
@@ -109,7 +109,7 @@ type Judgement struct {
 }
 
 // JudgeBackend abstracts the LLM completion call. The production wiring
-// in Phase F builds an adapter over *providers.Dispatcher that
+// in builds an adapter over *providers.Dispatcher that
 // translates Complete → Forward (TierRequest with claude-haiku-4-6 body).
 // Tests inject fakes directly.
 //
@@ -246,7 +246,7 @@ func buildJudgePrompt(query, answer string, chunks []QueryChunk, citations []Cit
 // generateNonce returns a hex-encoded 16-byte (128-bit) random nonce used
 // to bind prompt-injection envelopes in buildJudgePrompt.
 //
-// crypto/rand.Read is documented to never error on the platforms Plan 14
+// crypto/rand.Read is documented to never error on the platforms
 // targets (Linux, macOS, BSD) post-init; the error-handling branch is
 // defensive and falls back to a time-derived nonce so the function is
 // infallible. Even the fallback path is non-trivial to guess by an

@@ -116,7 +116,7 @@ func TestRestoreFromManifestCorruptGzip(t *testing.T) {
 }
 
 // TestRestoreFromManifestRejectsPathTraversal constructs a malicious
-// tarball with a ../../etc/passwd entry; restore MUST reject.
+// tarball with a../../etc/passwd entry; restore MUST reject.
 func TestRestoreFromManifestRejectsPathTraversal(t *testing.T) {
 	stateDir := t.TempDir()
 	tarPath := filepath.Join(stateDir, "evil.tar.gz")

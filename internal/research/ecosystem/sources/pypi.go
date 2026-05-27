@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -8,17 +9,17 @@
 // ecosystem. Implements ecosystem.Source (master plan §3.3).
 //
 // FetchManifest dual-path:
-//   - Libraries.io (`https://libraries.io/api/search?platforms=PyPI&...`)
-//     when PyPIOptions.LibrariesIOAPIKey is set; paginated stars-ranked
-//     across MaxPackages (default 5000) at PerPage (default 100).
-//   - hugovk top-PyPI-packages community BigQuery mirror
-//     (`https://hugovk.github.io/top-pypi-packages/top-pypi-packages-30-days.json`)
-//     fallback when no API key is configured.
+// - Libraries.io (`https://libraries.io/api/search?platforms=PyPI&...`)
+// when PyPIOptions.LibrariesIOAPIKey is set; paginated stars-ranked
+// across MaxPackages (default 5000) at PerPage (default 100).
+// - hugovk top-PyPI-packages community BigQuery mirror
+// (`https://hugovk.github.io/top-pypi-packages/top-pypi-packages-30-days.json`)
+// fallback when no API key is configured.
 //
 // FetchPackageDoc fetches `https://pypi.org/pypi/<pkg>/json` and emits a
 // minimum-viable PackageDoc with two DocSections: Summary (KindModule) and
 // Description (KindGuide). The full PyPI JSON body is stashed in RawBody
-// for downstream chunker re-parsing in Phase B chunker.go.
+// for downstream chunker re-parsing in chunker.go.
 //
 // FetchChangelog discovers a GitHub repo from `project_urls.Source` (or a
 // GitHub Homepage when Source is absent), transforms to raw.githubusercontent.com
@@ -28,13 +29,13 @@
 // an error — Python ecosystem has no unified changelog convention).
 //
 // All HTTP egress routes via the narrow FetchClient interface declared
-// in pkgdev.go; no direct net/http imports (inv-zen-152 + inv-zen-191).
+// in pkgdev.go; no direct net/http imports.
 // Per-source TTL = 1d (registered in source-ttls.toml at A-10).
 //
-// Boundary (inv-zen-031): this file MAY import internal/research/cache
+// Boundary: this file MAY import internal/research/cache
 // + internal/research/ecosystem (parent). It MUST NOT import internal/store
 // or internal/providers. Verified by `go test -run TestEcosystemBoundary`
-// and Phase H vet analyzer no_web_in_ecosystem.
+// and vet analyzer no_web_in_ecosystem.
 //
 // Concurrency PyPISource is safe for concurrent use from multiple
 // goroutines after construction (immutable opts; the underlying

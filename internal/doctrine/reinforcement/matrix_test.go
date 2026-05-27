@@ -50,12 +50,12 @@ func canonicalVars(doctrine, kind string) *reinforcement.Vars {
 
 // TestMatrixAllDoctrineRoleCombinations renders all 18 (doctrine × taskKind)
 // combinations and asserts:
-//   - the doctrine's voice marker appears (proves correct template selected)
-//   - the chosen TaskKind's section header appears
-//   - the other 5 task-kind section headers do NOT appear (mutual exclusion)
-//   - each Vars field's value appears at least once in the output (proves
-//     the template references it via the allowlist)
-//   - no raw template syntax leaks (no "{{" or "}}" in output)
+// - the doctrine's voice marker appears (proves correct template selected)
+// - the chosen TaskKind's section header appears
+// - the other 5 task-kind section headers do NOT appear (mutual exclusion)
+// - each Vars field's value appears at least once in the output (proves
+// the template references it via the allowlist)
+// - no raw template syntax leaks (no "{{" or "}}" in output)
 func TestMatrixAllDoctrineRoleCombinations(t *testing.T) {
 	e := reinforcement.New("")
 	for _, d := range doctrineCases {

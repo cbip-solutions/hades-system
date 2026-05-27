@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -18,7 +19,7 @@ func goLanguage() *sitter.Language { return golang.GetLanguage() }
 
 // newGoLangSpec builds the Go langSpec: the vendored Go grammar, the embedded
 // go.scm tags query, the Go capture→NodeKind map, and the Go node_id +
-// receiver builders (relocated from Phase B's package-level forms — behaviour
+// receiver builders (relocated from package-level forms — behaviour
 // identical). The capture names MUST match queries/go.scm (queries_test.go
 // gates the contract).
 func newGoLangSpec() (*langSpec, error) {
@@ -56,14 +57,14 @@ func goPackagePathFromFile(filePath string) string {
 }
 
 // qualifiedNodeID builds the globally-unique node_id for a symbol. This is the
-// repo-relative JOIN KEY that Phase C's canonicalNodeID must match byte-for-byte
-// (gated by TestNodeIDMatchesPhaseBByteForByte in Phase C).
+// repo-relative JOIN KEY that canonicalNodeID must match byte-for-byte
+// .
 //
 // Scheme <dir>.[Receiver.]Name — module prefix is NEVER included.
 // Examples
-//   - func Run in internal/widget/x.go      → "internal/widget.Run"
-//   - func (s Server) Serve in same dir     → "internal/widget.Server.Serve"
-//   - field prefix in Server struct         → "internal/widget.Server.prefix"
+// - func Run in internal/widget/x.go → "internal/widget.Run"
+// - func (s Server) Serve in same dir → "internal/widget.Server.Serve"
+// - field prefix in Server struct → "internal/widget.Server.prefix"
 //
 // For methods the receiver type is included so Server.Greet and Client.Greet
 // do not collide. receiver is "" for non-methods. Empty pkgPath (root file)

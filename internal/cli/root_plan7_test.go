@@ -38,7 +38,7 @@ func TestRootMountsPlan19CaronteVerbs(t *testing.T) {
 }
 
 // TestRootPlan7CommandsHelpExitsZero verifies `--help` works on each
-// from Use/Short/Long fields wired in Phase A-G; Task L-1 just verifies
+// from Use/Short/Long fields wired in ; Task L-1 just verifies
 // the wiring did not leave any constructor returning nil or unparented.
 //
 // Each case is a sub-test so a single drift surfaces with the exact

@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package cli — research_cache_ls.go (Plan 9 Phase I Task I-9).
+// Package cli — research_cache_ls.go.
 //
-// NEW Plan 9 leaf: `zen research cache ls` — browse cache entries with Plan 9
-// filters (--source URL prefix, --project). Distinct from Plan 4's
+// NEW leaf: `zen research cache ls` — browse cache entries with
+// filters (--source URL prefix, --project). Distinct's
 // `cache list` which is project-agnostic and pagination-oriented.
 //
 // Deviation from plan-file: plan-file sketched client.ResearchCacheLsEntry
 // and client.ResearchCacheLs(). H-9 actually shipped:
 //
-//	ResearchCacheEntryP9{Hash, BytesSize, CreatedAt, TTLUnix, SourceURL, ContentHash}
-//	ResearchCacheListP9(ctx, projectID, sourcePrefix string) ([]ResearchCacheEntryP9, error)
+// ResearchCacheEntryP9{Hash, BytesSize, CreatedAt, TTLUnix, SourceURL, ContentHash}
+// ResearchCacheListP9(ctx, projectID, sourcePrefix string) ([]ResearchCacheEntryP9, error)
 //
 // Renders a table with HASH (truncated), SOURCE_URL, PROJECT, BYTES, EXPIRES.
-// The route called is GET /v1/research/cache/list (same as Plan 4 list) but
-// with Plan 9 query params; the ls command is the CLI-side alias per spec §6.5.
+// The route called is GET /v1/research/cache/list but
+// with query params; the ls command is the CLI-side alias per spec §6.5.
 package cli
 
 import (

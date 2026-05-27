@@ -287,7 +287,7 @@ func TestEmitArchitecturalReview_IncludesSummaryWhenNonEmpty(t *testing.T) {
 
 // TestEmitArchitecturalReview_OmitsSummaryWhenEmpty is the negative
 // counterpart: when Finding.Summary == "", the "summary" key MUST be
-// absent from the payload (compact-log discipline; Phase F's gate
+// absent from the payload (compact-log discipline; gate
 // parser interprets summary's presence as signal).
 func TestEmitArchitecturalReview_OmitsSummaryWhenEmpty(t *testing.T) {
 	log := &internalCaptureEventLog{}

@@ -14,22 +14,22 @@ import (
 )
 
 // Notification is the canonical Go-domain representation of a row in the
-// per-project `inbox` table (Plan 7 Phase E migration 058). The struct
+// per-project `inbox` table. The struct
 // mirrors the SQL columns 1-to-1; the inboxadapter.Adapter scans rows
 // into this type and writes Insert calls back via prepared statements.
 //
 // Payload carries the typed event-specific fields as JSON; downstream
-// renderers (zen day in Phase F, Plan 11 channel adapters) decode based
+// renderers decode based
 // on EventType.
 //
 // Invariants
-//   - ProjectID MUST be a 64-char sha256 hex string (projectctx.ProjectID)
-//     so cross-project leak is structurally blocked at the per-DB-file
-//     boundary (inv-zen-113).
-//   - Severity MUST be one of the 4 frozen tiers (inv-zen-124).
-//   - ContentHash MUST be a 64-char sha256 hex (computed via
-//     ComputeContentHash); together with EventType + 5-min bucket
-//     enforces dedup (Plan 7 spec §1 Q11).
+// - ProjectID MUST be a 64-char sha256 hex string (projectctx.ProjectID)
+// so cross-project leak is structurally blocked at the per-DB-file
+// boundary.
+// - Severity MUST be one of the 4 frozen tiers.
+// - ContentHash MUST be a 64-char sha256 hex (computed via
+// ComputeContentHash); together with EventType + 5-min bucket
+// enforces dedup.
 type Notification struct {
 	ID           int64
 	ProjectID    string

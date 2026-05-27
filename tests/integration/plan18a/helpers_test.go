@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18a_integration_test
 
 import (
@@ -168,8 +167,8 @@ func readStubInvocations(t *testing.T, recordPath string) []stubInvocation {
 //
 // Variables scrubbed (so the wrapper does NOT see operator state leaking in):
 //
-//	HOME, XDG_CONFIG_HOME, XDG_STATE_HOME, XDG_CACHE_HOME, XDG_DATA_HOME,
-//	any HERMES_*, any ZEN_*, any HADES_*.
+// HOME, XDG_CONFIG_HOME, XDG_STATE_HOME, XDG_CACHE_HOME, XDG_DATA_HOME,
+// any HERMES_*, any ZEN_*, any HADES_*.
 //
 // HOME + XDG_* are pointed at a fresh per-test temp dir. This guarantees the
 // wrapper cannot read the operator's ~/.hermes/skins/, ~/.config/zen-swarm/,

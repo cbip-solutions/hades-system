@@ -11,8 +11,8 @@ import (
 )
 
 // Record is the durable wire shape of an event row, returned by Query
-// and propagated to subscribers (Task A-5). Plan 9 will hash-chain
-// these via prev_hash; Phase A leaves CausalChain as the seam.
+// and propagated to subscribers (Task A-5). will hash-chain
+// these via prev_hash; leaves CausalChain as the seam.
 //
 // Payload is the raw JSON bytes encoded by PayloadEncoder.Payload().
 // Callers decode via Decode(et, payload). Timestamp is unix nanoseconds
@@ -49,14 +49,14 @@ type RawEmitter interface {
 // Goroutine safety (I-3): Log itself holds no mutable state — it is
 // safe for concurrent use by any number of goroutines. Serialization
 // is delegated downstream:
-//   - RawEmitter implementations own their own synchronization
-//     (the in-memory test emitter uses sync.Mutex; the Phase N
-//     store-backed adapter relies on SQLite's WAL serialization).
-//   - subscriberHub (subscriber.go) owns synchronization of its
-//     subscriber set and per-mailbox publish path; Subscribe/publish/
-//     Close are all goroutine-safe.
+// - RawEmitter implementations own their own synchronization
+// (the in-memory test emitter uses sync.Mutex; the
+// store-backed adapter relies on SQLite's WAL serialization).
+// - subscriberHub (subscriber.go) owns synchronization of its
+// subscriber set and per-mailbox publish path; Subscribe/publish/
+// Close are all goroutine-safe.
 //
-// Eight downstream Plan 5 phases (D, E, F, G, H, K, M plus Replay)
+// Eight downstream phases (D, E, F, G, H, K, M plus Replay)
 // emit through Log from concurrent worker + reviewer goroutines;
 // Append/Query MUST remain lock-free at this layer. Reviewers of any
 // future change to Log MUST verify this property still holds.
@@ -69,7 +69,7 @@ type Log struct {
 var ErrNoEmitter = errors.New("eventlog: no RawEmitter wired")
 
 // New constructs a Log. clk MUST be non-nil — passing nil panics
-// because clock injection is the load-bearing primitive of Phase A.
+// because clock injection is the load-bearing primitive of
 // emit MAY be nil; in that case Append/Query return ErrNoEmitter.
 func New(emit RawEmitter, clk clock.Clock) *Log {
 	if clk == nil {
@@ -88,7 +88,7 @@ func New(emit RawEmitter, clk clock.Clock) *Log {
 // are notified via subscriberHub.publish; back-pressure is drop-oldest
 // (subscriber.go).
 //
-// appendTyped is the typed-PayloadEncoder path used internally by Phase A
+// appendTyped is the typed-PayloadEncoder path used internally by
 // (Replay's corruption-detection emit) and by package-internal tests
 // exercising the typed-encoder error paths. The method is intentionally
 // PACKAGE-PRIVATE (I-2 from A-5b code review): cross-phase consumers
@@ -98,17 +98,17 @@ func New(emit RawEmitter, clk clock.Clock) *Log {
 // Append(Event) so downstream phases cannot pick the wrong API.
 //
 // Validation order (fail-fast):
-//  1. ctx not already cancelled / deadline-exceeded (I-1: short-circuit
-//     before any work — wasted validation + spurious emit on a future
-//     non-cancel-aware emitter).
-//  2. evt non-nil
-//  3. evt.Type() must be IsValid() — rejects EvtUnknown (zero value)
-//     and any out-of-range values not yet wired into AllEventTypes()
-//     (IMP-2 from Task A-2 fix pass; Plan 5 J-2 promoted the
-//     reserved-for-Phase-J slots 40-42 to valid).
-//  4. sessionID + projectID non-empty (inv-zen tagging contract)
-//  5. payload encode
-//  6. emitter call
+// 1. ctx not already cancelled / deadline-exceeded (I-1: short-circuit
+// before any work — wasted validation + spurious emit on a future
+// non-cancel-aware emitter).
+// 2. evt non-nil
+// 3. evt.Type() must be IsValid() — rejects EvtUnknown (zero value)
+// and any out-of-range values not yet wired into AllEventTypes()
+// (IMP-2 from Task A-2 fix pass; J-2 promoted the
+// reserved-for- slots 40-42 to valid).
+// 4. sessionID + projectID non-empty (inv-zen tagging contract)
+// 5. payload encode
+// 6. emitter call
 //
 // Errors NEVER include payload bytes (privacy contract IMP-3): they
 // must be safe to log at error level even though payloads can carry
@@ -161,9 +161,9 @@ func (l *Log) appendTyped(ctx context.Context, sessionID, projectID string, evt 
 // Decode(rec.EventType, rec.Payload).
 //
 // Use since=0 to read all events for the session — audit_events_raw
-// event_ids are 1-indexed by the Phase N adapter, so "strictly > 0" is
+// event_ids are 1-indexed by the adapter, so "strictly > 0" is
 // the canonical "all events" sentinel. All RawEmitter implementations
-// (in-memory test, Phase N store-backed, Plan 9 hash-chain) MUST honor
+// MUST honor
 // this contract; Task A-4 Replay relies on it for crash recovery from
 // a fresh boot. Use since=lastSeenID to resume replay from a checkpoint.
 //

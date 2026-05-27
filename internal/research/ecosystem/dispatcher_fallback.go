@@ -2,35 +2,35 @@
 // internal/research/ecosystem/dispatcher_fallback.go
 //
 //
-// Live fallback path per spec §4.3 + inv-zen-203.
+// Live fallback path per spec §4.3 + invariant.
 //
 // # When invoked
 //
 // Triggered when the in-corpus dispatcher.Query path returns zero
 // high-confidence results — i.e., the requested package or symbol is not in
 // any ecosystem.db. Examples:
-//   - Operator queries about a newly-released package
-//     (`go get github.com/new/pkg@v0.1.0` before the next 6h cron tick)
-//   - Symbol is in an obscure GitHub repo not in the top-1000
+// - Operator queries about a newly-released package
+// (`go get github.com/new/pkg@v0.1.0` before the next 6h cron tick)
+// - Symbol is in an obscure GitHub repo not in the top-1000
 //
 // # Flow (spec §4.3)
 //
-//  1. Audit: emit EvtRAGQuery with payload.fresh_dispatch=true FIRST
-//     (inv-zen-203 ordering — chain captures dispatch reason BEFORE any
-//     live-network operation, so an aborted-mid-flight fallback still
-//     leaves an audit trail).
-//  2. Source.FetchManifest force-refresh: the context is decorated with
-//     contextWithForceRefresh; source impls call
-//     internal/research/cache.Revalidator.Fetch with FetchOptions{
-//     ForceRefresh true} when resolveForceRefresh(ctx) returns true.
-//     This bypasses TTL + ETag conditionals (cache.revalidator §5).
-//  3. If pkg in manifest: FetchPackageDoc + IndexerDeltaWriter.WriteDelta
-//     (so the next query hits the corpus normally).
-//  4. Else: research-MCP (Plan 4) synthesis. Cache finding in Plan 9 F
-//     research_findings table with cache_hit_reason='fresh_dispatch'.
-//  5. Return QueryResult{Provenance.FreshDispatch=true} in either branch.
+// 1. Audit: emit EvtRAGQuery with payload.fresh_dispatch=true FIRST
+// (invariant ordering — chain captures dispatch reason BEFORE any
+// live-network operation, so an aborted-mid-flight fallback still
+// leaves an audit trail).
+// 2. Source.FetchManifest force-refresh: the context is decorated with
+// contextWithForceRefresh; source impls call
+// internal/research/cache.Revalidator.Fetch with FetchOptions{
+// ForceRefresh true} when resolveForceRefresh(ctx) returns true.
+// This bypasses TTL + ETag conditionals (cache.revalidator §5).
+// 3. If pkg in manifest: FetchPackageDoc + IndexerDeltaWriter.WriteDelta
+// (so the next query hits the corpus normally).
+// 4. Else: research-MCP synthesis. Cache finding in F
+// research_findings table with cache_hit_reason='fresh_dispatch'.
+// 5. Return QueryResult{Provenance.FreshDispatch=true} in either branch.
 //
-// # inv-zen-203 enforcement
+// # invariant enforcement
 //
 // EvtRAGQuery (with payload.FreshDispatch=true) emits BEFORE any
 // live-network operation. The audit chain captures the dispatch reason
@@ -39,11 +39,11 @@
 // don't attempt the live-network work — fail-loud is preferable to
 // silent un-audited network calls.
 //
-// # inv-zen-031 boundary
+// # invariant boundary
 //
 // This file does NOT import internal/store; it consumes only narrow
 // interfaces (ResearchMCPSynthesizer, FindingsCache, IndexerDeltaWriter)
-// satisfied by adapters at Phase F daemon-init.
+// satisfied by adapters at daemon-init.
 
 package ecosystem
 
@@ -61,8 +61,8 @@ type LiveFallbackRequest struct {
 	ProjectPath string
 }
 
-// ResearchMCPSynthesizer abstracts the Plan 4 research MCP. The daemon wires
-// the concrete impl at startup (Phase F); tests inject a fake.
+// ResearchMCPSynthesizer abstracts the research MCP. The daemon wires
+// the concrete impl at startup; tests inject a fake.
 //
 // Contract Synthesize returns the rendered answer text on success. ctx
 // cancellation MUST be honored (long-running web fetches in production).
@@ -70,7 +70,7 @@ type ResearchMCPSynthesizer interface {
 	Synthesize(ctx context.Context, query string, eco Ecosystem) (string, error)
 }
 
-// FindingsCache abstracts the Plan 9 F research_findings table writer.
+// FindingsCache abstracts the F research_findings table writer.
 //
 // Contract Cache writes a row keyed by (key, query, answer, eco, reason).
 // The dispatcher always passes reason="fresh_dispatch" from this path.
@@ -88,26 +88,26 @@ type IndexerDeltaWriter interface {
 // with Provenance.FreshDispatch=true on success.
 //
 // Return semantics:
-//   - Package-found branch: QueryResult.Chunks is empty (the next query will
-//     hit the corpus via the standard Query path now that the package is
-//     delta-indexed). DoctrineApplied="fresh-dispatch".
-//   - Package-not-found branch (synthesis): QueryResult.Chunks contains one
-//     synthetic QueryChunk with the MCP answer in ContentText. The synthesis
-//     answer is also persisted to FindingsCache for future cache hits.
-//   - On error: nil + non-nil error (wrapped with step name).
+// - Package-found branch: QueryResult.Chunks is empty (the next query will
+// hit the corpus via the standard Query path now that the package is
+// delta-indexed). DoctrineApplied="fresh-dispatch".
+// - Package-not-found branch (synthesis): QueryResult.Chunks contains one
+// synthetic QueryChunk with the MCP answer in ContentText. The synthesis
+// answer is also persisted to FindingsCache for future cache hits.
+// - On error: nil + non-nil error (wrapped with step name).
 //
 // Concurrency Dispatcher is safe for concurrent LiveFallback calls. The
 // audit emitter serializes its writes; sources MUST be safe for concurrent
 // calls per the Source contract (source.go §"Concurrency"). Two concurrent
 // fallbacks for the same package may both fetch+index — the second
 // IndexerDeltaWriter.WriteDelta is a no-op upsert at the storage layer
-// (inv-zen-200 conflict-resolution: last write wins on identical chunk
+// (invariant conflict-resolution: last write wins on identical chunk
 // fingerprint).
 //
 // Pre ctx non-nil; req.Ecosystem identifies a wired Source; d.auditEmitter
 // wired.
 // Post on nil error: audit chain has one EvtRAGQuery row with
-// fresh_dispatch=true (inv-zen-203); on package-found branch indexerDelta
+// fresh_dispatch=true; on package-found branch indexerDelta
 // has one new entry; on synthesis branch findingsCache has one new entry.
 func (d *Dispatcher) LiveFallback(ctx context.Context, req LiveFallbackRequest) (*QueryResult, error) {
 	if err := ctx.Err(); err != nil {
@@ -124,7 +124,7 @@ func (d *Dispatcher) LiveFallback(ctx context.Context, req LiveFallbackRequest) 
 		}
 	}
 
-	// inv-zen-203: emit EvtRAGQuery FIRST. If the chain is failing (disk
+	// invariant: emit EvtRAGQuery FIRST. If the chain is failing (disk
 	// full, corrupted), we MUST NOT proceed to live-network ops — better to
 	// surface an un-audited dispatch as an error than to silently dispatch
 	// without a chain link. This is the load-bearing ordering invariant.
@@ -311,10 +311,10 @@ func computeFindingKey(query string, eco Ecosystem) string {
 // into cache.FetchOptions{ForceRefresh: true} on their Revalidator.Fetch
 // calls. We deliberately do NOT import internal/research/cache here:
 //
-//   - the dispatcher fallback path does not directly construct cache types,
-//   - cache.revalidator_fetch.go is gated behind `//go:build cgo` so a
-//     hard import would break GOOS=linux builds without CGO.
+// - the dispatcher fallback path does not directly construct cache types,
+// - cache.revalidator_fetch.go is gated behind `//go:build cgo` so a
+// hard import would break GOOS=linux builds without CGO.
 //
-// The contract is enforced by integration tests in Phase F daemon-init that
+// The contract is enforced by integration tests in daemon-init that
 // wire concrete Source impls; their tests verify resolveForceRefresh→
 // FetchOptions{ForceRefresh: true} round-trip on real Revalidator instances.

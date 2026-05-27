@@ -3,31 +3,31 @@
 //
 // translation (spec §6.4).
 //
-// DispatchInboxSeverity maps a Plan 9 event-type string to the canonical
+// DispatchInboxSeverity maps a event-type string to the canonical
 // via the caller-supplied InboxNotifier.
 //
 // Severity routing per spec §6.4:
 //
-//	URGENT (SeverityUrgent):
-//	  audit.tamper_detected, daemon.witness_key_compromised,
-//	  audit.partition_seal_failed
-//	HIGH (SeverityActionNeeded):
-//	  audit.litestream_lag with lag_seconds > 3600 (>1h),
-//	  audit.cold_archive_failed
-//	MEDIUM (SeverityInfoImmediate):
-//	  research.cache_revalidation_stuck, knowledge.embed_worker_degraded,
-//	  audit.litestream_lag with lag_seconds ≤ 3600 (<1h)
-//	LOW / info-digest (SeverityInfoDigest):
-//	  audit.recovery_completed, adr.*, state.*, vault.*, research.cache_*,
-//	  daemon.witness_co_signed, daemon.witness_rotated,
-//	  audit.partition_sealed, audit.checkpoint, ...
-//	  Default for unmapped events: SeverityInfoDigest.
+// URGENT (SeverityUrgent):
+// audit.tamper_detected, daemon.witness_key_compromised,
+// audit.partition_seal_failed
+// HIGH (SeverityActionNeeded):
+// audit.litestream_lag with lag_seconds > 3600 (>1h),
+// audit.cold_archive_failed
+// MEDIUM (SeverityInfoImmediate):
+// research.cache_revalidation_stuck, knowledge.embed_worker_degraded,
+// audit.litestream_lag with lag_seconds ≤ 3600 (<1h)
+// LOW / info-digest (SeverityInfoDigest):
+// audit.recovery_completed, adr.*, state.*, vault.*, research.cache_*,
+// daemon.witness_co_signed, daemon.witness_rotated,
+// audit.partition_sealed, audit.checkpoint,...
+// Default for unmapped events: SeverityInfoDigest.
 //
 // in 60s → "Simple Alert") is handled at the inbox layer
 // (inbox.AggregatorCacheStore); it is NOT re-implemented here. This
 // function is the translation + emission entry point only.
 //
-// Invariant inv-zen-031 (zenday never imports internal/store) is
+// Invariant invariant (zenday never imports internal/store) is
 // preserved — this file depends only on inbox (domain types) and
 // orchestrator/eventlog (event-type string constants).
 package zenday
@@ -109,7 +109,7 @@ func classifyEventSeverity(eventType string, payload []byte) inbox.Severity {
 
 	// ── URGENT ────────────────────────────────────────────────────────────────
 	// Security and chain-integrity failures that interrupt DND unconditionally
-	// (inv-zen-125) and require immediate operator response.
+	// and require immediate operator response.
 	case eventlog.EvtAuditTamperDetected,
 		eventlog.EvtDaemonWitnessKeyCompromised,
 		eventlog.EvtAuditPartitionSealFailed:

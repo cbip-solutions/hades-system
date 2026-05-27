@@ -156,7 +156,7 @@ def test_markdown_fallback_audit_event_ids_match_citation_ids(
     registry_with_defaults: RendererRegistry,
     sample_augmentation_result: AugmentationResult,
 ) -> None:
-    """Markdown fallback audit_event_ids carry the original Plan 11 event ids."""
+    """Markdown fallback audit_event_ids carry the original  event ids."""
     result = registry_with_defaults.dispatch(
         sample_augmentation_result, Platform.MARKDOWN_FALLBACK
     )

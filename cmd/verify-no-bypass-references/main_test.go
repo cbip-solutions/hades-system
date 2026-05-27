@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 // cmd/verify-no-bypass-references — TDD tests for the 5-surface boundary
-// scanner (inv-zen-B1 placeholder; eventually-numbered via Phase B-15).
+// scanner.
 //
 // Each surface exercises (a) a positive case where an unsanctioned bypass
 // mention MUST fail, and (b) a negative case where the mention is allowed
 // (sanctioned via defaultAllowlist()).
 //
-// Surfaces
+// # Surfaces
 //
-//  1. AST imports + qualified identifiers (.go files via go/ast)
-//  2. tests/ directory (grep for bypass outside sanctioned helpers)
-//  3. docs/ directory (grep outside sanctioned bypass-sidecar-recipe.md)
-//  4. configs/ directory (grep outside sidecars.toml.example)
-//  5. internal/store/migrations/ SQL (grep for bypass-specific tables)
+// 1. AST imports + qualified identifiers (.go files via go/ast)
+// 2. tests/ directory (grep for bypass outside sanctioned helpers)
+// 3. docs/ directory (grep outside sanctioned bypass-sidecar-recipe.md)
+// 4. configs/ directory (grep outside sidecars.toml.example)
+// 5. internal/store/migrations/ SQL (grep for bypass-specific tables)
 //
 // Test scaffolding: t.TempDir() seeded with surface-specific fixture
 // files; scanXxx functions operate against the temp dir and return
@@ -48,7 +48,7 @@ func mkfile(t *testing.T, dir, rel, body string) {
 	}
 }
 
-// TestSurface1_ASTImports_FailsOnUnsanctionedImport — a .go file outside
+// TestSurface1_ASTImports_FailsOnUnsanctionedImport — a.go file outside
 // the sanctioned allowlist that imports an anthropic-bypass path MUST
 // trigger a violation.
 func TestSurface1_ASTImports_FailsOnUnsanctionedImport(t *testing.T) {
@@ -68,7 +68,7 @@ var _ = anthropicbypass.Client{}
 	}
 }
 
-// TestSurface1_ASTImports_AllowsSanctionedDaemonSidecarBackend — a .go
+// TestSurface1_ASTImports_AllowsSanctionedDaemonSidecarBackend — a.go
 // file inside `internal/providers/sidecar_backend.go` MUST NOT trigger
 // a violation even if it mentions "bypass" (sanctioned daemon HTTP client).
 func TestSurface1_ASTImports_AllowsSanctionedDaemonSidecarBackend(t *testing.T) {
@@ -86,7 +86,7 @@ type SidecarBackend struct{}
 }
 
 // TestSurface1_ASTImports_AllowsAnthropicBypassTree — the entire
-// `private-tier1-module/**` subtree is sanctioned (Stage-0
+// `private-tier1-module/**` subtree is sanctioned (
 // correction #4 retains the source in the dev repo). Files there MUST
 // NOT trigger a violation.
 func TestSurface1_ASTImports_AllowsAnthropicBypassTree(t *testing.T) {
@@ -120,7 +120,7 @@ func use() { _ = bp.BypassClient{} }
 	}
 }
 
-// TestSurface1_ASTImports_IgnoresUnrelatedCode — clean .go file (no
+// TestSurface1_ASTImports_IgnoresUnrelatedCode — clean.go file (no
 // bypass tokens) MUST NOT trigger a violation.
 func TestSurface1_ASTImports_IgnoresUnrelatedCode(t *testing.T) {
 	t.Parallel()
@@ -203,7 +203,7 @@ func TestSurface3_DocsDir_FailsOnBypassMentionElsewhere(t *testing.T) {
 
 // TestSurface3_DocsDir_AllowsBypassSidecarRecipe — the sanctioned
 // `docs/operations/bypass-sidecar-recipe.md` MUST NOT trigger a violation
-// (community recipe per decisión 17-i).
+// .
 func TestSurface3_DocsDir_AllowsBypassSidecarRecipe(t *testing.T) {
 	t.Parallel()
 	dir := t.TempDir()
@@ -216,7 +216,7 @@ func TestSurface3_DocsDir_AllowsBypassSidecarRecipe(t *testing.T) {
 }
 
 // TestSurface3_DocsDir_AllowsPrivateBypassOpsDoc — `docs/operations/bypass.md`
-// (private-only per Phase B-12) MUST NOT trigger a violation in the dev-repo
+// MUST NOT trigger a violation in the dev-repo
 // scan because the doc-surface includes the private operator handbook.
 func TestSurface3_DocsDir_AllowsPrivateBypassOpsDoc(t *testing.T) {
 	t.Parallel()
@@ -283,7 +283,7 @@ func TestSurface4_ConfigsDir_AllowsBypassConfigJSONExample(t *testing.T) {
 // TestSurface5_SQLMigrations_FailsOnBypassTable — a SQL migration that
 // declares a bypass-specific table MUST trigger a violation.
 //
-// inv-zen-282 daemon-only store ownership: the sidecar maintains NO
+// invariant daemon-only store ownership: the sidecar maintains NO
 // SQLite state; any "bypass_*" table in `internal/store/migrations/` is
 // a boundary breach.
 func TestSurface5_SQLMigrations_FailsOnBypassTable(t *testing.T) {

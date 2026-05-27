@@ -77,11 +77,11 @@ func (p *concretePool) prewarmLoop() {
 // undo the reservation via p.total.Add(-1) on spawn failure.
 //
 // Returns false when:
-//   - pool is closed (Close fired; prewarm should idle until ctx.Done)
-//   - len(warm) >= Floor (no deficit to fill)
-//   - total >= ElasticMax (elastic ceiling reached; Lease saturation
-//     drives recovery instead via Release-spawn replacement, not
-//     prewarm — prewarm must respect the M ceiling exactly)
+// - pool is closed (Close fired; prewarm should idle until ctx.Done)
+// - len(warm) >= Floor (no deficit to fill)
+// - total >= ElasticMax (elastic ceiling reached; Lease saturation
+// drives recovery instead via Release-spawn replacement, not
+// prewarm — prewarm must respect the M ceiling exactly)
 func (p *concretePool) warmShouldSpawn() bool {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -120,7 +120,7 @@ func (p *concretePool) appendWarmAndSignal(w *Worktree) {
 // prewarmSleep blocks for d OR until p.prewarmCtx fires, whichever comes
 // first. Returns true if the full duration elapsed; false if ctx.Done
 // fired (the caller MUST exit the prewarm loop via drainWarmOnClose +
-// return). Uses the Phase A Clock seam so future *clock.Fake-driven
+// return). Uses the Clock seam so future *clock.Fake-driven
 // tests can drive backoff windows deterministically.
 func (p *concretePool) prewarmSleep(d time.Duration) bool {
 	timer := p.clk.NewTimer(d)

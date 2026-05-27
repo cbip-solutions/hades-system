@@ -5,21 +5,21 @@
 // repo on the workspace roster, so the linker can resolve an api_calls.
 // base_url_ref to a target_repo without executing client code.
 //
-// Validation refusals (every rule has a Phase F unit test + an inv-zen-268
+// Validation refusals (every rule has a unit test + an invariant
 // compliance test):
 //
-//	ErrMissingSchemaVersion     — schema_version REQUIRED (forward-compat)
-//	ErrMultipleBaseURLVariants  — exactly one of base_url / base_url_env /
-//	                              base_url_pattern per service entry
-//	ErrUnknownTargetRepo        — target_repo MUST be a workspace member
-//	ErrInlineSecret             — fields named password/token/api_key/secret/
-//	                              bearer/auth_token/private_key (any snake/
-//	                              kebab/camel variant; case-insensitive)
-//	                              REFUSED — secrets belong in env/keychain
-//	ErrPatternTooLong           — base_url_pattern > MaxPatternRunes (512)
-//	ErrPatternRegexDoS          — regexp/syntax re-walk rejects pathological
-//	                              alternation depth + complexity
-//	ErrInvalidUnresolvedPolicy  — unresolved_policy not in surface|fail|silent
+// ErrMissingSchemaVersion — schema_version REQUIRED (forward-compat)
+// ErrMultipleBaseURLVariants — exactly one of base_url / base_url_env /
+// base_url_pattern per service entry
+// ErrUnknownTargetRepo — target_repo MUST be a workspace member
+// ErrInlineSecret — fields named password/token/api_key/secret/
+// bearer/auth_token/private_key (any snake/
+// kebab/camel variant; case-insensitive)
+// REFUSED — secrets belong in env/keychain
+// ErrPatternTooLong — base_url_pattern > MaxPatternRunes (512)
+// ErrPatternRegexDoS — regexp/syntax re-walk rejects pathological
+// alternation depth + complexity
+// ErrInvalidUnresolvedPolicy — unresolved_policy not in surface|fail|silent
 //
 // The 7 sentinels are pairwise distinct (TestSentinelsAreDistinct) so a
 // caller's errors.Is discriminates the refusal class for the operator hint.

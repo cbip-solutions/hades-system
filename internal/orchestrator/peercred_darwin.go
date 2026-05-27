@@ -11,11 +11,10 @@
 // This file is excluded from coverage measurement: the syscall path
 // requires a real *net.UnixConn with a kernel-bound fd; unit tests
 // inject the PeerCredentials function via OperatorIdentityConfig
-// instead. Cross-compile is exercised by `GOOS=darwin go build ./...`
-// in the F-5 gate set; live behaviour lands in Phase N integration.
+// instead. Cross-compile is exercised by `GOOS=darwin go build./...`
+// in the F-5 gate set; live behaviour lands in integration.
 
-//go:build darwin
-
+// go:build darwin
 package orchestrator
 
 import (

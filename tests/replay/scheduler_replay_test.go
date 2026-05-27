@@ -1,4 +1,4 @@
-// tests/replay/scheduler_replay_test.go (Plan 7 Phase K Task K-12).
+// tests/replay/scheduler_replay_test.go.
 //
 // Replay-tier validation that the scheduler cost ledger is reconstructed
 // deterministically from a captured stream of HistoryEntry rows
@@ -6,48 +6,49 @@
 //
 // Coverage:
 //
-//  1. TestReplay_SchedulerCostLedger_DeterministicReconstruction —
-//     given a deterministic stream of HistoryEntry rows (the substrate
-//     row that schedule_history persists, one per fire attempt), folding
-//     the rows into a per-project cost ledger produces the same ledger
-//     across two independent passes. Direct §4.7 replay-determinism
-//     assertion at the ledger-state level.
+// 1. TestReplay_SchedulerCostLedger_DeterministicReconstruction —
+// given a deterministic stream of HistoryEntry rows (the substrate
+// row that schedule_history persists, one per fire attempt), folding
+// the rows into a per-project cost ledger produces the same ledger
+// across two independent passes. Direct §4.7 replay-determinism
+// assertion at the ledger-state level.
 //
-//  2. TestReplay_SchedulerCostLedger_RoutineFailedZeroCost — failed and
-//     skipped fires (Outcome != OutcomeSuccess) MUST NOT add cost to the
-//     ledger but MUST be preserved in the audit row count. Distinguishes
-//     "we charged" from "we tried" at the audit boundary so cost-gating
-//     downstream (Plan 5 G-2) reads only the successful spend.
+// 2. TestReplay_SchedulerCostLedger_RoutineFailedZeroCost — failed and
+// skipped fires (Outcome != OutcomeSuccess) MUST NOT add cost to the
+// ledger but MUST be preserved in the audit row count. Distinguishes
+// "we charged" from "we tried" at the audit boundary so cost-gating
+// downstream reads only the successful spend.
 //
-//  3. TestReplay_SchedulerCostLedger_IdempotentReplay — replaying the
-//     same HistoryEntry stream twice on a fresh ledger produces an
-//     IDENTICAL final state. Idempotency contract: replay sees the
-//     stream as the source of truth; no double-charge.
+// 3. TestReplay_SchedulerCostLedger_IdempotentReplay — replaying the
+// same HistoryEntry stream twice on a fresh ledger produces an
+// IDENTICAL final state. Idempotency contract: replay sees the
+// stream as the source of truth; no double-charge.
 //
 // Drift from spec heredoc (K-12 Steps 1+2): the spec referenced
 // fictional surfaces (costledger package, costledger.NewReplayer,
 // scheduler.New(scheduler.Deps{...}) constructor with Emitter+Action+
 // CostLedger fields, eventlog.NewRecorder, EvtRoutineFired/Failed event
-// types). None exist; the actual Plan 7 scheduler API
+// types). None exist; the actual scheduler API
 // (internal/scheduler/{scheduler.go, fire.go, store_iface.go}) ships:
 //
-//   - scheduler.HistoryEntry (substrate row: ScheduleID, FiredAt,
-//     Outcome, Reason, CostUSD, DurationMs)
-//   - scheduler.Outcome enum {Success, Failed, Skipped, RateLimited}
-//   - scheduler.Store interface (AppendHistory + QueryHistory)
-//   - No costledger package; cost rolls up via per-project sum over
-//     HistoryEntry.CostUSD where Outcome == OutcomeSuccess.
-//   - No EvtRoutineFired/Failed in the closed-set EventType taxonomy
-//     (Plan 7 Phase F-1/F-2 added EvtHandoffPosted, MorningBriefReady,
-//     EODDigestReady; routine-fire events are kept in
-//     scheduler.HistoryEntry rather than the cross-cutting eventlog
-//     because per-routine cost rollups are scheduler-private).
+// - scheduler.HistoryEntry (substrate row: ScheduleID, FiredAt,
+// Outcome, Reason, CostUSD, DurationMs)
+// - scheduler.Outcome enum {Success, Failed, Skipped, RateLimited}
+// - scheduler.Store interface (AppendHistory + QueryHistory)
+// - No costledger package; cost rolls up via per-project sum over
+// HistoryEntry.CostUSD where Outcome == OutcomeSuccess.
+// - No EvtRoutineFired/Failed in the closed-set EventType taxonomy
+// ( added EvtHandoffPosted, MorningBriefReady,
+// EODDigestReady; routine-fire events are kept in
+// scheduler.HistoryEntry rather than the cross-cutting eventlog
+// because per-routine cost rollups are scheduler-private).
 //
 // We adapt to the real surfaces and uphold the same load-bearing
 // contract: fold HistoryEntry stream → ledger; replay reproduces same
 // ledger; failed/skipped don't double-count cost; idempotent under
 // repeated apply.
 //
+// go:build replay
 //go:build replay
 // +build replay
 
@@ -138,7 +139,7 @@ func (s *schedReplayStore) snapshot() []scheduler.HistoryEntry {
 }
 
 // costLedgerRow is the per-(scheduleID, day) rollup that a daemon-side
-// cost ledger surfaces to operators (zen day --eod, Plan 7 spec §6.4).
+// cost ledger surfaces to operators.
 // Total cost is the sum of HistoryEntry.CostUSD for Outcome ==
 // OutcomeSuccess only — failed/skipped fires count as audit but do not
 // charge cost.
@@ -375,7 +376,7 @@ func TestReplay_SchedulerCostLedger_IdempotentReplay(t *testing.T) {
 	// of truth and the consumer treats duplicates as legitimate audit
 	// records, then the ledger doubles. This is the documented behavior:
 	// dedup happens via the ScheduleID + FiredAt unique constraint at
-	// the Phase E migration level (real persistence layer); the
+	// the migration level (real persistence layer); the
 	// replay-tier in-memory store does NOT dedup, and that is by design.
 	//
 	// What we DO assert here: applying the captured stream once on

@@ -1,18 +1,18 @@
 // tests/compliance/inv_zen_271_boundary_no_internal_store_test.go
 //
-// Compliance gate for inv-zen-271 (Plan 20 boundary mirror of inv-zen-031 /
-// inv-zen-230): the Plan-20 federation package (and the later Plan-20
+// Compliance gate for invariant ( boundary mirror of invariant /
+// invariant): the federation package (and the later
 // packages contract/{extract,link,break} + coordinated owned by Phases
 // C-H) MUST NOT import internal/store. The single sanctioned bridge is
-// internal/caronte/store (Plan 19's boundary, for the FROZEN value types
+// internal/caronte/store ( boundary, for the FROZEN value types
 // ContractLink + WorkspacePolicy + the sentinel errors); cross-project
 // federation does NOT go through the daemon-shared internal/store at all.
 //
-// Phase A ships the gate scoped to internal/caronte/store/federation only;
+// ships the gate scoped to internal/caronte/store/federation only;
 // later phases (C/D/E/F/G/H/L) extend the scan scope additively as their
-// packages land. Phase L roll-up consolidates the full scope.
+// packages land. roll-up consolidates the full scope.
 //
-// inv-zen-271 (Plan 20 Phase A).
+// invariant.
 package compliance
 
 import (

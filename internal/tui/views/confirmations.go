@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package views — confirmations.go (Plan 12 Phase C Task C-7, F6 panel).
+// Package views — confirmations.go.
 //
-// Pending confirmations (Plan 5 doctrine-decision lifecycle). The
+// Pending confirmations. The
 // daemon's /v1/doctrine/propose-list returns the queue of pending
 // doctrine proposals — these are the operator-facing confirmations
 // the F6 panel surfaces.

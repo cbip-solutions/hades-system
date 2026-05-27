@@ -241,7 +241,7 @@ func TestOrchestratorCoordinator_ErrCoordinatorNoWorkspace(t *testing.T) {
 
 // TestOrchestratorCoordinator_AuditEmitFailureReturnsErr pins step 5's
 // chokepoint contract: if emitAuditFn fails, the whole Dispatch
-// returns the error rather than dispatch-silently (inv-zen-269
+// returns the error rather than dispatch-silently (invariant
 // chokepoint guarantee — every dispatch MUST emit a leaf, or fail
 // loudly).
 func TestOrchestratorCoordinator_AuditEmitFailureReturnsErr(t *testing.T) {
@@ -270,7 +270,7 @@ func TestOrchestratorCoordinator_AuditEmitFailureReturnsErr(t *testing.T) {
 }
 
 // TestOrchestratorCoordinator_DenyPathAuditFailure pins the deny-path
-// symmetry of the inv-zen-269 chokepoint contract: when AuthorizeProjects
+// symmetry of the invariant chokepoint contract: when AuthorizeProjects
 // denies AND the emit-audit call fails, the returned error MUST surface
 // BOTH (a) the original capa-firewall denial reason AND (b) the
 // audit-emit failure so the operator can see that the denial was not
@@ -314,7 +314,7 @@ func TestOrchestratorCoordinator_DenyPathAuditFailure(t *testing.T) {
 	}
 	// (b) the audit-emit failure MUST also be errors.Is-discoverable
 	// (operator-visibility contract: a failed denial-audit must NOT be
-	// silently swallowed — that breaks the inv-zen-269 chokepoint
+	// silently swallowed — that breaks the invariant chokepoint
 	// symmetry between success and denial paths).
 	if !errors.Is(err, audit.failWith) {
 		t.Errorf("Dispatch error: want errors.Is(err, %q) true (deny-path audit-emit-failure surfaced), got %v",

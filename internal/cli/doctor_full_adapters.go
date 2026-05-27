@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_full_adapters.go (Plan 13 Phase F-tail F-imp BLOCKER 2).
+// Package cli — doctor_full_adapters.go.
 //
-// Constructs the Plan 1-9 subsystem doctor check.Check instances that
-// `zen doctor full` composes alongside the 4 NEW Plan 13 checks per
+// Constructs the subsystem doctor check.Check instances that
+// `zen doctor full` composes alongside the 4 NEW checks per
 // spec §2.5 line 229 ("Composing aggregator over Plans 1-9 per-flag
 // checks (--knowledge/--scheduler/--inbox/--tmux/--merge/--hermes) plus
-// 4 new Plan 13 checks").
+// 4 new checks").
 //
 // Import-cycle note: internal/doctor/check/cliadapter imports internal/cli
 // (for ProbeResult/ProbeStatus). If this file imported cliadapter, the
@@ -14,21 +14,21 @@
 // minimal check.Check impl that wraps an inline ProbeFunc returning
 // []ProbeResult and collapses to a composite DiagnosticResult by
 // selecting the worst Status. Semantics match cliadapter.CLIProbeAdapter;
-// the duplication is the cost of preserving inv-zen-031's package
+// the duplication is the cost of preserving invariant's package
 // boundaries without restructuring the whole adapter chain.
 //
 // Adapter wiring contract per plan F-tail F-imp:
 //
-//   - Each Plan 1-9 prober function (RunKnowledgeProbe / RunSchedulerProbe
-//     / RunInboxProbe / RunTmuxProbe / RunMergeChecks / RunHermesChecks /
-//     RunBypassChecks / etc) is wrapped via the local adapter constructor.
-//   - The adapter func builds a fresh client per invocation (lazy daemon
-//     dial) so doctor full never panics on daemon-down — the per-probe
-//     defensive paths surface daemon-down as one ProbeFail row each
-//     (operator-actionable; first remediation: `zen daemon start`).
-//   - Categories are assigned per spec §3.3 enum: Configuration for
-//     subsystem-config probes; Connectivity for daemon-reachability;
-//     Hints for info-only.
+// - Each prober function (RunKnowledgeProbe / RunSchedulerProbe
+// / RunInboxProbe / RunTmuxProbe / RunMergeChecks / RunHermesChecks /
+// RunBypassChecks / etc) is wrapped via the local adapter constructor.
+// - The adapter func builds a fresh client per invocation (lazy daemon
+// dial) so doctor full never panics on daemon-down — the per-probe
+// defensive paths surface daemon-down as one ProbeFail row each
+// (operator-actionable; first remediation: `zen daemon start`).
+// - Categories are assigned per spec §3.3 enum: Configuration for
+// subsystem-config probes; Connectivity for daemon-reachability;
+// Hints for info-only.
 //
 // Test seam: BuildPlan1To9DoctorFullAdaptersForTesting overrides the
 // production constructor — used by doctor full integration tests that
@@ -310,7 +310,7 @@ func checkResultStatusToProbeStatus(s string) ProbeStatus {
 var buildPlan1To9DoctorFullAdaptersOverride func() []check.Check
 
 // BuildPlan1To9DoctorFullAdaptersForTesting installs a test-only override
-// for the Plan 1-9 adapter list construction. Returns a cleanup function
+// for the adapter list construction. Returns a cleanup function
 // callers MUST defer.
 func BuildPlan1To9DoctorFullAdaptersForTesting(adapters func() []check.Check) func() {
 	prev := buildPlan1To9DoctorFullAdaptersOverride

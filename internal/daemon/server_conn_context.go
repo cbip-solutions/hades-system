@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 
-// Package daemon — server_conn_context.go (Plan 11 Phase D fix-cycle
+// Package daemon — server_conn_context.go ( fix-cycle
 // re-review pre-existing-gap fix).
 //
 // connContextWithPeerCred is the http.Server.ConnContext callback wired
@@ -10,16 +10,16 @@
 // context so every HTTP request served over that connection sees the
 // cred via auth.PeerCredFromContext(r.Context()).
 //
-// # Contract (inv-zen-131)
+// # Contract
 //
-//   - UDS connection (*net.UnixConn) → ExtractPeerCred + WithPeerCred.
-//     On extraction failure, the context proceeds untouched so
-//     downstream handlers detect HasSet=false and reject 401
-//     (fail-closed).
+// - UDS connection (*net.UnixConn) → ExtractPeerCred + WithPeerCred.
+// On extraction failure, the context proceeds untouched so
+// downstream handlers detect HasSet=false and reject 401
+// (fail-closed).
 //
-//   - Non-UDS connection (TCP) → return ctx unchanged. The TCP path
-//     is gated by the loopback predicate in sessionAuthenticated /
-//     auth.PeerCredOnly, not by peer-cred.
+// - Non-UDS connection (TCP) → return ctx unchanged. The TCP path
+// is gated by the loopback predicate in sessionAuthenticated /
+// auth.PeerCredOnly, not by peer-cred.
 //
 // # Lifecycle
 //

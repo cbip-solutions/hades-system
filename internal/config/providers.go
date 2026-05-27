@@ -2,15 +2,15 @@
 // internal/config/providers.go
 //
 // LoadProviders reads the [[providers]] array from providers.toml into
-// a []providers.ProviderConfig. It is the Plan 16 Phase A loader that
-// fills the Plan-3-Phase-J gap: before Plan 16 the ProviderConfig schema
+// a []providers.ProviderConfig. It is the loader that
+// fills the gap: before the ProviderConfig schema
 // existed (internal/providers/registry.go) but nothing parsed the array.
 //
 // The companion [[rate_cards]] array in the same file is read by the
 // existing providers.RateCardRegistry.LoadFromConfig — this loader does
 // not duplicate it.
 //
-// inv-zen-070: every entry is Validate()-checked before the slice is
+// invariant: every entry is Validate()-checked before the slice is
 // returned. A single malformed entry fails the whole load — a partial
 // slice would leak an operator typo into the registry build.
 package config

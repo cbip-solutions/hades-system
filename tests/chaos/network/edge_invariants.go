@@ -1,4 +1,4 @@
-//go:build chaos
+// go:build chaos
 
 // SPDX-License-Identifier: MIT
 
@@ -28,10 +28,10 @@ type EdgeInvariant func(ctx context.Context, reg *Registry, s Scenario) error
 // edgeInvariants holds the per-edge × per-category assertion table.
 // Lookup order on Run:
 //
-//	(1) (edge, category) — most specific
-//	(2) ("*",  category) — category default
-//	(3) panic — every (edge, category) MUST resolve at the registry-
-//	    level (per init guard below)
+// (1) (edge, category) — most specific
+// (2) ("*", category) — category default
+// (3) panic — every (edge, category) MUST resolve at the registry-
+// level (per init guard below)
 //
 // The "*" wildcard lets the category-default routine handle the
 // 8-edge × 10-toxic baseline (80 scenarios), and per-edge overrides
@@ -102,7 +102,7 @@ func assertCorruptShape(ctx context.Context, reg *Registry, s Scenario) error {
 // assertSidecarBypassClose is the per-edge override for
 // sidecar_bypass + CategoryClose: tightens the close-shape assertion
 // with a deadline appropriate for the bypass tier's documented
-// circuit-breaker probe cadence (per Plan 2 phase G — circuit opens
+// circuit-breaker probe cadence (per phase G — circuit opens
 // on first failure within ~150ms, half-open probe at 1s). The dial
 // MUST fail strictly faster than the dispatcher's 5s tier-fallback
 // budget so the dispatcher has time to fall through to the next

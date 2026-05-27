@@ -155,7 +155,7 @@ func TestMigrateClaudeCode_AuditEmitOnApplySuccess(t *testing.T) {
 }
 
 // TestMigrateClaudeCode_AuditEmitOnDryRunSkipped — dry-run / --plan-output
-// paths do NOT emit the run event (per spec §3.7 + Phase E §5979 "emitted on
+// paths do NOT emit the run event (per spec §3.7 + §5979 "emitted on
 // Apply completion"). Plan.Warnings still surfaces in CLI output for operator
 // inspection.
 func TestMigrateClaudeCode_AuditEmitOnDryRunSkipped(t *testing.T) {
@@ -186,14 +186,14 @@ func TestMigrateClaudeCode_AuditEmitOnDryRunSkipped(t *testing.T) {
 // canonical contract: under lenient preset (default), every CC permission
 // that fails classifyTierStrict (no matching prefix) emits exactly one
 // evt.migrate.claude_code.permission.unmapped event AND surfaces in
-// Plan.Warnings — implementing spec §3.7 line 629 + Phase E plan §25:
+// Plan.Warnings — implementing spec §3.7 line 629 + plan §25:
 // "Lenient-mode: missing source permission warns but does NOT silently drop
 // (warning surface in `Plan.Warnings` + audit emit
 // evt.migrate.claude_code.permission.unmapped)".
 //
 // Strict preset is NOT exercised here — strict halts at Apply-time via
 // ImportDoctrineStrict before the run event would fire (tested via the
-// existing inv-zen-183 compliance suite).
+// existing invariant compliance suite).
 func TestMigrateClaudeCode_PermissionUnmappedEmitsPerEntry(t *testing.T) {
 	srv, rec := newAuditDaemonStub(t)
 	defer srv.Close()

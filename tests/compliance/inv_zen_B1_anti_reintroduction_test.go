@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package compliance — Plan 15 Phase B Task B-16 anti-reintroduction sister-test.
+// Package compliance — Task B-16 anti-reintroduction sister-test.
 //
 // Defense-in-depth gate that catches regressions which would re-introduce
 // either (a) the 12 migrated invariant test files, or (b) the
 // private-tier1-module/ tree, into the PUBLIC-SNAPSHOT perimeter.
 //
-// CRITICAL semantic correction (Stage-0 plan-template-drift correction #4):
+// CRITICAL semantic correction:
 // the plan-text shape (lines 2830-2867) of the literal sister-test asserts
 // "private-tier1-module/ tree ABSENT from dev repo". REALITY:
 // private-tier1-module/ tree IS STILL PRESENT in this dev repo because
@@ -16,27 +16,27 @@
 // callsites to the sidecar pattern and only then removes the tree from
 // the dev repo. This test encodes ACTUAL semantics:
 //
-//  1. The allowlist manifest declares `private-tier1-module/**` as
-//     EXCLUDE so the snapshot REJECTS the tree.
+// 1. The allowlist manifest declares `private-tier1-module/**` as
+// EXCLUDE so the snapshot REJECTS the tree.
 //
-//  2. The 12 fully-migrated invariant test files are absent from
-//     tests/compliance/ (W7-B2 surgical-split + W7-B6 split-discipline
-//     duplicate assertion as defense-in-depth).
+// 2. The 12 fully-migrated invariant test files are absent from
+// tests/compliance/ (W7-B2 surgical-split + W7-B6 split-discipline
+// duplicate assertion as defense-in-depth).
 //
-//  3. POSITIVE assertion: the private-tier1-module/ tree IS present
-//     in the dev repo source (the COPY-not-MOVE Stage-0 truth) — fails if
-//     a future cleanup removes the tree WITHOUT first migrating the
-//     daemon-wiring callsites.
+// 3. POSITIVE assertion: the private-tier1-module/ tree IS present
+// in the dev repo source — fails if
+// a future cleanup removes the tree WITHOUT first migrating the
+// daemon-wiring callsites.
 //
 // Cross-phase: scripts/build_public_snapshot.sh applies the same
 // allowlist exclude patterns at sync-time (see scripts/build_public_snapshot.sh
 // lines 232-251 "Applying exclude patterns"); this compile-time test
-// is the source-level structural verifier. .github/workflows/
+// is the source-level structural verifier..github/workflows/
 // anti-bypass-reintroduction-on-pr.yml is the per-PR diff-time verifier.
 // Three-place coverage: allowlist + this test + per-PR workflow.
 //
-// inv-zen-NNN placeholder; concrete ID allocated at Plan 15 merge-time
-// reconciliation per the Plan 15 renumber-on-merge playbook.
+// inv-zen-NNN placeholder; concrete ID allocated at merge-time
+// reconciliation per the renumber-on-merge playbook.
 package compliance
 
 import (
@@ -135,7 +135,7 @@ func TestInvZenB1_NoMigratedInvariantTests(t *testing.T) {
 }
 
 // TestInvZenB1_DevRepoAnthropicBypassRetainedForDaemonWiring is the
-// POSITIVE assertion encoding Stage-0 correction #4. The dev repo
+// POSITIVE assertion encoding correction #4. The dev repo
 // MUST retain private-tier1-module/ until a future cleanup task
 // migrates the in-process BypassBackend daemon-wiring callsites to
 // the sidecar pattern (SidecarBackend + sidecars.toml).

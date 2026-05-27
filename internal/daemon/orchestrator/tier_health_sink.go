@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // tier_health_sink.go — orchestrator-side seam for per-provider health
-// samples (Plan 16 Phase B; inv-zen-214).
+// samples.
 //
 // TierHealthSink is the storage contract the RecoveryScheduler (probe
 // outcomes) and the daemon's dispatcher-outcome wiring write through. The
@@ -8,7 +8,7 @@
 // which translates to store.TierHealthSampleRow and forwards to
 // store.InsertTierHealthSample.
 //
-// Boundary (inv-zen-031): the orchestrator package MUST NOT import
+// Boundary: the orchestrator package MUST NOT import
 // internal/store. TierHealthSampleRow is an orchestrator-local mirror of
 // store.TierHealthSampleRow (intentionally identical in shape) — the same
 // "two type sets" discipline used for CostLedgerRow. The dispatcheradapter

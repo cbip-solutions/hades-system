@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:audit-impact — KG context for audit event {event_id}
 
-Resolve audit event **{event_id}** + show its full KG augmentation context (citations, affected symbols, community membership) in the HADES project. Wraps `zen://audit/<id>` URL handler (spec §4.2) + Plan 11 augmentation citation chain.
+Resolve audit event **{event_id}** + show its full KG augmentation context (citations, affected symbols, community membership) in the HADES project. Wraps `zen://audit/<id>` URL handler (spec §4.2) +  augmentation citation chain.
 
 ## 1. Resolve event via daemon
 
@@ -20,12 +20,12 @@ Expected response:
 - `event_type` — e.g., `AugmentationCompleted`, `KGQueryDispatched`, `MergeWinnerSelected`
 - `payload` — type-specific fields
 - `citations[]` — list of citation envelopes per spec §1 Q9
-- `tessera_leaf_anchor` — Plan 9 tile-log leaf hash
-- `prior_events[]` — chained prior events (Plan 9 audit chain prev-pointer)
+- `tessera_leaf_anchor` —  tile-log leaf hash
+- `prior_events[]` — chained prior events
 
 ## 2. Augment with KG context
 
-For each citation source, query the Plan 11 augmentation pipeline (`/v1/augment` mode=audit_resolve):
+For each citation source, query the  augmentation pipeline (`/v1/augment` mode=audit_resolve):
 
 ```bash
 curl --unix-socket /tmp/zen-swarm.sock \\
@@ -62,8 +62,8 @@ Format as operator briefing:
    - Affected callers: <list>
    - Community: <name>
 
-## Prior chained events (Plan 9 prev-pointer chain)
-<event_id_1> → <event_id_2> → ... → <root>
+## Prior chained events
+<event_id_1> → <event_id_2> →... → <root>
 
 ## Tessera leaf anchor
 <tessera_leaf_anchor>
@@ -71,10 +71,10 @@ Format as operator briefing:
 
 ## 4. Privacy filter
 
-Per Plan 11 inv-zen-163 (privacy boundary), if event was emitted in capa-firewall doctrine, only show events visible to operator's current doctrine + project.
+Per  invariant (privacy boundary), if event was emitted in capa-firewall doctrine, only show events visible to operator's current doctrine + project.
 
 ```
-Some context filtered by capa-firewall privacy boundary (inv-zen-163).
+Some context filtered by capa-firewall privacy boundary.
 ```
 
 ## 5. Audit chain navigation
@@ -89,8 +89,8 @@ Operator can deep-link to any chained event:
 - spec §4.2 slash command flow
 - spec §4.6 audit chain integration (event types table)
 - spec §1 Q9 citation envelope structure
-- inv-zen-163 privacy boundary
-- inv-zen-172 zen://audit URL handler auth check
+- invariant privacy boundary
+- invariant zen://audit URL handler auth check
 """
 
 _PROMPT_NO_ID = """# /hades:audit-impact — KG context for audit event

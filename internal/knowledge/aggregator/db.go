@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -37,27 +38,27 @@ const vecDimensions = 384
 // init pipeline.
 //
 // Pre-conditions:
-//   - dbPath is a non-empty absolute or repo-relative path. Empty path
-//     is rejected up-front; defaulting to ":memory:" or "$CWD/<x>"
-//     would silently mask configuration errors.
-//   - Process linked with CGO_ENABLED=1 (else the !cgo Open does not
-//     compile and the daemon fails at boot — that is the canonical
-//     degraded-mode entry point per Failure mode #8).
+// - dbPath is a non-empty absolute or repo-relative path. Empty path
+// is rejected up-front; defaulting to ":memory:" or "$CWD/<x>"
+// would silently mask configuration errors.
+// - Process linked with CGO_ENABLED=1 (else the !cgo Open does not
+// compile and the daemon fails at boot — that is the canonical
+// degraded-mode entry point per Failure mode #8).
 //
 // Post-conditions:
-//   - Parent directory exists (mkdir-all 0o700 — operator-only). The
-//     0o700 mode is load-bearing: aggregator.db lives in a global path
-//     under the operator's home and contains cross-project content;
-//     0o755 would expose it to other macOS / Linux users on a shared
-//     host (rare but real).
-//   - SQLite connection pool is sized for SINGLE-WRITER WAL discipline
-//     (MaxOpenConns=1, MaxIdleConns=1). Two writers + WAL is a known
-//     SQLite footgun (busy-loop unless busy_timeout > inter-writer
-//     gap). The single-writer model matches Plan 5's auditadapter
-//     posture; aggregator inherits it for consistency + simplicity.
-//   - Ping verifies the file is openable AND the DSN PRAGMAs were
-//     accepted (an invalid PRAGMA name produces a Ping error with the
-//     mattn driver).
+// - Parent directory exists (mkdir-all 0o700 — operator-only). The
+// 0o700 mode is load-bearing: aggregator.db lives in a global path
+// under the operator's home and contains cross-project content;
+// 0o755 would expose it to other macOS / Linux users on a shared
+// host (rare but real).
+// - SQLite connection pool is sized for SINGLE-WRITER WAL discipline
+// (MaxOpenConns=1, MaxIdleConns=1). Two writers + WAL is a known
+// SQLite footgun (busy-loop unless busy_timeout > inter-writer
+// gap). The single-writer model matches auditadapter
+// posture; aggregator inherits it for consistency + simplicity.
+// - Ping verifies the file is openable AND the DSN PRAGMAs were
+// accepted (an invalid PRAGMA name produces a Ping error with the
+// mattn driver).
 func Open(ctx context.Context, dbPath string) (*sql.DB, error) {
 	if dbPath == "" {
 		return nil, errors.New("aggregator: empty dbPath")

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// alias.go — Plan 7 Phase A: human alias resolution per spec §1 Q3.
+// alias.go — : human alias resolution per spec §1 Q3.
 //
 // The alias is read from <canonical-path>/zenswarm.toml [project] id, with
 // fallback <dirname>-<sha256[:8]>. Both forms validate against the same
@@ -79,13 +79,13 @@ type zenswarmTOML struct {
 }
 
 // ResolveAlias returns the alias for a project at canonicalPath.
-//  1. If <canonicalPath>/zenswarm.toml exists AND parses AND
-//     [project] id is set + valid, return that.
-//  2. If TOML parses but no [project] id, fall back to <dirname>-<sha8>.
-//  3. If TOML doesn't exist, fall back to <dirname>-<sha8>.
-//  4. If TOML exists and fails to parse, return ErrZenswarmTOMLMalformed
-//     (do NOT silently fall back — operator misconfig must surface).
-//  5. If [project] id is set but invalid, return ErrAliasInvalid.
+// 1. If <canonicalPath>/zenswarm.toml exists AND parses AND
+// [project] id is set + valid, return that.
+// 2. If TOML parses but no [project] id, fall back to <dirname>-<sha8>.
+// 3. If TOML doesn't exist, fall back to <dirname>-<sha8>.
+// 4. If TOML exists and fails to parse, return ErrZenswarmTOMLMalformed
+// (do NOT silently fall back — operator misconfig must surface).
+// 5. If [project] id is set but invalid, return ErrAliasInvalid.
 //
 // canonicalPath must exist on disk (ResolveAlias calls ResolveProjectID
 // for the fallback computation, which calls EvalSymlinks).

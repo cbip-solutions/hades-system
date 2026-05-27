@@ -2,24 +2,24 @@
 // Package augment — Pipeline.Run is the central augmentation orchestrator.
 //
 // Sequence (per spec §4.1 augmentation request lifecycle):
-//   1. Validate request
-//   2. DoctrineGate.Check     (capa-firewall / disabled / max_tokens=0 -> skip)
-//   3. BudgetGate.Check       (over-cap -> skip)
-//   4. Audit AugmentationStarted leaf
-//   5. 5-lane fan-out via wg + per-lane timeout
-//   6. Per-lane PrivacyFilter.FilterCrossProject
-//   7. AggregatorConsumer.RunRRF (Plan 9 D Fuse k=60)
-//   8. CommunitySummarize
-//   9. CacheSplit
-//  10. Truncation guard
-//  11. BudgetGate.Commit
-//  12. Audit AugmentationCompleted (or Truncated/Skipped) leaf
-//  13. Return AugmentResponse
+// 1. Validate request
+// 2. DoctrineGate.Check (capa-firewall / disabled / max_tokens=0 -> skip)
+// 3. BudgetGate.Check (over-cap -> skip)
+// 4. Audit AugmentationStarted leaf
+// 5. 5-lane fan-out via wg + per-lane timeout
+// 6. Per-lane PrivacyFilter.FilterCrossProject
+// 7. AggregatorConsumer.RunRRF
+// 8. CommunitySummarize
+// 9. CacheSplit
+// 10. Truncation guard
+// 11. BudgetGate.Commit
+// 12. Audit AugmentationCompleted (or Truncated/Skipped) leaf
+// 13. Return AugmentResponse
 //
 // Concurrency budget (Q8=C):
-//   - PerLaneTimeout: doctrine-tunable (max-scope=2s / default=1s / capa-firewall=500ms)
-//   - ConcurrencyBudget: in-flight lane goroutines
-//   - QueueDepth: queued Pipeline.Run calls beyond ConcurrencyBudget
+// - PerLaneTimeout: doctrine-tunable (max-scope=2s / default=1s / capa-firewall=500ms)
+// - ConcurrencyBudget: in-flight lane goroutines
+// - QueueDepth: queued Pipeline.Run calls beyond ConcurrencyBudget
 //
 // Partial-failure tolerance: errored lanes contribute empty TopK; pipeline continues.
 //
@@ -151,7 +151,7 @@ func (p *Pipeline) Run(ctx context.Context, req AugmentRequest) (AugmentResponse
 		return AugmentResponse{}, fmt.Errorf("augment: doctrine_gate: %w", err)
 	}
 	if !allowed {
-		// propagate. inv-zen-088 "every augmentation event MUST anchor"
+		// propagate. invariant "every augmentation event MUST anchor"
 		// is breached if the skip emit silently fails — operators see a
 		// skipped outcome but no chain anchor row.
 		eventID, emitErr := p.auditAnchor.Emit(ctx, EventAugmentationSkipped,
@@ -331,7 +331,7 @@ func (p *Pipeline) Run(ctx context.Context, req AugmentRequest) (AugmentResponse
 //
 // auditAnchor.Emit error any lane goroutine produces (alongside the
 // usual lane TopK list). The orchestrator surfaces this error to the
-// caller — inv-zen-088 "every augmentation event MUST anchor" is
+// caller — invariant "every augmentation event MUST anchor" is
 // load-bearing; silently swallowing lane emit errors leaves the chain
 // with no record of gateway-call failures.
 func (p *Pipeline) runFiveLanes(ctx context.Context, req AugmentRequest, schema *DoctrineSchema) ([]TopK, error) {

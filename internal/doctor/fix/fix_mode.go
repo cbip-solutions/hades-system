@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package fix — fix_mode.go ships the Apply orchestrator that runs the
 // per-fix Apply method through the GuardDestructive gate + emits the
-// audit event evt.doctor.full.fix.applied per inv-zen-184 sibling
+// audit event evt.doctor.full.fix.applied per invariant sibling
 // guarantee.
 package fix
 

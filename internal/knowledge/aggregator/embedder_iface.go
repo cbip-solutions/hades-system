@@ -6,7 +6,7 @@ import "context"
 // Embedder is the embedding model abstraction. Implementations live en
 // internal/knowledge/embed/ (Mac MPS / daemon CPU / mock for tests).
 //
-// Boundary implementations MUST NOT make web calls (inv-zen-129).
+// Boundary implementations MUST NOT make web calls.
 // The contract is enforced by the no-net/http compliance test on the
 // internal/knowledge/embed package (D-7's home).
 //

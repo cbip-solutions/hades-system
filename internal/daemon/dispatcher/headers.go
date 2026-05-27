@@ -7,13 +7,13 @@
 // before tier dispatch.
 //
 // Design notes:
-//   - Keys are unexported typed ints (ctxKey) to avoid cross-package collision.
-//   - Empty values are omitted from HeadersFromContext output so callers never
-//     need to filter zero-value headers before forwarding to the upstream tier.
-//   - MergeHeaders: explicit wins on conflict, including explicit empty string —
-//     the caller's deliberate choice always overrides the ambient context default.
-//   - Boundary (inv-zen-031): this file only imports "context" from stdlib.
-//     It MUST NOT import internal/store or any other internal package.
+// - Keys are unexported typed ints (ctxKey) to avoid cross-package collision.
+// - Empty values are omitted from HeadersFromContext output so callers never
+// need to filter zero-value headers before forwarding to the upstream tier.
+// - MergeHeaders: explicit wins on conflict, including explicit empty string —
+// the caller's deliberate choice always overrides the ambient context default.
+// - Boundary: this file only imports "context" from stdlib.
+// It MUST NOT import internal/store or any other internal package.
 
 package dispatcher
 

@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
-// Package budget provides the daemon-side budget engine for Plan 4.
+// Package budget provides the daemon-side budget engine.
 //
-// rows. Plan 4 layers four engines on top:
+// rows. layers four engines on top:
 //
-//   - axes: multi-axis attribution (project x doctrine x stage x task + operation + worker_id) via cost_axis_tags
-//   - enforce: hierarchical hard-pause cap check across 4 scopes (project / doctrine / stage / worker_id), most-restrictive wins
-//   - anomaly: z-score sliding window per scope (Welford epsilon-stable)
-//   - pause: 4-scope state machine + auto-resume scheduler
+// - axes: multi-axis attribution (project x doctrine x stage x task + operation + worker_id) via cost_axis_tags
+// - enforce: hierarchical hard-pause cap check across 4 scopes (project / doctrine / stage / worker_id), most-restrictive wins
+// - anomaly: z-score sliding window per scope (Welford epsilon-stable)
+// - pause: 4-scope state machine + auto-resume scheduler
 //
-// The package never imports internal/store directly (inv-zen-031). All
+// The package never imports internal/store directly. All
 // storage access goes through the BudgetStore interface declared here;
 // internal/daemon/dispatcheradapter/budget_hooks.go satisfies it.
 //
 // Compile-time anchors for the four invariants:
 //
-//	inv-zen-076: preCallEnforcedBeforeUpstream  (enforce.go)
-//	inv-zen-077: axisTagCompleteness             (axes.go)
-//	inv-zen-078: anomalyDeterministic            (anomaly.go)
-//	inv-zen-079: hierarchicalPrecedence          (enforce.go)
+// invariant: preCallEnforcedBeforeUpstream (enforce.go)
+// invariant: axisTagCompleteness (axes.go)
+// invariant: anomalyDeterministic (anomaly.go)
+// invariant: hierarchicalPrecedence (enforce.go)
 package budget
 
 import (

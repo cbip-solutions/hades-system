@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
-// Package client — adr.go (Plan 9 Phase H Task H-9).
+// Package client — adr.go.
 //
-// 9 typed wrappers for the Plan 9 Phase H-3 ADR endpoints declared in
+// 9 typed wrappers for the ADR endpoints declared in
 // internal/daemon/handlers/adr.go. Wire types mirror the handler declarations;
 // duplication is intentional (client compiles standalone without importing
-// internal/daemon — Plan 4 N convention).
+// internal/daemon — N convention).
 //
-//	POST /v1/adr/propose   — ADRPropose
-//	GET  /v1/adr/show      — ADRShow
-//	GET  /v1/adr/list      — ADRList
-//	GET  /v1/adr/graph     — ADRGraph
-//	GET  /v1/adr/history   — ADRHistory
-//	POST /v1/adr/accept    — ADRAccept
-//	POST /v1/adr/reject    — ADRReject
-//	POST /v1/adr/supersede — ADRSupersede
-//	POST /v1/adr/index     — ADRIndex
+// POST /v1/adr/propose — ADRPropose
+// GET /v1/adr/show — ADRShow
+// GET /v1/adr/list — ADRList
+// GET /v1/adr/graph — ADRGraph
+// GET /v1/adr/history — ADRHistory
+// POST /v1/adr/accept — ADRAccept
+// POST /v1/adr/reject — ADRReject
+// POST /v1/adr/supersede — ADRSupersede
+// POST /v1/adr/index — ADRIndex
 //
-// inv-zen-031: this file imports stdlib only (context, net/url, strconv).
+// invariant: this file imports stdlib only (context, net/url, strconv).
 // No internal/daemon, internal/store, or internal/adr imports.
 package client
 
@@ -76,7 +76,14 @@ type ADRManifest struct {
 }
 
 func (c *Client) ADRPropose(ctx context.Context, topic string) (ADR, error) {
+	return c.ADRProposeWithPlan(ctx, topic, "")
+}
+
+func (c *Client) ADRProposeWithPlan(ctx context.Context, topic, planRange string) (ADR, error) {
 	body := map[string]any{"topic": topic}
+	if planRange != "" {
+		body["plan_range"] = planRange
+	}
 	var out ADR
 	if err := c.postJSON(ctx, "/v1/adr/propose", body, &out); err != nil {
 		return ADR{}, err

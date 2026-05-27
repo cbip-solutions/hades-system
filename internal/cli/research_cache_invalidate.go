@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package cli — research_cache_invalidate.go (Plan 9 Phase I Task I-9).
+// Package cli — research_cache_invalidate.go.
 //
-// NEW Plan 9 leaf: `zen research cache invalidate <query>` — operator
+// NEW leaf: `zen research cache invalidate <query>` — operator
 // force-stale. Marks cache entries matching the query string as stale so the
 // next dispatch repopulates from source (T9 mitigation).
 //
@@ -9,7 +9,7 @@
 // returning a ResearchCacheInvalidateResp struct with Query/Invalidated/
 // EmittedAt fields. H-9 actually shipped:
 //
-//	ResearchCacheInvalidate(ctx, query string) (int, error)
+// ResearchCacheInvalidate(ctx, query string) (int, error)
 //
 // Returns only the count of invalidated entries. This file uses H-9 actuals.
 package cli

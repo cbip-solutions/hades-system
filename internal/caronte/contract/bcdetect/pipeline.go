@@ -17,14 +17,14 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/caronte/store/federation"
 )
 
-// ConsumerEnumerator is the Phase F seam Pipeline.Fan consumes. Phase F's
+// ConsumerEnumerator is the seam Pipeline.Fan consumes.
 // link.Linker.ConsumersFor is the production implementation; tests inject
 // fakeLinker. Returning []coordinated.ConsumerRef per FIX-4 of the
-// Stage-2 review — the canonical cross-package consumer-reference shape
-// is owned by Phase H (in internal/caronte/coordinated/types.go).
+// review — the canonical cross-package consumer-reference shape
+// is owned by (in internal/caronte/coordinated/types.go).
 //
-// AS-BUILT divergence from the Phase G plan: Phase F has not merged at
-// Phase G dispatch time (W4 = {F, G} parallel). When Phase F's linker
+// AS-BUILT divergence from the plan: has not merged at
+// dispatch time (W4 = {F, G} parallel). When linker
 // surfaces, it MUST satisfy this interface structurally (no need for a
 // shared declaration site — Go interface satisfiability is structural).
 type ConsumerEnumerator interface {
@@ -56,7 +56,7 @@ type Pipeline struct {
 }
 
 // NewPipeline constructs a Pipeline. Validates Params at construction +
-// refuses a nil Workspace (the inv-zen-264 capa-firewall gate is
+// refuses a nil Workspace (the invariant capa-firewall gate is
 // load-bearing). The panics here are construction-time guards — the
 // daemon composition root MUST satisfy them; tests pass DefaultParams +
 // a non-nil Workspace.
@@ -91,7 +91,7 @@ func (p *Pipeline) Fan(ctx context.Context, kind store.APIEndpointKind, endpoint
 	if err != nil {
 		return nil, fmt.Errorf("detect (%s): %w", det.DetectorID(), err)
 	}
-	// inv-zen-272 production wiring (spec-review MAJOR fix, Phase G plan
+	// invariant production wiring (spec-review MAJOR fix, plan
 	// §G-7 line 904): for KindGraphQL endpoints with a wired NodeFallback,
 	// invoke MaybeRun under the BOTH-AND gate. Plan §G-7 line 904 specifies
 	// the precise contract: "Pipeline.Fan for an endpoint of kind
@@ -105,19 +105,19 @@ func (p *Pipeline) Fan(ctx context.Context, kind store.APIEndpointKind, endpoint
 	// internally per its documented BOTH-AND contract, so a future caller
 	// that bypasses the pipeline still cannot spawn without both gates):
 	//
-	//   1. Kind-gate: only store.KindGraphQL endpoints reach the seam
-	//      (KindHTTP / KindGRPC / KindMQ / KindWS skip it entirely).
-	//      Wiring a NodeFallback into PipelineDeps MUST NOT bleed into
-	//      other detection paths.
-	//   2. Wiring-gate: PipelineDeps.NodeFallback nil ⇒ skip entirely
-	//      (Plan 19 / early-Plan-20 composition root behaviour — no
-	//      graphql-inspector binary available; surface SevInsufficient
-	//      to the operator unchanged).
-	//   3. SevInsufficient-gate: no Insufficient entries in goResult ⇒
-	//      no MaybeRun call (nothing to "fall back" for). MaybeRun's
-	//      internal containsInsufficient check is the defense-in-depth
-	//      backstop; the pipeline pre-check avoids the function-call
-	//      overhead + makes the gate auditable from the pipeline file.
+	// 1. Kind-gate: only store.KindGraphQL endpoints reach the seam
+	// (KindHTTP / KindGRPC / KindMQ / KindWS skip it entirely).
+	// Wiring a NodeFallback into PipelineDeps MUST NOT bleed into
+	// other detection paths.
+	// 2. Wiring-gate: PipelineDeps.NodeFallback nil ⇒ skip entirely
+	// ( / early- composition root behaviour — no
+	// graphql-inspector binary available; surface SevInsufficient
+	// to the operator unchanged).
+	// 3. SevInsufficient-gate: no Insufficient entries in goResult ⇒
+	// no MaybeRun call (nothing to "fall back" for). MaybeRun's
+	// internal containsInsufficient check is the defense-in-depth
+	// backstop; the pipeline pre-check avoids the function-call
+	// overhead + makes the gate auditable from the pipeline file.
 	//
 	// MaybeRun returns the (possibly replaced) []DiffResult; we feed it
 	// to filterActionableSeverities so a Node-classified SevBreaking
@@ -151,7 +151,7 @@ func (p *Pipeline) Fan(ctx context.Context, kind store.APIEndpointKind, endpoint
 		return nil, fmt.Errorf("link.ConsumersFor: %w", consErr)
 	}
 
-	// FIX-3 / inv-zen-264 capa-firewall gate: every breaking_changes write
+	// FIX-3 / invariant capa-firewall gate: every breaking_changes write
 	// (and every breaking_change_consumers write derived from it) MUST
 	// transit Workspace.AuthorizeProjects BEFORE any DB mutation. Collect
 	// every project that will appear in any row (endpoint repo + every

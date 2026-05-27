@@ -1,26 +1,26 @@
 // tests/compliance/inv_zen_104_merge_no_store_test.go
 //
-// Compliance gate for inv-zen-104: every package under
+// Compliance gate for invariant: every package under
 // internal/orchestrator/merge/... MUST NOT depend on internal/store,
 // neither directly nor transitively. The store boundary is bridged via
-// the Plan 5 Phase N adapter at internal/daemon/orchestratoradapter/
+// the adapter at internal/daemon/orchestratoradapter/
 // which adapts the merge engine's RawEmitter / EventEmitter onto the
 // store-backed audit_events_raw table.
 //
 // Two checks at the same compile-time substrate:
-//  1. `go list -deps -json` against ./internal/orchestrator/merge/...
-//     decoded into Imports + transitive Deps closure. Either route
-//     to internal/store fails the build. The Deps closure is the
-//     load-bearing check — a transitive store dep is just as much an
-//     inv-zen-104 violation as a direct one because it pulls the SQL
-//     surface into the merge engine's compile-time graph.
-//  2. The doc.go substrateSeparated() compile-time marker still builds.
-//     If a future contributor accidentally adds a forbidden import,
-//     `go build ./internal/orchestrator/merge/...` would either succeed
-//     anyway (caught by check 1) or fail to build (caught by check 2),
-//     so the two checks are belt-and-suspenders defense-in-depth.
+// 1. `go list -deps -json` against./internal/orchestrator/merge/...
+// decoded into Imports + transitive Deps closure. Either route
+// to internal/store fails the build. The Deps closure is the
+// load-bearing check — a transitive store dep is just as much an
+// invariant violation as a direct one because it pulls the SQL
+// surface into the merge engine's compile-time graph.
+// 2. The doc.go substrateSeparated() compile-time marker still builds.
+// If a future contributor accidentally adds a forbidden import,
+// `go build./internal/orchestrator/merge/...` would either succeed
+// anyway (caught by check 1) or fail to build (caught by check 2),
+// so the two checks are belt-and-suspenders defense-in-depth.
 //
-// Mirrors Plan 5 Phase A inv-zen-089 / inv-zen-090 import-graph scan
+// Mirrors invariant / invariant import-graph scan
 // pattern (tests/compliance/inv_zen_089_orchestrator_no_store_test.go,
 // tests/compliance/inv_zen_090_substrate_separation_test.go) — same
 // helpers (repoRoot, isUnderPrefix), same go-list-deps approach, same
@@ -41,7 +41,7 @@ const (
 
 // TestInvZen104MergeMustNotImportStore — internal/orchestrator/merge/*
 // MUST NOT import internal/store directly or transitively. Bridge via
-// internal/daemon/orchestratoradapter (Plan 5 Phase N).
+// internal/daemon/orchestratoradapter.
 func TestInvZen104MergeMustNotImportStore(t *testing.T) {
 	root := repoRoot(t)
 	cmd := exec.Command("go", "list", "-deps", "-json", "./internal/orchestrator/merge/...")

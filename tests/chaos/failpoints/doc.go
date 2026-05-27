@@ -1,8 +1,8 @@
-//go:build chaos
+// go:build chaos
 
 // SPDX-License-Identifier: MIT
 
-// Package failpoints implements Plan 15 Phase F gofail-driven chaos
+// Package failpoints implements gofail-driven chaos
 // scenarios across the 15 cross-package hot paths injected in F-2.
 //
 // # Coverage matrix
@@ -24,8 +24,8 @@
 // Within an enabled tree, tests pass a Term to gofail's runtime
 // (via the GOFAIL_FAILPOINTS env var) to switch a named site on:
 //
-//	GOFAIL_FAILPOINTS='auditWALFsync=return("err")' \
-//	go test -tags chaos ./tests/chaos/failpoints/...
+// GOFAIL_FAILPOINTS='auditWALFsync=return("err")' \
+// go test -tags chaos./tests/chaos/failpoints/...
 //
 // Or via the package-local Activate helper used by the test bodies.
 //

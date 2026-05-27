@@ -122,7 +122,7 @@ func TestCitationHashSuffix_PaddingBranch(t *testing.T) {
 	}
 }
 
-// TestMakeCitationID_TruncationCollisionDistinct pins Plan 11 Phase C
+// TestMakeCitationID_TruncationCollisionDistinct pins
 // fix-cycle Minor-9 closure. Two noteIDs that share the same 14-char
 // alphanumeric prefix MUST produce distinct citation IDs — pre-fix the
 // truncation step silently dropped the suffix and both rows landed on

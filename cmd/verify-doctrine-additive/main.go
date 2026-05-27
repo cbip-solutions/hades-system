@@ -4,18 +4,18 @@
 //
 // Inputs (environment):
 //
-//   - REPO_DIR: working directory of the git repo. Default ".".
-//   - BASE / HEAD_REF: explicit two-point range; default "HEAD~1" /
-//     "HEAD". Linear-history assumption — `HEAD~1..HEAD` does not
-//     reflect "the changes this PR introduces" on a branch that has
-//     merge commits in its history. For non-linear histories prefer
-//     MERGE_BASE_REF.
-//   - MERGE_BASE_REF: when set, the binary computes the real base via
-//     `git merge-base $MERGE_BASE_REF $HEAD_REF` and uses that as the
-//     diff base. Recommended in CI: set MERGE_BASE_REF=origin/main
-//     and HEAD_REF=HEAD so the validator inspects "everything this
-//     branch changed since it diverged from main", which works
-//     correctly through merge commits.
+// - REPO_DIR: working directory of the git repo. Default ".".
+// - BASE / HEAD_REF: explicit two-point range; default "HEAD~1" /
+// "HEAD". Linear-history assumption — `HEAD~1..HEAD` does not
+// reflect "the changes this PR introduces" on a branch that has
+// merge commits in its history. For non-linear histories prefer
+// MERGE_BASE_REF.
+// - MERGE_BASE_REF: when set, the binary computes the real base via
+// `git merge-base $MERGE_BASE_REF $HEAD_REF` and uses that as the
+// diff base. Recommended in CI: set MERGE_BASE_REF=origin/main
+// and HEAD_REF=HEAD so the validator inspects "everything this
+// branch changed since it diverged from main", which works
+// correctly through merge commits.
 //
 // Either BASE or MERGE_BASE_REF may be specified; MERGE_BASE_REF
 // wins when both are set. HEAD_REF is shared across both modes.

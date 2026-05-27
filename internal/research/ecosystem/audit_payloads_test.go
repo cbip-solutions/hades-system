@@ -1,25 +1,25 @@
 // internal/research/ecosystem/audit_payloads_test.go
 //
-// Tests for the 8 RAG audit event payload types (Plan 14 Phase D Task D-12;
+// Tests for the 8 RAG audit event payload types ( Task D-12;
 // see plan-file lines 5484-5806 for canonical spec).
 //
 // Coverage discipline: per project doctrine `feedback_no_tech_debt.md`,
 // security/correctness-critical files (audit chain integrity is a
-// Plan-level invariant: inv-zen-197 + inv-zen-205) require ≥90% per-function
+// Plan-level invariant: invariant + invariant) require ≥90% per-function
 // coverage. Tests cover:
-//   - Compile-time interface assertions for each payload type
-//     (via reflective JSON round-trip — payloads are pure data, no behaviour)
-//   - JSON marshal round-trip for every payload (preserves canonical schema)
-//   - All-fields-set + all-fields-zero marshal coverage per payload (omitempty
-//     correctness so audit storage stays compact)
-//   - Integration through RAGAuditEmitter.Emit for every payload type
-//     (verifies the emitter's marshal+Append path on each typed payload)
-//   - Cross-doctrine emit coverage (max-scope/default/minimal) per payload
-//   - EventType slot-binding invariant (each payload bound to its declared slot)
+// - Compile-time interface assertions for each payload type
+// (via reflective JSON round-trip — payloads are pure data, no behaviour)
+// - JSON marshal round-trip for every payload (preserves canonical schema)
+// - All-fields-set + all-fields-zero marshal coverage per payload (omitempty
+// correctness so audit storage stays compact)
+// - Integration through RAGAuditEmitter.Emit for every payload type
+// (verifies the emitter's marshal+Append path on each typed payload)
+// - Cross-doctrine emit coverage (max-scope/default/minimal) per payload
+// - EventType slot-binding invariant (each payload bound to its declared slot)
 //
-// Doctrine note: AuditMinimal in Phase A's frozen surface emits
+// Doctrine note: AuditMinimal in frozen surface emits
 // Query + Abstain (NOT Query + Answer as one plan-file snippet suggested);
-// these tests align with the Phase A surface (audit_emitter.go +
+// these tests align with the surface (audit_emitter.go +
 // audit_emitter_test.go) — the frozen contract wins per
 // `feedback_plan_template_drift.md`.
 
@@ -37,9 +37,9 @@ import (
 )
 
 func TestRAGAuditPayloadEventTypeSlots(t *testing.T) {
-	// inv-zen-197 APPEND-ONLY: EvtRAGQuery=92..EvtRAGIngestJoinKey=99.
-	// Payloads MUST bind to the slots Phase A declared; mismatching
-	// breaks audit chain consumers (D-9 dispatcher, Phase H property test).
+	// invariant APPEND-ONLY: EvtRAGQuery=92..EvtRAGIngestJoinKey=99.
+	// Payloads MUST bind to the slots declared; mismatching
+	// breaks audit chain consumers.
 	want := map[string]eventlog.EventType{
 		"RAGQueryPayload":         eventlog.EvtRAGQuery,
 		"RAGRetrievalPayload":     eventlog.EvtRAGRetrieval,
@@ -90,9 +90,9 @@ func TestRAGQueryPayloadJSONRoundtrip(t *testing.T) {
 func TestRAGQueryPayloadOmitEmpty(t *testing.T) {
 	// All zero-value optional fields MUST be omitted; required fields
 	// emit even at zero. Plan-file §4.6 marks these REQUIRED (no omitempty):
-	//   query, doctrine, routing, classifier_checkpoint
+	// query, doctrine, routing, classifier_checkpoint
 	// These are OPTIONAL (omitempty):
-	//   ecosystem, version, version_layer, project_path, fresh_dispatch
+	// ecosystem, version, version_layer, project_path, fresh_dispatch
 	in := RAGQueryPayload{Query: "q", Doctrine: "default"}
 	body := mustMarshal(t, in)
 	for _, omit := range []string{

@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -16,13 +17,13 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/research/ecosystem"
 )
 
-//go:embed pypi_testdata/numpy_metadata.json
+// go:embed pypi_testdata/numpy_metadata.json
 var pypiNumpyJSON []byte
 
-//go:embed pypi_testdata/libraries_io_top.json
+// go:embed pypi_testdata/libraries_io_top.json
 var pypiTopJSON []byte
 
-//go:embed pypi_testdata/numpy_release_notes.md
+// go:embed pypi_testdata/numpy_release_notes.md
 var pypiNumpyChangelog []byte
 
 func TestPyPISource_Ecosystem(t *testing.T) {

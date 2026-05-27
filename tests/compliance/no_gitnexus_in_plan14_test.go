@@ -1,39 +1,39 @@
 // tests/compliance/no_gitnexus_in_plan14_test.go
 //
 // Per ADR-0007 (vendor mode): project-RAG is orthogonal to ecosystem-RAG.
-// project-level code intelligence; Plan 14 owns ecosystem docs only.
+// project-level code intelligence; owns ecosystem docs only.
 //
 // Checked packages:
-//   - internal/research/ecosystem/... (full Plan 14 package tree)
-//   - cmd/zen-docs-cron/...           (cron worker)
-//   - internal/cli/ files: knowledge_remote.go, memory_*.go, specs_*.go, docs_*.go,
-//     doctor_ecosystem.go (Plan 14 CLI namespace fills)
-//   - internal/mcp/research/ecosystem_docs.go (the single Plan 4 MCP binding
-//     rewired in Phase F; the rest of internal/mcp/research/ is the Plan 4
-//     parent MCP which owns the long-lived `gitnexus mcp` child subprocess
-//     and is OUT OF SCOPE for this boundary — the Plan 14 contract is that
-//     the ecosystem_docs.go binding stays gitnexus-agnostic so Plan 17 swap
-//     readiness per ADR-0080 is preserved).
+// - internal/research/ecosystem/...
+// - cmd/zen-docs-cron/... (cron worker)
+// - internal/cli/ files: knowledge_remote.go, memory_*.go, specs_*.go, docs_*.go,
+// doctor_ecosystem.go
+// - internal/mcp/research/ecosystem_docs.go (the single MCP binding
+// rewired in ; the rest of internal/mcp/research/ is the
+// parent MCP which owns the long-lived `gitnexus mcp` child subprocess
+// and is OUT OF SCOPE for this boundary — the contract is that
+// the ecosystem_docs.go binding stays gitnexus-agnostic so swap
+// readiness per ADR-0080 is preserved).
 //
 // Invariant enforcement:
-//   - inv-zen-201: gitnexus boundary preserved.
-//     This test is the CANONICAL enforcement point for inv-zen-201 in the
-//     to clarify N4 doc drift: this file IS the inv-zen-201 enforcer; no
-//     other compliance test duplicates the check).
-//   - ADR-0007 (vendor mode): gitnexus orthogonal to ecosystem-RAG.
-//   - ADR-0080 (Plan 17 swap-readiness): if gitnexus is removed/replaced
-//     per ADR-0082 conditional trigger, Plan 14 remains operational without
-//     amendment because the substrate is gitnexus-agnostic.
+// - invariant: gitnexus boundary preserved.
+// This test is the CANONICAL enforcement point for invariant in the
+// to clarify N4 doc drift: this file IS the invariant enforcer; no
+// other compliance test duplicates the check).
+// - ADR-0007 (vendor mode): gitnexus orthogonal to ecosystem-RAG.
+// - ADR-0080: if gitnexus is removed/replaced
+// per ADR-0082 conditional trigger, remains operational without
+// amendment because the substrate is gitnexus-agnostic.
 //
 // Implementation strategy:
-//   - AST parse each candidate .go file with go/parser.ParseFile and
-//     parser.ImportsOnly (fast: stops after the import block).
-//   - Inspect f.Imports and fail if any import path contains "gitnexus".
-//   - AST-level inspection (NOT source-text grep) so comments and string
-//     literals mentioning "gitnexus" do not trigger false positives. The
-//     ecosystem doc.go has a comment line explaining the orthogonality
-//     with gitnexus — that is informational, not an import, and must
-//     pass the gate cleanly.
+// - AST parse each candidate.go file with go/parser.ParseFile and
+// parser.ImportsOnly (fast: stops after the import block).
+// - Inspect f.Imports and fail if any import path contains "gitnexus".
+// - AST-level inspection (NOT source-text grep) so comments and string
+// literals mentioning "gitnexus" do not trigger false positives. The
+// ecosystem doc.go has a comment line explaining the orthogonality
+// with gitnexus — that is informational, not an import, and must
+// pass the gate cleanly.
 package compliance
 
 import (
@@ -55,7 +55,7 @@ func TestNoGitNexusInZenDocsCron(t *testing.T) {
 	checkDirNoGitNexus(t, filepath.Join(root, "cmd", "zen-docs-cron"))
 }
 
-// TestNoGitNexusInPlan14CLIFiles verifies that Plan 14 CLI namespace fills
+// TestNoGitNexusInPlan14CLIFiles verifies that CLI namespace fills
 // (knowledge_remote.go, memory_*.go, specs_*.go, docs_*.go, doctor_ecosystem.go)
 // do not import gitnexus.
 func TestNoGitNexusInPlan14CLIFiles(t *testing.T) {

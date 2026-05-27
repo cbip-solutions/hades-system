@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_ls.go (Plan 9 Phase I Task I-6).
+// Package cli — adr_ls.go.
 //
 // `zen adr ls [--status X] [--plan Y] [--risk-level Z]` calls
 // GET /v1/adr/list with the supplied filter and renders results in a

@@ -1,36 +1,37 @@
 // SPDX-License-Identifier: MIT
 
+// go:build !race
 //go:build !race
 // +build !race
 
-// Package compliance — Plan 15 Phase H task H-1 compliance test for
-// inv-zen-318 (placeholder H2 → reconciled to inv-zen-318 per
-// docs/superpowers/plans/2026-05-25-plan-15-phase-H-docs-cutover-with-compat-and-security.md
-// inv-zen-317..H7 mapping).
+// Package compliance — task H-1 compliance test for
+// invariant (placeholder H2 → reconciled to invariant per
+// internal design record
+// invariant..H7 mapping).
 //
-// Asserts the v1.0.0 CHANGELOG.md entry follows the Plan 9 canonical
-// per-package pattern AND complies with the Stage-0 reconciliation
-// decisión 17-c (CHANGELOG curation policy) anti-leak rules:
+// Asserts the v1.0.0 CHANGELOG.md entry follows the canonical
+// per-package pattern AND complies with the reconciliation
+// policy (CHANGELOG curation policy) anti-leak rules:
 //
-//   - Has the v1.0.0 H2 header with `Plan 15:` framing.
-//   - Contains ≥ 4 mandatory sub-sections (Added, Changed, Fixed,
-//     Security) each with non-empty body.
-//   - Carries MIT license framing per Stage-0 decisión 15 (NOT
-//     Apache-2.0 in this entry; whole project is MIT).
-//   - Names the `hades-system` public identity per decisiones 4 + 11.
-//   - Does NOT leak bypass-tier internals per decisión 17-c (no
-//     mention of `metadata.user_id`, `fingerprint coexistence`,
-//     `refresh-on-429`, `validator schema drift`, `gzip+deflate
-//     decompression`, `bypass-recovery-probe`, `refresh-protocol`,
-//     `Anthropic anti-abuse`).
-//   - Preserves the historical v0.9.0 entry (additive top-banner
-//     authoring; H-1 prepends rather than rewrites).
-//   - Sits in the 300-600 line size range (per spec ~300-400 LOC
-//     target with headroom for the Stage-0-expanded sub-sections).
+// - Has the v1.0.0 H2 header with `:` framing.
+// - Contains ≥ 4 mandatory sub-sections (Added, Changed, Fixed,
+// Security) each with non-empty body.
+// - Carries MIT license framing policy (NOT
+// Apache-2.0 in this entry; whole project is MIT).
+// - Names the `hades-system` public identity policy
+// - Does NOT leak bypass-tier internals policy (no
+// mention of `metadata.user_id`, `fingerprint coexistence`,
+// `refresh-on-429`, `validator schema drift`, `gzip+deflate
+// decompression`, `bypass-recovery-probe`, `refresh-protocol`,
+// `Anthropic anti-abuse`).
+// - Preserves the historical v0.9.0 entry (additive top-banner
+// authoring; H-1 prepends rather than rewrites).
+// - Sits in the 300-600 line size range (per spec ~300-400 LOC
+// target with headroom for the sub-sections).
 //
 // Why this test exists: the v1.0.0 entry IS the portfolio shipping
 // document — drift here directly affects what the public will read
-// at the Phase H-9 cutover snapshot. A regex-anti-leak gate ensures
+// at the cutover snapshot. A regex-anti-leak gate ensures
 // no future writer reintroduces bypass-tier mechanism details into
 // a release the public will see.
 //
@@ -47,12 +48,12 @@ import (
 )
 
 // TestInvZenH2_ChangelogV1EntryStructuredPerPackage asserts the
-// CHANGELOG.md v1.0.0 entry follows the Plan 9 canonical pattern
+// CHANGELOG.md v1.0.0 entry follows the canonical pattern
 // (### Added/Changed/Fixed/Security mandatory + optional sub-sections),
 // carries MIT framing + `hades-system` identity, and does NOT leak
-// bypass-tier internals per decisión 17-c.
+// bypass-tier internals policy
 //
-// inv-zen-318 (H-2 placeholder).
+// invariant (H-2 placeholder).
 func TestInvZenH2_ChangelogV1EntryStructuredPerPackage(t *testing.T) {
 	t.Parallel()
 
@@ -96,7 +97,7 @@ func TestInvZenH2_ChangelogV1EntryStructuredPerPackage(t *testing.T) {
 		}
 	}
 
-	// (4) Decisión 17-c anti-leak: no bypass-tier mechanism substrings
+	// (4) policy anti-leak: no bypass-tier mechanism substrings
 	// in the public-bound v1.0.0 entry. STRIP-list per the curation
 	// table in 2026-05-25-plan-15-phase-H-docs-cutover-with-compat-and-security.md.
 	antiLeakPatterns := []string{

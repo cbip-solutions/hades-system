@@ -13,10 +13,13 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/cbip-solutions/hades-system/internal/redact"
 )
 
 func trueBin() string {
@@ -168,6 +171,319 @@ func TestColdArchiveWorkerProcessesSealEvent(t *testing.T) {
 	}
 	if row.Hash == "" {
 		t.Error("Hash empty")
+	}
+}
+
+func TestColdArchiveDownloaderDownloadsCanonicalS3KeyAndEnv(t *testing.T) {
+	dir := t.TempDir()
+	argsPath := filepath.Join(dir, "args.txt")
+	envPath := filepath.Join(dir, "env.txt")
+	scriptPath := filepath.Join(dir, "capture.sh")
+	if err := os.WriteFile(scriptPath, []byte(`#!/bin/sh
+printf '%s\n' "$@" > "$CAPTURE_ARGS"
+printf '%s|%s|%s\n' "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "$AWS_DEFAULT_REGION" > "$CAPTURE_ENV"
+exit 0
+`), 0o700); err != nil {
+		t.Fatalf("write script: %v", err)
+	}
+	withKeychainStub(t, func(projectID string) (S3Credentials, error) {
+		if projectID != "proj-a" {
+			t.Fatalf("projectID = %q, want proj-a", projectID)
+		}
+		return S3Credentials{
+			AccessKeyID:     redact.NewSecret("AKIA123456789012"),
+			SecretAccessKey: redact.NewSecret("01234567890123456789"),
+			Region:          "eu-west-1",
+			Endpoint:        "https://s3.example.test",
+		}, nil
+	})
+	var gotName string
+	starter := func(ctx context.Context, name string, arg ...string) *exec.Cmd {
+		gotName = name
+		cmd := exec.CommandContext(ctx, scriptPath, arg...)
+		cmd.Env = append(os.Environ(), "CAPTURE_ARGS="+argsPath, "CAPTURE_ENV="+envPath)
+		return cmd
+	}
+
+	dl := NewColdArchiveDownloader(starter, NewS3CredentialsStore())
+	dst := filepath.Join(dir, "out.tar.gz")
+	if err := dl.DownloadColdArchive(context.Background(), "proj-a", "2026_05", dst); err != nil {
+		t.Fatalf("DownloadColdArchive: %v", err)
+	}
+	if gotName != "aws" {
+		t.Fatalf("starter name = %q, want aws", gotName)
+	}
+	args, err := os.ReadFile(argsPath)
+	if err != nil {
+		t.Fatalf("read args: %v", err)
+	}
+	wantArgs := "s3\ncp\ns3://zen-swarm-audit-proj-a/cold-archive/2026_05.tar.gz\n" +
+		dst + "\n--quiet\n--endpoint-url\nhttps://s3.example.test\n"
+	if string(args) != wantArgs {
+		t.Fatalf("args = %q, want %q", string(args), wantArgs)
+	}
+	env, err := os.ReadFile(envPath)
+	if err != nil {
+		t.Fatalf("read env: %v", err)
+	}
+	if string(env) != "AKIA123456789012|01234567890123456789|eu-west-1\n" {
+		t.Fatalf("env = %q", string(env))
+	}
+}
+
+func TestColdArchiveDownloaderMissingCredentialsDoesNotCallAWS(t *testing.T) {
+	withKeychainStub(t, func(projectID string) (S3Credentials, error) {
+		return S3Credentials{}, ErrKeychainNoSuchEntry
+	})
+	var called atomic.Bool
+	starter := func(ctx context.Context, name string, arg ...string) *exec.Cmd {
+		called.Store(true)
+		return exec.CommandContext(ctx, trueBin())
+	}
+
+	dl := NewColdArchiveDownloader(starter, NewS3CredentialsStore())
+	err := dl.DownloadColdArchive(context.Background(), "proj-a", "2026_05", filepath.Join(t.TempDir(), "out.tar.gz"))
+	if !errors.Is(err, ErrKeychainNoSuchEntry) {
+		t.Fatalf("err = %v, want ErrKeychainNoSuchEntry", err)
+	}
+	if called.Load() {
+		t.Fatal("aws starter was called despite missing credentials")
+	}
+}
+
+func TestColdArchiveDownloaderDefaultsRejectMissingArgs(t *testing.T) {
+	dl := NewColdArchiveDownloader(nil, nil)
+	err := dl.DownloadColdArchive(context.Background(), "", "2026_05", filepath.Join(t.TempDir(), "out.tar.gz"))
+	if err == nil {
+		t.Fatal("expected required-argument error")
+	}
+	if !strings.Contains(err.Error(), "project_id, partition_id, and dst required") {
+		t.Fatalf("err = %v, want required-argument message", err)
+	}
+}
+
+func TestColdArchiveDownloaderCommandFailureUsesNilEnvDefaults(t *testing.T) {
+	withKeychainStub(t, func(projectID string) (S3Credentials, error) {
+		if projectID != "proj-a" {
+			t.Fatalf("projectID = %q, want proj-a", projectID)
+		}
+		return S3Credentials{
+			AccessKeyID:     redact.NewSecret("AKIA123456789012"),
+			SecretAccessKey: redact.NewSecret("01234567890123456789"),
+		}, nil
+	})
+	var gotArgs []string
+	starter := func(ctx context.Context, name string, arg ...string) *exec.Cmd {
+		if name != "aws" {
+			t.Fatalf("starter name = %q, want aws", name)
+		}
+		gotArgs = append([]string(nil), arg...)
+		return exec.CommandContext(ctx, falseBin())
+	}
+
+	dl := NewColdArchiveDownloader(starter, NewS3CredentialsStore())
+	err := dl.DownloadColdArchive(context.Background(), "proj-a", "2026_05", filepath.Join(t.TempDir(), "out.tar.gz"))
+	if err == nil {
+		t.Fatal("expected aws command failure")
+	}
+	if !strings.Contains(err.Error(), "aws s3 cp restore") {
+		t.Fatalf("err = %v, want aws restore wrapper", err)
+	}
+	for _, arg := range gotArgs {
+		if arg == "--endpoint-url" {
+			t.Fatalf("unexpected endpoint flag for empty credentials endpoint: %v", gotArgs)
+		}
+	}
+}
+
+func TestDBRestorerRestoresCanonicalStagedAuditDBAndEnv(t *testing.T) {
+	dir := t.TempDir()
+	argsPath := filepath.Join(dir, "args.txt")
+	envPath := filepath.Join(dir, "env.txt")
+	scriptPath := filepath.Join(dir, "restore.sh")
+	if err := os.WriteFile(scriptPath, []byte(`#!/bin/sh
+printf '%s\n' "$@" > "$CAPTURE_ARGS"
+printf '%s|%s\n' "$LITESTREAM_ACCESS_KEY_ID" "$LITESTREAM_SECRET_ACCESS_KEY" > "$CAPTURE_ENV"
+out=""
+while [ "$#" -gt 0 ]; do
+  if [ "$1" = "-o" ]; then
+    shift
+    out="$1"
+    break
+  fi
+  shift
+done
+mkdir -p "$(dirname "$out")"
+printf 'restored sqlite' > "$out"
+exit 0
+`), 0o700); err != nil {
+		t.Fatalf("write script: %v", err)
+	}
+	withKeychainStub(t, func(projectID string) (S3Credentials, error) {
+		if projectID != "proj-a" {
+			t.Fatalf("projectID = %q, want proj-a", projectID)
+		}
+		return S3Credentials{
+			AccessKeyID:     redact.NewSecret("LITEKEY"),
+			SecretAccessKey: redact.NewSecret("LITESECRET"),
+			Region:          "eu-west-1",
+			Endpoint:        "https://s3.example.test",
+		}, nil
+	})
+	starter := func(ctx context.Context, name string, arg ...string) *exec.Cmd {
+		if name != "litestream" {
+			t.Fatalf("starter name = %q, want litestream", name)
+		}
+		cmd := exec.CommandContext(ctx, scriptPath, arg...)
+		cmd.Env = append(os.Environ(), "CAPTURE_ARGS="+argsPath, "CAPTURE_ENV="+envPath)
+		return cmd
+	}
+	staging := filepath.Join(dir, "staging")
+	restorer := NewDBRestorer(starter, NewS3CredentialsStore())
+	if err := restorer.RestoreFromS3(context.Background(), "proj-a", time.Unix(1770000000, 0).UTC(), staging); err != nil {
+		t.Fatalf("RestoreFromS3: %v", err)
+	}
+	dbPath := filepath.Join(staging, "projects", "proj-a", "audit", "audit.db")
+	if _, err := os.Stat(dbPath); err != nil {
+		t.Fatalf("restored db missing: %v", err)
+	}
+	args, err := os.ReadFile(argsPath)
+	if err != nil {
+		t.Fatalf("read args: %v", err)
+	}
+	wantArgs := "restore\n-config\n" + filepath.Join(staging, "litestream-proj-a.yml") +
+		"\n-timestamp\n2026-02-02T02:40:00Z\n-o\n" + dbPath + "\n" + dbPath + "\n"
+	if string(args) != wantArgs {
+		t.Fatalf("args = %q, want %q", string(args), wantArgs)
+	}
+	env, err := os.ReadFile(envPath)
+	if err != nil {
+		t.Fatalf("read env: %v", err)
+	}
+	if string(env) != "LITEKEY|LITESECRET\n" {
+		t.Fatalf("env = %q", string(env))
+	}
+}
+
+func TestDBRestorerMissingCredentialsDoesNotCallLitestream(t *testing.T) {
+	withKeychainStub(t, func(projectID string) (S3Credentials, error) {
+		return S3Credentials{}, ErrKeychainNoSuchEntry
+	})
+	var called atomic.Bool
+	starter := func(ctx context.Context, name string, arg ...string) *exec.Cmd {
+		called.Store(true)
+		return exec.CommandContext(ctx, trueBin())
+	}
+	restorer := NewDBRestorer(starter, NewS3CredentialsStore())
+	err := restorer.RestoreFromS3(context.Background(), "proj-a", time.Unix(1770000000, 0), t.TempDir())
+	if !errors.Is(err, ErrKeychainNoSuchEntry) {
+		t.Fatalf("err = %v, want ErrKeychainNoSuchEntry", err)
+	}
+	if called.Load() {
+		t.Fatal("litestream command called despite missing credentials")
+	}
+}
+
+func TestDBRestorerDefaultsRejectMissingArgs(t *testing.T) {
+	restorer := NewDBRestorer(nil, nil)
+	err := restorer.RestoreFromS3(context.Background(), "", time.Unix(1770000000, 0), t.TempDir())
+	if err == nil {
+		t.Fatal("expected required-argument error")
+	}
+	if !strings.Contains(err.Error(), "project_id, timestamp, and stagingDir required") {
+		t.Fatalf("err = %v, want required-argument message", err)
+	}
+}
+
+func TestDBRestorerMkdirAuditFailure(t *testing.T) {
+	dir := t.TempDir()
+	blocker := filepath.Join(dir, "blocker")
+	if err := os.WriteFile(blocker, []byte("file-not-dir"), 0o600); err != nil {
+		t.Fatalf("seed blocker: %v", err)
+	}
+	withKeychainStub(t, func(projectID string) (S3Credentials, error) {
+		return S3Credentials{
+			AccessKeyID:     redact.NewSecret("LITEKEY"),
+			SecretAccessKey: redact.NewSecret("LITESECRET"),
+		}, nil
+	})
+	restorer := NewDBRestorer(func(ctx context.Context, name string, arg ...string) *exec.Cmd {
+		return exec.CommandContext(ctx, trueBin())
+	}, NewS3CredentialsStore())
+	err := restorer.RestoreFromS3(context.Background(), "proj-a", time.Unix(1770000000, 0), filepath.Join(blocker, "staging"))
+	if err == nil {
+		t.Fatal("expected audit staging mkdir failure")
+	}
+	if !strings.Contains(err.Error(), "mkdir audit staging") {
+		t.Fatalf("err = %v, want mkdir audit staging", err)
+	}
+}
+
+func TestDBRestorerWriteConfigFailure(t *testing.T) {
+	dir := t.TempDir()
+	staging := filepath.Join(dir, "staging")
+	if err := os.MkdirAll(filepath.Join(staging, "litestream-proj-a.yml"), 0o700); err != nil {
+		t.Fatalf("seed config path directory: %v", err)
+	}
+	withKeychainStub(t, func(projectID string) (S3Credentials, error) {
+		return S3Credentials{
+			AccessKeyID:     redact.NewSecret("LITEKEY"),
+			SecretAccessKey: redact.NewSecret("LITESECRET"),
+		}, nil
+	})
+	restorer := NewDBRestorer(func(ctx context.Context, name string, arg ...string) *exec.Cmd {
+		return exec.CommandContext(ctx, trueBin())
+	}, NewS3CredentialsStore())
+	err := restorer.RestoreFromS3(context.Background(), "proj-a", time.Unix(1770000000, 0), staging)
+	if err == nil {
+		t.Fatal("expected config write failure")
+	}
+	if !strings.Contains(err.Error(), "write config") {
+		t.Fatalf("err = %v, want write config", err)
+	}
+}
+
+func TestDBRestorerCommandFailureUsesNilEnvDefaults(t *testing.T) {
+	withKeychainStub(t, func(projectID string) (S3Credentials, error) {
+		if projectID != "proj-a" {
+			t.Fatalf("projectID = %q, want proj-a", projectID)
+		}
+		return S3Credentials{
+			AccessKeyID:     redact.NewSecret("LITEKEY"),
+			SecretAccessKey: redact.NewSecret("LITESECRET"),
+		}, nil
+	})
+	restorer := NewDBRestorer(func(ctx context.Context, name string, arg ...string) *exec.Cmd {
+		if name != "litestream" {
+			t.Fatalf("starter name = %q, want litestream", name)
+		}
+		return exec.CommandContext(ctx, falseBin())
+	}, NewS3CredentialsStore())
+	err := restorer.RestoreFromS3(context.Background(), "proj-a", time.Unix(1770000000, 0), t.TempDir())
+	if err == nil {
+		t.Fatal("expected litestream command failure")
+	}
+	if !strings.Contains(err.Error(), "litestream restore: command") {
+		t.Fatalf("err = %v, want command wrapper", err)
+	}
+}
+
+func TestDBRestorerReportsMissingRestoredDB(t *testing.T) {
+	withKeychainStub(t, func(projectID string) (S3Credentials, error) {
+		return S3Credentials{
+			AccessKeyID:     redact.NewSecret("LITEKEY"),
+			SecretAccessKey: redact.NewSecret("LITESECRET"),
+		}, nil
+	})
+	restorer := NewDBRestorer(func(ctx context.Context, name string, arg ...string) *exec.Cmd {
+		return exec.CommandContext(ctx, trueBin())
+	}, NewS3CredentialsStore())
+	err := restorer.RestoreFromS3(context.Background(), "proj-a", time.Unix(1770000000, 0), t.TempDir())
+	if err == nil {
+		t.Fatal("expected missing restored audit.db error")
+	}
+	if !strings.Contains(err.Error(), "restored audit.db missing") {
+		t.Fatalf("err = %v, want missing audit.db", err)
 	}
 }
 

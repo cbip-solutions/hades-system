@@ -1,17 +1,17 @@
-//go:build cgo
+// go:build cgo
 
 // tests/compliance/inv_zen_265_unresolved_surface_test.go
 //
-// inv-zen-265 (unresolvable client calls surfaced as `unresolved` rows; never
-// silently dropped or false-linked; Plan 20 Phase F):
+// invariant (unresolvable client calls surfaced as `unresolved` rows; never
+// silently dropped or false-linked; ):
 //
-//	When an api_calls row has a base_url_ref with no matching caronte.yaml
-//	manifest entry AND no artifact-tier hit, the linker MUST record an
-//	`unresolved` row + emit a Plan 14 Tessera audit row (under the default
-//	PolicySurface), and MUST NOT insert a contract_links row. The schema
-//	CHECK on contract_links.confidence refuses any value outside the four
-//	tier enum (exact_proto_import|spec_artifact|static_path|fuzzy_path), so
-//	even a forged INSERT with confidence='unresolved' is refused.
+// When an api_calls row has a base_url_ref with no matching caronte.yaml
+// manifest entry AND no artifact-tier hit, the linker MUST record an
+// `unresolved` row + emit a Tessera audit row (under the default
+// PolicySurface), and MUST NOT insert a contract_links row. The schema
+// CHECK on contract_links.confidence refuses any value outside the four
+// tier enum (exact_proto_import|spec_artifact|static_path|fuzzy_path), so
+// even a forged INSERT with confidence='unresolved' is refused.
 package compliance
 
 import (

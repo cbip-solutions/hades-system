@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package inboxadapter is the inv-zen-031 boundary between the
-// internal/inbox domain layer and internal/store SQL persistence (Plan 7
-// Phase E Task E-10).
+// Package inboxadapter is the invariant boundary between the
+// internal/inbox domain layer and internal/store SQL persistence (
+// Task E-10).
 //
 // Adapter satisfies inbox.Store directly (per-project authoritative
 // writes) and exposes an inbox.AggregatorCacheStore via Cache() (daemon-
@@ -13,7 +13,7 @@
 // up the store at call time. The daemon-level inbox_aggregator_cache
 // always lives in the dedicated daemonStore, regardless of project.
 //
-// inv-zen-031 boundary: this is the ONLY package permitted to import
+// invariant boundary: this is the ONLY package permitted to import
 // both internal/inbox AND internal/store. Domain errors are surfaced
 // across the boundary verbatim (UNIQUE -> inbox.ErrDedupViolation, no
 // rows -> inbox.ErrNotFound), so callers that errors.Is against the
@@ -21,18 +21,18 @@
 //
 // Drift note (vs spec lines 4022-4471):
 //
-//	The spec asserts both inbox.Store AND inbox.AggregatorCacheStore on
-//	*Adapter via two compile-time guards. That is impossible in Go: the
-//	two interfaces both declare a method named Insert with different
-//	signatures, and a single concrete type cannot have two methods with
-//	the same name. The resolution is the canonical Go idiom: a private
-//	cacheView wrapper type carries the cache-side Insert, and
-//	Adapter.Cache() returns it typed as inbox.AggregatorCacheStore. All
-//	other AggregatorCacheStore methods (DeleteByProject, Query, Rebuild)
-//	live on Adapter directly and are inherited by cacheView via
-//	embedding. Production callers that need an inbox.AggregatorCacheStore
-//	consume Cache(); production callers that need an inbox.Store consume
-//	the *Adapter directly.
+// The spec asserts both inbox.Store AND inbox.AggregatorCacheStore on
+// *Adapter via two compile-time guards. That is impossible in Go: the
+// two interfaces both declare a method named Insert with different
+// signatures, and a single concrete type cannot have two methods with
+// the same name. The resolution is the canonical Go idiom: a private
+// cacheView wrapper type carries the cache-side Insert, and
+// Adapter.Cache() returns it typed as inbox.AggregatorCacheStore. All
+// other AggregatorCacheStore methods (DeleteByProject, Query, Rebuild)
+// live on Adapter directly and are inherited by cacheView via
+// embedding. Production callers that need an inbox.AggregatorCacheStore
+// consume Cache(); production callers that need an inbox.Store consume
+// the *Adapter directly.
 package inboxadapter
 
 import (

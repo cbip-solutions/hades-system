@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_checks.go (Plan 2 Phase L Task L-3).
+// Package cli — doctor_checks.go.
 //
 // 10 spec §8.5 doctor checks that probe the daemon over the
 // GET /v1/bypass/doctor?check=<name> endpoint and render with a

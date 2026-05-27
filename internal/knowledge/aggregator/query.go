@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -192,8 +193,8 @@ func queryGlobal(ctx context.Context, a *Aggregator, req *QueryRequest, queryEmb
 // pickSource returns the canonical Source label for a query result.
 //
 // Contract
-//   - Scope==ScopePinnedOnly → always "pin" (triggers RRF pinBoost).
-//   - Any other scope → base (the sub-query's natural source: "fts", "vec", "graph").
+// - Scope==ScopePinnedOnly → always "pin" (triggers RRF pinBoost).
+// - Any other scope → base (the sub-query's natural source: "fts", "vec", "graph").
 //
 // Rationale queryPinIndex operates on the aggregator's own promoted pins;
 // operator-curated pins deserve the 1.5× boost in cross-scope comparisons.

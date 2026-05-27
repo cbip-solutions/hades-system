@@ -1,29 +1,29 @@
 // SPDX-License-Identifier: MIT
-// Package cli — coverage_gap_test.go (Plan 15 W5CLI coverage lift).
+// Package cli — coverage_gap_test.go.
 //
 // Focused unit tests that exercise 0%-covered functions in internal/cli
 // to lift coverage from 84.9% → ≥85.5% (with buffer above the 85% gate).
 //
 // Target functions (per go tool cover -func analysis):
-//   - humanBytes           (bypass.go:431)         — pure formatter, 5 stmts
-//   - notWiredYet          (audit_chain.go:89)      — closure factory, 2 stmts
-//   - defaultProviderConfigDir (providers.go:35)    — $HOME wrapper, 1 stmt
-//   - bypassNewClient      (bypass.go:65)           — client ctor, 2 stmts
-//   - bypassNewClientWithURL (client_helper.go:21)  — dual-path ctor, 3 stmts
-//   - findCtldBinary       (daemon.go:180)          — search function, 12 stmts
-//   - findInstallScript    (daemon.go:216)          — search function, 10 stmts
-//   - realEditorRun        (adr_editor.go:41)       — exec wrapper, 8 stmts
-//   - buildBackend         (providers_extra.go:45)  — switch factory, 7 stmts
-//   - runToolBinary        (bypass_extract.go:59)   — exec wrapper, 3 stmts
-//   - productionCochangeClient.CoChange (cochange.go:33) — thin wrapper, 1 stmt
-//   - productionWhyClient.Why (why.go:34)           — thin wrapper, 1 stmt
-//   - productionRiskClient.Risk (risk.go:35)        — thin wrapper, 1 stmt
-//   - bypassNewClient      (bypass.go:65)         — client ctor, 2 stmts
-//   - bypassNewClientWithURL (client_helper.go:21) — dual-path ctor, 3 stmts
-//   - findCtldBinary       (daemon.go:180)        — search function, 12 stmts
-//   - findInstallScript    (daemon.go:216)        — search function, 10 stmts
-//   - realEditorRun        (adr_editor.go:41)     — exec wrapper, 8 stmts
-//   - buildBackend         (providers_extra.go:45) — switch factory, 7 stmts
+// - humanBytes (bypass.go:431) — pure formatter, 5 stmts
+// - notWiredYet (audit_chain.go:89) — closure factory, 2 stmts
+// - defaultProviderConfigDir (providers.go:35) — $HOME wrapper, 1 stmt
+// - bypassNewClient (bypass.go:65) — client ctor, 2 stmts
+// - bypassNewClientWithURL (client_helper.go:21) — dual-path ctor, 3 stmts
+// - findCtldBinary (daemon.go:180) — search function, 12 stmts
+// - findInstallScript (daemon.go:216) — search function, 10 stmts
+// - realEditorRun (adr_editor.go:41) — exec wrapper, 8 stmts
+// - buildBackend (providers_extra.go:45) — switch factory, 7 stmts
+// - runToolBinary (bypass_extract.go:59) — exec wrapper, 3 stmts
+// - productionCochangeClient.CoChange (cochange.go:33) — thin wrapper, 1 stmt
+// - productionWhyClient.Why (why.go:34) — thin wrapper, 1 stmt
+// - productionRiskClient.Risk (risk.go:35) — thin wrapper, 1 stmt
+// - bypassNewClient (bypass.go:65) — client ctor, 2 stmts
+// - bypassNewClientWithURL (client_helper.go:21) — dual-path ctor, 3 stmts
+// - findCtldBinary (daemon.go:180) — search function, 12 stmts
+// - findInstallScript (daemon.go:216) — search function, 10 stmts
+// - realEditorRun (adr_editor.go:41) — exec wrapper, 8 stmts
+// - buildBackend (providers_extra.go:45) — switch factory, 7 stmts
 //
 // All tests are pure unit tests: no daemon, no real UDS, no Keychain.
 // Env-var seams (ZEN_SWARM_CTLD) control findCtldBinary search order.

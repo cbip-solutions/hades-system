@@ -1,4 +1,4 @@
-// tests/replay/tmux_state_replay_test.go (Plan 7 Phase K Task K-13).
+// tests/replay/tmux_state_replay_test.go.
 //
 // Replay-tier validation that the tmuxlife.SessionStore active-session
 // set is reconstructed deterministically from a captured stream of
@@ -9,50 +9,51 @@
 //
 // Coverage:
 //
-//  1. TestReplay_TmuxState_DeterministicReconstruction — given a
-//     captured stream of lifecycle ops, two independent replays into
-//     fresh InMemorySessionStore instances produce identical
-//     active-session sets (filtered by StatusActive).
+// 1. TestReplay_TmuxState_DeterministicReconstruction — given a
+// captured stream of lifecycle ops, two independent replays into
+// fresh InMemorySessionStore instances produce identical
+// active-session sets (filtered by StatusActive).
 //
-//  2. TestReplay_TmuxState_OrphanStatePreserved — sessions that
-//     transition Active → Orphaned during the captured stream are
-//     reconstructed as Orphaned (NOT Active) by replay. The lazy-
-//     respawn contract from §4.1 depends on this distinction:
-//     reattach-after-tmux-restart spawns a fresh session row, never
-//     reuses an orphan.
+// 2. TestReplay_TmuxState_OrphanStatePreserved — sessions that
+// transition Active → Orphaned during the captured stream are
+// reconstructed as Orphaned (NOT Active) by replay. The lazy-
+// respawn contract from §4.1 depends on this distinction:
+// reattach-after-tmux-restart spawns a fresh session row, never
+// reuses an orphan.
 //
-//  3. TestReplay_TmuxState_IdempotentReplay — applying the same
-//     captured stream twice produces the same final session set
-//     (no duplicates from re-Upsert; no leaks from re-Delete).
-//     Idempotency guard against daemon-reboot loops where boot-time
-//     replay may run more than once.
+// 3. TestReplay_TmuxState_IdempotentReplay — applying the same
+// captured stream twice produces the same final session set
+// (no duplicates from re-Upsert; no leaks from re-Delete).
+// Idempotency guard against daemon-reboot loops where boot-time
+// replay may run more than once.
 //
 // Drift from spec heredoc (K-13 Step 1+2): the spec referenced
 // fictional surfaces (tmuxlife.Replayer, tmuxlife.NewReplayer,
 // tmuxlife.SessionSpec/IDSha8 fields, Session.GetByID/.WhereStatus,
 // eventlog.NewRecorder/.Emit, EvtTmuxSpawned/EvtTmuxTeardown/
 // EvtTmuxServerLost event types, tmuxlife.StatusRunning). None exist;
-// the actual Plan 7 tmuxlife API (internal/tmuxlife/{session.go,
+// the actual tmuxlife API (internal/tmuxlife/{session.go,
 // api_p7.go, lifecycle.go}) ships:
 //
-//   - tmuxlife.Session (canonical row: Alias, Sha8, Name, CreatedAt,
-//     LastAttachAt, Status)
-//   - tmuxlife.SessionStatus enum {Active, Idle, Orphaned, Archived}
-//     (no "Running" — Active is the canonical alive state)
-//   - tmuxlife.SessionStore interface (Upsert/Get/List/Delete/
-//     SetLastAttach/SetStatus/ExpectedPanesFor)
-//   - tmuxlife.NewInMemorySessionStore (the canonical chaos/replay
-//     substrate)
-//   - tmuxlife.SessionName(alias, sha8) builds canonical names
-//   - No EvtTmux* in the closed-set EventType taxonomy (Plan 7 Phase F
-//     extended only F-1/F-2 events; tmux state lives in the
-//     SessionStore directly).
+// - tmuxlife.Session (canonical row: Alias, Sha8, Name, CreatedAt,
+// LastAttachAt, Status)
+// - tmuxlife.SessionStatus enum {Active, Idle, Orphaned, Archived}
+// (no "Running" — Active is the canonical alive state)
+// - tmuxlife.SessionStore interface (Upsert/Get/List/Delete/
+// SetLastAttach/SetStatus/ExpectedPanesFor)
+// - tmuxlife.NewInMemorySessionStore (the canonical chaos/replay
+// substrate)
+// - tmuxlife.SessionName(alias, sha8) builds canonical names
+// - No EvtTmux* in the closed-set EventType taxonomy (
+// extended only F-1/F-2 events; tmux state lives in the
+// SessionStore directly).
 //
 // We adapt to the real surfaces and uphold the same load-bearing
 // contract: capture lifecycle ops → replay reconstructs identical
 // active-session set; orphan status survives replay; idempotent under
 // repeated apply.
 //
+// go:build replay
 //go:build replay
 // +build replay
 

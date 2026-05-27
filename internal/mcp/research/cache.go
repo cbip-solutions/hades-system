@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // cache.go — research cache adapter.
 //
-// Wraps the daemon /v1/research/cache/{get,set} endpoints (Phase H
+// Wraps the daemon /v1/research/cache/{get,set} endpoints (
 // typed client) into the CacheClient interface declared in types.go.
 //
 // Cache key derivation: sha256(query + sorted_sources + iteration_index)

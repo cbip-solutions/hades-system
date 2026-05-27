@@ -6,7 +6,7 @@
 // aggregates evidence across all 15 detectors. Pure-Go zero-CGO; see Q4 spec
 // anti-pattern (NO AST/tree-sitter).
 //
-// Evidence values feed Phase B B6 orchestrator (recognize.go) which applies
+// Evidence values feed B6 orchestrator (recognize.go) which applies
 // the confidence thresholds + tier cascade short-circuit logic.
 package manifest
 

@@ -1,5 +1,5 @@
-// cite_single_probe_test.go — regression test for C-1 (CodeReview Plan 4
-// Phase I): the cite verifier MUST issue exactly ONE HTTP HEAD per
+// cite_single_probe_test.go — regression test for C-1 (CodeReview
+// ): the cite verifier MUST issue exactly ONE HTTP HEAD per
 // citation URL. Prior implementation called passes() (1 probe) then
 // re-called probeStatus() (2nd probe) to capture the status code; this
 // doubled outbound HEAD traffic + made rate-limit hits twice as likely.

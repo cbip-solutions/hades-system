@@ -46,15 +46,15 @@ type TaskParams struct {
 // Validation order (load-bearing — earliest gate names the most-
 // specific error so adapter callers can route the failure):
 //
-//  1. empty ID/ProjectAlias/Action → ErrInvalidSchedule (defence in
-//     depth; field name surfaced in the error message).
-//  2. FireAt <= now                → ErrInvalidSchedule (FireAt must
-//     be in the future).
-//  3. Schedule.Validate()          → ErrInvalidSchedule (catches
-//     CreatedAt zero, MissPolicy unknown, etc. — should never trip
-//     since this constructor sets all required fields).
+// 1. empty ID/ProjectAlias/Action → ErrInvalidSchedule (defence in
+// depth; field name surfaced in the error message).
+// 2. FireAt <= now → ErrInvalidSchedule (FireAt must
+// be in the future).
+// 3. Schedule.Validate() → ErrInvalidSchedule (catches
+// CreatedAt zero, MissPolicy unknown, etc. — should never trip
+// since this constructor sets all required fields).
 //
-// Boundary (inv-zen-031): stdlib + the in-package ComputeJitter
+// Boundary: stdlib + the in-package ComputeJitter
 // function only. No internal/store, internal/providers, or
 // private-tier1-module imports.
 func NewTask(p TaskParams, now time.Time) (*Schedule, error) {
@@ -103,10 +103,10 @@ func NewTask(p TaskParams, now time.Time) (*Schedule, error) {
 //
 // Idempotent + nil-safe + tier-safe (defence in depth):
 //
-//   - nil pointer            → no-op (adapter read miss tolerated).
-//   - non-Tier-Task schedule → no-op (caller bug; do NOT auto-disable
-//     a Routine or Loop — that would silently break recurrence).
-//   - already StatusDisabled → still set to StatusDisabled (idempotent).
+// - nil pointer → no-op (adapter read miss tolerated).
+// - non-Tier-Task schedule → no-op (caller bug; do NOT auto-disable
+// a Routine or Loop — that would silently break recurrence).
+// - already StatusDisabled → still set to StatusDisabled (idempotent).
 //
 // The function does NOT also clear NextRunAt: history readers want to
 // know "the task fired at this scheduled time", which NextRunAt

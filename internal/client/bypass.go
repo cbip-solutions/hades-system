@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — bypass.go (Plan 2 Phase L Task L-2).
+// Package client — bypass.go.
 //
 // Typed helper methods for /v1/bypass/* endpoints exercised by the zen
 // CLI subcommands.

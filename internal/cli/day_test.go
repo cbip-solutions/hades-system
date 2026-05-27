@@ -1,15 +1,15 @@
-// Package cli — day_test.go (Plan 7 Phase F Task F-10).
+// Package cli — day_test.go.
 //
 // Tests for the F-10 zen day dispatcher:
 //
-//   - runDay flag precedence (check-pending > eod > default morning).
-//   - Force flag propagation through the selected path.
-//   - Error propagation + classification (409 → recoverable + force
-//     hint; 503 → recoverable + daemon-not-ready hint; opaque → bare).
-//   - NewDayCmd integration via httptest.Server (full wire path:
-//     cobra → newClientFromCmd → typed Client → daemon → BriefDoc →
-//     Render → stdout).
-//   - --include-bypass legacy no-op emits the deprecation warning.
+// - runDay flag precedence (check-pending > eod > default morning).
+// - Force flag propagation through the selected path.
+// - Error propagation + classification (409 → recoverable + force
+// hint; 503 → recoverable + daemon-not-ready hint; opaque → bare).
+// - NewDayCmd integration via httptest.Server (full wire path:
+// cobra → newClientFromCmd → typed Client → daemon → BriefDoc →
+// Render → stdout).
+// - --include-bypass legacy no-op emits the deprecation warning.
 //
 // The runDay-level tests use a fakeZenDayClient so each flag
 // combination is exercised without standing up a real httptest server.

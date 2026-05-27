@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
-// Package client — codegraph_plan12.go (Plan 12 Phase C Task C-4).
+// Package client — codegraph_plan12.go.
 //
 // Extensions to the codegraph + augment + audit wrappers introduced in
 //
 // Public surface added here:
 //
-//	CodegraphFile     synthesizes per-file structural payload from three
-//	                  mcpgateway round-trips (codegraph + context + impact).
-//	                  Drives the F7 Code Graph panel's Refetch() Cmd.
-//	AugmentCache      thin alias over AugmentSummary mapping the rich
-//	                  daily-stats payload into the cache-stats display
-//	                  schema the F3 Cost panel expects.
-//	AuditEventByID    resolves zen://audit/<id> via GET /v1/audit/event/{id}.
-//	                  Used by the F4 Audit panel "inspect by ID" key and
-//	                  the citation envelope click-through.
+// CodegraphFile synthesizes per-file structural payload from three
+// mcpgateway round-trips (codegraph + context + impact).
+// Drives the F7 Code Graph panel's Refetch() Cmd.
+// AugmentCache thin alias over AugmentSummary mapping the rich
+// daily-stats payload into the cache-stats display
+// schema the F3 Cost panel expects.
+// AuditEventByID resolves zen://audit/<id> via GET /v1/audit/event/{id}.
+// Used by the F4 Audit panel "inspect by ID" key and
+// the citation envelope click-through.
 //
 // Wire-shape decoupling: response Render*Text helpers stay flat-string;
 // no domain types leak across the boundary.
 //
-// inv-zen-088 single-egress preserved: all round-trips proxy through the
-// daemon. inv-zen-129 enforced: this file uses only c.getJSON / c.postJSON
+// invariant single-egress preserved: all round-trips proxy through the
+// daemon. invariant enforced: this file uses only c.getJSON / c.postJSON
 // / c.urlFor — never net/http directly.
 package client
 

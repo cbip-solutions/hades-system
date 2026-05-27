@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — client_helper.go (Plan 4 Phase O).
+// Package cli — client_helper.go.
 //
 // bypassNewClientWithURL allows tests to inject a custom daemon URL
 // without touching the real UDS socket path. Production callers pass

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package cli — docs_sources.go (Plan 14 Phase F Task F-6).
+// Package cli — docs_sources.go.
 //
 // `zen docs sources --list` renders the per-source corpus health table:
 //
-//	NAME         ECOSYSTEM  TYPE      URL                    TTL  LAST_INDEXED      STATUS
-//	pkg.go.dev   go         registry  https://pkg.go.dev/    24h  2025-01-09T13...  ok
-//	pypi         python     registry  https://pypi.org/      24h  2025-01-08T22...  stale
+// NAME ECOSYSTEM TYPE URL TTL LAST_INDEXED STATUS
+// pkg.go.dev go registry https://pkg.go.dev/ 24h 2025-01-09T13... ok
+// pypi python registry https://pypi.org/ 24h 2025-01-08T22... stale
 //
 // Why an explicit --list flag: keeps the bare `zen docs sources`
 // invocation safely no-op-ish (prints a usage hint) so a typo doesn't
@@ -19,9 +19,9 @@
 //
 // Exit codes (per spec §6.2):
 //
-//	0  success (table render OR hint print)
-//	1  recoverable: daemon 404 / 422
-//	2  unrecoverable: transport, decode, daemon 5xx
+// 0 success (table render OR hint print)
+// 1 recoverable: daemon 404 / 422
+// 2 unrecoverable: transport, decode, daemon 5xx
 package cli
 
 import (

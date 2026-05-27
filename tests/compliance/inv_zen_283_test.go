@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_283_test.go
 //
-// Compliance gate for inv-zen-283 (v0.20.1): the doctor "Implementation
+// Compliance gate for invariant (v0.20.1): the doctor "Implementation
 // status" footer MUST NOT contain a hardcoded numeric plan-count
 // percentage expression of the form `(~NN%)` or `(~NNN%)` in
 // `internal/cli/doctor.go`.
@@ -11,7 +11,7 @@
 // number stale). Hardcoded percentages anchored to a plan count are
 // stale-prone — any new ship invalidates the literal without a build
 // failure. The fix is to remove the percentage form entirely from the
-// footer; a textual descriptive state ("post v0.20.0; Plan 15 v1.0
+// footer; a textual descriptive state ("post v0.20.0; v1.0
 // release in flight") is acceptable because it survives the natural
 // release cadence + carries no decayable arithmetic.
 //
@@ -19,7 +19,7 @@
 // `(~NN%)` / `(~NNN%)`) to the doctor footer literal; this test MUST
 // fail.
 //
-// inv-zen-283 (v0.20.1 fix #5).
+// invariant (v0.20.1 fix #5).
 package compliance
 
 import (

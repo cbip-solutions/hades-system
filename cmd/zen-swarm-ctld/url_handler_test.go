@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// cmd/zen-swarm-ctld/url_handler_test.go — Plan 11 Phase D Task D-6.
+// cmd/zen-swarm-ctld/url_handler_test.go — Task D-6.
 //
 // Tests for the cross-platform zen:// URL scheme registration helpers
 // (parseZenURL, zenURLToHTTPPath, RegisterZenScheme contract).

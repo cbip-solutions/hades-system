@@ -1,18 +1,18 @@
 // tests/compliance/inv_zen_230_caronte_no_store_import_test.go
 //
-// Compliance gate for inv-zen-230: internal/caronte (and ALL subpackages)
+// Compliance gate for invariant: internal/caronte (and ALL subpackages)
 // plus internal/daemon/caronteadapter MUST NOT import internal/store. DB
 // access is bridged via caronteadapter, the only package that opens
 // caronte.db by path. Mirrors inv_zen_031_plan9_aggregator_test.go.
 //
 // Two checks:
-//  1. AST import scan over internal/caronte/** + caronteadapter (incl.
-//     _test.go) — zero imports containing "internal/store".
-//  2. Runtime sentinel reachability — production source under
-//     internal/caronte/store invokes caronteBoundarySentinel(), the
-//     structural witness that the import set is intentionally narrow.
+// 1. AST import scan over internal/caronte/** + caronteadapter (incl.
+// _test.go) — zero imports containing "internal/store".
+// 2. Runtime sentinel reachability — production source under
+// internal/caronte/store invokes caronteBoundarySentinel(), the
+// structural witness that the import set is intentionally narrow.
 //
-// inv-zen-230 (Plan 19 Phase A).
+// invariant.
 package compliance
 
 import (

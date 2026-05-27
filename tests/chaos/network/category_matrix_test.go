@@ -1,4 +1,4 @@
-//go:build chaos
+// go:build chaos
 
 package network
 

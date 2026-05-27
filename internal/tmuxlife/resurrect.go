@@ -364,10 +364,10 @@ func (m *Manager) Restore(ctx context.Context, alias string) error {
 	return nil
 }
 
-// PruneOldSnapshots keeps the keepLast most recent .tar.gz files in dir
+// PruneOldSnapshots keeps the keepLast most recent.tar.gz files in dir
 // and deletes the rest. Files are ordered by name (lexicographic; the
 // SnapshotPath naming convention guarantees this is chronological for
-// a single alias). Files not matching .tar.gz are left alone (a stray
+// a single alias). Files not matching.tar.gz are left alone (a stray
 // .DS_Store or operator's own file must survive).
 //
 // keepLast == 0 (or negative) is a no-op (failsafe; operator misconfig
@@ -376,7 +376,7 @@ func (m *Manager) Restore(ctx context.Context, alias string) error {
 //
 // Doctrine matrix: max-scope=7, default=7, capa-firewall=3 (per spec
 // §1 Q7 D + §3.6); the caller chooses the value via doctrine config
-// at the daemon-startup wiring layer (Phase I).
+// at the daemon-startup wiring layer.
 //
 // This function is package-level (not a Manager method) because it
 // operates on a directory path with no Manager state required; the

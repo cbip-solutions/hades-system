@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_orchestrator_plan5.go (Plan 5 Phase N N-6).
+// Package cli — doctor_orchestrator_plan5.go.
 //
 // 9 orchestrator-engine doctor checks per spec §6.2. Distinct from the
-// 4 dispatcher-tier checks shipped in Plan 3 K-6's
+// 4 dispatcher-tier checks shipped in K-6's
 // doctor_orchestrator_checks.go (different names, different probes,
 // different responsibilities).
 //
 // The 9 checks (canonical order, spec §6.2):
 //
-//  1. orchestrator.daemon_up               — daemon process responding on UDS
-//  2. orchestrator.event_log_writable      — audit_events_raw writable + corruption < 5
-//  3. orchestrator.worktree_pool_healthy   — pool floor reached + 0 leaked + GC ran (Q3+Q4)
-//  4. orchestrator.research_mcp_up         — research MCP reachable (inv-zen-101 hard tier)
-//  5. orchestrator.caronte_up              — caronte engine up + index currency ≤ 24h (Q13 D)
-//  6. orchestrator.adapters_clean          — orchestratoradapter Close() succeeded last shutdown
-//  7. orchestrator.background_goroutines   — exactly 11 expected (spec §3.3)
-//  8. orchestrator.last_session_clean      — last session terminated cleanly (Q7 D)
-//  9. orchestrator.substrate_health        — substrate pass rate ≥ 95% (Q2 C + Q12 C)
+// 1. orchestrator.daemon_up — daemon process responding on UDS
+// 2. orchestrator.event_log_writable — audit_events_raw writable + corruption < 5
+// 3. orchestrator.worktree_pool_healthy — pool floor reached + 0 leaked + GC ran (Q3+Q4)
+// 4. orchestrator.research_mcp_up — research MCP reachable
+// 5. orchestrator.caronte_up — caronte engine up + index currency ≤ 24h (Q13 D)
+// 6. orchestrator.adapters_clean — orchestratoradapter Close() succeeded last shutdown
+// 7. orchestrator.background_goroutines — exactly 11 expected (spec §3.3)
+// 8. orchestrator.last_session_clean — last session terminated cleanly (Q7 D)
+// 9. orchestrator.substrate_health — substrate pass rate ≥ 95% (Q2 C + Q12 C)
 //
 // Each check has a happy + at least one failure path covered by the
 // adjacent _test.go file.
@@ -48,7 +48,7 @@ func (c orchestratorCheckP5) Name() string { return c.name }
 
 func (c orchestratorCheckP5) Run(ctx context.Context) DoctorResultP5 { return c.run(ctx) }
 
-// DoctorResultP5 is the local result shape used by Phase N checks. It
+// DoctorResultP5 is the local result shape used by checks. It
 // carries Pass / Warning / Detail; the section runner translates these
 // into the package-wide CheckResult shape (Status: ok|warn|fail).
 type DoctorResultP5 struct {

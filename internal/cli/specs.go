@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
-// Package cli — specs.go (Plan 14 Phase F Task F-5).
+// Package cli — specs.go.
 //
 // `zen specs <subcommand>` is the operator-facing entry point for the
 // read-only OpenSpec management surface (spec §0.2). Specs are read-only
-// at the CLI in Plan 14; write-back is deferred to post-v0.14.0.
+// at the CLI in ; write-back is deferred to post-v0.14.0.
 //
 // Four leaves under one root:
 //
-//	zen specs list   [--format text|json]
-//	zen specs show   <spec-id> [--format text|md]
-//	zen specs diff   <change-id> [--v <from>..<to>]
-//	zen specs sync   [--full] [--specs-dir <path>]
+// zen specs list [--format text|json]
+// zen specs show <spec-id> [--format text|md]
+// zen specs diff <change-id> [--v <from>..<to>]
+// zen specs sync [--full] [--specs-dir <path>]
 //
 // list / show / diff are pure filesystem reads of openspec/specs/ +
 // openspec/changes/<id>/deltas/ — no daemon call.
 //
 // sync calls POST /v1/knowledge/ecosystem/specs-sync to re-index specs
-// into ecosystem.db (the daemon handler is wired in Phase G; calling
+// into ecosystem.db (the daemon handler is wired in ; calling
 // against a daemon without the route returns ErrRecoverable with a
 // roadmap pointer).
 //

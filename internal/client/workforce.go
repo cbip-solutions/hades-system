@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package client — workforce.go (Plan 4 Phase N Task N-2).
+// Package client — workforce.go.
 //
 // Typed wrappers for /v1/workforce/* endpoints exposed by the daemon
-// (Phase G). The CLI surface in internal/cli/workforce.go uses these.
+// . The CLI surface in internal/cli/workforce.go uses these.
 package client
 
 import (

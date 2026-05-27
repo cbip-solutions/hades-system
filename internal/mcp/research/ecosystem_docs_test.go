@@ -251,7 +251,7 @@ func TestEcosystemDocsSearchHandlesNilQueryResult(t *testing.T) {
 // Without defensive unwrapping the `e.disp == nil` check passes and the
 // subsequent `e.disp.Query(...)` invocation panics with nil-pointer deref.
 // NewEcosystemDocs MUST unwrap typed-nil so the documented
-// graceful-degradation contract (inv-zen-202) holds for both untyped-nil
+// graceful-degradation contract holds for both untyped-nil
 // and typed-nil inputs.
 func TestEcosystemDocsTypedNilDispatcherSearchGracefulDegrades(t *testing.T) {
 	var typedNil *ecosystem.Dispatcher = nil

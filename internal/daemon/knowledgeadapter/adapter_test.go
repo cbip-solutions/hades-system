@@ -1,18 +1,18 @@
-//go:build cgo
+// go:build cgo
 
-// Package knowledgeadapter tests — adapter_test.go (Plan 9 Phase D-12).
+// Package knowledgeadapter tests — adapter_test.go.
 //
 // Tests cover:
-//  1. Compile-time interface compliance — verified by the var _ stmt in
-//     adapter.go; the test binary compilation itself is the assertion.
-//  2. ListAuthorizedProjects — happy path (2 active projects returned).
-//  3. ListAuthorizedProjects — archived project excluded.
-//  4. ListAuthorizedProjects — empty table returns empty slice, not nil.
-//  5. ListAuthorizedProjects — graceful no-such-table fallback.
-//  6. OpenProjectVault — creates vault.db on first call.
-//  7. OpenProjectVault — second call returns same *sql.DB (cache hit).
-//  8. UpdateAuditChainAnchor — writes row; SELECT verifies value.
-//  9. UpdateAuditChainAnchor — idempotent update path.
+// 1. Compile-time interface compliance — verified by the var _ stmt in
+// adapter.go; the test binary compilation itself is the assertion.
+// 2. ListAuthorizedProjects — happy path (2 active projects returned).
+// 3. ListAuthorizedProjects — archived project excluded.
+// 4. ListAuthorizedProjects — empty table returns empty slice, not nil.
+// 5. ListAuthorizedProjects — graceful no-such-table fallback.
+// 6. OpenProjectVault — creates vault.db on first call.
+// 7. OpenProjectVault — second call returns same *sql.DB (cache hit).
+// 8. UpdateAuditChainAnchor — writes row; SELECT verifies value.
+// 9. UpdateAuditChainAnchor — idempotent update path.
 //
 // 10. Close — all cached vaults closed; subsequent queries return error.
 //

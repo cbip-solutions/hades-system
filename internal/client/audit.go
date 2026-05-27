@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package client — audit.go (Plan 4 Phase N Task N-5).
+// Package client — audit.go.
 //
 // Typed wrappers for the audit surface:
 //
-//	POST /v1/audit/emit       — Phase G; per-event write (operator emit/test only)
-//	GET  /v1/audit/events     — Phase N; recent events filtered by type/project
-//	GET  /v1/audit/types      — Phase N; distinct types catalog (last 30d)
+// POST /v1/audit/emit — ; per-event write (operator emit/test only)
+// GET /v1/audit/events — ; recent events filtered by type/project
+// GET /v1/audit/types — ; distinct types catalog (last 30d)
 //
-// Family-disjoint reviewer pool (inv-zen-080) and criteria templates are
+// Family-disjoint reviewer pool and criteria templates are
 // surfaced via doctrine state (audit.families, audit.criteria.*); the CLI
 // reads them through DoctrineState rather than dedicated audit endpoints.
 package client

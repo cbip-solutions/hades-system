@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package mcpgateway — contract_get_why_breaking_change.go (Plan 20 Phase I).
+// Package mcpgateway — contract_get_why_breaking_change.go.
 //
 // Handler for the `get_why_breaking_change` MCP tool. Validates required
 // `change` arg + dispatches to engine.GetWhyBreakingChange. Returns the
 // WhyBreakingChange payload (D7 Lore-attribution evidence chain).
 //
-// The underlying engine call surfaces bcdetect.LoreAttribution (Phase G's
+// The underlying engine call surfaces bcdetect.LoreAttribution (
 // type; the package is `bcdetect`, NOT `intent` — `intent.LoreAttribution`
 // does not exist and would be a fictional reference). The engine maps the
 // attribution into the WhyBreakingChange value type before returning.

@@ -1,29 +1,29 @@
 // tests/compliance/inv_zen_144_cross_project_isolation_test.go
 //
-// Compliance gate for inv-zen-144 (per-project Tessera tile-log isolation).
+// Compliance gate for invariant (per-project Tessera tile-log isolation).
 //
-// Invariant text (inv-zen-144):
+// Invariant text:
 //
-//	"Every Tessera tile-log is addressable by exactly one project_id. An
-//	 Adapter constructed for project A MUST refuse to AppendLeaf or
-//	 AppendSeal carrying a different project_id, returning
-//	 ErrCrossProjectAccess. Cross-project isolation is enforced at the API
-//	 surface, not just by directory separation, so a misrouted call cannot
-//	 silently land on the wrong tile-log."
+// "Every Tessera tile-log is addressable by exactly one project_id. An
+// Adapter constructed for project A MUST refuse to AppendLeaf or
+// AppendSeal carrying a different project_id, returning
+// ErrCrossProjectAccess. Cross-project isolation is enforced at the API
+// surface, not just by directory separation, so a misrouted call cannot
+// silently land on the wrong tile-log."
 //
 // internal/audit/tessera/adapter.go:
 //
-//   - NewProjectAdapter rejects empty projectID (ErrEmptyProjectID).
-//   - AppendLeaf inspects leaf.ProjectID against a.projectID and refuses
-//     with %w ErrCrossProjectAccess when they differ (line ~183).
-//   - AppendSeal inspects the projectID argument against a.projectID and
-//     refuses with %w ErrCrossProjectAccess when they differ (line ~273).
+// - NewProjectAdapter rejects empty projectID (ErrEmptyProjectID).
+// - AppendLeaf inspects leaf.ProjectID against a.projectID and refuses
+// with %w ErrCrossProjectAccess when they differ (line ~183).
+// - AppendSeal inspects the projectID argument against a.projectID and
+// refuses with %w ErrCrossProjectAccess when they differ (line ~273).
 //
 // This compliance test is the runtime gate that catches drift: if a
 // refactor relaxes either check, the test fails and CI blocks the regression
 // before it reaches main.
 //
-// Plan-file: docs/superpowers/plans/2026-05-07-plan-9-phase-K-tests.md
+// Plan-file: internal design record
 // lines 4113-4174 (Task K-11 Step 2). The plan-file uses speculative method
 // names "Append" and "LeafFromOtherProject"; the actual API surface is
 // AppendLeaf (with a Leaf struct carrying ProjectID) and AppendSeal (with
@@ -36,8 +36,8 @@
 // link any SQLite driver, so it coexists cleanly with the compliance
 // package's existing ncruces driver registration (inv_zen_073_test.go).
 //
-// Refs: spec §7.2 lines 1666-1679 (Plan 9 invariant declaration); Plan 9
-// Phase A Task A-3 (Adapter ProjectID guard); inv-zen-144 sentinel
+// Refs: spec §7.2 lines 1666-1679;
+// Task A-3 (Adapter ProjectID guard); invariant sentinel
 // declared in internal/audit/tessera/errors.go.
 package compliance
 
@@ -63,7 +63,7 @@ func inv144TestConfig() tessera.Config {
 // Adapter for project "p-a" and attempts to AppendLeaf a Leaf whose
 // ProjectID is "p-b". The adapter MUST refuse with ErrCrossProjectAccess.
 //
-// This is the load-bearing inv-zen-144 assertion: API-surface isolation
+// This is the load-bearing invariant assertion: API-surface isolation
 // catches misrouted writes that would otherwise corrupt a peer project's
 // tile-log.
 func TestInvZen144_CrossProjectAppendLeafRefused(t *testing.T) {
@@ -118,7 +118,7 @@ func TestInvZen144_CrossProjectAppendSealRefused(t *testing.T) {
 }
 
 // TestInvZen144_NewProjectAdapterRejectsEmptyProjectID is the constructor-
-// level half of inv-zen-144: an Adapter MUST be addressable by a non-empty
+// level half of invariant: an Adapter MUST be addressable by a non-empty
 // project_id. Empty-string project ID returns ErrEmptyProjectID; this is
 // the structural pre-condition that makes the API-surface checks
 // (AppendLeaf / AppendSeal) meaningful.

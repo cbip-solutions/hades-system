@@ -591,14 +591,14 @@ func TestAuditChainColdArchive_RestoreAccepted(t *testing.T) {
 // ---- Task I-4 tests: configure-s3 + witness rotate + witness pubkey ----------
 //
 // Actual H-7 client signatures (deviates from plan-file; adapted to actuals):
-//   AuditConfigureS3(ctx, projectID string, creds AuditS3Credentials) error
-//     → returns nil on 204; creds has Endpoint, Bucket, Region, AccessKey, SecretKey, Prefix
-//   AuditWitnessRotate(ctx, reason string) (AuditRotateResult, error)
-//     → AuditRotateResult{NewKeyFingerprint, OldKeyFingerprint, RotatedAt}
-//       (NO OverlapWindowDays — not in H-7 AuditRotateResult)
-//   AuditWitnessPubkey(ctx) (AuditWitnessPubkey, error)
-//     → AuditWitnessPubkey{PubkeyPEM, Fingerprint, CreatedAt, RotationCount}
-//       (NOT HexPub/IssuedAt/NotAfterAt as plan-file proposed)
+// AuditConfigureS3(ctx, projectID string, creds AuditS3Credentials) error
+// → returns nil on 204; creds has Endpoint, Bucket, Region, AccessKey, SecretKey, Prefix
+// AuditWitnessRotate(ctx, reason string) (AuditRotateResult, error)
+// → AuditRotateResult{NewKeyFingerprint, OldKeyFingerprint, RotatedAt}
+// (NO OverlapWindowDays — not in H-7 AuditRotateResult)
+// AuditWitnessPubkey(ctx) (AuditWitnessPubkey, error)
+// → AuditWitnessPubkey{PubkeyPEM, Fingerprint, CreatedAt, RotationCount}
+// (NOT HexPub/IssuedAt/NotAfterAt as plan-file proposed)
 //
 // Plan-file types AuditChainConfigureS3Resp, AuditChainWitnessRotateResp,
 // AuditChainWitnessPubkeyResp do NOT exist; all tests use H-7 actuals.

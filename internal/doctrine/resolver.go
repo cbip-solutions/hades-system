@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-//   1. Built-in Go-coded defaults (builtin.go)
-//   2. ~/.config/zen-swarm/doctrines/<name>.toml
-//   3. zenswarm.toml per-project (capped by doctrine ceiling)
-//   4. --doctrine flag (transient)
+// 1. Built-in Go-coded defaults (builtin.go)
+// 2. ~/.config/zen-swarm/doctrines/<name>.toml
+// 3. zenswarm.toml per-project (capped by doctrine ceiling)
+// 4. --doctrine flag (transient)
 //
 // The resolver returns a Resolved{Schema, Provenance} value. Each
 // layer's contributions are tracked via dotted-path provenance keys;

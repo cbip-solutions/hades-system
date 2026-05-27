@@ -1,28 +1,28 @@
 // SPDX-License-Identifier: MIT
-// Package graphql — Plan 20 GraphQL breaking-change detector wrapping
+// Package graphql — GraphQL breaking-change detector wrapping
 // vektah/gqlparser/v2 (MIT). The sole Go SDL diff library used here per
-// inv-zen-267; the imports scan asserts no other diff library is imported
+// invariant; the imports scan asserts no other diff library is imported
 // in this file (except the gated Node fallback in nodefallback.go).
 //
 // Rule set: the six canonical SDL diff rules from the graphql-inspector
-// well-known catalog (Stage-0 divergence #3 — the spec §7 explicit
+// well-known catalog ( divergence #3 — the spec §7 explicit
 // enumeration). Anything outside this set yields SevInsufficient with
 // Kind = "INSUFFICIENT_<reason>" so the Node fallback (nodefallback.go)
-// can take over under the inv-zen-272 opt-in gate.
+// can take over under the invariant opt-in gate.
 //
 // Severity mapping:
 //
-//   - FIELD_REMOVED: SevBreaking (consumer queries fail with "field
-//     unknown" error).
-//   - FIELD_ARGUMENT_TYPE_CHANGED: SevBreaking (existing queries with the
-//     old type fail validation).
-//   - TYPE_REMOVED: SevBreaking (every consumer reference fails).
-//   - ENUM_VALUE_REMOVED: SevBreaking (consumers using the value lose
-//     semantic meaning).
-//   - INPUT_FIELD_ADDED_REQUIRED: SevBreaking (existing mutations missing
-//     the field fail validation).
-//   - DIRECTIVE_USAGE_REMOVED: SevDangerous (consumers depending on the
-//     directive's side effect lose it, but query parsing succeeds).
+// - FIELD_REMOVED: SevBreaking (consumer queries fail with "field
+// unknown" error).
+// - FIELD_ARGUMENT_TYPE_CHANGED: SevBreaking (existing queries with the
+// old type fail validation).
+// - TYPE_REMOVED: SevBreaking (every consumer reference fails).
+// - ENUM_VALUE_REMOVED: SevBreaking (consumers using the value lose
+// semantic meaning).
+// - INPUT_FIELD_ADDED_REQUIRED: SevBreaking (existing mutations missing
+// the field fail validation).
+// - DIRECTIVE_USAGE_REMOVED: SevDangerous (consumers depending on the
+// directive's side effect lose it, but query parsing succeeds).
 //
 // Concurrency Detect is safe to call concurrently.
 package graphql

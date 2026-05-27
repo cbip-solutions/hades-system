@@ -1,7 +1,7 @@
 // internal/research/ecosystem/abstention_test.go
 //
 // Tests for AbstentionPolicy (Bayesian μ−λσ per-ecosystem-tuned).
-// Spec §2.7 Q7=A Layer 3; inv-zen-196 (per-ecosystem λ tunable).
+// Spec §2.7 Q7=A Layer 3; invariant (per-ecosystem λ tunable).
 //
 // Coverage target: ≥90% (security/correctness-critical; this is the
 // final answer-gate — false negatives leak unverified content).

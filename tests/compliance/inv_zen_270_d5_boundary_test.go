@@ -1,14 +1,14 @@
 // tests/compliance/inv_zen_270_d5_boundary_test.go
 //
-// Compliance test for inv-zen-270 (master Plan 20):
+// Compliance test for invariant:
 //
-//	"The L10 Coordinator subsystem internal/caronte/coordinated/ is
-//	 INDEPENDENT of F.7 hook daemon-wiring (D5); Coordinator code MUST
-//	 NOT import or construct HRA / ConfirmationPolicy / MergeEngine
-//	 directly. Compliance: AST scan over
-//	 internal/caronte/coordinated/'s import set forbids those
-//	 packages; capability-detection of WorktreePool is the ONLY
-//	 sanctioned bridge."
+// "The L10 Coordinator subsystem internal/caronte/coordinated/ is
+// INDEPENDENT of F.7 hook daemon-wiring (D5); Coordinator code MUST
+// NOT import or construct HRA / ConfirmationPolicy / MergeEngine
+// directly. Compliance: AST scan over
+// internal/caronte/coordinated/'s import set forbids those
+// packages; capability-detection of WorktreePool is the ONLY
+// sanctioned bridge."
 //
 // Enforcement: full-package AST scan via
 // golang.org/x/tools/go/packages over internal/caronte/coordinated/

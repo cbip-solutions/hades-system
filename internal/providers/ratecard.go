@@ -94,7 +94,7 @@ func NewRateCardRegistry() *RateCardRegistry {
 // CONTRACT Register stores the *RateCard pointer directly. Callers
 // MUST NOT mutate the pointed-to struct after Register — Lookup
 // returns the same pointer, and any post-Register mutation would
-// silently corrupt the registry's view (Phase F cost ledger reads
+// silently corrupt the registry's view ( cost ledger reads
 // rates concurrently). To replace a rate, construct a new *RateCard
 // and Register again under a fresh key (or via a future Update method
 // that does the swap atomically).
@@ -116,7 +116,7 @@ func (r *RateCardRegistry) Register(c *RateCard) error {
 }
 
 // Lookup returns the rate card for (provider, model). Returns an
-// error wrapping ErrRateMissing if not found — Phase F dispatcher
+// error wrapping ErrRateMissing if not found — dispatcher
 // short-circuits with a 503 when the rate is missing rather than
 // silently treating cost as zero.
 //

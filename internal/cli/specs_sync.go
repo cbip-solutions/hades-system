@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-// specs_sync.go — Plan 14 Phase F Task F-5 subcommand `zen specs sync`.
+// specs_sync.go — Task F-5 subcommand `zen specs sync`.
 //
 // Calls POST /v1/knowledge/ecosystem/specs-sync to re-index openspec/specs/
 // into the ecosystem.db RAG store. Renders the daemon's chunks/specs
 // counts + elapsed-ms summary.
 //
-// The daemon-side handler is wired in Phase G; Phase F ships the CLI
+// The daemon-side handler is wired in ; ships the CLI
 // surface so operators can plug into the unified `zen specs *` family
 // before the route lands. Calling against a daemon that does not yet
 // register the route returns 404 — classifySpecsError maps that to
 // ErrRecoverable with an operator-facing hint.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract):
-//   - 0 success
-//   - 1 operator-recoverable: daemon 422 (validation), 404 (route not
-//     yet wired in Phase G).
-//   - 2 unrecoverable: transport, decode, daemon 5xx.
+// - 0 success
+// - 1 operator-recoverable: daemon 422 (validation), 404 (route not
+// yet wired in ).
+// - 2 unrecoverable: transport, decode, daemon 5xx.
 package cli
 
 import (

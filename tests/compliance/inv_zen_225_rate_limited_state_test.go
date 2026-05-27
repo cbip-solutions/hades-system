@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_225_rate_limited_state_test.go
 //
-// inv-zen-225 (v0.17.7 / B-3) — a 429 response never yields StateSuspect or StateOpen.
+// invariant (v0.17.7 / B-3) — a 429 response never yields StateSuspect or StateOpen.
 //
 // Root cause guarded: before v0.17.7, RecordRateLimited did not exist and a
 // 429 was routed to RecordFailure, which drove the failure counter and could
@@ -8,7 +8,7 @@
 // A throttling upstream is not a broken upstream; treating it as a failure
 // burns probe budget and can starve the tier indefinitely.
 //
-// inv-zen-225 pins the correct behaviour: calling RecordRateLimited on a
+// invariant pins the correct behaviour: calling RecordRateLimited on a
 // CircuitBreaker MUST result in StateRateLimited, never StateSuspect or
 // StateOpen, regardless of how many consecutive 429s are recorded.
 package compliance

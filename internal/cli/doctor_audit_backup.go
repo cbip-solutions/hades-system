@@ -9,8 +9,8 @@
 // implementations; the CLI just adapts the daemon response into
 // CheckResult rows for the existing renderCheck pipeline.
 //
-// The Phase C-10 surface ships the call-sites in
-// internal/client.AuditDoctorBackup; Phase H wires the daemon-side
+// The surface ships the call-sites in
+// internal/client.AuditDoctorBackup; wires the daemon-side
 // HTTP handler to invoke RunDoctorAuditBackup with the production
 // BackupStatus adapter (Manager + RsyncScheduler +
 // auditadapter.PartitionSealStore + AWS-CLI prober). Until then the

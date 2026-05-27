@@ -4,14 +4,14 @@
 // stored window samples on every Update call. Recomputation is cheap
 // (window default 60; bound 1440) and eliminates floating-point drift
 // that an incremental running-state approach would accumulate over
-// thousands of updates. inv-zen-078 demands determinism; the cost of an
+// thousands of updates. invariant demands determinism; the cost of an
 // extra O(N) pass per call is negligible against the dispatch latency
 // (sub-microsecond compared to network round-trips).
 //
 // The detector is stateless across calls — all state lives in the
 // BudgetStore via AnomalyAppend / AnomalyWindow. This means a daemon
 // restart does NOT lose the window (unlike the circuit breaker in Plan
-// 3 Phase H, which is intentionally restart-volatile).
+// 3, which is intentionally restart-volatile).
 //
 // Concurrency (post-review C-3 fix): per-scope serialisation via sync.Map
 // of *sync.Mutex keyed by (scope, scope_value). Window-read +

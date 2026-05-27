@@ -2,9 +2,9 @@
 // Package zenday — cost ledger contract.
 //
 // The local CostStore interface is the boundary between the zenday
-// package and Plan 3's dispatcheradapter.CostStore. Production wiring
+// package and dispatcheradapter.CostStore. Production wiring
 // adapts the dispatcher's concrete cost-ledger reader; tests substitute
-// in-memory fakes (per inv-zen-031, zenday/ never imports
+// in-memory fakes (per invariant, zenday/ never imports
 // internal/store).
 package zenday
 
@@ -13,8 +13,8 @@ import (
 	"time"
 )
 
-// CostStatus is the snapshot Phase F renders as rank-4 cost-cap-warning
-// items. Sourced from Plan 3's cost ledger via dispatcheradapter.CostStore;
+// CostStatus is the snapshot renders as rank-4 cost-cap-warning
+// items. Sourced's cost ledger via dispatcheradapter.CostStore;
 // only projects with PercentUsed ≥ 80 are emitted as items per spec §1
 // Q14 B (max 2 shown after sorting by % desc).
 //

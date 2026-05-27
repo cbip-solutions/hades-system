@@ -1,7 +1,7 @@
 # Third-Party Licenses
 
 HADES system is released under the MIT License. This document summarizes the
-main third-party licensing posture for the public distribution.
+main third-party licensing posture for this repository.
 
 ## Runtime And Build Dependencies
 
@@ -12,8 +12,8 @@ machine-readable dependency inventory with:
 make sbom
 ```
 
-Release verification uses the generated SBOMs, checksums, attestations, and the
-curated CGO supplement under `configs/`.
+Release verification uses generated SBOMs, checksums, attestations, and the CGO
+supplement under `configs/`.
 
 ## Notable Components
 

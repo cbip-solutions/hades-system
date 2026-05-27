@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — safetynet_divergence.go (Plan 5 Phase N N-5).
+// Package cli — safetynet_divergence.go.
 //
 // `zen safetynet divergence {run,history}` triggers and inspects the
 // config-divergence audit (Q2 C element 2). Run is on-demand (POST);

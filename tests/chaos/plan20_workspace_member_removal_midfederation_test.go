@@ -4,16 +4,16 @@
 // Runs under `make test-chaos`.
 //
 // Scenario (spec §13.3 second bullet): a caronte_workspaces row is deleted
-// during an in-flight FederatedQuery against the in-memory Plan-19-M
+// during an in-flight FederatedQuery against the in-memory
 // store.Workspace. The seam:
 //
-//   - Plan-19-M store.Workspace.FederatedQuery is a process-local fan-out
-//     across the in-memory roster; it does NOT read from the persistent
-//     caronte_workspaces table mid-query (the roster is fixed at
-//     NewWorkspace construction time).
-//   - Phase A's federation.WorkspaceFederationDB.RemoveWorkspace deletes
-//     the persistent row + CASCADE drops members + contract_links +
-//     breaking_changes + breaking_change_consumers.
+// - store.Workspace.FederatedQuery is a process-local fan-out
+// across the in-memory roster; it does NOT read from the persistent
+// caronte_workspaces table mid-query (the roster is fixed at
+// NewWorkspace construction time).
+// - federation.WorkspaceFederationDB.RemoveWorkspace deletes
+// the persistent row + CASCADE drops members + contract_links +
+// breaking_changes + breaking_change_consumers.
 //
 // Therefore the property under chaos: the persistent-side delete MUST NOT
 // (a) panic any concurrent FederatedQuery goroutine, (b) corrupt the
@@ -24,21 +24,20 @@
 // Close()d, which is the operator's signal that the federation is gone).
 //
 // Bite-check candidates:
-//   - Remove the persistent-side CASCADE on caronte_workspace_members →
-//     RemoveWorkspace fails with FK violation (members rows survive). The
-//     chaos test detects this as the persistent-side error.
-//   - Make Workspace.FederatedQuery read from a mutable roster (instead of
-//     the snapshot at NewWorkspace) → mid-query removal would surface as
-//     a partial fan-out. The chaos test detects this as scope mismatch.
+// - Remove the persistent-side CASCADE on caronte_workspace_members →
+// RemoveWorkspace fails with FK violation (members rows survive). The
+// chaos test detects this as the persistent-side error.
+// - Make Workspace.FederatedQuery read from a mutable roster (instead of
+// the snapshot at NewWorkspace) → mid-query removal would surface as
+// a partial fan-out. The chaos test detects this as scope mismatch.
 //
 // Why TDD via revert-impl bite-check: both invariants pass-from-start;
-// the test pins them against future regressions. The Phase A CASCADE
+// the test pins them against future regressions. The CASCADE
 // chain is already wired (Task L-3 verified breaking_changes); this test
 // pins the workspaces↔members chain + the in-memory snapshot semantics
 // jointly under concurrent assault.
 
-//go:build chaos && cgo
-
+// go:build chaos && cgo
 package chaos
 
 import (
@@ -85,7 +84,7 @@ func TestPlan20ChaosWorkspaceMemberRemovalMidFederation(t *testing.T) {
 		t.Fatalf("seedFedMembers: %v", err)
 	}
 
-	// Construct the in-memory Plan-19-M Workspace OVER per-project stores.
+	// Construct the in-memory Workspace OVER per-project stores.
 	// The roster is snapshot at construct time; the persistent-side
 	// RemoveWorkspace MUST NOT alter the in-memory scope.
 	storeA := openProjectStore(t, dbDir, owner)

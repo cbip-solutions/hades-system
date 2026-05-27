@@ -1,16 +1,16 @@
 // tests/compliance/inv_zen_111_tighten_only_validator_test.go
 //
-// Compliance gate for inv-zen-111: doctrine bounds matrix is TIGHTEN-only
-// at the project layer. Per spec §8.3 inv-zen-111, project-level overrides
+// Compliance gate for invariant: doctrine bounds matrix is TIGHTEN-only
+// at the project layer. Per spec §8.3 invariant, project-level overrides
 // to ScoringConfig MUST be allowed only in the tighter direction:
 //
-//   - BetaPatchSizePenalty: tighter = HIGHER  (override < base → REJECT)
-//   - GammaFlakePenalty:    tighter = HIGHER  (override < base → REJECT)
-//   - AlphaReviewerWeight:  NEUTRAL — doctrine philosophy lever; either
-//     direction OK
+// - BetaPatchSizePenalty: tighter = HIGHER (override < base → REJECT)
+// - GammaFlakePenalty: tighter = HIGHER (override < base → REJECT)
+// - AlphaReviewerWeight: NEUTRAL — doctrine philosophy lever; either
+// direction OK
 //
 // This is the load-bearing safety contract behind the per-project
-// override surface (Phase F TOML loader). Without it, a project could
+// override surface. Without it, a project could
 // silently weaken the global doctrine matrix — directly contradicting
 // the max-scope/no-defer/no-tech-debt project doctrine that the bounds
 // matrix encodes. The compliance test here is the public-API-surface
@@ -21,15 +21,15 @@
 // project override violated.
 //
 // Three sibling assertions:
-//  1. TestInvZen111ValidateTightenOnlyAcceptsTightening — five legal
-//     directions (equal, β tighten, γ tighten, α neutral lower/higher)
-//     all return nil.
-//  2. TestInvZen111ValidateTightenOnlyRejectsLoosen — two illegal
-//     directions (β loosen, γ loosen) return ErrLooseAttemptRejected
-//     with the offending field name embedded in the error message.
-//  3. TestInvZen111ValidateTightenOnlyAlphaIsNeutral — α at six
-//     spread-apart values (0, 0.5, 1, 1.5, 5, 100) all return nil
-//     against the same base, confirming the philosophy-lever semantics.
+// 1. TestInvZen111ValidateTightenOnlyAcceptsTightening — five legal
+// directions (equal, β tighten, γ tighten, α neutral lower/higher)
+// all return nil.
+// 2. TestInvZen111ValidateTightenOnlyRejectsLoosen — two illegal
+// directions (β loosen, γ loosen) return ErrLooseAttemptRejected
+// with the offending field name embedded in the error message.
+// 3. TestInvZen111ValidateTightenOnlyAlphaIsNeutral — α at six
+// spread-apart values (0, 0.5, 1, 1.5, 5, 100) all return nil
+// against the same base, confirming the philosophy-lever semantics.
 //
 // Note (per C-2 implementer pattern): we use the canonical
 // AlphaReviewerWeight / BetaPatchSizePenalty / GammaFlakePenalty field
@@ -43,7 +43,7 @@
 // or clock is needed for these tests — ValidateTightenOnly is a pure
 // function over ScoringConfig values.
 //
-// Reference: docs/superpowers/specs/2026-05-01-zen-swarm-plan-6-merge-engine-design.md §8.3 inv-zen-111
+// Reference: internal design record §8.3 invariant
 package compliance
 
 import (

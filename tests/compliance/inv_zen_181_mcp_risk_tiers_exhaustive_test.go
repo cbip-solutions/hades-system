@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_181_mcp_risk_tiers_exhaustive_test.go
 //
-// Spec §8.6 inv-zen-181 compliance test: the curated MCP catalog
+// Spec §8.6 invariant compliance test: the curated MCP catalog
 // (internal/onboard/mcp/catalog.go) MUST classify every entry into one
 // of the 4 risk tiers (high / medium / low / smart-default) per Q10=D.
 //

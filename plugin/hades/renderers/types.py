@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
                                  
-"""Python type stubs mirroring Plan 11 Phase D Go envelope substrate."""
+"""Python type stubs mirroring   Go envelope substrate."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ ALLOWED_DOCTRINES: frozenset[str] = frozenset({"max-scope", "default", "capa-fir
 class CitationType(str, Enum):
     """Citation type discriminating payload semantics.
 
-    Mirrors Plan 11 Phase D ``internal/citation/types.go`` ``CitationType`` Go
+    Mirrors   ``internal/citation/types.go`` ``CitationType`` Go
     enum. Adding a value here REQUIRES adding to Go source first
     (cross-language source-of-truth: Go).
     """
@@ -41,9 +41,9 @@ class CitationType(str, Enum):
 class CitationSource(str, Enum):
     """Originating retrieval surface for a citation.
 
-    Mirrors Plan 11 Phase D ``internal/citation/types.go`` ``CitationSource``.
-    Plan 19 Phase L renamed the code-graph sources gitnexus_* → caronte_*;
-    the old values are kept as backward-compat aliases so pre-Plan-19 audit
+    Mirrors   ``internal/citation/types.go`` ``CitationSource``.
+      renamed the code-graph sources gitnexus_* → caronte_*;
+    the old values are kept as backward-compat aliases so pre- audit
     rows (wire value ``gitnexus_query`` / ``gitnexus_context``) still round-trip
     without error — mirrors Go ``ParseCitationSource`` alias table.
     """
@@ -65,7 +65,7 @@ class CitationSource(str, Enum):
 class RetrievalLane(str, Enum):
     """RRF lane that surfaced a citation.
 
-    Mirrors Plan 11 Phase D ``internal/citation/types.go`` ``RetrievalLane``.
+    Mirrors   ``internal/citation/types.go`` ``RetrievalLane``.
     """
 
     SEMANTIC = "semantic"
@@ -78,8 +78,7 @@ class RetrievalLane(str, Enum):
 class Platform(str, Enum):
     """Render target.
 
-    6 platform-specific renderers (Plan 12 Phase A) + 1 fallback (Plan 11
-    substrate ``internal/citation/markdown_fallback.go``).
+    6 platform-specific renderers + 1 fallback.
     """
 
     INK = "ink"
@@ -95,10 +94,10 @@ class Platform(str, Enum):
 class Envelope:
     """Per-citation structured envelope.
 
-    Round-trips with Plan 11 Go ``internal/citation/types.go`` ``Envelope``
+    Round-trips with  Go ``internal/citation/types.go`` ``Envelope``
     struct byte-exact via JSON tags. Field order + names MUST match Go json
     tags; validation enforces invariants (confidence in [0.0, 1.0]; id
-    non-empty) — these are inv-zen-166 anchors.
+    non-empty) — these are invariant anchors.
 
     The Go ``Lane`` field has JSON tag ``retrieval_lane``; Python uses the
     same JSON name (``retrieval_lane`` field on the dataclass).
@@ -227,16 +226,16 @@ class Envelope:
 
 @dataclass(frozen=True, slots=True)
 class AugmentationResult:
-    """Wrapper type for Plan 11 Phase C augmentation pipeline output.
+    """Wrapper type augmentation pipeline output.
 
-    Round-trips with Plan 11 Go ``internal/augment/types.go``
+    Round-trips with  Go ``internal/augment/types.go``
     ``AugmentationResult`` struct byte-exact via JSON tags.
 
     Top-level container for an augmentation pipeline run; doctrine field is
     load-bearing for downstream filtering (e.g., capa-firewall hides
     cross-project citations entirely at render time).
 
-    inv-zen-166: structured serialization preserves to Tessera audit chain
+    invariant: structured serialization preserves to Tessera audit chain
     via the per-citation envelopes.
     """
 

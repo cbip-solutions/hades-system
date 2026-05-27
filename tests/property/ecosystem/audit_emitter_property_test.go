@@ -1,4 +1,4 @@
-//go:build property && cgo
+// go:build property && cgo
 
 package ecosystem_property_test
 
@@ -48,7 +48,7 @@ func TestAudit_Property_EventTypesContiguous(t *testing.T) {
 // chainLink is a synthetic audit-chain link mirroring the production
 // chain hash discipline (sha256 of seq + event + payload + parent).
 // We do NOT call the production chain here (cgo + DB wiring) because
-// inv-zen-197 enforcement targets the algebra, not the DB layer.
+// invariant enforcement targets the algebra, not the DB layer.
 type chainLink struct {
 	Seq        int64
 	EventType  uint32

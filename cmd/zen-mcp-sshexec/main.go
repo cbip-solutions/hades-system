@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // cmd/zen-mcp-sshexec/main.go
 //
-// zen-mcp-sshexec — ssh-exec MCP binary (Plan 4 Phase M).
+// zen-mcp-sshexec — ssh-exec MCP binary.
 //
 // Invoked by OpenCode plugin via stdio transport (Q9 B: stdio canonical;
-// inv-zen-086: no HTTP/TCP/Unix listen). SSH connections are OUTBOUND
+// invariant: no HTTP/TCP/Unix listen). SSH connections are OUTBOUND
 // (client role) — this binary never binds a server listen socket.
 //
 // The MCP server is implemented in internal/mcp/sshexec/; this file
@@ -13,19 +13,19 @@
 //
 // Usage (by plugin):
 //
-//	zen-mcp-sshexec --doctrine default --project-id zen-swarm
+// zen-mcp-sshexec --doctrine default --project-id zen-swarm
 //
 // Usage (operator debug with custom doctrine file):
 //
-//	zen-mcp-sshexec --doctrine-file /path/to/doctrine.toml --project-id zen-swarm
+// zen-mcp-sshexec --doctrine-file /path/to/doctrine.toml --project-id zen-swarm
 //
 // Flags
 //
-//	--doctrine          named built-in doctrine: default | max-scope | capa-firewall
-//	                    (mutually exclusive with --doctrine-file; default: "default")
-//	--doctrine-file     path to a TOML doctrine file (overrides --doctrine)
-//	--project-id        per-project doctrine identifier (default: "zen-swarm")
-//	--project-toml      path to per-project zenswarm.toml (default: "")
+// --doctrine named built-in doctrine: default | max-scope | capa-firewall
+// (mutually exclusive with --doctrine-file; default: "default")
+// --doctrine-file path to a TOML doctrine file (overrides --doctrine)
+// --project-id per-project doctrine identifier (default: "zen-swarm")
+// --project-toml path to per-project zenswarm.toml (default: "")
 package main
 
 import (

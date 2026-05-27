@@ -54,7 +54,7 @@ def extract_commit_message(cmd: str) -> str:
 def is_ai_attributed(message: str) -> bool:
     """Return True if the commit message contains an AI-attribution marker.
 
-    Per inv-zen-004 (NO Claude attribution in commits).
+    Per invariant (NO Claude attribution in commits).
     """
     if not message:
         return False
@@ -62,7 +62,7 @@ def is_ai_attributed(message: str) -> bool:
 
 
 def _block_directive() -> dict[str, str]:
-    """Return the standard inv-zen-004 block directive dict."""
+    """Return the standard invariant block directive dict."""
     return {
         "action": "block",
         "message": (

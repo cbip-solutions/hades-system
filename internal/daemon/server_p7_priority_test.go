@@ -51,7 +51,7 @@ func TestServer_OverrideStoreAccessorRoundTrip(t *testing.T) {
 
 // TestServer_PriorityRoutes503BeforeWiring — every priority route MUST
 // return 503 before SetOverrideStore has run. This is the canonical
-// "feature not configured" signal that lets `zen project priority ...`
+// "feature not configured" signal that lets `zen project priority...`
 // produce a clear error rather than a silent 404 when the daemon is
 // up but the adapter wiring hasn't completed.
 func TestServer_PriorityRoutes503BeforeWiring(t *testing.T) {

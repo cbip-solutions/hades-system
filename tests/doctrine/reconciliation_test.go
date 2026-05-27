@@ -1,7 +1,7 @@
-// Package doctrine_test — Plan 8 Phase 0 reconciliation golden corpus.
+// Package doctrine_test — Phase 0 reconciliation golden corpus.
 //
 // This file pins the operator-acked R1-R5 reconciliation values from
-// docs/superpowers/plans/2026-05-03-plan-8-phase-0-acks.md as a regression
+// internal design record as a regression
 // barrier: any future change to a built-in doctrine TOML field covered by
 // R1-R5 MUST be accompanied by an updated value here AND an ADR per
 package doctrine_test

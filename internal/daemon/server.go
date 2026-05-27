@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package daemon is the zen-swarm-ctld HTTP server.
 //
-// The API contract is versioned at /v1/ (inv-zen-024) and stays stable
+// The API contract is versioned at /v1/ and stays stable
 // across plans 1-15. Handlers for endpoints whose behaviour is filled in
 // by later plans return 501 Not Implemented with an X-Zen-Plan header
 // indicating which plan implements them. Every endpoint that exists in
@@ -30,6 +30,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/providers"
 	"github.com/cbip-solutions/hades-system/internal/quota"
 	"github.com/cbip-solutions/hades-system/internal/store"
+	"github.com/cbip-solutions/hades-system/internal/workforce/gate"
 )
 
 type BypassAdmin = bypassadmin.Client
@@ -67,7 +68,7 @@ type Server struct {
 	// bypassFwd is the bypass-tier admin handle used ONLY by the
 	// /v1/bypass/* admin endpoints (status / probe / certs / pin /
 	// purge / etc.). It MUST NOT be consulted by /v1/messages — that
-	// route uses orchestratorFwd above per inv-zen-080. The handlers
+	// route uses orchestratorFwd above per invariant. The handlers
 	// package (handlers/bypass.go) consumes this via the Bypass()
 	// accessor + a structurally-typed local interface.
 	bypassFwd BypassAdmin
@@ -91,7 +92,7 @@ type Server struct {
 	paygResetDone   <-chan struct{}
 
 	// `zen orchestrator status / probe / history` commands. The breaker
-	// itself is constructed inside buildOrchestrator (Phase D-6) and is
+	// itself is constructed inside buildOrchestrator and is
 	// the SAME instance the dispatcher consults via PermitTier /
 	// RecordSuccess / RecordFailure. The Server holds a reference for
 	// observability ONLY; mutations always flow through dispatcher / probe
@@ -109,6 +110,8 @@ type Server struct {
 	// preventing drift where a new tier is added in one place but not the
 	// other. Nil-safe: handlers that read this accessor MUST guard for nil.
 	tiers []providers.TierBackend
+
+	operatorGate *gate.OperatorGate
 
 	plan5OrchSvc handlers.Plan5OrchestratorService
 
@@ -163,7 +166,7 @@ type Server struct {
 	// a Server can run without setting up the auth pipeline. Production
 	// MUST call SetDaemonBearer before Start() — the daemon main.go
 	// enforces this ordering and refuses to bind listeners otherwise
-	// (inv-zen-131).
+	// .
 	daemonBearer       *auth.DaemonBearer
 	bearerAuditEmitter auth.AuditEmitter
 
@@ -414,18 +417,18 @@ func (s *Server) registerRoutes() {
 	s.mux.HandleFunc("POST /v1/inbox/ack", handlers.InboxAckHandler(s))
 	s.mux.HandleFunc("POST /v1/inbox/snooze", handlers.InboxSnoozeHandler(s))
 
-	// ----- Plan 7 Phase I Task I-2: HandoffPosted event ingestion ---
+	// ----- Task I-2: HandoffPosted event ingestion ---
 	// POST /v1/events/handoff_posted — plugin-emitted HandoffPostedEvent
-	// (Phase H /handoff slash command) consumed by Phase F EOD digest.
+	// consumed by EOD digest.
 	// Wrapped under requireDaemonBearer so the bearer middleware
-	// (Task I-1) gates the route at the inv-zen-131 boundary; when
+	// (Task I-1) gates the route at the invariant boundary; when
 	// daemonBearer is unset (test bring-up path) the helper falls
 	// open with a logged warning (production main.go enforces ordering).
 	//
 	// The functional handler factory + HandoffEmitter() accessor pattern
 	// makes the emitter-readiness gate at request-time (not
 	// registration-time), so cmd/zen-swarm-ctld can wire the emitter
-	// AFTER s.New runs — mirrors the Plan 7 Phase A..G accessor gate
+	// AFTER s.New runs — mirrors the accessor gate
 	// pattern.
 	s.mux.Handle("POST /v1/events/handoff_posted",
 		s.requireDaemonBearer(handlers.HandoffPosted(s)))
@@ -607,7 +610,7 @@ func (s *Server) Bypass() any {
 	return s.bypassFwd
 }
 
-// SetCostCounters injects the in-memory cost counters cache (Plan 3 Phase
+// SetCostCounters injects the in-memory cost counters cache ( Phase
 // C F-7). Called once at daemon boot in cmd/zen-swarm-ctld AFTER
 // buildOrchestrator has returned the dispatcheradapter.Adapter and the
 // caller has rebuilt counters from the ledger (RebuildFromLedger) +
@@ -619,7 +622,7 @@ func (s *Server) Bypass() any {
 // before the daemon process exits. Nil is acceptable for tests that do
 // not exercise the cost-counters path.
 //
-// inv-zen-065 contract: this MUST be called BEFORE the dispatcher
+// invariant contract: this MUST be called BEFORE the dispatcher
 // accepts requests. If the daemon ever serves /v1/messages with a nil
 // costCounters, every WouldExceedCap call returns false regardless of
 // historical spend — caps would silently leak. Main.go enforces the
@@ -634,7 +637,7 @@ func (s *Server) SetCostCounters(cc *orchestrator.CostCounters, maintCancel cont
 }
 
 // SetRecoveryScheduler injects the circuit-breaker recovery scheduler
-// (Plan 3 Phase D-6). Called once at daemon boot in cmd/zen-swarm-ctld
+// . Called once at daemon boot in cmd/zen-swarm-ctld
 // AFTER buildOrchestrator has returned the *RecoveryScheduler and main.go
 // has spawned its background goroutine via scheduler.Run(ctx).
 //
@@ -682,8 +685,20 @@ func (s *Server) CostCounters() *orchestrator.CostCounters {
 	return s.costCounters
 }
 
+func (s *Server) SetOperatorGate(g *gate.OperatorGate) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.operatorGate = g
+}
+
+func (s *Server) OperatorGate() *gate.OperatorGate {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.operatorGate
+}
+
 // SetPinOverrides injects the operator-facing pin override resolver
-// (Plan 3 Phase E I-5). Called once at daemon boot in cmd/zen-swarm-ctld
+// . Called once at daemon boot in cmd/zen-swarm-ctld
 // AFTER buildOrchestrator has returned the *PinOverrides and main.go has
 // spawned its TTL-sweep background goroutine via StartTTLSweep(ctx).
 //
@@ -693,7 +708,7 @@ func (s *Server) CostCounters() *orchestrator.CostCounters {
 // daemon process exits. Nil is acceptable for tests that do not exercise
 // the pin path.
 //
-// Phase F (CLI integration) consumes PinOverrides() to back the operator-
+// (CLI integration) consumes PinOverrides() to back the operator-
 // facing `zen orchestrator pin / unpin / list` commands; that wiring is
 // independent of this lifecycle setter.
 func (s *Server) SetPinOverrides(p *orchestrator.PinOverrides, cancel context.CancelFunc, done <-chan struct{}) {
@@ -705,7 +720,7 @@ func (s *Server) SetPinOverrides(p *orchestrator.PinOverrides, cancel context.Ca
 }
 
 // PinOverrides returns the injected *orchestrator.PinOverrides (or nil).
-// Nil-safe: callers (Phase F CLI handlers, Phase H tier_resolver) MUST
+// Nil-safe: callers MUST
 // guard for nil and degrade to "no pin data" during the brief startup
 // window before main.go has finished wiring.
 func (s *Server) PinOverrides() *orchestrator.PinOverrides {
@@ -715,7 +730,7 @@ func (s *Server) PinOverrides() *orchestrator.PinOverrides {
 }
 
 // SetPaygSafety injects the PAYG cap enforcement + threshold-notification
-// component (Plan 3 Phase E I-5). Called once at daemon boot AFTER
+// component. Called once at daemon boot AFTER
 // buildOrchestrator has returned the *PaygSafety and main.go has spawned
 // its hourly window-reset background goroutine via WindowResetScheduler(ctx).
 //
@@ -736,17 +751,17 @@ func (s *Server) SetPaygSafety(p *orchestrator.PaygSafety, cancel context.Cancel
 }
 
 // PaygSafety returns the injected *orchestrator.PaygSafety (or nil).
-// Nil-safe: callers MUST guard for nil. Phase H tier_resolver will invoke
+// Nil-safe: callers MUST guard for nil. tier_resolver will invoke
 // CheckCap + HandleCapReached via this accessor once it re-emerges (I-6
-// is currently blocked — Phase H tier_resolver was eliminated in the
+// is currently blocked — tier_resolver was eliminated in the
 func (s *Server) PaygSafety() *orchestrator.PaygSafety {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	return s.paygSafety
 }
 
-// SetCircuitBreaker injects the per-provider circuit breaker (Plan 3
-// Phase F K-3 / Plan 16 Phase B re-key). Called once at daemon boot in
+// SetCircuitBreaker injects the per-provider circuit breaker (
+// K-3 / re-key). Called once at daemon boot in
 // cmd/zen-swarm-ctld AFTER buildOrchestrator has constructed and wired
 // the breaker into the dispatcher. The breaker decides at
 // Backend.Name() granularity (NOT the broad providers.Tier enum), so
@@ -771,10 +786,10 @@ func (s *Server) SetCircuitBreaker(cb *orchestrator.CircuitBreaker) {
 }
 
 // CircuitBreaker returns the injected *orchestrator.CircuitBreaker (or
-// nil). The breaker is keyed by Backend.Name() (Plan 16 Phase B re-key),
+// nil). The breaker is keyed by Backend.Name(),
 // so callers issuing State()/RecordFailure()/RecordSuccess() lookups
 // MUST supply the provider name (e.g. "deepseek-direct"), not the
-// broad Tier label. Nil-safe: callers (Phase F K-3 status / probe /
+// broad Tier label. Nil-safe: callers ( K-3 status / probe /
 // history handlers) MUST guard for nil and degrade to "no breaker data"
 // during the brief startup window before main.go has finished wiring.
 func (s *Server) CircuitBreaker() *orchestrator.CircuitBreaker {
@@ -784,7 +799,7 @@ func (s *Server) CircuitBreaker() *orchestrator.CircuitBreaker {
 }
 
 // SetTiers injects the ordered list of providers.TierBackend the
-// dispatcher knows about (Plan 3 Phase F K-3). Called once at daemon
+// dispatcher knows about. Called once at daemon
 // boot in cmd/zen-swarm-ctld AFTER buildOrchestrator returns. The order
 // matches the dispatcher's failover order (Tier 1 first). The slice is
 // stored by reference; callers MUST NOT mutate it after handing it over.
@@ -857,7 +872,7 @@ type CaronteEngineForDaemon interface {
 	// projectID MUST be canonical id_sha256 (alias→canonical resolution
 	// happens upstream — at the HTTP layer in handlers/caronte.go).
 	// Returns the handler-facing CaronteReindexReport for direct JSON
-	// round-trip. inv-zen-273.
+	// round-trip. invariant.
 	IndexProject(ctx context.Context, projectID string) (handlers.CaronteReindexReport, error)
 
 	Close() error
@@ -875,7 +890,7 @@ func (s *Server) SetCaronteEngine(e CaronteEngineForDaemon) {
 
 // CaronteEngine returns the injected CaronteEngineForDaemon or nil (mirrors
 // MCPGateway()). nil before SetCaronteEngine has been called; callers MUST
-// guard for nil and degrade gracefully (Phase K augment-lane repoint +
+// guard for nil and degrade gracefully ( augment-lane repoint +
 // zen doctor caronte health are the canonical consumers).
 func (s *Server) CaronteEngine() CaronteEngineForDaemon {
 	s.mu.Lock()
@@ -947,10 +962,16 @@ func (s *Server) BGEAvailable() bool {
 }
 
 type ContractFederationForDaemon interface {
+	ValidateContractManifest(ctx context.Context, repo, workspaceID string) (ContractManifestValidation, error)
+	RegisterWorkspace(ctx context.Context, row Workspace) error
 	ListWorkspaces(ctx context.Context) ([]Workspace, error)
 	GetWorkspace(ctx context.Context, workspaceID string) (Workspace, error)
 	ListRecentBreakingChanges(ctx context.Context, workspaceID string, limit int) ([]BreakingChange, error)
 	ListWorkspaceMembers(ctx context.Context, workspaceID string) ([]Member, error)
+	AddWorkspaceMember(ctx context.Context, row Member) error
+	RemoveWorkspace(ctx context.Context, workspaceID string) (int64, error)
+	GetWorkspacePolicy(ctx context.Context, workspaceID string) (string, error)
+	SetWorkspacePolicy(ctx context.Context, workspaceID, policy string) error
 	GetBreakingChangeWithConsumers(ctx context.Context, changeID string) (BreakingChange, []BreakingChangeConsumer, error)
 	Close() error
 }
@@ -967,6 +988,24 @@ type Member struct {
 	WorkspaceID  string
 	ProjectID    string
 	RegisteredAt int64
+}
+
+type ContractManifestValidation struct {
+	Valid         bool
+	SchemaVersion int
+	Services      []ContractManifestService
+	Errors        []ContractManifestError
+}
+
+type ContractManifestService struct {
+	BaseURLRef string
+	TargetRepo string
+}
+
+type ContractManifestError struct {
+	Code    string
+	Message string
+	Path    string
 }
 
 type BreakingChange struct {
@@ -1000,11 +1039,113 @@ func (s *Server) SetContractFederation(f ContractFederationForDaemon) {
 // ContractFederation returns the injected federation DB or nil. Callers
 // MUST guard for nil and degrade gracefully (the TUI subview returns
 // empty roster section + the REST handler returns 503-style "federation
-// not configured" — Plan 2 nil-gate posture).
+// not configured" — nil-gate posture).
 func (s *Server) ContractFederation() ContractFederationForDaemon {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	return s.contractFederation
+}
+
+func (s *Server) ContractFederationREST() handlers.ContractFederationRESTStore {
+	src := s.ContractFederation()
+	if src == nil {
+		return nil
+	}
+	return contractFederationRESTAdapter{src: src}
+}
+
+type contractFederationRESTAdapter struct {
+	src ContractFederationForDaemon
+}
+
+func (a contractFederationRESTAdapter) ValidateContractManifest(ctx context.Context, repo, workspaceID string) (handlers.ContractValidateRESTResponse, error) {
+	v, err := a.src.ValidateContractManifest(ctx, repo, workspaceID)
+	if err != nil {
+		return handlers.ContractValidateRESTResponse{}, err
+	}
+	services := make([]handlers.ContractValidateRESTService, 0, len(v.Services))
+	for _, s := range v.Services {
+		services = append(services, handlers.ContractValidateRESTService{
+			BaseURLRef: s.BaseURLRef,
+			TargetRepo: s.TargetRepo,
+		})
+	}
+	errs := make([]handlers.ContractValidateRESTError, 0, len(v.Errors))
+	for _, e := range v.Errors {
+		errs = append(errs, handlers.ContractValidateRESTError{
+			Code:    e.Code,
+			Message: e.Message,
+			Path:    e.Path,
+		})
+	}
+	return handlers.ContractValidateRESTResponse{
+		Valid:         v.Valid,
+		SchemaVersion: v.SchemaVersion,
+		Services:      services,
+		Errors:        errs,
+	}, nil
+}
+
+func (a contractFederationRESTAdapter) RegisterWorkspace(ctx context.Context, row handlers.WorkspaceRESTRow) error {
+	return a.src.RegisterWorkspace(ctx, Workspace{
+		WorkspaceID: row.WorkspaceID, OwningProject: row.OwningProject,
+		PolicyLocked: row.PolicyLocked, CreatedAt: row.CreatedAt, SchemaVersion: row.SchemaVersion,
+	})
+}
+
+func (a contractFederationRESTAdapter) ListWorkspaces(ctx context.Context) ([]handlers.WorkspaceRESTRow, error) {
+	rows, err := a.src.ListWorkspaces(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]handlers.WorkspaceRESTRow, 0, len(rows))
+	for _, row := range rows {
+		out = append(out, workspaceToREST(row))
+	}
+	return out, nil
+}
+
+func (a contractFederationRESTAdapter) ListWorkspaceMembers(ctx context.Context, workspaceID string) ([]handlers.WorkspaceMemberRESTRow, error) {
+	rows, err := a.src.ListWorkspaceMembers(ctx, workspaceID)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]handlers.WorkspaceMemberRESTRow, 0, len(rows))
+	for _, row := range rows {
+		out = append(out, memberToREST(row))
+	}
+	return out, nil
+}
+
+func (a contractFederationRESTAdapter) AddWorkspaceMember(ctx context.Context, row handlers.WorkspaceMemberRESTRow) error {
+	return a.src.AddWorkspaceMember(ctx, Member{
+		WorkspaceID: row.WorkspaceID, ProjectID: row.ProjectID, RegisteredAt: row.RegisteredAt,
+	})
+}
+
+func (a contractFederationRESTAdapter) RemoveWorkspace(ctx context.Context, workspaceID string) (int64, error) {
+	return a.src.RemoveWorkspace(ctx, workspaceID)
+}
+
+func (a contractFederationRESTAdapter) GetWorkspacePolicy(ctx context.Context, workspaceID string) (string, error) {
+	return a.src.GetWorkspacePolicy(ctx, workspaceID)
+}
+
+func (a contractFederationRESTAdapter) SetWorkspacePolicy(ctx context.Context, workspaceID, policy string) error {
+	return a.src.SetWorkspacePolicy(ctx, workspaceID, policy)
+}
+
+func workspaceToREST(row Workspace) handlers.WorkspaceRESTRow {
+	return handlers.WorkspaceRESTRow{
+		WorkspaceID: row.WorkspaceID, OwningProject: row.OwningProject,
+		PolicyLocked: row.PolicyLocked, CreatedAt: row.CreatedAt, SchemaVersion: row.SchemaVersion,
+	}
+}
+
+func memberToREST(row Member) handlers.WorkspaceMemberRESTRow {
+	return handlers.WorkspaceMemberRESTRow{
+		WorkspaceID: row.WorkspaceID, ProjectID: row.ProjectID, RegisteredAt: row.RegisteredAt,
+	}
 }
 
 type ContractCoordinatorForDaemon interface {
@@ -1154,7 +1295,7 @@ func (s *Server) EcosystemHandler() handlers.EcosystemHandler {
 }
 
 // SetDaemonBearer injects the daemon-bearer validator + audit emitter
-// (Plan 7 Phase I Task I-1 primitives + I-2 first consumer). Called
+// . Called
 // once at daemon boot in cmd/zen-swarm-ctld AFTER the cleartext token
 // has been read from ~/.config/zen-swarm/daemon-bearer.txt (mode 0600);
 // tests that need to exercise the auth middleware inject a paired
@@ -1164,8 +1305,8 @@ func (s *Server) EcosystemHandler() handlers.EcosystemHandler {
 // requireDaemonBearer-wrapped route then falls open with a logged
 // warning. This deterministic "boot race" posture matters for
 // integration tests + handler-level unit tests that don't want to
-// drag in the Plan 2 audit pipeline. Production main.go MUST call
-// SetDaemonBearer BEFORE Start() per inv-zen-131; production paths
+// drag in the audit pipeline. Production main.go MUST call
+// SetDaemonBearer BEFORE Start() per invariant; production paths
 // fail-closed at daemon-startup (see cmd/zen-swarm-ctld/main.go).
 //
 // The DaemonBearer hashes the cleartext once at construction
@@ -1187,14 +1328,14 @@ func (s *Server) SetDaemonBearer(b *auth.DaemonBearer, emitter auth.AuditEmitter
 // ordering tricks (mirrors the per-handler accessor gate pattern used
 // by ProjectStore / InboxStore / etc.).
 //
-// inv-zen-131 contract: production main.go MUST call SetDaemonBearer
+// invariant contract: production main.go MUST call SetDaemonBearer
 // BEFORE Start. The fall-open path exists ONLY for the test fixture
-// shape (httptest harnesses that don't want to construct a Plan 2
+// shape (httptest harnesses that don't want to construct a
 // audit pipeline) and emits a single-line stderr warning so accidental
 // production deployment is loud, not silent.
 //
 // Inv-zen-031 boundary preserved: this helper imports
-// internal/daemon/auth (Plan 7 Phase I-1) which itself imports only
+// internal/daemon/auth which itself imports only
 // stdlib + golang.org/x/sys/unix; no internal/store import.
 func (s *Server) requireDaemonBearer(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -1267,10 +1408,10 @@ func (s *Server) Start() error {
 		// behaviour).
 		//
 		// References
-		//   - internal/daemon/auth/unix_peer.go:78-79 (the contract)
-		//   - internal/daemon/server_session_doctrine.go:122-126
-		//     (the consumer)
-		//   - inv-zen-131 (peer-cred OR loopback gating)
+		// - internal/daemon/auth/unix_peer.go:78-79 (the contract)
+		// - internal/daemon/server_session_doctrine.go:122-126
+		// (the consumer)
+		// - invariant (peer-cred OR loopback gating)
 		ConnContext: connContextWithPeerCred,
 	}
 	s.mu.Unlock()

@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/interactive.go
 //
-// Phase L Task L-7 (front-loaded into L-5 to avoid stub) — interactive
+// Task L-7 (front-loaded into L-5 to avoid stub) — interactive
 // prompt detector. Sealed type; constructor is the unexported
 // newDetector() called by Run only.
 //
-// This is the compile-check anchor for inv-zen-081: callers cannot
+// This is the compile-check anchor for invariant: callers cannot
 // instantiate a Detector outside this package, so every exec.Run path
 // goes through Run's wired-up SIGKILL handling.
 //
 // Runtime contract:
-//   - inspects the first 1024 bytes per stream;
-//   - patterns: [sudo], password:, Are you sure (yes/no), (yes/no),
-//     TIOCSTI bytes 0xFD 0x18, leading "> " continuation;
-//   - latches on first detection: subsequent Feed calls are no-ops;
-//   - trigger latency < 100ms (locked by TestDetectorTriggerLatency).
+// - inspects the first 1024 bytes per stream;
+// - patterns: [sudo], password:, Are you sure (yes/no), (yes/no),
+// TIOCSTI bytes 0xFD 0x18, leading "> " continuation;
+// - latches on first detection: subsequent Feed calls are no-ops;
+// - trigger latency < 100ms (locked by TestDetectorTriggerLatency).
 
 package sshexec
 

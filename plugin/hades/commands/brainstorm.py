@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 """/hades:brainstorm handler — research-first brainstorming workflow.
 
-Per inv-zen-015 + spec §1 Q9, Hermes is discover-then-call (not auto-trigger); this handler
+Per invariant + spec §1 Q9, Hermes is discover-then-call (not auto-trigger); this handler
 returns a prompt that explicitly invokes superpowers:brainstorming after the project-doctrine
 override pass (research SOTA dispatch per ADR-0006 + memoria feedback_research_first_brainstorm.md).
 """
@@ -18,7 +18,7 @@ You are starting a design brainstorm session for HADES. This command applies the
 skill_load("superpowers:brainstorming")
 ```
 
-Per inv-zen-015 + spec §1 Q9, Hermes is discover-then-call (not auto-trigger). Explicit invocation required.
+Per invariant + spec §1 Q9, Hermes is discover-then-call (not auto-trigger). Explicit invocation required.
 
 ## 2. Apply HADES project-doctrine override
 
@@ -38,7 +38,7 @@ Per `feedback_methodology_and_conventions.md` §2:
 - ONE question per message — overwhelming otherwise
 - Multiple choice A/B/C/D with explicit recommendation
 - Each option includes Pro/Con bullets
-- ALWAYS state your recommendation: "Mi recomendación: D. Razones: ..."
+- ALWAYS state your recommendation: "Mi recomendación: D. Razones:..."
 - ~10-15 questions per brainstorm typical
 - Probe ALL dimensions: architecture, data flow, errors, performance, security, operator UX, structure
 
@@ -60,7 +60,7 @@ Each section ends with "¿OK sección N?" — operator answers `y` to confirm.
 
 ## 6. Output
 
-Write design spec to `docs/superpowers/specs/<date>-zen-swarm-<topic>-design.md` per `feedback_spec_hierarchy_and_plan_types.md` Layer 3 plan-level convention.
+Write design spec to `internal design record` per `feedback_spec_hierarchy_and_plan_types.md` Layer 3 plan-level convention.
 
 ## Cross-references
 

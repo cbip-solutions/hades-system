@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-// Package cli — state.go (Plan 9 Phase I Task I-10 + Plan 13 Phase F7).
+// Package cli — state.go.
 //
 // `zen state` is the operator surface for the persistence state model.
 //
-//	show       — render system-state.toml manifest table (Plan 9)
-//	regenerate — rebuild manifest from authoritative sources (Plan 9)
-//	verify     — regenerate-and-diff CI gate (Plan 9)
-//	pin        — set a manual field with --reason (Plan 9; inv-zen-146)
-//	history    — walk Plan 9 chain showing manual field changes
-//	list       — enumerate XDG state entries (Plan 13 F7; sizes/ages/paths)
-//	cleanup    — apply retention policy to XDG state (Plan 13 F7; inv-zen-187)
+// show — render system-state.toml manifest table
+// regenerate — rebuild manifest from authoritative sources
+// verify — regenerate-and-diff CI gate
+// pin — set a manual field with --reason
+// history — walk chain showing manual field changes
+// list — enumerate XDG state entries
+// cleanup — apply retention policy to XDG state
 //
 // Wire types from internal/client/state.go (H-9 final shapes):
 //
-//	StateManifest, StateRegenerateReq, StateRegenerateResp,
-//	StateDiff, StatePinReq, StateChange.
+// StateManifest, StateRegenerateReq, StateRegenerateResp,
+// StateDiff, StatePinReq, StateChange.
 //
 // Plan-file fictitious type names (StateShowResp, StateField,
 // StateVerifyResp, StateHistoryEntry, StatePinResp) are NOT used; the

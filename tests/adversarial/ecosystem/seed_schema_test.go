@@ -1,12 +1,12 @@
 // Package ecosystem validates the Spracklen adversarial seed corpus
-// shipped with Plan 14 Phase H Task H-2.
+// shipped with Task H-2.
 //
 // The seed file (`spracklen_seed.json`) is a curated derived subset of
 // the Spracklen et al. USENIX Security 2025 corpus of 205k fake package
 // names hallucinated by LLMs across four ecosystems
 // (https://arxiv.org/abs/2406.10279). The H-4 adversarial CI gate
 // consumes this seed to measure the dispatcher confabulation rate per
-// spec §2.7 Q7=A (<2% threshold), inv-zen-194.
+// spec §2.7 Q7=A (<2% threshold), invariant.
 //
 // The schema validator here is the floor: it ensures the JSON shape
 // stays stable across regenerations (full corpus or representative
@@ -16,8 +16,8 @@
 // 205k corpus) but strict about per-entry field presence, value
 // constraints, and per-ecosystem minimum representation.
 //
-// Invariant references: inv-zen-191 (adversarial-corpus floor),
-// inv-zen-194 (<2% confabulation gate).
+// Invariant references: invariant (adversarial-corpus floor),
+// invariant (<2% confabulation gate).
 package ecosystem
 
 import (

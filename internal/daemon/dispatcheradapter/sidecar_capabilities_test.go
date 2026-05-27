@@ -5,7 +5,7 @@
 // End-to-end behavioural assertions live in
 // tests/integration/sidecar_capability_negotiation_test.go (B-10
 // integration); these unit tests are the coverage anchor for the new
-// surface and the unit-test pair canonical pattern (every NEW .go file
+// surface and the unit-test pair canonical pattern (every NEW.go file
 // in internal/daemon/ ships with a co-located _test.go per repo
 // convention).
 

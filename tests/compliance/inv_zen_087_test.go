@@ -12,17 +12,17 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/workforce/worker"
 )
 
-// TestInvZen087_NilWorktreePathPanics verifies the Plan 5 boundary
+// TestInvZen087_NilWorktreePathPanics verifies the boundary
 // integrity invariant: NewOpenClaudeWorker MUST refuse an empty
-// WorktreePath with a panic carrying ErrNilWorktreePath. Plan 5 owns
-// allocation; Plan 4 enforces the contract.
+// WorktreePath with a panic carrying ErrNilWorktreePath. owns
+// allocation; enforces the contract.
 //
 // Implementation: NewOpenClaudeWorker panics with ErrNilWorktreePath
 // when WorktreePath is empty/whitespace. The test recovers the panic
 // and inspects the value via errors.Is.
 //
 // Rationale: a missing worktreePath means the Worker has no isolated
-// filesystem to operate against, breaking inv-zen-040 (worktree
+// filesystem to operate against, breaking invariant (worktree
 // isolation). Failing-fast at construction catches the bug at
 // composition time, not at first tool use.
 func TestInvZen087_NilWorktreePathPanics(t *testing.T) {
@@ -73,9 +73,9 @@ func TestInvZen087_NilWorktreePathPanics(t *testing.T) {
 }
 
 // TestInvZen087_NoWorktreePoolUnderPlan4 verifies the symbol-absence
-// side of the boundary: Plan 4 ships NO worktree allocation logic.
+// side of the boundary: ships NO worktree allocation logic.
 // The internal/workforce/worker/ package MUST NOT contain a
-// WorktreePool type or AllocateWorktree function. Plan 5 introduces
+// WorktreePool type or AllocateWorktree function. introduces
 // them.
 //
 // CI reinforcement: scripts/scan-no-worktreepool.sh runs grep against

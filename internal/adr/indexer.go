@@ -12,8 +12,8 @@ import (
 )
 
 // Indexer composes Validator, WalkAndEmitIndex, and WalkAndEmitGraph into the
-// high-level API consumed by `zen adr index --check` (Phase I cobra wiring)
-// and by `make verify-invariants` (post-Phase-I; inv-zen-151).
+// high-level API consumed by `zen adr index --check`
+// and by `make verify-invariants`.
 //
 // Indexer is the single stable entry point for all index-and-diff operations.
 // Callers construct it once (NewIndexer) and reuse across multiple Generate /
@@ -21,7 +21,7 @@ import (
 // production passes time.Now().UTC().Format(time.RFC3339).
 //
 // Boundary Indexer lives in internal/adr/ and MUST NOT import internal/store
-// (inv-zen-031). It calls only the pure-functional walkers and the Validator
+// . It calls only the pure-functional walkers and the Validator
 // defined in this same package.
 type Indexer struct {
 	v     *Validator

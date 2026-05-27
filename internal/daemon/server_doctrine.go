@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package daemon — server_doctrine.go (Plan 8 Phase J Task J-5).
+// Package daemon — server_doctrine.go.
 //
 // Thin Server-side accessors that satisfy handlers.DoctrineHandlerCtx by
 // routing to the internal/doctrine/* package singletons. Mirrors the
 // server_audit_query.go + server_research_cache_admin.go pattern: keep
 // server.go small + group doctrine wiring in one file.
 //
-// Boundary discipline (inv-zen-031 generalized as inv-zen-133): this file
+// Boundary discipline: this file
 // imports internal/doctrine/{active,builtin,parser,reinforcement,reload,
 // schema/v1,errors} which is allowed because daemon is the orchestrator
 // that wires doctrine → handlers; doctrine itself never imports daemon
@@ -14,8 +14,8 @@
 //
 // (DoctrineState/DoctrineValidate(string)/DoctrineReload()) accessors that
 // previously lived in server_phase_g_defaults.go. The new method signatures
-// match the Plan 8 Phase J handlers.DoctrineHandlerCtx interface and the
-// Phase I client DTOs at internal/client/doctrine_v2.go.
+// match the handlers.DoctrineHandlerCtx interface and the
+// client DTOs at internal/client/doctrine_v2.go.
 package daemon
 
 import (
@@ -232,23 +232,23 @@ func sliceSection(body, section, format string) string {
 	return rest[:len(header)+end]
 }
 
-// DoctrineValidate parses TOML bytes via Phase B + validates via Phase A.
+// DoctrineValidate parses TOML bytes via + validates via
 // Returns nil on success; sentinel-wrapped error on failure (handler
 // discriminator translates to 422 / 400 / 500 per Hard Rule 11).
 //
-// The againstBaseline argument is currently advisory — a future Phase N
+// The againstBaseline argument is currently advisory — a future
 // extension can run candidate.ValidateTighten(active.For(againstBaseline))
 // to surface override-loosen attempts via the same /validate surface.
 // (CLI's `zen doctrine-v2 validate --against-baseline` populates the
 // flag for forward-compat).
 //
-// inv-zen-135 contract reconciliation (Phase J fix-pass): user TOMLs MUST
+// invariant contract reconciliation: user TOMLs MUST
 // NOT declare [doctrine_transverse] (parser's ParseOpts{} default rejects
 // the section), but the in-memory Validate() requires Transverse fields
 // to equal TransverseExpected() (all-true). The accessor reconciles by
 // populating the four transverse axioms BEFORE Validate so a user TOML
 // without the section parses → fills → validates cleanly. This preserves
-// inv-zen-135 source-level enforcement (user TOMLs literally cannot
+// invariant source-level enforcement (user TOMLs literally cannot
 // override transverse via TOML) while letting the user-side validate
 // pipeline succeed.
 func (s *Server) DoctrineValidate(tomlContent, againstBaseline string) error {

@@ -79,7 +79,7 @@ def test_manifest_name_is_hades(manifest_data: dict) -> None:
 
 
 def test_manifest_version_set(manifest_data: dict) -> None:
-    """version field present + non-empty + Plan 12 bumped to 0.12.0."""
+    """version field present + non-empty +  bumped to 0.12.0."""
     version = manifest_data.get("version", "")
     assert version, "version must be non-empty"
     assert version == "0.12.0", (
@@ -91,8 +91,8 @@ def test_manifest_version_set(manifest_data: dict) -> None:
 def test_skills_exist() -> None:
     """skills/{hades,start,handoff}/SKILL.md must exist with agentskills_version.
 
-    Note: skills/hades/ was skills/zen-swarm/ pre-Plan-18b. The directory was
-    renamed in Phase A (A-6). Phase E-10a (Plan 18b) completed the frontmatter
+    Note: skills/hades/ was skills/zen-swarm/ pre- The directory was
+    renamed in  (A-6).  completed the frontmatter
     name flip from 'zen-swarm' to 'hades'. The directory-name and frontmatter
     name now both use 'hades'.
     """
@@ -119,7 +119,7 @@ def test_skills_exist() -> None:
 
 
 def test_plan12_new_skills_exist() -> None:
-    """10 NEW Plan 12 Phase B skills must exist with correct agentskills_version."""
+    """10 NEW   skills must exist with correct agentskills_version."""
     new_skills = [
         "brainstorm",
         "write-plan",

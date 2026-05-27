@@ -1,33 +1,33 @@
 // internal/research/ecosystem/dispatcher_test.go
 //
-// Tests for Dispatcher.Query 14-step orchestration (Plan 14 Phase D Task D-9).
+// Tests for Dispatcher.Query 14-step orchestration.
 //
 // Coverage discipline: ≥90% on dispatcher.go production paths (security/correctness-
-// critical hot path — gates all of Phase D's downstream behaviour). Tests cover
+// critical hot path — gates all of downstream behaviour). Tests cover
 // each of the 14 steps + all four abstain exits (low-confidence, citation-
 // persistent, capa-firewall refuse, LLM-judge reject) + fan-out parallel
-// correctness (inv-zen-200) + 8-event audit canonical order (inv-zen-197 partial)
+// correctness + 8-event audit canonical order
 // + context-cancel at every step + concurrent Query safety + doctrine knob
-// (inv-zen-205 partial: max-scope/default/capa-firewall AuditEmissionLevel +
+// (invariant partial: max-scope/default/capa-firewall AuditEmissionLevel +
 // LLMJudgeEnabled + RefuseOnUnverified branches).
 //
 // Plan-file drift navigated (recorded inline at each touchpoint):
 //
-//   - `aggregator.Query` type does NOT exist in the aggregator package
-//     (verified at Stage 0 via grep). The plan-file's `aggregatorAdapter.Query(ctx,
-//     q aggregator.Query) ([]aggregator.QueryResult, error)` signature would not
-//     compile; only BinaryTop200/FTS5Top200/HydrateChunks are actually consumed
-//     by Query/fanOutRetrieve/hydrateChunks. The adapter interface here drops the
-//     vestigial Query method.
+// - `aggregator.Query` type does NOT exist in the aggregator package
+// . The plan-file's `aggregatorAdapter.Query(ctx,
+// q aggregator.Query) ([]aggregator.QueryResult, error)` signature would not
+// compile; only BinaryTop200/FTS5Top200/HydrateChunks are actually consumed
+// by Query/fanOutRetrieve/hydrateChunks. The adapter interface here drops the
+// vestigial Query method.
 //
-//   - `builtinDoctrineProfiles()` (function form) does NOT exist; the canonical
-//     accessor is the package-level `builtinProfiles` map. Tests use the map
-//     directly per Stage 0 verification.
+// - `builtinDoctrineProfiles()` (function form) does NOT exist; the canonical
+// accessor is the package-level `builtinProfiles` map. Tests use the map
+// directly per verification.
 //
-//   - DoctrineResolver in doctrine.go is the concrete production resolver;
-//     fixture tests use a `fixtureDoctrineResolver` interface-satisfying type
-//     to avoid coupling to *active.Accessor wiring (which has its own Plan 8
-//     unit tests).
+// - DoctrineResolver in doctrine.go is the concrete production resolver;
+// fixture tests use a `fixtureDoctrineResolver` interface-satisfying type
+// to avoid coupling to *active.Accessor wiring (which has its own
+// unit tests).
 
 package ecosystem
 

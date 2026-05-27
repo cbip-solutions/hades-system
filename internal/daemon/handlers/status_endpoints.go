@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — status_endpoints.go (Plan 18c Phase C — REAL).
+// Package handlers — status_endpoints.go.
 //
 // Five observability endpoints consumed by the /hades:status Hermes slash
 // command (plugin/hades/commands/status.py). All endpoints are GET-only and
@@ -8,23 +8,23 @@
 //
 // Endpoints shipped in this file:
 //
-//   - GET /v1/cascade/state     — active tier + provider count
-//   - GET /v1/cost/24h          — 24h + session spend in USD
-//   - GET /v1/context/used      — token usage (stub — Plan 18c+N wires live count)
-//   - GET /v1/profile/active    — active operator profile
-//   - GET /v1/cwd               — daemon working directory
+// - GET /v1/cascade/state — active tier + provider count
+// - GET /v1/cost/24h — 24h + session spend in USD
+// - GET /v1/context/used — token usage
+// - GET /v1/profile/active — active operator profile
+// - GET /v1/cwd — daemon working directory
 //
 // Two endpoints consumed by /hades:status already exist:
 //
-//   - GET /v1/health      — handlers/health.go (Plan 1; extended in Plan 18c
-//     Phase C to include pid, uds_path, active_model)
-//   - GET /v1/bypass/status — handlers/bypass.go (Plan 2)
+// - GET /v1/health — handlers/health.go (; extended in
+// to include pid, uds_path, active_model)
+// - GET /v1/bypass/status — handlers/bypass.go
 //
-// Boundary (inv-zen-031): handlers consume the server as `any` and
+// Boundary: handlers consume the server as `any` and
 // type-assert against locally-defined interfaces so this package never
 // imports the daemon back.
 //
-// inv-zen-088 (single egress preserved): these endpoints ONLY surface
+// invariant (single egress preserved): these endpoints ONLY surface
 // pre-computed state from the daemon's in-memory counters and OS calls.
 // They do NOT trigger external network calls, provider requests, or
 // keychain access.
@@ -39,7 +39,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/providers"
 )
 
-// statusEndpointAccessor narrows the daemon to the Plan 18c Phase C
+// statusEndpointAccessor narrows the daemon to the
 // status endpoints surface. *daemon.Server satisfies this structurally.
 //
 // Each method returns nil / zero until main.go has finished wiring;

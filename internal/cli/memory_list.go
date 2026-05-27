@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package cli — memory_list.go (Plan 14 Phase F Task F-4).
+// Package cli — memory_list.go.
 //
 // `zen memory list` enumerates pinned notes from the global pin index
-// (Plan 9 D aggregator). Render as text|json.
+// . Render as text|json.
 package cli
 
 import (

@@ -60,7 +60,7 @@ func fixtureSBOMPair(t *testing.T, tarPath string) {
 
 func TestVerifier_New_Defaults(t *testing.T) {
 	v := New(nil)
-	if v.Owner != "hades-system" || v.Repo != "hades-system" {
+	if v.Owner != "cbip-solutions" || v.Repo != "hades-system" {
 		t.Errorf("New() defaults: Owner=%q Repo=%q", v.Owner, v.Repo)
 	}
 	if v.Mode != ModeFull {
@@ -307,8 +307,8 @@ func TestVerifier_VerifyAttestation_Pass(t *testing.T) {
 	if !strings.Contains(fake.calls[0], "attestation verify") {
 		t.Errorf("expected gh attestation verify call, got %q", fake.calls[0])
 	}
-	if !strings.Contains(fake.calls[0], "--owner cbip-solutions") {
-		t.Errorf("expected --owner cbip-solutions flag, got %q", fake.calls[0])
+	if !strings.Contains(fake.calls[0], "--repo cbip-solutions/hades-system") {
+		t.Errorf("expected --repo cbip-solutions/hades-system flag, got %q", fake.calls[0])
 	}
 }
 

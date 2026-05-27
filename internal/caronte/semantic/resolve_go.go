@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -161,14 +162,14 @@ type llmTailRequest struct {
 }
 
 // resolveTail sends the bounded set of unresolved call sites to the LLM via
-// the C-2 single-egress seam (Profile=local-code → Ollama, §13, inv-zen-088)
+// the C-2 single-egress seam
 // and records any high-confidence disambiguation as a ConfLLMHint edge.
 // Returns the count of llm_hint edges written.
 //
 // A nil dispatcher ⇒ ErrNoDispatcher (the caller treats the tail as skipped,
 // §15). A dispatcher error (Ollama down) is propagated; ResolveProject
 // swallows it (degrade, do not block). This method NEVER dials a backend
-// directly — every LLM call is dispatcher.Forward (inv-zen-236).
+// directly — every LLM call is dispatcher.Forward.
 func (r *Resolver) resolveTail(ctx context.Context, sites []unresolvedSite) (int, error) {
 	if r.dispatcher == nil {
 		return 0, ErrNoDispatcher

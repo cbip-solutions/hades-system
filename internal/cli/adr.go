@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr.go (Plan 9 Phase I Task I-6).
+// Package cli — adr.go.
 //
-// `zen adr` is the Plan 9 operator surface for the ADR machine-readable
+// `zen adr` is the operator surface for the ADR machine-readable
 // index (spec §6.1 Q7 A). Ten leaves cover the full ADR lifecycle:
 //
-//	propose  <topic>              — draft + $EDITOR + daemon commit   [I-6]
-//	show     <id>                 — frontmatter table + body           [I-6]
-//	ls       [--status/plan/risk] — filter list                        [I-6]
-//	graph    --from <id> [--depth]— supersede chain ASCII tree         [I-6]
-//	history  <id>                 — transition log                     [I-7]
-//	accept   <id> --reason        — emit adr.accepted event            [I-7]
-//	reject   <id> --reason        — emit adr.rejected event            [I-7]
-//	supersede <old> <new> --reason— link old→new chain                [I-7]
-//	migrate                       — one-time 39-ADR frontmatter import [I-8]
-//	index    [--check]            — dual manifest regenerate / CI gate [I-8]
+// propose <topic> — draft + $EDITOR + daemon commit [I-6]
+// show <id> — frontmatter table + body [I-6]
+// ls [--status/plan/risk] — filter list [I-6]
+// graph --from <id> [--depth]— supersede chain ASCII tree [I-6]
+// history <id> — transition log [I-7]
+// accept <id> --reason — emit adr.accepted event [I-7]
+// reject <id> --reason — emit adr.rejected event [I-7]
+// supersede <old> <new> --reason— link old→new chain [I-7]
+// migrate — one-time 39-ADR frontmatter import [I-8]
+// index [--check] — dual manifest regenerate / CI gate [I-8]
 //
-// inv-zen-146: accept / reject / supersede MUST require non-empty --reason.
+// invariant: accept / reject / supersede MUST require non-empty --reason.
 // Cross-cutting compliance test in reason_flag_test.go (I-12).
 //
 // Wire types: client.ADR, client.ADRGraph, client.ADRGraphNode,

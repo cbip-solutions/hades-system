@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 // internal/research/ecosystem/mock_chain.go
 //
-// InMemoryRAGAuditChain — production-visible test utility (Plan 14
-// Phase A Task A-7).
+// InMemoryRAGAuditChain — production-visible test utility (
+// Task A-7).
 //
-// The Phase D production wrapper (D-12) targets Plan 9 chain primitives
+// The production wrapper (D-12) targets chain primitives
 // via SQLite. Phases B/C/E/F/G/H/I need to drive the RAGAuditEmitter in
-// isolation (unit + integration tests) WITHOUT a Plan 9 SQLite chain
+// isolation (unit + integration tests) WITHOUT a SQLite chain
 // instance — that is what InMemoryRAGAuditChain provides.
 //
-// Implements the SAME chain-link hash semantics as the Phase D
-// production wrapper:  sha256(seq || evt_int || payload || parent_hash)
+// Implements the SAME chain-link hash semantics as the
+// production wrapper: sha256(seq || evt_int || payload || parent_hash)
 // per spec §4.6 canonical chain-link formula.
 //
 // NOT a stub per project doctrine `feedback_no_stubs_complete_code.md`
@@ -144,7 +144,7 @@ func (c *InMemoryRAGAuditChain) Seals() map[string]time.Time {
 // per spec §4.6 canonical chain-link.
 //
 // Encoding "seq|evt_int|" prefix + raw payload bytes + "|parent" suffix
-// before sha256. Stable across implementations; Phase D production
+// before sha256. Stable across implementations; production
 // wrapper MUST use the same encoding to maintain chain compatibility.
 func chainHashFormula(seq int64, evt eventlog.EventType, payload []byte, parent string) string {
 	h := sha256.New()

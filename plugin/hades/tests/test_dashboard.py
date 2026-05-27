@@ -58,7 +58,7 @@ def test_dashboard_handler_happy_path_invokes_hades_dashboard(
     5. Returns None on subprocess exit code 0 (Hermes convention: no message
        to display when TUI exits cleanly).
 
-    Per spec §Q8 D-pattern + §5.4 TUI invocation flow + Plan 18a A A-7 alias.
+    Per spec §Q8 D-pattern + §5.4 TUI invocation flow +  A A-7 alias.
     """
                                                       
     fake_hades_path = "/usr/local/bin/hades"
@@ -145,7 +145,7 @@ def test_dashboard_handler_happy_path_invokes_hades_dashboard(
 def test_dashboard_handler_hades_binary_missing(monkeypatch: pytest.MonkeyPatch) -> None:
     """Asserts /hades:dashboard handler errors gracefully when `hades` is not on PATH.
 
-    Per inv-zen-220 (Phase G): handler MUST NOT raise an unrouted exception at the
+    Per invariant: handler MUST NOT raise an unrouted exception at the
     slash-command boundary. The hades-binary-missing case routes through the catalog
     (locally constructed since we can't reach the daemon via subprocess if the wrapper
     is absent).
@@ -158,7 +158,7 @@ def test_dashboard_handler_hades_binary_missing(monkeypatch: pytest.MonkeyPatch)
         "expected non-None error message when hades binary missing; "
         "handler MUST NOT silently no-op"
     )
-    # Error message MUST contain HADES branding per inv-zen-219.
+    # Error message MUST contain HADES branding per invariant.
     assert "HADES" in result, f"expected 'HADES' in error output; got {result!r}"
     # Recovery hint MUST be concrete (mention PATH or install verification).
     assert "PATH" in result or "install" in result.lower(), (
@@ -177,7 +177,7 @@ def test_dashboard_handler_stdin_not_tty_returns_error_block(
     MUST NOT spawn the subprocess (no point handing off the terminal we can't
     restore). Covers _subprocess_handoff.run_hades_subprocess termios.error path.
 
-    Per inv-zen-220 (Phase G): handler never raises at the slash boundary.
+    Per invariant: handler never raises at the slash boundary.
     """
     import termios
 

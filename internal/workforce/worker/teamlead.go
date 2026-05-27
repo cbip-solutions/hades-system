@@ -15,7 +15,7 @@ import (
 )
 
 // SubprocessAcquirer is the small surface TeamLead + Reviewer use for
-// session lifecycle. Phase C's *subprocess.Manager satisfies this
+// session lifecycle. *subprocess.Manager satisfies this
 // interface (with one trivial adapter that translates worker.WorkerSpec
 // → subprocess.WorkerSpecRef; see internal/daemon/workforceadapter).
 //
@@ -29,7 +29,7 @@ type SubprocessAcquirer interface {
 	Release(s subprocess.Session) error
 }
 
-// WorkerFactory creates child Workers on TeamLead's behalf. Plan 5's
+// WorkerFactory creates child Workers on TeamLead's behalf.
 // orchestrator wires the production factory; tests provide fakes.
 //
 // Concurrency implementations MUST be safe for concurrent NewChild
@@ -225,7 +225,7 @@ func (t *TeamLead) buildPlannerPrompt(objective string) string {
 // malformed — fail-loud rather than silently picking either block.
 //
 // We do NOT use a streaming JSON tokenizer here because the doctrine
-// reinforcement block (inv-zen-070) explicitly forbids the LLM from
+// reinforcement block explicitly forbids the LLM from
 // emitting embedded code-fence JSON or stray braces inside prose;
 // adding a tokenizer would mask doctrine drift instead of surfacing
 // it. The adversarial test locks this semantic so a future
@@ -331,8 +331,8 @@ func (t *TeamLead) dispatchChildren(ctx context.Context, parentID queue.TaskID, 
 // emitChildFixPrompt writes a FixPromptQueue row addressed to the
 // TeamLead's own spec ID so the next planner iteration sees the
 // failure context. Severity is l2 (tactical) — a single child failure
-// is recoverable; aggregated failures escalate to l3/l4 via Phase E
-// AggregationStream (Plan 4 future).
+// is recoverable; aggregated failures escalate to l3/l4 via
+// AggregationStream.
 //
 // The caller's ctx is intentionally ignored (signature `_ context.Context`):
 // the goroutine in dispatchChildren may run past the caller's

@@ -1,30 +1,30 @@
 // SPDX-License-Identifier: MIT
-// handoff_emitter.go — Plan 7 Phase I Task I-9 production HandoffEmitter
+// handoff_emitter.go — Task I-9 production HandoffEmitter
 // adapter (composition of *eventlog.Log on top of *orchestratoradapter.Adapter
 // as the RawEmitter substrate).
 //
 // Why daemon-package (not a new internal/daemon/handoffemitter sub-package):
 // the adapter is a thin (≤30 LOC) glue between three already-wired
 // components — handlers.HandoffEmitter (handler-side interface),
-// eventlog.Log (Plan 5 emission spine), and *orchestratoradapter.Adapter
-// (already constructed in cmd/zen-swarm-ctld/main.go for Plan 5 wiring).
+// eventlog.Log, and *orchestratoradapter.Adapter
+// .
 // Sub-package overhead would only add an import without any abstraction
 // gain; the boundary that matters (handlers → handoff_emitter →
 // eventlog.Log) is preserved at the *Server* method-call layer.
 //
-// inv-zen-031 boundary preserved: this file imports
+// invariant boundary preserved: this file imports
 // internal/orchestrator/eventlog (value types only — Event, EvtHandoffPosted
 // constant, *Log via dependency injection) and internal/daemon/handlers
 // (the satisfying interface). It NEVER imports internal/store.
 //
 // Synthesised SessionID rationale (handler invariant):
 // eventlog.Log.Append rejects empty SessionID (it is the audit-trail
-// grouping key per Plan 5 inv-zen-008). HandoffPostedEvent does not
+// grouping key invariant). HandoffPostedEvent does not
 // carry a session_id field by design — the plugin /handoff command runs
 // outside any orchestrator session — so the daemon-side emitter must
 // supply one. We use the constant "daemon-handoff" to identify the
 // daemon-internal session that owns these emissions; downstream
-// consumers (Plan 7 Phase F EOD digest) filter by EventType, not
+// consumers filter by EventType, not
 // SessionID, so the synthetic value is operationally inert.
 //
 // Tests handoff_emitter_test.go (round-trip + nil-Log + invalid-event

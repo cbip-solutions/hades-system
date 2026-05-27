@@ -31,7 +31,7 @@ type RotationResult struct {
 //
 // Per spec § 7.4 the rotation cadence is doctrine-driven (max-scope
 // 90 days; default 365; capa-firewall 90 + operator-triggered).
-// Phase A wires the rotation primitive only; Phase J wires the
+// wires the rotation primitive only; wires the
 // scheduler + the `zen audit witness rotate --reason` CLI command.
 //
 // Concurrency a Rotation value is single-shot from the caller's
@@ -42,7 +42,7 @@ type RotationResult struct {
 // signature → Delete → install NEW → NEW signature → Append). A
 // concurrent second rotation would observe an inconsistent witness
 // state and either fail fast on Sign (mid-Delete) or install over
-// itself. Phase J's scheduler runs at most one rotation in flight.
+// itself. scheduler runs at most one rotation in flight.
 type Rotation struct {
 	witness *Witness
 	cp      *Checkpoint
@@ -56,20 +56,20 @@ func NewRotation(w *Witness, cp *Checkpoint) *Rotation {
 // with both OLD and NEW keys (overlap), persists the rotation leaf
 // to the daemon-global checkpoint log, and updates the witness to
 // hold the NEW key. The reason MUST be non-empty (operator-attributable
-// per Plan 9 doctrine `--reason` mandatory).
+// doctrine `--reason` mandatory).
 //
 // Flow
 //
-//  1. Validate reason (non-empty).
-//  2. Snapshot the OLD pubkey via Witness.Load.
-//  3. Pre-generate the NEW keypair off-witness so the transition
-//     digest can be computed before the OLD key is retired.
-//  4. Compute transitionDigest(old, new, reason).
-//  5. Sign the digest with the OLD key (overlap signature 1).
-//  6. Witness.Delete (retire OLD).
-//  7. Witness.installKey(NEW) (install pre-generated NEW key).
-//  8. Sign the digest with the NEW key (overlap signature 2).
-//  9. appendTransitionLeaf (synthetic SignedSTH using NEW signature).
+// 1. Validate reason (non-empty).
+// 2. Snapshot the OLD pubkey via Witness.Load.
+// 3. Pre-generate the NEW keypair off-witness so the transition
+// digest can be computed before the OLD key is retired.
+// 4. Compute transitionDigest(old, new, reason).
+// 5. Sign the digest with the OLD key (overlap signature 1).
+// 6. Witness.Delete (retire OLD).
+// 7. Witness.installKey(NEW) (install pre-generated NEW key).
+// 8. Sign the digest with the NEW key (overlap signature 2).
+// 9. appendTransitionLeaf (synthetic SignedSTH using NEW signature).
 //
 // Forward-only failure semantics: if step 9 (Append) fails, the
 // witness still holds the NEW key (steps 6+7 already executed). The
@@ -79,14 +79,14 @@ func NewRotation(w *Witness, cp *Checkpoint) *Rotation {
 // even with a delayed Append.
 //
 // Errors
-//   - Reason validation: bare error ("rotation reason must be non-empty").
-//   - ErrWitnessKeyMissing if no OLD key was persisted.
-//   - Wrapped errors from Witness.Sign / Delete / installKey if any
-//     of the intermediate steps fail (these leave the witness in a
-//     half-rotated state — see TestRotationIsAtomicOnFailure for the
-//     forward-only contract).
-//   - Wrapped Append error from the final checkpoint write (the
-//     witness is already swapped forward; caller may retry).
+// - Reason validation: bare error ("rotation reason must be non-empty").
+// - ErrWitnessKeyMissing if no OLD key was persisted.
+// - Wrapped errors from Witness.Sign / Delete / installKey if any
+// of the intermediate steps fail (these leave the witness in a
+// half-rotated state — see TestRotationIsAtomicOnFailure for the
+// forward-only contract).
+// - Wrapped Append error from the final checkpoint write (the
+// witness is already swapped forward; caller may retry).
 func (r *Rotation) Rotate(ctx context.Context, reason string) (RotationResult, error) {
 	if reason == "" {
 		return RotationResult{}, fmt.Errorf("tessera: rotation reason must be non-empty")

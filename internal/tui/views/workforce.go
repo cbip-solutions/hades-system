@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package views — workforce.go (Plan 12 Phase C Task C-7, F2 panel).
+// Package views — workforce.go.
 //
 // Workforce hierarchy — active workers, status, in-flight task IDs.
-// Live data from /v1/workforce/workers (Plan 4 + 5 + 7 substrate).
+// Live data from /v1/workforce/workers.
 package views
 
 import (

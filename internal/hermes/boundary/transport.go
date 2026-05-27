@@ -12,32 +12,32 @@ import (
 
 // NewHermesCliFromZenSwarmTransport adapts an existing daemon-side
 // ZenSwarmTransport (internal/daemon/transport/zenswarm_transport.go) into
-// the boundary.HermesCli interface. Constructor preserves the inv-zen-164
+// the boundary.HermesCli interface. Constructor preserves the invariant
 // compile-anchor (the underlying transport.ZenSwarmTransport file stays at
 // its canonical path); the boundary package consumes it via this adapter.
 //
-// Per Plan 15 Phase H-12 / decisión 7-b: the ZenSwarmTransport is NOT moved
-// (would shatter the inv-zen-164 grep). Instead, the boundary package
+// Per / policy: the ZenSwarmTransport is NOT moved
+// . Instead, the boundary package
 // wraps it so the consolidation surface (Surface interface) covers the
 // existing single-egress completion path AND adds capability-feature
 // detection + lifecycle hooks for future Hermes API growth.
 //
-// version MUST match the .hermes-version pin at repo root (consumed by
+// version MUST match the.hermes-version pin at repo root (consumed by
 // CapabilitiesFor to compute the empirically-verified capability snapshot).
-// Production wiring at cmd/zen-swarm-ctld bootstrap reads .hermes-version
+// Production wiring at cmd/zen-swarm-ctld bootstrap reads.hermes-version
 // + passes the value here.
 //
 // Returned HermesCli:
-//   - SendCompletion routes via the existing ZenSwarmTransport.Forward
-//     (single-egress preserved per inv-zen-164 + inv-zen-088).
-//   - RegisterStatusProvider / OnSessionStart / RenderInlinePrompt all
-//     return ErrCapabilityUnavailable in v0.13.x (G2/G3/G5 absent).
-//   - OnPreToolCall accepts handlers and stores them; production wiring
-//     surfaces them at the Python/Hermes integration boundary.
-//   - WrapMCPEnvelope delegates to the canonical WrapMCPEnvelope helper.
+// - SendCompletion routes via the existing ZenSwarmTransport.Forward
+// .
+// - RegisterStatusProvider / OnSessionStart / RenderInlinePrompt all
+// return ErrCapabilityUnavailable in v0.13.x (G2/G3/G5 absent).
+// - OnPreToolCall accepts handlers and stores them; production wiring
+// surfaces them at the Python/Hermes integration boundary.
+// - WrapMCPEnvelope delegates to the canonical WrapMCPEnvelope helper.
 //
 // Behaviour preservation: callers of the underlying ZenSwarmTransport
-// (compliance test inv-zen-164, integration tests, daemon dispatcher
+// (compliance test invariant, integration tests, daemon dispatcher
 // wiring) see no behaviour change. The boundary wrapping is additive — it
 // gives consolidation a home without removing the existing surface.
 func NewHermesCliFromZenSwarmTransport(zt *transport.ZenSwarmTransport, version HermesVersion) HermesCli {

@@ -1,12 +1,12 @@
-//go:build chaos
+// go:build chaos
 
-// Package chaos — p13_migrate_partial_failure_test.go (Plan 13 Phase
+// Package chaos — p13_migrate_partial_failure_test.go ( Phase
 // F-tail IMPORTANT 7 missing-tests completion).
 //
 // Chaos: claude-code migrate writer interrupted mid-write MUST surface
 // a partial-write error AND the operator can identify the partial
 // result for cleanup. Per spec §3.5 migrate atomicity contract +
-// inv-zen-183 1:1 mapping precondition (mapping fails atomically before
+// invariant 1:1 mapping precondition (mapping fails atomically before
 // writer is invoked).
 //
 // Build tag `chaos` excludes from default CI.

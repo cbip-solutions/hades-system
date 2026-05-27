@@ -11,10 +11,10 @@ import (
 // CaronteDispatcher is the C-2 single-egress seam (master §C-2). The semantic
 // resolver routes its residual-tail LLM disambiguation (reflection / DI /
 // dynamic dispatch) through this narrow interface; the daemon composition
-// root (Phase J) wires the real *orchestrator.Orchestrator. Declaring the
+// root wires the real *orchestrator.Orchestrator. Declaring the
 // interface HERE (consumer-side) — not importing a concrete dispatcher —
-// keeps internal/caronte persistence- and transport-agnostic (inv-zen-031)
-// and preserves single-egress (inv-zen-088/236): every Caronte LLM call is a
+// keeps internal/caronte persistence- and transport-agnostic
+// and preserves single-egress: every Caronte LLM call is a
 // dispatcher.Forward, never a direct backend dial.
 //
 // The signature mirrors orchestrator.Orchestrator.Forward EXACTLY so the
@@ -27,7 +27,7 @@ type CaronteDispatcher interface {
 	Forward(ctx context.Context, call orchestrator.Call) (*providers.TierResponse, error)
 }
 
-// inv-zen-236 compile anchor: the production *orchestrator.Orchestrator MUST
+// invariant compile anchor: the production *orchestrator.Orchestrator MUST
 // satisfy CaronteDispatcher. If this stops compiling the daemon wiring is
 // broken — fix the orchestrator signature or the wiring, do NOT relax this
 // seam (that would breach single-egress). Mirrors the

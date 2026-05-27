@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — plan4_summary.go (Plan 4 Phase O Tasks O-1 + O-2).
+// Package client — plan4_summary.go.
 //
 // Typed daemon-API helpers for the GET /v1/{workforce,research,audit,
 // budget,sshexec}/summary and GET /v1/health/plan4 endpoints. The

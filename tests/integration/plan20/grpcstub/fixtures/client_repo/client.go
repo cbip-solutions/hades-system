@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // hand-written stub package; the import is the load-bearing artifact
-// Phase F's link resolver elevates to exact_proto_import confidence.
+// link resolver elevates to exact_proto_import confidence.
 package main
 
 import (

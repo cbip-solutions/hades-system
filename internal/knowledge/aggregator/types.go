@@ -2,10 +2,10 @@
 // Package aggregator — canonical value types for the knowledge aggregator.
 //
 // All types exported from this file are the single source of truth for:
-//   - JSON serialisation to the daemon HTTP API and Go client
-//   - SQL scan targets (PinNote ↔ knowledge_pin_index 1:1)
-//   - RRF fusion input/output (QueryResult, TopK)
-//   - Cross-project wikilink graph (WikilinkEdge)
+// - JSON serialisation to the daemon HTTP API and Go client
+// - SQL scan targets (PinNote ↔ knowledge_pin_index 1:1)
+// - RRF fusion input/output (QueryResult, TopK)
+// - Cross-project wikilink graph (WikilinkEdge)
 //
 // Phase ownership: D-3 ships the complete type surface. D-4..D-7 extend the
 // behaviour (QueryFTS, QueryVec, Promote) but add NO new exported types to
@@ -13,10 +13,10 @@
 // QueryRequest if audit-chain filters need additional fields; extend here,
 // never in the method files.
 //
-// inv-zen-152: ScopePinnedOnly is the widest scope this aggregator honours.
-// Ecosystem-wide RAG (cross-project web + external-source search) is Plan 14
+// invariant: ScopePinnedOnly is the widest scope this aggregator honours.
+// Ecosystem-wide RAG (cross-project web + external-source search) is
 // territory. Any call-site that passes Scope("ecosystem-rag") will receive an
-// explicit error message pointing at Plan 14 — never a silent default.
+// explicit error message pointing at — never a silent default.
 package aggregator
 
 import (

@@ -292,7 +292,7 @@ func NewRecoveryEngine(cfg RecoveryEngineConfig) (*RecoveryEngine, error) {
 //
 // Lock discipline (review fix-pass): the decision is computed under r.mu
 // so concurrent same-(task,class) deaths cannot double-count, but the
-// audit Append is emitted OUTSIDE the lock. Phase A's eventlog.Log.Append
+// audit Append is emitted OUTSIDE the lock. eventlog.Log.Append
 // performs SQLite persistence I/O; holding r.mu across that call would
 // serialize every other RecoveryEngine call behind audit-write latency.
 // computeDecisionLocked + handleTransientLocked encapsulate the
@@ -303,8 +303,8 @@ func NewRecoveryEngine(cfg RecoveryEngineConfig) (*RecoveryEngine, error) {
 // drops the forensic row. The Decision return value is unaffected by ctx.
 //
 // Payload schema (review fix-pass): the payload map keys MUST match the
-// eventlog.WorkerRedispatched typed-struct json tags so Phase E-6 replay
-// + Plan 9 hash-chain consumers can typed-Decode the row without losing
+// eventlog.WorkerRedispatched typed-struct json tags so replay
+// + hash-chain consumers can typed-Decode the row without losing
 // fields. The contract is pinned by
 // TestRecoveryEngine_HandleWorkerDeath_TypedPayloadRoundTrip.
 func (r *RecoveryEngine) HandleWorkerDeath(ctx context.Context, in WorkerDeathInput) (Decision, error) {
@@ -319,7 +319,7 @@ func (r *RecoveryEngine) HandleWorkerDeath(ctx context.Context, in WorkerDeathIn
 		auditCtx := context.WithoutCancel(ctx)
 		// Map keys MUST match eventlog.WorkerRedispatched json tags so a
 		// typed Decode round-trip yields all fields populated (replay
-		// + Plan 9 hash-chain contract).
+		// + hash-chain contract).
 		_, _ = r.evlog.Append(auditCtx, eventlog.Event{
 			Type:        eventlog.EvtWorkerRedispatched,
 			SessionID:   r.sessionID,
@@ -368,12 +368,12 @@ func (r *RecoveryEngine) computeDecisionLocked(class FailureClass, in WorkerDeat
 // budget; the infra problem is local, not tier-specific).
 //
 // Two counters drive this function (see RecoveryEngine docstring):
-//   - r.retries[key]: PER-TIER counter. Resets to 0 on
-//     RedispatchNextTier so each tier walks its own budget.
-//   - r.cumulative[key]: NEVER-RESET counter. Drives the reclassify-
-//     permanent gate so sustained transient failure across the tier
-//     chain eventually flips to PERMANENT_TASK once cumulative count
-//     reaches doctrine.permanent_after_n_retries.
+// - r.retries[key]: PER-TIER counter. Resets to 0 on
+// RedispatchNextTier so each tier walks its own budget.
+// - r.cumulative[key]: NEVER-RESET counter. Drives the reclassify-
+// permanent gate so sustained transient failure across the tier
+// chain eventually flips to PERMANENT_TASK once cumulative count
+// reaches doctrine.permanent_after_n_retries.
 //
 // Decision.RetryCount surfaces the CUMULATIVE counter (the operator-
 // facing audit value should reflect actual progression through the

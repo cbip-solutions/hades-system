@@ -29,7 +29,7 @@ def test_hades_module_is_importable():
 
 
 def test_hades_module_exposes_required_symbols():
-    """B-2: the public surface includes the helpers Phase B will populate."""
+    """B-2: the public surface includes the helpers  will populate."""
     mod = _import_hades_module()
     for sym in ("register_hades_skin", "_build_hades_yaml", "_maybe_activate_hades"):
         assert hasattr(mod, sym), f"hades module is missing required symbol {sym!r}"

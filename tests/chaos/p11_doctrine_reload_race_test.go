@@ -1,5 +1,4 @@
-//go:build chaos
-
+// go:build chaos
 package chaos
 
 import (
@@ -139,7 +138,7 @@ func TestDoctrineReload_GateObservesPostSwap(t *testing.T) {
 	}
 }
 
-// TestDoctrineReload_CapaFirewallNameWins verifies inv-zen-170: the
+// TestDoctrineReload_CapaFirewallNameWins verifies invariant: the
 // canonical capa-firewall name short-circuits regardless of TOML state.
 // A "capa-firewall" doctrine with Enable=true (operator override
 // attempt) MUST still be refused.

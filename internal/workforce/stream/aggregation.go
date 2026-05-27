@@ -90,16 +90,16 @@ const defaultBackpressureMinCount = 100
 // window holds the in-progress accumulation for one layer.
 //
 // Concurrency contract:
-//   - All field reads/writes (id, openedAt, events) MUST hold w.mu.
-//   - appendAndPersist runs the in-memory append AND the persist call
-//     under the SAME critical section so that flush cannot interleave
-//     between them. This prevents the C-1/C-2/C-3 durability race where
-//     Publish would land an event in a post-flush w.events slice while
-//     reading wid==0 — losing the event from both AppendEvent (skipped)
-//     and the prior flush batch (already drained).
-//   - flush drains events + zeroes the window in one critical section,
-//     then returns a FlushBatch holding the drained slice. The caller
-//     must NOT call flush while holding w.mu (it acquires internally).
+// - All field reads/writes (id, openedAt, events) MUST hold w.mu.
+// - appendAndPersist runs the in-memory append AND the persist call
+// under the SAME critical section so that flush cannot interleave
+// between them. This prevents the C-1/C-2/C-3 durability race where
+// Publish would land an event in a post-flush w.events slice while
+// reading wid==0 — losing the event from both AppendEvent (skipped)
+// and the prior flush batch (already drained).
+// - flush drains events + zeroes the window in one critical section,
+// then returns a FlushBatch holding the drained slice. The caller
+// must NOT call flush while holding w.mu (it acquires internally).
 type window struct {
 	mu       sync.Mutex
 	id       int64
@@ -307,16 +307,16 @@ func (s *AggregationStream) Start(ctx context.Context) error {
 // Durability contract (post C-1/C-2/C-3 fix): every successful Publish
 // returns nil iff the event is durably reachable from one of:
 //
-//	(a) aggregation_events row inserted via AppendEvent under the same
-//	    w.mu critical section as the in-memory append (no race window).
-//	(b) the w.events slice that will be drained by the next flush and
-//	    handed to subscribers / hooks via FlushBatch.Events.
+// (a) aggregation_events row inserted via AppendEvent under the same
+// w.mu critical section as the in-memory append (no race window).
+// (b) the w.events slice that will be drained by the next flush and
+// handed to subscribers / hooks via FlushBatch.Events.
 //
 // AppendEvent persistence errors are surfaced via the OnPersistError
 // callback (registered via OnPersistError); they do NOT cause Publish to
 // fail because the event is already in w.events and will be re-persisted
 // or batched by the next flush. This matches the noopPersist + best-effort
-// recovery semantics required by inv-zen-073 (durability via WAL + flush).
+// recovery semantics required by invariant (durability via WAL + flush).
 func (s *AggregationStream) Publish(ctx context.Context, layer Layer, event Event) error {
 	select {
 	case <-s.stopped:
@@ -412,8 +412,8 @@ func (s *AggregationStream) flushLayer(ctx context.Context, layer Layer, closedA
 // than expected and dispatches lag visibility to registered LagHandlers.
 //
 // The fired LagInfo carries layer + count + halfWindow + timestamp so
-// handlers can decide what to do (Phase G wires /v1/audit/emit so the
-// event reaches the daemon audit log; future Phase F may derive a richer
+// handlers can decide what to do ( wires /v1/audit/emit so the
+// event reaches the daemon audit log; future may derive a richer
 // publish-rate signal from budget anomaly data).
 //
 // Critical (C-4 fix): this function MUST NOT publish into the stream

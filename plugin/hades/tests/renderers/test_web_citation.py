@@ -313,11 +313,11 @@ def test_web_render_caps_caller_chain_at_first_five() -> None:
 def test_web_render_section_uses_hades_citations_css_class(
     sample_augmentation_result: AugmentationResult,
 ) -> None:
-    """Plan 18b Phase D: top-level <section> CSS class rebranded from
+    """ : top-level <section> CSS class rebranded from
     `zen-citations` to `hades-citations`.
 
-    This is the document-fragment stylesheet hook the future Plan 13+
-    web UI targets (`<style>.hades-citations { ... }</style>`). The
+    This is the document-fragment stylesheet hook the future +
+    web UI targets (`<style>.hades-citations {... }</style>`). The
     brand-pass rebrands the class name so downstream consumers
     converge on the HADES wordmark.
     """
@@ -330,7 +330,7 @@ def test_web_render_section_uses_hades_citations_css_class(
 def test_web_render_empty_section_uses_hades_citations_css_class(
     empty_augmentation_result: AugmentationResult,
 ) -> None:
-    """Plan 18b Phase D: empty-result fallback <section> also uses
+    """ : empty-result fallback <section> also uses
     `hades-citations` class.
 
     The empty-state branch is a separate emit path; both branches MUST

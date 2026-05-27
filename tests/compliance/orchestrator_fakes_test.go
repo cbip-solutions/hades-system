@@ -12,9 +12,9 @@
 // interfaces must be mirrored here.
 //
 // Interfaces implemented:
-//   - orch.StateMachineAPI  → complianceFakeSM
-//   - orch.AppenderAPI      → complianceFakeAppender
-//   - orch.GateAPI          → complianceFakeGate
+// - orch.StateMachineAPI → complianceFakeSM
+// - orch.AppenderAPI → complianceFakeAppender
+// - orch.GateAPI → complianceFakeGate
 package compliance_test
 
 import (

@@ -36,7 +36,7 @@ func newDoctorMergeTestServer(t *testing.T) *httptest.Server {
 }
 
 // TestDoctor_AggregateIncludesMergeSection — `zen doctor --json` output
-// MUST contain entries with Section="Merge (Plan 6)" for all 4 checks.
+// MUST contain entries with Section="Merge" for all 4 checks.
 // This is the load-bearing wiring assertion: pre-C-2 the section was
 // absent because runMergeChecks was never called by doctorAggregateRunE.
 func TestDoctor_AggregateIncludesMergeSection(t *testing.T) {

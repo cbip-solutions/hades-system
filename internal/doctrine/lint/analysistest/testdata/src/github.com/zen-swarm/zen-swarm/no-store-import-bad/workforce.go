@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package bad simulates a workforce sub-package importing internal/store directly.
-// This is the inv-zen-031 violation pattern that Q16 D's analyzer catches.
+// This is the invariant violation pattern that Q16 D's analyzer catches.
 package bad
 
 import (

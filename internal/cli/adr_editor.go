@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_editor.go (Plan 9 Phase I Task I-6).
+// Package cli — adr_editor.go.
 //
 // editorRunner runs the operator's preferred editor against the path
 // passed in. Test code substitutes a fake editor by replacing this

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// findroot.go — Plan 7 Phase A Task A-8 helper.
+// findroot.go — Task A-8 helper.
 //
 // FindProjectRoot walks up the filesystem from `start` looking for an
 // ancestor directory that contains EITHER `zenswarm.toml` OR a `.git`
@@ -13,7 +13,7 @@
 // project_id consistently regardless of which subdirectory the operator
 // is sitting in.
 //
-// Boundary discipline (inv-zen-031): pure stdlib (os, path/filepath,
+// Boundary discipline: pure stdlib (os, path/filepath,
 // errors, fmt). No internal/store imports; no projectctxadapter
 // dependency.
 package projectctx

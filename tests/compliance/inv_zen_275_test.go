@@ -127,7 +127,7 @@ func TestInvZen275_DoctorCaronteSurfaces404(t *testing.T) {
 // TestInvZen275_404MapsToEndpointNotFoundEndToEnd drives the CLI flow
 // against an httptest.Server that returns 404 for /v1/mcpgateway/codegraph.
 // The classifier MUST surface *CodedError with Code == CodeEndpointNotFound,
-// NOT daemon.unreachable. inv-zen-275 §B.
+// NOT daemon.unreachable. invariant §B.
 func TestInvZen275_404MapsToEndpointNotFoundEndToEnd(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusNotFound)

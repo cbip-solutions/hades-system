@@ -1,3 +1,4 @@
+// go:build integration && cgo
 //go:build integration && cgo
 // +build integration,cgo
 
@@ -439,7 +440,7 @@ func TestIntegration_FetchManifestErrorIsolated(t *testing.T) {
 	}
 }
 
-// TestIntegration_ConcurrentIngestRaceClean exercises inv-zen-200: 20 pkgs
+// TestIntegration_ConcurrentIngestRaceClean exercises invariant: 20 pkgs
 // × 8 concurrent workers MUST be race-clean at -race -count=2. All 20
 // packages end up in ecosystem_packages; audit chain has 20 events; no
 // double-counted ingests / failed transactions.

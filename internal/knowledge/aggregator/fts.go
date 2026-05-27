@@ -8,29 +8,29 @@
 //
 // Design choices:
 //
-//  1. Split into exported Aggregator method (QueryFTS) + package-level helper
-//     (queryFTS): the package-level helper is directly callable from CGO-tagged
-//     tests without constructing a full Aggregator, enabling seedFTS to verify
-//     the SQL without the overhead of Options validation.
+// 1. Split into exported Aggregator method (QueryFTS) + package-level helper
+// (queryFTS): the package-level helper is directly callable from CGO-tagged
+// tests without constructing a full Aggregator, enabling seedFTS to verify
+// the SQL without the overhead of Options validation.
 //
-//  2. BM25 normalisation: FTS5 bm25() returns a negative float64 (lower /
-//     more negative = better match). We negate it so QueryResult.Score is
-//     positive and "higher = better", consistent with vec0 cosine distances
-//     and the RRF fusion contract in D-5.
+// 2. BM25 normalisation: FTS5 bm25() returns a negative float64 (lower /
+// more negative = better match). We negate it so QueryResult.Score is
+// positive and "higher = better", consistent with vec0 cosine distances
+// and the RRF fusion contract in D-5.
 //
-//  3. sanitizeFTSQuery is conservative: it strips FTS5 operator characters
-//     (`+ - " ( ) * :`) rather than escaping them. Plan 9 does not expose
-//     advanced FTS5 syntax (prefix queries, NEAR, column filters) to the
-//     operator; stripping keeps the implementation simple and correct.
-//     is a separate package decision.
+// 3. sanitizeFTSQuery is conservative: it strips FTS5 operator characters
+// (`+ - " ( ) * :`) rather than escaping them. does not expose
+// advanced FTS5 syntax (prefix queries, NEAR, column filters) to the
+// operator; stripping keeps the implementation simple and correct.
+// is a separate package decision.
 //
-//  4. No CGO build tag here: QueryFTS uses database/sql which works with any
-//     registered driver. The CGO dependency lives in db.go (mattn/go-sqlite3
-//     driver registration). fts.go itself is build-tag–agnostic, consistent
-//     with aggregator.go's posture. The fts_test.go is tagged //go:build cgo
-//     because it calls Open+Init which require the mattn driver.
+// 4. No CGO build tag here: QueryFTS uses database/sql which works with any
+// registered driver. The CGO dependency lives in db.go (mattn/go-sqlite3
+// driver registration). fts.go itself is build-tag–agnostic, consistent
+// with aggregator.go's posture. The fts_test.go is tagged //go:build cgo
+// because it calls Open+Init which require the mattn driver.
 //
-// inv-zen-129: this file makes no web calls. All data comes from aggregator.db.
+// invariant: this file makes no web calls. All data comes from aggregator.db.
 package aggregator
 
 import (

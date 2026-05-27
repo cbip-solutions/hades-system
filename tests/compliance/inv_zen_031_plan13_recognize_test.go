@@ -1,9 +1,9 @@
-// Package compliance — inv-zen-031 Plan 13 Phase B recognize sub-tree.
+// Package compliance — invariant recognize sub-tree.
 //
-// inv-zen-031 (boundary discipline): `internal/recognize/{,manifest,config,
+// invariant (boundary discipline): `internal/recognize/{,manifest,config,
 // glob,monorepo,maturity}/` packages do NOT import `internal/store` directly.
 // Compile-checked via grep against package source (test files allowed for
-// future fixture loading; production .go files MUST be clean).
+// future fixture loading; production.go files MUST be clean).
 package compliance
 
 import (
@@ -57,7 +57,7 @@ func TestInvZen031Plan13RecognizeNoStoreImport(t *testing.T) {
 	}
 }
 
-// TestInvZen088Plan13RecognizeNoProvidersImport asserts inv-zen-088 single-
+// TestInvZen088Plan13RecognizeNoProvidersImport asserts invariant single-
 // egress: recognize packages do NOT import internal/providers or
 // internal/dispatcher (no LLM traffic from inference path).
 func TestInvZen088Plan13RecognizeNoProvidersImport(t *testing.T) {

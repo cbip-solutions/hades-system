@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — knowledge_aggregator.go (Plan 9 Phase D-12).
+// Package handlers — knowledge_aggregator.go.
 //
-// Five HTTP handler functions for the Plan 9 knowledge aggregator surface:
+// Five HTTP handler functions for the knowledge aggregator surface:
 //
-//	POST /v1/knowledge/aggregator/query      — FTS + structured filter via
-//	                                           Aggregator.QueryFTS
-//	POST /v1/knowledge/aggregator/promote    — promote note to pin-index
-//	POST /v1/knowledge/aggregator/unpromote  — remove note from pin-index
-//	GET  /v1/knowledge/aggregator/list       — list pinned notes
-//	POST /v1/knowledge/aggregator/rebuild    — enqueue async re-embed
+// POST /v1/knowledge/aggregator/query — FTS + structured filter via
+// Aggregator.QueryFTS
+// POST /v1/knowledge/aggregator/promote — promote note to pin-index
+// POST /v1/knowledge/aggregator/unpromote — remove note from pin-index
+// GET /v1/knowledge/aggregator/list — list pinned notes
+// POST /v1/knowledge/aggregator/rebuild — enqueue async re-embed
 //
-// These are DISTINCT from the Plan 7 knowledge handler factory functions
+// These are DISTINCT from the knowledge handler factory functions
 // (KnowledgeQueryHandler, KnowledgeReindexHandler, KnowledgeStatsHandler in
 // knowledge.go) which back the legacy /v1/knowledge/{query,reindex,stats}
-// routes. Both surfaces coexist; the Plan 9 aggregator routes delegate to an
+// routes. Both surfaces coexist; the aggregator routes delegate to an
 // AggregatorService interface (structural typing) to avoid importing
 // internal/knowledge/aggregator directly in the handlers package.
 //
@@ -24,7 +24,7 @@
 // same binary. By using structural typing (AggregatorService interface rather
 // than a concrete *aggregator.Aggregator), the handlers package avoids
 // importing aggregator directly — the aggregator import lives only in
-// internal/daemon/knowledgeadapter (inv-zen-031 bridge) and in
+// internal/daemon/knowledgeadapter and in
 // cmd/zen-swarm-ctld (the binary, which tolerates the CGO dep).
 //
 // Route registration: RegisterKnowledgeAggregatorRoutes(mux, h) mounts all
@@ -33,13 +33,13 @@
 //
 // Status-code mapping (mirrors inbox_p7 + zenday patterns):
 //
-//	400  — invalid JSON body or missing required field
-//	500  — opaque backend failure (sql I/O, embedder error, etc.)
-//	200  — success
-//	202  — rebuild enqueued (async; forward-compat seam D-12)
+// 400 — invalid JSON body or missing required field
+// 500 — opaque backend failure (sql I/O, embedder error, etc.)
+// 200 — success
+// 202 — rebuild enqueued (async; forward-compat seam D-12)
 //
-// inv-zen-031: this file does NOT import internal/store directly.
-// inv-zen-146: empty reason in promote/unpromote → ErrPromoteReasonRequired
+// invariant: this file does NOT import internal/store directly.
+// invariant: empty reason in promote/unpromote → ErrPromoteReasonRequired
 // → HTTP 400 (detected via error string; errors.Is not available without
 // importing aggregator, which we intentionally avoid here).
 package handlers

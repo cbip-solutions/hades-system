@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
 // Package fix — plugin_format_fix.go ships the DESTRUCTIVE Fix impl for
-// the hermes.plugin-format check (inv-zen-176 + 190).
+// the hermes.plugin-format check.
 //
 // Delegates to:
-//   - internal/doctor/backup (F4) for backup-before-modify (inv-zen-177)
-//   - internal/migrate/writer (Phase E) for fresh plugin scaffold
+// - internal/doctor/backup (F4) for backup-before-modify
+// - internal/migrate/writer for fresh plugin scaffold
 //
-// inv-zen-178 enforcement: declared via interface guard
+// invariant enforcement: declared via interface guard
 // `_ Destructive = (*PluginFormatFix)(nil)` AND IsDestructive() returns true.
 // The GuardDestructive gate rejects FixModeAutoSafe/FixModeInteractive
 // without TTY; only FixModeYes (explicit) and FixModeInteractive in TTY
 // proceed.
 //
 // Failure halts:
-//   - Backup fails → halt; plugin untouched
-//   - Backup succeeds + delete fails → halt; manifest references backup
-//     for `zen doctor restore <ID>` reverse op
-//   - Delete succeeds + scaffold fails → halt; manifest references backup
-//     for reverse op
+// - Backup fails → halt; plugin untouched
+// - Backup succeeds + delete fails → halt; manifest references backup
+// for `zen doctor restore <ID>` reverse op
+// - Delete succeeds + scaffold fails → halt; manifest references backup
+// for reverse op
 //
 // Operator UX: post-failure, the error string carries the BackupID so the
 // operator can run `zen doctor restore <ID>` immediately.

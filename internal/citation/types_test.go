@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// internal/citation/types_test.go — Plan 11 Phase D Task D-1.
+// internal/citation/types_test.go — Task D-1.
 //
 // Round-trip + zero-value + minimal-valid tests for the citation envelope
 // substrate types. Deeper property-based round-trip lives in

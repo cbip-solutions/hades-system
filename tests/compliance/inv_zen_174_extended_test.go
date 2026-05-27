@@ -4,19 +4,19 @@
 //
 // existing surface tests with the C-8 umbrella contract.
 //
-// inv-zen-174 (widened, MIT-canonical 4-redundant per decisión 15):
-//  1. LICENSE                MIT canonical text + "Ika el Zur" copyright
-//  2. per-file SPDX headers  SPDX-License-Identifier: MIT
-//  3. supporting docs        README.md + INSTALL.md + THIRD_PARTY_LICENSES.md
-//  4. brew Formula           Formula/hades.rb license "MIT"
+// invariant:
+// 1. LICENSE MIT canonical text + "Ika el Zur" copyright
+// 2. per-file SPDX headers SPDX-License-Identifier: MIT
+// 3. supporting docs README.md + INSTALL.md + THIRD_PARTY_LICENSES.md
+// 4. brew Formula Formula/hades.rb license "MIT"
 //
-// inv-zen-286: LICENSE canonical content sentinels.
-// inv-zen-290: composition contract — scripts/verify_license_compliance.sh
+// invariant: LICENSE canonical content sentinels.
+// invariant: composition contract — scripts/verify_license_compliance.sh
 //
-//	exits 0 with the canonical success banner.
+// exits 0 with the canonical success banner.
 //
 // W4C scope extension: NOTICE file is shipped (minimal mode per
-// decisión 15-optional-best-practice path); content sentinels asserted
+// policy path); content sentinels asserted
 // here so the W4C override is captured as a load-bearing gate.
 //
 // All assertions are repo-local (no network); the umbrella shell-out

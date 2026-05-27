@@ -2,13 +2,13 @@
 // Value types + interfaces shared across the package.
 //
 // Production wire-format contracts (Python ↔ Go):
-//   - ForwardedRequest:  POST /v1/messages body shape
-//   - ForwardedResponse: response envelope returned to Python
+// - ForwardedRequest: POST /v1/messages body shape
+// - ForwardedResponse: response envelope returned to Python
 //
 // Internal contracts:
-//   - MessagesHandler:   concrete handler tied to the daemon dispatcher
-//   - Dispatcher:        abstract dispatcher dependency (Plan 3 satisfies)
-//   - AuditAnchor:       abstract Plan 9 Tessera audit hook
+// - MessagesHandler: concrete handler tied to the daemon dispatcher
+// - Dispatcher: abstract dispatcher dependency
+// - AuditAnchor: abstract Tessera audit hook
 package transport
 
 import (

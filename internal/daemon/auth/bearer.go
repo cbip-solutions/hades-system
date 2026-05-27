@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package auth — bearer.go (Plan 7 Phase I Task I-1).
+// Package auth — bearer.go.
 //
 // Daemon-bearer + per-routine bearer validators using
 // crypto/subtle.ConstantTimeCompare for timing-safe comparison
-// (inv-zen-132). Per-routine mismatch emits a
-// ScheduleHttpTriggerAuthFailed audit event for the Plan 2 audit
+// . Per-routine mismatch emits a
+// ScheduleHttpTriggerAuthFailed audit event for the audit
 // pipeline to escalate to action-needed (5+ in 1h per spec §4.3).
 package auth
 

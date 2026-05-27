@@ -25,7 +25,7 @@ from hermes_plugins.hades.renderers.types import (
 
 
 def test_citation_type_enum_values():
-    """All CitationType values match Plan 11 Phase D Go enum."""
+    """All CitationType values match   Go enum."""
     assert CitationType.KG_NODE.value == "kg_node"
     assert CitationType.KG_EDGE.value == "kg_edge"
     assert CitationType.FILE_SLICE.value == "file_slice"
@@ -36,7 +36,7 @@ def test_citation_type_enum_values():
 
 
 def test_citation_source_enum_values():
-    """CitationSource enum matches Plan 11 Phase D Go enum (Plan 19 renamed gitnexus_* → caronte_*)."""
+    """CitationSource enum matches   Go enum."""
                                                                                        
     assert CitationSource.CARONTE_QUERY.value == "caronte_query"
     assert CitationSource.CARONTE_CONTEXT.value == "caronte_context"
@@ -59,7 +59,7 @@ def test_retrieval_lane_enum_values():
 
 
 def test_platform_enum_values():
-    """Platform enum: 6 platform renderers + markdown fallback (Plan 11)."""
+    """Platform enum: 6 platform renderers + markdown fallback."""
     assert Platform.INK.value == "ink"
     assert Platform.TELEGRAM.value == "telegram"
     assert Platform.SLACK.value == "slack"
@@ -96,7 +96,7 @@ def test_envelope_dataclass_round_trip():
 def test_envelope_to_json_matches_go_wire():
     """Envelope.to_json() emits keys matching Go envelope.go json tags.
 
-    Plan 19: primary source value is ``caronte_query``; backward-compat
+    : primary source value is ``caronte_query``; backward-compat
     alias ``GITNEXUS_QUERY`` still round-trips (tested separately in
     test_citation_source_enum_values).
     """

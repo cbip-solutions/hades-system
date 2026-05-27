@@ -3,27 +3,27 @@
 // Evaluator interface impl that produces a CallDecision from (mcpName,
 // toolName, params) + active doctrine bundle.
 //
-// inv-zen-184 enforcement: every EvaluateCall invocation MUST emit
+// invariant enforcement: every EvaluateCall invocation MUST emit
 // exactly one audit event via the configured Emitter. The runtime
 // guarantee is the emit call below; tests assert via recordingEmitter
 // count.
 //
 // Decision matrix per Q10=D + spec §2.10 3-profile baseline:
 //
-//	profile == "max-scope"        → CallAllow regardless of tier
-//	profile == "default":
-//	  - low    → CallAllow
-//	  - medium → CallAllowWithAudit
-//	  - high   → CallAllowWithConfirm
-//	  - unknown→ CallAllowWithAudit (conservative)
-//	profile == "capa-firewall":
-//	  - mcpName.toolName in DenyList         → CallDeny
-//	  - mcpName.toolName in AllowList        → CallAllow (explicit)
-//	  - high (and not in AllowList)          → CallDeny (deny-default)
-//	  - medium                                → CallAllowWithConfirm
-//	  - low                                   → CallAllowWithAudit
-//	profile == "imported-from-claude-code" or other custom → treat as
-//	  default-equivalent + apply allow/deny lists strictly.
+// profile == "max-scope" → CallAllow regardless of tier
+// profile == "default":
+// - low → CallAllow
+// - medium → CallAllowWithAudit
+// - high → CallAllowWithConfirm
+// - unknown→ CallAllowWithAudit (conservative)
+// profile == "capa-firewall":
+// - mcpName.toolName in DenyList → CallDeny
+// - mcpName.toolName in AllowList → CallAllow (explicit)
+// - high (and not in AllowList) → CallDeny (deny-default)
+// - medium → CallAllowWithConfirm
+// - low → CallAllowWithAudit
+// profile == "imported-from-claude-code" or other custom → treat as
+// default-equivalent + apply allow/deny lists strictly.
 package eval
 
 import (
@@ -53,7 +53,7 @@ type RuntimeEvaluator struct {
 
 // NewRuntimeEvaluator constructs the production evaluator. cfg.Policy +
 // cfg.Emitter MUST both be non-nil; callers MUST validate at composition
-// root (Plan 14+ daemon boot).
+// root.
 func NewRuntimeEvaluator(cfg Config) *RuntimeEvaluator {
 	return &RuntimeEvaluator{policy: cfg.Policy, emitter: cfg.Emitter}
 }
@@ -108,11 +108,11 @@ var sensitiveParamKeys = map[string]bool{
 // extractParamShape walks the params arg (expected map[string]any or any
 // JSON-decodable shape) and returns:
 //
-//   - keys: sorted []string of top-level keys present in params, for
-//     audit forensic trace. Never includes values (security: values
-//     may carry secrets).
-//   - sensitive: true if any key in the params is a sensitive-shape
-//     key per sensitiveParamKeys taxonomy.
+// - keys: sorted []string of top-level keys present in params, for
+// audit forensic trace. Never includes values (security: values
+// may carry secrets).
+// - sensitive: true if any key in the params is a sensitive-shape
+// key per sensitiveParamKeys taxonomy.
 //
 // Non-map params (e.g., a bare string or nil) return ([], false). The
 // function is defensive: any unexpected shape falls through to (nil, false)

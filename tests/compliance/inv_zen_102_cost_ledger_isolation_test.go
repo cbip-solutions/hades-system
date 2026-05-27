@@ -1,15 +1,15 @@
 // tests/compliance/inv_zen_102_cost_ledger_isolation_test.go
 //
-// Compliance test for inv-zen-102 (cost-ledger write isolation):
+// Compliance test for invariant (cost-ledger write isolation):
 // internal/orchestrator/* and internal/daemon/orchestratoradapter/
 // MUST NOT write the cost_ledger table directly. All cost writes flow
-// via Plan 3 dispatcher → internal/daemon/dispatcheradapter.
+// dispatcher → internal/daemon/dispatcheradapter.
 //
-// This test parses every .go file under the orchestrator + adapter
+// This test parses every.go file under the orchestrator + adapter
 // trees and rejects any literal SQL fragment "INSERT INTO cost_ledger",
 // "UPDATE cost_ledger", or "DELETE FROM cost_ledger" (case-insensitive).
 //
-// Boundary inv-zen-089: same trees MUST NOT import internal/store
+// Boundary invariant: same trees MUST NOT import internal/store
 // (only orchestratoradapter is allowed; that package lives at
 // internal/daemon/orchestratoradapter, NOT internal/orchestrator).
 package compliance

@@ -1,33 +1,33 @@
 // SPDX-License-Identifier: MIT
-// Package cli — amendment.go (Plan 8 Phase K Tasks K-1 through K-4).
+// Package cli — amendment.go.
 //
 // Amendment group commands: propose-list, ack, deny, revert, propose.
 //
-// Per Plan 8 spec Q11 D, all amendment business logic lives in the Plan 5
+// Per spec Q11 D, all amendment business logic lives in the
 // amendment package (internal/orchestrator/amendment/); the CLI is a pure
 // HTTP client to the daemon's /v1/doctrine/{propose-list,ack,deny,revert,
-// propose} routes. Boundary inv-zen-133: zero internal/orchestrator/* or
+// propose} routes. Boundary invariant: zero internal/orchestrator/* or
 // internal/store imports — the CLI talks JSON-only to the daemon.
 //
 // Per spec Q14 C, commands are flat-invocation (zen doctrine ack ADR-0050,
 // not zen doctrine amendment ack ADR-0050). The cobra.Group{ID: "amendment"}
-// declared by Phase I's doctrine.go organizes --help output only.
+// declared by doctrine.go organizes --help output only.
 //
 // Per CLAUDE.md operator language preference + spec §6.6, command help text
 // and error messages are Spanish; JSON request/response field names are
 // English (machine-readable contract).
 //
-// names, same body fields, same exit codes). Phase K adds:
-//   - propose-list: lists pending ADR proposals from the daemon's filesystem
-//     scan (Plan 5 already exposes /propose-list; Phase K adds the CLI
-//     surface with Spanish-localized table renderer + client-side filters).
-//   - propose: NEW Plan 8 operator-initiated manual amendment entry. Plan 5's
-//     Proposer originates telemetry-driven proposals only; Phase K's propose
-//     lets the operator inject a manual proposal into the same lifecycle.
+// names, same body fields, same exit codes). adds:
+// - propose-list: lists pending ADR proposals from the daemon's filesystem
+// scan ( already exposes /propose-list; adds the CLI
+// surface with Spanish-localized table renderer + client-side filters).
+// - propose: NEW operator-initiated manual amendment entry.
+// Proposer originates telemetry-driven proposals only; propose
+// lets the operator inject a manual proposal into the same lifecycle.
 //
 // File layout: this file owns the 5 amendment-group commands + their wire
 // types + helper renderers. The shared HTTP client (client.go) is owned by
-// Phase I; Phase K adds the AmendmentProposeList/Ack/Deny/Revert/Propose
+// ; adds the AmendmentProposeList/Ack/Deny/Revert/Propose
 // methods to it.
 package cli
 
@@ -284,13 +284,13 @@ subyacente o denegar la propuesta con 'zen doctrine deny ADR-NNNN
 	return cmd
 }
 
-// denyCmd constructs the `zen doctrine deny <adr_id> --reason ...` command.
+// denyCmd constructs the `zen doctrine deny <adr_id> --reason...` command.
 //
-// Per Plan 5 K-3 verbatim baseline, --reason is REQUIRED for deny
+// Per K-3 verbatim baseline, --reason is REQUIRED for deny
 // (operators MUST articulate rejection rationale for the audit trail).
 // The daemon writes DoctrineAmendmentSuppressed{decision="deny", reason}
-// to the eventlog and (via Plan 5 Applier extension) moves the ADR
-// markdown to docs/decisions/rejected/.
+// to the eventlog and moves the ADR
+// markdown to architecture records
 func denyCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "deny <adr_id>",
@@ -389,7 +389,7 @@ el contexto del audit trail ya es claro), --reason puede omitirse.`,
 
 			// Operator-manual revert MUST surface the DoctrineAmendmentReverted
 			// event reference (vs DoctrineAutonomousReverted for telemetry-driven
-			// — Phase H AutoRevert) so the audit trail is unambiguous.
+			// — AutoRevert) so the audit trail is unambiguous.
 			out := cmd.OutOrStdout()
 			fmt.Fprintf(out, "Enmienda %s revertida.\n", adrID)
 			fmt.Fprintln(out, "  evento:        DoctrineAmendmentReverted (operator-manual)")

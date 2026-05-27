@@ -1,32 +1,32 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — merge.go (Plan 6 Phase F Task F-4).
+// Package handlers — merge.go.
 //
 // MergeHandler ships the daemon-side HTTP surface for /v1/merge/* — 8
-// routes that the Phase F-2 cobra subcommands consume via the
+// routes that the cobra subcommands consume via the
 // internal/client.MergeClient transport. The handler is wired in the
 // daemon bootstrap (alongside F-1's NewMergeEngineFromConfig); for
-// Phase F.4 the production wiring of `Engine` is left optional so the
-// route registration test can run without the full Plan 5 substrate
+// the production wiring of `Engine` is left optional so the
+// route registration test can run without the full substrate
 // graph.
 //
 // Routes (registered on a *http.ServeMux via Register):
 //
-//	GET  /v1/merge/inspect?id=<generation|hash>
-//	POST /v1/merge/replay              (body: {"session_id": "..."})
-//	GET  /v1/merge/score-explain?outcome_id=<id>
-//	GET  /v1/merge/baseline?session_id=<id>
-//	GET  /v1/merge/cache/status
-//	POST /v1/merge/cache/clear
-//	GET  /v1/merge/config
-//	GET  /v1/merge/anomaly?since=<duration>
+// GET /v1/merge/inspect?id=<generation|hash>
+// POST /v1/merge/replay (body: {"session_id": "..."})
+// GET /v1/merge/score-explain?outcome_id=<id>
+// GET /v1/merge/baseline?session_id=<id>
+// GET /v1/merge/cache/status
+// POST /v1/merge/cache/clear
+// GET /v1/merge/config
+// GET /v1/merge/anomaly?since=<duration>
 //
 // Wire-types decoupling: handlers serialize internal/orchestrator/merge
 // domain types into internal/cli wire-types via small mapping helpers
 // declared in this file (so neither package leaks its types to the
-// other and inv-zen-104 is preserved).
+// other and invariant is preserved).
 //
-// Phase F.4 surfaces are intentionally THIN for inspect / replay /
-// score-explain / baseline / anomaly: full Plan 5 Phase O capture
+// surfaces are intentionally THIN for inspect / replay /
+// score-explain / baseline / anomaly: full capture
 // machinery is the load-bearing dependency, and the F.7 amendment
 // wires it. The cache + config endpoints are FULLY wired today
 // (cache.Size + cache.Clear + ScoringConfig fields → wire types).

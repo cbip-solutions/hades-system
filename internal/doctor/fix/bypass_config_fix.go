@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package fix — bypass_config_fix.go ships the Fix impl for the
-// bypass.config check (Plan 2 extracted-config presence).
+// bypass.config check.
 //
 // Non-destructive: delegates to the existing `bin/zen bypass extract-config`
 // interactive command. The extract-config command requires operator

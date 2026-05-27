@@ -64,7 +64,7 @@ func openTestStore(t *testing.T) *store.Store {
 // still produce a non-nil orchestrator. The bypass backend is registered
 // as a disabled stub (cascade skips it). With no other providers in the
 // registry, a Forward against the built-in "worker-code" cascade hits an
-// inv-zen-211 condition at request time — the cascade names unregistered
+// invariant condition at request time — the cascade names unregistered
 // providers — and the resolver call surfaces an error. The point of the
 // test is "buildOrchestrator did not panic on nil BypassClient".
 func TestBuildOrchestrator_NilBypassClientGracefullyDegrades(t *testing.T) {
@@ -114,13 +114,13 @@ func TestBuildOrchestrator_DisabledBypassReturnsErrTierUnavailable(t *testing.T)
 	}
 }
 
-// TestBuildOrchestrator_ReturnsCostAdapter — Plan 3 Phase C F-7 wiring
+// TestBuildOrchestrator_ReturnsCostAdapter — F-7 wiring
 // pin: buildOrchestrator MUST return a non-nil *dispatcheradapter.Adapter
 // so main.go can hand it to orchestrator.NewCostCounters and the
 // dispatcher's AsyncEmitter writes + the counters' RebuildFromLedger
 // reads cross the SAME boundary instance. A regression returning a
 // throwaway second adapter would silently route writes to one Adapter
-// and reads to another, breaking inv-zen-065 (rebuild would query an
+// and reads to another, breaking invariant (rebuild would query an
 // empty adapter). Pinning the adapter satisfies orchestrator.CostStore.
 func TestBuildOrchestrator_ReturnsCostAdapter(t *testing.T) {
 	st := openTestStore(t)
@@ -157,7 +157,7 @@ func TestBuildOrchestrator_CloseReleasesEmitter(t *testing.T) {
 	closeFn()
 }
 
-// TestBuildOrchestrator_ReturnsRecoveryScheduler — Plan 3 Phase D-6 wiring
+// TestBuildOrchestrator_ReturnsRecoveryScheduler — wiring
 // pin: buildOrchestrator MUST return a non-nil *orchestrator.RecoveryScheduler
 // so main.go can wire it through Server.SetRecoveryScheduler. A regression
 // returning nil would silently disable the recovery probe loop and Open
@@ -176,7 +176,7 @@ func TestBuildOrchestrator_ReturnsRecoveryScheduler(t *testing.T) {
 	}
 }
 
-// TestBuildOrchestrator_BreakerInDispatcherChain — Plan 3 Phase D-6 pin:
+// TestBuildOrchestrator_BreakerInDispatcherChain — pin:
 // the dispatcher MUST be wired with a real *orchestrator.CircuitBreaker
 // (not the deleted noopBreaker stand-in). We verify by triggering a
 // Forward against a fully-disabled chain (both tiers off) and asserting
@@ -208,11 +208,11 @@ func TestBuildOrchestrator_BreakerInDispatcherChain(t *testing.T) {
 	}
 }
 
-// TestBuildOrchestrator_ReturnsPinOverrides — Plan 3 Phase E I-5 wiring
+// TestBuildOrchestrator_ReturnsPinOverrides — I-5 wiring
 // pin: buildOrchestrator MUST return a non-nil *orchestrator.PinOverrides
 // so main.go can wire it through Server.SetPinOverrides. A regression
 // returning nil would silently disable the operator-facing pin path —
-// `zen orchestrator pin` (Phase F CLI) would 503 forever.
+// `zen orchestrator pin` would 503 forever.
 func TestBuildOrchestrator_ReturnsPinOverrides(t *testing.T) {
 	st := openTestStore(t)
 	built := buildOrchestrator(testDeps(t, st, nil))
@@ -240,7 +240,7 @@ func TestBuildOrchestrator_ReturnsPinOverrides(t *testing.T) {
 	}
 }
 
-// TestBuildOrchestrator_ReturnsPaygSafety — Plan 3 Phase E I-5 wiring
+// TestBuildOrchestrator_ReturnsPaygSafety — I-5 wiring
 // pin: buildOrchestrator MUST return a non-nil *orchestrator.PaygSafety
 // constructed against the SAME *CostCounters (CapCounters interface) so
 // CheckCap reads the live ledger. A duplicate counter cache (or nil)
@@ -263,7 +263,7 @@ func TestBuildOrchestrator_ReturnsPaygSafety(t *testing.T) {
 	}
 }
 
-// TestBuildOrchestrator_PaygSafetySharesCostCounters — Plan 3 Phase E I-5
+// TestBuildOrchestrator_PaygSafetySharesCostCounters — I-5
 // CRITICAL pin: PaygSafety MUST be wired against the EXACT same
 // *CostCounters instance buildOrchestrator returns in built.CostCounters.
 // A duplicate would silently desynchronise from the live ledger — writes
@@ -303,12 +303,12 @@ func TestBuildOrchestrator_PaygSafetySharesCostCounters(t *testing.T) {
 	}
 }
 
-// TestBuildOrchestrator_ReturnsCircuitBreakerAndTiers — Plan 3 Phase F
-// K-3 + Plan 16 T17 wiring pin: buildOrchestrator MUST return a non-nil
+// TestBuildOrchestrator_ReturnsCircuitBreakerAndTiers —
+// K-3 + T17 wiring pin: buildOrchestrator MUST return a non-nil
 // *orchestrator.CircuitBreaker AND a non-empty Tiers slice so main.go
 // can hand them to Server.SetCircuitBreaker / Server.SetTiers. The
 // operator-facing `zen orchestrator status / probe / history` commands
-// (Phase F K-3) consult those accessors; missing wiring would silently
+// consult those accessors; missing wiring would silently
 // surface empty-shape responses with no breaker / tier data.
 //
 // the deleted tier1/tier2 hard-wire. With testDeps' empty registry plus
@@ -397,7 +397,7 @@ func TestOrchestratorNotifierAdapter_ForwardsAllSeverities(t *testing.T) {
 // TestCostLedgerSink_PersistsPerAttemptEvent verifies the real
 // dispatcheradapter.Store sink (replacing noopCostSink in T17) translates a
 // per-attempt CostLedgerRow into a canonical store.CostLedgerRow and persists
-// it via store.InsertCostLedger. The persisted row MUST carry the Plan 16
+// it via store.InsertCostLedger. The persisted row MUST carry the
 // provider attribution (cost_ledger.provider column, migration 064) and the
 // Tier rendered as its canonical string.
 func TestCostLedgerSink_PersistsPerAttemptEvent(t *testing.T) {
@@ -438,7 +438,7 @@ func TestCostLedgerSink_PersistsPerAttemptEvent(t *testing.T) {
 // idempotency-key synthesis: a re-delivered identical CostEvent MUST NOT
 // produce a duplicate cost_ledger row and MUST NOT surface an error to the
 // AsyncEmitter worker (worker would log spurious failures + retry). The
-// inv-zen-062 no-double-charge invariant relies on this dedup behaviour.
+// invariant no-double-charge invariant relies on this dedup behaviour.
 func TestCostLedgerSink_DuplicateEventDeduped(t *testing.T) {
 	st := openTestStore(t)
 	sink := newCostLedgerSink(st)
@@ -588,11 +588,11 @@ func TestVerifyCascadeCompleteness_BypassRegistered(t *testing.T) {
 // roster profile defaults (BuiltinProfileDefaults: orchestrator,
 // worker-code, worker-reasoning, tactical, local-code) reference roster
 // providers the operator has not configured yet — they are aspirational
-// stubs of the v1.0 OSS roster. inv-zen-211 must only fire on
+// stubs of the v1.0 OSS roster. invariant must only fire on
 // operator-supplied profiles (profiles.toml ∪ projects.toml
 // [orchestrator].fallback_chain), NOT on the built-in defaults; otherwise
 // the daemon refuses to start out-of-box. Regression guard for the smoke
-// break surfaced during Plan 16 Phase B Task 22.
+// break surfaced during Task 22.
 func TestVerifyCascadeCompleteness_EmptyConfigBootstrap(t *testing.T) {
 	reg := testRegistry(t)
 
@@ -607,7 +607,7 @@ func TestVerifyCascadeCompleteness_EmptyConfigBootstrap(t *testing.T) {
 
 // TestVerifyCascadeCompleteness_OperatorProfileStillGated verifies the
 // flip side of the empty-config relaxation: when an OPERATOR supplies a
-// profile via profiles.toml, inv-zen-211 MUST still fire if the cascade
+// profile via profiles.toml, invariant MUST still fire if the cascade
 // names an unregistered provider. The gate protects against operator
 // typos; the empty-config relaxation only excuses BUILT-IN defaults.
 func TestVerifyCascadeCompleteness_OperatorProfileStillGated(t *testing.T) {

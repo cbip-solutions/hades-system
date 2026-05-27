@@ -213,7 +213,7 @@ def test_renderer_subclass_must_set_platform() -> None:
 def test_renderer_audit_anchor_default_network_failure_returns_empty() -> None:
     """Default audit_anchor: when network call fails → returns empty string + logs warning.
 
-    inv-zen-166: audit anchoring is a side-channel; failure here is
+    invariant: audit anchoring is a side-channel; failure here is
     non-fatal and must not abort rendering. The renderer continues with
     audit_event_ids[] entries that reflect the original envelope's
     audit_event_id (not the anchor RPC return value).

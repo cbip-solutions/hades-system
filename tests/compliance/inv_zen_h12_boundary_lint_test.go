@@ -3,7 +3,7 @@
 // boundary consolidation is in place + the boundary lint script catches
 // regressions.
 //
-// Composes the inv-zen-322 boundary lint into the standard compliance
+// Composes the invariant boundary lint into the standard compliance
 // suite so `make test` exercises the gate without depending on
 // `make verify-hermes-boundary` being chained into the developer's local
 // workflow. Belt + suspenders per defense-in-depth.

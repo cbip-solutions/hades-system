@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -16,26 +17,26 @@ import (
 )
 
 // TestNodeIDMatchesPhaseBByteForByte is the parse↔resolve JOIN-KEY gate. node_id
-// is the join between parsed nodes (Phase B writes them to graph_nodes) and
-// resolved edges (Phase C writes SourceID/TargetID). They MUST be the SAME
+// is the join between parsed nodes and
+// resolved edges. They MUST be the SAME
 // string for the SAME symbol or every C edge dangles. Here we drive BOTH layers
 // off ONE Go source:
 //
-//   - Phase B: parser.ParseFile(ctx, "internal/widget/widget.go", src) — its
-//     goPackagePathFromFile derives dir "internal/widget" and qualifiedNodeID
-//     emits "internal/widget.Run" / "internal/widget.Server.Serve".
-//   - Phase C: type-check the SAME src as import path
-//     "github.com/cbip-solutions/hades-system/internal/widget", then canonicalNodeID
-//     strips module "github.com/cbip-solutions/hades-system" to recover the SAME
-//     "internal/widget.<...>".
+// - : parser.ParseFile(ctx, "internal/widget/widget.go", src) — its
+// goPackagePathFromFile derives dir "internal/widget" and qualifiedNodeID
+// emits "internal/widget.Run" / "internal/widget.Server.Serve".
+// - : type-check the SAME src as import path
+// "github.com/cbip-solutions/hades-system/internal/widget", then canonicalNodeID
+// strips module "github.com/cbip-solutions/hades-system" to recover the SAME
+// "internal/widget.<...>".
 //
-// The dir Phase B sees ("internal/widget") and the module-stripped import-path
-// tail Phase C sees MUST coincide — that is the contract, asserted byte-for-byte.
+// The dir sees ("internal/widget") and the module-stripped import-path
+// tail sees MUST coincide — that is the contract, asserted byte-for-byte.
 func TestNodeIDMatchesPhaseBByteForByte(t *testing.T) {
 	const (
 		modulePath = "github.com/cbip-solutions/hades-system"
 		importPath = modulePath + "/internal/widget"
-		// repoRelPath is the path Phase B's extractor receives; its directory
+		// repoRelPath is the path extractor receives; its directory
 		// ("internal/widget") MUST equal importPath with modulePath stripped.
 		repoRelPath = "internal/widget/widget.go"
 		src         = `package widget

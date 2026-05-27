@@ -194,7 +194,7 @@ func TestReplayCorruptionToleratedUpTo5(t *testing.T) {
 		t.Errorf("EventsReplayed = %d want 7", st.EventsReplayed)
 	}
 	// Each corruption MUST have been audited via a ReplayCorruptionDetected
-	// event re-appended to the log (inv-zen-095 contract).
+	// event re-appended to the log.
 	rows, err := log.Query(ctx, "s1", 0)
 	if err != nil {
 		t.Fatalf("Query post-replay: %v", err)
@@ -258,7 +258,7 @@ func TestReplayCorruptionBudgetExceededOn6th(t *testing.T) {
 	// via a ReplayCorruptionDetected event before Replay returns the
 	// error. Post-mortem audit logs would otherwise show only 5/N
 	// corruption rows for the session that hit N+1, hiding the breaching
-	// row from inv-zen-095 forensics.
+	// row from invariant forensics.
 	rows, qerr := log.Query(context.Background(), "s1", 0)
 	if qerr != nil {
 		t.Fatalf("Query post-replay: %v", qerr)
@@ -402,7 +402,7 @@ func TestReplayLastEventIDWatermark(t *testing.T) {
 // TestReplayHonorsCancelMidLoop per IMP-1, the Replay row-fold loop
 // MUST re-check ctx.Err() periodically so daemon shutdown / deadline
 // expiry preempts a long replay (10k-event sessions approach the <5s
-// recovery spec; Phase E crash-recovery hot path relies on this).
+// recovery spec; crash-recovery hot path relies on this).
 //
 // Strategy use a wrappedEmitter whose QueryRaw returns rows AND cancels
 // the ctx the caller passes through, so by the time Replay enters the

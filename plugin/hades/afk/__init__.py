@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""zen-swarm AFK richness module — Plan 12 Phase D."""
+"""zen-swarm AFK richness module —  """
 
 from __future__ import annotations
 

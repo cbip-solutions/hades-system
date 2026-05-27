@@ -3,24 +3,24 @@
 //
 // substrates that the audit chain depends on:
 //
-//   - audit.backup       reports per-project backup substrate freshness
-//     (litestream replica age, tessera rsync age,
-//     cold archive age, S3 reachability) per spec
-//     §6.2 lines 1527-1540.
-//   - audit.chain-integrity reports per-project chain integrity history
-//     (last verify-chain age + 7d tamper event count)
-//     per spec §1 Q10 line 657.
+// - audit.backup reports per-project backup substrate freshness
+// (litestream replica age, tessera rsync age,
+// cold archive age, S3 reachability) per spec
+// §6.2 lines 1527-1540.
+// - audit.chain-integrity reports per-project chain integrity history
+// (last verify-chain age + 7d tamper event count)
+// per spec §1 Q10 line 657.
 //
 // The doctor LOGIC lives here in package recovery so it can be unit-
 // tested via stubbed BackupStatus / ChainStatus interfaces; the cobra
 // surface lives in internal/cli/doctor_audit_{backup,chain_integrity}.go
 // and delegates to RunDoctorAuditBackup / RunDoctorAuditChainIntegrity
-// via a daemon HTTP round-trip (Phase H wires the daemon-side handlers).
+// via a daemon HTTP round-trip.
 //
-// inv-zen-031: this file does NOT import internal/store. Backup status
+// invariant: this file does NOT import internal/store. Backup status
 // fields are read through a small extension on Manager / RsyncScheduler
-// (Phase B/C wire those) and ChainStatus reads from the in-memory cache
-// populated by Phase J's tamper.scheduler. The doctor returns CheckResult
+// and ChainStatus reads from the in-memory cache
+// populated by tamper.scheduler. The doctor returns CheckResult
 // (a CLI-shape value type) so internal/cli can adapt without importing
 // recovery's full surface.
 package recovery

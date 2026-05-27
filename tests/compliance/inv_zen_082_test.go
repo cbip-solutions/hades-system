@@ -1,6 +1,6 @@
-// Phase L Task L-2 — runtime compliance test for inv-zen-082.
+// Task L-2 — runtime compliance test for invariant.
 //
-// inv-zen-082: ssh-exec allowlist enforcement. Forbidden chars +
+// invariant: ssh-exec allowlist enforcement. Forbidden chars +
 // non-prefix-match commands MUST be rejected by the validator and never
 // reach exec.
 //

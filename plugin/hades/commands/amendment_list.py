@@ -59,9 +59,9 @@ Operator can:
 
 ## Cross-references
 
-- Plan 5 + Plan 8 doctrine-amendment lifecycle
+-  +  doctrine-amendment lifecycle
 - spec §7.2 (slash commands)
-- Plan 8 inv-zen-072 amendment audit chain anchor
+-  invariant amendment audit chain anchor
 """
 
 

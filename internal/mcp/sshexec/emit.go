@@ -1,31 +1,31 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/emit.go
 //
-// Phase L Task L-8 — sshexec audit emitter.
+// Task L-8 — sshexec audit emitter.
 //
-// Wraps the Phase H *client.EmitClient with sshexec-specific event types
+// Wraps the *client.EmitClient with sshexec-specific event types
 // and structured payload schema. Implements the AuditEmitter interface
 // consumed by exec.Run.
 //
-// inv-zen-083 (no-loss): every emit attempt has two paths inside the
+// invariant (no-loss): every emit attempt has two paths inside the
 // underlying EmitClient:
 //
-//  1. POST <daemon>/v1/audit/emit (3 retries built into client.Do)
-//  2. on 5xx / dial failure: append JSONL line to the buffer file
-//     <bufDir>/zen-mcp-ssh-exec-emit-buffer-<pid>.jsonl
+// 1. POST <daemon>/v1/audit/emit (3 retries built into client.Do)
+// 2. on 5xx / dial failure: append JSONL line to the buffer file
+// <bufDir>/zen-mcp-ssh-exec-emit-buffer-<pid>.jsonl
 //
-// Phase H's EmitClient does NOT return an error when the daemon path
+// EmitClient does NOT return an error when the daemon path
 // fails — it falls back to the buffer file silently (so callers in the
 // MCP tool path never block). When BOTH paths fail, the EmitClient
 // writes a stderr log line and returns nil — events are NEVER silently
-// dropped (inv-zen-083 satisfied; the stderr line is the audit trail of
+// dropped (invariant satisfied; the stderr line is the audit trail of
 // the trail).
 //
-// Phase L's Emitter is a thin typed wrapper: build the JSON payload for
+// Emitter is a thin typed wrapper: build the JSON payload for
 // each ssh_exec.* event type, hand it to EmitClient.Emit, surface
 // nothing else.
 //
-// Boundary (inv-zen-031): imports only stdlib + internal/mcp/client.
+// Boundary: imports only stdlib + internal/mcp/client.
 
 package sshexec
 

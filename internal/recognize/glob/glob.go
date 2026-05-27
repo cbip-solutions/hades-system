@@ -2,7 +2,7 @@
 // Package glob implements Tier 3 of zen recognize per spec §2.4 Q4=B:
 // go-enry-powered byte-ranking with linguist filters (IsVendor / IsGenerated /
 // IsDocumentation / IsTest / IsBinary) applied BEFORE byte-counting.
-// Honors .gitattributes linguist-* overrides.
+// Honors.gitattributes linguist-* overrides.
 //
 // Performance budget (spec §2.4): streaming walk; classify ~95% files by
 // extension/filename; cap content-read at MaxBytesPerFile per file; parallel

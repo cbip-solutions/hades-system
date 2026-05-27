@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_140_applier_validate_tighten_test.go
 //
-// Compliance gate for invariant inv-zen-140: amendment Applier MUST run
+// Compliance gate for invariant invariant: amendment Applier MUST run
 // candidate.ValidateTighten(baseline) BEFORE writing TOML to filesystem.
 // On tighten violation, the file MUST remain byte-identical AND
 // DoctrineTightenViolationRejected MUST be emitted.
@@ -23,7 +23,7 @@ import (
 )
 
 // TestInvZen140ApplierMustValidateTightenBeforeWrite enforces the
-// inv-zen-140 sequence: ApplyWithValidation MUST run candidate.
+// invariant sequence: ApplyWithValidation MUST run candidate.
 // ValidateTighten BEFORE touching the filesystem; on tighten violation,
 // the TOML file MUST remain byte-identical AND
 // DoctrineTightenViolationRejected MUST be emitted with

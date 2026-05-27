@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
                                              
-"""Telegram Bot API renderer for citation envelopes (Plan 12 Phase A Task A-4)."""
+"""Telegram Bot API renderer for citation envelopes."""
 
 from __future__ import annotations
 

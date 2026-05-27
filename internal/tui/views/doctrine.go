@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package views — doctrine.go (Plan 12 Phase C Task C-7, F10 panel).
+// Package views — doctrine.go.
 //
 // Active doctrine + amendments (proposals). Live data from
-// /v1/doctrine/active + /v1/doctrine/list (Plan 8 substrate) +
-// /v1/doctrine/propose-list (Plan 5 — pending amendments).
+// /v1/doctrine/active + /v1/doctrine/list +
+// /v1/doctrine/propose-list.
 package views
 
 import (

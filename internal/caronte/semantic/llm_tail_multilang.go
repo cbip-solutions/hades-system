@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -16,19 +17,19 @@ import (
 
 // resolveMultiLangTail sends the bounded set of unresolved interfaces (no
 // SCIP/heuristic implementation found) to the LLM via the C-2 single-egress
-// seam — the SAME CaronteDispatcher Phase C declares (Profile=local-code →
-// Ollama, §13, inv-zen-088/236). It records high-confidence disambiguations as
+// seam — the SAME CaronteDispatcher declares (Profile=local-code →
+// Ollama, §13, invariant/236). It records high-confidence disambiguations as
 // ConfLLMHint implements edges. Returns the count written.
 //
 // REUSE (not re-declaration): CaronteDispatcher, DefaultLLMProfile,
 // ErrNoDispatcher, unresolvedSite, llmTailRequest, tailResolution, and
-// parseTailResolutions are all Phase C's (same package). This function is the
-// multi-language analogue of Phase C's resolveTail (Go); it shares the seam +
+// parseTailResolutions are all (same package). This function is the
+// multi-language analogue of resolveTail (Go); it shares the seam +
 // envelope shape, differing only in the prompt + that it emits implements edges
 // (interface→concrete) rather than call edges.
 //
 // A nil dispatcher ⇒ ErrNoDispatcher (caller treats the tail as skipped,
-// inv-zen-234). A dispatcher error (Ollama down) is returned; the caller
+// invariant). A dispatcher error (Ollama down) is returned; the caller
 // swallows it (degrade, do not block). NEVER dials a backend directly.
 func (r *MultiLangResolver) resolveMultiLangTail(ctx context.Context, language string, unresolved []unresolvedSite) (int, error) {
 	if r.dispatcher == nil {

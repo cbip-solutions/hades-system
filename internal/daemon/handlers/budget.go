@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — budget.go (Plan 3 Phase F K-4 — REAL).
+// Package handlers — budget.go.
 //
-// Replaces the Plan 2 stub trio (BudgetAll/Project/Raise → 501). K-4
+// Replaces the stub trio (BudgetAll/Project/Raise → 501). K-4
 // retains ONE real route: GET /v1/budget?range=<window>, a read-only
 // per-(project, profile, tier) spend rollup backed by CostCounters.
 //
-// The Plan 4+ wire path (BudgetProject + BudgetRaise) stays at 501
-// pending Phase J (ProfileResolver) + cost_cap_changes table. Mutations
+// The + wire path (BudgetProject + BudgetRaise) stays at 501
+// pending (ProfileResolver) + cost_cap_changes table. Mutations
 // require a write path that does not exist post-rescope; deferring is
 // load-bearing per max-scope-meta doctrine — building a stub today
 // becomes retrofit debt tomorrow when the real cap source lands.
 //
-// Boundary (inv-zen-031): consumes the Server pointer as `any` and
+// Boundary: consumes the Server pointer as `any` and
 // reuses orchestratorAccessor (defined in handlers/orchestrator.go) so
 // this file shares the K-3 nil-safe accessor wiring without re-defining
 // the interface. Production *daemon.Server satisfies it structurally.
 //
 // Window restriction: CostCounters registers WindowCounter only for
 // 24h and 30d. parseRange accepts those plus shorter Go-duration values
-// (1h, 2h, ...) that ProjectProfileTierTotal MUST reject (panics on
+// (1h, 2h,...) that ProjectProfileTierTotal MUST reject (panics on
 // unsupported durations). To keep handler responses friendly, parseRange
 // PRE-VALIDATES against the allowed set — operators see "unsupported
 // range" 400 rather than a 500 from the panic.
@@ -77,7 +77,7 @@ func parseRange(s string) (time.Duration, error) {
 // CostCounters constant simultaneously).
 //
 // Returns the duration unchanged on success; an error otherwise. The
-// allowed set is intentionally small: Plan 3 ships 24h + 30d; future
+// allowed set is intentionally small: ships 24h + 30d; future
 // plans MUST add ledger-side support before exposing more windows.
 func supportedBudgetWindow(d time.Duration) error {
 	switch d {

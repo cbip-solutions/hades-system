@@ -1,33 +1,33 @@
 // tests/compliance/inv_zen_105_replay_determinism_test.go
 //
-// Compliance gate for inv-zen-105: replay-determinism via cache key.
+// Compliance gate for invariant: replay-determinism via cache key.
 //
-// The merge engine's audit trail (Plan 6 Phase B Cache + EventLog) MUST
+// The merge engine's audit trail MUST
 // support deterministic replay: rebuilding a fresh Cache from the same
 // EvtMergeCompleted event stream produces byte-identical lookups for the
 // same MergeRequest. This is the runtime expression of the spec's
-// content-addressable cache contract — Plan 5 amendment.proposer relies
+// content-addressable cache contract — amendment.proposer relies
 // on the property when reconstructing causal chains across daemon
-// restarts, and Plan 6 Phase D's cache-hit short-circuit relies on it
+// restarts, and cache-hit short-circuit relies on it
 // for "skip re-merge if already done in a previous run" correctness.
 //
 // Three sibling assertions at the same compliance tier:
-//  1. TestInvZen105RebuildDeterministic — two fresh caches rebuilt from
-//     the same event stream produce equal Size() and byte-identical
-//     Lookup(req) outcomes. Catches non-deterministic reduce-over-events
-//     (map ordering leak, time-of-day in payload, etc.).
-//  2. TestInvZen105StoreLookupIdempotent — Cache.Store(req, outcome)
-//     followed by 100 successive Cache.Lookup(req) calls all return
-//     the exact same outcome. Catches lookup drift (state mutation
-//     between calls, hash collision masking, etc.).
-//  3. TestInvZen105CacheKeyDeterministic — CacheKey(req) is pure: 50
-//     successive calls with the same input produce the same string.
-//     Already covered in cache_test.go but re-asserted here for
-//     compliance-tier visibility (the binary CI gate). Drift in cache-
-//     key production silently invalidates every prior cached outcome,
-//     so the property is tier-1 doctrine, not "minor invariant".
+// 1. TestInvZen105RebuildDeterministic — two fresh caches rebuilt from
+// the same event stream produce equal Size() and byte-identical
+// Lookup(req) outcomes. Catches non-deterministic reduce-over-events
+// (map ordering leak, time-of-day in payload, etc.).
+// 2. TestInvZen105StoreLookupIdempotent — Cache.Store(req, outcome)
+// followed by 100 successive Cache.Lookup(req) calls all return
+// the exact same outcome. Catches lookup drift (state mutation
+// between calls, hash collision masking, etc.).
+// 3. TestInvZen105CacheKeyDeterministic — CacheKey(req) is pure: 50
+// successive calls with the same input produce the same string.
+// Already covered in cache_test.go but re-asserted here for
+// compliance-tier visibility (the binary CI gate). Drift in cache-
+// key production silently invalidates every prior cached outcome,
+// so the property is tier-1 doctrine, not "minor invariant".
 //
-// Reference: docs/superpowers/specs/2026-05-01-zen-swarm-plan-6-merge-engine-design.md §8.3 inv-zen-105
+// Reference: internal design record §8.3 invariant
 //
 // Drift adaptation per Task B-7 instructions: package compliance (not
 // _test) to match the predominant tests/compliance convention (29-of-37

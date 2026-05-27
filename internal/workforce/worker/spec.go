@@ -5,16 +5,16 @@
 // over child Workers), and Reviewer (L2/L3/L4 variants).
 //
 // Per spec §2.2 (Capa 1 workforce primitives) + §3.1 (Flow 1 Worker
-// dispatch + execution), this package wires Phase B queues + Phase C
-// subprocess + Phase A doctrine into a single executable surface that
+// dispatch + execution), this package wires queues +
+// subprocess + doctrine into a single executable surface that
 // the AutonomousOrchestrator composes without modification.
 //
-// Boundary integrity (inv-zen-087): the Worker constructor REQUIRES a
+// Boundary integrity: the Worker constructor REQUIRES a
 // non-nil worktreePath. The orchestrator's WorktreePool owns allocation;
 // this package is the consumer. Compile-check via constructor signature;
 // runtime check via panic at construction with explanatory message.
 //
-// inv-zen-031 boundary: this package depends on internal/workforce/queue
+// invariant boundary: this package depends on internal/workforce/queue
 // (interfaces) and internal/workforce/subprocess; it MUST NOT import
 // internal/store directly. Concrete queue/store wiring lives in
 // internal/daemon/workforceadapter (separate package).
@@ -164,7 +164,7 @@ func ParseRecoveryPolicy(s string) (RecoveryPolicy, error) {
 // Quota bounds resource use for a single Worker.Run call.
 //
 // Per spec §2.2 Capa 1 worker/spec.go fields. All three fields MUST be
-// positive — zero means "unbounded", which Plan 4 explicitly rejects under
+// positive — zero means "unbounded", which explicitly rejects under
 // the max-scope doctrine (cost runaway prevention is load-bearing).
 type Quota struct {
 	MaxTokens int

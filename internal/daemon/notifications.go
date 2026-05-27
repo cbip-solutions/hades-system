@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package daemon — notifications.go (Plan 2 Phase L Task L-4).
+// Package daemon — notifications.go.
 //
 // The Notifier dispatches bypass-module events to two destinations:
-//  1. SQLite ledger (notifications table, schema v9).
-//  2. macOS osascript banner (darwin only; non-darwin → log-only).
+// 1. SQLite ledger (notifications table, schema v9).
+// 2. macOS osascript banner (darwin only; non-darwin → log-only).
 //
 // Severity ∈ {INFO, WARN, CRITICAL}. CRITICAL events not acknowledged
 // within 1h are re-dispatched (osascript fires again, last_repeated

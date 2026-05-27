@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -24,8 +25,8 @@ type NodeDistance struct {
 //
 // This is the read counterpart to UpsertNodeVector: it owns the vec0
 // wire-format (float32SliceBytes) + the rowid→graph_nodes join so the
-// vec0/rowid contract stays inside the store boundary (inv-zen-230 — the
-// intent package never re-encodes vectors or joins rowids itself). Phase H
+// vec0/rowid contract stays inside the store boundary (invariant — the
+// intent package never re-encodes vectors or joins rowids itself).
 // semantic retrieval calls this, then BGE-reranks the node text.
 func (s *Store) KNNNodeIDs(ctx context.Context, embedding []float32, k int) ([]NodeDistance, error) {
 	if len(embedding) != vecDimensions {

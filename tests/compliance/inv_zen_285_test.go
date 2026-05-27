@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_285_test.go
 //
-// Compliance gate for inv-zen-285 (v0.20.2 fix): the caronte intent linker
+// Compliance gate for invariant (v0.20.2 fix): the caronte intent linker
 // resolves ADR ids via YAML frontmatter (canonical) with a filename-
 // derivation fallback ONLY when frontmatter is absent or malformed.
 //
@@ -15,27 +15,27 @@
 //
 // Source-regex anchors over internal/caronte/intent/adrlink.go:
 //
-//  1. `splitFrontmatter(string(data))` MUST appear inside adrPathIndex —
-//     the canonical parser is invoked.
-//  2. `fmID != ""` MUST appear — frontmatter id is preferred when
-//     present (gates the canonical assignment; substring works for both
-//     inline-if and standalone-if idioms).
-//  3. The fallback line `id = "ADR-" + e.Name()[:4]` MUST appear — back-
-//     compat for legacy ADRs without frontmatter is preserved.
-//  4. The pre-v0.20.2 form `id := "ADR-" + e.Name()[:4]` (NOTE := short
-//     declaration) MUST NOT appear — that is the regressed shape where
-//     filename is the sole source of truth.
+// 1. `splitFrontmatter(string(data))` MUST appear inside adrPathIndex —
+// the canonical parser is invoked.
+// 2. `fmID != ""` MUST appear — frontmatter id is preferred when
+// present (gates the canonical assignment; substring works for both
+// inline-if and standalone-if idioms).
+// 3. The fallback line `id = "ADR-" + e.Name()[:4]` MUST appear — back-
+// compat for legacy ADRs without frontmatter is preserved.
+// 4. The pre-v0.20.2 form `id := "ADR-" + e.Name()[:4]` (NOTE := short
+// declaration) MUST NOT appear — that is the regressed shape where
+// filename is the sole source of truth.
 //
 // Behavioural anchors (same source file's test file):
 //
-//  5. `TestADRPathIndexFrontmatterIDWins` MUST be declared — the load-
-//     bearing assertion that filename/frontmatter mismatch resolves
-//     via frontmatter (the exact case that broke TestCoverageManifestLinks).
+// 5. `TestADRPathIndexFrontmatterIDWins` MUST be declared — the load-
+// bearing assertion that filename/frontmatter mismatch resolves
+// via frontmatter (the exact case that broke TestCoverageManifestLinks).
 //
 // Sister-test bite check: revert any of the four anchors in adrlink.go
 // (or delete TestADRPathIndexFrontmatterIDWins); this test MUST fail.
 //
-// inv-zen-285 (v0.20.2 fix).
+// invariant (v0.20.2 fix).
 package compliance
 
 import (
@@ -72,7 +72,7 @@ func TestInvZen285SourceRegex_FilenameFallbackPreserved(t *testing.T) {
 // TestInvZen285SourceRegex_NoRegressedShortDecl is anchor 4: the
 // pre-v0.20.2 regressed form (`id := "ADR-" + e.Name()[:4]` with `:=`
 // short declaration) MUST NOT appear. The new code uses `var id string`
-// + `id = ...` for both the frontmatter and fallback assignments; the
+// + `id =...` for both the frontmatter and fallback assignments; the
 // `:=` short-decl form is the signal that the canonical path has been
 // removed and filename-derivation is the sole source again.
 func TestInvZen285SourceRegex_NoRegressedShortDecl(t *testing.T) {

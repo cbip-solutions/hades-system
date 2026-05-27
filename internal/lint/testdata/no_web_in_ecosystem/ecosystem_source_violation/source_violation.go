@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// badSourceFetch violates inv-zen-191 by calling http.Get directly.
+// badSourceFetch violates invariant by calling http.Get directly.
 // Sources MUST delegate to cache.Revalidator.Fetch (ADR-0087).
 func badSourceFetch(url string) {
 	resp, _ := http.Get(url)

@@ -132,8 +132,7 @@ def test_zen_swarm_profile_name_and_aliases():
 
 
 def test_zen_swarm_profile_env_vars_declares_api_key():
-    """Profile must declare an env-var for the API key (Plan 11 Phase F
-    will issue per-operator daemon-side API keys)."""
+    """Profile must declare an env-var for the API key."""
     _fresh_load_zen_provider_module()
     from providers import get_provider_profile
 
@@ -146,7 +145,7 @@ def test_zen_swarm_profile_env_vars_declares_api_key():
 
 def test_zen_swarm_profile_does_not_leak_external_hostnames():
     """Adversarial: the profile's ``base_url`` must NOT point at any
-    forbidden upstream LLM hostname (inv-zen-164 single-egress)."""
+    forbidden upstream LLM hostname."""
     _fresh_load_zen_provider_module()
     from providers import get_provider_profile
 

@@ -104,7 +104,7 @@ func TestApplyWithValidationRejectsLoosenAttempt(t *testing.T) {
 		t.Errorf("err = %v, want ErrTightenViolation", err)
 	}
 
-	// inv-zen-140 + inv-zen-094: filesystem MUST be byte-identical.
+	// invariant + invariant: filesystem MUST be byte-identical.
 	postContent, _ := os.ReadFile(tomlPath)
 	postStat, _ := os.Stat(tomlPath)
 	if string(postContent) != string(preContent) {
@@ -637,7 +637,7 @@ func TestApplyWithValidationSyncReloadWaitStallEmitsTelemetry(t *testing.T) {
 }
 
 // TestApplyWithValidationFireAndForgetWhenAwaiterNil verifies
-// backward-compatibility: when ReloadAwaiter is nil (Phase H semantics),
+// backward-compatibility: when ReloadAwaiter is nil,
 // ApplyWithValidation falls through to the inner Apply's existing
 // fire-and-forget ReloadSignal.Reload(ctx) path. NO DoctrineWatcherStalled
 // MUST be emitted (the awaiter codepath is short-circuited entirely).
@@ -661,7 +661,7 @@ func TestApplyWithValidationFireAndForgetWhenAwaiterNil(t *testing.T) {
 	}
 
 	// inner Apply's fire-and-forget reload signal MUST have been invoked
-	// exactly once (Phase H legacy path is preserved).
+	// exactly once.
 	if rs.calls != 1 {
 		t.Errorf("ReloadSignal.calls = %d, want 1 (Phase H legacy fire-and-forget path)", rs.calls)
 	}

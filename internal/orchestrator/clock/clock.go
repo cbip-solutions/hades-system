@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package clock provides an injectable wall-clock + timer abstraction
 // (Q14 C). Production code uses Real{}; tests inject *Fake to drive
-// deterministic time advancement for HRA cadence (Phase H), recovery
-// heartbeat (Phase E), amendment cooldown (Phase K), and the
-// time-accelerated test tier (Phase O).
+// deterministic time advancement for HRA cadence, recovery
+// heartbeat, amendment cooldown, and the
+// time-accelerated test tier.
 //
 // Invariant Real and Fake satisfy identical Clock semantics modulo
 // monotonicity (Fake's Now is operator-controlled; Real is wall-clock).
@@ -20,7 +20,7 @@ import (
 // Clock is the injectable wall-clock + timer abstraction.
 // All orchestrator/* timed code MUST take a Clock parameter and never
 // call time.Now/time.NewTimer/time.NewTicker/time.Sleep/time.AfterFunc
-// directly. A vet-style lint (Phase O) enforces this rule.
+// directly. A vet-style lint enforces this rule.
 type Clock interface {
 	Now() time.Time
 	Since(t time.Time) time.Duration

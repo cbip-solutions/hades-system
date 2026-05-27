@@ -2,36 +2,36 @@
 // Package cli — new.go.
 //
 // Surface greenfield scaffold from embedded or pluggable template. Consumes
-// Phase A onboard.Wizard with WizardKindGreenfield discriminator + Phase A
-// preflight + Plan 9 audit emit (via daemon HTTP audit client per
-// inv-zen-031 — internal/cli MUST NOT import internal/store) + Phase D
+// onboard.Wizard with WizardKindGreenfield discriminator +
+// preflight + audit emit (via daemon HTTP audit client per
+// invariant — internal/cli MUST NOT import internal/store) +
 // D1/D2/D3 templates+hooks.
 //
-// Stage 0 drift adjustments vs the master plan §"Tech Stack" assumption:
+// drift adjustments vs the master plan §"Tech Stack" assumption:
 //
-//   - Plan cited `qna.WizardKind/Mode/Defaults/Answers`. Actual canonical
-//     types live in package `onboard` (per C1 reconciliation 2026-05-14).
-//     This file imports both: `onboard` for the types + Wizard interface,
-//     `qna` for the bubbletea + non-interactive concrete constructors.
-//   - Plan cited `internal/audit/chain.Emit(ctx, type, payload)`. Actual
-//     pattern (Phase C config_init.go) uses
-//     `newClientFromCmd(cmd).AuditEmit(ctx, client.AuditEmitReq{...})`
-//     against the daemon HTTP /v1/audit/emit endpoint. Audit emit failures
-//     are surfaced as warnings, not blockers.
-//   - Plan invented `errExit(code, msg)` typed errors. Actual exit-code
-//     dispatch uses `ErrRecoverable` (exit 1) + `ErrPreflightFailure`
-//     (exit 3); unknown errors default to exit 2 (cmd/zen/main.go). Plan's
-//     conflict (exit 4) and SIGINT (exit 130) collapse into:
-//   - non-interactive missing required flag → ErrRecoverable (exit 1)
-//   - target exists + non-empty → ErrRecoverable (exit 1)
-//   - Hermes preflight fail → ErrPreflightFailure (exit 3)
-//   - ctx.Canceled → propagate as-is (exit 2 generic)
-//     The plan's exit-code-4 conflict is operator-fixable ("add --force"),
-//     so the recoverable category is the doctrinally-correct mapping.
-//   - Plan's `WizardDefaults.RecognizeResult` field does NOT exist on
-//     onboard.WizardDefaults. Brownfield (D5) threads recognize values
-//     through existing fields (ProjectKind, etc.) rather than a separate
-//     RecognizeResult pointer.
+// - Plan cited `qna.WizardKind/Mode/Defaults/Answers`. Actual canonical
+// types live in package `onboard` (per C1 reconciliation 2026-05-14).
+// This file imports both: `onboard` for the types + Wizard interface,
+// `qna` for the bubbletea + non-interactive concrete constructors.
+// - Plan cited `internal/audit/chain.Emit(ctx, type, payload)`. Actual
+// pattern uses
+// `newClientFromCmd(cmd).AuditEmit(ctx, client.AuditEmitReq{...})`
+// against the daemon HTTP /v1/audit/emit endpoint. Audit emit failures
+// are surfaced as warnings, not blockers.
+// - Plan invented `errExit(code, msg)` typed errors. Actual exit-code
+// dispatch uses `ErrRecoverable` (exit 1) + `ErrPreflightFailure`
+// (exit 3); unknown errors default to exit 2 (cmd/zen/main.go). Plan's
+// conflict (exit 4) and SIGINT (exit 130) collapse into:
+// - non-interactive missing required flag → ErrRecoverable (exit 1)
+// - target exists + non-empty → ErrRecoverable (exit 1)
+// - Hermes preflight fail → ErrPreflightFailure (exit 3)
+// - ctx.Canceled → propagate as-is (exit 2 generic)
+// The plan's exit-code-4 conflict is operator-fixable ("add --force"),
+// so the recoverable category is the doctrinally-correct mapping.
+// - Plan's `WizardDefaults.RecognizeResult` field does NOT exist on
+// onboard.WizardDefaults. Brownfield (D5) threads recognize values
+// through existing fields (ProjectKind, etc.) rather than a separate
+// RecognizeResult pointer.
 package cli
 
 import (
@@ -315,7 +315,7 @@ func runNew(ctx context.Context, cmd *cobra.Command, args newArgs) error {
 // emitOnboardNew posts evt.onboard.new.run to the daemon audit endpoint.
 // Best-effort: failure prints a warning but never blocks scaffold success.
 // Daemon may be down (zen new is operable without daemon); audit-pending
-// queue (Plan 9) catches up later.
+// queue catches up later.
 func emitOnboardNew(ctx context.Context, cmd *cobra.Command, stderr io.Writer, a onboard.WizardAnswers, target, template string) {
 	auditClient := newClientFromCmd(cmd)
 	payload := map[string]any{

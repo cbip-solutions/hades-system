@@ -1,21 +1,21 @@
 // internal/daemon/dispatcheradapter/tier_health_adapter_test.go
 //
 // Test surface for the orchestrator→store TierHealthSink boundary adapter
-// (Plan 16 Phase B; inv-zen-031 + inv-zen-214).
+// .
 //
 // Three paths exercised:
 //
-//   - RecordHealthSample roundtrip via a real *store.Store backed by a
-//     temp SQLite file. Asserts the inserted row is readable via
-//     store.QueryTierHealthSamples with field parity (Provider, Tier,
-//     Success, LatencyMS, ErrorPattern, TS).
-//   - Reflective parity guard between orchestrator.TierHealthSampleRow
-//     and store.TierHealthSampleRow — store has an extra ID
-//     (autoincrement); every orchestrator field MUST exist on the store
-//     type with the same name + identical reflect.Type.
-//   - Fail-fast posture: NewTierHealthSampleAdapter(nil) MUST panic
-//     (wiring-bug detection at boot — same precedent as Adapter.New /
-//     NewPinStoreAdapter).
+// - RecordHealthSample roundtrip via a real *store.Store backed by a
+// temp SQLite file. Asserts the inserted row is readable via
+// store.QueryTierHealthSamples with field parity (Provider, Tier,
+// Success, LatencyMS, ErrorPattern, TS).
+// - Reflective parity guard between orchestrator.TierHealthSampleRow
+// and store.TierHealthSampleRow — store has an extra ID
+// (autoincrement); every orchestrator field MUST exist on the store
+// type with the same name + identical reflect.Type.
+// - Fail-fast posture: NewTierHealthSampleAdapter(nil) MUST panic
+// (wiring-bug detection at boot — same precedent as Adapter.New /
+// NewPinStoreAdapter).
 //
 // Package dispatcheradapter_test (external) — matches the sibling
 // dispatcheradapter_test.go convention so the adapter exercises only the

@@ -3,27 +3,27 @@
 //
 // Promote is the operator-gated action that moves a note from a per-project
 // Obsidian vault into the cross-project knowledge_pin_index. The operation is:
-//   - Validated up-front (reason required per inv-zen-146; operatorID, noteID,
-//     projectID required for audit trail integrity).
-//   - Idempotent at the DB level (INSERT ... ON CONFLICT(note_id) DO UPDATE SET).
-//   - Chain-anchored via ChainAnchorComputer (noopChainAnchorComputer pre-Phase-B;
-//     real implementation wired by D-11 daemon glue).
-//   - Wikilink-extracting: every [[target]] in content becomes an edge in
-//     knowledge_pin_wikilinks for the D-8 BFS graph traversal.
-//   - Embedding-optional: if the Embedder fails (Failure mode #9, spec §4.1),
-//     Promote proceeds without populating knowledge_pin_vec. The row is still
-//     indexed in FTS5 and wikilinks so search degrades gracefully to BM25+graph.
+// - Validated up-front (reason required per invariant; operatorID, noteID,
+// projectID required for audit trail integrity).
+// - Idempotent at the DB level (INSERT... ON CONFLICT(note_id) DO UPDATE SET).
+// - Chain-anchored via ChainAnchorComputer (noopChainAnchorComputer pre-;
+// real implementation wired by D-11 daemon glue).
+// - Wikilink-extracting: every [[target]] in content becomes an edge in
+// knowledge_pin_wikilinks for the D-8 BFS graph traversal.
+// - Embedding-optional: if the Embedder fails (Failure mode #9, spec §4.1),
+// Promote proceeds without populating knowledge_pin_vec. The row is still
+// indexed in FTS5 and wikilinks so search degrades gracefully to BM25+graph.
 //
-// Boundary (inv-zen-031): promote.go does NOT import internal/store. The
+// Boundary: promote.go does NOT import internal/store. The
 // per-project vault is accessed via PerProjectKnowledgeStore.OpenProjectVault,
 // which returns a ProjectVault (interface{}). Promote type-asserts to *sql.DB —
 // the only contract the aggregator package observes; the adapter (D-12) satisfies
 // it with a real *sql.DB from the daemon's per-project connection pool.
 //
-// inv-zen-129: no web calls. All data comes from the per-project SQLite vault
+// invariant: no web calls. All data comes from the per-project SQLite vault
 // and the aggregator pin-index DB (both local files).
 //
-// inv-zen-146: empty reason → ErrPromoteReasonRequired (exported sentinel so
+// invariant: empty reason → ErrPromoteReasonRequired (exported sentinel so
 // D-14 compliance test can errors.Is-assert across package boundaries).
 package aggregator
 
@@ -77,8 +77,8 @@ func (a *Aggregator) Promote(
 	}
 
 	// 3. Open per-project vault via the PerProjectKnowledgeStore bridge.
-	//    inv-zen-031: we do NOT import internal/store; we type-assert the
-	//    opaque ProjectVault to *sql.DB — the only contract this package observes.
+	// invariant: we do NOT import internal/store; we type-assert the
+	// opaque ProjectVault to *sql.DB — the only contract this package observes.
 	srcVault, err := a.store.OpenProjectVault(ctx, projectID)
 	if err != nil {
 		return nil, fmt.Errorf("aggregator: Promote: OpenProjectVault %q: %w", projectID, err)

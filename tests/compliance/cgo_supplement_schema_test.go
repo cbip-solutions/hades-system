@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
 
-// tests/compliance/cgo_supplement_schema_test.go — Phase E-2 CGO supplement
+// tests/compliance/cgo_supplement_schema_test.go — CGO supplement
 // structural compliance.
 //
 // Asserts configs/cgo-supplement.cdx.json parses as valid CycloneDX 1.6
 // JSON con the 3 required components — entities syft cannot inventory from
 // a compiled Go binary:
 //
-//  1. sqlite-vec (asg017; Apache-2.0; cgo-static; statically-linked C extension)
-//  2. Foundation framework (Apple; Proprietary; system-framework; macOS SDK)
-//  3. smacker/go-tree-sitter (smacker; MIT; cgo-static; Caronte native parsers
-//     per decisión 6 + Plan 19 Caronte SHIPPED v0.18.0)
+// 1. sqlite-vec (asg017; Apache-2.0; cgo-static; statically-linked C extension)
+// 2. Foundation framework (Apple; Proprietary; system-framework; macOS SDK)
+// 3. smacker/go-tree-sitter (smacker; MIT; cgo-static; Caronte native parsers
+// policy + Caronte SHIPPED v0.18.0)
 //
 // Each component must declare a SPDX license identifier (or "Proprietary"
 // for Foundation) and the hades-system:cgo-classification property
 // (cgo-static | system-framework | vendored).
 //
-// Stage-0 reality-check rationale: the spec-text Phase E-2 list of 6
+// reality-check rationale: the spec-text list of 6
 // components included vllm-mlx + litestream + transparency.dev/trillian-tessera
 // that either (a) do not exist in this codebase (no vendor/vllm-mlx, no
 // benbjohnson/litestream in go.mod) or (b) ARE inventoried by syft already
@@ -25,7 +25,7 @@
 // not yet done would be misleading. Only entries syft genuinely cannot
 // inventory belong in the CGO supplement.
 //
-// inv-zen-300 structural check (Phase E-2 + E-6 + E-9 library validation).
+// invariant structural check.
 
 package compliance
 

@@ -61,7 +61,7 @@ def test_default_audit_endpoint_is_v1_audit_emit() -> None:
     a registered daemon route). The daemon registers POST /v1/audit/emit
     at ``internal/daemon/server.go:737``; any value other than ``emit``
     here means every Python-rendered citation drops its audit anchor
-    silently (inv-zen-051 violation).
+    silently.
     """
     assert DEFAULT_DAEMON_URL == "http://localhost:4471"
     assert DEFAULT_AUDIT_ENDPOINT == "http://localhost:4471/v1/audit/emit"

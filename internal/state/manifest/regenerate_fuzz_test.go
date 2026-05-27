@@ -1,20 +1,20 @@
 // Drives the contract documented in regenerate.go:
 //
-//  1. Determinism — twin Regenerate calls with the same (fresh, existing)
-//     inputs must produce byte-identical merged Manifests. inv-zen-151
-//     (regenerate-and-diff CI gate) depends on this: if Regenerate is
-//     non-deterministic, the CI gate raises false positives every run.
+// 1. Determinism — twin Regenerate calls with the same (fresh, existing)
+// inputs must produce byte-identical merged Manifests. invariant
+// (regenerate-and-diff CI gate) depends on this: if Regenerate is
+// non-deterministic, the CI gate raises false positives every run.
 //
-//  2. No panic on any TOML payload — the on-disk system-state.toml is
-//     in scope of the spec §5.2 supply-chain attack model (T10 threat:
-//     attacker plants malformed TOML to silently lose manual-field
-//     pinning). The parser must surface ErrManifestInvalid + return
-//     cleanly, never panic deep in BurntSushi/toml.
+// 2. No panic on any TOML payload — the on-disk system-state.toml is
+// in scope of the spec §5.2 supply-chain attack model (T10 threat:
+// attacker plants malformed TOML to silently lose manual-field
+// pinning). The parser must surface ErrManifestInvalid + return
+// cleanly, never panic deep in BurntSushi/toml.
 //
-//  3. Manual-field preservation — when the fuzzed existing TOML parses
-//     cleanly AND populates a manual field, the merged Manifest's
-//     manual-field value MUST equal the existing value, NOT the fresh
-//     value. This is the operator-pin invariant inv-zen-150.
+// 3. Manual-field preservation — when the fuzzed existing TOML parses
+// cleanly AND populates a manual field, the merged Manifest's
+// manual-field value MUST equal the existing value, NOT the fresh
+// value. This is the operator-pin invariant invariant.
 //
 // Fuzz strategy: feed (fresh Manifest scalar fields, existing TOML
 // bytes). The fresh Manifest is constructed from a small set of fuzzed

@@ -1,49 +1,50 @@
-// tests/replay/inbox_replay_test.go (Plan 7 Phase K Task K-11).
+// tests/replay/inbox_replay_test.go.
 //
 // Replay-tier validation that the inbox aggregator cache is reconstructed
-// deterministically from the per-project authoritative source (inv-zen-113
+// deterministically from the per-project authoritative source (invariant
 // + spec §4.4 + spec §4.7 replay-recovery contract).
 //
 // Coverage:
 //
-//  1. TestReplay_InboxAggregator_TwoRebuildsIdenticalCache — given a
-//     deterministic stream of inbox.Notification writes flowing through
-//     two parallel inbox.Aggregator instances backed by independent
-//     cache fakes, both caches converge to the same row set after
-//     Outbox.Recover (the replay entry point — see §4.4 "Cache rebuild"
-//     contract). Direct §4.7 replay-determinism assertion at the cache-
-//     state level.
+// 1. TestReplay_InboxAggregator_TwoRebuildsIdenticalCache — given a
+// deterministic stream of inbox.Notification writes flowing through
+// two parallel inbox.Aggregator instances backed by independent
+// cache fakes, both caches converge to the same row set after
+// Outbox.Recover (the replay entry point — see §4.4 "Cache rebuild"
+// contract). Direct §4.7 replay-determinism assertion at the cache-
+// state level.
 //
-//  2. TestReplay_InboxAggregator_RebuildIdempotent — calling
-//     Outbox.Recover twice on the same authoritative source yields a
-//     row set with identical (ProjectID, ContentHash, EventType)
-//     tuples. Idempotency guard against double-counting on a
-//     daemon-reboot loop.
+// 2. TestReplay_InboxAggregator_RebuildIdempotent — calling
+// Outbox.Recover twice on the same authoritative source yields a
+// row set with identical (ProjectID, ContentHash, EventType)
+// tuples. Idempotency guard against double-counting on a
+// daemon-reboot loop.
 //
-//  3. TestReplay_InboxAggregator_ReplayBudgetUnder500ms — replay-
-//     recovery budget assertion from spec §4.7: a 1000-entry per-project
-//     authoritative source rebuilds its cache in <500 ms. Catches
-//     egregious regressions (e.g. accidental N+1 inserts).
+// 3. TestReplay_InboxAggregator_ReplayBudgetUnder500ms — replay-
+// recovery budget assertion from spec §4.7: a 1000-entry per-project
+// authoritative source rebuilds its cache in <500 ms. Catches
+// egregious regressions (e.g. accidental N+1 inserts).
 //
 // Drift from spec heredoc (K-11 Steps 1+2+3): the spec referenced
 // fictional surfaces (inbox.Replayer, inbox.NewAuthoritativeStore,
 // inbox.NewAggregatorCache, eventlog.NewRecorder/.Snapshot, projectctx.
-// ProjectID typed string). None exist; the actual Plan 7 inbox API
+// ProjectID typed string). None exist; the actual inbox API
 // (internal/inbox/{inbox.go, aggregator.go, outbox.go}) ships:
 //
-//   - inbox.Notification (canonical row type; no inbox.Event)
-//   - inbox.Store / inbox.NewMemStore (per-project authoritative)
-//   - inbox.AggregatorCacheStore (cache contract; Insert/Query/Rebuild)
-//   - inbox.NewAggregator (Plan 7 façade composing Store + Outbox + cache)
-//   - Outbox.Recover(ctx, sources) → cache.Rebuild(ctx, sources) is the
-//     replay entry point (see internal/inbox/outbox.go:129).
+// - inbox.Notification (canonical row type; no inbox.Event)
+// - inbox.Store / inbox.NewMemStore (per-project authoritative)
+// - inbox.AggregatorCacheStore (cache contract; Insert/Query/Rebuild)
+// - inbox.NewAggregator
+// - Outbox.Recover(ctx, sources) → cache.Rebuild(ctx, sources) is the
+// replay entry point (see internal/inbox/outbox.go:129).
 //
 // We adapt to the real surfaces and uphold the same load-bearing
 // contract: deterministic reconstruction + idempotency + <500 ms budget.
 //
-// inv-zen-113 anchor: the replay path preserves ProjectID across the
+// invariant anchor: the replay path preserves ProjectID across the
 // cache → authoritative bridge.
 //
+// go:build replay
 //go:build replay
 // +build replay
 

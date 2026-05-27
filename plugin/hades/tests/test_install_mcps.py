@@ -105,7 +105,7 @@ def test_snippet_each_entry_has_command():
 
 
 def test_snippet_caronte_has_no_mcp_entry():
-    """Caronte code-graph is in-process (Plan 19, ADR-0095): the snippet must NOT
+    """Caronte code-graph is in-process: the snippet must NOT
     contain a gitnexus or caronte MCP entry — no external binary required."""
     parsed = load_snippet()
     servers = set(parsed["mcp_servers"].keys())
@@ -116,7 +116,7 @@ def test_snippet_caronte_has_no_mcp_entry():
 
 
 def test_snippet_zen_mcps_set_daemon_socket_env():
-    """Per inv-zen-088 single-egress, every zen-mcp-* entry must set
+    """Per invariant single-egress, every zen-mcp-* entry must set
     ZEN_DAEMON_SOCKET env."""
     parsed = load_snippet()
     zen_mcps = [k for k in parsed["mcp_servers"].keys() if k.startswith("zen-mcp-")]

@@ -755,7 +755,7 @@ def test_handle_status_ok_field_renders_with_ok_green(
     color_enabled: None,
     mock_transport: httpx.MockTransport,
 ) -> None:
-    """Happy-path 'daemon: ok ...' line surfaces the ok marker in
+    """Happy-path 'daemon: ok...' line surfaces the ok marker in
     ok-green per spec §Q5."""
     import hermes_plugins.hades.commands.status as status_mod
 
@@ -932,7 +932,7 @@ def _filter_volatile_fields(payload: dict[str, Any]) -> dict[str, Any]:
 def test_handle_status_json_mode_has_schema_version_field(
     mock_transport: httpx.MockTransport,
 ) -> None:
-    """Spec §Q5 + inv-zen-221: JSON output has top-level `schema_version: 1`."""
+    """Spec §Q5 + invariant: JSON output has top-level `schema_version: 1`."""
     from hermes_plugins.hades.commands.status import handle_status
 
     with patch(
@@ -986,7 +986,7 @@ def test_handle_status_json_mode_matches_golden_fixture(
     """The JSON output (under HAPPY_PATH_RESPONSES) deep-equal-matches
     the golden fixture at testdata/status_schema_v1.json (modulo volatile fields).
 
-    This is the load-bearing inv-zen-221 stability anchor."""
+    This is the load-bearing invariant stability anchor."""
     from hermes_plugins.hades.commands.status import handle_status
 
     with patch(

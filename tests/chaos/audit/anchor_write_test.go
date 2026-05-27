@@ -1,16 +1,16 @@
-//go:build chaos
+// go:build chaos
 
 // failure modes.
 //
-// "Anchor write" in the inv-zen-054 contract aliases to
+// "Anchor write" in the invariant contract aliases to
 // chain.Backfill's UpdateChainColumns call (the per-row chain-anchor
 // commit). A failure here MUST:
 //
-//   1. Surface a wrapped error with the chain.Backfill prefix.
-//   2. Leave the PRIOR rows committed (chain.UpdateChainColumns is
-//      atomic per row — atomic-by-store).
-//   3. Allow a clean restart: Backfill called again resumes from the
-//      chain tip without re-processing committed rows.
+// 1. Surface a wrapped error with the chain.Backfill prefix.
+// 2. Leave the PRIOR rows committed (chain.UpdateChainColumns is
+// atomic per row — atomic-by-store).
+// 3. Allow a clean restart: Backfill called again resumes from the
+// chain tip without re-processing committed rows.
 
 package audit
 

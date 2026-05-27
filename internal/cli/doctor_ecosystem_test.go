@@ -165,7 +165,7 @@ func (s *slowEcosystemProberG4) Probe(ctx context.Context) []ProbeResult {
 }
 
 // TestRunFullProbe_NilEcosystemProber_DoesNotPanic guards the doctor RunFullProbe
-// path against accidental panic on a deps with EcosystemProber=nil. Phase G
+// path against accidental panic on a deps with EcosystemProber=nil.
 // does NOT yet wire ecosystem into RunFullProbe (G-4 ships only the leaf
 // subcommand), but the field MUST coexist with the rest of DoctorDeps so the
 // future RunFullProbe extension lands without a struct-shape mismatch.

@@ -2,8 +2,7 @@
 """VoiceCitationRenderer tests: TTS-ready text emission + shell-injection defence.
 
 Output: plain text consumable by Hermes voice mode (pipes through configured
-TTS provider). Per spec §1 Q9 example (post-Plan-19: "Citing caronte query,
-Tessera event 1234abc, confidence 94 percent"; source name from citation.source.value).
+TTS provider). Per spec §1 Q9 example.
 """
 
 from __future__ import annotations
@@ -261,7 +260,7 @@ def test_voice_render_caps_total_word_budget_for_many_citations() -> None:
 def test_voice_render_no_zen_swarm_brand_string_in_tts_output(
     sample_augmentation_result: AugmentationResult,
 ) -> None:
-    """Plan 18b Phase D regression guard: the voice TTS renderer
+    """  regression guard: the voice TTS renderer
     carries NO `zen-swarm` substring in its rendered text.
 
     The voice renderer emits TTS-ready plain text shaped by the spec

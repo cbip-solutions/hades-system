@@ -2,26 +2,26 @@
 // tests that exercise the daemon HTTP surface and the OpenClaude plugin
 // slash commands. Tests in this package use external-test packaging
 // (`package integration_test`) so they cannot import internal packages
-// directly — that constraint enforces inv-zen-031 boundary discipline
-// for the slash-command surface (see Plan 7 Phase H spec line 23).
+// directly — that constraint enforces invariant boundary discipline
+// for the slash-command surface.
 //
-//   - Task H-1: Structural assertion that the extended /handoff slash
-//     command markdown contains the required YAML frontmatter, every
-//     load-bearing payload field name, the canonical UDS path / env
-//     override, the daemon-bearer auth header, and the backward-compat
-//     warning marker.
-//   - Task H-4: End-to-end integration tests that exercise the canonical
-//     step-7.5 bash body against a mocked daemon UDS HTTP server. Five
-//     scenarios cover happy path + daemon-down + daemon-500 + daemon-401
-//   - alias-fallback per spec §1 Q15 + §4.4 row "HandoffPosted emit
-//     failure" + §7.2 inv-zen-128 (canonical 8-field schema).
+// - Task H-1: Structural assertion that the extended /handoff slash
+// command markdown contains the required YAML frontmatter, every
+// load-bearing payload field name, the canonical UDS path / env
+// override, the daemon-bearer auth header, and the backward-compat
+// warning marker.
+// - Task H-4: End-to-end integration tests that exercise the canonical
+// step-7.5 bash body against a mocked daemon UDS HTTP server. Five
+// scenarios cover happy path + daemon-down + daemon-500 + daemon-401
+// - alias-fallback per spec §1 Q15 + §4.4 row "HandoffPosted emit
+// failure" + §7.2 invariant (canonical 8-field schema).
 //
-// Why a mocked daemon (not testhelpers.SpawnDaemon): Phase H must run
-// without Phase I (daemon endpoint owner) shipping. Phase H tests stub
+// Why a mocked daemon (not testhelpers.SpawnDaemon): must run
+// without (daemon endpoint owner) shipping. tests stub
 // the endpoint contract; when Phases F + I land these tests continue
 // to pass — the contract is invariant.
 //
-// Anti-pattern guard: this file also enforces inv-zen-004 (no Claude
+// Anti-pattern guard: this file also enforces invariant (no Claude
 // attribution in production artifacts) on the plugin slash command
 // markdown — the test fails if any forbidden phrase leaks in.
 package integration_test

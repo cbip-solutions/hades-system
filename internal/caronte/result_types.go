@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-// IndexReport summarises a full per-project reindex pass (Plan v0.20.0 Phase C
-// inv-zen-273). Surfaced by Engine.IndexProject + the daemon
+// IndexReport summarises a full per-project reindex pass (Plan v0.20.0
+// invariant). Surfaced by Engine.IndexProject + the daemon
 // POST /v1/caronte/reindex endpoint + the `zen caronte reindex` CLI.
 //
 // Field-completeness contract (sister-tested at compliance level — the

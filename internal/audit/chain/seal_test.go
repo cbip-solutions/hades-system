@@ -369,12 +369,12 @@ func TestVerifySealMissingSeal(t *testing.T) {
 
 // TestVerifySealRejectsBadWitnessSignature pins the C-fix-2 fix:
 // chain.VerifySeal MUST verify the daemon witness signature stored on
-// the seal row.  Pre-fix the verify body returned (nil) even when the
+// the seal row. Pre-fix the verify body returned (nil) even when the
 // signature was missing, forged, or bytes-corrupted (a major audit
-// gap surfaced by Stage 2 cross-phase review CRITICAL-2).
+// gap surfaced by cross-phase review CRITICAL-2).
 //
 // Failure shape: errors.Is(err, ErrChainTampered) — same sentinel the
-// final-record-hash mismatch branch returns, so doctor + Phase J
+// final-record-hash mismatch branch returns, so doctor +
 // seal-verify worker can react uniformly.
 func TestVerifySealRejectsBadWitnessSignature(t *testing.T) {
 	fs := newFakeStore()
@@ -399,9 +399,9 @@ func TestVerifySealRejectsBadWitnessSignature(t *testing.T) {
 // VerifySealSignature returns a non-nil error (e.g. witness key
 // detached during compromise-response, or backend I/O failure), the
 // chain verifier MUST wrap + bubble it instead of either silently
-// passing or conflating with ErrChainTampered.  Distinct sentinel
+// passing or conflating with ErrChainTampered. Distinct sentinel
 // avoids misclassifying transient infra errors as tamper events
-// (which would trigger doctrine-specific halts in Phase J).
+// .
 func TestVerifySealBubblesWitnessVerifyError(t *testing.T) {
 	fs := newFakeStore()
 	ft := newFakeTessera()

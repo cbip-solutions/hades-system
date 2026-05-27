@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package cli — federation.go (Plan 20 Phase I).
+// Package cli — federation.go.
 //
 // `zen federation health [wsid]` + `zen api-impact <diff-ref>` — the
 // federation health surface + the cross-repo API-impact analysis verb.
-// Mirrors Plan 19 K's verb pattern (risk.go / why.go); each verb supports
-// `--format text|json` per DECISION 1. Routes via the daemon
-// /v1/mcpgateway/{federation/health,api-impact} sub-routes (inv-zen-088
-// single-egress, inv-zen-129 no direct net/http).
+// Mirrors K's verb pattern (risk.go / why.go); each verb supports
+// `--format text|json` policy Routes via the daemon
+// /v1/mcpgateway/{federation/health,api-impact} sub-routes (invariant
+// single-egress, invariant no direct net/http).
 package cli
 
 import (
@@ -132,11 +132,14 @@ func NewAPIImpactCmd(factory func(cmd *cobra.Command) FederationClient) *cobra.C
 	flags := APIImpactFlags{}
 	cmd := &cobra.Command{
 		Use:   "api-impact <diff-ref>",
-		Short: "Report consumers impacted by a diff (Plan 20 federation)",
-		Long: `Analyze the impact of a contract diff (git ref or contract-diff identifier)
-on cross-repo consumers. Routes via the daemon (single-egress, inv-zen-088).`,
-		Example: `  zen api-impact HEAD~3..HEAD
-  zen api-impact diff-abc123 --workspace ws-1 --format json`,
+		Short: "Report consumers impacted by recorded API-contract changes",
+		Long: `Report cross-repo consumers affected by the federation breaking-change
+ledger. A concrete change_id, or change:<id>, scopes the result to one recorded
+event; other selectors are preserved in the output while the daemon reports the
+workspace's current affected-consumer set. Routes via the daemon (single-egress,
+inv-zen-088).`,
+		Example: `  zen api-impact change:chg-abc123 --workspace ws-1
+  zen api-impact HEAD~3..HEAD --workspace ws-1 --format json`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

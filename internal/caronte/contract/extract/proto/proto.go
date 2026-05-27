@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -66,7 +67,7 @@ func (e *Extractor) Detect(file string, content []byte) bool {
 //
 // content is re-derived from the tree (the smacker tree carries no source
 // bytes by itself; the source is needed for `node.Content`). The C-4 contract
-// does NOT pass content alongside the tree — Phase F's ingestion path passes
+// does NOT pass content alongside the tree — ingestion path passes
 // content through a per-file context — so Endpoints' file argument is used
 // only as ContractArtifact + a deferred read of bytes is unavailable; the
 // caller MUST have produced the tree via this package's parseTree (which

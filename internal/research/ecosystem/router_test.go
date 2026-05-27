@@ -179,7 +179,7 @@ func TestRouter_ClassifierMarginBelow010_Broadcast(t *testing.T) {
 	if sum < 0.99 || sum > 1.01 {
 		t.Errorf("broadcast weights must already sum 1.0; got %.3f", sum)
 	}
-	// Ecosystems slice MUST be in descending-confidence order (deterministic ordering inv-zen-200)
+	// Ecosystems slice MUST be in descending-confidence order
 	for i := 1; i < len(decision.Ecosystems); i++ {
 		prev := decision.ConfidenceWeights[decision.Ecosystems[i-1]]
 		cur := decision.ConfidenceWeights[decision.Ecosystems[i]]

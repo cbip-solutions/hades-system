@@ -45,34 +45,34 @@ var extendedTokens = []string{
 //
 // REJECTS (each surfaced as an ErrInvalidCron-wrapping error):
 //
-//   - 6-field forms (with seconds).
-//   - Descriptors (@hourly, @daily, @reboot, @yearly, @monthly,
-//     @weekly, @midnight, @annually).
-//   - Extended syntax: L, W, ?, named months (JAN..DEC), named days
-//     (MON..SUN). Reason: portability across operator timezones.
-//   - Leading/trailing whitespace, embedded comments.
-//   - Empty / out-of-range numeric fields (delegated to robfig/cron/v3).
+// - 6-field forms (with seconds).
+// - Descriptors (@hourly, @daily, @reboot, @yearly, @monthly,
+// @weekly, @midnight, @annually).
+// - Extended syntax: L, W, ?, named months (JAN..DEC), named days
+// (MON..SUN). Reason: portability across operator timezones.
+// - Leading/trailing whitespace, embedded comments.
+// - Empty / out-of-range numeric fields (delegated to robfig/cron/v3).
 //
 // ENFORCES granularity floor per doctrine (see granularityFloor):
 //
-//	default       → 1min
-//	max-scope     → 30s
-//	capa-firewall → 5min
+// default → 1min
+// max-scope → 30s
+// capa-firewall → 5min
 //
 // All errors wrap ErrInvalidCron; callers MUST use errors.Is to
 // discriminate.
 //
 // Why a wrapper, not direct use of robfig/cron/v3:
 //
-//  1. Boundary control — only this file touches the library; tests can
-//     stub it if needed without touching every call site.
-//  2. Doctrine override hooks — the granularity-floor gate rides on
-//     the wrapper, not on the library.
-//  3. Extended-syntax rejection — the library accepts named tokens by
-//     default; we reject them so daemon.db only stores portable cron.
-//  4. Deterministic test fixtures — the wrapper exposes
-//     CronExpr.Next which always returns UTC, regardless of the
-//     `after` argument's location.
+// 1. Boundary control — only this file touches the library; tests can
+// stub it if needed without touching every call site.
+// 2. Doctrine override hooks — the granularity-floor gate rides on
+// the wrapper, not on the library.
+// 3. Extended-syntax rejection — the library accepts named tokens by
+// default; we reject them so daemon.db only stores portable cron.
+// 4. Deterministic test fixtures — the wrapper exposes
+// CronExpr.Next which always returns UTC, regardless of the
+// `after` argument's location.
 func ParseCron(expr string, d doctrine.Name) (*CronExpr, error) {
 	if expr == "" {
 		return nil, fmt.Errorf("%w: empty expression", ErrInvalidCron)

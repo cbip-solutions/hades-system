@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — caronte_reindex.go (Plan v0.20.0 Phase C Task C-3; inv-zen-273).
+// Package client — caronte_reindex.go.
 //
 // Client wrappers for the daemon's POST /v1/caronte/reindex endpoint
 // (handlers/caronte.go::CaronteReindex) + the GET /v1/projects helper
@@ -7,7 +7,7 @@
 //
 // The reindex endpoint reads its project id from the X-Zen-Project-ID
 // HTTP header (the same protocol the mcpgateway uses for the
-// inv-zen-277 alias→canonical resolution). Operators pass an alias OR
+// invariant alias→canonical resolution). Operators pass an alias OR
 // a canonical id_sha256; the daemon-side resolver translates.
 package client
 

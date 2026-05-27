@@ -2,12 +2,12 @@
 // internal/orchestrator/orchestrator.go
 //
 // Package orchestrator owns the autonomous-orchestrator state machine
-// (state_machine.go, Phase C), the depth/width decision (depth.go,
-// D-4/D-5), the dispatcher integration with Plan 4 workforce
+// , the depth/width decision (depth.go,
+// D-4/D-5), the dispatcher integration with workforce
 // (dispatcher.go, D-3), and the public RunStage4 entry point used by
 // the daemon HTTP layer (D-2).
 //
-// The Orchestrator is the load-bearing supervisor of Plan 5. It owns
+// The Orchestrator is the load-bearing supervisor of It owns
 // one of each substrate primitive (clock, eventlog, state machine,
 // worktree pool, dispatcher, research gate) by composition — it never
 // reaches into them via package globals. New is pure construction
@@ -17,37 +17,37 @@
 //
 // D-2 implements the §3.1 RunStage4 lifecycle:
 //
-//  1. validate BuildRequest, then check Initialized() (fail-fast)
-//  2. emit EvtOrchestratorStarted
-//  3. Idle → Initializing
-//  4. ResearchGate.Check (inv-zen-101 enforcement; failure unwinds
-//     gracefully to Idle and returns ErrResearchGateNotPassed)
-//  5. DecideWidth + DecideDepth (depth.go scaffolding;
-//     D-4/D-5 wholesale-replace with §5.3.2 formula)
-//  6. emit EvtDepthWidthDecided
-//  7. ConfirmationCallback (operator gate; deny unwinds to Idle)
-//  8. Initializing → Running BEFORE blocking on Dispatch (so Phase E
-//     recovery sees Running rather than Initializing on crash)
-//  9. Dispatcher.Dispatch (block until completion)
-//  10. on success → Running → Idle, emit EvtOrchestratorStopped(success)
-//  11. on dispatch error → Running → Aborting → Idle, with cleanup
-//     Dispatcher.Shutdown, emit EvtOrchestratorStopped(dispatch_failed)
+// 1. validate BuildRequest, then check Initialized() (fail-fast)
+// 2. emit EvtOrchestratorStarted
+// 3. Idle → Initializing
+// 4. ResearchGate.Check (invariant enforcement; failure unwinds
+// gracefully to Idle and returns ErrResearchGateNotPassed)
+// 5. DecideWidth + DecideDepth (depth.go scaffolding;
+// D-4/D-5 wholesale-replace with §5.3.2 formula)
+// 6. emit EvtDepthWidthDecided
+// 7. ConfirmationCallback (operator gate; deny unwinds to Idle)
+// 8. Initializing → Running BEFORE blocking on Dispatch (so
+// recovery sees Running rather than Initializing on crash)
+// 9. Dispatcher.Dispatch (block until completion)
+// 10. on success → Running → Idle, emit EvtOrchestratorStopped(success)
+// 11. on dispatch error → Running → Aborting → Idle, with cleanup
+// Dispatcher.Shutdown, emit EvtOrchestratorStopped(dispatch_failed)
 //
 // Boundaries
-//   - inv-zen-089: this package NEVER imports internal/store. Persistence
-//     flows through internal/daemon/orchestratoradapter (Phase N).
-//   - inv-zen-090: this package NEVER imports internal/workforce/queue
-//     directly. Plan 4 workforce.Manager is wired via the Dispatcher
-//     interface (D-3) so eventlog (durable) ⊥ queue (transient) stays
-//     a clean separation.
+// - invariant: this package NEVER imports internal/store. Persistence
+// flows through internal/daemon/orchestratoradapter.
+// - invariant: this package NEVER imports internal/workforce/queue
+// directly. workforce.Manager is wired via the Dispatcher
+// interface (D-3) so eventlog (durable) ⊥ queue (transient) stays
+// a clean separation.
 //
 // Sanctioned scaffolding remaining after D-2:
-//   - DecideWidth + DecideDepth (depth.go) — D-4/D-5 wholesale-replace
-//     with the spec §5.3.2 min-over-5-factors / ceil(log_W(N)) formulas.
-//   - Dispatcher concrete impl (dispatcher.go, D-3) — the interface is
-//     consumed here; tests inject a fake.
-//   - ResearchGate concrete impl (D-6) — same pattern.
-//   - Shutdown (this file) — D-7 wholesale-replace with graceful drain.
+// - DecideWidth + DecideDepth (depth.go) — D-4/D-5 wholesale-replace
+// with the spec §5.3.2 min-over-5-factors / ceil(log_W(N)) formulas.
+// - Dispatcher concrete impl (dispatcher.go, D-3) — the interface is
+// consumed here; tests inject a fake.
+// - ResearchGate concrete impl (D-6) — same pattern.
+// - Shutdown (this file) — D-7 wholesale-replace with graceful drain.
 package orchestrator
 
 import (
@@ -64,26 +64,26 @@ import (
 )
 
 // Spec is the build-spec contract RunStage4 consumes. The full
-// implementation lives outside this package (Plan 5 phase boundaries
+// implementation lives outside this package ( phase boundaries
 // keep Spec abstract here so the orchestrator never reaches into the
 // daemon's domain types). The four methods are the minimal slice the
 // orchestrator needs to size depth/width and propagate the request to
 // Dispatcher.
 //
-//   - Phases reports the number of plan phases. Used for depth-budget
-//     telemetry; not yet load-bearing in D-2 scaffolding but stable in
-//     the eventual D-4/D-5 §5.3.2 formula.
-//   - TaskCount reports the number of leaf tasks. Drives the
-//     DecideDepth log_W(N) calculation.
-//   - ParallelizableUpperBound returns the DAG-derived upper bound on
-//     concurrent task execution. MUST be ≥ 1; a value ≤ 0 yields
-//     orchestrator.ErrZeroWidth from DecideWidth (spec §5.3.2: any zero
-//     factor in the min-over-5-factors formula short-circuits to "no
-//     parallelism feasible"). Spec implementations should clamp to 1
-//     for trivially-serial DAGs.
-//   - DependencyDAG returns the dependency graph; consumed by D-3
-//     dispatch sequencing (Phase D-3 narrows the return type when the
-//     workforce.Manager surface is wired).
+// - Phases reports the number of plan phases. Used for depth-budget
+// telemetry; not yet load-bearing in D-2 scaffolding but stable in
+// the eventual D-4/D-5 §5.3.2 formula.
+// - TaskCount reports the number of leaf tasks. Drives the
+// DecideDepth log_W(N) calculation.
+// - ParallelizableUpperBound returns the DAG-derived upper bound on
+// concurrent task execution. MUST be ≥ 1; a value ≤ 0 yields
+// orchestrator.ErrZeroWidth from DecideWidth (spec §5.3.2: any zero
+// factor in the min-over-5-factors formula short-circuits to "no
+// parallelism feasible"). Spec implementations should clamp to 1
+// for trivially-serial DAGs.
+// - DependencyDAG returns the dependency graph; consumed by D-3
+// dispatch sequencing ( narrows the return type when the
+// workforce.Manager surface is wired).
 type Spec interface {
 	Phases() int
 	TaskCount() int
@@ -154,7 +154,7 @@ type Config struct {
 	DefaultDoctrine string
 
 	// PoolCapacity is the orchestrator's view of the worktree pool's
-	// concurrent-lease ceiling. Plan 5 Phase B's worktreepool.Pool
+	// concurrent-lease ceiling. worktreepool.Pool
 	// interface intentionally omits a Capacity() method (the elastic
 	// Floor..ElasticMax model is private to the pool implementation),
 	// so the supervisor consumes its own configured capacity instead.

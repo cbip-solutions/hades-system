@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/allowlist.go
 //
-// Phase L Task L-4 — allowlist resolution.
+// Task L-4 — allowlist resolution.
 //
-// Merges doctrine SSHExecAxis (Phase A) with per-project zenswarm.toml
+// Merges doctrine SSHExecAxis with per-project zenswarm.toml
 // [ssh_exec.allowlist] under the rule:
 //
-//	doctrine is ceiling; project can ONLY narrow, never widen.
+// doctrine is ceiling; project can ONLY narrow, never widen.
 //
-// inv-zen-082 reinforced at this layer: any pattern produced here is
+// invariant reinforced at this layer: any pattern produced here is
 // guaranteed to be a non-empty string with no lone '*'; loader-level
 // invalid patterns are rejected with an error.
 //
-// Boundary (inv-zen-031): imports only stdlib + BurntSushi/toml +
+// Boundary: imports only stdlib + BurntSushi/toml +
 // internal/doctrine (pure value type).
 
 package sshexec

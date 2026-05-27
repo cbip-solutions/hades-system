@@ -133,7 +133,7 @@ type RawCitation struct {
 
 // VerifiedCitation is a HEAD-probe-passing citation. Consumer-side type
 // (cite.Format, downstream synthesizer, audit log). Type-distinction
-// enforces inv-zen-075 at compile time: any code path that needs a
+// enforces invariant at compile time: any code path that needs a
 // citation MUST take a VerifiedCitation, not a RawCitation.
 type VerifiedCitation struct {
 	SourceID   string `json:"source_id"`

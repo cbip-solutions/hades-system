@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
-// Package backup ships the Plan 13 Phase F4 backup-before-modify
-// substrate per spec §2.5 + §2.12 + §5.1 + inv-zen-177.
+// Package backup ships the backup-before-modify
+// substrate per spec §2.5 + §2.12 + §5.1 + invariant.
 //
 // Backups land at $XDG_STATE_HOME/zen-swarm/doctor-backups/<ISO8601>/<check>/
 // with manifest.json (mode 0600) + content.tar.gz tarball. Manifest
 // carries: BackupID (ISO8601 UTC) + CheckName + SourcePath + TarballPath +
 // AuditEventHash + Files (list of paths relative to SourcePath).
 //
-// Boundary (inv-zen-031): backup package consumes ONLY stdlib (os, io,
+// Boundary: backup package consumes ONLY stdlib (os, io,
 // archive/tar, compress/gzip, encoding/json, path/filepath, time); MUST
 // NOT import internal/store.
 //
 // Defense-in-depth posture:
-//   - Walks skip symlinks during backup (avoid following hostile targets)
-//   - Tar extraction rejects path-traversal entries (isPathWithin guard)
-//   - Manifest is mode 0600 (operator-only)
-//   - Conflict-halt on restore unless --overwrite explicit
-//   - Atomic tarball + manifest write via temp+rename
+// - Walks skip symlinks during backup (avoid following hostile targets)
+// - Tar extraction rejects path-traversal entries (isPathWithin guard)
+// - Manifest is mode 0600 (operator-only)
+// - Conflict-halt on restore unless --overwrite explicit
+// - Atomic tarball + manifest write via temp+rename
 package backup
 
 import (

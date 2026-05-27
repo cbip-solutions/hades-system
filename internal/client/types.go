@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — types.go (Plan 2 Phase L Task L-2).
+// Package client — types.go.
 //
 // Wire-shape mirrors of the daemon's bypass + notifications + orchestrator
 // JSON responses. Defined here so the CLI can decode without importing

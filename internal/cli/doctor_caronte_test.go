@@ -15,8 +15,8 @@ import (
 )
 
 // startFakeCaronteProbeServer returns an httptest.Server that answers
-// the v0.20.0 Phase E `mcp_zen-swarm_caronte_get_health` JSON-RPC
-// tools/call envelope with a non-degraded HealthReport (inv-zen-275).
+// the v0.20.0 `mcp_zen-swarm_caronte_get_health` JSON-RPC
+// tools/call envelope with a non-degraded HealthReport.
 // All synthesized probe rows derived from this report MUST report
 // "ok" status (engine non-degraded, languages populated, recent
 // LastIndexed, NodeCount > 0).
@@ -64,7 +64,7 @@ func keys(m map[string]bool) []string {
 	return out
 }
 
-// TestRunCaronteChecks_AutoResolvesProjectFromCwd asserts inv-zen-281
+// TestRunCaronteChecks_AutoResolvesProjectFromCwd asserts invariant
 // (v0.20.1 fix #1): when neither --project flag nor ZEN_PROJECT_ID env
 // is set, runCaronteChecks calls /v1/projects/doctor with the current
 // cwd and uses the resolved alias as the X-Zen-Project-ID header on
@@ -139,7 +139,7 @@ func TestRunCaronteChecks_AutoResolvesProjectFromCwd(t *testing.T) {
 }
 
 // TestRunCaronteChecks_GracefulFallbackOnCwdResolveFailure asserts the
-// graceful-degrade half of inv-zen-281: when /v1/projects/doctor errors
+// graceful-degrade half of invariant: when /v1/projects/doctor errors
 // (project not registered for this cwd; daemon transport failure), the
 // auto-resolve falls back to empty alias and the probe section still
 // runs (against daemon-default-project) instead of bubbling the resolve
@@ -218,10 +218,10 @@ func TestCaronteChecksNamesAndNoLicenseProbe(t *testing.T) {
 	}
 }
 
-// TestRunCaronteChecks_IncludesRerankAvailable asserts the Phase F
+// TestRunCaronteChecks_IncludesRerankAvailable asserts the
 // addition: the probes slice MUST include a "rerank.available" entry
 // whose resultName is "caronte.rerank.available" and whose hint points
-// at scripts/download-bge-model.sh. inv-zen-278.
+// at scripts/download-bge-model.sh. invariant.
 func TestRunCaronteChecks_IncludesRerankAvailable(t *testing.T) {
 	c := newFakeCaronteProbeClient(t)
 	results := runCaronteChecks(context.Background(), c)
@@ -238,7 +238,7 @@ func TestRunCaronteChecks_IncludesRerankAvailable(t *testing.T) {
 // caronteResultFrom: when the probe call fails with a transport error,
 // the result MUST have Status=="fail", Detail==err.Error(), and Hint
 // set to the supplied hint string. Coverage for the err-branch closes
-// a gap surfaced when Phase F's new probe entries exercised the
+// a gap surfaced when new probe entries exercised the
 // happy-path branches.
 func TestCaronteResultFrom_ErrorPath(t *testing.T) {
 	someErr := errors.New("connection refused")
@@ -261,7 +261,7 @@ func TestCaronteResultFrom_ErrorPath(t *testing.T) {
 // downgrade-path detail: when the synthesized rerank.available row
 // reports non-ok status, the hint MUST reference
 // scripts/download-bge-model.sh so operators know the install path
-// (inv-zen-278 + inv-zen-275 v0.20.0 Phase E migration).
+// .
 //
 // Under the v0.20.0 synthesis, rerank.available derives from
 // HealthReport.Degraded: a degraded engine → "warn" rerank row (the

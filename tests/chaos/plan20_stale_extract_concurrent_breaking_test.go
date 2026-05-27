@@ -19,8 +19,7 @@
 // the count MUST always be zero — even mid-race, the FK rejects the
 // dangling row (or the CASCADE clears it before the scan reads it).
 
-//go:build chaos && cgo
-
+// go:build chaos && cgo
 package chaos
 
 import (

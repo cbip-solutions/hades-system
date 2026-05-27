@@ -1,4 +1,4 @@
-//go:build integration && cgo
+// go:build integration && cgo
 
 // Package ecosystem_test — chain_integrity_test.go
 //
@@ -6,19 +6,19 @@
 // canonical-chain-formula) wiring across package boundaries that the
 // per-package unit tests intentionally stop short of.
 //
-// The Plan 14 audit chain is the load-bearing trust surface for the RAG
-// substrate. The spec §4.6 + inv-zen-197 contract says:
+// The audit chain is the load-bearing trust surface for the RAG
+// substrate. The spec §4.6 + invariant contract says:
 //
-//	(a) every Append produces a strictly-monotonic seq (1, 2, 3, ...)
-//	(b) every row's parent_hash MUST equal the previous row's self_hash
-//	    (or "" for the genesis row)
-//	(c) every row's self_hash MUST match the canonical formula
-//	    sha256(seq || event_int || payload || parent_hash) (mock_chain.go
-//	    chainHashFormula — production wrapper uses the same encoding)
-//	(d) all 8 EventTypes 92..99 appear in the canonical declaration order
-//	    when emitted sequentially (inv-zen-197 ordering for RAG events)
-//	(e) concurrent Append calls preserve seq monotonicity (the chain
-//	    serializes under its own mutex; inv-zen-200 partial)
+// (a) every Append produces a strictly-monotonic seq (1, 2, 3,...)
+// (b) every row's parent_hash MUST equal the previous row's self_hash
+// (or "" for the genesis row)
+// (c) every row's self_hash MUST match the canonical formula
+// sha256(seq || event_int || payload || parent_hash) (mock_chain.go
+// chainHashFormula — production wrapper uses the same encoding)
+// (d) all 8 EventTypes 92..99 appear in the canonical declaration order
+// when emitted sequentially
+// (e) concurrent Append calls preserve seq monotonicity (the chain
+// serializes under its own mutex; invariant partial)
 //
 // Cross-package signal: the chain primitive (mock_chain.go) consumes
 // `eventlog.EventType` (declared in internal/orchestrator/eventlog) and
@@ -28,14 +28,14 @@
 // hash mismatch here, regardless of where the regression actually lives.
 //
 // Why this complements the unit-tier coverage:
-//   - mock_chain_test.go (same-package) covers Append/Get/LastHash/Seal
-//     mechanics with synthetic payloads.
-//   - audit_emitter_test.go (same-package) covers emitter→chain dispatch
-//     via the doctrine filter.
-//   - THIS file proves the canonical formula is stable across
-//     real-shaped event payloads that mix all 8 EventTypes (92..99),
-//     including across concurrent Append fan-out — the exact failure
-//     mode a regression in chainHashFormula would produce.
+// - mock_chain_test.go (same-package) covers Append/Get/LastHash/Seal
+// mechanics with synthetic payloads.
+// - audit_emitter_test.go (same-package) covers emitter→chain dispatch
+// via the doctrine filter.
+// - THIS file proves the canonical formula is stable across
+// real-shaped event payloads that mix all 8 EventTypes (92..99),
+// including across concurrent Append fan-out — the exact failure
+// mode a regression in chainHashFormula would produce.
 //
 // Build tags `integration && cgo` match the directory convention.
 package ecosystem_test
@@ -172,7 +172,7 @@ func TestChainIntegrity_AllRagEventsAppendInOrder(t *testing.T) {
 // TestChainIntegrity_ConcurrentAppendsPreserveMonotonicSeq drives N
 // goroutines each issuing M Append calls. The chain MUST serialize
 // internally so seqs come out as a strictly-increasing 1..(N×M) set
-// with zero duplicates and zero gaps. inv-zen-200 partial enforcement
+// with zero duplicates and zero gaps. invariant partial enforcement
 // (full fan-out correctness covered by H-7 property tests).
 //
 // Cross-package signal: the chain's mutex contract MUST hold even when

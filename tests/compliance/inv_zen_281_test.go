@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_281_test.go
 //
-// Compliance gate for inv-zen-281 (v0.20.1 fix #1): `zen doctor` /
+// Compliance gate for invariant (v0.20.1 fix #1): `zen doctor` /
 // `zen doctor caronte` auto-resolve the current working directory to
 // a registered project's canonical alias when neither --project flag
 // nor ZEN_PROJECT_ID env is set. The resolution drives the
@@ -19,18 +19,18 @@
 //
 // Four source-regex anchors:
 //
-//  1. `resolveCaronteAliasViaCwd(` helper function declared in
-//     internal/cli/doctor_caronte.go.
-//  2. The helper invokes `c.ProjectDoctor(cctx, "", cwd, false)` — the
-//     daemon's cwd→alias seam. Empty alias arg signals "resolve from
-//     cwd"; rebind=false because the doctor section MUST be a read-
-//     only probe (no side-effect on path_history).
-//  3. The runCaronteChecks no-alias entry composes
-//     resolveCaronteAliasViaCwd into the alias chain when
-//     ZEN_PROJECT_ID is empty (the auto-resolve fallback layer).
-//  4. Graceful fallback: errors from ProjectDoctor return "" so the
-//     section renders against daemon-default-project — pinned by the
-//     `err != nil || resp == nil` early-return.
+// 1. `resolveCaronteAliasViaCwd(` helper function declared in
+// internal/cli/doctor_caronte.go.
+// 2. The helper invokes `c.ProjectDoctor(cctx, "", cwd, false)` — the
+// daemon's cwd→alias seam. Empty alias arg signals "resolve from
+// cwd"; rebind=false because the doctor section MUST be a read-
+// only probe (no side-effect on path_history).
+// 3. The runCaronteChecks no-alias entry composes
+// resolveCaronteAliasViaCwd into the alias chain when
+// ZEN_PROJECT_ID is empty (the auto-resolve fallback layer).
+// 4. Graceful fallback: errors from ProjectDoctor return "" so the
+// section renders against daemon-default-project — pinned by the
+// `err != nil || resp == nil` early-return.
 //
 // Sister-test bite check: revert any of the four anchors; this test
 // MUST fail. Behavioural tests live in
@@ -38,7 +38,7 @@
 // (TestRunCaronteChecks_AutoResolvesProjectFromCwd +
 // TestRunCaronteChecks_GracefulFallbackOnCwdResolveFailure).
 //
-// inv-zen-281 (v0.20.1 fix #1).
+// invariant (v0.20.1 fix #1).
 package compliance
 
 import (

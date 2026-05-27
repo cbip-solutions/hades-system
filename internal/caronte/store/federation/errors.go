@@ -8,7 +8,7 @@ import (
 )
 
 // DefaultDriver is the canonical SQLite driver name workspace.db is opened
-// with. Aliased to internal/caronte/store.DefaultDriver — Plan 19 chose
+// with. Aliased to internal/caronte/store.DefaultDriver — chose
 // mattn/go-sqlite3 (registered as "sqlite3") so the sqlite-vec C extension
 // links for the per-project caronte.db; the federation package REUSES that
 // driver for build-tag symmetry (the federation tables themselves do NOT

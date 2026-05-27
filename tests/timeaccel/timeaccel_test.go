@@ -1,6 +1,6 @@
-// tests/timeaccel/timeaccel_test.go (Plan 5 Phase O Task O-5).
+// tests/timeaccel/timeaccel_test.go.
 //
-// HRA cadence timeaccel test — asserts the Phase H tactical cadence
+// HRA cadence timeaccel test — asserts the tactical cadence
 // fires at the doctrine-declared interval (T=3min for max-scope) when
 // driven by the harness's *clock.Fake.
 //
@@ -11,8 +11,9 @@
 // surface.
 //
 // This test is the template other timeaccel cases will follow (Phase
-// K cooldown windows, Phase E recovery heartbeat, watcher cadence).
+// K cooldown windows, recovery heartbeat, watcher cadence).
 //
+// go:build timeaccel
 //go:build timeaccel
 // +build timeaccel
 

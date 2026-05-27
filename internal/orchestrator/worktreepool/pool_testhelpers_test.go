@@ -14,7 +14,7 @@ import (
 // internal pool state deterministically.
 //
 // Forward-looking: when more test-only entry points accumulate (B-4..B-9)
-// they consolidate here. inv-zen-105 (added by Plan 5 self-review) will
+// they consolidate here. invariant will
 // add a static check that no production build artefact references these
 // symbols.
 

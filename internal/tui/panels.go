@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package tui — panels.go (Plan 12 Phase C Task C-5).
+// Package tui — panels.go.
 //
 // Per-panel cadence registry + panel-typed tickMsg for the F1-F12
 // panel system (spec §7.3). The dashboard's Update routes panelTickMsg
@@ -11,23 +11,23 @@
 // Cadence assignment (per spec §7.3 + project doctrine
 // "calm-by-default"):
 //
-//	Panel       | Key | Cadence | Rationale
-//	------------+-----+---------+----------------------------------------
-//	Help        | F1  | static  | Hermes default; no live data
-//	Workforce   | F2  | 1s      | hot — operator wants live worker tree
-//	Cost        | F3  | 2s      | warm — 4-axis dashboard
-//	Audit       | F4  | 1s      | hot — event stream
-//	HRA queue   | F5  | 1s      | hot — confirmations queue ages
-//	Confirms    | F6  | 1s      | hot — pending decisions
-//	Code Graph  | F7  | 5s      | cold — file structure changes slowly
-//	Memory      | F8  | 5s      | cold — memory inspector
-//	Skills      | F9  | 5s      | cold — Curator browser
-//	Doctrine    | F10 | 5s      | cold — doctrine + amendments
-//	X-project   | F11 | 5s      | cold — switcher list
-//	Inbox       | F12 | 2s      | warm — notifications inbox
+// Panel | Key | Cadence | Rationale
+// ------------+-----+---------+----------------------------------------
+// Help | F1 | static | Hermes default; no live data
+// Workforce | F2 | 1s | hot — operator wants live worker tree
+// Cost | F3 | 2s | warm — 4-axis dashboard
+// Audit | F4 | 1s | hot — event stream
+// HRA queue | F5 | 1s | hot — confirmations queue ages
+// Confirms | F6 | 1s | hot — pending decisions
+// Code Graph | F7 | 5s | cold — file structure changes slowly
+// Memory | F8 | 5s | cold — memory inspector
+// Skills | F9 | 5s | cold — Curator browser
+// Doctrine | F10 | 5s | cold — doctrine + amendments
+// X-project | F11 | 5s | cold — switcher list
+// Inbox | F12 | 2s | warm — notifications inbox
 //
 // These thresholds are doctrine-tunable post-ship via
-// ~/.config/zen-swarm/tui.toml (Plan 13 amendment); Plan 12 ships
+// ~/.config/zen-swarm/tui.toml; ships
 // fixed defaults.
 package tui
 

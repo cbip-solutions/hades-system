@@ -1,22 +1,22 @@
 // tests/compliance/inv_zen_223_daemon_recovery_consistency_test.go
 //
-// inv-zen-223 (v0.17.2 / ADR-0099) — daemon recovery-guidance consistency.
+// invariant (v0.17.2 / ADR-0099) — daemon recovery-guidance consistency.
 //
 // Root cause of the v0.17.2 hot-fix: the daemon-down recovery guidance had
 // drifted from deployed reality across three surfaces —
 //
-//   - the error catalog hints (internal/errors/codes.go: daemon.not-running,
-//     daemon.unreachable) named a phantom hyphenated LaunchAgent label
-//     (com.zen-swarm.ctld) that launchctl never registers — the deployed
-//     label is com.zenswarm.ctld (no hyphen) — and pointed at a nonexistent
-//     docs/operations/daemon.md;
-//   - the `hades` wrapper (cmd/hades/main.go) emitted a Plan 18a placeholder
-//     (`zen-swarm-ctld -uds &`) instead of the shipped `hades daemon`
-//     command family;
-//   - the operator handbook (docs/operations/hades-entry-point.md §4.2)
-//     repeated the phantom label + manual incantation.
+// - the error catalog hints (internal/errors/codes.go: daemon.not-running,
+// daemon.unreachable) named a phantom hyphenated LaunchAgent label
+// (com.zen-swarm.ctld) that launchctl never registers — the deployed
+// label is com.zenswarm.ctld (no hyphen) — and pointed at a nonexistent
+// docs/operations/daemon.md;
+// - the `hades` wrapper (cmd/hades/main.go) emitted a placeholder
+// (`zen-swarm-ctld -uds &`) instead of the shipped `hades daemon`
+// command family;
+// - the operator handbook (docs/operations/hades-entry-point.md §4.2)
+// repeated the phantom label + manual incantation.
 //
-// inv-zen-223 pins that drift class: across the LIVE recovery surfaces, the
+// invariant pins that drift class: across the LIVE recovery surfaces, the
 // guidance MUST reference the shipped `hades daemon` family + the canonical
 // DEPLOYED label, and MUST NOT reference the phantom hyphenated ctld label or
 // the missing doc. (Historical plan/spec docs that RECORD the old phantom as

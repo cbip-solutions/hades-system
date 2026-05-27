@@ -1,16 +1,17 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
 // tests/compliance/inv_zen_241_workspace_capa_firewall_test.go
 //
-// inv-zen-241 (workspace federation capa-firewall gate, Plan 19 Phase M, the
-// FIRST Plan-20-range invariant — allocated now because Plan 19 ships the gate
+// invariant (workspace federation capa-firewall gate,, the
+// FIRST invariant — allocated now because ships the gate
 //
-//	store.Workspace.FederatedQuery + CrossRepoLink MUST refuse any access to a
-//	projectID not on the workspace roster (ErrUnauthorizedProject) and, under a
-//	privacy-locked (capa-firewall) WorkspacePolicy, MUST confine federation to
-//	the single owning project (ErrCrossProjectDenied). No cross-project leakage
-//	(extends inv-zen-163/231; mirrors the inv-zen-100 autonomy hard guard).
+// store.Workspace.FederatedQuery + CrossRepoLink MUST refuse any access to a
+// projectID not on the workspace roster (ErrUnauthorizedProject) and, under a
+// privacy-locked (capa-firewall) WorkspacePolicy, MUST confine federation to
+// the single owning project (ErrCrossProjectDenied). No cross-project leakage
+// .
 package compliance
 
 import (

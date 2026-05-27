@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cleanup — inspect.go ships JSON serialization for
-// `zen state list` (Plan 13 Phase F7).
+// `zen state list`.
 //
-// Schema version follows Plan 13's aggregator + recognize JSON pattern:
+// Schema version follows aggregator + recognize JSON pattern:
 // schemaVersion="1.0" with additive growth. Operators MAY parse via
 // `jq '.entries[] | select(.subsystem == "doctor-backups")'` etc.
 package cleanup

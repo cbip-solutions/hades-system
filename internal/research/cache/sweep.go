@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -5,33 +6,33 @@
 
 // Package cache — sweep.go
 //
-// Sweeper is the background revalidation sweep goroutine (Plan 9 Phase F-11).
+// Sweeper is the background revalidation sweep goroutine.
 // It periodically scans research_findings for expired entries and revalidates
 // them via the Revalidator, writing the result to research_validation_log and
 // updating the finding's last_validated_at + content_hash on stale content.
 //
 // # Flow (per sweep iteration)
 //
-//  1. SELECT findings ORDER BY (last_validated_at IS NULL) DESC, last_validated_at ASC
-//     LIMIT BatchSize — prioritises unvalidated findings first.
-//  2. For each finding: call IsExpired; skip if not expired (spare fresh findings
-//     from unnecessary HTTP traffic).
-//  3. Call Revalidator.Validate on each expired finding.
-//  4. INSERT research_validation_log row (regardless of fresh/stale/error) for
-//     forensic auditability.
-//  5. On fresh: UPDATE research_findings.last_validated_at → emit
-//     EventResearchCacheRevalidatedFresh.
-//  6. On stale: UPDATE research_findings.last_validated_at + content_hash →
-//     emit EventResearchCacheRevalidatedStaleRefetched.
-//  7. Errors from Validate do not halt the batch; the validation_log row records
-//     them. (Failure mode #11 per spec §7.1 — error per source, not per sweep.)
+// 1. SELECT findings ORDER BY (last_validated_at IS NULL) DESC, last_validated_at ASC
+// LIMIT BatchSize — prioritises unvalidated findings first.
+// 2. For each finding: call IsExpired; skip if not expired (spare fresh findings
+// from unnecessary HTTP traffic).
+// 3. Call Revalidator.Validate on each expired finding.
+// 4. INSERT research_validation_log row (regardless of fresh/stale/error) for
+// forensic auditability.
+// 5. On fresh: UPDATE research_findings.last_validated_at → emit
+// EventResearchCacheRevalidatedFresh.
+// 6. On stale: UPDATE research_findings.last_validated_at + content_hash →
+// emit EventResearchCacheRevalidatedStaleRefetched.
+// 7. Errors from Validate do not halt the batch; the validation_log row records
+// them. (Failure mode #11 per spec §7.1 — error per source, not per sweep.)
 //
 // # Cadence and batch size
 //
-//   - Default cadence: 24h (operator-tunable via Phase J doctrine schema).
-//   - Default batch size: 100 (prevents hot-spot scanning on large caches).
-//   - First iteration fires immediately (time.NewTimer(0)) so the sweep does
-//     one pass at daemon startup without waiting a full cadence.
+// - Default cadence: 24h.
+// - Default batch size: 100 (prevents hot-spot scanning on large caches).
+// - First iteration fires immediately (time.NewTimer(0)) so the sweep does
+// one pass at daemon startup without waiting a full cadence.
 //
 // # Context cancellation
 //
@@ -40,13 +41,13 @@
 // goroutine exits. A pre-cancelled ctx causes Run to return context.Canceled
 // before the first sweep iteration.
 //
-// # inv-zen-031
+// # invariant
 //
 // This package MUST NOT import internal/store. Sweeper touches only the
 // research_cache.db via *DB.SQL; the Revalidator interface is the sole
 // HTTP boundary; the Sink interface decouples from the eventlog package.
 //
-// Doctrine-tunable cadence: default daily (max-scope eager default; Phase J
+// Doctrine-tunable cadence: default daily (max-scope eager default;
 // wires capa-firewall / crypto-attribution overrides via doctrine schema).
 package cache
 

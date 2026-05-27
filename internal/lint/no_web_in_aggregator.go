@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_web_in_aggregator.go
 //
-// Phase J Task J-7: custom go vet analyzer enforcing inv-zen-129 +
-// inv-zen-152 at compile time.
+// Task J-7: custom go vet analyzer enforcing invariant +
+// invariant at compile time.
 //
-// inv-zen-129 (Plan 7 commitment): aggregator NEVER queries web.
-// inv-zen-152 (Plan 9 commitment):  research cache stores findings;
+// invariant: aggregator NEVER queries web.
+// invariant: research cache stores findings;
 //
-//	never dispatches against ecosystem corpus.
+// never dispatches against ecosystem corpus.
 //
 // Allowlist `internal/research/cache/revalidator.go` may call
 // http.Head/Do for HEAD revalidation per Q8 A.
 // `internal/research/cache/revalidator_fetch.go` for the Fetch +
-// FetchPOST URL-fetch primitives consumed by Plan 14 ingester sources.
+// FetchPOST URL-fetch primitives consumed ingester sources.
 //
 // Pattern golang.org/x/tools/go/analysis.Analyzer + analysistest.
-// Loaded via cmd/zen-doctrine-lint module plugin (Plan 8 Q4 B).
+// Loaded via cmd/zen-doctrine-lint module plugin.
 package lint
 
 import (

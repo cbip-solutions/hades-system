@@ -103,7 +103,7 @@ func TestCacheSplit_VolatileIncludesCallersCalleesIfPresent(t *testing.T) {
 	}
 }
 
-// TestCacheSplit_NoCarryoverBetweenCalls pins Plan 11 Phase C fix-cycle
+// TestCacheSplit_NoCarryoverBetweenCalls pins fix-cycle
 // Minor-10 closure: per-call callers + callees do NOT leak across
 // concurrent Splits because they are NEVER stored on the struct. The
 // pre-fix WithCallersCallees / one-shot clear pattern had a window

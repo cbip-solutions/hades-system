@@ -1,9 +1,9 @@
 // tests/compliance/inv_zen_219_visible_strings_hades_test.go
 //
-// inv-zen-219 (Plan 18b Phase J J-2) — Visible-strings-HADES compliance scan.
+// invariant — Visible-strings-HADES compliance scan.
 //
-// Doctrine: per spec §Q3 + master §"Invariant additions" + master §Phase J,
-// the post-Plan-18b world MUST contain ZERO `zen-swarm` brand strings in
+// Doctrine: per spec §Q3 + master §"Invariant additions" + master §,
+// the post- world MUST contain ZERO `zen-swarm` brand strings in
 // user-visible output surfaces, with surgically-narrow borderline carve-outs
 // per spec §Q3 BORDERLINE (config paths, socket, keychain prefix, env vars,
 // daemon binary name, Go module path in imports only, historical CHANGELOG
@@ -11,69 +11,69 @@
 //
 // Surfaces scanned:
 //
-//  1. Go files (AST-aware — distinguishes import statements from user-visible
-//     string literals):
-//     - internal/tui/views/*.go      (13 panel views)
-//     - internal/tui/dashboard.go
-//     - internal/tui/styles.go
-//     - internal/tui/components/*.go (header glyph)
-//     - internal/cli/*.go            (cobra Short/Long/Use/Example + printers)
-//     - cmd/zen-swarm-ctld/*.go      (log format strings)
-//     - internal/onboard/qna/*.go    (wizard prompts)
-//  2. Markdown / YAML / Python files (regex-with-path-prefix-allowlist):
-//     - plugin/hades/**/*.{py,md,yaml}
-//     - README.md, AGENTS.md, CHANGELOG.md, llms.txt
-//     - docs/operations/*.md
+// 1. Go files (AST-aware — distinguishes import statements from user-visible
+// string literals):
+// - internal/tui/views/*.go (13 panel views)
+// - internal/tui/dashboard.go
+// - internal/tui/styles.go
+// - internal/tui/components/*.go (header glyph)
+// - internal/cli/*.go (cobra Short/Long/Use/Example + printers)
+// - cmd/zen-swarm-ctld/*.go (log format strings)
+// - internal/onboard/qna/*.go (wizard prompts)
+// 2. Markdown / YAML / Python files (regex-with-path-prefix-allowlist):
+// - plugin/hades/**/*.{py,md,yaml}
+// - README.md, AGENTS.md, CHANGELOG.md, llms.txt
+// - docs/operations/*.md
 //
 // Forbidden patterns (case variants per spec §Q3 IN table):
-//   - "zen-swarm"        (canonical hyphenated form)
-//   - "zen_swarm"        (Python module underscore form)
-//   - "ZenSwarm"         (Go-identifier CamelCase form — out-of-scope per
-//     spec §Q3 OUT for type names, but if it appears
-//     in a string-literal, that's a user-visible
-//     brand leak)
-//   - "Zen-Swarm"        (Title-Case hyphenated form)
+// - "zen-swarm" (canonical hyphenated form)
+// - "zen_swarm" (Python module underscore form)
+// - "ZenSwarm" (Go-identifier CamelCase form — out-of-scope per
+// spec §Q3 OUT for type names, but if it appears
+// in a string-literal, that's a user-visible
+// brand leak)
+// - "Zen-Swarm" (Title-Case hyphenated form)
 //
 // Borderline allowlist (spec §Q3 BORDERLINE — these STAY in the codebase
-// per the deferred-to-Plan-18+N migration roadmap):
-//  1. File path strings: "~/.config/zen-swarm/", "/tmp/zen-swarm.sock"
-//     — operator-script-compat; needs migration helper tooling.
-//  2. Keychain service prefix: "zen-swarm/..." — re-provisioning all API
-//     keys is high friction; coordinated migration.
-//  3. Env var names: "ZEN_*" (e.g., "ZEN_SKIP_*_HOOK", "ZEN_BYPASS_*") —
-//     operator-side environment files.
-//  4. Daemon binary name: "zen-swarm-ctld" — process supervision configs
-//     (launchd, systemd) reference this.
-//  5. Go module path: "github.com/cbip-solutions/hades-system/..." — IN IMPORT
-//     STATEMENTS ONLY. If the same string appears in a user-visible
-//     print call, that's a brand leak (caught by the AST visitor).
-//  6. Historical CHANGELOG version entries: lines under `### [v0.X.Y]`
-//     headers BEFORE the current `[Unreleased]` section. Revisionist
-//     edits to historical narrative are forbidden.
-//  7. "(formerly zen-swarm)" first-mention footnote in README: spec §Q3
-//     explicitly preserves this for search-engine legacy resolution.
-//  8. ADR-0080 substrate-pivot narrative referencing the legacy product
-//     name as history: "zen-swarm migrated from OpenCode to Hermes" —
-//     the historical story IS about zen-swarm; rewriting is dishonest.
-//  9. Plan/spec/HANDOFF historical pointers: docs/superpowers/plans/ +
-//     docs/superpowers/specs/ + HANDOFF.md historical sections.
+// per the deferred-to-+N migration roadmap):
+// 1. File path strings: "~/.config/zen-swarm/", "/tmp/zen-swarm.sock"
+// — operator-script-compat; needs migration helper tooling.
+// 2. Keychain service prefix: "zen-swarm/..." — re-provisioning all API
+// keys is high friction; coordinated migration.
+// 3. Env var names: "ZEN_*" (e.g., "ZEN_SKIP_*_HOOK", "ZEN_BYPASS_*") —
+// operator-side environment files.
+// 4. Daemon binary name: "zen-swarm-ctld" — process supervision configs
+// (launchd, systemd) reference this.
+// 5. Go module path: "github.com/cbip-solutions/hades-system/..." — IN IMPORT
+// STATEMENTS ONLY. If the same string appears in a user-visible
+// print call, that's a brand leak (caught by the AST visitor).
+// 6. Historical CHANGELOG version entries: lines under `### [v0.X.Y]`
+// headers BEFORE the current `[Unreleased]` section. Revisionist
+// edits to historical narrative are forbidden.
+// 7. "(formerly zen-swarm)" first-mention footnote in README: spec §Q3
+// explicitly preserves this for search-engine legacy resolution.
+// 8. ADR-0080 substrate-pivot narrative referencing the legacy product
+// name as history: "zen-swarm migrated from OpenCode to Hermes" —
+// the historical story IS about zen-swarm; rewriting is dishonest.
+// 9. Plan/spec/HANDOFF historical pointers: internal design record +
+// internal design record + HANDOFF.md historical sections.
 //
 // Test methodology:
-//   - Go files: go/ast + go/parser + go/token visit each BasicLit. Filter
-//     out import-statement BasicLits (those are spec §Q3 OUT Go-module-path
-//     carve-outs). Assert no remaining BasicLit contains a forbidden pattern.
-//   - .md/.yaml/.py files: regex scan line-by-line with path-prefix allowlist
-//     filtering. Each occurrence reports file:line + offending string +
-//     remediation hint.
+// - Go files: go/ast + go/parser + go/token visit each BasicLit. Filter
+// out import-statement BasicLits (those are spec §Q3 OUT Go-module-path
+// carve-outs). Assert no remaining BasicLit contains a forbidden pattern.
+// -.md/.yaml/.py files: regex scan line-by-line with path-prefix allowlist
+// filtering. Each occurrence reports file:line + offending string +
+// remediation hint.
 //
 // Test failure message format:
 //
-//	"inv-zen-219 violation: file X line Y contains forbidden brand string
-//	'zen-swarm' outside borderline allowlist. Either rebrand or add
-//	explicit allowlist entry with rationale."
+// "invariant violation: file X line Y contains forbidden brand string
+// 'zen-swarm' outside borderline allowlist. Either rebrand or add
+// explicit allowlist entry with rationale."
 //
-// Companion ADR: docs/decisions/0095-compliance-scan-allowlist-boundary.md
-// (RESERVED — not in Plan 18b scope; operator authoring decision post-tag).
+// Companion ADR: architecture records
+// .
 package compliance
 
 import (
@@ -303,9 +303,21 @@ var fileLineAllowlist_inv219 = []struct {
 	},
 	{
 		path:      "AGENTS.md",
-		startLine: 21,
-		endLine:   27,
-		rationale: "spec §Q3 BORDERLINE: AGENTS.md private repos list referencing zen-swarm GitHub org/repos; org doesn't exist note",
+		startLine: 20,
+		endLine:   35,
+		rationale: "spec §Q3 BORDERLINE: AGENTS.md continuation surface names the repository cwd and legacy Hermes slash-command namespace; private operator memory must preserve these exact identifiers",
+	},
+	{
+		path:      "AGENTS.md",
+		startLine: 42,
+		endLine:   45,
+		rationale: "spec §Q3 BORDERLINE: AGENTS.md private/public repository identity map references canonical GitHub repo names; repo rename is a separate coordinated decision",
+	},
+	{
+		path:      "AGENTS.md",
+		startLine: 88,
+		endLine:   97,
+		rationale: "spec §Q3 BORDERLINE: AGENTS.md memory section records Codex/Claude project-memory paths; private traceability doctrine requires preserving exact local identifiers",
 	},
 	// ── CHANGELOG.md ──────────────────────────────────────────────────────
 	// (v0.17.3) CHANGELOG historical entries are now exempted DYNAMICALLY by
@@ -313,7 +325,7 @@ var fileLineAllowlist_inv219 = []struct {
 	// header is a shipped-release entry (historical narrative) and is skipped.
 	// This replaces the per-line CHANGELOG carve-outs that used to live here —
 	// they shifted on every release (verify-invariants shipped RED on v0.17.1
-	// when the [v0.17.1] section moved the Plan 6/7/8 intros out of range).
+	// when the [v0.17.1] section moved the intros out of range).
 	// Do NOT re-add line-anchored CHANGELOG entries; author the NEWEST release
 	// entry brand-clean (substring carve-outs like `zen-swarm-ctld`,
 	// `/tmp/zen-swarm.sock`, `com.zen-swarm.` still apply via the substring

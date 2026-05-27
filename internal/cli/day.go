@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — day.go (Plan 7 Phase F Task F-10).
+// Package cli — day.go.
 //
 // `zen day [--force | --eod | --check-pending]` dispatches to the
 // daemon-side zen day generator façade and renders the returned
@@ -8,28 +8,28 @@
 // introspection preview; --force overrides today's-archive
 // idempotency.
 //
-// Pre-Plan 7 history: this file previously hosted the Plan 2-6
+// Pre- history: this file previously hosted the
 // morning-brief composer that issued multiple GET /v1/*/summary calls
-// from the CLI side and stitched the markdown locally. Plan 7
+// from the CLI side and stitched the markdown locally.
 // consolidates the brief into a single daemon-side composer
 // (zenday.Generator, F-7..F-9) so the CLI is now a thin dispatcher:
-// one POST round-trip + Render. The Plan 2-6 sections (workforce,
+// one POST round-trip + Render. The sections (workforce,
 // research, audit, budget, sshexec, health, autonomy, merge,
 // notifications, bypass) are now sourced server-side via
 // zenday.Collect's parallel fan-out.
 //
 // --include-bypass is preserved as a no-op flag (with a stderr
 // deprecation notice) for backward compat with operators who scripted
-// the Plan 2 form. The deprecation message points at the new behaviour
-// — the brief always consolidates every source as of Plan 7 — so
+// the form. The deprecation message points at the new behaviour
+// — the brief always consolidates every source as of — so
 // removing the flag in the next major can happen without surprise.
 //
 // Exit-code contract via cmd.RunE / IsRecoverable:
 //
-//   - 0 — brief rendered to stdout.
-//   - 1 — operator-recoverable (e.g. 409 idempotency without --force,
-//     daemon UDS missing); cli/main maps via IsRecoverable.
-//   - 2 — unrecoverable (network, decode, daemon 5xx).
+// - 0 — brief rendered to stdout.
+// - 1 — operator-recoverable (e.g. 409 idempotency without --force,
+// daemon UDS missing); cli/main maps via IsRecoverable.
+// - 2 — unrecoverable (network, decode, daemon 5xx).
 package cli
 
 import (
@@ -78,13 +78,13 @@ func dayClientFromHTTP(c *client.Client) ZenDayClient {
 //
 // Flag precedence (locked by tests in day_test.go):
 //
-//   - --check-pending wins over --eod and --force (introspection is
-//     read-only; force is irrelevant).
-//   - --eod wins over default morning when both flags would otherwise
-//     match (no flag = morning).
-//   - --force applies to whichever path is selected (morning / eod);
-//     no effect on check-pending.
-//   - --include-bypass is a no-op with a stderr deprecation warning.
+// - --check-pending wins over --eod and --force (introspection is
+// read-only; force is irrelevant).
+// - --eod wins over default morning when both flags would otherwise
+// match (no flag = morning).
+// - --force applies to whichever path is selected (morning / eod);
+// no effect on check-pending.
+// - --include-bypass is a no-op with a stderr deprecation warning.
 //
 // The function signature is preserved across the F-10 rewrite so
 // root.go's `root.AddCommand(NewDayCmd())` registration line is

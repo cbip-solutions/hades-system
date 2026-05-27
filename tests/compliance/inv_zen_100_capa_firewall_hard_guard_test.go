@@ -2,23 +2,23 @@
 //
 // tests/compliance/inv_zen_100_capa_firewall_hard_guard_test.go
 //
-// inv-zen-100 (capa-firewall autonomy hard guard, spec §10.2.5):
+// invariant (capa-firewall autonomy hard guard, spec §10.2.5):
 //
-//	When the active doctrine is "capa-firewall", autonomy.Resolve MUST
-//	force ModeManual irrespective of any per-project or per-build-flag
-//	override. The Source field of the resulting Resolution MUST be
-//	SourceCapaFirewallGuard. When a non-manual override was attempted,
-//	the highest-precedence such attempt MUST be recorded in
-//	Resolution.RejectedOverride so the caller can emit
-//	AutonomyOverrideRejected to the event log.
+// When the active doctrine is "capa-firewall", autonomy.Resolve MUST
+// force ModeManual irrespective of any per-project or per-build-flag
+// override. The Source field of the resulting Resolution MUST be
+// SourceCapaFirewallGuard. When a non-manual override was attempted,
+// the highest-precedence such attempt MUST be recorded in
+// Resolution.RejectedOverride so the caller can emit
+// AutonomyOverrideRejected to the event log.
 //
 // Tests:
-//  1. TestInvZen100_CapaFirewallHardGuard_ExhaustiveOverrides — exhaustive
-//     cartesian product {nil, manual, semi, full}^2 × capa-firewall asserts
-//     Mode=manual + Source=capa-firewall-guard + correct RejectedOverride.
-//  2. TestInvZen100_NonCapaFirewall_NotGuarded — the hard guard is
-//     strictly a function of doctrine name; max-scope + flag=full must
-//     resolve to ModeFull from SourceBuildFlag (not the guard).
+// 1. TestInvZen100_CapaFirewallHardGuard_ExhaustiveOverrides — exhaustive
+// cartesian product {nil, manual, semi, full}^2 × capa-firewall asserts
+// Mode=manual + Source=capa-firewall-guard + correct RejectedOverride.
+// 2. TestInvZen100_NonCapaFirewall_NotGuarded — the hard guard is
+// strictly a function of doctrine name; max-scope + flag=full must
+// resolve to ModeFull from SourceBuildFlag (not the guard).
 package compliance_test
 
 import (

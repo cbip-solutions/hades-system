@@ -14,10 +14,10 @@ import (
 //
 // Authentication decision tree (mirrors auth.PeerCredOnly):
 //
-//	r.RemoteAddr is non-loopback TCP        → "" (reject)
-//	r.RemoteAddr is loopback TCP            → trust + read active
-//	r.RemoteAddr is "@" or empty (UDS)      → require peer-cred set
-//	                                            then read active
+// r.RemoteAddr is non-loopback TCP → "" (reject)
+// r.RemoteAddr is loopback TCP → trust + read active
+// r.RemoteAddr is "@" or empty (UDS) → require peer-cred set
+// then read active
 //
 // Doctrine resolution: s.DoctrineActive("") returns the daemon-wide
 // active doctrine name from active.Active() via
@@ -26,7 +26,7 @@ import (
 // fail-closed — better to reject than to silently expose a wrong
 // doctrine).
 //
-// inv-zen-172 corollary: doctrine MUST NOT be derived from a
+// invariant corollary: doctrine MUST NOT be derived from a
 // client-controlled signal. The prior implementation read
 // X-Zen-Doctrine header; this is removed entirely from the security
 // path. Tests inject doctrine via the active.Accessor (via
@@ -61,7 +61,7 @@ func (s *Server) sessionDoctrine(r *http.Request) string {
 //
 // Non-loopback TCP MUST be rejected regardless of any HTTP-layer
 // headers — exposing UDS-mode endpoints over a public interface is
-// always wrong (inv-zen-131).
+// always wrong.
 func (s *Server) sessionAuthenticated(r *http.Request) bool {
 	if r.RemoteAddr != "" && r.RemoteAddr != "@" {
 

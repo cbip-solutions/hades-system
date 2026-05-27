@@ -605,8 +605,8 @@ func TestCaronteProxyExposesNineteenTools(t *testing.T) {
 			got, want, plan19Count, plan20Count)
 	}
 
-	// (b) Set-membership: every Plan-20 tool name MUST be present.
-	//     This pins Phase I's contribution and remains stable as Plan 21+ add more.
+	// (b) Set-membership: every tool name MUST be present.
+	// This pins contribution and remains stable as + add more.
 	expectedPlan20Tools := map[string]bool{
 		"get_contract":            true,
 		"get_consumers":           true,

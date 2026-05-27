@@ -35,7 +35,7 @@ type fakeKnowledgeAdapterP9 struct {
 }
 
 type promoteCallArgs struct {
-	NoteID, Reason, OperatorID string
+	NoteID, ProjectID, Reason, OperatorID string
 }
 
 type listCallArgs struct {
@@ -58,17 +58,17 @@ func (f *fakeKnowledgeAdapterP9) Query(_ context.Context, req KnowledgeQueryReqP
 	return r, nil
 }
 
-func (f *fakeKnowledgeAdapterP9) Promote(_ context.Context, noteID, reason, operatorID string) error {
+func (f *fakeKnowledgeAdapterP9) Promote(_ context.Context, noteID, projectID, reason, operatorID string) error {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	f.promoteArgs = append(f.promoteArgs, promoteCallArgs{noteID, reason, operatorID})
+	f.promoteArgs = append(f.promoteArgs, promoteCallArgs{noteID, projectID, reason, operatorID})
 	return f.promoteErr
 }
 
-func (f *fakeKnowledgeAdapterP9) Unpromote(_ context.Context, noteID, reason, operatorID string) error {
+func (f *fakeKnowledgeAdapterP9) Unpromote(_ context.Context, noteID, projectID, reason, operatorID string) error {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	f.unpromoteArgs = append(f.unpromoteArgs, promoteCallArgs{noteID, reason, operatorID})
+	f.unpromoteArgs = append(f.unpromoteArgs, promoteCallArgs{noteID, projectID, reason, operatorID})
 	return f.unpromoteErr
 }
 
@@ -181,6 +181,20 @@ func TestKnowledgeP9_Query_LimitParam(t *testing.T) {
 	}
 }
 
+func TestKnowledgeP9_Query_PinnedOnlyParamSelectsPinnedScope(t *testing.T) {
+	fake := &fakeKnowledgeAdapterP9{}
+	h := KnowledgeP9Query(fake)
+	req := httptest.NewRequest(http.MethodGet, "/v1/knowledge/query?q=test&pinned_only=true", nil)
+	w := httptest.NewRecorder()
+	h.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("status: got %d", w.Code)
+	}
+	if fake.queryArgs[0].Scope != "pinned-only" {
+		t.Fatalf("scope = %q, want pinned-only", fake.queryArgs[0].Scope)
+	}
+}
+
 func TestKnowledgeP9_Promote_OK(t *testing.T) {
 	fake := &fakeKnowledgeAdapterP9{}
 	h := KnowledgeP9Promote(fake)
@@ -201,6 +215,27 @@ func TestKnowledgeP9_Promote_OK(t *testing.T) {
 	}
 	if fake.promoteArgs[0].Reason != "applies cross-project" {
 		t.Errorf("reason: %q", fake.promoteArgs[0].Reason)
+	}
+}
+
+func TestKnowledgeP9_Promote_ForwardsProjectID(t *testing.T) {
+	fake := &fakeKnowledgeAdapterP9{}
+	h := KnowledgeP9Promote(fake)
+	body := map[string]any{
+		"note_id":    "M0-pattern-vault-format",
+		"project_id": "internal-platform-x",
+		"reason":     "applies cross-project",
+	}
+	b, _ := json.Marshal(body)
+	req := httptest.NewRequest(http.MethodPost, "/v1/knowledge/promote", bytes.NewReader(b))
+	req.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	h.ServeHTTP(w, req)
+	if w.Code != http.StatusNoContent {
+		t.Fatalf("status: got %d, want 204; body=%s", w.Code, w.Body.String())
+	}
+	if fake.promoteArgs[0].ProjectID != "internal-platform-x" {
+		t.Fatalf("project_id = %q, want internal-platform-x", fake.promoteArgs[0].ProjectID)
 	}
 }
 
@@ -295,6 +330,27 @@ func TestKnowledgeP9_Unpromote_OK(t *testing.T) {
 	}
 	if len(fake.unpromoteArgs) != 1 || fake.unpromoteArgs[0].NoteID != "internal-platform-x/M0" {
 		t.Errorf("dispatch: %+v", fake.unpromoteArgs)
+	}
+}
+
+func TestKnowledgeP9_Unpromote_ForwardsProjectID(t *testing.T) {
+	fake := &fakeKnowledgeAdapterP9{}
+	h := KnowledgeP9Unpromote(fake)
+	body := map[string]any{
+		"note_id":    "M0-pattern-vault-format",
+		"project_id": "internal-platform-x",
+		"reason":     "no longer applies globally",
+	}
+	b, _ := json.Marshal(body)
+	req := httptest.NewRequest(http.MethodPost, "/v1/knowledge/unpromote", bytes.NewReader(b))
+	req.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	h.ServeHTTP(w, req)
+	if w.Code != http.StatusNoContent {
+		t.Fatalf("status: got %d, want 204; body=%s", w.Code, w.Body.String())
+	}
+	if fake.unpromoteArgs[0].ProjectID != "internal-platform-x" {
+		t.Fatalf("project_id = %q, want internal-platform-x", fake.unpromoteArgs[0].ProjectID)
 	}
 }
 

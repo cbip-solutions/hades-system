@@ -4,58 +4,58 @@ package tessera
 // the gap between 87.3% and the 100% spec §5.2 target.
 //
 // Organisation
-//   Phase A — testable error paths in adapter, checkpoint, cosigner,
-//              doctor, manager, sth, and witness.
-//   Phase B — NOTE blocks documenting architecturally-unreachable
-//              branches with forward-ref to ADR-0069.
+// — testable error paths in adapter, checkpoint, cosigner,
+// doctor, manager, sth, and witness.
+// — NOTE blocks documenting architecturally-unreachable
+// branches with forward-ref to ADR-0069.
 //
 // NOTE(plan-15) (arch-unreachable — ADR-0069):
-//   The following statement ranges are infeasible in any test environment
-//   and are documented here per the Path-D doctrine established for
-//   auditadapter (commits 88331a3/e0e964f) and adr (commits abe383b/7223e46).
-//   They are pending formal formalisation in ADR-0069 (Stage 5 Plan 9).
+// The following statement ranges are infeasible in any test environment
+// and are documented here per the Path-D doctrine established for
+// auditadapter (commits 88331a3/e0e964f) and adr (commits abe383b/7223e46).
+// They are pending formal formalisation in ADR-0069.
 //
-//   1. witness_darwin.go:macWitnessBackend.{Load,Store,Delete} (0.0%)
-//      The macOS Keychain backend is never exercised in test runs because
-//      CLAUDE.md hard rule 4 mandates ZEN_BYPASS_DISABLE_KEYCHAIN=1 for
-//      all CI/test environments. With that env var set, defaultWitnessBackend
-//      returns defaultMemWitnessBackend instead of &macWitnessBackend{}.
-//      The memWitnessBackend is 100% covered; the Keychain backend is a
-//      platform-level security primitive that requires a live macOS Keychain
-//      (unlocked, authorised) and is therefore structurally excluded from
-//      automated test execution. ADR-0069 will document the CI exemption.
+// 1. witness_darwin.go:macWitnessBackend.{Load,Store,Delete} (0.0%)
+// The macOS Keychain backend is never exercised in test runs because
+// CLAUDE.md hard rule 4 mandates ZEN_BYPASS_DISABLE_KEYCHAIN=1 for
+// all CI/test environments. With that env var set, defaultWitnessBackend
+// returns defaultMemWitnessBackend instead of &macWitnessBackend{}.
+// The memWitnessBackend is 100% covered; the Keychain backend is a
+// platform-level security primitive that requires a live macOS Keychain
+// (unlocked, authorised) and is therefore structurally excluded from
+// automated test execution. ADR-0069 will document the CI exemption.
 //
-//   2. witness_darwin.go:defaultWitnessBackend → `return &macWitnessBackend{}`
-//      The second branch (env != "1") is never taken in tests for the same
-//      reason as (1). 66.7% → only the mem-backend arm is covered.
+// 2. witness_darwin.go:defaultWitnessBackend → `return &macWitnessBackend{}`
+// The second branch (env != "1") is never taken in tests for the same
+// reason as (1). 66.7% → only the mem-backend arm is covered.
 //
-//   3. witness.go:Generate → ecdsa.GenerateKey error (line ~44)
-//      witness.go:Sign → ecdsa.SignASN1 error (line ~77)
-//      witness.go:PubkeyPEM → x509.MarshalPKIXPublicKey error (line ~96)
-//      These branches wrap errors from standard-library functions that
-//      operate on a P-256 key with crypto/rand.Reader. The Go stdlib
-//      guarantees these functions are infallible under those conditions:
-//      ecdsa.GenerateKey never returns a non-nil error for P-256 + rand.Reader;
-//      ecdsa.SignASN1 never returns a non-nil error for a valid *ecdsa.PrivateKey
-//      + rand.Reader; x509.MarshalPKIXPublicKey on a *ecdsa.PublicKey never
-//      returns a non-nil error. No injection seam exists without refactoring
-//      the Witness struct (e.g., adding a randReader field for testing) — such
-//      a seam would expose a footgun in production code to service infeasible
-//      coverage. ADR-0069 formalises this class of stdlib-infallible errors.
+// 3. witness.go:Generate → ecdsa.GenerateKey error (line ~44)
+// witness.go:Sign → ecdsa.SignASN1 error (line ~77)
+// witness.go:PubkeyPEM → x509.MarshalPKIXPublicKey error (line ~96)
+// These branches wrap errors from standard-library functions that
+// operate on a P-256 key with crypto/rand.Reader. The Go stdlib
+// guarantees these functions are infallible under those conditions:
+// ecdsa.GenerateKey never returns a non-nil error for P-256 + rand.Reader;
+// ecdsa.SignASN1 never returns a non-nil error for a valid *ecdsa.PrivateKey
+// + rand.Reader; x509.MarshalPKIXPublicKey on a *ecdsa.PublicKey never
+// returns a non-nil error. No injection seam exists without refactoring
+// the Witness struct (e.g., adding a randReader field for testing) — such
+// a seam would expose a footgun in production code to service infeasible
+// coverage. ADR-0069 formalises this class of stdlib-infallible errors.
 //
-//   4. sth.go:newCheckpointSigner → note.GenerateKey error
-//      note.GenerateKey with rand.Reader is infallible in all non-pathological
-//      environments (the Go note package uses Ed25519 key generation which
-//      reads exactly 32 bytes from rand.Reader and never fails in practice).
-//      No injection seam exists. ADR-0069.
+// 4. sth.go:newCheckpointSigner → note.GenerateKey error
+// note.GenerateKey with rand.Reader is infallible in all non-pathological
+// environments (the Go note package uses Ed25519 key generation which
+// reads exactly 32 bytes from rand.Reader and never fails in practice).
+// No injection seam exists. ADR-0069.
 //
-//   5. sth.go:newTesseraAppender → tessera.NewAppender error
-//      tessera.NewAppender takes an already-constructed Driver and opts; it
-//      can return an error only if opts.valid() fails (impossible after
-//      WithCheckpointSigner succeeds with a non-nil signer) or if the POSIX
-//      driver's background goroutine fails to start (not modelled by
-//      posixDriverFactory injection — by the time NewAppender is called the
-//      driver is already successfully constructed). ADR-0069.
+// 5. sth.go:newTesseraAppender → tessera.NewAppender error
+// tessera.NewAppender takes an already-constructed Driver and opts; it
+// can return an error only if opts.valid() fails (impossible after
+// WithCheckpointSigner succeeds with a non-nil signer) or if the POSIX
+// driver's background goroutine fails to start (not modelled by
+// posixDriverFactory injection — by the time NewAppender is called the
+// driver is already successfully constructed). ADR-0069.
 
 import (
 	"context"

@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_restore.go ships `zen doctor restore <ID>` Cobra
-// subcommand (Plan 13 Phase F task F4).
+// subcommand.
 //
 // Operator UX:
 //
-//	zen doctor restore 20260514T120000Z [--overwrite]
+// zen doctor restore 20260514T120000Z [--overwrite]
 //
 // Halts on conflict by default; --overwrite forces replacement.
 //
 // Exit codes (per spec §5.2 + cmd/zen/main.go):
-//   - 0 — restore succeeded
-//   - 1 — recoverable error (conflict halt; operator should re-run with --overwrite)
-//   - 2 — unrecoverable error (missing manifest, tarball corrupt, etc.)
+// - 0 — restore succeeded
+// - 1 — recoverable error (conflict halt; operator should re-run with --overwrite)
+// - 2 — unrecoverable error (missing manifest, tarball corrupt, etc.)
 //
 // Conflict exit is mapped to 1 (recoverable) via cli.ErrRecoverable so
 // the operator sees the conflict-resolution hint and can re-run.

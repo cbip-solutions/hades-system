@@ -236,7 +236,7 @@ func TestMessagesHandlerServeHTTPAnchorEmitErrorNonFatal(t *testing.T) {
 
 func TestMessagesHandlerServeHTTPNonZenSwarmTransportSkipsAnchor(t *testing.T) {
 	// Calls without X-Zen-Transport: zenswarm header (CLI / MCP origin) MUST
-	// NOT trigger a Plan 9 anchor emit (CLI has its own audit path).
+	// NOT trigger a anchor emit (CLI has its own audit path).
 	disp := &fakeDispatcher{
 		resp: &providers.TierResponse{Status: 200, Body: []byte(`{}`)},
 	}

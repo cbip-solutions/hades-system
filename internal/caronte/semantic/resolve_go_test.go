@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -41,10 +42,10 @@ func openTestStore(t *testing.T) *store.Store {
 // reference real nodes. The node_ids MUST be the SAME repo-relative form the
 // resolver's canonicalNodeID produces (the parse↔resolve JOIN KEY): the
 // fixture is module example.com/buildable with files at the module root, so
-// canonicalNodeID strips the module prefix to the BARE form Phase B emits for
+// canonicalNodeID strips the module prefix to the BARE form emits for
 // a repo-root file (Circle, Circle.Area, TotalArea — no import-path prefix).
 // Seeding the full import path here would make every resolver edge dangle —
-// the exact Stage-2 cross-phase-drift bug this fix closes.
+// the exact cross-phase-drift bug this fix closes.
 func seedBuildableNodes(t *testing.T, s *store.Store) {
 	t.Helper()
 	ctx := context.Background()

@@ -1,5 +1,5 @@
-// main_test.go — regression tests for C-16 + C-17 (CodeReview Plan 4
-// Phase I): the binary MUST fail fast when the daemon is unreachable
+// main_test.go — regression tests for C-16 + C-17 (CodeReview
+// ): the binary MUST fail fast when the daemon is unreachable
 // and --allow-fallback is NOT set, AND must log the wiring posture on
 // startup so operators can grep for "NoOpBudget"/"BudgetAdapter" to
 // confirm production posture vs degraded.

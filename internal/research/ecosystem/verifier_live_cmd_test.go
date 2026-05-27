@@ -293,9 +293,9 @@ func TestExtractSignature(t *testing.T) {
 //
 // Attack shape that historically would have worked:
 //
-//	SymbolPath = `os; __import__('os').system('whoami')#.x`
-//	→ firstPart = "os; __import__('os').system('whoami')#"
-//	→ embedded raw into Python `-c` script → RCE.
+// SymbolPath = `os; __import__('os').system('whoami')#.x`
+// → firstPart = "os; __import__('os').system('whoami')#"
+// → embedded raw into Python `-c` script → RCE.
 //
 // Under the argv-passing design, the substring above ends up in
 // argv[3] / argv[4] as a string literal. Python's importlib then

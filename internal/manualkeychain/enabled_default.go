@@ -1,4 +1,4 @@
-//go:build !manual_keychain
+// go:build !manual_keychain
 
 // SPDX-License-Identifier: MIT
 

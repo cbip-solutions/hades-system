@@ -255,7 +255,7 @@ func TestDashboardAlias(t *testing.T) {
 //
 // Per spec §3.2 step 4 + §Q7: --no-wizard is the escape hatch that
 // prevents the implicit wizard from auto-launching on first run.
-// In Phase 18a there is no wizard yet (Plan 18c ships it); the env
+// In Phase 18a there is no wizard yet; the env
 // var is set as a placeholder so the contract is already honoured
 // when 18c lands.
 //
@@ -318,19 +318,19 @@ func TestNoWizardOnlyAffectsBareInvocation(t *testing.T) {
 // statement execution. Validates the same assertions as TestVersionFlag
 // (subprocess), establishing belt-and-suspenders coverage:
 //
-//   - subprocess test (TestVersionFlag) proves the binary's --version
-//     dispatch path works end-to-end (main() → printVersion() → stdout);
-//   - in-process test (this one) proves printVersion() itself produces
-//     the documented output for any io.Writer.
+// - subprocess test (TestVersionFlag) proves the binary's --version
+// dispatch path works end-to-end (main() → printVersion() → stdout);
+// - in-process test (this one) proves printVersion() itself produces
+// the documented output for any io.Writer.
 //
-// Coverage rationale (A-10 coverage-lift, option a per Plan 18a master):
+// Coverage rationale:
 // the subprocess pattern in TestVersionFlag exec's a separate binary, so
 // Go's `-cover` instrumentation does NOT see those statements as
 // covered. Calling printVersion() directly from a test inside the same
 // process closes that gap without removing the subprocess tests (which
 // remain the canonical behavioural assertions).
 //
-// Per spec §Q2 + §11 + inv-zen-217: output MUST contain "HADES",
+// Per spec §Q2 + §11 + invariant: output MUST contain "HADES",
 // "Hermes substrate", and the version constant; MUST NOT contain
 // "zen-swarm".
 func TestPrintVersion_InProcess(t *testing.T) {
@@ -363,7 +363,7 @@ func TestPrintVersion_InProcess(t *testing.T) {
 //
 // Per spec §3.2: the four wrapper modes (bare hermes, dashboard alias,
 // passthrough, flags) MUST all be documented; the brand string MUST NOT
-// be zen-swarm (inv-zen-217 placeholder).
+// be zen-swarm.
 func TestPrintHelp_InProcess(t *testing.T) {
 	var buf bytes.Buffer
 	printHelp(&buf)

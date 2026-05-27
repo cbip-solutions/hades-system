@@ -29,47 +29,47 @@ type FireDeps struct {
 // Fire orchestrates one fire attempt for s. The orchestration pipeline
 // (spec §3.2 / Task D-12):
 //
-//  1. Resolve EffectiveMissPolicy(s, doctrine) — inv-zen-121.
-//  2. Compute MissedFire via ComputeMissed(s, now).
-//  3. Apply miss policy for any historical gap:
-//     - MissPolicySkip          → emit one EventRoutineSkipped per
-//     missed; the current tick still fires.
-//     - MissPolicyNotifyOnly    → emit one EventMissedFire with
-//     action-needed reason; the current tick still fires.
-//     - MissPolicyCoalesce      → fire ONCE (the current tick) with
-//     a non-nil BackfillWindow describing the gap; do NOT emit per-
-//     missed events (the single fire IS the audit record).
-//     - MissPolicyCatchUpBounded → fire N catch-up dispatches gated
-//     by deps.RateLimit (1/30s/project); on rate-limit denial emit
-//     EventRateLimited and proceed to the current tick.
-//  4. Fire the current (now-due) tick:
-//     - Pre-flight Quota.PreFlight (returns ErrQuotaCap on deny;
-//     emits EventQuotaCapReached).
-//     - Pre-flight RateLimit.Allow (returns ErrRateLimited on deny;
-//     emits EventRateLimited; persists OutcomeRateLimited history).
-//     - Dispatch via deps.Dispatcher.Dispatch (single-egress).
-//     - On success: emit EventRoutineFired, persist OutcomeSuccess
-//     history, advance s.LastRunAt, advance store.UpdateNextRun.
-//     - On failure: emit EventRoutineFailed, persist OutcomeFailed
-//     history, return wrapped dispatcher error; do NOT advance.
+// 1. Resolve EffectiveMissPolicy(s, doctrine) — invariant.
+// 2. Compute MissedFire via ComputeMissed(s, now).
+// 3. Apply miss policy for any historical gap:
+// - MissPolicySkip → emit one EventRoutineSkipped per
+// missed; the current tick still fires.
+// - MissPolicyNotifyOnly → emit one EventMissedFire with
+// action-needed reason; the current tick still fires.
+// - MissPolicyCoalesce → fire ONCE (the current tick) with
+// a non-nil BackfillWindow describing the gap; do NOT emit per-
+// missed events (the single fire IS the audit record).
+// - MissPolicyCatchUpBounded → fire N catch-up dispatches gated
+// by deps.RateLimit (1/30s/project); on rate-limit denial emit
+// EventRateLimited and proceed to the current tick.
+// 4. Fire the current (now-due) tick:
+// - Pre-flight Quota.PreFlight (returns ErrQuotaCap on deny;
+// emits EventQuotaCapReached).
+// - Pre-flight RateLimit.Allow (returns ErrRateLimited on deny;
+// emits EventRateLimited; persists OutcomeRateLimited history).
+// - Dispatch via deps.Dispatcher.Dispatch (single-egress).
+// - On success: emit EventRoutineFired, persist OutcomeSuccess
+// history, advance s.LastRunAt, advance store.UpdateNextRun.
+// - On failure: emit EventRoutineFailed, persist OutcomeFailed
+// history, return wrapped dispatcher error; do NOT advance.
 //
-// Boundary (inv-zen-080 / inv-zen-123): dispatch happens ONLY through
+// Boundary: dispatch happens ONLY through
 // deps.Dispatcher. This file imports stdlib + internal/doctrine only;
 // it MUST NOT import internal/providers or private-tier1-module.
-// Compile-checked by D-14 + Phase K boundary tests.
+// Compile-checked by D-14 + boundary tests.
 //
 // Returns
 //
-//   - nil on success or a pure-skip case (skip is not an error).
-//   - errors.Is(ErrInvalidSchedule) when s is nil or fails Validate.
-//   - errors.Is(ErrQuotaCap) when quota.PreFlight returned !Allowed.
-//   - errors.Is(ErrRateLimited) when rate-limit denied the current tick.
-//   - the underlying dispatcher / quota infrastructural error wrapped
-//     with %w when the failure is below the deny boundary (e.g. SQLite
-//     locked, network error from quota adapter). Callers MUST use
-//     errors.Is on the sentinels.
+// - nil on success or a pure-skip case (skip is not an error).
+// - errors.Is(ErrInvalidSchedule) when s is nil or fails Validate.
+// - errors.Is(ErrQuotaCap) when quota.PreFlight returned !Allowed.
+// - errors.Is(ErrRateLimited) when rate-limit denied the current tick.
+// - the underlying dispatcher / quota infrastructural error wrapped
+// with %w when the failure is below the deny boundary (e.g. SQLite
+// locked, network error from quota adapter). Callers MUST use
+// errors.Is on the sentinels.
 //
-// Inv-zen-080 / inv-zen-123 / inv-zen-121 contract.
+// Inv-zen-080 / invariant / invariant contract.
 func Fire(ctx context.Context, s *Schedule, deps FireDeps) error {
 
 	_ = jitterDeterministicSentinel
@@ -238,7 +238,7 @@ func dispatchOne(ctx context.Context, s *Schedule, deps FireDeps, now time.Time,
 
 // nextRunAfter returns the Schedule's next planned fire time. For
 // TierRoutine + TriggerCron this is `cron.Next(now) + ComputeJitter`,
-// matching Routine.Plan exactly (Phase D Task D-7). For TierTask
+// matching Routine.Plan exactly. For TierTask
 // (one-shot) we return zero — the task is auto-disabled by the tick
 // driver after first fire. For TriggerHTTP / TriggerGitPoll we return
 // zero — these tiers do not own a scheduler-driven next-run cursor.

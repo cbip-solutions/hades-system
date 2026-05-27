@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
-// Package client — audit_p9.go (Plan 9 Phase H Task H-7).
+// Package client — audit_p9.go.
 //
-// Typed wrappers for the 10 Plan 9 audit-chain endpoints declared in
+// Typed wrappers for the 10 audit-chain endpoints declared in
 // internal/daemon/handlers/audit_p9.go. Wire types mirror the handler
 // declarations; duplication is intentional (client compiles standalone
-// without importing internal/daemon — Plan 4 N convention).
+// without importing internal/daemon — N convention).
 //
-//	POST /v1/audit-chain/verify-chain         AuditVerifyChain
-//	GET  /v1/audit-chain/history              AuditHistory
-//	POST /v1/audit-chain/recover              AuditRecover (two-phase)
-//	GET  /v1/audit-chain/partition-seals      AuditPartitionSeals
-//	POST /v1/audit-chain/checkpoint           AuditCheckpoint
-//	GET  /v1/audit-chain/cold-archive/list    AuditColdArchiveList
-//	POST /v1/audit-chain/cold-archive/restore AuditColdArchiveRestore
-//	POST /v1/audit-chain/witness/rotate       AuditWitnessRotate
-//	GET  /v1/audit-chain/witness/pubkey       AuditWitnessPubkey
-//	POST /v1/audit-chain/configure-s3         AuditConfigureS3
+// POST /v1/audit-chain/verify-chain AuditVerifyChain
+// GET /v1/audit-chain/history AuditHistory
+// POST /v1/audit-chain/recover AuditRecover (two-phase)
+// GET /v1/audit-chain/partition-seals AuditPartitionSeals
+// POST /v1/audit-chain/checkpoint AuditCheckpoint
+// GET /v1/audit-chain/cold-archive/list AuditColdArchiveList
+// POST /v1/audit-chain/cold-archive/restore AuditColdArchiveRestore
+// POST /v1/audit-chain/witness/rotate AuditWitnessRotate
+// GET /v1/audit-chain/witness/pubkey AuditWitnessPubkey
+// POST /v1/audit-chain/configure-s3 AuditConfigureS3
 //
 // All 10 methods compile against the *Client plumbing in client.go
 // (getJSON / postJSON / NewWithBaseURL). No dependency on internal/daemon
-// or internal/store (inv-zen-031 boundary respected at the client layer).
+// or internal/store.
 package client
 
 import (
@@ -50,23 +50,23 @@ type AuditHistoryFilter struct {
 }
 
 type AuditHistoryEntry struct {
-	ID            string `json:"id"`
-	ProjectID     string `json:"project_id"`
-	Type          string `json:"type"`
-	PayloadJSON   string `json:"payload_json"`
-	EmittedAt     int64  `json:"emitted_at"`
-	PrevHash      string `json:"prev_hash,omitempty"`
-	RecordHash    string `json:"record_hash,omitempty"`
-	TesseraLeafID *int64 `json:"tessera_leaf_id,omitempty"`
-	PartitionID   string `json:"partition_id,omitempty"`
+	ID            string  `json:"id"`
+	ProjectID     string  `json:"project_id"`
+	Type          string  `json:"type"`
+	PayloadJSON   string  `json:"payload_json"`
+	EmittedAt     int64   `json:"emitted_at"`
+	PrevHash      string  `json:"prev_hash,omitempty"`
+	RecordHash    string  `json:"record_hash,omitempty"`
+	TesseraLeafID *string `json:"tessera_leaf_id,omitempty"`
+	PartitionID   string  `json:"partition_id,omitempty"`
 }
 
 type AuditPartitionSeal struct {
 	PartitionID       string `json:"partition_id"`
-	FirstRecordID     int64  `json:"first_record_id"`
-	LastRecordID      int64  `json:"last_record_id"`
+	FirstRecordID     string `json:"first_record_id"`
+	LastRecordID      string `json:"last_record_id"`
 	FinalRecordHash   string `json:"final_record_hash"`
-	TesseraSealLeafID int64  `json:"tessera_seal_leaf_id"`
+	TesseraSealLeafID string `json:"tessera_seal_leaf_id"`
 	DaemonWitnessSig  string `json:"daemon_witness_sig"`
 	SealedAtUnix      int64  `json:"sealed_at_unix"`
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — ecosystem_ingest_delta.go (Plan 14 Phase G fix-cycle).
+// Package handlers — ecosystem_ingest_delta.go.
 //
 // EcosystemIngestDelta implements POST /v1/ecosystem/ingest-delta.
 //
@@ -11,9 +11,9 @@
 // The daemon-side seam dispatches to
 // internal/research/ecosystem.Dispatcher.IngestDelta which:
 //
-//  1. Fetches the upstream package manifest (cache-revalidator backed).
-//  2. Computes the delta vs the local ecosystem_versions snapshot.
-//  3. Schedules new-version chunk/symbol/change-node ingestion.
+// 1. Fetches the upstream package manifest (cache-revalidator backed).
+// 2. Computes the delta vs the local ecosystem_versions snapshot.
+// 3. Schedules new-version chunk/symbol/change-node ingestion.
 //
 // The handler returns once dispatch is scheduled; actual ingestion runs
 // async on the daemon side per spec §4.4 (cron worker tolerates partial
@@ -22,10 +22,10 @@
 //
 // Status codes:
 //
-//	204 No Content — delta-ingest scheduled successfully.
-//	400 Bad Request — invalid JSON body or unknown ecosystem.
-//	500 Internal Server Error — dispatch failure.
-//	503 Service Unavailable — EcosystemHandler not wired.
+// 204 No Content — delta-ingest scheduled successfully.
+// 400 Bad Request — invalid JSON body or unknown ecosystem.
+// 500 Internal Server Error — dispatch failure.
+// 503 Service Unavailable — EcosystemHandler not wired.
 //
 // Wire mirror: matches daemonCronClient.IngestDelta(ctx, eco) →
 // POST /v1/ecosystem/ingest-delta + JSON body

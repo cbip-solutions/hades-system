@@ -1,33 +1,33 @@
 // SPDX-License-Identifier: MIT
-// Package graphql — Node fallback for the inv-zen-272 opt-in path.
+// Package graphql — Node fallback for the invariant opt-in path.
 //
-// This file is THE SINGLE SANCTIONED os/exec spawn site in Plan 20. The
-// inv-zen-272 compliance test (tests/compliance/inv_zen_272_*) AST-scans
+// This file is THE SINGLE SANCTIONED os/exec spawn site in The
+// invariant compliance test (tests/compliance/inv_zen_272_*) AST-scans
 // internal/caronte/contract/bcdetect/ for os/exec imports and asserts
 // EXACTLY this file appears. Any new os/exec import under bcdetect/ is a
 // sovereignty regression that the compliance gate refuses.
 //
-// Trigger mechanism (load-bearing, per Phase G plan):
+// Trigger mechanism:
 //
-//	MaybeRun is called from Pipeline.Fan after the Go GraphQLDetector
-//	returns. The gate opens iff BOTH:
-//	  (a) enabled == workspace.EnableGraphQLNodeFallback (the persisted
-//	      opt-in flag from Phase A caronte_workspaces row), AND
-//	  (b) goResult contains ≥1 entry with Severity == br.SevInsufficient
-//	      (the Go path's explicit signal that a rule class fell outside
-//	      the canonical six per Stage-0 divergence #3).
-//	When closed: returns goResult unchanged + no spawn + no audit.
-//	When open : shells `node graphql-inspector diff <old> <new>` (or the
-//	            Params.NodeBinaryPath override) with Params.NodeSpawnTimeout,
-//	            emits a Plan 14 Tessera audit row per spawn (success OR
-//	            failure) via the AuditEmitter seam (production: Phase A
-//	            federation.AuditEmitter), and replaces the SevInsufficient
-//	            entries with the Node output while preserving canonical
-//	            (non-Insufficient) entries from goResult.
+// MaybeRun is called from Pipeline.Fan after the Go GraphQLDetector
+// returns. The gate opens iff BOTH:
+// (a) enabled == workspace.EnableGraphQLNodeFallback (the persisted
+// opt-in flag from caronte_workspaces row), AND
+// (b) goResult contains ≥1 entry with Severity == br.SevInsufficient
+// (the Go path's explicit signal that a rule class fell outside
+// the canonical six per divergence #3).
+// When closed: returns goResult unchanged + no spawn + no audit.
+// When open : shells `node graphql-inspector diff <old> <new>` (or the
+// Params.NodeBinaryPath override) with Params.NodeSpawnTimeout,
+// emits a Tessera audit row per spawn (success OR
+// failure) via the AuditEmitter seam (production:
+// federation.AuditEmitter), and replaces the SevInsufficient
+// entries with the Node output while preserving canonical
+// (non-Insufficient) entries from goResult.
 //
-// AS-BUILT note: the Phase G plan named federation.EvtGraphQLNodeFallbackSpawn
-// as the EventType — shipped additively in Phase G Task G-7 (event_types.go
-// extension to 6 EventTypes; valid + AllEventTypes updated; inv-zen-269
+// AS-BUILT note: the plan named federation.EvtGraphQLNodeFallbackSpawn
+// as the EventType — shipped additively in Task G-7 (event_types.go
+// extension to 6 EventTypes; valid + AllEventTypes updated; invariant
 // compliance still green).
 package graphql
 

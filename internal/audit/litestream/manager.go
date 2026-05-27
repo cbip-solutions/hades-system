@@ -39,7 +39,7 @@ type Manager struct {
 
 	// envForProject returns the env vars (KEY=VALUE) the litestream
 	// subprocess should inherit in addition to os.Environ(). Daemon main
-	// (Phase H) wires this via SetEnvForProject (lifecycle.go) to a
+	// wires this via SetEnvForProject (lifecycle.go) to a
 	// closure that reads S3 creds from Keychain at spawn time — handles
 	// operator-rotation transparently. Tests substitute a deterministic
 	// closure. Nil envForProject = no extra env (the subprocess inherits

@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package cli — knowledge_p9_promote.go (Plan 9 Phase I Task I-5).
+// Package cli — knowledge_p9_promote.go.
 //
 // `zen knowledge-p9 promote <note-id>` — operator-gated pin to global index.
 //
-// inv-zen-146: --reason is MANDATORY. Two gates:
-//  1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
-//  2. strings.TrimSpace check in RunE — rejects whitespace-only values.
+// invariant: --reason is MANDATORY. Two gates:
+// 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
+// 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 //
 // Wire method: KnowledgePromoteP9(ctx, noteID, reason) → error (204 No Content).
-// The daemon emits a vault.note_promoted_to_global Plan 8 audit event anchored
-// on the Plan 9 chain; the CLI does not observe the event directly.
+// The daemon emits a vault.note_promoted_to_global audit event anchored
+// on the chain; the CLI does not observe the event directly.
 package cli
 
 import (
@@ -25,6 +25,7 @@ import (
 
 func knowledge9PromoteCmd() *cobra.Command {
 	var reason string
+	var project string
 
 	cmd := &cobra.Command{
 		Use:   "promote <note-id>",
@@ -48,7 +49,7 @@ and visible via ` + "`zen audit-chain history`" + `.`,
 			ctx, cancel := context.WithTimeout(cmd.Context(), 30*time.Second)
 			defer cancel()
 
-			if err := newClientFromCmd(cmd).KnowledgePromoteP9(ctx, noteID, reason); err != nil {
+			if err := newClientFromCmd(cmd).KnowledgePromoteProjectP9(ctx, noteID, project, reason); err != nil {
 				return err
 			}
 
@@ -58,6 +59,7 @@ and visible via ` + "`zen audit-chain history`" + `.`,
 	}
 
 	cmd.Flags().StringVar(&reason, "reason", "", "Operator rationale (required; inv-zen-146)")
+	cmd.Flags().StringVar(&project, "project", "", "Source project ID when note_id is not globally unique")
 
 	_ = cmd.MarkFlagRequired("reason")
 

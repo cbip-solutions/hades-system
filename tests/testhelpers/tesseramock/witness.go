@@ -4,7 +4,7 @@
 // production). MockWitness produces real ECDSA-P256 signatures verifiable
 // with the same primitives as production. Boundary: this file lives in
 // tests/testhelpers/tesseramock/ — testhelpers may import internal/* freely
-// (the inv-zen-031 boundary forbids the OPPOSITE direction).
+// .
 package tesseramock
 
 import (
@@ -30,7 +30,7 @@ func NewMockWitness() (*MockWitness, error) {
 // Sign returns an ASN.1-encoded ECDSA signature over digest using the
 // underlying P-256 private key. digest MUST already be a hash output
 // (callers hash payload first; mirrors the production hash-then-sign
-// pattern enforced by inv-zen-145).
+// pattern enforced by invariant).
 func (w *MockWitness) Sign(digest []byte) ([]byte, error) {
 	return ecdsa.SignASN1(rand.Reader, w.priv, digest)
 }

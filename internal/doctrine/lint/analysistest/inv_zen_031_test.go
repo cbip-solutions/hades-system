@@ -40,13 +40,13 @@ func TestInvZen133_AnalyzerCatchesDoctrineImportingStore(t *testing.T) {
 
 // TestInvZen031_PlanWorkforceProductionCodeIsClean asserts that the actual
 // production code under internal/workforce/* does NOT import internal/store
-// directly. This is the ULTIMATE goal of inv-zen-031 — beyond fixture
+// directly. This is the ULTIMATE goal of invariant — beyond fixture
 // verification, the real codebase must conform.
 //
 // We achieve this by checking the analyzer's allowlist invariants
 // programmatically: workforce sub-packages MUST NOT be on the allowlist
-// (they bridge via adapter). For real-package coverage, see the Phase M
-// CI gate that invokes ./scripts/lint-no-tech-debt.sh on the entire repo.
+// (they bridge via adapter). For real-package coverage, see the
+// CI gate that invokes./scripts/lint-no-tech-debt.sh on the entire repo.
 func TestInvZen031_PlanWorkforceProductionCodeIsClean(t *testing.T) {
 	allow := nostore.DefaultAllowlist()
 	// workforce sub-packages MUST NOT be on the allowlist (they bridge via adapter).

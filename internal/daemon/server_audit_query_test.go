@@ -1,11 +1,11 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// internal/daemon/server_audit_query_test.go — Plan 11 Phase D fix-cycle
+// internal/daemon/server_audit_query_test.go — fix-cycle
 // for Critical-1 (extractDoctrineFromPayload fails OPEN) + Critical-2
 // (Server.AuditEventByID + extractDoctrineFromPayload 0% covered).
 //
 // Tests in this file exercise the daemon-side production wiring of
-// inv-zen-172 doctrine privacy filtering through real SQL inserts into
+// invariant doctrine privacy filtering through real SQL inserts into
 // audit_events_raw + the canonical extractor.
 //
 // Fail-closed contract (Option A, post-review): when payload_json is
@@ -13,7 +13,7 @@
 // unrecognised doctrine value, extractDoctrineFromPayload returns
 // "capa-firewall" — the most-restrictive setting — so the visibility
 // predicate denies cross-doctrine reads against legacy / corrupted
-// rows. inv-zen-172 corollary: any ambiguity at the payload-parse
+// rows. invariant corollary: any ambiguity at the payload-parse
 // layer is resolved on the side of secrecy.
 package daemon
 
@@ -225,7 +225,7 @@ func TestServerAuditEventsNilStore(t *testing.T) {
 
 // TestServerAuditEventsQueryError closes the store mid-test to trigger
 // the Query error branch of AuditEvents (line 73 — `if err != nil
-// return nil, err`). Defends the inv-zen-172 read-path: a DB error
+// return nil, err`). Defends the invariant read-path: a DB error
 // MUST surface to the handler as a 5xx, not be swallowed silently.
 func TestServerAuditEventsQueryError(t *testing.T) {
 	t.Parallel()
@@ -361,7 +361,7 @@ func TestDoctrineVisibleWhitelistsKnownSessionDoctrines(t *testing.T) {
 		{"active session + capa-firewall row → deny", "capa-firewall", "active", false},
 
 		// Unknown / future doctrine names → fail closed. This is the
-		// load-bearing future-proofing: a Plan 12 (or later) doctrine
+		// load-bearing future-proofing: a (or later) doctrine
 		// added to the registry but not yet wired through the
 		// visibility matrix MUST not silently inherit max-scope/default
 		// authorisation. Operator must explicitly extend this matrix.

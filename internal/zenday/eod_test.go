@@ -202,7 +202,7 @@ func TestGenerateEODDigest_LatestHandoffWins(t *testing.T) {
 // TestGenerateEODDigest_LatestHandoffWins_OutOfOrder ensures the dedup
 // is order-insensitive: the LATER timestamp wins regardless of which
 // record arrives first in the slice (eventlog.QueryByType ordering is
-// implementation-detail; per inv-zen-031 we MUST NOT depend on it).
+// implementation-detail; per invariant we MUST NOT depend on it).
 func TestGenerateEODDigest_LatestHandoffWins_OutOfOrder(t *testing.T) {
 	tmp := t.TempDir()
 	deps, _ := newEODDeps(t, tmp, canonicalNow)

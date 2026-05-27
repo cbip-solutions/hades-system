@@ -48,7 +48,7 @@ func readSource279(t *testing.T, relPath string) string {
 }
 
 // TestInvZen279_SchemaUsesRawMessage pins the canonical schema extension
-// from Phase B. The frozen contract requires System on canonicalRequest
+// from The frozen contract requires System on canonicalRequest
 // and Content on canonicalMessage to be json.RawMessage (so the wire
 // body can carry either a string or a content-block array). A revert to
 // `string` MUST fail this gate.

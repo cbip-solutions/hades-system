@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package views — skills.go (Plan 12 Phase C Task C-7, F9 panel).
+// Package views — skills.go.
 //
 // Skills browser surfaced via Hermes probe. The skills registry lives
 // in the Hermes plugin (ADR-0080) which the daemon probes via
-// /v1/hermes/probe?check=skills. Plan 12+ may add a richer
+// /v1/hermes/probe?check=skills. + may add a richer
 // /v1/hermes/skills endpoint; this panel renders whatever the probe
 // reports today + degrades cleanly when Hermes is offline.
 package views

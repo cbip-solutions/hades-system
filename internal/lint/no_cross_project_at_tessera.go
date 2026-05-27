@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_cross_project_at_tessera.go
 //
-// Phase J Task J-9: custom go vet analyzer enforcing inv-zen-144
+// Task J-9: custom go vet analyzer enforcing invariant
 // (per-project Tessera tile-log isolation; *Adapter exported methods
 // MUST key tile reads by a.projectID).
 //
@@ -11,11 +11,11 @@
 // any name containing "projectid" or "project_id" that is NOT the receiver-
 // field accessor). If found, REJECT.
 //
-// Compile-check complementary to runtime defense: Phase A returns
+// Compile-check complementary to runtime defense: returns
 // tessera.ErrCrossProject when tile keys do not match a.projectID.
 //
 // Pattern golang.org/x/tools/go/analysis.Analyzer + analysistest.
-// Loaded via cmd/zen-doctrine-lint module plugin (Plan 8 Q4 B).
+// Loaded via cmd/zen-doctrine-lint module plugin.
 package lint
 
 import (

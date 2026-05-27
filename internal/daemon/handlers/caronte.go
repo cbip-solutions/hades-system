@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — caronte.go (Plan v0.20.0 Phase C Task C-2; inv-zen-273).
+// Package handlers — caronte.go.
 //
 // POST /v1/caronte/reindex — operator-triggered reindex of a project's
 // Caronte code-graph. The handler resolves the X-Zen-Project-ID header
 // (alias OR canonical id_sha256) through the ProjectsAliasResolver,
 // then delegates to the engine's IndexProject method. The engine is
-// in-daemon (Plan 19 Apache-2.0 sovereign code-graph); this route
+// in-daemon; this route
 // avoids the gateway round-trip used by /v1/mcpgateway/* — operators
 // can `zen caronte reindex` against a daemon without a running Hermes
 // session.
 //
-// inv-zen-031 boundary: this handler does NOT import internal/caronte
+// invariant boundary: this handler does NOT import internal/caronte
 // or internal/daemon/mcpgateway. The engine + alias resolver are
 // consumed through narrow handler-local interfaces
 // (CaronteEngineForReindex + ProjectsAliasResolverForReindex). The
@@ -18,7 +18,7 @@
 // thin-translate to those interfaces (the existing CaronteEngine /
 // mcpgateway.ProjectsAliasResolver instances).
 //
-// inv-zen-277 alias resolution: the handler MUST translate alias →
+// invariant alias resolution: the handler MUST translate alias →
 // canonical id_sha256 BEFORE invoking IndexProject (the engine never
 // sees aliases — its surface keys on canonical id_sha256 always).
 package handlers
@@ -48,7 +48,7 @@ type CaronteEngineForReindex interface {
 }
 
 // ProjectsAliasResolverForReindex is the alias-resolver seam the handler
-// uses. Mirrors mcpgateway.ProjectsAliasResolver (Phase A) so the
+// uses. Mirrors mcpgateway.ProjectsAliasResolver so the
 // production wiring is a thin pass-through; declared locally so the
 // handler package does not import internal/daemon/mcpgateway directly.
 //
@@ -64,7 +64,7 @@ type ProjectsAliasResolverForReindex interface {
 // return this sentinel (not the mcpgateway sentinel directly) so the
 // handler can errors.Is-match without importing mcpgateway.
 //
-// Phase E (CLI router migration) may consolidate the sentinel into a
+// (CLI router migration) may consolidate the sentinel into a
 // shared package; until then the value-type mirror is the right scope.
 var ErrCaronteAliasNotFound = errors.New("handlers/caronte: project alias not found")
 

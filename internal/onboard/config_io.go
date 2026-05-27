@@ -14,11 +14,11 @@ import (
 
 // GlobalConfig is the on-disk shape of $XDG_CONFIG_HOME/zen-swarm/config.toml,
 // authored by WriteGlobalConfig at the end of `zen config init`. The shape
-// mirrors the Plan 8 doctrine TOML pattern (schema-versioned per
+// mirrors the doctrine TOML pattern (schema-versioned per
 // ADR-0050). All non-mandatory fields are `omitempty` so unselected
 // answers do not pollute the file.
 //
-// Per inv-zen-188 (schema_version required), Phase C task C-2 always
+// Per invariant (schema_version required), task C-2 always
 // populates SchemaVersion = CurrentConfigSchemaVersion before calling
 // WriteGlobalConfig.
 type GlobalConfig struct {
@@ -88,19 +88,19 @@ func CloneBuiltinDoctrine(name string) error {
 // defaults into a WizardDefaults consumable by Path 1 (recommended) or as
 // starting values for Path 3 (customize). Precedence per spec §7.3:
 //
-//	flags > prefs > builtin
+// flags > prefs > builtin
 //
 // Empty flag values do NOT count as "operator-supplied"; absent or empty
 // flags fall through to prefs. Nil prefs falls through to builtin. Slice
 // fields from prefs are copied into the result so the caller may mutate
 // without aliasing the prefs cache.
 //
-// Phase C task C-2 calls this after parsing `zen config init` flags and
+// task C-2 calls this after parsing `zen config init` flags and
 // loading prefs via `prefs.Load(onboard.OnboardPrefsPath())`.
 //
 // Builtin defaults source: `GetDefaults(WizardKindGlobal)` (single
 // source of truth in defaults.go — spec §7.3 + §2.7 Q7=D Tier 1+2 MCP
-// set). Stage 2 cross-phase review F-2: prior code duplicated those
+// set). cross-phase review F-2: prior code duplicated those
 // defaults inline as `globalBuiltinDefaults()` while A-2 was unmerged;
 // post-A-2 the inline copy is dead code and a drift risk.
 func DefaultsFromFlagsAndPrefs(flags map[string]string, p *prefs.Prefs) WizardDefaults {
@@ -141,13 +141,13 @@ func DefaultsFromFlagsAndPrefs(flags map[string]string, p *prefs.Prefs) WizardDe
 //
 // Crash-only contract (SOTA-2 #6 + spec §3.6):
 //
-//  1. Encode to `<path>.tmp` with O_TRUNC + O_CREATE.
-//  2. fsync the temp file.
-//  3. Close.
-//  4. os.Rename to final path (atomic on POSIX + NTFS).
-//  5. On any failure: remove the .tmp and return wrapped error.
+// 1. Encode to `<path>.tmp` with O_TRUNC + O_CREATE.
+// 2. fsync the temp file.
+// 3. Close.
+// 4. os.Rename to final path (atomic on POSIX + NTFS).
+// 5. On any failure: remove the.tmp and return wrapped error.
 //
-// Per inv-zen-031: callers do not pass arbitrary writer fns — the
+// Per invariant: callers do not pass arbitrary writer fns — the
 // signature is `(path, v)` so the call site cannot accidentally smuggle
 // a non-TOML encoder in.
 func writeAtomicTOML(path string, v any) error {

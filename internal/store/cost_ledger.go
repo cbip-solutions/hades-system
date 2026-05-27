@@ -1,30 +1,30 @@
 // SPDX-License-Identifier: MIT
-// cost_ledger.go — CRUD for the cost_ledger table (Plan 3 Phase C, Task F-1).
+// cost_ledger.go — CRUD for the cost_ledger table.
 //
 // The cost_ledger table is the persistent source of truth for every LLM
 // request's cost. Layer 2 of orchestrator observability (Layer 1 is
 // bypass_audit). The in-memory CostCounters in
 // internal/daemon/orchestrator/cost_counters.go (Task F-4) materialise
 // rolling 30d / 24h / session-lifetime windows on top of this table and
-// are rebuilt on daemon restart via QueryAllRecentCosts (inv-zen-065).
+// are rebuilt on daemon restart via QueryAllRecentCosts.
 //
-// Invariant inv-zen-062 (no double-charge) is anchored two ways:
+// Invariant invariant (no double-charge) is anchored two ways:
 //
-//   - SQL-side: idempotency_key UNIQUE in migration 040. SQLite refuses
-//     a second insert with the same key under any contention regime
-//     (busy_timeout serialises writers).
-//   - Go-side: the noDoubleCharge sentinel + ErrDuplicateIdempotency
-//     translation. Removing the sentinel breaks `var _ = noDoubleCharge`
-//     and any test using errors.Is — the compile-time guard.
+// - SQL-side: idempotency_key UNIQUE in migration 040. SQLite refuses
+// a second insert with the same key under any contention regime
+// (busy_timeout serialises writers).
+// - Go-side: the noDoubleCharge sentinel + ErrDuplicateIdempotency
+// translation. Removing the sentinel breaks `var _ = noDoubleCharge`
+// and any test using errors.Is — the compile-time guard.
 //
 // The error translation is defense-in-depth:
 //
-//  1. errors.Is(err, sqlite3.CONSTRAINT_UNIQUE) — the typed extended
-//     error code from the ncruces/go-sqlite3 driver. This is the
-//     authoritative match.
-//  2. strings.Contains on the error text — fallback if the driver ever
-//     fails to thread the typed code (defense in depth; matches the
-//     plan's defensive shape).
+// 1. errors.Is(err, sqlite3.CONSTRAINT_UNIQUE) — the typed extended
+// error code from the ncruces/go-sqlite3 driver. This is the
+// authoritative match.
+// 2. strings.Contains on the error text — fallback if the driver ever
+// fails to thread the typed code (defense in depth; matches the
+// plan's defensive shape).
 //
 // Concurrency InsertCostLedger is safe to call from multiple goroutines
 // against the same *sql.DB. Under the Open() pragmas (busy_timeout=5000,

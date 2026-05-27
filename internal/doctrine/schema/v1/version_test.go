@@ -67,7 +67,7 @@ func TestValidateDoctrineVersion_Invalid(t *testing.T) {
 }
 
 // TestSentinelAliasing — schema/v1's local sentinels MUST be the same value as
-// internal/doctrine/errors so external callers (Phase B parser, Phase H
+// internal/doctrine/errors so external callers ( parser,
 // applier) can errors.Is on the canonical sentinel.
 func TestSentinelAliasing(t *testing.T) {
 	if !errors.Is(v1.ErrTightenViolation, doctrineerrors.ErrTightenViolation) {

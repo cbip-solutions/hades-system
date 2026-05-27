@@ -1,28 +1,28 @@
 // SPDX-License-Identifier: MIT
 // Package coordinated owns the L10 coordinator value types + the
 // Coordinator interface + the OrchestratorCoordinator production impl
-// that turn a ContractBreakage event (Phase G bcdetect.Pipeline.Fan
+// that turn a ContractBreakage event ( bcdetect.Pipeline.Fan
 // output) into either an autonomous dispatch across affected client
-// repos (ModeAutonomy via Plan 5 worktreepool.Pool) OR a structured
+// repos OR a structured
 // surface recommendation (ModeSurface — surfaced via §10 MCP +
-// F7 TUI panel). Every dispatch emits a Plan 14 Tessera audit row via
-// the Phase A C-11 federation.EmitAudit helper (inv-zen-269 chokepoint).
+// F7 TUI panel). Every dispatch emits a Tessera audit row via
+// the C-11 federation.EmitAudit helper.
 //
-// Phase H is the production owner of the Coordinator behavioural surface
-// (master C-8, ADR-0115). Phase F + Phase G seeded the ConsumerRef value
-// type additively here in W4 because Phase G consumes
+// is the production owner of the Coordinator behavioural surface
+// (master C-8, ADR-0115). + seeded the ConsumerRef value
+// type additively here in W4 because consumes
 // (*link.Linker).ConsumersFor returning []coordinated.ConsumerRef +
-// emits ContractBreakage events for Phase H to dispatch on.
+// emits ContractBreakage events for to dispatch on.
 //
-// Boundary inv-zen-031 / inv-zen-270 / inv-zen-271: this package MUST
+// Boundary invariant / invariant / invariant: this package MUST
 // NOT import internal/orchestrator/{hra,merge,confirmation_policy} (the
-// F.7 hook packages — Plan 19 N-4 verified those are seam-for-future,
+// F.7 hook packages — N-4 verified those are seam-for-future,
 // the D5 decoupling); MUST NOT import internal/store (the daemon store);
 // the SOLE permitted orchestrator-side bridge is the capability-detected
 // worktreepool.Pool interface + the orchestrator.ContractFixAutonomyOracle
 // seam (declared in internal/orchestrator/seam_contractfix.go, consumed
 // here through a typed interface field on OrchestratorCoordinator —
-// reverse direction from Plan 19 G-6's seam_blastradius.go but the same
+// reverse direction G-6's seam_blastradius.go but the same
 // boundary discipline).
 //
 // Build tag: NONE — value-type-only file + the Coordinator interface +
@@ -77,10 +77,10 @@ type DispatchResult struct {
 
 // DispatchDecision is the durable summary of a single Dispatch call
 // retained in the OrchestratorCoordinator's in-memory ring-buffer cache
-// for fast-access surfaces (Phase J TUI + the §10 MCP
+// for fast-access surfaces ( TUI + the §10 MCP
 // get_recent_dispatches surface).
 //
-// NOTE(plan-15) — the persistent ledger of all dispatches is the Plan 14 Tessera
+// NOTE(plan-15) — the persistent ledger of all dispatches is the Tessera
 // audit chain (see AuditID below — it is the durable handle to the
 // Tessera leaf). The ring-buffer is a FAST-ACCESS CACHE for TUI/CLI
 // surfaces only, NOT the durable record. Every entry corresponds to a
@@ -90,7 +90,7 @@ type DispatchResult struct {
 //
 // Field shape (reflect-pinned by types_blackbox_test.go's
 // TestDispatchDecisionFieldSet — drift requires deliberate cross-phase
-// contract change with Phase J):
+// contract change with ):
 type DispatchDecision struct {
 	ChangeID        string
 	Mode            DispatchMode
@@ -114,27 +114,27 @@ type Coordinator interface {
 // declares `type ContractFixAutonomyOracle = coordinated.AutonomyOracle`
 // (a Go type alias — both identifiers refer to the SAME interface, so
 // implementors of either satisfy the other via structural typing). This
-// preserves the master C-9 naming (Phase K's production adapter is
+// preserves the master C-9 naming ( production adapter is
 // constructed via orchestrator.ContractFixAutonomyOracle; tests in
 // coordinated use coordinated.AutonomyOracle) AND preserves the
-// inv-zen-270 boundary (coordinated does NOT import orchestrator;
+// invariant boundary (coordinated does NOT import orchestrator;
 // orchestrator only imports coordinated for the value-types parameter).
 //
 // Decision returns ModeAutonomy iff ALL THREE hold (single-method seam;
 // the layered conditions are implementation detail of the production
 // adapter):
 //
-//	(a) doctrine grants autonomy for cross-repo contract-fix
-//	    (capa-firewall denies; default allows assisted; max-scope allows
-//	    full),
+// (a) doctrine grants autonomy for cross-repo contract-fix
+// (capa-firewall denies; default allows assisted; max-scope allows
+// full),
 //
-//	(b) blast-radius does not exceed the workspace's RiskThreshold
-//	    (Plan 19 G mirror — composite of cone-cardinality +
-//	    cochange-coupling + LoC-percentile),
+// (b) blast-radius does not exceed the workspace's RiskThreshold
+// ( G mirror — composite of cone-cardinality +
+// cochange-coupling + LoC-percentile),
 //
-//	(c) workspace.PrivacyLocked()=false OR affected consumers all live
-//	    in the owning project (capa-firewall consistency double-gate
-//	    with Workspace.AuthorizeProjects).
+// (c) workspace.PrivacyLocked()=false OR affected consumers all live
+// in the owning project (capa-firewall consistency double-gate
+// with Workspace.AuthorizeProjects).
 //
 // Returns ModeSurface otherwise. The Coordinator MUST default to
 // surface on (a) explicit deny or (b) ANY future enum value the oracle
@@ -144,7 +144,7 @@ type Coordinator interface {
 // Implementations MUST be deterministic for a fixed ContractBreakage
 // (same input → same DispatchMode) — the audit trail captures the
 // decision, and a non-deterministic oracle would make the audit row
-// misleading. The default production policy (Phase K) is
+// misleading. The default production policy is
 // doctrine-resolver-driven and inherently deterministic; tests fake
 // this interface with a stub that returns a fixed mode.
 type AutonomyOracle interface {

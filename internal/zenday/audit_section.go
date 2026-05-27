@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package zenday — audit_section.go
 //
-// Extends Plan 7 zenday with a NEW collector that walks per-project Plan 9
+// Extends zenday with a NEW collector that walks per-project
 // substrate health (chain integrity + backup status + ADR transitions today
 // + research cache hit rate + state freshness) and produces BriefItem per
 // project. LeverageRank assigned per worst-substrate-status:
 //
-//   - FAIL → RankCritical (1): any FAIL probe → operator must investigate immediately
-//   - WARN → RankAlertNeeded (3): any WARN probe → operator awareness needed today
-//   - OK   → RankInfoSummary (7): all OK → daily reassurance summary
+// - FAIL → RankCritical (1): any FAIL probe → operator must investigate immediately
+// - WARN → RankAlertNeeded (3): any WARN probe → operator awareness needed today
+// - OK → RankInfoSummary (7): all OK → daily reassurance summary
 //
 // reuse of zenday.BriefItem and zenday.SortByLeverage unchanged.
 //
 // Thresholds are derived from AuditProjectStatus.DoctrineName so this package
-// does NOT import internal/doctrine — preserving the inv-zen-031 boundary
+// does NOT import internal/doctrine — preserving the invariant boundary
 // (zenday accepts only interface parameters; no concrete store or doctrine
 // types cross the package boundary).
 package zenday

@@ -598,7 +598,7 @@ func TestForward_PassesRequestUnchanged(t *testing.T) {
 
 // ----------------------------------------------------------------------------
 // Forward — emitter error MUST NOT shadow a successful upstream response.
-// The cost-emit path is best-effort (Phase F audits drift separately).
+// The cost-emit path is best-effort.
 // ----------------------------------------------------------------------------
 
 func TestForward_EmitterErrorDoesNotShadowSuccess(t *testing.T) {
@@ -725,7 +725,7 @@ func TestForward_ConcurrentSafe(t *testing.T) {
 
 // ----------------------------------------------------------------------------
 // Forward — request with nil Headers/Credentials maps MUST NOT cause NPE.
-// inv-zen-068: dispatcher does not synthesise or rewrite these maps.
+// invariant: dispatcher does not synthesise or rewrite these maps.
 // ----------------------------------------------------------------------------
 
 func TestForward_AcceptsNilMapsInRequest(t *testing.T) {
@@ -893,7 +893,7 @@ func TestForward_Tier1VetoedTier2FailsCtxDoneReturnsCtxErr(t *testing.T) {
 // Forward — backend contract violation: Forward returns (nil resp, nil err).
 // Dispatcher MUST NOT NPE; it treats the violation as a tier failure (records
 // breaker failure, emits CostEvent with explanatory Err) and falls over to
-// Tier 2+. Phase F drift audit catches the violation in the cost ledger.
+// Tier 2+. drift audit catches the violation in the cost ledger.
 // ----------------------------------------------------------------------------
 
 func TestForward_BackendReturnsNilNilTreatedAsFailure(t *testing.T) {
@@ -1153,7 +1153,7 @@ func TestPreFlightCheckDoesNotMutateWfqDepth(t *testing.T) {
 // ----------------------------------------------------------------------------
 // PreFlightCheck — runs without invoking ANY provider (compile-time +
 // behavioural check). The dispatcher's tier1/tier2 backends MUST NOT be
-// called by PreFlightCheck — that is the whole point of inv-zen-080's
+// called by PreFlightCheck — that is the whole point of invariant's
 // "pre-flight runs before any provider call" contract.
 // ----------------------------------------------------------------------------
 
@@ -1261,7 +1261,7 @@ func TestPreFlightFuncSignatureParity(t *testing.T) {
 // Tasks 5–6 cascade refactor verbatim. The QuotaSeam struct, SetQuotaSeam,
 // PreFlightCheck, OverrideStore, Wfq, PreFlightFunc and the underlying
 // atomic seam pointer are orthogonal to the cascade and MUST keep working
-// unchanged on a cascade-shaped Dispatcher (master plan C6: "the Plan 7
+// unchanged on a cascade-shaped Dispatcher (master plan C6: "the
 // quota seam is preserved verbatim"). This test pins that contract.
 // ----------------------------------------------------------------------------
 
@@ -1507,7 +1507,7 @@ func TestForward_CtxCancelledMidCascadeStops(t *testing.T) {
 // meaningful (not just a counter check). *CircuitBreaker satisfies
 // dispatcher.BreakerState after B-5 widens the interface.
 // =============================================================================
-// Plan v0.20.0 Phase B-5b (inv-zen-279) — ErrToolsUnsupported breaker-skip
+// Plan v0.20.0 — ErrToolsUnsupported breaker-skip
 //
 // providers.ErrToolsUnsupported is returned by openai-compat / gemini /
 // ollama backends when the canonical request carries a tools field. The

@@ -1,13 +1,13 @@
 // tests/compliance/inv_zen_184_eval_emission_exactly_once_test.go
 //
-// Spec §8.6 inv-zen-184 compliance test: every eval.RuntimeEvaluator
+// Spec §8.6 invariant compliance test: every eval.RuntimeEvaluator
 // EvaluateCall invocation MUST emit exactly one audit event via the
 // configured Emitter. The runtime guarantee is the load-bearing
 // forensic-trace contract per spec §3.7 + §8.6.
 //
 // location per spec §8.6. The pkg-internal test
 // (internal/doctrine/eval/evaluator_test.go) covers the truth table;
-// this compliance test asserts the inv-zen-184 contract holds across
+// this compliance test asserts the invariant contract holds across
 // every decision branch + emitter failure path.
 package compliance
 

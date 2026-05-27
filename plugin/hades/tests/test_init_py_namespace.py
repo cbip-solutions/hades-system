@@ -58,8 +58,7 @@ def _collect_register_command_names(source_path: Path) -> list[str]:
 
     Raises:
         FileNotFoundError: if ``source_path`` does not exist.
-        SyntaxError: if ``source_path`` is not valid Python (Phase A
-            regression signal — halt and investigate).
+        SyntaxError: if ``source_path`` is not valid Python.
         AssertionError: if a register_command call's first positional arg
             is NOT a string constant (defensive — current code uses string
             literals exclusively, so this would signal a refactor we did
@@ -97,8 +96,8 @@ def _collect_register_command_names(source_path: Path) -> list[str]:
 def test_register_command_count_is_25() -> None:
     """Assertion 1: exactly 25 ctx.register_command(...) calls.
 
-    Plan 18b B baseline was 22 (Phase H' 3 + Plan 12 B-3..B-8 19). Plan 18c
-    adds 3: Phase C hades:status + Phase D hades:dashboard + hades:panel.
+     B baseline was 22. 
+    adds 3:  hades:status +  hades:dashboard + hades:panel.
     Regression guard: if this fires, something accidentally deleted or
     duplicated a call.
     """
@@ -111,7 +110,7 @@ def test_register_command_count_is_25() -> None:
 
 
 def test_register_command_includes_dashboard_and_panel() -> None:
-    """Plan 18c Phase D adds /hades:dashboard + /hades:panel (Task D-7)."""
+    """  adds /hades:dashboard + /hades:panel (Task D-7)."""
     names = set(_collect_register_command_names(_INIT_PY_PATH))
     assert "hades:dashboard" in names, (
         f"expected 'hades:dashboard' registered; got {sorted(names)}"
@@ -122,12 +121,12 @@ def test_register_command_includes_dashboard_and_panel() -> None:
 
 
 def test_register_command_names_match_expected_set() -> None:
-    """Assertion 2: the 25 names equal the post-rebrand + Plan 18c expected set.
+    """Assertion 2: the 25 names equal the post-rebrand +  expected set.
 
     Pre-B-3+B-4: this FAILS because 3 names start with `zen-swarm:`
     and 19 are bare (no namespace).
     Post-B-3+B-4: this PASSES; the 22 names all match `hades:<slug>`.
-    Post-Plan-18c: 25 names (hades:status + hades:dashboard + hades:panel added).
+    Post-: 25 names (hades:status + hades:dashboard + hades:panel added).
     """
     actual = sorted(_collect_register_command_names(_INIT_PY_PATH))
     expected = sorted(EXPECTED_HADES_COMMANDS)
@@ -159,8 +158,7 @@ def test_no_command_uses_legacy_zen_swarm_prefix() -> None:
     """Assertion 4: no registered command uses the legacy `zen-swarm:` prefix.
 
     Spec §Q4 hard cutover: `/zen-swarm:*` is removed; invocations get
-    Hermes' built-in command-not-found (Plan 18c ships polished
-    did-you-mean hint).
+    Hermes' built-in command-not-found.
     """
     names = _collect_register_command_names(_INIT_PY_PATH)
     violations = [n for n in names if n.startswith("zen-swarm:")]
@@ -174,9 +172,9 @@ def test_no_command_uses_legacy_zen_swarm_prefix() -> None:
 def test_no_command_is_bare() -> None:
     """Assertion 5: no registered command is bare (lacks `:` separator).
 
-    Plan 12 era registered 19 commands without any namespace prefix
+     era registered 19 commands without any namespace prefix
     (`brainstorm`, `write-plan`, etc.). Spec §Q4 requires a single
-    consistent namespace; bare names are not allowed post-Plan-18.
+    consistent namespace; bare names are not allowed post-
     """
     names = _collect_register_command_names(_INIT_PY_PATH)
     violations = [n for n in names if ":" not in n]
@@ -194,7 +192,7 @@ _PLUGIN_HADES_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _all_python_files_in_plugin_hades() -> list[Path]:
-    """Return every .py file under plugin/hades/ (used by sentinel-2 sweeps).
+    """Return every.py file under plugin/hades/ (used by sentinel-2 sweeps).
 
     Excludes:
     - The plugin's tests/ tree (tests legitimately mention 'zen-swarm:'
@@ -217,10 +215,10 @@ def test_no_zen_swarm_namespace_call_in_plugin_hades_tree() -> None:
     """Sentinel-2 sweep: no `ctx.register_command("zen-swarm:...")` calls
     remain anywhere in `plugin/hades/` (excluding tests/).
 
-    This is the per-phase regression guard for Plan 18b Phase B. Phase J's
-    full inv-zen-219 AST grep is the comprehensive coverage across all
+    This is the per-phase regression guardb  
+    full invariant AST grep is the comprehensive coverage across all
     post-rebrand surfaces (`internal/cli/`, `internal/tui/`, etc.); this
-    sentinel-2 sweep is the Phase B-specific guardrail.
+    sentinel-2 sweep is the  guardrail.
     """
     violations: list[tuple[Path, int, str]] = []
     for path in _all_python_files_in_plugin_hades():
@@ -243,7 +241,7 @@ def test_no_zen_swarm_namespace_call_in_plugin_hades_tree() -> None:
 
 
 def test_no_bare_register_command_call_in_plugin_hades_tree() -> None:
-    """Sentinel-2 sweep: no `ctx.register_command("<bare-name>", ...)` calls
+    """Sentinel-2 sweep: no `ctx.register_command("<bare-name>",...)` calls
     (without `hades:` prefix) remain anywhere in `plugin/hades/` (excluding
     tests/).
 

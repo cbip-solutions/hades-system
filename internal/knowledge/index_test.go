@@ -1,7 +1,7 @@
 // Package knowledge — tests for the FTS5 + supplementary metadata
-// schema initialiser (Plan 7 Phase G Task G-1).
+// schema initialiser.
 //
-// Spec reference: docs/superpowers/plans/2026-05-01-plan-7-phase-G-knowledge.md
+// Spec reference: internal design record
 // §"Task G-1" lines 78–516 (canonical) — schema lockstep between
 // 061_knowledge_index_extension_hooks.sql and Init() is enforced by
 // TestSchemaParityWithMigrationFile (a CI-grep-equivalent in-process
@@ -9,7 +9,7 @@
 //
 // The three extension-hook columns (audit_chain_anchor,
 // ecosystem_join_keys, caronte_symbol_refs) MUST ship NULL by default
-// (inv-zen-130). TestMetaTableHasExtensionHookColumns is the production
+// . TestMetaTableHasExtensionHookColumns is the production
 // anchor; the compliance test in G-16 will additionally enforce no
 // INSERT statement populates them.
 package knowledge
@@ -609,7 +609,7 @@ func TestIndexInsertPersistsFrontmatterJSON(t *testing.T) {
 }
 
 // TestIndexExtensionHookColumnsNullByDefault asserts the runtime-observable
-// half of inv-zen-130: post-INSERT, the three extension-hook columns MUST
+// half of invariant: post-INSERT, the three extension-hook columns MUST
 // be NULL. Even if a Doc carries Valid=true on AuditChainAnchor /
 // EcosystemJoinKeys / CaronteSymbolRefs (e.g., tests, malicious caller,
 // future-Plan code paths reused incorrectly), the canonical INSERT does
@@ -747,7 +747,7 @@ func TestIndexDeleteIdempotentOnMissingPath(t *testing.T) {
 }
 
 // TestIndexInsertSQLDoesNotMentionExtensionHookColumns is the COMPILE-TIME
-// half of inv-zen-130: the canonical INSERT statement string MUST NOT
+// half of invariant: the canonical INSERT statement string MUST NOT
 // reference any of the three extension-hook column names. This is a
 // source-level grep on the package-level constant. The companion
 // runtime check is TestIndexExtensionHookColumnsNullByDefault.

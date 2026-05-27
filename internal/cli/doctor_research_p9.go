@@ -2,29 +2,29 @@
 // Package cli — doctor_research_p9.go
 //
 // Filename uses _p9 suffix because doctor_research.go already ships from
-// reachability and size checks). This file adds the Plan 9 RunResearchCacheProbe
+// reachability and size checks). This file adds the RunResearchCacheProbe
 // orchestrator and `zen doctor research cache` subcommand.
 //
 // `zen doctor research cache` delegates to ResearchCacheProber declared
 // in probe.go; 5 results:
 //
-//   - research.cache.hit_rate
-//   - research.cache.volume
-//   - research.cache.freshness_lag
-//   - research.cache.revalidation_queue_depth
-//   - research.cache.stuck_queries_count
+// - research.cache.hit_rate
+// - research.cache.volume
+// - research.cache.freshness_lag
+// - research.cache.revalidation_queue_depth
+// - research.cache.stuck_queries_count
 //
 // Architecture (J-1 precedent):
 //
-//	ResearchCacheProber interface declared in probe.go (CLI side).
-//	Substrate prober.go files (internal/research/cache/) are NOT modified
-//	per J-1 pattern.
-//	Production wiring in cmd/zen-swarm-ctld/main.go.
+// ResearchCacheProber interface declared in probe.go (CLI side).
+// Substrate prober.go files (internal/research/cache/) are NOT modified
+// per J-1 pattern.
+// Production wiring in cmd/zen-swarm-ctld/main.go.
 //
-// Boundary (inv-zen-031):
+// Boundary:
 //
-//	This file imports only cli-internal types + cobra + context + stdlib.
-//	Does NOT import internal/research/cache concrete types.
+// This file imports only cli-internal types + cobra + context + stdlib.
+// Does NOT import internal/research/cache concrete types.
 package cli
 
 import (
@@ -39,8 +39,8 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunResearchCacheProbe orchestrates the research.cache doctor check (Plan 9
-// Phase J Task J-2, spec §6.2).
+// RunResearchCacheProbe orchestrates the research.cache doctor check (
+// Task J-2, spec §6.2).
 //
 // Delegates to DoctorDeps.ResearchCacheProber.Probe(ctx) and returns the
 // resulting ProbeResult slice unchanged. Returns a non-nil error if

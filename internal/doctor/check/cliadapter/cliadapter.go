@@ -20,10 +20,10 @@
 // to check.Status directly (the int values happen to align for the
 // first 3 values today, but that is incidental and may drift).
 //
-// Package boundary (Plan 13 Phase F-tail F5 refactor):
+// Package boundary:
 //
 // This adapter lives in its own sub-package so that internal/doctor/check
-// (the Plan 13 doctor Check interface + DiagnosticResult value type) can
+// can
 // remain a leaf package with no upstream imports. The cycle that arose
 // when the cli package consumed both internal/doctor/check (via the
 // aggregator) AND was consumed by the adapter (for ProbeResult/ProbeStatus)
@@ -129,7 +129,7 @@ func (a *CLIProbeAdapter) Run(ctx context.Context) check.DiagnosticResult {
 	return d
 }
 
-// translateCLIStatus maps Plan 7+ cli.ProbeStatus (OK/Warn/Fail) into
+// translateCLIStatus maps + cli.ProbeStatus (OK/Warn/Fail) into
 //
 // FORBIDDEN cast: callers MUST NOT use `check.Status(int(cliStatus))`.
 // Today the first 3 values happen to align (ProbeOK=0/StatusPass=0,
@@ -137,7 +137,7 @@ func (a *CLIProbeAdapter) Run(ctx context.Context) check.DiagnosticResult {
 // is incidental and may drift. Always go through this translation.
 //
 // cli.ProbeStatus has no Skip; missing-precondition contexts are reported
-// as Fail in Plan 7+ — preserved here. The adapter's Run() may emit Skip
+// as Fail in + — preserved here. The adapter's Run() may emit Skip
 // when probeFunc returns no rows (separate from translation).
 func translateCLIStatus(s cli.ProbeStatus) check.Status {
 	switch s {

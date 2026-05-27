@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package cli — docs_router_retrain.go (Plan 14 Phase F Task F-6).
+// Package cli — docs_router_retrain.go.
 //
 // `zen docs router-retrain` invokes the daemon endpoint that retrains
 // the router's local logistic classifier (per spec §2.6 Q6=A; D-2
 // scaffold in cmd/zen/docs/router_retrain.go).
 //
-// The daemon-side handler (Phase G) wires the D-2 trainer pipeline:
+// The daemon-side handler wires the D-2 trainer pipeline:
 // it resolves the corpus + output path from configuration and invokes
 // cmd/zen/docs.RunRouterRetrainWithOptions(...). The CLI surface here
 // is a thin transport call — no flag plumbing for corpus / output path
@@ -19,9 +19,9 @@
 //
 // Exit codes (per spec §6.2):
 //
-//	0  success
-//	1  recoverable: daemon 404 / 422
-//	2  unrecoverable: training failure (5xx), transport, decode
+// 0 success
+// 1 recoverable: daemon 404 / 422
+// 2 unrecoverable: training failure (5xx), transport, decode
 package cli
 
 import (

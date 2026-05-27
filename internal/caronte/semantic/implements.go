@@ -13,33 +13,33 @@ import (
 )
 
 // canonicalNodeID maps a go/types object to the REPO-RELATIVE node_id Phase
-// B's parser wrote into graph_nodes (spec §4.2 + Phase B lang_go.go
+// B's parser wrote into graph_nodes (spec §4.2 + lang_go.go
 // `qualifiedNodeID`): "<dir>.[Type.]Symbol", where <dir> is the package's
 // directory RELATIVE TO THE REPO ROOT (the Go import-path tail). This is THE
 // single source of truth for the parse↔resolve join — resolver edges
 // reference node_ids this function produces, and they MUST match BYTE-FOR-BYTE
-// the strings Phase B's lang_go extraction emits for the same symbols.
+// the strings lang_go extraction emits for the same symbols.
 //
 // go/types reports the FULL import path on pkg.Path()
-// ("github.com/cbip-solutions/hades-system/internal/widget"), but Phase B keys on the
+// ("github.com/cbip-solutions/hades-system/internal/widget"), but keys on the
 // file's directory relative to the repo root ("internal/widget"). So
 // canonicalNodeID STRIPS the module prefix (modulePrefix, read from go.mod via
 // packages.Module.Path) from pkg.Path() to recover the dir-relative form that
-// matches Phase B:
+// matches :
 //
-//	module      github.com/cbip-solutions/hades-system                (from go.mod)
-//	import path github.com/cbip-solutions/hades-system/internal/widget (from go/types)
-//	dir prefix  internal/widget                               (module stripped)
+// module github.com/cbip-solutions/hades-system (from go.mod)
+// import path github.com/cbip-solutions/hades-system/internal/widget (from go/types)
+// dir prefix internal/widget (module stripped)
 //
-//	func  Run              in internal/widget → "internal/widget.Run"
-//	method (T) Beta        in internal/widget → "internal/widget.T.Beta"  (receiver named-type, no '*')
-//	named type Reader      in internal/widget → "internal/widget.Reader"
-//	main-module-root pkg / cmd:
-//	  import path == module → dir prefix "" → "Run" / "Server.Serve" (no leading dot — exactly
-//	    as Phase B's goPackagePathFromFile drops the prefix for a repo-root file)
-//	  github.com/.../cmd/zen → "cmd/zen" → "cmd/zen.main"
+// func Run in internal/widget → "internal/widget.Run"
+// method (T) Beta in internal/widget → "internal/widget.T.Beta" (receiver named-type, no '*')
+// named type Reader in internal/widget → "internal/widget.Reader"
+// main-module-root pkg / cmd:
+// import path == module → dir prefix "" → "Run" / "Server.Serve" (no leading dot — exactly
+// as goPackagePathFromFile drops the prefix for a repo-root file)
+// github.com/.../cmd/zen → "cmd/zen" → "cmd/zen.main"
 //
-// Pointer and value receivers collapse to the same node_id: Phase B keys a
+// Pointer and value receivers collapse to the same node_id: keys a
 // method on its receiver's NAMED type, not on pointer-ness, so (T).M and
 // (*T).M are one node (matching go/types method identity). A nil object — a
 // synthetic SSA wrapper with no source object — yields "" so callers skip it
@@ -48,12 +48,12 @@ import (
 // Pre obj is a *types.Func, *types.TypeName, or nil; modulePrefix is the
 // module path from go.mod ("" tolerated — then no stripping, the import path
 // is used verbatim, which only happens when the loader could not resolve a
-// module and is the same fallback Phase B never hits in a real repo).
+// module and is the same fallback never hits in a real repo).
 // Post "" iff obj is nil or has no enclosing package; otherwise a dotted
 //
-//	repo-relative id BYTE-EQUAL to Phase B's qualifiedNodeID for the same
-//	symbol, stable across runs (deterministic — feeds the inv-zen-232
-//	byte-stable structure downstream).
+// repo-relative id BYTE-EQUAL to qualifiedNodeID for the same
+// symbol, stable across runs (deterministic — feeds the invariant
+// byte-stable structure downstream).
 func canonicalNodeID(obj types.Object, modulePrefix string) string {
 	if obj == nil {
 		return ""

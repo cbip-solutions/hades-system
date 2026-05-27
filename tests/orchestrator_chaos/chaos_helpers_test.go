@@ -1,4 +1,4 @@
-// tests/orchestrator_chaos/chaos_helpers_test.go (Plan 5 Phase O Task O-6).
+// tests/orchestrator_chaos/chaos_helpers_test.go.
 //
 // These helper tests spawn a real bin/zen-swarm-ctld subprocess and
 // exercise spawn/health/kill/restart. They do not require the

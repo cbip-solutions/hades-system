@@ -1,4 +1,4 @@
-//go:build chaos
+// go:build chaos
 
 // SPDX-License-Identifier: MIT
 
@@ -17,13 +17,13 @@ import (
 // The harness drives one Action at a time; the SUT decides how the
 // action translates into a system event:
 //
-//   - OnSleep:   advance / observe state during the synthetic sleep.
-//   - OnYield:   yield to other goroutines (the harness runs this
-//     inside the synctest bubble; goroutine scheduling is
-//     already deterministic).
-//   - OnInject:  activate the system-side failure (call gofail hook,
-//     close stub connection, etc.).
-//   - OnRecover: clear the injected failure.
+// - OnSleep: advance / observe state during the synthetic sleep.
+// - OnYield: yield to other goroutines (the harness runs this
+// inside the synctest bubble; goroutine scheduling is
+// already deterministic).
+// - OnInject: activate the system-side failure (call gofail hook,
+// close stub connection, etc.).
+// - OnRecover: clear the injected failure.
 //
 // Implementations MUST be non-blocking on a "sane" duration budget;
 // the harness wraps each step in a context with a per-step deadline so

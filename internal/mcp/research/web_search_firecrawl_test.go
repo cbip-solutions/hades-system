@@ -32,7 +32,7 @@ func TestFirecrawlErrorIsSanitised(t *testing.T) {
 		t.Fatalf("hits = %d", len(hits))
 	}
 	excerpt := hits[0].Excerpt
-	// The excerpt MUST start with the [firecrawl-failed: ...] marker.
+	// The excerpt MUST start with the [firecrawl-failed:...] marker.
 	if !strings.HasPrefix(excerpt, "[firecrawl-failed:") {
 		t.Errorf("excerpt missing marker: %q", excerpt)
 	}

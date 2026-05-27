@@ -14,28 +14,28 @@ import (
 )
 
 // OpenClaudeWorker is the concrete Worker implementation that drives an
-// OpenClaude subprocess via the Phase C subprocess.Session (stdio
-// JSON-RPC). It implements the Plan 4 spec §3.1 Flow 1 pipeline:
+// OpenClaude subprocess via the subprocess.Session (stdio
+// JSON-RPC). It implements the spec §3.1 Flow 1 pipeline:
 //
-//  1. Claim a SharedTaskList row (status: pending → in_progress)
-//  2. Drain pending FixPromptQueue rows for this worker
-//  3. Build a prompt with the doctrine-reinforcement block (inv-zen-070 hook)
-//     + drained fix-prompts + the user prompt
-//  4. Send the prompt as a single Request frame to OpenClaude
-//  5. Loop on Receive:
-//     - Notification "checkpoint" → CheckpointQueue.Put with deadline-stamping
-//     (inv-zen-050 hook)
-//     - Request "tool_use" → route via ToolRelay; send Result/Error back
-//     - Result "done" / non-tool_use → terminal; advance task to review
-//     - Error → mark task failed
-//  6. Finalize SharedTaskList (success → review, failure → failed)
+// 1. Claim a SharedTaskList row (status: pending → in_progress)
+// 2. Drain pending FixPromptQueue rows for this worker
+// 3. Build a prompt with the doctrine-reinforcement block
+// + drained fix-prompts + the user prompt
+// 4. Send the prompt as a single Request frame to OpenClaude
+// 5. Loop on Receive:
+// - Notification "checkpoint" → CheckpointQueue.Put with deadline-stamping
 //
-// inv-zen-087 boundary: NewOpenClaudeWorker REQUIRES non-empty
-// worktreePath. The Worker is the consumer; Plan 5 WorktreePool will own
+// - Request "tool_use" → route via ToolRelay; send Result/Error back
+// - Result "done" / non-tool_use → terminal; advance task to review
+// - Error → mark task failed
+// 6. Finalize SharedTaskList (success → review, failure → failed)
+//
+// invariant boundary: NewOpenClaudeWorker REQUIRES non-empty
+// worktreePath. The Worker is the consumer; WorktreePool will own
 // allocation. Compile-check via constructor signature; runtime check via
 // panic at construction with explanatory message.
 //
-// inv-zen-031 boundary: this struct depends only on internal/workforce/queue
+// invariant boundary: this struct depends only on internal/workforce/queue
 // (interface) + internal/workforce/subprocess (interface) + worker
 // package interfaces (DoctrineConfig, ToolRelay). It MUST NOT import
 // internal/store directly. Concrete queue/store wiring lives in
@@ -446,13 +446,13 @@ func (w *OpenClaudeWorker) LastResponseText() string {
 }
 
 // MakeCheckpointID returns the stable string used as the worker-local
-// identifier for a checkpoint emission. Plan 5's reviewer dispatcher
+// identifier for a checkpoint emission. reviewer dispatcher
 // MUST compute the same string deterministically from (projectID,
 // taskID, seq) to correlate Drain reads with the upstream worker's
 // RunResult.CheckpointIDs slice.
 //
 // Format "<projectID>/<taskID>/seq=<seq>". The format is stable;
-// changing it is a breaking contract for Plan 5 + audit downstream.
+// changing it is a breaking contract + audit downstream.
 //
 // The queue.CheckpointQueue interface intentionally does not return
 // an ID from Put (the SQLite rowid is an implementation detail), so
@@ -462,7 +462,7 @@ func MakeCheckpointID(projectID string, taskID queue.TaskID, seq int) string {
 }
 
 // finalizeTask updates the SharedTaskList row based on the run outcome.
-// Success → status=review (Plan 5 reviewers move review → done).
+// Success → status=review.
 // Failure → status=failed.
 //
 // SharedTaskList writes use a fresh background context so cancellation

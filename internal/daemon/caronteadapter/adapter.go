@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -36,7 +37,7 @@ func NewAdapterFromDB(db *sql.DB) *Adapter {
 }
 
 // OpenProjectDB returns a *sql.DB for the project's caronte.db, opening
-// (and creating the file + .zen/ dir) on first call and returning the
+// (and creating the file +.zen/ dir) on first call and returning the
 // cached handle thereafter. The caller (caronte.store.Open via the engine)
 // MUST NOT Close the returned handle — Close() owns the lifecycle.
 //

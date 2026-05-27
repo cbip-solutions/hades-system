@@ -78,20 +78,20 @@ type CandidateFailure struct {
 	Stderr      string               `json:"stderr"`
 }
 
-// CandidateRunner is the Phase B → Phase D contract. Phase D engine.go
+// CandidateRunner is the → contract. engine.go
 // invokes Run(...) per candidate via runner.go's goroutine fan-out
-// (internal/orchestrator/merge/runner.go is Phase D territory; the
-// interface lives here in Phase B because that is where the implementation
+// (internal/orchestrator/merge/runner.go is territory; the
+// interface lives here in because that is where the implementation
 // surface lives).
 //
 // Implementations MUST:
-//   - Honor ctx cancellation (return promptly with wrapped context.Canceled
-//     or context.DeadlineExceeded; partial state cleanup via defer).
-//   - Emit EvtCandidateStarted before any side effect; either
-//     EvtCandidateComplete (success path) or EvtCandidateFailed (any error
-//     path) before returning.
-//   - Never return a partially populated CandidateOutcome on the error path
-//     (return zero-value + non-nil error so callers can rely on the dichotomy).
+// - Honor ctx cancellation (return promptly with wrapped context.Canceled
+// or context.DeadlineExceeded; partial state cleanup via defer).
+// - Emit EvtCandidateStarted before any side effect; either
+// EvtCandidateComplete (success path) or EvtCandidateFailed (any error
+// path) before returning.
+// - Never return a partially populated CandidateOutcome on the error path
+// (return zero-value + non-nil error so callers can rely on the dichotomy).
 type CandidateRunner interface {
 	Run(ctx context.Context, c MergeCandidate, baseSHA string, passingSet PassingSet, mode Mode, suite TestSuite) (CandidateOutcome, error)
 }

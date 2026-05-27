@@ -25,7 +25,7 @@ for f in "${required[@]}"; do
 done
 echo "  [OK] required docs present (inv-zen-324)"
 
-# Sub-invariant inv-zen-326: gitnexus-ux.md MUST NOT exist.
+# Sub-invariant invariant: gitnexus-ux.md MUST NOT exist.
 if [[ -f "docs/operations/gitnexus-ux.md" ]]; then
     echo "ERROR: docs/operations/gitnexus-ux.md MUST NOT exist (decisión 6; Plan 19 Caronte)" >&2
     exit 1

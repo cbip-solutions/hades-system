@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// internal/citation/markdown_fallback_test.go — Plan 11 Phase D Task D-4.
+// internal/citation/markdown_fallback_test.go — Task D-4.
 //
 // Render output tests + AuditEmitter integration (best-effort emission)
 // + plain-text mode + golden-style footnote shape.

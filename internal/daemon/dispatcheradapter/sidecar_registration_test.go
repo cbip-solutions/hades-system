@@ -3,7 +3,7 @@
 //
 // Tests for RegisterSidecars — the daemon-startup hook that reads
 // sidecars.toml, probes /health, and registers the SidecarBackend by name
-// into providers.Registry per inv-zen-066 frozen contract C8 (name-based
+// into providers.Registry per invariant frozen contract C8 (name-based
 // cascade; ProfileResolver determines order).
 
 package dispatcheradapter_test
@@ -100,7 +100,7 @@ func TestRegisterSidecars_NilTier1Bypass_NoOpDoesNotRegister(t *testing.T) {
 // TestRegisterSidecars_HealthProbeNon200_SkipsRegistration asserts that
 // a 503 (or any non-200) /health response causes the backend to be
 // skipped: no registration, with a warning log line. The operator's
-// daemon boots successfully; the Plan 16 cascade handles dispatches.
+// daemon boots successfully; the cascade handles dispatches.
 func TestRegisterSidecars_HealthProbeNon200_SkipsRegistration(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusServiceUnavailable)
@@ -219,7 +219,7 @@ func TestRegisterSidecars_PanicsOnNilLogger(t *testing.T) {
 
 // TestRegisterSidecars_InvalidURL_SkipsRegistration asserts a malformed
 // tier1.URL surfaces as a "skipping registration" warning rather than
-// crashing the daemon. (Per Plan 15 Phase B-5 validation, sidecars.toml
+// crashing the daemon. (Per validation, sidecars.toml
 // loader normally catches this — but RegisterSidecars must be defensive
 // against a caller that bypasses the loader, e.g. tests injecting a
 // hand-built cfg.)

@@ -78,7 +78,7 @@ func TestInvZenB11_CurationTablePrivacyHeader(t *testing.T) {
 	}
 	content := string(body)
 
-	// The doc MUST self-classify as PRIVATE-ONLY + reference decisión 17-c
+	// The doc MUST self-classify as PRIVATE-ONLY + reference policy
 	// in the opening preamble (first ~50 lines / privacy callout block).
 	// Both anchors are required so a future edit that softens one signal
 	// trips the gate.
@@ -87,7 +87,7 @@ func TestInvZenB11_CurationTablePrivacyHeader(t *testing.T) {
 		"decisión 17-c",
 	}
 	// Restrict the scan to the first ~120 lines so a future references-section
-	// mention of "decisión 17-c" downstream does not satisfy the privacy-header
+	// mention of policy" downstream does not satisfy the privacy-header
 	// requirement (the header MUST be in the preamble).
 	prefix := content
 	if len(content) > 6000 {

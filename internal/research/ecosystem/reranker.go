@@ -10,7 +10,7 @@ import (
 // score-space drift implicitly per Bruch 2023 + ZeroEntropy 2025).
 //
 // Concurrency implementations MUST be safe for concurrent Rerank calls.
-// Phase D dispatcher.Query issues one Rerank per query (not parallelized
+// dispatcher.Query issues one Rerank per query (not parallelized
 // per ecosystem — RRF fusion runs BEFORE rerank).
 type Reranker interface {
 	Rerank(ctx context.Context, query string, candidates []Candidate, topK int) ([]RankedResult, error)

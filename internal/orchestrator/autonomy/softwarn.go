@@ -8,19 +8,19 @@ import (
 )
 
 // AutonomyEventKind enumerates the audit events the autonomy package emits.
-// Phase L surfaces the kind constants; the eventlog wire format
-// (eventlog.EventType) is wired by Phase N at the CLI entry point via an
+// surfaces the kind constants; the eventlog wire format
+// (eventlog.EventType) is wired by at the CLI entry point via an
 // adapter that translates AutonomyEvent → eventlog.Event.
 //
 // Two kinds are exposed:
 //
-//   - EventBypassedSoftCheck — emitted when --allow-soft-warnings caused a
-//     soft-tier check failure to be bypassed instead of warning-only. One
-//     event per bypassed check.
-//   - EventAutonomyOverrideRejected — emitted when Resolve's capa-firewall
-//     hard guard suppressed a non-manual override (inv-zen-100). Phase N
-//     wires the emission at the CLI entry point when
-//     Resolution.RejectedOverride != nil.
+// - EventBypassedSoftCheck — emitted when --allow-soft-warnings caused a
+// soft-tier check failure to be bypassed instead of warning-only. One
+// event per bypassed check.
+// - EventAutonomyOverrideRejected — emitted when Resolve's capa-firewall
+// hard guard suppressed a non-manual override.
+// wires the emission at the CLI entry point when
+// Resolution.RejectedOverride != nil.
 type AutonomyEventKind uint8
 
 const (
@@ -49,8 +49,8 @@ type AutonomyEvent struct {
 	Override   *RejectedOverride
 }
 
-// EventEmitter is the collaborator Phase N wires to the eventlog package.
-// Phase L tests inject a fake; production injects an adapter that translates
+// EventEmitter is the collaborator wires to the eventlog package.
+// tests inject a fake; production injects an adapter that translates
 // AutonomyEvent → eventlog.Event{Type: EventTypeAutonomy*}.
 //
 // Emission is best-effort: a returned error is logged by the caller but

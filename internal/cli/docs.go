@@ -1,35 +1,35 @@
 // SPDX-License-Identifier: MIT
-// Package cli — docs.go (Plan 14 Phase F Task F-6 + Phase G Task G-5).
+// Package cli — docs.go.
 //
 // `zen docs` is the operator-facing surface for ecosystem-docs corpus
-// management. The Plan 14 design registers six management subcommands:
+// management. The design registers six management subcommands:
 //
-//	zen docs reindex                                     rebuild/refresh
-//	zen docs pin --ecosystem X --version Y               set indefinite_retain=true (G-5)
-//	zen docs prune --ecosystem X --version Y --confirm   hard-remove version (G-5)
-//	zen docs status                                      per-ecosystem table
-//	zen docs sources --list                              per-source health table
-//	zen docs router-retrain                              retrain D-2 classifier
+// zen docs reindex rebuild/refresh
+// zen docs pin --ecosystem X --version Y set indefinite_retain=true (G-5)
+// zen docs prune --ecosystem X --version Y --confirm hard-remove version (G-5)
+// zen docs status per-ecosystem table
+// zen docs sources --list per-source health table
+// zen docs router-retrain retrain D-2 classifier
 //
 // All six talk to the HADES daemon (zen-swarm-ctld) over the HTTP API
 // (internal/client.ecosystem_docs_ops.go). The daemon-side handlers land
-// in Phase G — until then the endpoints return 503 and the CLI maps that
+// in — until then the endpoints return 503 and the CLI maps that
 // to exit-code 2 (unrecoverable per spec §6.2).
 //
 // G-5 evolution from F-6 (operator-confirmed retention per spec §2.9 Q9=A):
-//   - pin: chunk-id positional → flag-based --ecosystem --version. Sets
-//     ecosystem_versions.indefinite_retain=true; daemon path moves from
-//     /v1/knowledge/ecosystem/pin to /v1/ecosystem/pin.
-//   - prune: dry-run-or-confirm flags → preview (GET /v1/ecosystem/prune-preview)
-//   - promptYN gate + commit (DELETE /v1/ecosystem/version). Daemon refuses
-//     pruning pinned versions (409 Conflict); CLI surfaces unpin guidance.
+// - pin: chunk-id positional → flag-based --ecosystem --version. Sets
+// ecosystem_versions.indefinite_retain=true; daemon path moves from
+// /v1/knowledge/ecosystem/pin to /v1/ecosystem/pin.
+// - prune: dry-run-or-confirm flags → preview (GET /v1/ecosystem/prune-preview)
+// - promptYN gate + commit (DELETE /v1/ecosystem/version). Daemon refuses
+// pruning pinned versions (409 Conflict); CLI surfaces unpin guidance.
 //
 // Boundary stdlib + spf13/cobra + internal/client only. No
-// internal/research/ecosystem import (inv-zen-031); the orchestrator
+// internal/research/ecosystem import; the orchestrator
 // owns ecosystem operations and the daemon mediates.
 //
 // History pre-F-6, `zen docs` registered six `notImplementedSubcommand`
-// stubs (show/open/diff/versions/export/recover) targeting Plan 9. F-6
+// stubs (show/open/diff/versions/export/recover) targeting F-6
 // replaced them with the management surface above. G-5 refined the
 // pin/prune semantics from F-6's initial chunk-id-based / dry-run-or-confirm
 // shape to the canonical version-retention contract from the spec.

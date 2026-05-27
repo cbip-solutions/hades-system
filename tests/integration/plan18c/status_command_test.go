@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18c_integration_test
 
 import (

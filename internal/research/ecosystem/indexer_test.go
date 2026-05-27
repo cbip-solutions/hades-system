@@ -1,9 +1,10 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
 // Package ecosystem — indexer_test.go
 //
-// Tests for Indexer.WriteChunks (Plan 14 Phase C Task C-3).
+// Tests for Indexer.WriteChunks.
 //
 // Coverage discipline: per project doctrine `feedback_no_tech_debt.md`,
 // security/correctness-critical files require ≥90% per-function coverage.
@@ -14,17 +15,17 @@
 // audit chain linking (parent_hash → next-row.parent_hash), FTS5 MATCH,
 // vec0 Hamming MATCH (build-tag-gated), and constructor validation.
 //
-// Drift reconciliation (Stage 0 reality-check, 2026-05-17):
-//   - plan-file used column `language` for UNIQUE on ecosystem_packages;
-//     real Phase A migration uses `ecosystem` (A-9 reconciliation). All
-//     SQL + Go field accesses here use `ecosystem`.
-//   - plan-file fakeAuditEmitter.Append used `uint16` for event type;
-//     real RAGAuditChainEmitter.Append takes `eventlog.EventType` (int).
-//     fakeAuditEmitter below uses the canonical signature.
-//   - plan-file did not pin chain seq alignment between RAGAuditChainEmitter
-//     and ecosystem_audit_chain.seq AUTOINCREMENT; tests verify that the
-//     persisted row's seq matches the value chain.Append returned (the
-//     indexer writes that seq explicitly, overriding AUTOINCREMENT).
+// Drift reconciliation:
+// - plan-file used column `language` for UNIQUE on ecosystem_packages;
+// real migration uses `ecosystem` (A-9 reconciliation). All
+// SQL + Go field accesses here use `ecosystem`.
+// - plan-file fakeAuditEmitter.Append used `uint16` for event type;
+// real RAGAuditChainEmitter.Append takes `eventlog.EventType` (int).
+// fakeAuditEmitter below uses the canonical signature.
+// - plan-file did not pin chain seq alignment between RAGAuditChainEmitter
+// and ecosystem_audit_chain.seq AUTOINCREMENT; tests verify that the
+// persisted row's seq matches the value chain.Append returned (the
+// indexer writes that seq explicitly, overriding AUTOINCREMENT).
 //
 // Build tag `cgo`: this file requires sqlite3 driver (mattn/go-sqlite3) +
 // sqlite-vec virtual table support (registered via ApplyMigrations).
@@ -461,7 +462,7 @@ func TestIndexer_WriteChunks_RollbackOnInvalidChangeType(t *testing.T) {
 // TestIndexer_WriteChunks_RollbackOnAuditEmitterError forces the audit
 // chain emitter to fail. Verifies the FULL transaction rolls back —
 // the chunks/symbols/changes written earlier MUST not persist if the
-// audit row can't be emitted (inv-zen-197 backstop: a write WITHOUT
+// audit row can't be emitted (invariant backstop: a write WITHOUT
 // an audit event is forbidden).
 func TestIndexer_WriteChunks_RollbackOnAuditEmitterError(t *testing.T) {
 	db := setupIndexerTestDB(t)

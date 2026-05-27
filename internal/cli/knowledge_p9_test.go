@@ -170,6 +170,33 @@ func TestKnowledge9Promote_HappyPath(t *testing.T) {
 	}
 }
 
+func TestKnowledge9Promote_ForwardsProjectFlag(t *testing.T) {
+	var gotProject string
+	mux := http.NewServeMux()
+	mux.HandleFunc("/v1/knowledge/promote", func(w http.ResponseWriter, r *http.Request) {
+		var body struct {
+			ProjectID string `json:"project_id"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode: %v", err)
+		}
+		gotProject = body.ProjectID
+		w.WriteHeader(http.StatusNoContent)
+	})
+	srv := httptest.NewServer(mux)
+	t.Cleanup(srv.Close)
+
+	_, _, err := invokeKnowledge9Cmd(t,
+		[]string{"promote", "M0-pattern-vault-format", "--project", "internal-platform-x", "--reason", "applies"},
+		srv.URL)
+	if err != nil {
+		t.Fatalf("CLI: %v", err)
+	}
+	if gotProject != "internal-platform-x" {
+		t.Fatalf("project_id = %q, want internal-platform-x", gotProject)
+	}
+}
+
 func TestKnowledge9Unpromote_RequiresReason(t *testing.T) {
 	srv := mockKnowledge9Server(t)
 	_, _, err := invokeKnowledge9Cmd(t, []string{"unpromote", "x"}, srv.URL)
@@ -188,6 +215,33 @@ func TestKnowledge9Unpromote_HappyPath(t *testing.T) {
 	}
 	if !strings.Contains(stdout, "unpromoted") {
 		t.Errorf("expected 'unpromoted' in output; got: %s", stdout)
+	}
+}
+
+func TestKnowledge9Unpromote_ForwardsProjectFlag(t *testing.T) {
+	var gotProject string
+	mux := http.NewServeMux()
+	mux.HandleFunc("/v1/knowledge/unpromote", func(w http.ResponseWriter, r *http.Request) {
+		var body struct {
+			ProjectID string `json:"project_id"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode: %v", err)
+		}
+		gotProject = body.ProjectID
+		w.WriteHeader(http.StatusNoContent)
+	})
+	srv := httptest.NewServer(mux)
+	t.Cleanup(srv.Close)
+
+	_, _, err := invokeKnowledge9Cmd(t,
+		[]string{"unpromote", "M0-pattern-vault-format", "--project", "internal-platform-x", "--reason", "superseded"},
+		srv.URL)
+	if err != nil {
+		t.Fatalf("CLI: %v", err)
+	}
+	if gotProject != "internal-platform-x" {
+		t.Fatalf("project_id = %q, want internal-platform-x", gotProject)
 	}
 }
 

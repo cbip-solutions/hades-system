@@ -1,3 +1,4 @@
+// go:build integration
 //go:build integration
 // +build integration
 
@@ -145,7 +146,7 @@ sys.stdout.write(json.dumps({
 		t.Errorf("python received id = %v, want msg_E2E", result["id"])
 	}
 	// Reviewer I2: the audit_event_id MUST cross the cross-language
-	// boundary so Plan 12 citation renderers can deep-link via
+	// boundary so citation renderers can deep-link via
 	// zen://audit/<id>. Before the I2 fix, complete() returned just the
 	// inner body dict — the field was silently discarded.
 	if got := result["audit_event_id"]; got != "evt-e2e-001" {

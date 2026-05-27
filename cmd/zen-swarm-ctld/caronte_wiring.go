@@ -1,34 +1,34 @@
 // SPDX-License-Identifier: MIT
 // cmd/zen-swarm-ctld/caronte_wiring.go
 //
-// Caronte engine (Plan 19 sovereign in-process replacement for the former gitnexus subprocess, DECISION 1/2).
+// Caronte engine.
 //
 // This file is the daemon's composition root for caronte: it is ALLOWED to
 // import internal/caronte, internal/caronte/*, internal/daemon/caronte*,
 // internal/orchestrator, internal/orchestrator/merge, and
 // internal/research/ecosystem. The composition root is the ONLY layer that
 // imports concretes from all sides; the intermediate layers see only narrow
-// seam interfaces (inv-zen-031).
+// seam interfaces.
 //
 // Three public helpers exported to main.go (J-10):
 //
-//   - buildCaronteEngine(caronteWiringDeps) (*caronte.Engine, error)
-//     Assembles caronte.Deps from the daemon's real substrate and calls
-//     caronte.NewEngine. main.go os.Exit(1)s on error (bootstrap-required,
-//     generalises inv-zen-206).
+// - buildCaronteEngine(caronteWiringDeps) (*caronte.Engine, error)
+// Assembles caronte.Deps from the daemon's real substrate and calls
+// caronte.NewEngine. main.go os.Exit(1)s on error (bootstrap-required,
+// generalises invariant).
 //
-//   - caronteOrchVerdictAdapter  — satisfies orchestrator.BlastRadiusProvider
+// - caronteOrchVerdictAdapter — satisfies orchestrator.BlastRadiusProvider
 //
-//   - caronteMergeVerdictAdapter — satisfies merge.BlastRadiusScorer
-//     Both map evolution.RiskScore → the local Verdict type (DECISION 3:
-//     one adapter type CANNOT have two BlastRadius methods returning different
-//     Verdict types, so the mapping is split across two tiny wrappers over a
-//     shared caronteBlastRadiusCore).
+// - caronteMergeVerdictAdapter — satisfies merge.BlastRadiusScorer
+// Both map evolution.RiskScore → the local Verdict type (DECISION 3:
+// one adapter type CANNOT have two BlastRadius methods returning different
+// Verdict types, so the mapping is split across two tiny wrappers over a
+// shared caronteBlastRadiusCore).
 //
-//   - newCaronteSubsystem(*mcpgateway.CaronteProxy) *caronteSubsystem
-//     Wraps the proxy as a gateway Subsystem named "caronte" (Plan 19 Phase L
-//     renamed the segment gitnexus->caronte; RBAC/REST/augment lanes all moved
-//     to the "caronte" segment in the same atomic cutover).
+// - newCaronteSubsystem(*mcpgateway.CaronteProxy) *caronteSubsystem
+// Wraps the proxy as a gateway Subsystem named "caronte" (
+// renamed the segment gitnexus->caronte; RBAC/REST/augment lanes all moved
+// to the "caronte" segment in the same atomic cutover).
 package main
 
 import (

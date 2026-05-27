@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Plan 13 spike fixture — project-scope plugin module.
+""" spike fixture — project-scope plugin module.
 
 Minimal `register(ctx)` entry-point required by Hermes plugin loader
 (see hermes_cli/plugins.py:1037). The fixture exists to prove Hermes

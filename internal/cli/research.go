@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
-// Package cli — research.go (Plan 4 Phase N Task N-3).
+// Package cli — research.go.
 //
 // `zen research` exposes the research-cache admin surface to operators.
 //
 // Cobra layout (7 leaves):
 //
-//	zen research cache get   <hash>
-//	zen research cache set   --hash --body --ttl
-//	zen research cache list  --limit --offset
-//	zen research cache clear --older-than <duration>
-//	zen research cache stats
-//	zen research show        <hash>
-//	zen research sources     (synthetic; reports doctrine-configured sources)
+// zen research cache get <hash>
+// zen research cache set --hash --body --ttl
+// zen research cache list --limit --offset
+// zen research cache clear --older-than <duration>
+// zen research cache stats
+// zen research show <hash>
+// zen research sources (synthetic; reports doctrine-configured sources)
 //
 // Option A adaptation: the plan-doc enumerates streaming `dispatch` and
 // `agentic-deep` subcommands plus a `findings/{id}` show route. Those
-// require Phase I (research MCP wiring) which is out of Phase N scope;
+// require (research MCP wiring) which is out of scope;
 // they will be appended additively without touching the surface here.
-// Phase N delivers the cache admin tools as the operator-reachable
+// delivers the cache admin tools as the operator-reachable
 // research subset, complete with real round-trips against the daemon.
 package cli
 

@@ -1,28 +1,28 @@
 // SPDX-License-Identifier: MIT
 // Package cli — init.go.
 //
-// Surface brownfield attach to an existing repo. Delegates Phase B
-// recognize for inference + Phase A onboard.Wizard with WizardKindBrownfield
-// + writes .zen/{config,scaffold}.toml + optional .hermes/plugins/ symlink.
+// Surface brownfield attach to an existing repo. Delegates
+// recognize for inference + onboard.Wizard with WizardKindBrownfield
+// + writes.zen/{config,scaffold}.toml + optional.hermes/plugins/ symlink.
 //
 // brownfield is ADDITIVE ONLY: never overwrites operator source files
-// (only writes inside .zen/ + .hermes/).
+// (only writes inside.zen/ +.hermes/).
 //
-// Stage 0 drift adjustments vs plan §"Tech Stack":
-//   - Plan §3416 sets `defaults.RecognizeResult = &result`. Field does
-//     not exist on onboard.WizardDefaults. Workaround: thread recognize
-//     fields into existing defaults (ProjectKind, Doctrine).
-//   - Plan cites `recognize.Result.Framework` (singular) — actual struct
-//     has `Frameworks []FrameworkEvidence`. Helper firstFramework() reads
-//     the head of the slice or returns "" when empty.
-//   - Plan cites `recognize.Result.WorkspaceRoot` — actual is
-//     `Monorepo *MonorepoInfo` carrying the root. Adapted to read
-//     Monorepo.WorkspaceRoot when populated.
-//   - Plan cites `recognize.Result.Confidence map[string]float64` —
-//     actual `PrimaryConfidence float64` + per-language evidence
-//     confidences in `Languages []LanguageEvidence`.
-//   - Exit codes: ErrRecoverable / ErrPreflightFailure sentinels (NOT
-//     plan's errExit; same adaptation as new.go).
+// drift adjustments vs plan §"Tech Stack":
+// - Plan §3416 sets `defaults.RecognizeResult = &result`. Field does
+// not exist on onboard.WizardDefaults. Workaround: thread recognize
+// fields into existing defaults (ProjectKind, Doctrine).
+// - Plan cites `recognize.Result.Framework` (singular) — actual struct
+// has `Frameworks []FrameworkEvidence`. Helper firstFramework() reads
+// the head of the slice or returns "" when empty.
+// - Plan cites `recognize.Result.WorkspaceRoot` — actual is
+// `Monorepo *MonorepoInfo` carrying the root. Adapted to read
+// Monorepo.WorkspaceRoot when populated.
+// - Plan cites `recognize.Result.Confidence map[string]float64` —
+// actual `PrimaryConfidence float64` + per-language evidence
+// confidences in `Languages []LanguageEvidence`.
+// - Exit codes: ErrRecoverable / ErrPreflightFailure sentinels (NOT
+// plan's errExit; same adaptation as new.go).
 package cli
 
 import (
@@ -429,7 +429,7 @@ func writeBrownfieldScaffold(root string, a onboard.WizardAnswers, r recognize.R
 	return os.WriteFile(filepath.Join(zenDir, "scaffold.toml"), []byte(scaffold), 0o644)
 }
 
-// linkHermesPlugin creates the .hermes/plugins/<project-name>/ symlink.
+// linkHermesPlugin creates the.hermes/plugins/<project-name>/ symlink.
 // Best-effort: returns error but caller treats as warning.
 func linkHermesPlugin(root, projectName string) error {
 	pluginDir := filepath.Join(root, ".hermes", "plugins")

@@ -3,34 +3,34 @@
 // Compliance test: chain.Compute (the audit-event chain hash producer)
 // and recovery.ComputeRecordHashCanonical (the verify-side hash
 // reproducer) MUST produce byte-identical output for the same inputs.
-// Closes IMPORTANT-4 (I-4) from the Plan 9 cross-phase A+B+C review.
+// Closes IMPORTANT-4 (I-4) from the cross-phase A+B+C review.
 //
 // Why this test exists:
 //
-//	The recovery package re-implements the chain-hash formula
-//	(see internal/audit/recovery/verify_chain.go computeRecordHash)
-//	rather than importing internal/audit/chain. The orthogonality is
-//	intentional under the project doctrine + dispatch DAG — Phase B
-//	(chain) and Phase C (recovery) ship in parallel; cross-importing
-//	couples them. But two copies of the same formula is an opportunity
-//	for silent bit-rot: a future change to chain.Compute that misses
-//	the recovery copy would break verify-chain only on tampered inputs
-//	that THIS specific formula version flags, surfacing as a
-//	subtle-and-late integrity bug.
+// The recovery package re-implements the chain-hash formula
+// (see internal/audit/recovery/verify_chain.go computeRecordHash)
+// rather than importing internal/audit/chain. The orthogonality is
+// intentional under the project doctrine + dispatch DAG —
+// (chain) and (recovery) ship in parallel; cross-importing
+// couples them. But two copies of the same formula is an opportunity
+// for silent bit-rot: a future change to chain.Compute that misses
+// the recovery copy would break verify-chain only on tampered inputs
+// that THIS specific formula version flags, surfacing as a
+// subtle-and-late integrity bug.
 //
-//	This test catches the drift in two complementary ways:
+// This test catches the drift in two complementary ways:
 //
-//	  1. Property-based — testing/quick fires 1000 random
-//	     (prevHash, eventType, payload, ts) tuples through both
-//	     functions and asserts equality on the chain-rejection-domain
-//	     (chain.Compute validates inputs; recovery does not — when
-//	     chain.Compute returns an error we skip that input as
-//	     out-of-formula-domain).
+// 1. Property-based — testing/quick fires 1000 random
+// (prevHash, eventType, payload, ts) tuples through both
+// functions and asserts equality on the chain-rejection-domain
+// (chain.Compute validates inputs; recovery does not — when
+// chain.Compute returns an error we skip that input as
+// out-of-formula-domain).
 //
-//	  2. Pinned vector — a hard-coded canonical input + expected
-//	     output. Mirrors chain.TestComputeKnownVector so the same
-//	     sha256 byte sequence is asserted from both sides. Locks the
-//	     algorithm to "sha256(prev || \"|\" || type || \"|\" || payload || \"|\" || ts_decimal)".
+// 2. Pinned vector — a hard-coded canonical input + expected
+// output. Mirrors chain.TestComputeKnownVector so the same
+// sha256 byte sequence is asserted from both sides. Locks the
+// algorithm to "sha256(prev || \"|\" || type || \"|\" || payload || \"|\" || ts_decimal)".
 //
 // Inv-zen-031 boundary check: this test imports BOTH internal/audit/chain
 // AND internal/audit/recovery. tests/compliance/ is the integration

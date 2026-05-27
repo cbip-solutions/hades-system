@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package main implements the Plan 13 Phase 0 spike re-verify CLI.
+// Package main implements the Phase 0 spike re-verify CLI.
 //
-// Per spec §2.6 Q6=C + §4.5 + §8.10 inv-zen-180: this binary regenerates
-// the canonical spike artifact (docs/superpowers/specs/2026-05-XX-zen-
+// Per spec §2.6 Q6=C + §4.5 + §8.10 invariant: this binary regenerates
+// the canonical spike artifact (internal design record
 // swarm-plan-13-spike-hermes-mcp-contract.md) by querying Hermes head
 // SHA via api.github.com + extracting VALID_HOOKS + PluginManifest schema
 // from hermes_cli/plugins.py. If drift detected vs committed artifact,
@@ -10,10 +10,10 @@
 //
 // Modes (post review M-1 fix — explicit, mutually exclusive):
 //
-//	(no flag)        defaults to --check (fetch Hermes head + diff against artifact)
-//	--check          fetch Hermes head + diff against artifact; exit 0=ok 1=drift 2=network-fail
-//	--check --offline only verify artifact file exists (no network); CI fast-path
-//	--regenerate     fetch Hermes head + overwrite artifact (operator-driven; commits artifact via single docs(plan-13) commit)
+// (no flag) defaults to --check (fetch Hermes head + diff against artifact)
+// --check fetch Hermes head + diff against artifact; exit 0=ok 1=drift 2=network-fail
+// --check --offline only verify artifact file exists (no network); CI fast-path
+// --regenerate fetch Hermes head + overwrite artifact (operator-driven; commits artifact via single docs(plan-13) commit)
 //
 // Drift gate semantics (post review C-3 fix): the check mode compares the
 // full rendered artifact bytes (not just SHA) against the committed file.
@@ -22,7 +22,7 @@
 //
 // Per spec §0.4 doctrine + methodology §13 + feedback_plan_template_drift:
 // drift detection in CI is the canonical "halt + investigate" trigger; the
-// operator decides whether to amend Plan 13 spec inline (single commit) or
+// operator decides whether to amend spec inline (single commit) or
 // to coordinate cross-plan implications first.
 package main
 
@@ -436,7 +436,7 @@ const projectScopeSection = "\n---\n\n## §3 Project-scope `.hermes/plugins/` lo
 //
 // We use a plain net/http POST rather than internal/client.Client so the
 // spike binary stays a tiny standalone tool with no daemon-runtime
-// dependency. The payload mirrors the spec §3.7 + inv-zen-180 contract:
+// dependency. The payload mirrors the spec §3.7 + invariant contract:
 // artifact_path / hermes_head_sha / artifact_bytes / valid_hooks_count /
 // manifest_required_keys_count.
 func emitSpikeAuditEvent(ctx context.Context, baseURL, artifactPath string, info *hermesHeadInfo, artifactBytes int) {

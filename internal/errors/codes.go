@@ -2,54 +2,54 @@
 // Package errors centralises sentinel error values and the typed
 // error-code catalog used across zen-swarm.
 //
-// This file (codes.go) ships the Plan 18c Phase A error catalog: a
+// This file (codes.go) ships the error catalog: a
 // typed table of 31 user-visible error codes per spec §Q6, each with
 // a stable identifier (Code), a short title, a body template, a
 // recovery hint (concrete shell command or doc link — NEVER
 // platitudes), a Severity (driving exit-code mapping), and a Category.
 // The catalog is the single source of truth consumed by
-// internal/cli/error_render.go (Phase B) at every CLI subcommand
+// internal/cli/error_render.go at every CLI subcommand
 // boundary.
 //
 // # Catalog composition (31 entries)
 //
-//   - 24 enumerated codes spanning 8 categories per spec §Q6:
-//     daemon (4) + provider (5) + bypass (3) + wizard (3) +
-//     plugin (3) + tui (2) + cli (2) + skin (2)
-//   - 1 internal-uncaught defense-in-depth catch-all (severity
-//     SeverityFatal, category CategoryCLI; consumed by Phase B's
-//     main.go recover() block for any error that escapes the
-//     catalog-routing layer)
-//   - 6 reserved overflow slots (reserved.slot-1 ... reserved.slot-6;
-//     severity SeverityInfo) representing intentional reserved
-//     capacity per max-scope doctrine. NOT stubs — future point-
-//     releases consume a slot in-place by renaming it to a real
-//     code; the schema + the LOC budget stay constant.
+// - 24 enumerated codes spanning 8 categories per spec §Q6:
+// daemon (4) + provider (5) + bypass (3) + wizard (3) +
+// plugin (3) + tui (2) + cli (2) + skin (2)
+// - 1 internal-uncaught defense-in-depth catch-all (severity
+// SeverityFatal, category CategoryCLI; consumed by
+// main.go recover() block for any error that escapes the
+// catalog-routing layer)
+// - 6 reserved overflow slots (reserved.slot-1... reserved.slot-6;
+// severity SeverityInfo) representing intentional reserved
+// capacity per max-scope doctrine. NOT stubs — future point-
+// releases consume a slot in-place by renaming it to a real
+// code; the schema + the LOC budget stay constant.
 //
-// # Phase A → Phase B contract
+// # → contract
 //
-// Phase A exports the following types + functions which are FROZEN
-// once Phase A ships (per Plan 18c master plan §"Cross-phase type
+// exports the following types + functions which are FROZEN
+// once ships (per master plan §"Cross-phase type
 // discipline"):
 //
-//   - Code (string type alias) — stable identifier; never renamed
-//     once shipped; expansion adds new constants, never modifies
-//     existing
-//   - Category enum (8 constants) — fixed surface; additions allowed
-//     via NEW const declarations + new entries in validCategories;
-//     removals forbidden
-//   - Severity enum (4 constants) — fixed surface
-//   - CodedError struct — fields {Code Code; Cause error;
-//     Context map[string]string}; stable shape
-//   - CatalogEntry struct — fields {Code Code; Title string;
-//     BodyTemplate string; RecoveryHint string; Severity Severity;
-//     Category Category}; stable shape
-//   - Lookup(code Code) *CatalogEntry — O(1) average; returns nil on
-//     miss
-//   - New(code, cause, ctx) *CodedError — full constructor
-//   - Wrap(code, cause) *CodedError — no-context shorthand
+// - Code (string type alias) — stable identifier; never renamed
+// once shipped; expansion adds new constants, never modifies
+// existing
+// - Category enum (8 constants) — fixed surface; additions allowed
+// via NEW const declarations + new entries in validCategories;
+// removals forbidden
+// - Severity enum (4 constants) — fixed surface
+// - CodedError struct — fields {Code Code; Cause error;
+// Context map[string]string}; stable shape
+// - CatalogEntry struct — fields {Code Code; Title string;
+// BodyTemplate string; RecoveryHint string; Severity Severity;
+// Category Category}; stable shape
+// - Lookup(code Code) *CatalogEntry — O(1) average; returns nil on
+// miss
+// - New(code, cause, ctx) *CodedError — full constructor
+// - Wrap(code, cause) *CodedError — no-context shorthand
 //
-// Phase B's Render() function is the SINGLE consumer of these types.
+// Render() function is the SINGLE consumer of these types.
 // Future plans extend the catalog by adding NEW entries (struct
 // literals) to the catalog map; they do NOT modify existing fields
 // or rewrite the schema. The 6 reserved overflow slots are consumed
@@ -59,29 +59,29 @@
 //
 // # Doctrine compliance
 //
-//   - Max-scope: 31 entries ship day 1 (not "10 codes now, 20
-//     later"); reserve > scarcity = 6 overflow slots
-//   - No stubs: every entry has fully-populated title/body/recovery
-//     text — reserved slots carry placeholder-but-NOT-stub text
-//     identifying them as reserved capacity
-//   - No platitudes: recovery hints are concrete shell commands or
-//     doc links — never "try again later" or "contact support"
-//   - Privacy-by-default: catalog contains NO secrets, NO operator
-//     PII; pure value types with no IO
-//   - Defense-in-depth: the internal-uncaught entry is the catch-all
-//     for any error that escapes the catalog-routing layer
+// - Max-scope: 31 entries ship day 1 (not "10 codes now, 20
+// later"); reserve > scarcity = 6 overflow slots
+// - No stubs: every entry has fully-populated title/body/recovery
+// text — reserved slots carry placeholder-but-NOT-stub text
+// identifying them as reserved capacity
+// - No platitudes: recovery hints are concrete shell commands or
+// doc links — never "try again later" or "contact support"
+// - Privacy-by-default: catalog contains NO secrets, NO operator
+// PII; pure value types with no IO
+// - Defense-in-depth: the internal-uncaught entry is the catch-all
+// for any error that escapes the catalog-routing layer
 //
 // # Companion file
 //
 // errors.go preserves the legacy NotImplementedError family + Plan2..
-// Plan15 sentinels (additive composition — Phase A does NOT modify
+// Plan15 sentinels (additive composition — does NOT modify
 // errors.go).
 //
 // # Spec references
 //
-//   - docs/superpowers/specs/2026-05-20-zen-swarm-plan-18-hades-system-unified-ux-design.md §Q6
-//   - docs/superpowers/plans/2026-05-20-plan-18c-polish-master.md §"Phase A — Error catalog"
-//   - docs/superpowers/plans/2026-05-20-plan-18c-phase-A-error-catalog.md (this file's parent)
+// - internal design record §Q6
+// - internal design record §" — Error catalog"
+// - internal design record (this file's parent)
 package errors
 
 import (
@@ -193,26 +193,26 @@ type CatalogEntry struct {
 // CatalogEntry. Populated at package init (Go static-var init). Phase
 // A ships 31 entries:
 //
-//   - 24 enumerated codes (8 categories × 2-5 codes each per spec §Q6)
-//     → daemon(4) + provider(5) + bypass(3) + wizard(3) + plugin(3)
-//   - tui(2) + cli(2) + skin(2) = 24
-//   - 1 internal-uncaught defense-in-depth entry
-//   - 6 reserved overflow slots (reserved.slot-1 ... reserved.slot-6)
+// - 24 enumerated codes (8 categories × 2-5 codes each per spec §Q6)
+// → daemon(4) + provider(5) + bypass(3) + wizard(3) + plugin(3)
+// - tui(2) + cli(2) + skin(2) = 24
+// - 1 internal-uncaught defense-in-depth entry
+// - 6 reserved overflow slots (reserved.slot-1... reserved.slot-6)
 //
 // Lookup discipline:
-//   - O(1) average via map[Code]*CatalogEntry (Go runtime hash map)
-//   - Pointer-typed values (NOT inline struct values) so consumers can
-//     compare for nil to detect a catalog miss without copying the
-//     entry
+// - O(1) average via map[Code]*CatalogEntry (Go runtime hash map)
+// - Pointer-typed values (NOT inline struct values) so consumers can
+// compare for nil to detect a catalog miss without copying the
+// entry
 //
 // Mutability discipline:
-//   - The map is package-private (lowercase identifier) — external
-//     consumers MUST use Lookup() to read entries; mutation outside
-//     the package is impossible
-//   - In-package additions go through new struct literals in this map
-//     declaration; runtime mutation is forbidden
-//   - Phase G's inv-zen-220 compliance test asserts no production
-//     code path mutates this map at runtime
+// - The map is package-private (lowercase identifier) — external
+// consumers MUST use Lookup() to read entries; mutation outside
+// the package is impossible
+// - In-package additions go through new struct literals in this map
+// declaration; runtime mutation is forbidden
+// - invariant compliance test asserts no production
+// code path mutates this map at runtime
 var catalog = map[Code]*CatalogEntry{
 
 	"daemon.not-running": {
@@ -579,10 +579,10 @@ func Lookup(code Code) *CatalogEntry {
 // without context. Use New only when context vars must be attached
 // at construction:
 //
-//	return errors.New(codes.ProviderAuth401, httpErr, map[string]string{
-//	    "provider": "anthropic-paygo",
-//	    "endpoint": "/v1/messages",
-//	})
+// return errors.New(codes.ProviderAuth401, httpErr, map[string]string{
+// "provider": "anthropic-paygo",
+// "endpoint": "/v1/messages",
+// })
 //
 // Context-isolation discipline: the ctx map is stored by reference;
 // callers MUST NOT mutate it after construction. TestConstructorContextIsolated

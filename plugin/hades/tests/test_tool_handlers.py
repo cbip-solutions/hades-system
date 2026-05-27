@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Tests for tool_handlers (pre_tool_call inv-zen-004 gate + post_tool_call)."""
+"""Tests for tool_handlers."""
 
 from __future__ import annotations
 
@@ -305,7 +305,7 @@ def test_post_tool_call_result_size_handles_unsized_objects():
 
 def test_pre_tool_call_block_also_emits_blocked_audit_event():
     """When gate blocks, callback must emit pre_tool_call.blocked for audit
-    trail BEFORE returning the block dict. Payload contract: reason='inv-zen-004'."""
+    trail BEFORE returning the block dict. Payload contract: reason='invariant'."""
     captured: list[tuple[str, dict]] = []
 
     def fake_invoke(event_name, payload):

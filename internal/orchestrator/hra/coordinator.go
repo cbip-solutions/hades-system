@@ -295,12 +295,12 @@ func (h *HRACoordinator) Run(ctx context.Context) error {
 // tacticalLoop is the per-tick driver for the tactical cadence.
 //
 // On each iteration the loop is in one of three states:
-//   - context cancelled → exit (the deferred wg.Done unblocks Run.Wait)
-//   - record arriving on tacticalSub.Events() → append to window buffer
-//   - ticker fire on Clock.NewTicker(cadence.Tactical).C() → run the
-//     placeholder aggregator over the buffered events, emit
-//     EvtTacticalAggregation if the window observed at least one event,
-//     and reset the buffer for the next window.
+// - context cancelled → exit (the deferred wg.Done unblocks Run.Wait)
+// - record arriving on tacticalSub.Events() → append to window buffer
+// - ticker fire on Clock.NewTicker(cadence.Tactical).C() → run the
+// placeholder aggregator over the buffered events, emit
+// EvtTacticalAggregation if the window observed at least one event,
+// and reset the buffer for the next window.
 //
 // Empty-window ticks emit no event so the audit log stays compact under
 // quiescent doctrine (capa-firewall is doctrine-suppressed entirely; the
@@ -365,22 +365,22 @@ func aggregateTactical(events []eventlog.Record, since, until time.Time) Finding
 // Payload schema (FROZEN — H-3/H-4 strategic + architectural emit
 // follow the same shape with layer="strategic"/"architectural"):
 //
-//	layer         string  — Finding.Layer.String()
-//	events_count  int     — Finding.EventCount
-//	verdict       string  — Finding.Verdict ("ack"|"needs_fix")
-//	needs_fix     bool    — Finding.NeedsFix
-//	disagreement  bool    — Finding.Disagreement
-//	window_start  int64   — since.Unix() (epoch seconds, inclusive)
-//	window_end    int64   — fireAt.Unix() (epoch seconds, exclusive)
+// layer string — Finding.Layer.String()
+// events_count int — Finding.EventCount
+// verdict string — Finding.Verdict ("ack"|"needs_fix")
+// needs_fix bool — Finding.NeedsFix
+// disagreement bool — Finding.Disagreement
+// window_start int64 — since.Unix() (epoch seconds, inclusive)
+// window_end int64 — fireAt.Unix() (epoch seconds, exclusive)
 //
 // H-5 may extend the payload with additional keys (fix_proposals,
 // dissenting_reviewers, etc.) but MUST NOT change the field types of
-// the keys above — Phase F operator-gate evaluation parses those by
+// the keys above — operator-gate evaluation parses those by
 // name.
 //
 // Append errors are logged at the EventLog layer; the caller has no
 // recovery path here (the aggregation already happened; failure to
-// persist is a substrate-level concern Phase A audit_events_raw
+// persist is a substrate-level concern audit_events_raw
 // integration tests cover). Discarding via _ = err keeps the cadence
 // loop from blocking on transient SQLite contention.
 func (h *HRACoordinator) emitAggregation(ctx context.Context, fireAt, since time.Time, finding Finding) {
@@ -541,17 +541,17 @@ func aggregateArchitectural(events []eventlog.Record, since, until time.Time) Fi
 // returns a non-empty Summary; the key is OMITTED for the placeholder
 // so the audit log stays compact under the no-prose default):
 //
-//	layer         string  — "architectural"
-//	events_count  int     — Finding.EventCount
-//	verdict       string  — Finding.Verdict
-//	needs_fix     bool    — Finding.NeedsFix
-//	disagreement  bool    — Finding.Disagreement
-//	window_start  int64   — since.Unix() (epoch seconds, inclusive)
-//	window_end    int64   — fireAt.Unix() (epoch seconds, exclusive)
-//	summary       string  — Finding.Summary (OMITTED when empty)
+// layer string — "architectural"
+// events_count int — Finding.EventCount
+// verdict string — Finding.Verdict
+// needs_fix bool — Finding.NeedsFix
+// disagreement bool — Finding.Disagreement
+// window_start int64 — since.Unix() (epoch seconds, inclusive)
+// window_end int64 — fireAt.Unix() (epoch seconds, exclusive)
+// summary string — Finding.Summary (OMITTED when empty)
 //
 // H-5 may extend the payload with additional keys but MUST NOT change
-// the field types of the keys above — Phase F's operator-gate parser
+// the field types of the keys above — operator-gate parser
 // reads them by name.
 func (h *HRACoordinator) emitArchitecturalReview(ctx context.Context, fireAt, since time.Time, finding Finding) {
 	auditCtx := context.WithoutCancel(ctx)

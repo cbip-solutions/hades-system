@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — audit_query.go (Plan 4 Phase N Task N-5).
+// Package handlers — audit_query.go.
 //
 // Operator-facing audit query endpoints layered on the audit_events_raw
-// table from Phase G. The MCP-side write path (POST /v1/audit/emit) is
+// table from The MCP-side write path (POST /v1/audit/emit) is
 // unchanged; this file adds:
 //
-//	GET /v1/audit/events  — recent events filtered by type/project/since
-//	GET /v1/audit/types   — distinct event types (catalog)
+// GET /v1/audit/events — recent events filtered by type/project/since
+// GET /v1/audit/types — distinct event types (catalog)
 //
 // The CLI's `zen audit verdicts` filters events by type prefix
 // (audit_review.*) on the events route; the catalog supports
 // `zen audit criteria list` where criteria templates are surfaced
 // via doctrine state (audit.criteria.* keys).
 //
-// inv-zen-001: Unix socket only.
-// inv-zen-031: never imports internal/store directly; AuditQueryCtx is the bridge.
+// invariant: Unix socket only.
+// invariant: never imports internal/store directly; AuditQueryCtx is the bridge.
 package handlers
 
 import (
@@ -41,7 +41,7 @@ type AuditQueryCtx interface {
 
 	AuditTypes() ([]AuditTypeRow, error)
 	// AuditEventByID returns a single row by id, or
-	// (zero-value, ErrAuditEventNotFound) when absent. Plan 11 D-5
+	// (zero-value, ErrAuditEventNotFound) when absent. D-5
 	// (zen://audit URL handler). The Doctrine field MUST be populated
 	// (extracted from payload_json) so the handler's doctrine privacy
 	// filter can run without re-parsing.

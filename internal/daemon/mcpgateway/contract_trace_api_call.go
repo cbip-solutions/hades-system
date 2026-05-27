@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package mcpgateway — contract_trace_api_call.go (Plan 20 Phase I).
+// Package mcpgateway — contract_trace_api_call.go.
 //
 // Handler for the `trace_api_call` MCP tool. Validates required `call` +
 // `workspace` args + dispatches to engine.TraceAPICall; returns the

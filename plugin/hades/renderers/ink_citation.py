@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
                                         
-"""Hermes Ink TUI renderer for citation envelopes (Plan 12 Phase A Task A-3)."""
+"""Hermes Ink TUI renderer for citation envelopes."""
 
 from __future__ import annotations
 

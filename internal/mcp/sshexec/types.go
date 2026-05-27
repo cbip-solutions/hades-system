@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/types.go
 //
-// Phase L Task L-3 — package-level value types. Pure values; no I/O,
+// Task L-3 — package-level value types. Pure values; no I/O,
 // no mutation of global state, no goroutines.
 //
-// Boundary anchor (inv-zen-031): this file imports only stdlib.
+// Boundary anchor: this file imports only stdlib.
 
 package sshexec
 

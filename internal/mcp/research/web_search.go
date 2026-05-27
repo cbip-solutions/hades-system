@@ -2,15 +2,15 @@
 // web_search.go — DDG + optional Firecrawl, with cache hit/miss path.
 //
 // Two paths:
-//  1. DDG (DuckDuckGo) for bulk hits via the daemon-routed search proxy
-//     OR direct duckduckgo.com (whitelisted in Phase H allowedHosts).
-//  2. Firecrawl for full-page extraction when extract=true (gated by
-//     doctrine; default off).
+// 1. DDG (DuckDuckGo) for bulk hits via the daemon-routed search proxy
+// OR direct duckduckgo.com.
+// 2. Firecrawl for full-page extraction when extract=true (gated by
+// doctrine; default off).
 //
 // Cache hit/miss is the first stage: webSearchCacheKey(query, max)
 // → s.cache.Get; on hit, return; on miss, run the search + s.cache.Set.
 //
-// inv-zen-076: budget.PreCall is called BEFORE the cache lookup at the
+// invariant: budget.PreCall is called BEFORE the cache lookup at the
 // handler level (server.go handleWebSearch); the WebSearch backend
 // itself is invoked only after the gate passes.
 package research

@@ -1,38 +1,34 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — knowledge_p9.go (Plan 9 Phase H Task H-2).
+// Package handlers — knowledge_p9.go.
 //
-// 5 NEW operator-facing knowledge aggregator endpoints surfacing Phase D
+// 5 NEW operator-facing knowledge aggregator endpoints surfacing
 // substrate (federated query + opt-in promote per Q6 C) over
-// /v1/knowledge/*. inv-zen-150 + inv-zen-031: handlers consume the
+// /v1/knowledge/*. invariant + invariant: handlers consume the
 // KnowledgeAdapterP9 interface and never import internal/knowledge/*
-// directly. inv-zen-146: promote/unpromote require non-empty, non-whitespace
+// directly. invariant: promote/unpromote require non-empty, non-whitespace
 // --reason (auto-promote bypass structurally impossible from this surface).
 //
-//	GET  /v1/knowledge/query     — federated/pinned/chain-verified search
-//	POST /v1/knowledge/promote   — operator-gated promote (--reason required)
-//	POST /v1/knowledge/unpromote — operator-gated reverse (--reason required)
-//	GET  /v1/knowledge/list      — list notes (pinned filter optional)
-//	POST /v1/knowledge/rebuild   — full re-embed + re-index, returns 202+job_id
+// GET /v1/knowledge/query — federated/pinned/chain-anchored search
+// POST /v1/knowledge/promote — operator-gated promote (--reason required)
+// POST /v1/knowledge/unpromote — operator-gated reverse (--reason required)
+// GET /v1/knowledge/list — list notes (pinned filter optional)
+// POST /v1/knowledge/rebuild — synchronous pin-index rebuild, returns receipt
 //
-// Graceful degradation (Plan 2 pattern): any nil KnowledgeAdapterP9 passed
+// Graceful degradation: any nil KnowledgeAdapterP9 passed
 // to a constructor returns an http.HandlerFunc that immediately responds
 // 503 {"error":"feature not configured","code":"plan9_knowledge_unavailable"}.
-// Phase H-10 wires *daemon.Server to satisfy KnowledgeAdapterP9 once the
-// Phase D adapter is available; during development the 503 makes intent
+// wires *daemon.Server to satisfy KnowledgeAdapterP9 once the
+// adapter is available; during development the 503 makes intent
 // explicit.
 //
 // Boundary invariants:
 //
-//	inv-zen-031: handler never imports internal/store directly.
-//	inv-zen-150: handler never imports internal/knowledge/{aggregator,embed}
-//	             directly; all calls go via KnowledgeAdapterP9.
+// invariant: handler never imports internal/store directly.
+// invariant: handler never imports internal/knowledge/{aggregator,embed}
+// directly; all calls go via KnowledgeAdapterP9.
 //
 // Wire KnowledgeQueryReqP9, KnowledgeResultP9, KnowledgeNoteP9,
 // KnowledgeRebuildRespP9 declared inline.
-//
-// operatorFromContext is a provisional stub returning "" until Phase H-6
-// lands the auth package extension. The adapter records "anonymous" in
-// audit events when operatorID is "". Phase K sentinel test confirms.
 package handlers
 
 import (
@@ -54,12 +50,13 @@ type KnowledgeQueryReqP9 struct {
 }
 
 type KnowledgeResultP9 struct {
-	NoteID     string  `json:"note_id"`
-	ProjectID  string  `json:"project_id,omitempty"`
-	Path       string  `json:"path,omitempty"`
-	Snippet    string  `json:"snippet,omitempty"`
-	Score      float64 `json:"score"`
-	ChainProof string  `json:"audit_chain_proof,omitempty"`
+	NoteID           string  `json:"note_id"`
+	ProjectID        string  `json:"project_id,omitempty"`
+	Path             string  `json:"path,omitempty"`
+	Snippet          string  `json:"snippet,omitempty"`
+	Score            float64 `json:"score"`
+	AuditChainAnchor string  `json:"audit_chain_anchor,omitempty"`
+	ChainProof       string  `json:"audit_chain_proof,omitempty"`
 }
 
 type KnowledgeNoteP9 struct {
@@ -71,14 +68,15 @@ type KnowledgeNoteP9 struct {
 }
 
 type KnowledgeRebuildRespP9 struct {
-	JobID     string `json:"job_id"`
-	StartedAt int64  `json:"started_at_unix,omitempty"`
+	JobID        string `json:"job_id"`
+	StartedAt    int64  `json:"started_at_unix,omitempty"`
+	RebuiltCount int    `json:"rebuilt_count,omitempty"`
 }
 
 type KnowledgeAdapterP9 interface {
 	Query(ctx context.Context, req KnowledgeQueryReqP9) ([]KnowledgeResultP9, error)
-	Promote(ctx context.Context, noteID, reason, operatorID string) error
-	Unpromote(ctx context.Context, noteID, reason, operatorID string) error
+	Promote(ctx context.Context, noteID, projectID, reason, operatorID string) error
+	Unpromote(ctx context.Context, noteID, projectID, reason, operatorID string) error
 	List(ctx context.Context, projectID string, pinnedOnly bool) ([]KnowledgeNoteP9, error)
 	Rebuild(ctx context.Context, projectID string) (KnowledgeRebuildRespP9, error)
 }
@@ -102,6 +100,9 @@ func KnowledgeP9Query(s KnowledgeAdapterP9) http.HandlerFunc {
 			Scope:     q.Get("scope"),
 			ProjectID: q.Get("project_id"),
 			Limit:     50,
+		}
+		if q.Get("pinned_only") == "true" {
+			req.Scope = "pinned-only"
 		}
 		if req.Query == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "q required"})
@@ -136,6 +137,7 @@ func KnowledgeP9Promote(s KnowledgeAdapterP9) http.HandlerFunc {
 		defer r.Body.Close()
 		var req struct {
 			NoteID     string `json:"note_id"`
+			ProjectID  string `json:"project_id"`
 			Reason     string `json:"reason"`
 			OperatorID string `json:"operator_id"`
 		}
@@ -158,7 +160,7 @@ func KnowledgeP9Promote(s KnowledgeAdapterP9) http.HandlerFunc {
 		if operatorID == "" {
 			operatorID = req.OperatorID
 		}
-		if err := s.Promote(r.Context(), req.NoteID, req.Reason, operatorID); err != nil {
+		if err := s.Promote(r.Context(), req.NoteID, req.ProjectID, req.Reason, operatorID); err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			return
 		}
@@ -175,6 +177,7 @@ func KnowledgeP9Unpromote(s KnowledgeAdapterP9) http.HandlerFunc {
 		defer r.Body.Close()
 		var req struct {
 			NoteID     string `json:"note_id"`
+			ProjectID  string `json:"project_id"`
 			Reason     string `json:"reason"`
 			OperatorID string `json:"operator_id"`
 		}
@@ -196,7 +199,7 @@ func KnowledgeP9Unpromote(s KnowledgeAdapterP9) http.HandlerFunc {
 		if operatorID == "" {
 			operatorID = req.OperatorID
 		}
-		if err := s.Unpromote(r.Context(), req.NoteID, req.Reason, operatorID); err != nil {
+		if err := s.Unpromote(r.Context(), req.NoteID, req.ProjectID, req.Reason, operatorID); err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 			return
 		}

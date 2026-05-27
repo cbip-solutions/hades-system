@@ -1,39 +1,39 @@
 // SPDX-License-Identifier: MIT
-// Package recognize is the canonical home of Plan 13 Phase B's
+// Package recognize is the canonical home of
 // `zen recognize` 3-tier signal stack (linguist filters → manifest deps
 // → framework configs → monorepo walk → maturity probe) — see
-// docs/superpowers/plans/2026-05-14-plan-13-phase-B-recognize.md.
+// internal design record
 //
-// # Forward-declaration status (Phase A scaffold)
+// # Forward-declaration status
 //
-// Phase A Task A-5 (internal/onboard/mcp/) imports recognize.Result for
+// Task A-5 (internal/onboard/mcp/) imports recognize.Result for
 // smart-default detection (C7 reconciliation 2026-05-14 — no shim
 // package). To compile, this package forward-declares the canonical
-// Result type + dependent evidence types in types.go. Phase B will
+// Result type + dependent evidence types in types.go. will
 // extend this package with the detection logic (manifest/, config/,
 // monorepo/, maturity/, glob/ subpackages + recognize.go orchestrator)
 // per its plan §"Files to create"; the Result type defined here is the
-// authoritative cross-phase contract — Phase B populates fields rather
+// authoritative cross-phase contract — populates fields rather
 // than redefining the struct.
 //
 // # Cross-phase contract
 //
-// Phase B Tier 1 manifest detectors populate `Result.ManifestDeps` from
+// Tier 1 manifest detectors populate `Result.ManifestDeps` from
 // go.mod / package.json / Cargo.toml / requirements.txt / etc.
 //
-// Phase B Tier 2 config detectors populate `Result.EnvVars`,
+// Tier 2 config detectors populate `Result.EnvVars`,
 // `Result.ConfigFiles`, and `Result.Doctrine` from framework-specific
 // config files (next.config.{js,ts}, vite.config.*, sentry.config.*,
 // .linear.{yml,yaml}, etc.).
 //
-// Phase A's `internal/onboard/mcp/smart_default.go` consumes those
-// fields directly via Tier 3 `Detected fn` evaluation (inv-zen-179
+// `internal/onboard/mcp/smart_default.go` consumes those
+// fields directly via Tier 3 `Detected fn` evaluation (invariant
 // confidence ≥0.6 threshold).
 //
 // # Invariants enforced by this package
 //
-//   - inv-zen-031 — boundary discipline: NEVER import internal/store.
-//   - inv-zen-179 — smart-default confidence ≥0.6 threshold (enforced
-//     downstream in internal/onboard/mcp/smart_default.go; this package
-//     surfaces `Result.PrimaryConfidence` as the threshold input).
+// - invariant — boundary discipline: NEVER import internal/store.
+// - invariant — smart-default confidence ≥0.6 threshold (enforced
+// downstream in internal/onboard/mcp/smart_default.go; this package
+// surfaces `Result.PrimaryConfidence` as the threshold input).
 package recognize

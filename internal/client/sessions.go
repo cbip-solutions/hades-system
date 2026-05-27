@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
-// Package client — sessions.go (Plan 7 Phase C Task C-12).
+// Package client — sessions.go.
 //
-// Three methods that mirror the daemon's tmux-session surface (Phase I
-// ships handlers; Phase C ships client + CLI so the surface is final-
+// Three methods that mirror the daemon's tmux-session surface (
+// ships handlers; ships client + CLI so the surface is final-
 // shape day 1 per project doctrine "build the final product, not the
 // stages"):
 //
-//	AttachSession  POST /v1/sessions/{alias}/attach
-//	ListSessions   GET  /v1/sessions
-//	RepaintLayout  POST /v1/sessions/{alias}/layout/repaint
+// AttachSession POST /v1/sessions/{alias}/attach
+// ListSessions GET /v1/sessions
+// RepaintLayout POST /v1/sessions/{alias}/layout/repaint
 //
-// In the Phase I gap the daemon returns HTTP 503 with a remediation
+// In the gap the daemon returns HTTP 503 with a remediation
 // hint (consistent with the existing /v1/messages graceful-degradation
-// pattern from Plan 2). 503 is unrecoverable from the operator's
+// pattern). 503 is unrecoverable from the operator's
 // perspective at this command level — exit 2 — because "daemon route
 // not yet shipped" is an infra concern, not an input typo.
 //
 // Wire types align field-for-field with the daemon-side handler that
-// will land in Phase I (`internal/daemon/handlers/sessions_p7.go`):
+// will land in (`internal/daemon/handlers/sessions_p7.go`):
 // SessionRow / AttachResponse / RepaintResponse. Times use RFC3339
 // over the wire (Go's encoding/json default for time.Time).
 package client
@@ -46,7 +46,7 @@ type attachRequest struct {
 
 // attachResponse is the body of POST /v1/sessions/{alias}/attach.
 // TmuxCmd is the exact command-line the CLI MUST exec to inherit the
-// operator's TTY — daemon-controlled (enforces inv-zen-117 via the -S
+// operator's TTY — daemon-controlled (enforces invariant via the -S
 // SocketPath flag in the rendered tokens). Returned as a single string
 // the CLI splits via strings.Fields; the daemon renders the canonical
 // form with no shell metacharacters.

@@ -10,19 +10,19 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/doctrine"
 )
 
-// Stage 2 review reconciliation: the canonical Doctrine taxonomy is
-// owned by `internal/doctrine.Name` (Plan 4 Phase A shipped at HEAD).
-// Phase C consumes that type directly; declaring a parallel
+// review reconciliation: the canonical Doctrine taxonomy is
+// owned by `internal/doctrine.Name`.
+// consumes that type directly; declaring a parallel
 // `tmuxlife.Doctrine` would create a duplicate taxonomy that violates
-// the no-defer + no-tech-debt doctrine. All callers of Phase C public
-// API (Phase D scheduler, Phase B quota adapter, Phase I daemon HTTP
+// the no-defer + no-tech-debt doctrine. All callers of public
+// API ( scheduler, quota adapter, daemon HTTP
 // handlers, CLI flag parsers) consume `doctrine.Name` consistently.
 //
 // Canonical values (see `internal/doctrine` package):
 //
-//   - doctrine.NameMaxScope     ("max-scope")     — persistent state, never auto-reap
-//   - doctrine.NameDefault      ("default")       — 24h idle, 100% hard cap
-//   - doctrine.NameCapaFirewall ("capa-firewall") — 4h idle, 95% hard cap
+// - doctrine.NameMaxScope ("max-scope") — persistent state, never auto-reap
+// - doctrine.NameDefault ("default") — 24h idle, 100% hard cap
+// - doctrine.NameCapaFirewall ("capa-firewall") — 4h idle, 95% hard cap
 //
 // Validation of doctrine names from untrusted input (zenswarm.toml,
 // HTTP request body) MUST go through `doctrine.IsValid` BEFORE calling
@@ -33,17 +33,17 @@ type IdleTTL int
 
 // DoctrineIdleTTL returns the idle TTL in hours for the given doctrine.
 //
-// Mapping (inv-zen-119, spec §1 Q7 D):
+// Mapping:
 //
-//	max-scope     → IdleTTLInfinity (-1)
-//	default       → 24
-//	capa-firewall → 4
+// max-scope → IdleTTLInfinity (-1)
+// default → 24
+// capa-firewall → 4
 //
 // Per-project override (zenswarm.toml [project.tmux] idle_ttl_hours = X)
 // is consumed by IdleReaper.doctrineFor callback (C-10); this function
 // returns ONLY the doctrine-default. Override resolution lives at the
 // callsite, NOT here, so the doctrine-default mapping stays the single
-// source of truth for inv-zen-119 enforcement.
+// source of truth for invariant enforcement.
 //
 // Panics on unknown doctrine to surface drift
 // (programmer-error-must-surface principle). Callers consuming
@@ -57,7 +57,7 @@ type IdleTTL int
 // quota's fallback is conservative because cost-side overshoot is
 // recoverable (operator notices, refunds, adjusts threshold), whereas
 // tmuxlife mismapping silently leaves stale tmux sessions running for
-// hours past the intended TTL — an inv-zen-119 violation. The panic
+// hours past the intended TTL — an invariant violation. The panic
 // path keeps the bug visible.
 func DoctrineIdleTTL(d doctrine.Name) IdleTTL {
 	switch d {

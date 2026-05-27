@@ -1,4 +1,4 @@
-//go:build test
+// go:build test
 
 // SPDX-License-Identifier: MIT
 

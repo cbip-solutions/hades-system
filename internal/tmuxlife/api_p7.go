@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
-// Package tmuxlife — Plan 7 Phase I + K public consumption surface.
+// Package tmuxlife — + K public consumption surface.
 //
 // This file extends the C-1..C-13 production API with aliases and
 // alias-typed convenience wrappers consumed by:
-//   - Phase I HTTP handlers (internal/daemon/handlers/sessions_p7.go)
-//   - Phase I daemon bootstrap (cmd/zen-swarm-ctld/main.go)
-//   - Phase K chaos tests (tests/chaos/tmux_health_*_test.go)
+// - HTTP handlers (internal/daemon/handlers/sessions_p7.go)
+// - daemon bootstrap (cmd/zen-swarm-ctld/main.go)
+// - chaos tests (tests/chaos/tmux_health_*_test.go)
 //
-// Stage 2 review CRITICAL #5 reconciliation (2026-05-01): Phase I and
-// Phase K were authored against names + types that did not yet exist
+// review CRITICAL #5 reconciliation (2026-05-01): and
+// were authored against names + types that did not yet exist
 // in C-1..C-13 (e.g., `SessionState`, `StatusRunning`, `NewManager`,
 // `RepaintLayout`). Rather than retrofitting the consumer phases to
-// the C-1..C-13 names, Phase C extends here with type aliases +
+// the C-1..C-13 names, extends here with type aliases +
 // alias-based methods + new constructor variants. The C-1..C-13 names
 // remain authoritative implementations; this file is the consumption-
 // side facade.
 //
-// Boundary (inv-zen-031, inv-zen-122): this file imports only
+// Boundary: this file imports only
 // internal/doctrine + standard library. NO internal/store import; the
 // in-memory SessionStore implementation here is for chaos tests +
 // daemon-bootstrap fallback when the persistence-backed store is not
@@ -117,19 +117,19 @@ func (s *inMemorySessionStore) DeleteSession(name string) error {
 // In-memory implementation: returns an empty (non-nil) map. The
 // in-memory variant does NOT track pane state; the DriftPoller treats
 // "no expectation" as "do not emit drift", per the SessionStore
-// contract. Phase I's *store.Store implementation populates real
+// contract. *store.Store implementation populates real
 // pane-id expectations from a child table.
 func (s *inMemorySessionStore) ExpectedPanesFor(sessionName string) (map[WindowName][]string, error) {
 	return map[WindowName][]string{}, nil
 }
 
-// SessionSpec is the Phase K builder type for chaos test sessions.
+// SessionSpec is the builder type for chaos test sessions.
 //
 // Captures the alias + sha8 (canonical session identity) plus an
 // explicit Windows list for tests that want to assert against a
 // non-default window set. Production code uses Manager.Spawn +
 // Manager.CreateWindows directly (the canonical 6-window layout is
-// hard-coded in CreateWindows; Phase K tests respect that and do not
+// hard-coded in CreateWindows; tests respect that and do not
 // override).
 type SessionSpec struct {
 	Alias   string

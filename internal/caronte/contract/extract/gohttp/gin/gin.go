@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package gin implements the gin HTTP route extractor for Plan 20 Phase D.
+// Package gin implements the gin HTTP route extractor
 //
 // It walks a Go package via go/parser AST + syntactic receiver-type
 // inference (same strategy as the chi extractor — see internal/caronte/
@@ -13,15 +13,15 @@
 // Detect(file, content) gates by the `github.com/gin-gonic/gin` import.
 //
 // Receiver types recognised:
-//   - *gin.Engine  (the top-level router constructed via gin.Default() /
-//     gin.New())
-//   - *gin.RouterGroup (the value returned by .Group(prefix, ...))
-//   - gin.IRoutes (the interface both Engine and RouterGroup implement)
+// - *gin.Engine (the top-level router constructed via gin.Default() /
+// gin.New())
+// - *gin.RouterGroup (the value returned by.Group(prefix,...))
+// - gin.IRoutes (the interface both Engine and RouterGroup implement)
 //
 // Composition `g := r.Group("/v1")` pushes "/v1" onto g's prefix; a
 // subsequent `g.GET("/users", h)` is emitted with `/v1/users`.
 //
-// Boundary (inv-zen-230 + inv-zen-271): imports only
+// Boundary: imports only
 // `internal/caronte/store` + `internal/caronte/contract/extract` + std
 // library. Does NOT import `internal/store` (daemon store) nor
 // `golang.org/x/tools/go/packages`.

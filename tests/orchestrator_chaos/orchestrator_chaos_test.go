@@ -1,4 +1,4 @@
-// tests/orchestrator_chaos/orchestrator_chaos_test.go (Plan 5 Phase O Task O-7).
+// tests/orchestrator_chaos/orchestrator_chaos_test.go.
 //
 // The flagship Tier 9 (orchestrator-chaos) cases. Each case spawns a
 // real bin/zen-swarm-ctld subprocess, exercises a chaos failure
@@ -8,17 +8,18 @@
 //
 // Reality-check note vs the original plan: the plan's
 // TestOrchestrator_KillMidBuildAndReplay assumed the daemon exposed an
-// HTTP endpoint to start a Stage-4 build (OrchestratorBuildStart);
+// HTTP endpoint to start a build (OrchestratorBuildStart);
 // today the daemon's orchestrator surface is read-only at the HTTP
 // layer (state, pool, capture, replay). The test below exercises the
 // observable contract: spawn → assert health + clean state → kill →
 // restart pointing at SAME data dir → assert health + clean state +
 // capture-endpoint determinism. This is the integration-level analog
-// of the unit-level inv-zen-095 corruption-bounded test that ships in
-// internal/orchestrator/eventlog/replay_test.go (Phase A); the full
+// of the unit-level invariant corruption-bounded test that ships in
+// internal/orchestrator/eventlog/replay_test.go; the full
 // "kill mid-build and replay" path remains blocked on a future phase
-// that wires a build-start HTTP endpoint, which Phase O does not own.
+// that wires a build-start HTTP endpoint, which does not own.
 //
+// go:build orchestrator_chaos
 //go:build orchestrator_chaos
 // +build orchestrator_chaos
 

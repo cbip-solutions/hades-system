@@ -1,5 +1,4 @@
-//go:build cgo
-
+// go:build cgo
 package bcdetect
 
 import (
@@ -329,7 +328,7 @@ func TestPipelineRegisterAcceptsCanonicalDetector(t *testing.T) {
 }
 
 // TestNewPipelinePanicsWithoutWorkspace pins the FIX-3 capa-firewall gate:
-// PipelineDeps.Workspace MUST be non-nil (the inv-zen-264 gate is
+// PipelineDeps.Workspace MUST be non-nil (the invariant gate is
 // load-bearing; a nil Workspace would bypass it).
 func TestNewPipelinePanicsWithoutWorkspace(t *testing.T) {
 	defer func() {
@@ -548,7 +547,7 @@ func TestPipelineFanGraphQLNodeFallback_WiredAndEnabled_CallsMaybeRun(t *testing
 // pins the gate-closed contract on the workspace-flag axis: even with
 // NodeFallback wired + Go path returning SevInsufficient, if
 // workspace.EnableGraphQLNodeFallback() is false the MaybeRun call MUST
-// be SKIPPED. (The inv-zen-272 BOTH-AND gate: workspace flag false ⇒ no
+// be SKIPPED. (The invariant BOTH-AND gate: workspace flag false ⇒ no
 // spawn, no audit, goResult surfaced unchanged.)
 func TestPipelineFanGraphQLNodeFallback_WiredButDisabled_DoesNotCallMaybeRun(t *testing.T) {
 	ctx, db, audit, cleanup := newPipelineHarness(t)

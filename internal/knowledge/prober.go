@@ -1,29 +1,29 @@
 // SPDX-License-Identifier: MIT
 // Package knowledge — prober.go
 //
-// Phase J Task J-3 adapter: exposes a slim Prober implementation that the
+// Task J-3 adapter: exposes a slim Prober implementation that the
 // cli/doctor_knowledge.go layer consumes (cli.KnowledgeProber). The split
-// keeps inv-zen-031 clean (internal/cli imports internal/knowledge; this
+// keeps invariant clean (internal/cli imports internal/knowledge; this
 // package does NOT import internal/store; the daemon assembles the
 // runtime via the projectctxadapter pattern).
 //
 // The Prober is read-only: it queries the index DB and an in-memory
 // budget/watcher snapshot owned by the daemon. No mutations.
 //
-// Design split (Phase G vs Phase J):
+// Design split:
 //
-//   - Phase G ships the FTS5 + knowledge_meta schema, the IndexDoc / Open
-//     / Init / Reindex hot path, and the fsnotify Watcher loop with
-//     debounce + CPU throttle (internal/knowledge/watcher.go).
+// - ships the FTS5 + knowledge_meta schema, the IndexDoc / Open
+// / Init / Reindex hot path, and the fsnotify Watcher loop with
+// debounce + CPU throttle (internal/knowledge/watcher.go).
 //
-//   - Phase J adds the Prober that exposes that subsystem state to the
-//     CLI doctor probe. Rather than retrofitting Watcher with a public
-//     LastHeartbeat() accessor (which would surface internal scheduling
-//     state), the Prober consumes injected closures: HeartbeatFn returns
-//     the watcher tick timestamp, BudgetSnapshotFn returns the cpu
-//     usage/thresholds. The daemon main loop wires these closures over
-//     the actual Watcher / Budget instances at startup, keeping Phase G's
-//     surface narrow.
+// - adds the Prober that exposes that subsystem state to the
+// CLI doctor probe. Rather than retrofitting Watcher with a public
+// LastHeartbeat() accessor (which would surface internal scheduling
+// state), the Prober consumes injected closures: HeartbeatFn returns
+// the watcher tick timestamp, BudgetSnapshotFn returns the cpu
+// usage/thresholds. The daemon main loop wires these closures over
+// the actual Watcher / Budget instances at startup, keeping
+// surface narrow.
 package knowledge
 
 import (
@@ -45,7 +45,7 @@ type HeartbeatFn func() time.Time
 
 // BudgetSnapshotFn returns (used, warn, fail) for the indexer CPU budget,
 // resolved against the active doctrine at call time. If the budget
-// tracker is not yet wired (Phase G optional component) returns
+// tracker is not yet wired returns
 // (0, 0, 0, nil) which RunKnowledgeProbe interprets as ProbeOK with a
 // passive "no budget tracker" message — the absent tracker is a
 // degraded-mode signal, not a failure.

@@ -15,7 +15,7 @@ const inv221GoldenFixtureRel = "tests/compliance/testdata/status_schema_v1.json"
 
 // inv221RequiredFieldNames enumerates the 8 field names that MUST exist
 // in the "fields" top-level key. These are the schema-v1 stability anchors
-// per spec §Q5 + Phase C status.py _render_json.
+// per spec §Q5 + status.py _render_json.
 var inv221RequiredFieldNames = []string{
 	"daemon",
 	"model",

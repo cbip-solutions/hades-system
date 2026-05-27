@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_show.go (Plan 9 Phase I Task I-6).
+// Package cli — adr_show.go.
 //
 // `zen adr show <id>` calls GET /v1/adr/show?id=... and renders the ADR
 // frontmatter as a table plus the markdown body. Wire type: client.ADR.

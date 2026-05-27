@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package auth — project_scoped.go (Plan 9 Phase H Task H-6).
+// Package auth — project_scoped.go.
 //
-// inv-zen-146: every project-scoped /v1/* endpoint validates the
+// invariant: every project-scoped /v1/* endpoint validates the
 // caller's effective-project set BEFORE delegating to the substrate +
 // emits audit.access_denied{caller_uid, project_id, route, ts} on 403.
 //
 // Two flavours:
-//   - ProjectScopedMiddleware — wraps GET handlers (alias from query param).
-//     Alias is extracted before the body is touched, so no body buffering.
-//   - CheckProjectScope — called explicitly by POST handlers after they
-//     have already JSON-decoded the body (avoids body-buffering middleware).
+// - ProjectScopedMiddleware — wraps GET handlers (alias from query param).
+// Alias is extracted before the body is touched, so no body buffering.
+// - CheckProjectScope — called explicitly by POST handlers after they
+// have already JSON-decoded the body (avoids body-buffering middleware).
 //
 // OperatorIDFromContext resolves the operator's stable ID from the peer-cred
 // uid + the ProjectResolver stored in context. Replaces the provisional

@@ -1,12 +1,12 @@
 // cmd/zen-mcp-sshexec/main_test.go
 //
 // TDD tests for the sshexec MCP binary entrypoint.
-// Mirrors the Phase J/K cmd/zen-mcp-{budget,audit} pattern:
+// Mirrors the cmd/zen-mcp-{budget,audit} pattern:
 // extract testable buildServer() + buildOptions shape so tests cover
 // the flag-validation + server-construction branches without engaging
 // the blocking stdio Run loop.
 //
-// Phase M Task M-4: these tests MUST fail before main.go exists, then
+// Task M-4: these tests MUST fail before main.go exists, then
 // PASS after main.go is written.
 package main
 

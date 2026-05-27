@@ -229,7 +229,7 @@ def test_slack_render_audit_event_ids_match_count(
 def test_slack_render_text_field_is_hades_branded(
     sample_augmentation_result: AugmentationResult,
 ) -> None:
-    """Plan 18b Phase D: Slack top-level `text` field rebranded from
+    """ : Slack top-level `text` field rebranded from
     `Citations from zen-swarm augmentation pipeline` to
     `Citations from HADES augmentation pipeline`.
 

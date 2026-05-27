@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -17,13 +18,13 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/research/ecosystem"
 )
 
-//go:embed pkgdev_testdata/index.json
+// go:embed pkgdev_testdata/index.json
 var pkgdevIndexJSON []byte
 
-//go:embed pkgdev_testdata/crypto_sha256_page.html
+// go:embed pkgdev_testdata/crypto_sha256_page.html
 var pkgdevSHA256HTML []byte
 
-//go:embed pkgdev_testdata/go_1.23_release_notes.html
+// go:embed pkgdev_testdata/go_1.23_release_notes.html
 var pkgdevGo123HTML []byte
 
 type stubRevalidator struct {

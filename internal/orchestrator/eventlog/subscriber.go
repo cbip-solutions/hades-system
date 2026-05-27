@@ -11,7 +11,7 @@ type Filter struct {
 }
 
 // DefaultBufferSize is the recommended channel buffer size for typical
-// callers (Phase H reviewers, Phase K amendment proposer, Phase M drift
+// callers ( reviewers, amendment proposer, drift
 // detector). It balances burst tolerance (small bursts ride out without
 // drop-oldest activation) against memory footprint (~2 KiB per
 // subscription at sizeof(Record) ≈ 32 bytes plus payload pointer).
@@ -30,7 +30,7 @@ const DefaultBufferSize = 64
 // []byte; Filter MUST NOT mutate it).
 //
 // Complexity (N-1): O(|Types|) linear scan over the Types slice. Intentional
-// — typical |Types| ≤ 10 (Phase H reviewer, Phase K amendment proposer
+// — typical |Types| ≤ 10 ( reviewer, amendment proposer
 // each subscribe to ≤ 5 EventTypes), and a 10-element linear scan beats a
 // map lookup on cache-friendliness for these sizes. If a future caller
 // needs |Types| > 32, replace with a precomputed bitset over EventType.
@@ -88,20 +88,20 @@ func (h *subscriberHub) add(s *subscriber) {
 // publish fans r out to every subscriber whose Filter matches.
 //
 // Algorithm
-//  1. Snapshot the subs slice under RLock; release the lock before any
-//     channel work to keep contention bounded.
-//  2. For each subscriber: check filter, then attempt delivery via a
-//     single select that watches s.closed alongside the s.ch <- r send
-//     case. This atomically handles the publish/Close race:
-//     - If s.ch has buffer space and s.closed is open: deliver.
-//     - If s.closed has been closed by Close(): skip and mark for prune.
-//     - If buffer is full and s.closed is open: fall through to
-//     drop-oldest path.
-//  3. Drop-oldest path: drain ONE oldest record non-blocking, then retry
-//     the send (still under the s.closed-watching select). If the channel
-//     re-fills in the race window, drop the new record — spec §1 Q5 C:
-//     publisher MUST NOT block.
-//  4. Closed subscribers are pruned in a final write-lock pass.
+// 1. Snapshot the subs slice under RLock; release the lock before any
+// channel work to keep contention bounded.
+// 2. For each subscriber: check filter, then attempt delivery via a
+// single select that watches s.closed alongside the s.ch <- r send
+// case. This atomically handles the publish/Close race:
+// - If s.ch has buffer space and s.closed is open: deliver.
+// - If s.closed has been closed by Close(): skip and mark for prune.
+// - If buffer is full and s.closed is open: fall through to
+// drop-oldest path.
+// 3. Drop-oldest path: drain ONE oldest record non-blocking, then retry
+// the send (still under the s.closed-watching select). If the channel
+// re-fills in the race window, drop the new record — spec §1 Q5 C:
+// publisher MUST NOT block.
+// 4. Closed subscribers are pruned in a final write-lock pass.
 //
 // C-1 fix: pre-fix, the closed-check was a separate select before the
 // send select, leaving an atomicity gap where Close() could close s.ch

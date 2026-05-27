@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 //
-// Usage: go run ./tools/gen-audit-golden --count N --out <file>
+// Usage: go run./tools/gen-audit-golden --count N --out <file>
 //
 // Emits a single JSON file at <file> containing an ordered sequence of
 // audit events with their pre-computed chain hashes per Q3 C
 // (chain.Compute spec §1.Q3 + §2.4 migration 059):
 //
-//	record_hash = sha256(prev_hash || "|" || event_type || "|" || payload || "|" || ts_decimal)
+// record_hash = sha256(prev_hash || "|" || event_type || "|" || payload || "|" || ts_decimal)
 //
 // Determinism: timestamps anchored at 2026-05-07T00:00:00Z and increment
 // 1 s per event. Payloads are stable JSON objects with deterministic

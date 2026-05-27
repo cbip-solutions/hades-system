@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — caronte_reindex.go (Plan v0.20.0 Phase C Task C-3; inv-zen-273).
+// Package cli — caronte_reindex.go.
 //
 // `zen caronte reindex [project] [--all]` triggers a full reindex of one
 // project (or every registered project with --all). The CLI POSTs the
@@ -9,13 +9,13 @@
 //
 // Resolution precedence:
 //
-//  1. `--all` enumerates every registered project via GET /v1/projects.
-//  2. positional [project] alias-or-id used verbatim as the header value.
-//  3. neither → CLI uses os.Getwd() as the alias; the daemon's resolver
-//     matches against projects_alias.canonical_path (the same trick
-//     `zen project doctor` uses for cwd-based resolution).
+// 1. `--all` enumerates every registered project via GET /v1/projects.
+// 2. positional [project] alias-or-id used verbatim as the header value.
+// 3. neither → CLI uses os.Getwd() as the alias; the daemon's resolver
+// matches against projects_alias.canonical_path (the same trick
+// `zen project doctor` uses for cwd-based resolution).
 //
-// inv-zen-277: the CLI does NOT pre-resolve aliases — the daemon-side
+// invariant: the CLI does NOT pre-resolve aliases — the daemon-side
 // handler is the single source of truth. This keeps the CLI thin (no
 // store dependency) and the alias-resolution rules co-located with the
 // projects_alias table.

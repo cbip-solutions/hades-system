@@ -2,7 +2,7 @@
 // + DiagnosticResult value type + Status/FixMode/Category enums declared
 // in package check.
 //
-// Per Plan 13 Phase F Task F1 (TDD step 1): tests are written FIRST and
+// Per Task F1 (TDD step 1): tests are written FIRST and
 // MUST fail (no implementation yet); step 3 implements check.go to
 // satisfy them.
 package check_test

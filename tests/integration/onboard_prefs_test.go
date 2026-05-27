@@ -1,4 +1,4 @@
-//go:build a7_full
+// go:build a7_full
 
 package integration_test
 

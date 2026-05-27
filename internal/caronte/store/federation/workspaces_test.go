@@ -1,5 +1,4 @@
-//go:build cgo
-
+// go:build cgo
 package federation
 
 import (
@@ -206,7 +205,7 @@ func TestSetEnableGraphQLNodeFallbackMissing(t *testing.T) {
 
 // TestSetWorkspacePolicyEmitsAuditRow asserts the chokepoint route — every
 // successful SetWorkspacePolicy call drives the injected AuditEmitter
-// (inv-zen-269 closed-enum discipline). Also pins the payload contract:
+// . Also pins the payload contract:
 // the bytes the emitter receives MUST be valid JSON whose `policy` field
 // round-trips byte-for-byte (Tessera forensic chain). Wires the emitter
 // via the review-I2 construction-time WithAuditEmitter option.
@@ -248,7 +247,7 @@ func TestSetWorkspacePolicyEmitsAuditRow(t *testing.T) {
 // TestSetWorkspacePolicyAuditPayloadIsValidJSON pins review-C1: when the
 // operator-supplied policy contains characters that Go's %q quotes with a
 // Go-only escape (\v, \a, \x07 — NOT in the JSON spec's escape set), the
-// emitted audit payload MUST still be valid JSON. fmt.Sprintf("%q", ...)
+// emitted audit payload MUST still be valid JSON. fmt.Sprintf("%q",...)
 // produces Go-quoted strings whose escape vocabulary diverges from JSON
 // strings (json.Unmarshal rejects \v / \a / \x07 with "invalid character
 // 'v' in string escape code"). The fix is encoding/json.Marshal at the

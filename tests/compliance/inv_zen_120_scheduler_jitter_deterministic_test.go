@@ -1,9 +1,9 @@
-// Package compliance — inv-zen-120: scheduler jitter is deterministic.
+// Package compliance — invariant: scheduler jitter is deterministic.
 //
-// Spec §1 Q9 C / §7.2 inv-zen-120 wording:
+// Spec §1 Q9 C / §7.2 invariant wording:
 //
-//	"Scheduler jitter offset MUST be deterministic — hash(routine_id) %
-//	(10% × period), capped at 15min recurring / 90s one-shot."
+// "Scheduler jitter offset MUST be deterministic — hash(routine_id) %
+// (10% × period), capped at 15min recurring / 90s one-shot."
 //
 // This test is the cross-package, boundary-side witness. The in-package
 // test surface in internal/scheduler/jitter_test.go locks
@@ -14,26 +14,26 @@
 //
 // Coverage matrix:
 //
-//	(a) Determinism across 10000 invocations on the same input — locks
-//	    the "no map iteration / no random source / no init-time RNG"
-//	    contract that makes daemon.db replay reproducible.
-//	(b) Concurrency-safety: 100 goroutines × 100 calls each on the same
-//	    input return the same value. Defends against accidental
-//	    package-level mutable state introduced by a future caching layer.
-//	(c) Order-independence: interleaving foreign IDs in between calls
-//	    on the witness ID does not change the witness ID's offset.
-//	(d) Recurring cap (≥1h period): 15min ceiling holds across 10000
-//	    distinct IDs. Saturation tests prove the cap branch is reached.
-//	(e) One-shot cap (<1h period): 90s ceiling holds across 10000
-//	    distinct IDs.
-//	(f) Cross-process determinism: a child process (started via
-//	    `go run` against a tiny generator) produces byte-identical
-//	    output. Catches accidental use of process-local randomness
-//	    (e.g. crypto/rand instead of crypto/sha256, time-based seed,
-//	    map iteration). The generator source is written to a temp dir
-//	    so the test is self-contained and survives `go test -race`.
+// (a) Determinism across 10000 invocations on the same input — locks
+// the "no map iteration / no random source / no init-time RNG"
+// contract that makes daemon.db replay reproducible.
+// (b) Concurrency-safety: 100 goroutines × 100 calls each on the same
+// input return the same value. Defends against accidental
+// package-level mutable state introduced by a future caching layer.
+// (c) Order-independence: interleaving foreign IDs in between calls
+// on the witness ID does not change the witness ID's offset.
+// (d) Recurring cap (≥1h period): 15min ceiling holds across 10000
+// distinct IDs. Saturation tests prove the cap branch is reached.
+// (e) One-shot cap (<1h period): 90s ceiling holds across 10000
+// distinct IDs.
+// (f) Cross-process determinism: a child process (started via
+// `go run` against a tiny generator) produces byte-identical
+// output. Catches accidental use of process-local randomness
+// (e.g. crypto/rand instead of crypto/sha256, time-based seed,
+// map iteration). The generator source is written to a temp dir
+// so the test is self-contained and survives `go test -race`.
 //
-// Boundary (inv-zen-031): this test imports only internal/scheduler +
+// Boundary: this test imports only internal/scheduler +
 // stdlib + the in-tests testharness. It does NOT touch internal/store,
 // internal/providers, or private-tier1-module.
 //

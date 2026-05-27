@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — research_cache.go (Plan 4 Phase G Task G-1).
+// Package handlers — research_cache.go.
 //
-// GET  /v1/research/cache/get?hash=<sha256>  — cache lookup by pre-computed hash.
-// POST /v1/research/cache/set                — persist a cache entry with TTL.
+// GET /v1/research/cache/get?hash=<sha256> — cache lookup by pre-computed hash.
+// POST /v1/research/cache/set — persist a cache entry with TTL.
 //
 // Cache hash = sha256(query + sources_used + iteration_index), computed by the
-// research MCP (Phase I) before the outbound call. The daemon stores and retrieves
+// research MCP before the outbound call. The daemon stores and retrieves
 // the opaque response_json blob. TTL is 7 days by default; doctrine-tunable via
-// ResearchCacheCtx.ResearchCacheTTL() (Phase A wires the actual doctrine loader;
+// ResearchCacheCtx.ResearchCacheTTL() ( wires the actual doctrine loader;
 // the interface defaults to 7 days when no loader is present).
 //
 // # Eviction
@@ -20,8 +20,8 @@
 // unboundedly (post-review C-3 fix). The goroutine is stopped on
 // daemon shutdown via Stop().
 //
-// inv-zen-001: Unix socket only — enforced at server.go listener level.
-// inv-zen-031: This file never imports internal/store directly.
+// invariant: Unix socket only — enforced at server.go listener level.
+// invariant: This file never imports internal/store directly.
 package handlers
 
 import (

@@ -1,16 +1,16 @@
-// Phase L Task L-8 — runtime compliance test for inv-zen-083.
+// Task L-8 — runtime compliance test for invariant.
 //
-// inv-zen-083: audit emit no-loss. When the daemon HTTP path fails,
+// invariant: audit emit no-loss. When the daemon HTTP path fails,
 // events MUST be appended to the local buffer file; when the daemon
-// returns, the next DrainBuffer flushes them. Phase H's EmitClient
-// implements both halves and is the sole emit path used by Phase L's
+// returns, the next DrainBuffer flushes them. EmitClient
+// implements both halves and is the sole emit path used by
 // internal/mcp/sshexec/emit.go.
 //
 // This test exercises three phases against a controllable fake daemon:
 //
-//	Phase 1 (daemon up)    — events land at daemon, buffer stays empty.
-//	Phase 2 (daemon down)  — events land in buffer file.
-//	Phase 3 (daemon back)  — DrainBuffer flushes pending events.
+// Phase 1 (daemon up) — events land at daemon, buffer stays empty.
+// Phase 2 (daemon down) — events land in buffer file.
+// Phase 3 (daemon back) — DrainBuffer flushes pending events.
 
 package compliance
 

@@ -8,7 +8,7 @@ import (
 	v1 "github.com/cbip-solutions/hades-system/internal/doctrine/schema/v1"
 )
 
-// TestInv136_TightenOnlyEnforced — inv-zen-136 enforced for every direction
+// TestInv136_TightenOnlyEnforced — invariant enforced for every direction
 // class. Per-project overrides MUST be tighten-only relative to baseline;
 // loosen attempts produce *TightenViolation entries joined under
 // ErrTightenViolation so callers see every loosen in one pass.

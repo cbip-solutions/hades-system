@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package ecosystem
 
 import (
@@ -9,14 +8,14 @@ import (
 	"time"
 )
 
-// TestInvZen200Integration_1000IterDeterminism enforces inv-zen-200 at the
+// TestInvZen200Integration_1000IterDeterminism enforces invariant at the
 // integration seam: 1000 iterations of an identical query against the real
 // Dispatcher (fixture aggregators wired through the public Options surface)
 // MUST yield the identical chunk-ID slice.
 //
 // Differs from the unit-level race test (dispatcher_race_test.go) in that
-// THIS test is the canonical integration-level inv-zen-200 enforcement
-// expected by the Plan 14 verification matrix.
+// THIS test is the canonical integration-level invariant enforcement
+// expected by the verification matrix.
 func TestInvZen200Integration_1000IterDeterminism(t *testing.T) {
 	fix := buildHappyPathFixture(t)
 	const iters = 1000
@@ -39,28 +38,28 @@ func TestInvZen200Integration_1000IterDeterminism(t *testing.T) {
 	}
 }
 
-// TestInvZen205Integration_DoctrineEventCounts enforces inv-zen-205
+// TestInvZen205Integration_DoctrineEventCounts enforces invariant
 // (doctrine-strictness knob) at the integration seam: each doctrine mode
 // MUST emit the expected canonical event-type set on the happy path.
 //
 // Happy-path event matrix (per doctrine + AuditEmissionLevel + spec §2.7
 // Q7=A table + happy-path-with-AllVerified fixture wiring):
 //
-//   - default doctrine (AuditQueryAbstainVerifyFailureAnswer): emits
-//     EvtRAGQuery + EvtRAGAnswer. Verify NOT emitted (AllVerified=true so
-//     verify-failure gate filters it out; see audit_emitter.go shouldEmit
-//     "EvtRAGVerify" case). Citation + Retrieval not in the emission set.
+// - default doctrine (AuditQueryAbstainVerifyFailureAnswer): emits
+// EvtRAGQuery + EvtRAGAnswer. Verify NOT emitted (AllVerified=true so
+// verify-failure gate filters it out; see audit_emitter.go shouldEmit
+// "EvtRAGVerify" case). Citation + Retrieval not in the emission set.
 //
-//   - max-scope doctrine (AuditAll8Events): emits EvtRAGQuery + EvtRAGRetrieval
+// - max-scope doctrine (AuditAll8Events): emits EvtRAGQuery + EvtRAGRetrieval
 //
-//   - EvtRAGCitation + EvtRAGVerify + EvtRAGAnswer on happy path (no
-//     abstain triggered + LLM-judge accepts the fixture answer).
+// - EvtRAGCitation + EvtRAGVerify + EvtRAGAnswer on happy path (no
+// abstain triggered + LLM-judge accepts the fixture answer).
 //
-//   - capa-firewall doctrine (AuditAll8Events + RefuseOnUnverified=true +
-//     LLMJudgeEnabled=true): same as max-scope on happy path because the
-//     fixture verifier returns AllVerified=true for crypto/sha256.Sum256
-//     (capa-firewall's refuse gate ONLY fires on AllVerified=false). Plus
-//     LLM-judge re-pass with judge.Acceptable=true completes Step 13.
+// - capa-firewall doctrine (AuditAll8Events + RefuseOnUnverified=true +
+// LLMJudgeEnabled=true): same as max-scope on happy path because the
+// fixture verifier returns AllVerified=true for crypto/sha256.Sum256
+// (capa-firewall's refuse gate ONLY fires on AllVerified=false). Plus
+// LLM-judge re-pass with judge.Acceptable=true completes Step 13.
 //
 // The N-query sweep across queries (one per ecosystem) confirms event-set
 // is doctrine-bound, NOT query-bound, NOT ecosystem-bound.
@@ -179,7 +178,7 @@ func TestDispatcherIntegration_AllFourEcosystemsBroadcast(t *testing.T) {
 // Note the fixture happy-path Query is sub-millisecond on M4 dev hardware
 // (no real BGE inference, no SQLite I/O, no subprocess verifier — pure
 // in-memory fixture). The budget enforcement here is a smoke-test: real
-// budget enforcement against production-shaped fixtures lives in Phase H
+// budget enforcement against production-shaped fixtures lives in
 // follow-up tests (with real *.db + real BGE + real verifier).
 //
 // THIS test catches a coarse regression — if the dispatcher's orchestration

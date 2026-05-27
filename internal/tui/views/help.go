@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package views — help.go (Plan 12 Phase C Task C-7, F1 panel).
+// Package views — help.go.
 //
 // Static help panel — F1..F12 panel inventory + key bindings.
 package views

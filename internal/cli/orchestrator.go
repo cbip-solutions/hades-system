@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package cli — orchestrator.go (Plan 3 Phase F K-3 — REAL).
+// Package cli — orchestrator.go.
 //
 // `zen orchestrator` exposes six subcommands backed by the daemon's
 // /v1/orchestrator/* RESTful surface:
 //
-//   - status   — per-tier breaker state + active pins + 30d cost summary
-//   - pin      — operator pin (scope=session|project|global, --tier required,
-//     optional --ttl, --provider, --reason)
-//   - unpin    — operator unpin by scope OR --all (mutually exclusive)
-//   - pins     — list every active (non-expired) pin
-//   - probe    — trigger circuit-breaker recovery on each non-Closed tier
-//   - history  — current state per tier (post-rescope: CircuitBreaker
-//     does not yet track state-transition history)
+// - status — per-tier breaker state + active pins + 30d cost summary
+// - pin — operator pin (scope=session|project|global, --tier required,
+// optional --ttl, --provider, --reason)
+// - unpin — operator unpin by scope OR --all (mutually exclusive)
+// - pins — list every active (non-expired) pin
+// - probe — trigger circuit-breaker recovery on each non-Closed tier
+// - history — current state per tier (post-rescope: CircuitBreaker
+// does not yet track state-transition history)
 //
-// Replaces the Plan 2 stub set (status/pin/unpin via /switch + 4-tier
+// Replaces the stub set (status/pin/unpin via /switch + 4-tier
 // numeric mapping). Tier names are now canonical providers.Tier strings
 // ("in-house" / "openclaude" / etc.) so future tiers added in
 // buildOrchestrator widen this surface without CLI changes.

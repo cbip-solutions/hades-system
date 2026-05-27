@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -87,7 +88,7 @@ func (e *Extractor) endpointsFromAST(ctx context.Context, file string, src []byt
 func composeRouterPrefixes(bindings map[string]*routerBinding, edges []includeEdge) map[string]string {
 	// Build a child→edge index. A router may have at most one inbound edge
 	// in well-formed code; on multiple inbounds, the first wins (warning is
-	// surfaced via the audit emitter in Phase F).
+	// surfaced via the audit emitter in ).
 	inbound := make(map[string]includeEdge)
 	for _, edge := range edges {
 		if _, exists := inbound[edge.child]; !exists {

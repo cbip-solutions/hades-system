@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-// Package cli — day_autonomy.go (Plan 5 Phase N N-7).
+// Package cli — day_autonomy.go.
 //
 // Renders the `[plan-5 autonomy]` section of the morning brief per
 // spec §6.3. The renderer is graceful on daemon-down: rather than
 // failing the whole brief, it emits a single "daemon unreachable"
-// line. This matches Plan 2 Phase L's day.go pattern (the brief
+// line. This matches day.go pattern (the brief
 // always renders, even partially).
 //
 // Pulls from 4 daemon endpoints:
 //
-//	GET /v1/autonomy/show       — effective mode + resolution chain
-//	GET /v1/orchestrator/state  — last session id + state + transitions
-//	GET /v1/doctrine/propose-list — pending amendments
-//	GET /v1/safetynet/status + /v1/orchestrator/pool — substrate + pool
+// GET /v1/autonomy/show — effective mode + resolution chain
+// GET /v1/orchestrator/state — last session id + state + transitions
+// GET /v1/doctrine/propose-list — pending amendments
+// GET /v1/safetynet/status + /v1/orchestrator/pool — substrate + pool
 //
 // internal/cli/brief.go is a notImplementedCmd stub; the morning brief
-// surface is `zen day` (Plan 2 Phase L), so Phase N N-7 extends day.go's
+// surface is `zen day`, so N-7 extends day.go's
 // inline RunE rather than adding a new top-level command.
 package cli
 

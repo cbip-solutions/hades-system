@@ -17,7 +17,7 @@ import (
 	t "github.com/cbip-solutions/hades-system/internal/templates"
 )
 
-//go:embed all:fixtures
+// go:embed all:fixtures
 var fixturesFS embed.FS
 
 func Templates() []string {

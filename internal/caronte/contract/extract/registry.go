@@ -9,44 +9,44 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/caronte/store"
 )
 
-// RouteExtractor is the Plan 20 cross-language API-extraction contract (master
+// RouteExtractor is the cross-language API-extraction contract (master
 // C-4, FROZEN). Each concrete extractor lives in a per-framework subpackage
 // under internal/caronte/contract/extract/ and is added to a Registry at
 // daemon composition time. The registry's Resolve(file, content) capability-
 // detects ALL matching extractors for a file — one file may match multiple
 // (e.g., a NestJS controller annotated with @nestjs/swagger decorators matches
 // both the structural NestJS extractor and the swagger artifact extractor; the
-// Phase F linker merges their endpoints at distinct confidence tiers).
+// linker merges their endpoints at distinct confidence tiers).
 //
 // Methods (master C-4):
-//   - Language returns the source language this extractor parses (one of the 5
-//     constants). The registry uses (Language, framework) tuples as collision
-//     keys: at most one extractor per tuple is registered.
-//   - Frameworks returns the framework labels this extractor handles (e.g.,
-//     {"chi","gin","echo","stdlib"} for a Go-HTTP extractor that covers all
-//     four routers). The registry reserves every (Language, framework) tuple
-//     in the slice for this extractor; a second Register call that collides
-//     on ANY tuple returns ErrDuplicateExtractor.
-//   - Detect returns true iff this file (path + content) is in-scope for this
-//     extractor. Capability detection is content-aware so a Go file can be
-//     routed to chi vs gin via package-import sniff; a TypeScript file can be
-//     routed to nextjs vs nestjs via decorator presence.
-//   - Endpoints extracts the server-side route definitions from a parsed tree
-//     and returns []store.APIEndpoint rows ready for store.UpsertAPIEndpoint
-//     (Phase B CRUD). Each row carries ExtractorID populated by the extractor
-//     so per-row provenance is traceable.
-//   - Calls extracts the client-side call sites from a parsed tree and returns
-//     []store.APICall rows. Same provenance discipline as Endpoints.
-//   - StubArtifacts returns gRPC client-side generated-stub references (e.g.,
-//     the *.pb.go / *.pb.ts package + service + RPC trio) used by the Phase F
-//     linker for the highest-confidence exact_proto_import tier. Non-gRPC
-//     extractors return an empty slice; this is the contract Phase D's proto
-//     extractor consumes and Phase E's typescript extractors return empty.
+// - Language returns the source language this extractor parses (one of the 5
+// constants). The registry uses (Language, framework) tuples as collision
+// keys: at most one extractor per tuple is registered.
+// - Frameworks returns the framework labels this extractor handles (e.g.,
+// {"chi","gin","echo","stdlib"} for a Go-HTTP extractor that covers all
+// four routers). The registry reserves every (Language, framework) tuple
+// in the slice for this extractor; a second Register call that collides
+// on ANY tuple returns ErrDuplicateExtractor.
+// - Detect returns true iff this file (path + content) is in-scope for this
+// extractor. Capability detection is content-aware so a Go file can be
+// routed to chi vs gin via package-import sniff; a TypeScript file can be
+// routed to nextjs vs nestjs via decorator presence.
+// - Endpoints extracts the server-side route definitions from a parsed tree
+// and returns []store.APIEndpoint rows ready for store.UpsertAPIEndpoint
+// . Each row carries ExtractorID populated by the extractor
+// so per-row provenance is traceable.
+// - Calls extracts the client-side call sites from a parsed tree and returns
+// []store.APICall rows. Same provenance discipline as Endpoints.
+// - StubArtifacts returns gRPC client-side generated-stub references (e.g.,
+// the *.pb.go / *.pb.ts package + service + RPC trio) used by the
+// linker for the highest-confidence exact_proto_import tier. Non-gRPC
+// extractors return an empty slice; this is the contract proto
+// extractor consumes and typescript extractors return empty.
 //
 // Boundary inheritance: extractor concrete impls may import the smacker
 // tree-sitter binding (CGO) via the *parser.Tree alias — that is correct; they
-// MUST NOT import internal/store (boundary inv-zen-230 + inv-zen-271) and MUST
-// NOT import internal/caronte/store/federation (Phase A is workspace-scoped;
+// MUST NOT import internal/store and MUST
+// NOT import internal/caronte/store/federation ( is workspace-scoped;
 // extractors are per-repo).
 type RouteExtractor interface {
 	Language() Language
@@ -132,7 +132,7 @@ func (r *Registry) Register(name string, e RouteExtractor) error {
 // non-nil slice when no extractor matches (so callers can range without a
 // nil-check); ordering is the registration order of byName iteration which is
 // unspecified by the Go runtime — callers MUST treat the result as a SET, not
-// a sequence (Phase F's linker iterates and dedupes by extractor identity).
+// a sequence.
 //
 // One file may match multiple extractors — this is intentional. A NestJS
 // controller annotated with @nestjs/swagger decorators matches both the

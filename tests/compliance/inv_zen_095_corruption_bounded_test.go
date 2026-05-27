@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_095_corruption_bounded_test.go
 //
-// Compliance gate for inv-zen-095: Replay tolerates at most
+// Compliance gate for invariant: Replay tolerates at most
 // ReplayCorruptionBudget (5) corrupted events per session. The
 // (budget+1)th corruption MUST return ErrCorruptionBudgetExceeded so
 // the orchestrator caller can transition to HARD_PAUSED instead of
@@ -16,13 +16,13 @@
 // accidentally changed the public budget contract would be caught here.
 //
 // Three sub-tests:
-//  1. budget tolerated — N corrupted rows replay with no error +
-//     EventsCorrupted == N
-//  2. budget exceeded — N+1 corrupted rows return
-//     ErrCorruptionBudgetExceeded (errors.Is-wrapped)
-//  3. budget constant pinned — ReplayCorruptionBudget literally equals
-//     5, so a future code change that loosened the budget without a
-//     spec amendment is caught at the compliance layer
+// 1. budget tolerated — N corrupted rows replay with no error +
+// EventsCorrupted == N
+// 2. budget exceeded — N+1 corrupted rows return
+// ErrCorruptionBudgetExceeded (errors.Is-wrapped)
+// 3. budget constant pinned — ReplayCorruptionBudget literally equals
+// 5, so a future code change that loosened the budget without a
+// spec amendment is caught at the compliance layer
 package compliance
 
 import (
@@ -38,11 +38,11 @@ import (
 )
 
 // TestInvZen095ReplayCorruptionBounded — the canonical end-to-end gate
-// for inv-zen-095 (replay corruption budget = 5). All three sub-tests
+// for invariant (replay corruption budget = 5). All three sub-tests
 // MUST pass on every commit; race-clean under -race.
 func TestInvZen095ReplayCorruptionBounded(t *testing.T) {
 	t.Run("budget_constant_matches_spec", func(t *testing.T) {
-		// inv-zen-095 fixes N=5. A tightening (N<5) is non-breaking; a
+		// invariant fixes N=5. A tightening (N<5) is non-breaking; a
 		// loosening (N>5) is a spec amendment that requires a parallel
 		// update here. Either direction MUST surface in CI.
 		if eventlog.ReplayCorruptionBudget != 5 {

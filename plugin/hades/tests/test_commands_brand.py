@@ -167,7 +167,7 @@ def test_handler_success_path_has_hades_branding(
     raw_args: str,
     case_id: str,
 ) -> None:
-    """Phase E rebrand: every handler's main / success path output contains
+    """ rebrand: every handler's main / success path output contains
     "HADES" (or "HADES system") and contains NO non-allowlisted "zen-swarm".
 
     RED on post-A+B + pre-E-3..E-10. GREEN after the appropriate E-3..E-10
@@ -201,7 +201,7 @@ def test_handler_error_path_has_hades_branding(
     raw_args: str,
     case_id: str,
 ) -> None:
-    """Phase E rebrand: every handler's _PROMPT_NO_* error path output also
+    """ rebrand: every handler's _PROMPT_NO_* error path output also
     carries HADES branding. Per spec §Q6 recovery-hint template.
     """
     result = handler(raw_args)
@@ -229,7 +229,7 @@ def test_recovery_hints_match_q6_template(
 ) -> None:
     """Spec §Q6 recovery-hint template: HADES: <short>\\n  <body>\\n  → <hint>.
 
-    Phase E-11 ships placeholder strings matching this shape; Plan 18c
+     ships placeholder strings matching this shape; 
     rewires through internal/cli/error_render.go. This test asserts the
     shape: a line beginning with "HADES:" + a subsequent line beginning
     with "  →" (the green recovery-hint arrow).
@@ -252,7 +252,7 @@ def test_recovery_hints_match_q6_template(
 
 def test_commands_init_docstring_uses_hades_slash_namespace() -> None:
     """plugin/hades/commands/__init__.py docstring references slash names;
-    Phase E-3 rebrands those references to /hades:start, /hades:handoff,
+     rebrands those references to /hades:start, /hades:handoff,
     /hades:install-mcps form (matching the post-B namespace).
     """
     import importlib
@@ -270,7 +270,7 @@ def test_commands_init_docstring_uses_hades_slash_namespace() -> None:
 
 
 def test_handler_signatures_unchanged() -> None:
-    """Sister-test: Phase E MUST NOT change handler signatures. Each handler
+    """Sister-test:  MUST NOT change handler signatures. Each handler
     accepts a single str arg and returns str | None.
     """
     import inspect

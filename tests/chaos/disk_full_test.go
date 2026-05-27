@@ -1,22 +1,22 @@
-//go:build chaos
+// go:build chaos
 
 // Drives the contract from spec §4.6 row "Disk full":
-//   - Daemon-owned writes (inbox.Aggregator.Insert,
-//     scheduler.Store.AppendHistory) MUST fail-loud when the backing
-//     storage returns ENOSPC / "database or disk is full" errors.
-//     The error propagates to the caller with the original cause
-//     reachable via errors.Is — operators can grep audit logs.
-//   - The daemon does NOT silently swallow disk errors; aggregator
-//     errors are visible at the Insert call site (inv: per-project
-//     state.db is authoritative; cache fanout is best-effort but the
-//     authoritative write failure is the source of truth).
-//   - Recovery: when disk space frees (storage stops returning the
-//     error), subsequent writes succeed. State is not corrupted by
-//     the prior failures.
-//   - Backpressure: when the cache is full or unwritable, the outbox
-//     queue depth grows but writes do not block forever — the
-//     buffered channel either accepts or returns ErrOutboxFull
-//     synchronously.
+// - Daemon-owned writes (inbox.Aggregator.Insert,
+// scheduler.Store.AppendHistory) MUST fail-loud when the backing
+// storage returns ENOSPC / "database or disk is full" errors.
+// The error propagates to the caller with the original cause
+// reachable via errors.Is — operators can grep audit logs.
+// - The daemon does NOT silently swallow disk errors; aggregator
+// errors are visible at the Insert call site (inv: per-project
+// state.db is authoritative; cache fanout is best-effort but the
+// authoritative write failure is the source of truth).
+// - Recovery: when disk space frees (storage stops returning the
+// error), subsequent writes succeed. State is not corrupted by
+// the prior failures.
+// - Backpressure: when the cache is full or unwritable, the outbox
+// queue depth grows but writes do not block forever — the
+// buffered channel either accepts or returns ErrOutboxFull
+// synchronously.
 //
 // Drives REAL production code: inbox.Aggregator + Outbox.Recover +
 // scheduler.Fire stack. Distinct from K-2 (which corrupts the cache

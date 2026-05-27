@@ -2,7 +2,7 @@
 //
 // Real compilable Go (no third-party deps so the parent module's
 // tests can run on a CI without grpc-go installed). The K-4 test
-// does NOT execute this; it reads the .proto file via the proto
+// does NOT execute this; it reads the.proto file via the proto
 // extractor's EndpointsFromBytes path + the *_grpc.pb.go stub
 // via StubArtifacts for the link resolution.
 package main

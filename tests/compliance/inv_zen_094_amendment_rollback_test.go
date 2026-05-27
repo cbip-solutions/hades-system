@@ -1,15 +1,15 @@
-//go:build orchestrator_chaos
+// go:build orchestrator_chaos
 
 // tests/compliance/inv_zen_094_amendment_rollback_test.go
 //
-// Compliance test for inv-zen-094 (Plan 5 Phase K-5):
+// Compliance test for invariant:
 //
-//	AmendmentApplier.ApplyTransacted MUST atomically roll back if any
-//	post-commit step (reload signal, event emit, panic) fails. Rollback
-//	leaves the zenswarm.toml byte-identical to pre-Apply (SHA-256 hash
-//	check); the audit trail contains: init + amendment commit + revert
-//	commit (3 commits total) — never a hard reset, every change keeps
-//	an auditable record.
+// AmendmentApplier.ApplyTransacted MUST atomically roll back if any
+// post-commit step (reload signal, event emit, panic) fails. Rollback
+// leaves the zenswarm.toml byte-identical to pre-Apply (SHA-256 hash
+// check); the audit trail contains: init + amendment commit + revert
+// commit (3 commits total) — never a hard reset, every change keeps
+// an auditable record.
 //
 // Build tag: orchestrator_chaos. Run with `go test -tags=orchestrator_chaos`.
 package compliance
@@ -98,7 +98,7 @@ func countLines(b []byte) int {
 	return bytes.Count(b, []byte("\n"))
 }
 
-// inv-zen-094: post-commit failure must trigger atomic rollback; final
+// invariant: post-commit failure must trigger atomic rollback; final
 // zenswarm.toml hash MUST equal pre-Apply hash; rollback produces a
 // revert commit (auditable, never `git reset --hard`).
 func TestInvZen094AmendmentRollbackAtomicity(t *testing.T) {

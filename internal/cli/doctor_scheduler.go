@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_scheduler.go
 //
-// Phase J Task J-4: scheduler subsystem doctor probe. Four aspects per
+// Task J-4: scheduler subsystem doctor probe. Four aspects per
 // spec §6.7 (queue.depth, missed_fires.recent, wfq.saturation,
 // dispatcher.bound). RunSchedulerProbe is delegate-only; impl in
 // internal/scheduler/prober.go.
 //
-// inv-zen-080 + inv-zen-123 anchor: the dispatcher.bound aspect probes
-// that the scheduler can reach the Plan 3 dispatcher at runtime — a
+// invariant + invariant anchor: the dispatcher.bound aspect probes
+// that the scheduler can reach the dispatcher at runtime — a
 // non-nil "scheduler.fire dispatched directly" path would surface here.
 package cli
 

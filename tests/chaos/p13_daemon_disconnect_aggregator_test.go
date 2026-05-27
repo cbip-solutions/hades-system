@@ -1,7 +1,7 @@
-//go:build chaos
+// go:build chaos
 
-// Package chaos — p13_daemon_disconnect_aggregator_test.go (Plan 13
-// Phase F-tail F-imp IMPORTANT 7).
+// Package chaos — p13_daemon_disconnect_aggregator_test.go (
+// F-imp IMPORTANT 7).
 //
 // Chaos: the doctor full aggregator MUST gracefully handle daemon
 // disconnection mid-run. Per spec §3.4 + plan F10 line 7243-7247: the
@@ -10,7 +10,7 @@
 // diagnostic surface).
 //
 // Build tag `chaos` excludes this file from default CI; opt-in via
-// `make test-chaos` or `go test -tags=chaos ./tests/chaos/...`.
+// `make test-chaos` or `go test -tags=chaos./tests/chaos/...`.
 package chaos
 
 import (

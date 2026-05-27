@@ -4,7 +4,7 @@
 // Runs under `make test-adversarial`.
 //
 // Scenario (spec §13.4 fourth bullet + spec §6 + master C-6 +
-// inv-zen-268): a hostile / careless operator commits a caronte.yaml
+// invariant): a hostile / careless operator commits a caronte.yaml
 // that names a credential-bearing field (`password`, `token`, `api_key`,
 // `secret`, `bearer`, `auth_token`, `private_key`) under any casing
 // variant (snake / kebab / camel / UPPER) at any nesting position
@@ -13,7 +13,7 @@
 // strict-mode unmarshal would surface a generic "unknown field" error
 // (defence-in-depth ordering per spec §6).
 //
-// This is the inv-zen-268 normative statement under the per-field
+// This is the invariant normative statement under the per-field
 // exhaustive corpus assault. The plan-L sweep: 7 base names × 4 casing
 // variants × 3 positions = ~84 hostile inputs.
 //
@@ -24,8 +24,7 @@
 // they're at a nested arbitrary position). Test must surface the
 // regression for THAT variant.
 
-//go:build adversarial
-
+// go:build adversarial
 package adversarial
 
 import (

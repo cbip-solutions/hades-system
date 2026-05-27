@@ -4,28 +4,28 @@
 // Build tag: adversarial (per the tests/adversarial/ precedent).
 // Runs under `make test-adversarial`.
 //
-// Scenario (spec §13.4 sixth bullet + inv-zen-264 chain extension):
+// Scenario:
 // a malicious / buggy caller invokes coordinated.OrchestratorCoordinator.
 // Dispatch with a ContractBreakage whose AffectedConsumers reference
 // project IDs NOT on the workspace roster (the forged workspace_id
 // surface — the workspace handle is real, but the consumer set tries
 // to span projects the workspace was never authorized for).
 //
-// The Workspace.AuthorizeProjects (Plan-19-M capa-firewall) MUST refuse
+// The Workspace.AuthorizeProjects MUST refuse
 // with store.ErrUnauthorizedProject + the Coordinator MUST emit a
 // Tessera audit row of type EvtFederatedQueryDenied (master C-11 +
-// inv-zen-269). The dispatch MUST return the wrapped error + NO data
+// invariant). The dispatch MUST return the wrapped error + NO data
 // leaks (zero DispatchedRepos, empty SurfaceMessage from the dispatch
 // payload — the denial-payload audit row carries the forensic record).
 //
 // Adversarial corpus walks 4 forgery shapes:
-//   - completely off-roster project ID;
-//   - case-mangled near-match of a roster member;
-//   - empty project ID (edge case — neither a roster nor non-roster);
-//   - workspace ID forged into the change while the consumer scope
-//     references roster members (the inverse forgery surface: the
-//     denial path catches workspace_id mismatch via the WorkspaceID
-//     payload field).
+// - completely off-roster project ID;
+// - case-mangled near-match of a roster member;
+// - empty project ID (edge case — neither a roster nor non-roster);
+// - workspace ID forged into the change while the consumer scope
+// references roster members (the inverse forgery surface: the
+// denial path catches workspace_id mismatch via the WorkspaceID
+// payload field).
 //
 // Bite-check: temporarily disable the audit-emit on the denial path in
 // coordinated.OrchestratorCoordinator.Dispatch (orchestrator.go::Dispatch
@@ -36,8 +36,7 @@
 // emission rather than relying on an indirect "the typed error proves
 // the emit succeeded" inference.
 
-//go:build adversarial
-
+// go:build adversarial
 package adversarial
 
 import (

@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_178_destructive_fix_confirm_gate_test.go
 //
-// Spec §8.6 inv-zen-178 compliance test: destructive Fix impls in
+// Spec §8.6 invariant compliance test: destructive Fix impls in
 // internal/doctor/fix/ MUST be guarded by GuardDestructive, which
 // rejects FixModeAutoSafe + FixModeInteractive-without-TTY for any
 // fix.Destructive impl returning IsDestructive=true.

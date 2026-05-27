@@ -1449,7 +1449,7 @@ verify-comment-hygiene: verify-no-task-context-comments verify-godoc-clean
 .PHONY: sync-public-now verify-snapshot-build emergency-alpha-back-sync-verify emergency-alpha-back-sync-apply test-sync-public-snapshot
 
 sync-public-now:
-	@bash scripts/build_public_snapshot.sh
+	@bash scripts/build_public_snapshot.sh $(SYNC_PUBLIC_FLAGS)
 
 verify-snapshot-build:
 	@bash scripts/build_public_snapshot.sh --dry-run >/dev/null

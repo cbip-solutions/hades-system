@@ -9,7 +9,7 @@ import (
 const subscriberBufferSize = 8
 
 // NotifyForce triggers an immediate (post-debounce-bypass) reload of path.
-// Used by Plan 5 Applier post-Qx-4-approval to ensure synchronous reload
+// Used Applier post-Qx-4-approval to ensure synchronous reload
 // kick after writing the TOML to filesystem; the resulting DoctrineReloaded
 // event carries Source="amendment-apply".
 //
@@ -38,7 +38,7 @@ func (w *Watcher) NotifyForce(path string) error {
 }
 
 // SubscribeReloadEvents returns a channel that emits DoctrineReloaded
-// events. Plan 5 Applier subscribes to wait for reload completion
+// events. Applier subscribes to wait for reload completion
 // synchronously after NotifyForce. Channel is buffered; emit drops on
 // full buffer (slow subscriber does not block fan-out).
 //

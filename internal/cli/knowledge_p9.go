@@ -1,28 +1,28 @@
 // SPDX-License-Identifier: MIT
-// Package cli — knowledge_p9.go (Plan 9 Phase I Task I-5).
+// Package cli — knowledge_p9.go.
 //
-// `zen knowledge` is the Plan 9 operator surface for the cross-project
+// `zen knowledge` is the operator surface for the cross-project
 // knowledge aggregator (spec §6.1 Q6 C). Five leaves cover the full lifecycle:
 //
-//	query   <q>         federated/pinned/chain-verified search
-//	promote <note-id>   operator-gated pin to global index (inv-zen-146)
-//	unpromote <note-id> reverse a prior promote (inv-zen-146)
-//	ls                  list notes (per-project or pinned-only)
-//	rebuild             re-embed + re-index one project
+// query <q> federated/pinned/chain-verified search
+// promote <note-id> operator-gated pin to global index
+// unpromote <note-id> reverse a prior promote
+// ls list notes (per-project or pinned-only)
+// rebuild re-embed + re-index one project
 //
-// DISTINCT from Plan 7's `zen knowledge` surface (knowledge.go: query/reindex/
-// stats backed by FTS5 daemon routes). This group hits the Plan 9 Phase H-2
+// DISTINCT's `zen knowledge` surface (knowledge.go: query/reindex/
+// stats backed by FTS5 daemon routes). This group hits the
 // aggregator endpoints /v1/knowledge/{query,promote,unpromote,list,rebuild}.
 //
 // Constructor NewKnowledge9Cmd() (not NewKnowledgeCmd) — zero-arg, registered
-// on root as `knowledge-p9` to avoid shadowing the existing Plan 7 group.
+// on root as `knowledge-p9` to avoid shadowing the existing group.
 // See root.go for the registration comment.
 //
-// inv-zen-146: promote and unpromote MUST require non-empty --reason; enforced
+// invariant: promote and unpromote MUST require non-empty --reason; enforced
 // via cobra MarkFlagRequired (presence gate) + TrimSpace check in RunE
 // (non-empty gate). Cross-cutting compliance test in reason_flag_test.go (I-12).
 //
-// inv-zen-129: aggregator NEVER queries the web — Plan 14 territory. No
+// invariant: aggregator NEVER queries the web — territory. No
 // --remote or --ecosystem flag is exposed here.
 package cli
 

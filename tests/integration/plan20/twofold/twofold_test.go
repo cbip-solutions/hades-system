@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package twofold
 
 import (
@@ -53,7 +52,7 @@ func TestTwofoldEndToEnd(t *testing.T) {
 	}
 	ws := registerWorkspaceAndMembers(t, ctx, wsDB, workspaceID, members, permissivePolicy{})
 
-	// ── 5. Validate both caronte.yaml manifests via Phase F yaml.Load ────
+	// ── 5. Validate both caronte.yaml manifests via yaml.Load ────
 	//
 	// The manifest's target_repo entries MUST be in the workspace roster.
 	// yaml.Load takes the roster slice; an unknown target yields

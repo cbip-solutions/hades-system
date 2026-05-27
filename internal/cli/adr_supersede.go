@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_supersede.go (Plan 9 Phase I Task I-7).
+// Package cli — adr_supersede.go.
 //
 // `zen adr supersede <old-id> <new-id> --reason <X>` calls
-// POST /v1/adr/supersede. --reason is mandatory per inv-zen-146.
+// POST /v1/adr/supersede. --reason is mandatory per invariant.
 // Two positional args are required (cobra.ExactArgs(2)).
 package cli
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package bcdetect — replicated trailer-key extraction.
 //
-// via parseTrailerLines but keeps trailerKeyOf unexported. Phase G
+// via parseTrailerLines but keeps trailerKeyOf unexported.
 // replicates trailerKeyOf here (~15-line function) because we need to scan
 // for two trailer keys (Lore-Adr-Ref, Lore-Supersedes) that fall OUTSIDE
 // behavioural keys: Constraint, Rejected, Agent-Directive, Verification).

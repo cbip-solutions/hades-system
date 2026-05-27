@@ -1,3 +1,4 @@
+// go:build chaos && cgo
 //go:build chaos && cgo
 // +build chaos,cgo
 
@@ -59,15 +60,15 @@ func TestChaos_AggregatorDegradedModeFTSPath(t *testing.T) {
 
 // TestChaos_AggregatorDegradedQueryRejectsUnknownScope asserts that
 // even under simulated degraded-mode the aggregator's Query validator
-// continues to reject malformed Scope values (inv-zen-152). This
+// continues to reject malformed Scope values. This
 // guards against a regression where the degraded-mode code path
 // short-circuits validation and accepts ecosystem-rag or other
 //
 // The contract: Query MUST surface a validation error before
 // dispatching to any underlying subsystem (vec, FTS, graph). A
-// degraded-mode aggregator is still bound by the inv-zen-152
+// degraded-mode aggregator is still bound by the invariant
 // boundary. We assert err != nil + err message contains the
-// inv-zen-152 pointer (the Plan 14 escape hatch documented in
+// invariant pointer (the escape hatch documented in
 // types.go:144-146).
 func TestChaos_AggregatorDegradedQueryRejectsUnknownScope(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

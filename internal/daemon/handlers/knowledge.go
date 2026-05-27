@@ -1,43 +1,43 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — knowledge.go (Plan 7 Phase G Task G-11).
+// Package handlers — knowledge.go.
 //
-// Three routes for the Plan 7 knowledge aggregator operator surface:
+// Three routes for the knowledge aggregator operator surface:
 //
-//	POST /v1/knowledge/query    — hybrid FTS5 + structured filter
-//	POST /v1/knowledge/reindex  — cold rebuild dispatch
-//	GET  /v1/knowledge/stats    — index statistics (count + by-type +
-//	                              last-indexed timestamp)
+// POST /v1/knowledge/query — hybrid FTS5 + structured filter
+// POST /v1/knowledge/reindex — cold rebuild dispatch
+// GET /v1/knowledge/stats — index statistics (count + by-type +
+// last-indexed timestamp)
 //
 // These dispatch to a KnowledgeIndex façade wired at daemon boot (Phase
 // I composes the *internal/knowledge index DB + scanner + parser into a
 // KnowledgeIndex satisfying interface and hands it to SetKnowledgeIndex).
-// Until Phase I lands the routes return 503 — the operator surface is
+// Until lands the routes return 503 — the operator surface is
 // final-shape day 1 (`zen knowledge query` reaches a real route) but the
-// substrate ships in Phase I bootstrap (mirrors the Plan 7 D-13 schedule
+// substrate ships in bootstrap (mirrors the D-13 schedule
 // + E-12 inbox + F-10 zen-day patterns).
 //
 // Status-code mapping (mirrors the inbox_p7 + zenday patterns):
 //
-//	503  — KnowledgeIndex() not yet wired (Phase I bootstrap will
-//	       register the façade at boot; tests inject fakes via
-//	       SetKnowledgeIndex).
-//	400  — invalid JSON body.
-//	422  — validation rejected the input (unknown FileType in filter).
-//	500  — opaque query / reindex / stats failure (sql I/O, scanner
-//	       error count > threshold, etc).
-//	200  — success; bodies documented per route below.
+// 503 — KnowledgeIndex() not yet wired ( bootstrap will
+// register the façade at boot; tests inject fakes via
+// SetKnowledgeIndex).
+// 400 — invalid JSON body.
+// 422 — validation rejected the input (unknown FileType in filter).
+// 500 — opaque query / reindex / stats failure (sql I/O, scanner
+// error count > threshold, etc).
+// 200 — success; bodies documented per route below.
 //
-// inv-zen-031 boundary: this handler imports internal/knowledge value
+// invariant boundary: this handler imports internal/knowledge value
 // types only (Query / Result / Doc / FileType / sentinel errors). No
 // internal/store imports — the KnowledgeIndex interface is structural
 // and the daemon-side accessor returns it as the same interface, keeping
 // the boundary at the interface layer (mirrors handlers.InboxStore +
 // handlers.ScheduleStore + handlers.DayGenerator gate patterns). The
 // knowledge package owns its own DB at
-// `~/.cache/zen-swarm/knowledge-index/index.db` (per the inv-zen-031
+// `~/.cache/zen-swarm/knowledge-index/index.db` (per the invariant
 // documented exception in docs/operations/knowledge-aggregator-boundary.md).
 //
-// inv-zen-129 boundary: the handler does NOT process q.Remote=true /
+// invariant boundary: the handler does NOT process q.Remote=true /
 // q.AuditChain=true even though the underlying knowledge.Execute returns
 // distinct sentinel errors for both. The CLI layer intercepts both flags
 // BEFORE the round-trip per spec §1 Q17 + the G-12/G-13 sentinel-anchor
@@ -47,9 +47,9 @@
 //
 // CLI surface (handled in internal/cli/knowledge.go):
 //
-//	zen knowledge query <text> [--type X] [--project Y] [--since 7d] [--limit N] [--format text|json|md] [--code-symbol foo]
-//	zen knowledge reindex [--full] [--project alias]
-//	zen knowledge stats
+// zen knowledge query <text> [--type X] [--project Y] [--since 7d] [--limit N] [--format text|json|md] [--code-symbol foo]
+// zen knowledge reindex [--full] [--project alias]
+// zen knowledge stats
 package handlers
 
 import (

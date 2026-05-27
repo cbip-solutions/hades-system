@@ -5,20 +5,20 @@
 // out-of-process bypass sidecar (cbip-solutions/zen-bypass-tier1) and
 // writes them to the schema-v9 notifications table.
 //
-// Architectural intent (inv-zen-282 + decisión 17-a extended):
+// Architectural intent:
 // the daemon owns SQLite. The sidecar maintains NO SQLite state.
 // Notifications previously dispatched via in-process callback shapes
 // (OnTierSwitch / OnRefreshPermanentFail / OnCertPinFailure /
 // OnAnomalyThreshold living on the bypass Client + Validator) now
 // HTTP-post to this endpoint instead. The endpoint's request shape
-// matches the wire-schema documented in the Plan 15 Phase B spec §B-8:
+// matches the wire-schema documented in the spec §B-8:
 //
-//	{"severity": "info"|"warn"|"error",
-//	 "source":   "bypass-sidecar",
-//	 "ts":       "RFC3339",
-//	 "payload":  {...}}
+// {"severity": "info"|"warn"|"error",
+// "source": "bypass-sidecar",
+// "ts": "RFC3339",
+// "payload": {...}}
 //
-// inv-zen-031 boundary: this handler imports internal/store solely for
+// invariant boundary: this handler imports internal/store solely for
 // the Notification value type passed to NotificationsInserter — it
 // never touches the concrete *store.Store. The daemon adapter that
 // satisfies NotificationsInserter is the single bridge.

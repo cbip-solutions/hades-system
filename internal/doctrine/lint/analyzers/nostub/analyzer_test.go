@@ -3,10 +3,10 @@
 //
 // Fixture convention:
 //
-//   - testdata/src/no-stub/bad/*.go  — files that MUST trigger the analyzer;
-//     each line that should report carries a `// want "regex"` annotation
-//   - testdata/src/no-stub/good/*.go — files that MUST NOT trigger; absence
-//     of `// want "..."` comments means analysistest expects ZERO diagnostics
+// - testdata/src/no-stub/bad/*.go — files that MUST trigger the analyzer;
+// each line that should report carries a `// want "regex"` annotation
+// - testdata/src/no-stub/good/*.go — files that MUST NOT trigger; absence
+// of `// want "..."` comments means analysistest expects ZERO diagnostics
 //
 // analysistest reads the diagnostics emitted by the Analyzer.Run for each
 // package and cross-references them with `// want` annotations; mismatches

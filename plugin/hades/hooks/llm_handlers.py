@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
                                         
-"""Hermes pre_llm_call callback for zen-swarm (Phase H' baseline + Plan 11"""
+"""Hermes pre_llm_call callback for zen-swarm ( baseline + """
 
 from __future__ import annotations
 
@@ -65,7 +65,7 @@ def pre_llm_call(
         cwd: current working directory
         messages: list of message dicts in the current turn
         model: requested LLM model name
-        project_id: zen-swarm project alias (from .zen-swarm.toml or session
+        project_id: zen-swarm project alias (from.zen-swarm.toml or session
             context); empty falls back to "default"
         conversation_id: Hermes conversation correlation key
         **kwargs: forward-compatible extras (e.g. task_id, doctrine)

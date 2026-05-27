@@ -2,13 +2,16 @@ package main
 
 import (
 	"context"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/cbip-solutions/hades-system/internal/audit/tessera"
+	"github.com/cbip-solutions/hades-system/internal/caronte/coordinated"
 	"github.com/cbip-solutions/hades-system/internal/daemon"
 	"github.com/cbip-solutions/hades-system/internal/doctrine/active"
+	"github.com/cbip-solutions/hades-system/internal/orchestrator/worktreepool"
 	"github.com/cbip-solutions/hades-system/internal/store"
 )
 
@@ -47,6 +50,20 @@ func envSnapshotWithStateRoot(stateRoot string) map[string]string {
 		"ZEN_STATE_DIR": stateRoot,
 	}
 }
+
+type mainWiringTestPool struct{}
+
+func (mainWiringTestPool) Lease(context.Context) (*worktreepool.Worktree, error) {
+	return &worktreepool.Worktree{}, nil
+}
+
+func (mainWiringTestPool) Release(context.Context, *worktreepool.Worktree) error { return nil }
+
+func (mainWiringTestPool) PruneOrphans(context.Context) (worktreepool.PruneReport, error) {
+	return worktreepool.PruneReport{}, nil
+}
+
+func (mainWiringTestPool) Close(context.Context) error { return nil }
 
 func TestWireContractFederation_HappyPathSetsBothSettersAndClosesCleanly(t *testing.T) {
 	t.Parallel()
@@ -93,6 +110,62 @@ func TestWireContractFederation_HappyPathSetsBothSettersAndClosesCleanly(t *test
 	matches, _ := filepath.Glob(filepath.Join(wantPrefix, "workspace.db"))
 	if len(matches) == 0 {
 		t.Errorf("expected workspace.db under %q; found nothing", wantPrefix)
+	}
+}
+
+func TestWireContractFederation_PoolOptionReachesCoordinator(t *testing.T) {
+	t.Parallel()
+
+	srv := newDaemonServerForTest(t)
+	mgr := newTesseraManagerForTest(t)
+	pool := mainWiringTestPool{}
+
+	closer, err := wireContractFederation(
+		context.Background(),
+		srv,
+		mgr,
+		envSnapshotWithStateRoot(t.TempDir()),
+		wireContractFederationOpts{Pool: pool},
+	)
+	if err != nil {
+		t.Fatalf("wireContractFederation: %v", err)
+	}
+	t.Cleanup(func() { _ = closer() })
+
+	adapter, ok := srv.ContractCoordinator().(*coordinatorDaemonAdapter)
+	if !ok {
+		t.Fatalf("ContractCoordinator type = %T; want *coordinatorDaemonAdapter", srv.ContractCoordinator())
+	}
+	coord, ok := adapter.coord.(*coordinated.OrchestratorCoordinator)
+	if !ok {
+		t.Fatalf("coordinator source type = %T; want *coordinated.OrchestratorCoordinator", adapter.coord)
+	}
+	if coord.Pool != pool {
+		t.Fatalf("coord.Pool = %#v; want injected pool %#v", coord.Pool, pool)
+	}
+}
+
+func TestMainCompositionRootConstructsPoolBeforeContractFederation(t *testing.T) {
+	t.Parallel()
+
+	src, err := os.ReadFile("main.go")
+	if err != nil {
+		t.Fatalf("ReadFile(main.go): %v", err)
+	}
+	text := string(src)
+	newPoolAt := strings.Index(text, "worktreepool.NewPool(")
+	wireAt := strings.Index(text, "wireContractFederation(")
+	if newPoolAt < 0 {
+		t.Fatal("main.go does not construct worktreepool.NewPool before contract federation")
+	}
+	if wireAt < 0 {
+		t.Fatal("main.go does not call wireContractFederation")
+	}
+	if newPoolAt > wireAt {
+		t.Fatalf("worktreepool.NewPool appears after wireContractFederation (%d > %d)", newPoolAt, wireAt)
+	}
+	if !strings.Contains(text, "Pool: contractPool") {
+		t.Fatal("wireContractFederationOpts does not pass the daemon contractPool")
 	}
 }
 
@@ -158,7 +231,7 @@ func TestWireContractFederation_WorkspaceIDFromOptsOverridesDefault(t *testing.T
 
 // TestProductionDoctrineResolverPolicyNonNil — the production resolver
 // returns a non-nil WorkspacePolicy (PrivacyLocked is callable) after
-// the doctrine registry is wired (the inv-zen-134 init-order contract:
+// the doctrine registry is wired (the invariant init-order contract:
 // active.SetRegistry MUST run before any Policy() consumer reads). The
 // active.Active() call panics if the registry is unwired — that is the
 // daemon-boot misconfiguration sentinel, NOT a resolver bug. Sister-
@@ -168,7 +241,7 @@ func TestWireContractFederation_WorkspaceIDFromOptsOverridesDefault(t *testing.T
 // that other tests in the same binary (production_boot_smoke_test.go,
 // doctrine_eval_wiring_test.go) reset via active.ResetForTest in
 // t.Cleanup. Running this test in parallel risks racing the cleanup +
-// surfacing a phantom inv-zen-134 panic. Serial execution + an explicit
+// surfacing a phantom invariant panic. Serial execution + an explicit
 // per-test setup-and-cleanup keeps the assertion deterministic under
 // -race -count=2.
 func TestProductionDoctrineResolverPolicyNonNil(t *testing.T) {

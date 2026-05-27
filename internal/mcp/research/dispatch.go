@@ -4,35 +4,35 @@
 // citation-verification gate.
 //
 // Architecture
-//   - DispatcherImpl is the concrete Dispatcher.
-//   - Dispatch fans out to {WebSearch, Arxiv, GitHub, Code Graph,
-//     Ecosystem Docs} in parallel via sync.WaitGroup. (Originally
-//     used golang.org/x/sync/errgroup but per-backend goroutines
-//     unconditionally returned nil — g.Wait was guaranteed-nil dead
-//     code and the cancel-on-first-error semantic was never wanted;
-//     fix C-2 + C-19 in post-review I-2 swapped to WaitGroup +
-//     explicit error capture.)
-//   - Per-backend errors are recorded as soft-fail (other backends
-//     keep running) to maximize coverage; only the empty-aggregate
-//     case becomes a hard error, and the error message + audit
-//     payload include the per-backend root causes (C-3).
-//   - Aggregator deduplicates by canonicalized URL key and applies a
-//     min-source threshold (doctrine-tunable; default 1).
-//   - Raw hits become RawCitation seeds; CiteService.Verify converts
-//     to VerifiedCitation, enforcing inv-zen-075 at the type level.
-//   - Every per-backend dispatch is preceded by BudgetClient.PreCall
-//     (inv-zen-076 anchor; CI grep rule enforces presence).
+// - DispatcherImpl is the concrete Dispatcher.
+// - Dispatch fans out to {WebSearch, Arxiv, GitHub, Code Graph,
+// Ecosystem Docs} in parallel via sync.WaitGroup. (Originally
+// used golang.org/x/sync/errgroup but per-backend goroutines
+// unconditionally returned nil — g.Wait was guaranteed-nil dead
+// code and the cancel-on-first-error semantic was never wanted;
+// fix C-2 + C-19 in post-review I-2 swapped to WaitGroup +
+// explicit error capture.)
+// - Per-backend errors are recorded as soft-fail (other backends
+// keep running) to maximize coverage; only the empty-aggregate
+// case becomes a hard error, and the error message + audit
+// payload include the per-backend root causes (C-3).
+// - Aggregator deduplicates by canonicalized URL key and applies a
+// min-source threshold (doctrine-tunable; default 1).
+// - Raw hits become RawCitation seeds; CiteService.Verify converts
+// to VerifiedCitation, enforcing invariant at the type level.
+// - Every per-backend dispatch is preceded by BudgetClient.PreCall
+// .
 //
 // Budget axis convention:
-//   - PreCall axis is "stage" with value "research:<tool>". The four
-//     daemon-recognised axes (project | doctrine | stage | worker_id)
-//     are documented in internal/daemon/handlers/budget_plan4.go
-//     BudgetCapStatus. Research-MCP costs attribute to the "stage"
-//     axis (the research stage of the parent workflow). Using any
-//     non-recognised axis (e.g. "operation") would cause the daemon
-//     handler to silently NoOp the gate (C-7, post-review I-2 fix).
-//     The compliance test
-//     internal/mcp/research/precall_axis_test.go pins this contract.
+// - PreCall axis is "stage" with value "research:<tool>". The four
+// daemon-recognised axes (project | doctrine | stage | worker_id)
+// are documented in internal/daemon/handlers/budget_plan4.go
+// BudgetCapStatus. Research-MCP costs attribute to the "stage"
+// axis (the research stage of the parent workflow). Using any
+// non-recognised axis (e.g. "operation") would cause the daemon
+// handler to silently NoOp the gate (C-7, post-review I-2 fix).
+// The compliance test
+// internal/mcp/research/precall_axis_test.go pins this contract.
 package research
 
 import (

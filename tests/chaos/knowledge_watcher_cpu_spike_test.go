@@ -1,21 +1,21 @@
-//go:build chaos
+// go:build chaos
 
 // Drives the contract from spec §4.5 row "File watcher CPU spike":
-//   - knowledge.Watcher honours an internal cpuBudget = 25% (constant
-//     MaxCPUBudgetPct in internal/knowledge); when CPU exceeds budget,
-//     the watcher's debounce loop re-arms its timer instead of
-//     dispatching, keeping the queue intact while the spike lasts.
-//   - When CPU clears, the queued events drain and reach the
-//     IndexerSink — no events lost.
-//   - The watcher does NOT crash, leak goroutines, or hang under the
-//     pressure of 1000+ rapid file events.
+// - knowledge.Watcher honours an internal cpuBudget = 25% (constant
+// MaxCPUBudgetPct in internal/knowledge); when CPU exceeds budget,
+// the watcher's debounce loop re-arms its timer instead of
+// dispatching, keeping the queue intact while the spike lasts.
+// - When CPU clears, the queued events drain and reach the
+// IndexerSink — no events lost.
+// - The watcher does NOT crash, leak goroutines, or hang under the
+// pressure of 1000+ rapid file events.
 //
 // Cross-package surface only: the Watcher's CPUSampler interface is
 // package-private (internal/knowledge), so this test does not inject
 // a fake CPU profile — it asserts the high-level integration contract:
 // real fsnotify events on real markdown files reach the IndexerSink
 // even under CPU pressure. The throttle path is exercised by
-// internal/knowledge unit tests (Phase G); the chaos surface here
+// internal/knowledge unit tests; the chaos surface here
 // asserts the integration boundary survives operator-level load.
 //
 // The test creates a tmpdir, a single Watcher subscribed to the dir,

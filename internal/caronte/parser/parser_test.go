@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -16,7 +17,7 @@ import (
 )
 
 // readFixture loads a testdata/<name>.go.txt fixture as bytes. Fixtures use
-// the .go.txt suffix so `go build ./...` and `go vet` do not try to compile
+// the.go.txt suffix so `go build./...` and `go vet` do not try to compile
 // them as package files.
 func readFixture(t *testing.T, name string) []byte {
 	t.Helper()

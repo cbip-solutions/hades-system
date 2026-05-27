@@ -1,41 +1,41 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — schedule_p7.go (Plan 7 Phase D Task D-13).
+// Package handlers — schedule_p7.go.
 //
-// Six routes for the Plan 7 scheduler operator surface:
+// Six routes for the scheduler operator surface:
 //
-//	POST   /v1/schedules                  — create routine | task | loop
-//	GET    /v1/schedules                  — list (filter via ?alias=)
-//	POST   /v1/schedules/{id}/delete      — soft-delete (Disabled then DELETE)
-//	POST   /v1/schedules/{id}/run         — manual trigger (Fire)
-//	GET    /v1/schedules/{id}/history     — fire history rows in window
-//	GET    /v1/schedules/queue            — next-24h fire queue
+// POST /v1/schedules — create routine | task | loop
+// GET /v1/schedules — list (filter via ?alias=)
+// POST /v1/schedules/{id}/delete — soft-delete (Disabled then DELETE)
+// POST /v1/schedules/{id}/run — manual trigger (Fire)
+// GET /v1/schedules/{id}/history — fire history rows in window
+// GET /v1/schedules/queue — next-24h fire queue
 //
 // These operate on the schedules + schedule_history substrate
 // (migration 063) via internal/scheduler.Store + a typed
 // ScheduleHandler that bridges scheduler.Schedule ↔ store.ScheduleRow
-// per inv-zen-031: this handler package never imports internal/store
+// per invariant: this handler package never imports internal/store
 // directly for scheduler-side lifecycle; the scheduleradapter is the
 // single bridge.
 //
 // Status-code mapping (mirrors the projects_p7 + priority patterns):
 //
-//	503  — ScheduleStore() not yet wired (cmd/zen-swarm-ctld registers
-//	       the adapter at boot; tests inject fakes via SetScheduleStore).
-//	400  — invalid JSON / missing required fields.
-//	404  — schedule id not found (delete / run / history paths).
-//	422  — validation rejected the input (unknown trigger, bad cron,
-//	       interval below 1min floor, FireAt in the past, miss policy
-//	       not in the four-policy union).
-//	500  — opaque store error (transactional failure, sql I/O).
-//	200  — success; bodies documented per route below.
+// 503 — ScheduleStore() not yet wired (cmd/zen-swarm-ctld registers
+// the adapter at boot; tests inject fakes via SetScheduleStore).
+// 400 — invalid JSON / missing required fields.
+// 404 — schedule id not found (delete / run / history paths).
+// 422 — validation rejected the input (unknown trigger, bad cron,
+// interval below 1min floor, FireAt in the past, miss policy
+// not in the four-policy union).
+// 500 — opaque store error (transactional failure, sql I/O).
+// 200 — success; bodies documented per route below.
 //
-// Phase I gap: the Run path requires a wired scheduler.FireDeps (quota
-// + dispatcher + eventlog + ratelimit), which Phase I composes at boot.
+// gap: the Run path requires a wired scheduler.FireDeps (quota
+// + dispatcher + eventlog + ratelimit), which composes at boot.
 // Until then the Run route returns 503 even when the store is wired —
 // the operator surface is final-shape day 1 (`zen schedule routine run`
-// reaches a real route) but the dispatch substrate ships in Phase I.
+// reaches a real route) but the dispatch substrate ships in
 //
-// inv-zen-031 boundary: the only scheduler-side imports are the
+// invariant boundary: the only scheduler-side imports are the
 // scheduler.Schedule + scheduler.HistoryEntry value types and the
 // scheduler.Tier / scheduler.MissPolicy / scheduler.TriggerType /
 // scheduler.Status / scheduler.Outcome enums. No internal/store, no

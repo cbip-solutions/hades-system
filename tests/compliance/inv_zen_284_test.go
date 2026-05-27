@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_284_test.go
 //
-// Compliance gate for inv-zen-284 (v0.20.1 fix #4): `Engine.IndexProject`
+// Compliance gate for invariant (v0.20.1 fix #4): `Engine.IndexProject`
 // auto-triggers the per-project `semantic.Resolver.ResolveProject` pass
 // at the end of a successful walk, so the IndexReport.EdgesCreated
 // surfaces a non-zero count and the per-project caronte.db ends a
@@ -10,13 +10,13 @@
 // nodes via the parser indexer but NEVER called ResolveProject. The
 // inline comment at engine_ops.go was honest about it:
 //
-//	// Edges are populated by the per-project semantic.Resolver
-//	// (Phase C of the original Caronte design); the IndexProject
-//	// surface reports zero edges until that wiring catches up
-//	// (the resolver's call-graph fan-out runs as a separate pass —
-//	// Phase E of Plan v0.20.0 may auto-trigger it after IndexProject;
-//	// until then EdgesCreated stays 0 — documented at
-//	// result_types.go::IndexReport).
+// // Edges are populated by the per-project semantic.Resolver
+// //; the IndexProject
+// // surface reports zero edges until that wiring catches up
+// // (the resolver's call-graph fan-out runs as a separate pass —
+// // of Plan v0.20.0 may auto-trigger it after IndexProject;
+// // until then EdgesCreated stays 0 — documented at
+// // result_types.go::IndexReport).
 //
 // the walk, captures the ResolutionStats, and populates EdgesCreated
 // from `CallEdges + ImplementsEdges + LLMHintEdges`. Failure of the
@@ -26,12 +26,12 @@
 //
 // Two source-regex anchors:
 //
-//  1. internal/caronte/engine_ops.go calls `pe.resolver.ResolveProject(`
-//     after the walk completes. Removing this call regresses
-//     EdgesCreated to permanently 0.
-//  2. The returned ResolutionStats are summed into rep.EdgesCreated
-//     (anchor on the assignment shape). Without this assignment, the
-//     report would understate edges even after a successful resolve.
+// 1. internal/caronte/engine_ops.go calls `pe.resolver.ResolveProject(`
+// after the walk completes. Removing this call regresses
+// EdgesCreated to permanently 0.
+// 2. The returned ResolutionStats are summed into rep.EdgesCreated
+// (anchor on the assignment shape). Without this assignment, the
+// report would understate edges even after a successful resolve.
 //
 // Sister-test bite check: revert the ResolveProject call OR drop the
 // EdgesCreated assignment; this test MUST fail. Behavioural test for
@@ -39,7 +39,7 @@
 // EdgesCreated > 0) lives at internal/caronte/engine_ops_test.go
 // (TestIndexProjectAutoResolvesEdges).
 //
-// inv-zen-284 (v0.20.1 fix #4).
+// invariant (v0.20.1 fix #4).
 package compliance
 
 import (

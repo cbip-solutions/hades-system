@@ -1,3 +1,4 @@
+// go:build !race
 //go:build !race
 // +build !race
 
@@ -173,12 +174,12 @@ func TestADR0065_KnowledgeAggregatorHybridFederatedAndOptInPromote(t *testing.T)
 		}
 	}
 
-	// inv-zen-129 (aggregator NEVER queries web — Plan 14 territory) MUST be cited.
+	// invariant MUST be cited.
 	if !strings.Contains(bodyStr, "inv-zen-129") {
 		t.Errorf("ADR-0065 missing inv-zen-129 (Plan 14 boundary — aggregator never queries web)")
 	}
 
-	// inv-zen-146 (promote operator-gated, no auto-promote) MUST be cited.
+	// invariant (promote operator-gated, no auto-promote) MUST be cited.
 	if !strings.Contains(bodyStr, "inv-zen-146") {
 		t.Errorf("ADR-0065 missing inv-zen-146 (promote operator-gated — no auto-promote code path)")
 	}

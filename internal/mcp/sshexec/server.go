@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/server.go
 //
-// Phase L Task L-9 — go-sdk stdio MCP server, three tools.
+// Task L-9 — go-sdk stdio MCP server, three tools.
 //
 // The server is constructed via NewServer(cfg) and started by the
-// binary cmd/zen-mcp-sshexec/main.go (Phase M wires the binary). For
-// Phase L we ship Server with InvokeForTest / InvokeExecForTest helpers
+// binary cmd/zen-mcp-sshexec/main.go. For
+// we ship Server with InvokeForTest / InvokeExecForTest helpers
 // so unit tests can dispatch tools without a real go-sdk transport.
 //
 // Tool surface (Q8 C):
-//   - validate(cmd, project)                      → ValidationResult JSON
-//   - exec(host, cmd, cwd, timeout, project)       → streaming chunks + ExecResult
-//   - list_allowed(project)                        → ListAllowedResult JSON
+// - validate(cmd, project) → ValidationResult JSON
+// - exec(host, cmd, cwd, timeout, project) → streaming chunks + ExecResult
+// - list_allowed(project) → ListAllowedResult JSON
 //
-// inv-zen-086 (stdio canonical for MCP): server-level constructor uses
-// only mcp.StdioTransport; no HTTP listen. Phase M's compliance test
+// invariant (stdio canonical for MCP): server-level constructor uses
+// only mcp.StdioTransport; no HTTP listen. compliance test
 // asserts no `net.Listen` import in the binary main.go. The package
 // itself imports neither net.Listen nor http.ListenAndServe (compile-
 // check anchor).
 //
-// Boundary (inv-zen-031): no internal/store import.
+// Boundary: no internal/store import.
 
 package sshexec
 
@@ -34,30 +34,30 @@ import (
 	mcp "github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-// Coverage-tooling sentinels (inv-zen-031, inv-zen-086).
+// Coverage-tooling sentinels.
 //
 // The two AssertX functions below do NOT perform runtime checks — they
 // always return true. Their value is **structural**: they are exported
 // symbols in this package whose names encode the invariant they are
 // associated with, so:
 //
-//   - `grep AssertStdioCanonical` over the codebase produces a single
-//     live reference (this file), making it obvious to a future reader
-//     that `internal/mcp/sshexec` claims stdio-only transport;
-//   - the test in coverage_test.go (TestSentinelExports) covers them,
-//     keeping the symbol visible to coverage tooling so a future code
-//     reorg that accidentally removes the package boundary comment
-//     leaves a coverage gap that surfaces in CI;
-//   - the no-import-path checks at the bottom of the spec
-//     (compliance/inv_zen_086_test) grep for the symbol's presence as
-//     an explicit "package authors thought about this" marker.
+// - `grep AssertStdioCanonical` over the codebase produces a single
+// live reference (this file), making it obvious to a future reader
+// that `internal/mcp/sshexec` claims stdio-only transport;
+// - the test in coverage_test.go (TestSentinelExports) covers them,
+// keeping the symbol visible to coverage tooling so a future code
+// reorg that accidentally removes the package boundary comment
+// leaves a coverage gap that surfaces in CI;
+// - the no-import-path checks at the bottom of the spec
+// (compliance/inv_zen_086_test) grep for the symbol's presence as
+// an explicit "package authors thought about this" marker.
 //
 // Real enforcement of these invariants lives in:
-//   - inv-zen-031: `compliance/inv_zen_031_test` (no internal/store
-//     import in this package).
-//   - inv-zen-086: `compliance/inv_zen_086_test` (no http.ListenAndServe
-//     in any sshexec source file) plus the var-block import sentinel
-//     at the top of this file.
+// - invariant: `compliance/inv_zen_031_test` (no internal/store
+// import in this package).
+// - invariant: `compliance/inv_zen_086_test` (no http.ListenAndServe
+// in any sshexec source file) plus the var-block import sentinel
+// at the top of this file.
 var (
 	_stdioCanonicalSentinel    = AssertStdioCanonical
 	_boundaryPreservedSentinel = AssertBoundaryPreserved

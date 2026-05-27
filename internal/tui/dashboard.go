@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package tui — dashboard.go (Plan 18b Phase C Task C-7).
+// Package tui — dashboard.go.
 //
 // Bubbletea root model for the HADES TUI. Hosts the 12 F-key panels
 // (spec §7.3) as tea.Model children; routes key + tick + data

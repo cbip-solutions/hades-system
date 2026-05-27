@@ -85,7 +85,7 @@ func TestRunSpike_RegenerateEmitsAuditEvent(t *testing.T) {
 // the regenerator MUST still write the artifact + exit 0. The audit
 // event is forensic; the artifact regeneration is load-bearing.
 //
-// CI workflows typically run `go run ./tests/spike --regenerate` without
+// CI workflows typically run `go run./tests/spike --regenerate` without
 // a running daemon, so this is the expected path in production. The
 // test simulates daemon-down via a closed server (connection refused).
 func TestRunSpike_RegenerateAuditEmitBestEffortOnDaemonDown(t *testing.T) {

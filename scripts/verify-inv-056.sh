@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT
-# inv-zen-056 (persist-before-upstream): the bypass module MUST persist
+# invariant (persist-before-upstream): the bypass module MUST persist
 
 set -euo pipefail
 

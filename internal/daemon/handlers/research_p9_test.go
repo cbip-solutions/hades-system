@@ -134,6 +134,24 @@ func TestResearchP9_History_Happy(t *testing.T) {
 	if fake.historyArgs[0].ProjectID != "proj-1" {
 		t.Errorf("project_id forwarded: got %q", fake.historyArgs[0].ProjectID)
 	}
+	if fake.historyArgs[0].Limit != 100 {
+		t.Errorf("default limit forwarded: got %d", fake.historyArgs[0].Limit)
+	}
+}
+
+func TestResearchP9_History_ForwardsLimit(t *testing.T) {
+	fake := &fakeResearchStoreP9{}
+	h := ResearchP9History(fake)
+	req := httptest.NewRequest(http.MethodGet, "/v1/research/history?limit=17", nil)
+	w := httptest.NewRecorder()
+	h.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("status: got %d, want 200", w.Code)
+	}
+	if fake.historyArgs[0].Limit != 17 {
+		t.Errorf("limit forwarded: got %d, want 17", fake.historyArgs[0].Limit)
+	}
 }
 
 func TestResearchP9_History_AdapterError(t *testing.T) {

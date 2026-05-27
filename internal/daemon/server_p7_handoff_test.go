@@ -1,15 +1,15 @@
-// server_p7_handoff_test.go — Plan 7 Phase I Task I-2 server-level
+// server_p7_handoff_test.go — Task I-2 server-level
 // integration of the HandoffPosted route + RequireDaemonBearer
-// middleware wiring (auth flow at the inv-zen-131 boundary).
+// middleware wiring.
 //
 // Splits the test surface into three concerns:
 //
-//  1. SetHandoffEmitter / HandoffEmitter accessor round-trip (mirrors
-//     the SetDayGenerator / SetInboxStore nil-safety contract).
-//  2. SetDaemonBearer round-trip (bearer hash + audit emitter pair).
-//  3. Wired-route integration: 503 before SetHandoffEmitter; 401 when
-//     bearer is configured + caller omits / mismatches the header;
-//     202 on the happy path with a valid bearer.
+// 1. SetHandoffEmitter / HandoffEmitter accessor round-trip (mirrors
+// the SetDayGenerator / SetInboxStore nil-safety contract).
+// 2. SetDaemonBearer round-trip (bearer hash + audit emitter pair).
+// 3. Wired-route integration: 503 before SetHandoffEmitter; 401 when
+// bearer is configured + caller omits / mismatches the header;
+// 202 on the happy path with a valid bearer.
 //
 // The fall-open posture of requireDaemonBearer (when daemonBearer is
 // nil, the helper logs a warning + lets the request through) is also
@@ -126,7 +126,7 @@ func TestServer_HandoffPosted_503BeforeWiring(t *testing.T) {
 // has NOT been called, the requireDaemonBearer helper falls open with
 // a logged warning + the request reaches the handler. This is the
 // test-fixture path; production main.go refuses Start when bearer is
-// nil (inv-zen-131) — that contract is enforced by daemon Start, not
+// nil — that contract is enforced by daemon Start, not
 // by registerRoutes.
 func TestServer_HandoffPosted_FallOpenWithoutBearer(t *testing.T) {
 	st := newTestStore(t)

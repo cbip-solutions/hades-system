@@ -19,12 +19,10 @@ def render_hades_block(title: str, body: str, recovery: str) -> str:
           <body>
           → <recovery>
 
-    Used by both dashboard.py and panel.py to render error blocks LOCALLY
-    (Stage 2 C-5 operator decision 2026-05-21: no daemon error-render
-    roundtrip; render locally using Phase A catalog text). Mirrors the
-    three-line format of Phase B's Go-side Render().
+    Used by both dashboard.py and panel.py to render error blocks LOCALLY. Mirrors the
+    three-line format of  Go-side Render().
 
-    Per inv-zen-219 (visible-strings-HADES preserved): all strings returned by
+    Per invariant (visible-strings-HADES preserved): all strings returned by
     this function contain the HADES brand by construction.
     """
     return f"HADES: {title}\n  {body}\n  → {recovery}\n"
@@ -62,7 +60,7 @@ def run_hades_subprocess(extra_args: list[str]) -> str | None:
     Per spec §Q8 D-pattern: lazygit-style subprocess handoff. Terminal mode
     is captured before spawn and restored in finally block.
 
-    Per inv-zen-220 prep (Phase G): this function NEVER raises at the
+    Per invariant prep: this function NEVER raises at the
     slash-command boundary; all paths return either a rendered string or
     None.
     """

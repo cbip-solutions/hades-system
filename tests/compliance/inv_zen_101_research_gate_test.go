@@ -1,40 +1,40 @@
 // tests/compliance/inv_zen_101_research_gate_test.go
 //
-// inv-zen-101 — Research gate: depth/width decisions require a prior
+// invariant — Research gate: depth/width decisions require a prior
 // ResearchCompleted event in the active session.
 //
 // Compliance witness: end-to-end validation through orchestrator.RunStage4
 // public surface. Two cases:
 //
-//  1. Without prior ResearchCompleted: RunStage4 must return
-//     ErrResearchGateNotPassed, state must revert to StateIdle,
-//     EvtOrchestratorStopped{outcome:research_gate_failed} must be the
-//     last event, and Dispatcher.Dispatch must never be invoked.
+// 1. Without prior ResearchCompleted: RunStage4 must return
+// ErrResearchGateNotPassed, state must revert to StateIdle,
+// EvtOrchestratorStopped{outcome:research_gate_failed} must be the
+// last event, and Dispatcher.Dispatch must never be invoked.
 //
-//  2. With ResearchCompleted pre-seeded: RunStage4 must proceed,
-//     Dispatcher.Dispatch must fire exactly once.
+// 2. With ResearchCompleted pre-seeded: RunStage4 must proceed,
+// Dispatcher.Dispatch must fire exactly once.
 //
 // This file is the canonical enrollment record for make verify-invariants.
 // If this test is deleted or its assertions weakened without a
-// corresponding ADR, the verify-inv-zen-101 Makefile target will fail
+// corresponding ADR, the verify-invariant Makefile target will fail
 // the static file-presence check.
 //
-// Adaptations from plan template (canonical Phase A/B/C truth):
-//   - No statemachine subpackage: bare *orchestrator.StateMachine via
-//     orchestrator.NewStateMachine (no statemachine.New(initial)).
-//   - No worktreepool.NewFake: fakePool defined locally (same shape as
-//     the orchestrator_test.go fakePool but compliance-package-local).
-//   - eventlog.NewMemory returns *eventlog.Log (concrete); satisfies
-//     both eventlog.Appender and eventlogQuerier internally.
-//   - Query is 3-arg: Query(ctx, sessionID, since int64).
-//   - Returned slice is []eventlog.Record with EventType field (not Type).
-//   - eventlog.Decode returns value type (not pointer); type-switch uses
-//     eventlog.OrchestratorStopped (value form, not pointer).
+// Adaptations from plan template:
+// - No statemachine subpackage: bare *orchestrator.StateMachine via
+// orchestrator.NewStateMachine (no statemachine.New(initial)).
+// - No worktreepool.NewFake: fakePool defined locally (same shape as
+// the orchestrator_test.go fakePool but compliance-package-local).
+// - eventlog.NewMemory returns *eventlog.Log (concrete); satisfies
+// both eventlog.Appender and eventlogQuerier internally.
+// - Query is 3-arg: Query(ctx, sessionID, since int64).
+// - Returned slice is []eventlog.Record with EventType field (not Type).
+// - eventlog.Decode returns value type (not pointer); type-switch uses
+// eventlog.OrchestratorStopped (value form, not pointer).
 //
 // If this test fails, the research gate has been disabled or bypassed.
 // Do NOT update this file to match new behaviour — surface to operator.
 // Either the spec must be amended (ADR-track) or the code must be
-// reverted. See spec §6.3 inv-zen-101, ADR-0006.
+// reverted. See spec §6.3 invariant, ADR-0006.
 package compliance_test
 
 import (

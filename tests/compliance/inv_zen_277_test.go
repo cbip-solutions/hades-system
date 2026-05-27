@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_277_test.go
 //
-// Compliance gate for inv-zen-277 (Plan v0.20.0 Phase A): project alias
+// Compliance gate for invariant: project alias
 // resolution is implemented by internal/daemon/projectsaliasadapter and
 // translates BOTH raw 64-hex id_sha256 (pass-through) AND human aliases
 // (e.g. "zen-swarm-3572a35b") to the canonical id_sha256 the caronte
@@ -8,25 +8,25 @@
 //
 // Four anchors per phase plan §Task A-5:
 //
-//  1. source-regex 1: file `internal/daemon/projectsaliasadapter/adapter.go`
-//     exists (sentinel against a future refactor that moves the package
-//     without updating the wiring in cmd/zen-swarm-ctld/main.go).
-//  2. source-regex 2: the `hexID.MatchString(idOrAlias)` pass-through
-//     branch is present — 64-hex inputs MUST be recognised statically
-//     without a DB round-trip.
-//  3. source-regex 3: the `alias = ? OR id_sha256 = ?` SQL query is
-//     present — the resolver MUST accept BOTH columns in a single query
-//     (Plan 7 dual-id contract).
-//  4. behavioural test: an in-memory daemon-shared SQLite is seeded
-//     with one row; Resolve(alias)+Resolve(id_sha256)+Resolve("unknown")
-//     produce the expected canonical id, canonical id (pass-through),
-//     and ErrAliasNotFound respectively.
+// 1. source-regex 1: file `internal/daemon/projectsaliasadapter/adapter.go`
+// exists (sentinel against a future refactor that moves the package
+// without updating the wiring in cmd/zen-swarm-ctld/main.go).
+// 2. source-regex 2: the `hexID.MatchString(idOrAlias)` pass-through
+// branch is present — 64-hex inputs MUST be recognised statically
+// without a DB round-trip.
+// 3. source-regex 3: the `alias = ? OR id_sha256 = ?` SQL query is
+// present — the resolver MUST accept BOTH columns in a single query
+// .
+// 4. behavioural test: an in-memory daemon-shared SQLite is seeded
+// with one row; Resolve(alias)+Resolve(id_sha256)+Resolve("unknown")
+// produce the expected canonical id, canonical id (pass-through),
+// and ErrAliasNotFound respectively.
 //
 // Sister-test pattern (feedback_sister_test_pattern): bite-check is to
 // revert adapter.go to a single-column query (`WHERE id_sha256 = ?`);
 // this test MUST fail on the alias-lookup behavioural anchor.
 //
-// inv-zen-277 (Plan v0.20.0 Phase A Task A-2 + A-5).
+// invariant.
 package compliance
 
 import (

@@ -31,7 +31,7 @@ func NewRegistry() *Registry {
 // Register attaches a backend under the given name. The name MUST be
 // non-empty AND match backend.Name() — mismatch is rejected because
 // downstream code looks backends up by both name and Backend.Name()
-// interchangeably (e.g. tier_resolver.go in Phase H).
+// interchangeably.
 //
 // Duplicate registration returns an error rather than overwriting:
 // silent overwrite would mask provider-config typos that map two
@@ -208,7 +208,7 @@ func (r *Registry) RegisterFromConfig(cfg ProviderConfig) error {
 // adapter) are absent from the map; callers treat an absent name as
 // "family unknown".
 //
-// inv-zen-213: the audit MCP's family-disjoint reviewer pool is built from
+// invariant: the audit MCP's family-disjoint reviewer pool is built from
 // this live map (was a static doctrine TOML list). A reviewer<->worker
 // pair sharing a family is rejected at pair-selection.
 //

@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -15,10 +16,10 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/research/ecosystem"
 )
 
-//go:embed mdn_testdata/sitemap.xml
+// go:embed mdn_testdata/sitemap.xml
 var mdnSitemapXML []byte
 
-//go:embed mdn_testdata/Array_prototype_map_page.html
+// go:embed mdn_testdata/Array_prototype_map_page.html
 var mdnArrayMapHTML []byte
 
 func TestMDNSource_Ecosystem(t *testing.T) {

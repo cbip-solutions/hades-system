@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package cli — layout.go (Plan 7 Phase C Task C-12).
+// Package cli — layout.go.
 //
 // `zen layout repaint <alias>` is the operator-invoked recovery primitive:
 // re-construct the 5 daemon-owned tmux windows (orch / leads / workers /
 // hra / logs) from logical state in daemon.db. Preserves the
-// operator-owned scratch window per inv-zen-118.
+// operator-owned scratch window per invariant.
 //
 // Use case: after `zen day` surfaces a TmuxLayoutDriftDetected event
 // (the drift poller's read-only forensic side-channel — Q6 D), the
@@ -13,16 +13,16 @@
 //
 // Cobra layout:
 //
-//	zen layout
-//	  repaint <alias>    re-construct daemon-owned windows
+// zen layout
+// repaint <alias> re-construct daemon-owned windows
 //
 // Exit-code mapping (per spec §6.2):
-//   - 0 success
-//   - 1 operator-recoverable: daemon 404 (alias not found / archived)
-//   - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503 Phase I gap
+// - 0 success
+// - 1 operator-recoverable: daemon 404 (alias not found / archived)
+// - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503 gap
 //
-// Phase I gap: until the daemon ships POST /v1/sessions/{alias}/layout/repaint
-// in Phase I, the route returns 503. The CLI surfaces 503 as exit 2.
+// gap: until the daemon ships POST /v1/sessions/{alias}/layout/repaint
+// in, the route returns 503. The CLI surfaces 503 as exit 2.
 package cli
 
 import (

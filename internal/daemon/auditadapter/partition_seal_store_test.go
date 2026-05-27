@@ -31,6 +31,16 @@ func openTestDB(t *testing.T) *sql.DB {
 	if err != nil {
 		t.Fatalf("create: %v", err)
 	}
+	_, err = db.Exec(`CREATE TABLE audit_events_partitions (
+		partition_id TEXT PRIMARY KEY,
+		first_id TEXT NOT NULL,
+		last_id TEXT NOT NULL,
+		event_count INTEGER NOT NULL,
+		final_record_hash TEXT NOT NULL
+	)`)
+	if err != nil {
+		t.Fatalf("create partition stats: %v", err)
+	}
 	return db
 }
 
@@ -108,6 +118,17 @@ func seedSealFull(t *testing.T, db *sql.DB, partitionID string, sealedAtMs int64
 	}
 }
 
+func seedPartitionStat(t *testing.T, db *sql.DB, partitionID, firstID, lastID string, eventCount int64, finalHash string) {
+	t.Helper()
+	_, err := db.Exec(`INSERT INTO audit_events_partitions
+		(partition_id, first_id, last_id, event_count, final_record_hash)
+		VALUES (?, ?, ?, ?, ?)`,
+		partitionID, firstID, lastID, eventCount, finalHash)
+	if err != nil {
+		t.Fatalf("seed partition stat: %v", err)
+	}
+}
+
 var (
 	_ recovery.SealRowReader   = (*PartitionSealStore)(nil)
 	_ recovery.SealStoreReader = (*PartitionSealStore)(nil)
@@ -119,6 +140,7 @@ func TestListSealsReturnsRowsOrderedBySealedAt(t *testing.T) {
 	seedSealFull(t, db, "2026_03", 1700000003000, "h3", "leaf3", "sig3", "s3://b/3", "ch3")
 	seedSealFull(t, db, "2026_01", 1700000001000, "h1", "leaf1", "sig1", "s3://b/1", "ch1")
 	seedSealFull(t, db, "2026_02", 1700000002000, "h2", "leaf2", "sig2", "", "")
+	seedPartitionStat(t, db, "2026_02", "evt-first-2", "evt-last-2", 7, "h2")
 	store := NewPartitionSealStore(db)
 
 	got, err := store.ListSeals(context.Background(), "zen-swarm")
@@ -144,12 +166,11 @@ func TestListSealsReturnsRowsOrderedBySealedAt(t *testing.T) {
 	if got[1].DaemonWitnessSignature != "sig2" {
 		t.Errorf("DaemonWitnessSignature[1] = %q, want sig2", got[1].DaemonWitnessSignature)
 	}
-
-	if got[1].EventCount != 0 {
-		t.Errorf("EventCount[1] = %d, want 0 (Phase B schema does not store it)", got[1].EventCount)
+	if got[1].EventCount != 7 {
+		t.Errorf("EventCount[1] = %d, want 7 from audit_events_partitions", got[1].EventCount)
 	}
-	if got[1].LastID != "" {
-		t.Errorf("LastID[1] = %q, want empty (Phase B schema does not store it)", got[1].LastID)
+	if got[1].LastID != "evt-last-2" {
+		t.Errorf("LastID[1] = %q, want evt-last-2 from audit_events_partitions", got[1].LastID)
 	}
 }
 
@@ -290,6 +311,16 @@ func TestListSealsScanErrorWraps(t *testing.T) {
 	)`)
 	if err != nil {
 		t.Fatalf("create: %v", err)
+	}
+	_, err = db.Exec(`CREATE TABLE audit_events_partitions (
+		partition_id TEXT PRIMARY KEY,
+		first_id TEXT NOT NULL,
+		last_id TEXT NOT NULL,
+		event_count INTEGER NOT NULL,
+		final_record_hash TEXT NOT NULL
+	)`)
+	if err != nil {
+		t.Fatalf("create partition stats: %v", err)
 	}
 
 	_, err = db.Exec(`INSERT INTO audit_partition_seals

@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
-// Package compliance — Phase B Task B-10 `/v1` HTTP API contract
+// Package compliance — Task B-10 `/v1` HTTP API contract
 // FREEZE invariant test.
 //
-// Per decisión 17-d, the daemon ↔ sidecar HTTP contract over `/v1`
-// is FROZEN FOREVER post-Phase-B-3 ship. The frozen sidecar-contract
+// policy, the daemon ↔ sidecar HTTP contract over `/v1`
+// is FROZEN FOREVER post- ship. The frozen sidecar-contract
 // surface is the FIVE routes consumed across the loopback HTTP
 // channel between the dev daemon (this repo) and the private
 // zen-bypass-tier1 sidecar binary (cbip-solutions/zen-bypass-tier1):
 //
-//	POST /v1/messages                 (sidecar serves; B-3 sidecar binary)
-//	GET  /health                      (sidecar serves; B-3 sidecar binary)
-//	GET  /v1/sidecar/info             (sidecar serves; B-3 sidecar binary)
-//	POST /v1/notifications/post       (daemon serves;  B-8 dev daemon)
-//	POST /v1/bypass/update-config     (daemon serves;  pre-existing Plan 2)
+// POST /v1/messages (sidecar serves; B-3 sidecar binary)
+// GET /health (sidecar serves; B-3 sidecar binary)
+// GET /v1/sidecar/info (sidecar serves; B-3 sidecar binary)
+// POST /v1/notifications/post (daemon serves; B-8 dev daemon)
+// POST /v1/bypass/update-config
 //
 // The freeze applies BOTH directions across the sidecar boundary —
 // the daemon must NEVER mount a `/v2` route for these capabilities,
@@ -24,32 +24,32 @@
 // Test scope (inv-zen-B2 placeholder; concrete inv-zen-NNN allocated at
 // merge-time renumber reconciliation per the renumber-on-merge playbook):
 //
-//  1. `TestInvZenB10_NoV2RoutesInDevRepo` — walks every `.go` file
-//     (excluding `vendor/`) and asserts NO string literal of the form
-//     `"/v2..."` appears in a `mux.Handle*` / `http.HandleFunc` /
-//     `http.Handle` call. This is the dev-repo-side per-PR diff gate
-//     that protects the freeze. The private sidecar repo carries a
-//     mirrored test (private B-10 step 6 GitHub Actions workflow).
+// 1. `TestInvZenB10_NoV2RoutesInDevRepo` — walks every `.go` file
+// (excluding `vendor/`) and asserts NO string literal of the form
+// `"/v2..."` appears in a `mux.Handle*` / `http.HandleFunc` /
+// `http.Handle` call. This is the dev-repo-side per-PR diff gate
+// that protects the freeze. The private sidecar repo carries a
+// mirrored test (private B-10 step 6 GitHub Actions workflow).
 //
-//  2. `TestInvZenB10_CanonicalDaemonSidecarContractRoutesPresent` —
-//     asserts the TWO daemon-side routes of the canonical sidecar
-//     contract (`POST /v1/notifications/post` for the sidecar→daemon
-//     direction and `POST /v1/bypass/update-config` for the legacy
-//     in-process bypass admin endpoint) ARE mounted in
-//     `internal/daemon/server.go`. The other three routes (`POST
-//     /v1/messages`, `GET /health`, `GET /v1/sidecar/info`) live in
-//     the private sidecar binary; the dev-repo cannot assert their
-//     presence directly, but the documented contract is encoded here
-//     as canonical reference.
+// 2. `TestInvZenB10_CanonicalDaemonSidecarContractRoutesPresent` —
+// asserts the TWO daemon-side routes of the canonical sidecar
+// contract (`POST /v1/notifications/post` for the sidecar→daemon
+// direction and `POST /v1/bypass/update-config` for the legacy
+// in-process bypass admin endpoint) ARE mounted in
+// `internal/daemon/server.go`. The other three routes (`POST
+// /v1/messages`, `GET /health`, `GET /v1/sidecar/info`) live in
+// the private sidecar binary; the dev-repo cannot assert their
+// presence directly, but the documented contract is encoded here
+// as canonical reference.
 //
-//  3. `TestInvZenB10_NoV2StringLiteralsInDevRepo` — defence-in-depth
-//     scan over every `.go` file for the substring `"/v2` in any
-//     string literal (not just route mounts). Catches future
-//     `client.Do(http.NewRequest("GET", baseURL+"/v2/..."))` calls
-//     or response-format references that would be a leading indicator
-//     of contract drift even before a mux registration lands.
+// 3. `TestInvZenB10_NoV2StringLiteralsInDevRepo` — defence-in-depth
+// scan over every `.go` file for the substring `"/v2` in any
+// string literal (not just route mounts). Catches future
+// `client.Do(http.NewRequest("GET", baseURL+"/v2/..."))` calls
+// or response-format references that would be a leading indicator
+// of contract drift even before a mux registration lands.
 //
-// inv-zen-031 boundary: this file imports go/ast / go/parser / go/token
+// invariant boundary: this file imports go/ast / go/parser / go/token
 // (stdlib AST tooling) + os / path/filepath / strings / testing. It
 // does NOT import any internal/ package.
 //

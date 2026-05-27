@@ -1,5 +1,4 @@
-//go:build replay
-
+// go:build replay
 package p11_augment_test
 
 import (

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package cli — knowledge_p9_rebuild.go (Plan 9 Phase I Task I-5).
+// Package cli — knowledge_p9_rebuild.go.
 //
-// `zen knowledge-p9 rebuild` — re-embed + re-index one project asynchronously.
+// `zen knowledge-p9 rebuild` — re-embed + re-index one project's promoted pins.
 //
-// The daemon enqueues the rebuild in a background goroutine and returns 202
-// Accepted with a job_id immediately. The operator tracks progress via Plan 5
-// audit events. --project is required; the daemon returns 400 when omitted.
+// The daemon refreshes the global pin index synchronously and returns
+// 202 Accepted with a receipt for wire compatibility. --project is required;
+// the daemon returns 400 when omitted.
 //
 // Wire method: KnowledgeRebuildP9(ctx, projectID) → (KnowledgeRebuildResp, error).
 // KnowledgeRebuildResp JobID (string), StartedAt (int64 unix).
@@ -26,13 +26,12 @@ func knowledge9RebuildCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "rebuild",
-		Short: "Re-embed + re-index one project's notes (async; returns job_id)",
-		Long: `rebuild enqueues a full re-embed + re-index for one project. The daemon
-returns 202 Accepted immediately with a job_id; the rebuild runs in a background
-goroutine. On Mac M4 MPS GPU (mac-compute tier), embedding is ~230× faster than
-daemon CPU — the daemon offloads if the mac-compute dispatcher is configured.
+		Short: "Re-embed + re-index one project's promoted pins",
+		Long: `rebuild refreshes the Plan 9 global pin index for one project. The daemon
+returns 202 Accepted with a receipt after the promoted-pin FTS and vector rows
+have been rewritten.
 
---project is required. Track progress via ` + "`zen audit-chain history`" + `.`,
+--project is required.`,
 		Example: `  zen knowledge-p9 rebuild --project zen-swarm
   zen knowledge-p9 rebuild --project internal-platform-x`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -49,7 +48,10 @@ daemon CPU — the daemon offloads if the mac-compute dispatcher is configured.
 			}
 
 			out := cmd.OutOrStdout()
-			fmt.Fprintf(out, "rebuild enqueued: project=%s job_id=%s\n", project, resp.JobID)
+			fmt.Fprintf(out, "rebuild completed: project=%s job_id=%s\n", project, resp.JobID)
+			if resp.RebuiltCount > 0 {
+				fmt.Fprintf(out, "rebuilt=%d\n", resp.RebuiltCount)
+			}
 			if resp.StartedAt > 0 {
 				fmt.Fprintf(out, "started_at=%s\n", client.FormatUnix(resp.StartedAt))
 			}

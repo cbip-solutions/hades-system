@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package client — ecosystem_query.go (Plan 14 Phase F Tasks F-3 + F-4).
+// Package client — ecosystem_query.go.
 //
 // Typed client method for POST /v1/knowledge/ecosystem/query (daemon-side
-// handler wired by Phase G or daemon integration). Wire types mirror the
-// daemon handler; no internal/research/ecosystem import (boundary per inv-zen-031).
+// handler wired by or daemon integration). Wire types mirror the
+// daemon handler; no internal/research/ecosystem import.
 //
 // Endpoint POST /v1/knowledge/ecosystem/query
 // Auth same UDS transport as other client methods.

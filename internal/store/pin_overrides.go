@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// pin_overrides.go — CRUD for the pin_overrides table (Plan 3 Phase E, Task I-1).
+// pin_overrides.go — CRUD for the pin_overrides table.
 //
 // The pin_overrides table stores operator-set tier pins at three scope levels:
 // session, project, and global. At most one active pin exists per (scope, scope_id)
-// pair — the UNIQUE constraint is enforced at the SQL layer (inv-zen-063).
+// pair — the UNIQUE constraint is enforced at the SQL layer.
 //
 // Scope vocabulary (CHECK-constrained at SQL):
-//   - "session" — pin applies to a single Claude Code session
-//   - "project" — pin applies across all sessions for a project
-//   - "global"  — pin applies to all projects; ScopeID must be ""
+// - "session" — pin applies to a single Claude Code session
+// - "project" — pin applies across all sessions for a project
+// - "global" — pin applies to all projects; ScopeID must be ""
 //
 // ScopeID is "" for the global scope. Using NULL would allow multiple global
 // rows because SQLite treats NULLs as distinct in UNIQUE constraints; empty
@@ -18,8 +18,8 @@
 // Non-nil ExpiresAt is stored as INTEGER unix epoch seconds; the orchestrator's
 // 5-min sweep calls PurgeExpiredPins to remove stale rows.
 //
-// inv-zen-063: this table stores PIN INTENT only. The cap check in
-// tier_resolver.Select (Phase H) overrides a pin when the pinned tier has
+// invariant: this table stores PIN INTENT only. The cap check in
+// tier_resolver.Select overrides a pin when the pinned tier has
 // reached its budget cap. There is no SQL coupling to cost_ledger; the
 // invariant is enforced by the capOverridesPin sentinel + integration tests.
 //

@@ -127,8 +127,8 @@ func newFakeServer() (*fakeOrchestratorServer, *fakeTierBackend, *fakeTierBacken
 // TestOrchestratorStatus_AccessorWithNilPinOverridesReturnsEmptyPins pins the
 // defence-in-depth branch where the accessor IS configured (acc != nil) but
 // PinOverrides() returns nil — e.g. daemon started before I-2 wiring
-// completes.  Distinct from TestOrchestratorStatus_NilServerReturnsEmptyShape
-// which exercises the acc==nil early-return path.  The pins field in the JSON
+// completes. Distinct from TestOrchestratorStatus_NilServerReturnsEmptyShape
+// which exercises the acc==nil early-return path. The pins field in the JSON
 // response MUST be an empty array (not JSON null).
 func TestOrchestratorStatus_AccessorWithNilPinOverridesReturnsEmptyPins(t *testing.T) {
 	tier1 := &fakeTierBackend{tier: providers.TierInHouse, name: "in-house"}
@@ -218,7 +218,7 @@ func TestOrchestratorStatus_TiersReportSuspectAfterFailures(t *testing.T) {
 	}
 }
 
-// TestCollectTierStates_PerProviderVisibility — Plan 16 Phase B Task 20.
+// TestCollectTierStates_PerProviderVisibility — Task 20.
 // When two backends share one Tier enum (e.g. deepseek-direct +
 // siliconflow-deepseek both providers.TierGenericOpenAICompat), the
 // operator's `zen orchestrator status` output MUST distinguish them via
@@ -227,12 +227,12 @@ func TestOrchestratorStatus_TiersReportSuspectAfterFailures(t *testing.T) {
 // Backend.Name() granularity (T17) is invisible.
 //
 // Pins
-//   - tierStateRow has a Provider field populated from t.Name()
-//   - same Tier on both rows still renders both rows (one per backend)
-//   - per-provider breaker state surfaces independently: the failing
-//     provider goes suspect, the sibling stays closed
+// - tierStateRow has a Provider field populated from t.Name()
+// - same Tier on both rows still renders both rows (one per backend)
+// - per-provider breaker state surfaces independently: the failing
+// provider goes suspect, the sibling stays closed
 //
-// inv-zen-213 (per-provider observability on the status surface).
+// invariant (per-provider observability on the status surface).
 func TestCollectTierStates_PerProviderVisibility(t *testing.T) {
 	cb := orchestrator.NewCircuitBreaker(orchestrator.CircuitBreakerConfig{FailureThreshold: 1})
 	cb.RecordFailure("deepseek-direct")

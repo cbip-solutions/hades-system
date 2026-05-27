@@ -84,12 +84,12 @@ func buildDSN(dbPath string) string {
 
 // Init creates the FTS5 virtual table + knowledge_meta supplementary
 // metadata table + supporting indexes if they do not already exist.
-// Idempotent — safe to call repeatedly (uses CREATE ... IF NOT EXISTS
+// Idempotent — safe to call repeatedly (uses CREATE... IF NOT EXISTS
 // throughout) and preserves any existing data across re-Init.
 //
-// Per spec §1 Q17 D + inv-zen-130: the three extension-hook columns
+// Per spec §1 Q17 D + invariant: the three extension-hook columns
 // (audit_chain_anchor, ecosystem_join_keys, caronte_symbol_refs)
-// declared here ship NULL by default in Plan 7; INSERT statements
+// declared here ship NULL by default in ; INSERT statements
 // MUST NOT populate them (G-16 compliance test enforces).
 func Init(ctx context.Context, db *sql.DB) error {
 	if db == nil {
@@ -109,10 +109,10 @@ func Init(ctx context.Context, db *sql.DB) error {
 }
 
 // indexInsertSQL is the canonical INSERT statement for knowledge_meta.
-// inv-zen-130 enforcement site (compile-time-visible): the column list
+// invariant enforcement site (compile-time-visible): the column list
 // MUST NOT include audit_chain_anchor, ecosystem_join_keys, or
 // caronte_symbol_refs. SQLite defaults the absent columns to NULL
-// automatically, which is the contract Plan 9 / Plan 14 / Caronte
+// automatically, which is the contract / / Caronte
 // rely on (they fill those columns at index time without retrofit migrations).
 //
 // The column rowid is bound explicitly as NULL so SQLite assigns the
@@ -120,8 +120,8 @@ func Init(ctx context.Context, db *sql.DB) error {
 // FTS5 join below.
 //
 // Two grep sites cover this constant:
-//   - in-package: TestIndexInsertSQLDoesNotMentionExtensionHookColumns
-//   - tree-wide compliance: tests/compliance/inv_zen_130_*_test.go (G-16)
+// - in-package: TestIndexInsertSQLDoesNotMentionExtensionHookColumns
+// - tree-wide compliance: tests/compliance/inv_zen_130_*_test.go (G-16)
 const indexInsertSQL = `
 INSERT INTO knowledge_meta (
     rowid,
@@ -152,10 +152,10 @@ const (
 // single explicit transaction so the operation is atomic — a re-index
 // either fully succeeds or fully rolls back, never half-applied.
 //
-// Per inv-zen-130: the canonical INSERT (indexInsertSQL) does NOT list
+// Per invariant: the canonical INSERT (indexInsertSQL) does NOT list
 // the three extension-hook columns. Doc fields AuditChainAnchor /
 // EcosystemJoinKeys / CaronteSymbolRefs are IGNORED here even if
-// Valid=true — the data flows from Plan 9 / Plan 14 / Caronte
+// Valid=true — the data flows / / Caronte
 // writers, NOT from this code path. The runtime check
 // TestIndexExtensionHookColumnsNullByDefault asserts the row's columns
 // are NULL post-INSERT regardless of Doc field values; the compile-time
@@ -168,9 +168,9 @@ const (
 // each (DELETE, DELETE, INSERT, INSERT) sequence atomic per call.
 //
 // Validation
-//   - FilePath MUST be non-empty (defensive guard before BeginTx).
-//   - FileType MUST be non-empty (defensive guard; schema CHECK would
-//     also reject, but a Go-side error is more actionable).
+// - FilePath MUST be non-empty (defensive guard before BeginTx).
+// - FileType MUST be non-empty (defensive guard; schema CHECK would
+// also reject, but a Go-side error is more actionable).
 //
 // Failure modes wrap the underlying driver error via %w; callers may
 // errors.Is/errors.As against sql sentinels when needed.

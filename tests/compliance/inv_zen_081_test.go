@@ -1,6 +1,6 @@
-// Phase L Task L-7 — runtime compliance test for inv-zen-081.
+// Task L-7 — runtime compliance test for invariant.
 //
-// inv-zen-081: ssh-exec interactive prompt MUST be detected, the session
+// invariant: ssh-exec interactive prompt MUST be detected, the session
 // SIGKILLed, and the prompt content MUST NOT be returned to the caller.
 // The only legitimate signal is ExecResult.InteractiveBlocked=true plus
 // audit emit "interactive_blocked".

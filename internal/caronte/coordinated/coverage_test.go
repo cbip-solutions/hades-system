@@ -1,26 +1,26 @@
 // internal/caronte/coordinated/coverage_test.go
 //
-// Phase H Task 6 coverage-closing tests for branches the matrix +
+// Task 6 coverage-closing tests for branches the matrix +
 // smoke tests don't exercise. Per master §13.7 the coordinated/
 // package targets ≥95% (security/correctness-critical L10 logic).
 // These tests close the gaps the matrix leaves open:
 //
-//   - dispatchPayloadFor with non-nil LoreAttribution (the ADRRefs
-//     append branch).
-//   - truncate for the over-length branch (the rest is the no-op
-//     branch).
-//   - sortedConsumersOf for File tie-break + Line tie-break (the
-//     matrix only varies Repo).
-//   - consumersListPreview for the overflow ">N" branch.
-//   - recommendForOperator's default branch (autonomy with no
-//     dispatched repos — the degraded coordinator path between
-//     ModeAutonomy + empty dispatched, which orchestrator.go
-//     down-converts to ModeSurface but the builder itself can render).
-//   - autonomyBranch with a Lease error (per-repo degradation).
-//   - uniqueRepos with empty Repo entries (skipped per
-//     defense-in-depth).
-//   - Dispatch with a Pool that returns lease errors for EVERY repo
-//     (degrades the WHOLE dispatch to ModeSurface).
+// - dispatchPayloadFor with non-nil LoreAttribution (the ADRRefs
+// append branch).
+// - truncate for the over-length branch (the rest is the no-op
+// branch).
+// - sortedConsumersOf for File tie-break + Line tie-break (the
+// matrix only varies Repo).
+// - consumersListPreview for the overflow ">N" branch.
+// - recommendForOperator's default branch (autonomy with no
+// dispatched repos — the degraded coordinator path between
+// ModeAutonomy + empty dispatched, which orchestrator.go
+// down-converts to ModeSurface but the builder itself can render).
+// - autonomyBranch with a Lease error (per-repo degradation).
+// - uniqueRepos with empty Repo entries (skipped per
+// defense-in-depth).
+// - Dispatch with a Pool that returns lease errors for EVERY repo
+// (degrades the WHOLE dispatch to ModeSurface).
 
 package coordinated
 

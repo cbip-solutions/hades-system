@@ -54,7 +54,7 @@ func writeFixtureDockerfile(t *testing.T, body string) string {
 	return path
 }
 
-var validBody = `FROM golang:1.25-bookworm AS builder
+var validBody = `FROM golang:1.26-bookworm AS builder
 WORKDIR /src
 COPY . .
 RUN go build -trimpath -ldflags="-buildid= -X main.version=dev -X main.commit=unknown -X main.date=unknown -X github.com/cbip-solutions/hades-system/internal/buildinfo.version=dev -X github.com/cbip-solutions/hades-system/internal/buildinfo.commit=unknown -X github.com/cbip-solutions/hades-system/internal/buildinfo.date=unknown" -o /out/zen ./cmd/zen

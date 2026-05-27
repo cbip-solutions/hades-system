@@ -1,8 +1,9 @@
+// go:build adversarial
 //go:build adversarial
 // +build adversarial
 
-// Package adversarial — p13_non_interactive_coverage_test.go (Plan 13
-// Phase F-tail IMPORTANT 7 missing-tests completion).
+// Package adversarial — p13_non_interactive_coverage_test.go (
+// IMPORTANT 7 missing-tests completion).
 //
 // Adversarial: a wizard invoked in non-interactive context MUST reject
 // any mode that requires operator input. Per spec §3.1 contract:

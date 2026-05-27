@@ -8,30 +8,30 @@
 //
 // Design choices:
 //
-//  1. float32SliceBytes encodes the query vector as little-endian IEEE-754 bytes
-//     so it can be bound to the MATCH parameter of the sqlite-vec vec0 virtual
-//     table. sqlite-vec accepts raw bytes in this format from Go via the mattn
-//     driver (confirmed via D-2 Stage 0 probe and Plan 9 plan-file §D-4
-//     schema check).
+// 1. float32SliceBytes encodes the query vector as little-endian IEEE-754 bytes
+// so it can be bound to the MATCH parameter of the sqlite-vec vec0 virtual
+// table. sqlite-vec accepts raw bytes in this format from Go via the mattn
+// driver (confirmed via D-2 probe and plan-file §D-4
+// schema check).
 //
-//  2. Threshold filtering (cosine_similarity ≥ threshold) is done in Go after
-//     the KNN scan rather than in SQL. sqlite-vec vec0 MATCH returns the
-//     angular distance on the unit sphere, NOT (1 - cosine_similarity) directly.
-//     The correct conversion is: cosine_similarity = 1 - distance²/2
-//     (derived from the identity: ||a-b||² = 2 - 2·cos(θ) for unit vectors).
-//     This was verified empirically against sqlite-vec v0.1.6 in the D-4
-//     Stage 0 probe (2026-05-09): the plan-file assumed `sim = 1 - distance`
-//     but the actual formula is `sim = 1 - distance²/2`.
+// 2. Threshold filtering (cosine_similarity ≥ threshold) is done in Go after
+// the KNN scan rather than in SQL. sqlite-vec vec0 MATCH returns the
+// angular distance on the unit sphere, NOT (1 - cosine_similarity) directly.
+// The correct conversion is: cosine_similarity = 1 - distance²/2
+// (derived from the identity: ||a-b||² = 2 - 2·cos(θ) for unit vectors).
+// This was verified empirically against sqlite-vec v0.1.6 in the D-4
+// probe (2026-05-09): the plan-file assumed `sim = 1 - distance`
+// but the actual formula is `sim = 1 - distance²/2`.
 //
-//  3. Score = 1 - distance²/2 (cosine_similarity) makes the QueryResult.Score
-//     contract consistent with QueryFTS (higher = better) and the D-5 RRF
-//     fusion input expectations.
+// 3. Score = 1 - distance²/2 (cosine_similarity) makes the QueryResult.Score
+// contract consistent with QueryFTS (higher = better) and the D-5 RRF
+// fusion input expectations.
 //
-//  4. isExtensionMissing + contains are kept in this file (no "strings" import)
-//     to satisfy the inv-zen-129 grep test which checks for net/http absence.
-//     The contains helper avoids importing strings just for one callsite.
+// 4. isExtensionMissing + contains are kept in this file (no "strings" import)
+// to satisfy the invariant grep test which checks for net/http absence.
+// The contains helper avoids importing strings just for one callsite.
 //
-// inv-zen-129: this file makes NO web calls. All data comes from aggregator.db
+// invariant: this file makes NO web calls. All data comes from aggregator.db
 // (local sqlite-vec extension). No import of net/http, net/url, or any
 // network package.
 package aggregator

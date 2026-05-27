@@ -1,18 +1,18 @@
-// projects_test.go — Plan 7 Phase L Task L-1 CLI tests for `zen projects ls`.
+// projects_test.go — Task L-1 CLI tests for `zen projects ls`.
 //
 // Tests cover:
-//   - `zen projects ls` renders all 5 columns (alias, sha8, path,
-//     last-active, state) including the empty-state path.
-//   - tabwriter alignment + canonical relative-time formatting.
-//   - never-activated row renders as "never".
-//   - archived rows render with state=archived.
-//   - render path tolerates short / malformed ids without panic.
-//   - error propagation: client-side err → wrapped "projects ls: ..."
-//     so the operator sees the namespace prefix even on a deep failure.
-//   - subcommand registration: `projects` MUST have an `ls` subcommand
-//     and `ls --help` must surface a Usage line (drift from
-//     newSessionsLsCmd / newProjectsLsCmd would surface here).
-//   - HTTP path coverage via httptest: client → daemon GET /v1/projects.
+// - `zen projects ls` renders all 5 columns (alias, sha8, path,
+// last-active, state) including the empty-state path.
+// - tabwriter alignment + canonical relative-time formatting.
+// - never-activated row renders as "never".
+// - archived rows render with state=archived.
+// - render path tolerates short / malformed ids without panic.
+// - error propagation: client-side err → wrapped "projects ls:..."
+// so the operator sees the namespace prefix even on a deep failure.
+// - subcommand registration: `projects` MUST have an `ls` subcommand
+// and `ls --help` must surface a Usage line (drift from
+// newSessionsLsCmd / newProjectsLsCmd would surface here).
+// - HTTP path coverage via httptest: client → daemon GET /v1/projects.
 package cli
 
 import (

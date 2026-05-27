@@ -62,8 +62,8 @@ func TestInvZen294_BrewsConfigShape(t *testing.T) {
 	if b.Name != "hades" {
 		t.Errorf("inv-zen-294 (brew) VIOLATED: brews[0].name=%q, want 'hades' (matches Formula/hades.rb + class Hades)", b.Name)
 	}
-	if b.Repository.Owner != "hades-system" {
-		t.Errorf("inv-zen-294 (brew) VIOLATED: brews[0].repository.owner=%q, want 'hades-system'", b.Repository.Owner)
+	if b.Repository.Owner != "cbip-solutions" {
+		t.Errorf("inv-zen-294 (brew) VIOLATED: brews[0].repository.owner=%q, want 'cbip-solutions'", b.Repository.Owner)
 	}
 	if b.Repository.Name != "homebrew-tap" {
 		t.Errorf("inv-zen-294 (brew) VIOLATED: brews[0].repository.name=%q, want 'homebrew-tap'", b.Repository.Name)

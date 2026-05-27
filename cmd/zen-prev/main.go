@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // zen-prev — thin wrapper that routes argv to an installed N-1 release binary.
-// The Plan 5 Q2 C safety-net's "fall back to last known good" handle.
+// The Q2 C safety-net's "fall back to last known good" handle.
 //
 // Resolution order for the target binary path:
-//  1. $ZEN_PREV_TARGET_PATH   (test/override hook)
-//  2. $XDG_DATA_HOME/zen-swarm/prev/zen   (Linux/macOS standard)
-//  3. ~/.local/share/zen-swarm/prev/zen   (XDG fallback)
+// 1. $ZEN_PREV_TARGET_PATH (test/override hook)
+// 2. $XDG_DATA_HOME/zen-swarm/prev/zen (Linux/macOS standard)
+// 3. ~/.local/share/zen-swarm/prev/zen (XDG fallback)
 //
 // Exit codes:
 //
-//	0  — target ran and returned 0
-//	2  — target binary not installed (graceful refuse, NOT a crash)
-//	*  — target's exit code (propagated when target ran but failed)
+// 0 — target ran and returned 0
+// 2 — target binary not installed (graceful refuse, NOT a crash)
+// * — target's exit code (propagated when target ran but failed)
 package main
 
 import (

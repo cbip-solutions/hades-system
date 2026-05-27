@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package quota implements zen-swarm's 3-layer quota system per Plan 7
+// Package quota implements zen-swarm's 3-layer quota system
 // design spec §1 Q4 + §1 Q10:
 //
-//	Layer 1 — Hierarchical budgets (per-project + global daemon + per-tier)
-//	Layer 2 — Weighted Fair Queueing (token bucket per project)
-//	Layer 3 — Operator override (boost weight ×N for TTL window)
+// Layer 1 — Hierarchical budgets (per-project + global daemon + per-tier)
+// Layer 2 — Weighted Fair Queueing (token bucket per project)
+// Layer 3 — Operator override (boost weight ×N for TTL window)
 //
 // All thresholds are doctrine-tunable: per-doctrine defaults live in
 // DoctrineDefaults; per-project overrides come via zenswarm.toml at
-// activation time and flow into ResolveThresholds (Phase B subsequent
+// activation time and flow into ResolveThresholds ( subsequent
 // tasks).
 //
 // # Boundary contract
 //
-// Per inv-zen-031 generalised (spec §2.8): this package imports stdlib
+// Per invariant generalised (spec §2.8): this package imports stdlib
 // + internal/doctrine only. Storage access (the priority_overrides
 // table that backs Layer 3) flows via the OverrideStore interface; the
 // concrete implementation lives in internal/daemon/quotaadapter/ which
@@ -21,15 +21,15 @@
 //
 // # LLM dispatch contract
 //
-// Per inv-zen-080: PreFlight returns a decision only — never invokes a
-// provider. The dispatcher (Plan 3) consumes the decision and proceeds
+// Per invariant: PreFlight returns a decision only — never invokes a
+// provider. The dispatcher consumes the decision and proceeds
 // or denies; this preserves the single-egress-point invariant.
 //
 // # Doctrine taxonomy
 //
 // The canonical doctrine taxonomy is owned by internal/doctrine.Name
 // (constants doctrine.NameMaxScope, doctrine.NameDefault,
-// doctrine.NameCapaFirewall). Phase B consumes those names directly
+// doctrine.NameCapaFirewall). consumes those names directly
 // to avoid a parallel taxonomy; round-trip across the package boundary
 // is byte-lossless (see TestDoctrineConstantsMatchInternalDoctrineNames).
 package quota
@@ -53,7 +53,7 @@ const (
 
 // String returns a stable human label for logs. Downstream observability
 // (audit events, status responses) depend on these exact strings; do not
-// rename without coordinating an inv-zen-115 update.
+// rename without coordinating an invariant update.
 func (m Mode) String() string {
 	switch m {
 	case ModeWarnOnly:
@@ -71,12 +71,12 @@ func (m Mode) String() string {
 // the Mode that determines what to do at HardCapPct.
 //
 // Invariants (enforced by the matrix; ResolveThresholds will re-verify
-// at config-load time in subsequent Phase B tasks):
+// at config-load time in subsequent tasks):
 //
-//   - 0 < SoftCapPct <= HardCapPct <= 100
-//   - HardCapPct == 100 ⇔ Mode != ModeExtraMargin
-//   - Pulido §3.5 keeps SoftCapPct = 80 across all doctrines so the
-//     warning surface is uniform; only HardCapPct + Mode vary.
+// - 0 < SoftCapPct <= HardCapPct <= 100
+// - HardCapPct == 100 ⇔ Mode != ModeExtraMargin
+// - Pulido §3.5 keeps SoftCapPct = 80 across all doctrines so the
+// warning surface is uniform; only HardCapPct + Mode vary.
 type Thresholds struct {
 	// SoftCapPct is the percentage of the cap at which a warning fires
 	// (typically 80). Below SoftCapPct: silent. Between SoftCapPct and
@@ -114,10 +114,10 @@ type ProjectQuotaOverride struct {
 // sensible (1..100 inclusive for both, soft ≤ hard).
 //
 // The threshold range is inclusive on both ends:
-//   - 1 means "warn at the very first dollar" (legal but unusual)
-//   - 100 means "warn at the cap exactly" (effectively no soft warning;
-//     legal because some operators want hard-deny only).
-//   - soft == hard is legal: warn and deny coincide at the same point.
+// - 1 means "warn at the very first dollar" (legal but unusual)
+// - 100 means "warn at the cap exactly" (effectively no soft warning;
+// legal because some operators want hard-deny only).
+// - soft == hard is legal: warn and deny coincide at the same point.
 func validProjectQuotaOverride(o ProjectQuotaOverride) bool {
 	if o.SoftCapPct < 1 || o.SoftCapPct > 100 {
 		return false
@@ -167,7 +167,7 @@ const (
 
 // String returns a stable label for logs / audit trail. Downstream
 // observability (audit events, status responses) depends on these exact
-// strings; do not rename without coordinating an inv-zen-115 update.
+// strings; do not rename without coordinating an invariant update.
 func (s CapStatus) String() string {
 	switch s {
 	case CapStatusOK:
@@ -186,15 +186,15 @@ func (s CapStatus) String() string {
 // ClassifyUsage compares used vs cap against Thresholds and returns
 // the CapStatus.
 //
-// Algorithm
+// # Algorithm
 //
-//	if cap <= 0:        return CapStatusOK            // no cap configured
-//	if used < 0:        used = 0                       // defensive
-//	pct = used * 100 / cap                              // integer arithmetic
-//	if pct < SoftCapPct:                return CapStatusOK
-//	if pct < HardCapPct:                return CapStatusSoftWarn
-//	if Mode == ModeWarnOnly:            return CapStatusHardLogOnly
-//	else:                               return CapStatusHardDeny
+// if cap <= 0: return CapStatusOK // no cap configured
+// if used < 0: used = 0 // defensive
+// pct = used * 100 / cap // integer arithmetic
+// if pct < SoftCapPct: return CapStatusOK
+// if pct < HardCapPct: return CapStatusSoftWarn
+// if Mode == ModeWarnOnly: return CapStatusHardLogOnly
+// else: return CapStatusHardDeny
 //
 // Integer arithmetic is intentional — avoids floating-point compare
 // edge cases at the threshold boundary. used is int64 so multiplying

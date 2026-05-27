@@ -138,7 +138,7 @@ func TestWalkUp_BazelRequiresBoth(t *testing.T) {
 	}
 }
 
-// TestWalkUp_StopsAtGitBoundary asserts we do NOT cross .git boundary.
+// TestWalkUp_StopsAtGitBoundary asserts we do NOT cross.git boundary.
 func TestWalkUp_StopsAtGitBoundary(t *testing.T) {
 
 	root := mkTree(t, map[string]string{

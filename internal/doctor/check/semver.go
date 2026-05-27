@@ -3,32 +3,32 @@
 // internal/doctor/hermes (InstallCheck binary-version comparison) and
 // internal/doctor/mcp (AvailabilityCheck pin comparison).
 //
-// Pre-canonical state (Plan 13 Phase F2 review surfaced as F-imp-3): each
+// Pre-canonical state: each
 // consumer shipped its own isSemverLike / compareSemver / versionLessThan
 // / atoi helpers. The two atoi implementations had DIFFERENT semantics on
 // non-digit input (hermes assumed pre-validated digits-only; mcp parsed
 // digits-until-first-non-digit). Duplicate logic + behavioural mismatch
 // violated no-tech-debt + risked downstream bugs.
 //
-// Boundary (inv-zen-031): semver.go consumes ONLY the stdlib. The check
+// Boundary: semver.go consumes ONLY the stdlib. The check
 // package is the canonical shared substrate for doctor primitives — both
 // internal/doctor/hermes and internal/doctor/mcp already import it for
 // the Check interface, so consolidation here adds no new boundary
 // crossings.
 //
 // Two parsers + one comparator:
-//   - ParseSemver: STRICT — requires exactly 3 dotted numeric components.
-//     Rejects pre-release tags (`1.2.3-pre` → error), excess components
-//     (`1.2.3.4` → error), missing components (`1.2` → error), and any
-//     non-digit content. Used by hermes for binary-version probe (Plan
-//     13 requires Hermes ≥0.13.0; the strict shape avoids accidental
-//     comparison against pre-release snapshots).
-//   - ParseSemverLax: PERMISSIVE — parses up to 3 components, each via
-//     digit-until-first-non-digit (matches the legacy mcp.atoi semantic
-//     used for curated MCP catalog version-pin comparison; tolerates
-//     trailing `-pre` tags on pinned packages).
-//   - CompareVersions: -1/0/1 canonical comparison; lex order over
-//     (Major, Minor, Patch).
+// - ParseSemver: STRICT — requires exactly 3 dotted numeric components.
+// Rejects pre-release tags (`1.2.3-pre` → error), excess components
+// (`1.2.3.4` → error), missing components (`1.2` → error), and any
+// non-digit content. Used by hermes for binary-version probe (Plan
+// 13 requires Hermes ≥0.13.0; the strict shape avoids accidental
+// comparison against pre-release snapshots).
+// - ParseSemverLax: PERMISSIVE — parses up to 3 components, each via
+// digit-until-first-non-digit (matches the legacy mcp.atoi semantic
+// used for curated MCP catalog version-pin comparison; tolerates
+// trailing `-pre` tags on pinned packages).
+// - CompareVersions: -1/0/1 canonical comparison; lex order over
+// (Major, Minor, Patch).
 package check
 
 import (

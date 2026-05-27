@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // internal/config/resolver.go
 //
-// ProfileResolver materializes inv-zen-066: it merges the four config
-// layers of Plan 16's routing model into a single ordered provider
+// ProfileResolver materializes invariant: it merges the four config
+// layers of routing model into a single ordered provider
 // cascade, deterministically.
 //
-//	built-in defaults → profiles.toml → projects.toml[orchestrator] → .zen-swarm.toml
+// built-in defaults → profiles.toml → projects.toml[orchestrator] →.zen-swarm.toml
 //
 // Merge is per-field replacement: a later layer that sets a cascade
 // wholly replaces the earlier one (it does not append or splice).
-// inv-zen-066 is the guarantee that the merge result depends only on
+// invariant is the guarantee that the merge result depends only on
 // the layer *contents*, never on map-iteration order — a dedicated test
 // (resolver_test.go) asserts determinism across layer permutations.
 //

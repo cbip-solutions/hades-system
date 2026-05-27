@@ -146,7 +146,7 @@ async def test_telegram_e2e_short_render_expand_cache_hit() -> None:
 @pytest.mark.asyncio
 async def test_e2e_short_render_consistent_across_platforms() -> None:
     """Cross-platform parity: same envelope renders to same MobileSummaryCard
-    regardless of which AFK platform the operator is on. Phase A's
+    regardless of which AFK platform the operator is on. 
     platform renderer transforms the card to platform-specific markup;
     the AFK module only owns the field-set extraction."""
     envelope = {
@@ -176,8 +176,7 @@ async def test_e2e_short_render_consistent_across_platforms() -> None:
 @pytest.mark.asyncio
 async def test_e2e_capa_firewall_hydrate_then_read_filters_cross_project() -> None:
     """Defense-in-depth scenario: cache hydrates from an aggregator
-    response that erroneously contains a cross-project row (simulates a
-    bug in Plan 9 D layers 1-3). The AFK cache layer 4 filter blocks
+    response that erroneously contains a cross-project row. The AFK cache layer 4 filter blocks
     the cross-project entry on read under capa-firewall.
 
     This test exercises D-5 (privacy filter) + D-6 (hydration) together

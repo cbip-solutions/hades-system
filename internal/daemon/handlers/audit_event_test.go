@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// internal/daemon/handlers/audit_event_test.go — Plan 11 Phase D Task D-5.
+// internal/daemon/handlers/audit_event_test.go — Task D-5.
 //
 // Tests for the zen://audit URL handler: auth-required, doctrine privacy
 // filter, path validation, 401/403/404/200 paths.

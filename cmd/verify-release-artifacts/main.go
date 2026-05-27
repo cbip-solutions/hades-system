@@ -122,7 +122,7 @@ Modes:
 		},
 	}
 	cmd.Flags().StringVar(&dir, "dir", "dist", "GoReleaser output directory")
-	cmd.Flags().StringVar(&owner, "owner", "hades-system", "GitHub owner for attestation+cosign verification (public org per decisión 11)")
+	cmd.Flags().StringVar(&owner, "owner", "cbip-solutions", "GitHub owner for attestation+cosign verification (public org per decisión 11)")
 	cmd.Flags().StringVar(&repo, "repo", "hades-system", "GitHub repo for attestation+cosign verification (public repo per decisión 11)")
 	cmd.Flags().StringVar(&mode, "mode", "full", "Verification mode: full (default; network calls) | fast (offline; skip gh+cosign)")
 	cmd.Flags().BoolVar(&checkSBOM, "check-sbom", true, "Verify SBOM dual-emit presence (Phase E-5)")

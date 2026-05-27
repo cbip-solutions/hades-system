@@ -714,9 +714,9 @@ func TestRender_UnknownSubcommand_IncludesSuggestion(t *testing.T) {
 
 // TestRender_UnknownSubcommand_NoFabricatedSuggestion asserts two safety
 // properties when no suggestion_line is provided:
-//  1. The rendered output does NOT contain "did you mean".
-//  2. The rendered output does NOT contain a dangling "{{" template literal
-//     (the slot must vanish when its context value is empty string "").
+// 1. The rendered output does NOT contain "did you mean".
+// 2. The rendered output does NOT contain a dangling "{{" template literal
+// (the slot must vanish when its context value is empty string "").
 //
 // The builder in cmd/zen/main.go MUST always set Context["suggestion_line"]
 // — to "" when no candidate exists so the {{suggestion_line}} slot in the

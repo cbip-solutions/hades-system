@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package cli — state_pin.go (Plan 9 Phase I Task I-10).
+// Package cli — state_pin.go.
 //
 // `zen state pin <field> <value> --reason <X>` calls POST /v1/state/pin.
-// Enforces inv-zen-146: --reason is both cobra.MarkFlagRequired and
+// Enforces invariant: --reason is both cobra.MarkFlagRequired and
 // non-empty checked in RunE. The operator sees a confirmation prompt
 // (privacy-by-default: blank input = abort, same as audit_chain_cold_archive.go).
 //

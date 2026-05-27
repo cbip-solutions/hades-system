@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
-// Package merge: Phase C — Task C-3.
+// Package merge: — Task C-3.
 //
 // anomaly.go ships the Severity enum + AnomalyDetector struct + the
 // AnomalyDetectedPayload shape + the OnEvent dispatch shell. Per-type
 // rolling-window evaluators ship as no-op stubs in C-3 and are filled
 // in C-4 (FlakeRate + ModeDegradation) and C-5 (ScoringWinnerVetoed +
 // BaselineUnstable + TextualUnresolvable). The skeleton is load-bearing
-// for Phase D engine.go which constructs the detector and forwards
+// for engine.go which constructs the detector and forwards
 // events from the eventlog goroutine.
 //
 // Drift-D structural enforcement (re-stated to keep it visible at the
 // file level): there is exactly ONE EventType for anomaly emission —
 // EvtMergeAnomalyDetected — and the AnomalyType discriminator lives in
-// the payload (AnomalyDetectedPayload.Type). Plan 5 amendment.proposer
+// the payload (AnomalyDetectedPayload.Type). amendment.proposer
 // subscribes to EvtMergeAnomalyDetected, decodes the payload, and
 // switches on payload.Type for per-template ADR dispatch.
 
@@ -26,7 +26,7 @@ import (
 	"time"
 )
 
-// Severity is the closed enum of anomaly severity levels. inv-zen-110
+// Severity is the closed enum of anomaly severity levels. invariant
 // sibling: must be Go enum (int kind) so the dispatch table compiles
 // (compile-time switch, not a runtime string lookup). Ordered ascending
 // (Info < Warning < High < Critical) so callers can compare via simple
@@ -433,10 +433,10 @@ func (d *AnomalyDetector) emit(ctx context.Context, anomalyType AnomalyType, sev
 	})
 }
 
-// Plan6ADRRangeStart is the first ADR ID reserved for Plan 6 anomaly proposals.
-// inv-zen-112: every ADR proposed in response to a Plan 6 EvtMergeAnomalyDetected
-// event MUST allocate its ID from [Plan6ADRRangeStart, Plan6ADRRangeEnd]. Plan 5
-// amendment.proposer enforces at allocation time (Phase F.6 cross-branch
+// Plan6ADRRangeStart is the first ADR ID reserved anomaly proposals.
+// invariant: every ADR proposed in response to a EvtMergeAnomalyDetected
+// event MUST allocate its ID from [Plan6ADRRangeStart, Plan6ADRRangeEnd].
+// amendment.proposer enforces at allocation time ( cross-branch
 // amendment); the compliance test verifies the reserved range constants are
 // present + correct here at the merge package surface.
 const Plan6ADRRangeStart = 30

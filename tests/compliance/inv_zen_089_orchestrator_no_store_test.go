@@ -1,15 +1,15 @@
 // tests/compliance/inv_zen_089_orchestrator_no_store_test.go
 //
-// Compliance gate for inv-zen-089: every package under
+// Compliance gate for invariant: every package under
 // internal/orchestrator/... MUST NOT depend on internal/store, neither
 // directly nor transitively. The store boundary is bridged via the
-// Phase N adapter at internal/daemon/orchestratoradapter/ which adapts
+// adapter at internal/daemon/orchestratoradapter/ which adapts
 // the orchestrator's RawEmitter interface onto the store-backed
 // audit_events_raw table.
 //
-// Phase A's contribution covers internal/orchestrator/clock and
+// contribution covers internal/orchestrator/clock and
 // internal/orchestrator/eventlog. The scan is package-pattern based
-// (./internal/orchestrator/...) so future Phase B-P subpackages
+// (./internal/orchestrator/...) so future subpackages
 // (worktreepool/, state_machine, orchestrator/, etc.) inherit the
 // same compliance gate automatically.
 //
@@ -17,7 +17,7 @@
 // orchestrator subtree, then walks each package's Imports +
 // transitive Deps and asserts internal/store is absent. The Deps
 // closure is the load-bearing check — a transitive store dep is just
-// as much an inv-zen-089 violation as a direct one because it pulls
+// as much an invariant violation as a direct one because it pulls
 // the SQL surface into orchestrator's compile-time graph.
 package compliance
 
@@ -30,7 +30,7 @@ import (
 
 // TestInvZen089OrchestratorNoStoreImport — internal/orchestrator/* MUST
 // NOT import internal/store directly or transitively. Bridge via
-// internal/daemon/orchestratoradapter (Phase N).
+// internal/daemon/orchestratoradapter.
 func TestInvZen089OrchestratorNoStoreImport(t *testing.T) {
 	root := repoRoot(t)
 	cmd := exec.Command("go", "list", "-deps", "-json", "./internal/orchestrator/...")

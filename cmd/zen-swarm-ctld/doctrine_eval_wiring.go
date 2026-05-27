@@ -8,7 +8,7 @@
 // + the production TierPolicy that reads from the active doctrine
 // accessor (internal/doctrine/active).
 //
-// Boundary (inv-zen-031): this file lives in cmd/zen-swarm-ctld (the
+// Boundary: this file lives in cmd/zen-swarm-ctld (the
 // composition root) — it consumes mcpgateway + doctrine/eval +
 // internal/onboard/mcp, the only place that's allowed. None of those
 // three packages depend on each other; the daemon root wires them via

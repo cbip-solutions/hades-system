@@ -4,35 +4,35 @@
 // allows; this binary provides process-isolation when the daemon is
 // CPU-budget-constrained.
 //
-//   - Spec ref: docs/superpowers/plans/2026-05-01-plan-7-phase-G-knowledge.md
-//     §"Task G-15" lines 3908-4061.
-//   - Master plan §2.1 declares this binary OPTIONAL — the daemon's
-//     in-proc watcher is the canonical wiring; this subprocess covers
-//     the case where operators want explicit per-project watcher
-//     isolation (e.g., a heavy plan or research re-index burst that
-//     would jitter the daemon's HTTP loop).
+// - Spec ref: internal design record
+// §"Task G-15" lines 3908-4061.
+// - Master plan §2.1 declares this binary OPTIONAL — the daemon's
+// in-proc watcher is the canonical wiring; this subprocess covers
+// the case where operators want explicit per-project watcher
+// isolation (e.g., a heavy plan or research re-index burst that
+// would jitter the daemon's HTTP loop).
 //
-// Lifecycle
+// # Lifecycle
 //
-//  1. parseConfig: -roots (comma-separated absolute paths) + -index
-//     (knowledge index DB path; defaults to canonical ~/.cache path).
-//  2. signal.NotifyContext on SIGTERM + SIGINT — the daemon supervisor
-//     (or systemd) signals graceful shutdown via SIGTERM; Ctrl-C from
-//     an operator CLI uses SIGINT.
-//  3. knowledge.Open + knowledge.Init — opens the FTS5 + meta tables
-//     idempotently. Identical to the daemon's wiring; the subprocess
-//     and daemon share the same DB schema.
-//  4. NewWatcher + AddProject(per root) — fsnotify subscriptions on the
-//     5 canonical Plan 7 source dirs (memory, ADRs, specs, plans, root
-//     for HANDOFF.md).
-//  5. Watcher.Run(ctx) — blocks until ctx is canceled. On
-//     debounced .md events, the watcher dispatches Reindex/Delete to
-//     this binary's indexerSink.
-//  6. indexerSink.Reindex composes inferKind (path → FileType) +
-//     IncrementalUpdate. Soft-error contract: parser/index errors are
-//     logged but do not abort the watcher loop.
-//  7. Clean shutdown: ctx.Err() == context.Canceled is treated as
-//     success (exit 0). Any other error propagates as exit 1.
+// 1. parseConfig: -roots (comma-separated absolute paths) + -index
+// (knowledge index DB path; defaults to canonical ~/.cache path).
+// 2. signal.NotifyContext on SIGTERM + SIGINT — the daemon supervisor
+// (or systemd) signals graceful shutdown via SIGTERM; Ctrl-C from
+// an operator CLI uses SIGINT.
+// 3. knowledge.Open + knowledge.Init — opens the FTS5 + meta tables
+// idempotently. Identical to the daemon's wiring; the subprocess
+// and daemon share the same DB schema.
+// 4. NewWatcher + AddProject(per root) — fsnotify subscriptions on the
+// 5 canonical source dirs (memory, ADRs, specs, plans, root
+// for HANDOFF.md).
+// 5. Watcher.Run(ctx) — blocks until ctx is canceled. On
+// debounced.md events, the watcher dispatches Reindex/Delete to
+// this binary's indexerSink.
+// 6. indexerSink.Reindex composes inferKind (path → FileType) +
+// IncrementalUpdate. Soft-error contract: parser/index errors are
+// logged but do not abort the watcher loop.
+// 7. Clean shutdown: ctx.Err() == context.Canceled is treated as
+// success (exit 0). Any other error propagates as exit 1.
 //
 // Boundary stdlib + internal/knowledge only — no internal/store, no
 // internal/projectctx, no net/http. The daemon HTTP API is the
@@ -44,7 +44,7 @@
 // Inv-zen-130: composes knowledge.IncrementalUpdate which already
 // honors the NULL-discipline for the three extension-hook columns.
 // This binary does not bind audit_chain_anchor / ecosystem_join_keys /
-// caronte_symbol_refs at all — Plan 9 / Plan 14 / caronte engine own
+// caronte_symbol_refs at all — / / caronte engine own
 // those writes.
 package main
 

@@ -3,11 +3,11 @@
 // the static (Anthropic-cacheable) + volatile (NEVER cached) portions.
 //
 // Anthropic prompt cache (per Anthropic Engineering blog 2024):
-//   - cache_control: {"type": "ephemeral"} on a system-prompt block triggers
-//     5-minute cache TTL.
-//   - Static portion = community summaries + project meta (stable across queries).
-//   - Volatile portion = per-query fused results + callers/callees (DIFFERENT
-//     per query; never cacheable).
+// - cache_control: {"type": "ephemeral"} on a system-prompt block triggers
+// 5-minute cache TTL.
+// - Static portion = community summaries + project meta (stable across queries).
+// - Volatile portion = per-query fused results + callers/callees (DIFFERENT
+// per query; never cacheable).
 //
 // takes callers + callees as explicit per-call parameters. Pre-fix the
 // CacheSplit struct held callers/callees on shared state mutated by an

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — bypass.go (Plan 2 Phase L Task L-2).
+// Package cli — bypass.go.
 //
 // Wires the 23 spec §8.1 operations through 14 cobra subcommands. Each
 // subcommand is a thin shim: parse flags → call internal/client over
@@ -8,16 +8,16 @@
 //
 // Flag-counted operations (so 14 cobra commands cover 23 spec ops):
 //
-//	audit       --range / --inspect / --since   (3 ops)
-//	update-config --diff / --check / apply       (3 ops)
-//	extract-config --capture-only                (2 ops)
-//	anomalies   --acknowledge                    (2 ops)
-//	purge       --dry-run / --apply              (2 ops)
-//	certs       --show / --rotate                (2 ops)
-//	cf-range    --show / --refresh               (2 ops)
-//	single-shot: status, probe, test, cross-validate,
-//	             refresh-now, pin, unpin         (7 ops)
-//	total                                        = 23
+// audit --range / --inspect / --since (3 ops)
+// update-config --diff / --check / apply (3 ops)
+// extract-config --capture-only (2 ops)
+// anomalies --acknowledge (2 ops)
+// purge --dry-run / --apply (2 ops)
+// certs --show / --rotate (2 ops)
+// cf-range --show / --refresh (2 ops)
+// single-shot: status, probe, test, cross-validate,
+// refresh-now, pin, unpin (7 ops)
+// total = 23
 package cli
 
 import (

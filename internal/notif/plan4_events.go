@@ -1,29 +1,29 @@
 // SPDX-License-Identifier: MIT
-// Package notif — Plan 4 Phase O Task O-3.
+// Package notif — Task O-3.
 //
-// Event-type taxonomy and structured payload schemas for Plan 4 emit
-// hooks. Plan 4 ships the emit-side only; Plan 11 ships the routing
+// Event-type taxonomy and structured payload schemas emit
+// hooks. ships the emit-side only; ships the routing
 // chain (Slack/email/webhook/etc). This package has no runtime
 // dependencies beyond the standard library and must NEVER import
 // internal packages that carry secrets or credentials. The PII-free
-// invariant (inv-zen-085) is enforced by TestVerifyNoPII.
+// invariant is enforced by TestVerifyNoPII.
 //
-// Boundary (inv-zen-031): this package does NOT import internal/store.
+// Boundary: this package does NOT import internal/store.
 // It is a pure types + constructors package; persistence is the
 // responsibility of internal/daemon/handlers/audit_emit.go.
 //
 // Callers (each Phase that emits a payload of this type):
 //
-//   - internal/workforce/subprocess: SubprocessCrashChain, SubprocessTTLEvicted
-//   - internal/budget/anomaly:       BudgetAnomalyZScore, BudgetCapExhausted
-//   - internal/daemon/handlers/audit_emit.go:
-//     AuditFamilyDisjointPoolEmpty,
-//     AuditEmitHTTPFailSustained
-//   - internal/mcp/sshexec:          SSHExecInteractiveBlocked, SSHExecAllowlistDenied
-//   - internal/daemon/handlers/doctrine.go:
-//     DoctrineInvalidOnReload
-//   - internal/workforce/worker:     WorkerCompleted, WorkerFailed
-//   - internal/mcp/research:         ResearchCitationHallucinated
+// - internal/workforce/subprocess: SubprocessCrashChain, SubprocessTTLEvicted
+// - internal/budget/anomaly: BudgetAnomalyZScore, BudgetCapExhausted
+// - internal/daemon/handlers/audit_emit.go:
+// AuditFamilyDisjointPoolEmpty,
+// AuditEmitHTTPFailSustained
+// - internal/mcp/sshexec: SSHExecInteractiveBlocked, SSHExecAllowlistDenied
+// - internal/daemon/handlers/doctrine.go:
+// DoctrineInvalidOnReload
+// - internal/workforce/worker: WorkerCompleted, WorkerFailed
+// - internal/mcp/research: ResearchCitationHallucinated
 package notif
 
 import (
@@ -31,7 +31,7 @@ import (
 	"time"
 )
 
-// Severity mirrors the Plan 2 notifications-table severity column,
+// Severity mirrors the notifications-table severity column,
 // extended with SeveritySecurityAlert for security-grade always-notify
 // events that bypass any rate-limiting or batching layer.
 type Severity string
@@ -44,7 +44,7 @@ const (
 	SeverityCritical Severity = "CRITICAL"
 	// SeveritySecurityAlert is the highest severity, reserved for
 	// security-grade events that must always reach the operator regardless
-	// of doctrine-tunable aggregation. Plan 11 routes these BEFORE any
+	// of doctrine-tunable aggregation. routes these BEFORE any
 	// rate-limiting or batching layer.
 	SeveritySecurityAlert Severity = "SECURITY_ALERT"
 )
@@ -137,7 +137,7 @@ func (et EventType) DefaultSeverity() Severity {
 
 // IsAlwaysNotify returns true if this event type is security-grade and
 // must always be surfaced to the operator regardless of doctrine
-// aggregation settings. Plan 11 consults this flag before applying
+// aggregation settings. consults this flag before applying
 // any rate-limiting or batching.
 func (et EventType) IsAlwaysNotify() bool {
 	return alwaysNotifySet[et]

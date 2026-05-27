@@ -1,29 +1,29 @@
 // SPDX-License-Identifier: MIT
 // internal/daemon/mcpgateway/caronte_proxy.go
 //
-// CaronteProxy — gateway facade over the in-daemon Caronte engine (Plan 19
-// Phase J + L). The SOLE code-graph proxy: Phase L deleted the old gitnexus
+// CaronteProxy — gateway facade over the in-daemon Caronte engine (
+// + L). The SOLE code-graph proxy: deleted the old gitnexus
 // subprocess proxy + the gitnexus subprocess client; this proxy fronts the
 // in-process engine under the "caronte" wire segment. The proxy:
 //
-//  1. Wraps a narrow CaronteEngine interface (declared here) so the daemon
-//     composition root wires the concrete *caronte.Engine without this package
-//     importing internal/caronte's constructor (inv-zen-031; the package does
-//     import caronte's result/return VALUE types — a one-way lower-layer
-//     import, fine). The engine satisfies CaronteEngine + research.GitnexusClient
-//     (the research interface name is the stable drop-in contract — DECISION L-3).
-//  2. Exposes the 11 C-8 tools (query·context·impact·wiki·get_risk·get_why·
-//     get_health·trace_call_path·get_cochange·get_implementations·
-//     get_architecture) — all under the "caronte" subsystem segment
-//     (Plan 19 Phase L renamed the segment gitnexus->caronte; the REST adapter,
-//     RBAC, and augment lanes all dispatch the caronte_* wire names).
-//     query/context/impact are GENUINELY DISTINCT real ops (DECISION 6), not
-//     aliases.
-//  3. PRESERVES the per-mode escalate() semantics (Q7=B): autonomy →
-//     WAITING_FOR_CONFIRMATION, afk → cached_summary, interactive →
-//     doctor_warning.
-//  4. Bootstrap-required: a nil engine → EnsureReachable returns
-//     ErrCaronteBootstrapRequired so daemon boot fails fast (os.Exit(1)).
+// 1. Wraps a narrow CaronteEngine interface (declared here) so the daemon
+// composition root wires the concrete *caronte.Engine without this package
+// importing internal/caronte's constructor (invariant; the package does
+// import caronte's result/return VALUE types — a one-way lower-layer
+// import, fine). The engine satisfies CaronteEngine + research.GitnexusClient
+// (the research interface name is the stable drop-in contract — DECISION L-3).
+// 2. Exposes the 11 C-8 tools (query·context·impact·wiki·get_risk·get_why·
+// get_health·trace_call_path·get_cochange·get_implementations·
+// get_architecture) — all under the "caronte" subsystem segment
+// ( renamed the segment gitnexus->caronte; the REST adapter,
+// RBAC, and augment lanes all dispatch the caronte_* wire names).
+// query/context/impact are GENUINELY DISTINCT real ops (DECISION 6), not
+// aliases.
+// 3. PRESERVES the per-mode escalate() semantics (Q7=B): autonomy →
+// WAITING_FOR_CONFIRMATION, afk → cached_summary, interactive →
+// doctor_warning.
+// 4. Bootstrap-required: a nil engine → EnsureReachable returns
+// ErrCaronteBootstrapRequired so daemon boot fails fast (os.Exit(1)).
 package mcpgateway
 
 import (

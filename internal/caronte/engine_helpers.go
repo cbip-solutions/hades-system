@@ -2,7 +2,7 @@
 // internal/caronte/engine_helpers.go
 //
 // Build-tag-agnostic helpers shared by both the cgo and !cgo Engine variants.
-// Currently decodeJSONArray for Plan-20 federation ops that surface
+// Currently decodeJSONArray federation ops that surface
 // JSON-encoded TEXT columns (Lore ADR refs / supersedes) as []string slices.
 
 package caronte

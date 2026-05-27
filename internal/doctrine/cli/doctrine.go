@@ -1,32 +1,32 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctrine.go (Plan 8 Phase I Task I-1).
+// Package cli — doctrine.go.
 //
-// `zen doctrine` (registered as `zen doctrine-v2` during Phase I + K parity
-// window; Phase N polish promotes to `zen doctrine`) exposes 15 subcommands
+// `zen doctrine` (registered as `zen doctrine-v2` during + K parity
+// window; polish promotes to `zen doctrine`) exposes 15 subcommands
 // organized via cobra.Group annotations:
 //
-//	Read group       → list, show, status, history, diff, validate
-//	Write group      → init, migrate, override edit, reload
-//	Amendment group  → propose-list, ack, deny, revert  (Phase K populates;
-//	                   Phase I registers group only)
-//	Debug group      → reinforce
+// Read group → list, show, status, history, diff, validate
+// Write group → init, migrate, override edit, reload
+// Amendment group → propose-list, ack, deny, revert ( populates;
+// registers group only)
+// Debug group → reinforce
 //
 // Q14 C: flat invocation pattern — `zen doctrine show max-scope`, NOT
 // `zen doctrine read show max-scope`. cobra.Group annotation organizes
 // `--help` into visual groups WITHOUT introducing intermediate command
-// nodes (preserves backward-compat with Plan 5 K-3 leaves like `ack`).
+// nodes.
 //
 // Q15 A: `migrate` operator-explicit write-back; daemon never auto-writes
-// (inv-zen-137).
+// .
 //
 // Q12 C: `reinforce` previews template render output for operator inspection
 // of what worker subprocess will receive.
 //
 // Help text + error messages in español per CLAUDE.md operator language §6.6.
 //
-// inv-zen-133: this package imports zero internal/store; all stateful reads
+// invariant: this package imports zero internal/store; all stateful reads
 // route via internal/client (typed HTTP daemon client) which itself respects
-// inv-zen-031.
+// invariant.
 package cli
 
 import (

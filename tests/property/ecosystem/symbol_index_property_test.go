@@ -1,5 +1,4 @@
-//go:build property && cgo
-
+// go:build property && cgo
 package ecosystem_property_test
 
 import (

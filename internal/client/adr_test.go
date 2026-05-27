@@ -42,6 +42,25 @@ func TestADRPropose_OK(t *testing.T) {
 	}
 }
 
+func TestADRProposeWithPlan_OK(t *testing.T) {
+	c, _ := startADRTestServer(t, "POST /v1/adr/propose",
+		func(w http.ResponseWriter, r *http.Request) {
+			body, _ := io.ReadAll(r.Body)
+			if !strings.Contains(string(body), "dispatcher") || !strings.Contains(string(body), "plan-9") {
+				t.Errorf("body: %s", string(body))
+			}
+			w.WriteHeader(http.StatusCreated)
+			json.NewEncoder(w).Encode(ADR{ID: "ADR-0042", Status: "proposed", Topic: "dispatcher", Plan: "plan-9"})
+		})
+	doc, err := c.ADRProposeWithPlan(context.Background(), "dispatcher", "plan-9")
+	if err != nil {
+		t.Fatalf("err: %v", err)
+	}
+	if doc.Plan != "plan-9" {
+		t.Errorf("plan: %q", doc.Plan)
+	}
+}
+
 func TestADRPropose_HTTPError(t *testing.T) {
 	c, _ := startADRTestServer(t, "POST /v1/adr/propose",
 		func(w http.ResponseWriter, r *http.Request) {

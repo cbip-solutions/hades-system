@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -8,14 +9,14 @@
 // handling.
 //
 // GitHub (https://github.com) is the cross-ecosystem corpus host for the
-// top-1000 starred repositories per language. Phase B's GitHubSource wraps
+// top-1000 starred repositories per language. GitHubSource wraps
 // the GitHub REST API's /search/repositories endpoint behind the
-// ecosystem.Source interface (master plan §3.3) so the Phase B ingester
+// ecosystem.Source interface (master plan §3.3) so the ingester
 // can pull README + docs/*.md content into ecosystem.db alongside the
 // per-language package documentation produced by pkgdev/pypi/npm/cratesio,
 // the cross-ecosystem arxiv papers, and the TypeScript-only MDN content.
 //
-// Instance topology (per spec §2.1 + Stage 2 amendment 2026-05-15):
+// Instance topology:
 // GitHub source is 1-instance-per-ecosystem (4 instances total: one each
 // in Go/Python/TypeScript/Rust daemon Source maps), in contrast to the
 // pkgdev/pypi/npm/cratesio sources which are 1-instance-total. Each
@@ -57,10 +58,10 @@
 // Per-source TTL = 1d (already configured in source-ttls.toml from A-10).
 //
 // All HTTP egress routes via the narrow FetchClient interface declared in
-// pkgdev.go (inv-zen-152 + inv-zen-191 — single egress point for the
+// pkgdev.go (invariant + invariant — single egress point for the
 // research data plane; no direct net/http imports in this package).
 //
-// Boundary (inv-zen-031): this file MAY import internal/research/cache +
+// Boundary: this file MAY import internal/research/cache +
 // internal/research/ecosystem (parent) + encoding/json (stdlib). It MUST
 // NOT import internal/store, internal/providers, internal/daemon, or any
 // net/http symbols.

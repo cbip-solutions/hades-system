@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_139_revert_cooldown_test.go
 //
-// Compliance gate for invariant inv-zen-139: telemetry-driven
+// Compliance gate for invariant invariant: telemetry-driven
 // autonomous revert MUST respect per-rule cooldown (default
 // max-scope=24h). Within the cooldown window, no additional autonomous
 // reverts fire even if every evaluation pass observes a fresh threshold

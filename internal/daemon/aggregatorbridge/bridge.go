@@ -9,24 +9,24 @@
 // lived in internal/daemon, every daemon test binary would panic on startup
 // with "sql: Register called twice for driver sqlite3".
 //
-// Import topology (inv-zen-031 compliant):
+// Import topology:
 //
-//	cmd/zen-swarm-ctld → aggregatorbridge (mattn)
-//	cmd/zen-swarm-ctld → internal/daemon (ncruces via store)
-//	aggregatorbridge   → internal/knowledge/aggregator (mattn via db.go CGO)
-//	aggregatorbridge   → internal/daemon/handlers (no drivers)
+// cmd/zen-swarm-ctld → aggregatorbridge (mattn)
+// cmd/zen-swarm-ctld → internal/daemon (ncruces via store)
+// aggregatorbridge → internal/knowledge/aggregator (mattn via db.go CGO)
+// aggregatorbridge → internal/daemon/handlers (no drivers)
 //
 // The production binary links both mattn and ncruces; mattn's init() runs
 // first (it is imported deeper in the link graph via aggregator/db.go),
 // registers "sqlite3", and ncruces silently skips its init() because
 // driverName registration check detects the name already claimed.
 //
-// inv-zen-031: this package imports internal/knowledge/aggregator but NOT
+// invariant: this package imports internal/knowledge/aggregator but NOT
 //
-//	internal/store. The daemon package + store coexist in the binary but
-//	neither package directly imports the other via aggregatorbridge.
+// internal/store. The daemon package + store coexist in the binary but
+// neither package directly imports the other via aggregatorbridge.
 //
-// inv-zen-129: does NOT import net/http.
+// invariant: does NOT import net/http.
 package aggregatorbridge
 
 import (
@@ -122,11 +122,6 @@ func (b *AggregatorBridge) AggListPins(ctx context.Context, projectID string) ([
 
 func (b *AggregatorBridge) AggEnqueueRebuild(ctx context.Context, projectID string) error {
 
-	if err := b.agg.EnqueueRebuild(ctx, projectID); err != nil {
-		if errors.Is(err, aggregator.ErrEmbedWorkerNotStarted) {
-			return handlers.ErrAggWorkerNotStarted
-		}
-		return err
-	}
-	return nil
+	_, err := b.agg.RebuildPinnedEmbeddings(ctx, projectID)
+	return err
 }

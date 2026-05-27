@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — state_show.go (Plan 9 Phase I Task I-10).
+// Package cli — state_show.go.
 //
 // `zen state show` calls GET /v1/state/show and renders the StateManifest.
 // The manifest exposes TomlContent (raw TOML) plus convenience scalars:

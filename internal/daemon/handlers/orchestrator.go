@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — orchestrator.go (Plan 3 Phase F Task K-3 — REAL).
+// Package handlers — orchestrator.go.
 //
-// Replaces the Plan 2 Phase L thin pin/unpin/status surface (which used
+// Replaces the thin pin/unpin/status surface (which used
 // package-level globals) with a six-endpoint real surface backed by the
-// Phase B+C+D+E components:
+// +C+D+E components:
 //
-//   - GET  /v1/orchestrator/status   — per-tier circuit breaker state +
-//     active pins summary + 30d cost summary.
-//   - POST /v1/orchestrator/pin      — operator pin (calls PinOverrides.Set).
-//   - POST /v1/orchestrator/unpin    — operator unpin (calls PinOverrides.Unset
-//     or UnpinAll).
-//   - GET  /v1/orchestrator/pins     — list every active pin (PinOverrides.ListAll).
-//   - POST /v1/orchestrator/probe    — trigger AttemptRecovery on each
-//     non-Closed tier and return the post-probe state.
-//   - GET  /v1/orchestrator/history  — current state per-tier (post-rescope
-//     placeholder; CircuitBreaker doesn't track transition history yet —
-//     see K-3 self-review concern).
+// - GET /v1/orchestrator/status — per-tier circuit breaker state +
+// active pins summary + 30d cost summary.
+// - POST /v1/orchestrator/pin — operator pin (calls PinOverrides.Set).
+// - POST /v1/orchestrator/unpin — operator unpin (calls PinOverrides.Unset
+// or UnpinAll).
+// - GET /v1/orchestrator/pins — list every active pin (PinOverrides.ListAll).
+// - POST /v1/orchestrator/probe — trigger AttemptRecovery on each
+// non-Closed tier and return the post-probe state.
+// - GET /v1/orchestrator/history — current state per-tier (post-rescope
+// placeholder; CircuitBreaker doesn't track transition history yet —
+// see K-3 self-review concern).
 //
-// Boundary (inv-zen-031): handlers consume the Server pointer as `any` and
+// Boundary: handlers consume the Server pointer as `any` and
 // type-assert against locally-defined interfaces (mirrors handlers/bypass.go
 // pattern) so this package never imports the daemon back. The orchestrator
 // package types (CircuitBreaker, PinOverrides, CostCounters) are imported

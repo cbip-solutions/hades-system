@@ -115,7 +115,7 @@ def _resolve_hades_bin() -> str | None:
 def _is_interactive_stdin() -> bool:
     """Return True iff stdin is a TTY.
 
-    Plan 13's bubbletea wizard requires a TTY for prompt rendering;
+     bubbletea wizard requires a TTY for prompt rendering;
     spawning the subprocess in a non-TTY session would emit a wizard-side
     error after the subprocess-start cost. This helper detects the
     condition early so the hook can no-op silently.
@@ -146,8 +146,7 @@ def _maybe_launch_wizard(
     - HADES_NO_WIZARD=1 (operator escape hatch via `hades --no-wizard`)
     - config.toml present (subsequent session, not first run)
 
-    On trigger: spawns `hades config init` subprocess (Plan 13 wizard
-    surface). Hands off stdin/stdout/stderr so the operator drives the
+    On trigger: spawns `hades config init` subprocess. Hands off stdin/stdout/stderr so the operator drives the
     interactive bubbletea TUI in their terminal. The subprocess writes
     config.toml on success; subsequent session-start invocations of this
     hook see the file + skip the wizard.

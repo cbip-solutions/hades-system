@@ -1,5 +1,4 @@
-//go:build cgo
-
+// go:build cgo
 package link
 
 import (
@@ -65,7 +64,7 @@ func TestSurfacePolicyPersistsUnresolvedRow(t *testing.T) {
 		t.Errorf("audit events = %d; want 1", len(audit.events))
 	}
 	// Closed-enum check: the EventType MUST be federation.EvtUnresolvedCall
-	// (the Phase F additive EventType this Phase added in Stage-0 contingency);
+	// ;
 	// a string drift here would surface as a compile error on the field
 	// type, not a silent miss-route.
 	if got := audit.events[0].t; got != federation.EvtUnresolvedCall {

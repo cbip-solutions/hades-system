@@ -92,7 +92,7 @@ func TestRegistryReadOnly(t *testing.T) {
 }
 
 // TestBytes_ReturnsEmbeddedTOML verifies Bytes() returns the verbatim
-// embedded TOML bytes for each canonical built-in (per Stage 2 CRITICAL #7).
+// embedded TOML bytes for each canonical built-in.
 // The bytes returned MUST contain a "schema_version" header field as a
 // minimum-viable shape check.
 func TestBytes_ReturnsEmbeddedTOML(t *testing.T) {

@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -17,19 +18,19 @@ import (
 	sitter "github.com/smacker/go-tree-sitter"
 )
 
-//go:embed testdata/chunker/go_sample.go
+// go:embed testdata/chunker/go_sample.go
 var goSampleSrc []byte
 
-//go:embed testdata/chunker/python_sample.py
+// go:embed testdata/chunker/python_sample.py
 var pythonSampleSrc []byte
 
-//go:embed testdata/chunker/typescript_sample.ts
+// go:embed testdata/chunker/typescript_sample.ts
 var typescriptSampleSrc []byte
 
-//go:embed testdata/chunker/rust_sample.rs
+// go:embed testdata/chunker/rust_sample.rs
 var rustSampleSrc []byte
 
-//go:embed testdata/chunker/markdown_sample.md
+// go:embed testdata/chunker/markdown_sample.md
 var markdownSampleSrc []byte
 
 // newTestChunker is a tiny helper that constructs a Chunker with B-1

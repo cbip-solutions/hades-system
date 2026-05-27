@@ -1,7 +1,7 @@
 # Contributing To HADES system
 
 Thank you for taking the time to improve HADES system. This project is strict
-about correctness, reviewability, and release hygiene because it coordinates
+about correctness, reviewability, and release verification because it coordinates
 autonomous development work across real repositories.
 
 ## Ground Rules
@@ -11,8 +11,8 @@ autonomous development work across real repositories.
 - Do not add generated-by-tool or co-author attribution lines.
 - Keep changes scoped and reviewable.
 - Add or update tests for behavior changes.
-- Keep public docs professional, current, and free of private environment
-  details.
+- Keep docs professional, current, and free of credentials, local machine paths,
+  and unrelated project details.
 - Do not add stubs, placeholder implementations, or open-ended TODO markers to
   production code.
 
@@ -44,12 +44,11 @@ make verify-no-task-context-comments
 
 ## Pull Requests
 
-Small fixes, typo corrections, and focused documentation improvements can be
-reviewed directly in the public repository.
+Small fixes, typo corrections, and focused documentation improvements are the
+easiest changes to review.
 
-Larger changes may be absorbed into the maintainer's private development cycle
-and re-published in a later curated public release. That workflow keeps the
-public tree clean while still preserving credit and review context.
+Larger changes may be declined, split, or deferred depending on maintainer
+capacity and roadmap fit.
 
 ## Security
 

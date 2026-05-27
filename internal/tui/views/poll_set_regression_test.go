@@ -1,7 +1,7 @@
-// Package views — poll_set_regression_test.go (Plan 18b Phase C Task C-10).
+// Package views — poll_set_regression_test.go.
 //
-// inv-zen-088 preservation test: verifies the set of daemon endpoints
-// polled by each TUI panel is unchanged after the Plan 18b Phase C
+// invariant preservation test: verifies the set of daemon endpoints
+// polled by each TUI panel is unchanged after the
 // brand pass. The brand pass MUST NOT alter any Refetch() method or
 // add/remove HTTP calls.
 //
@@ -9,7 +9,7 @@
 // reflection on method presence + source keyword search) rather than
 // mocking the HTTP client — this avoids coupling the test to the
 // client.Client interface, while still catching the structural
-// invariant that inv-zen-088 requires.
+// invariant that invariant requires.
 //
 // Concretely for each panel, call Refetch() on a nil-client view and
 // assert that the returned tea.Cmd is nil (degraded mode). This proves

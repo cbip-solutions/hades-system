@@ -1,18 +1,19 @@
 // SPDX-License-Identifier: MIT
 
+// go:build !race
 //go:build !race
 // +build !race
 
-// Package compliance — Plan 15 Phase H task H-5 compliance test for
-// inv-zen-317 sub-coverage (README.md component of the H-full doc
+// Package compliance — task H-5 compliance test for
+// invariant sub-coverage (README.md component of the H-full doc
 // maturity bundle).
 //
-// inv-zen-317 is the umbrella invariant for the H-full doc maturity
+// invariant is the umbrella invariant for the H-full doc maturity
 // bundle (LICENSE + NOTICE + README + CHANGELOG + SECURITY + CONTRIBUTING
-// + CODE_OF_CONDUCT + handbook docs). Phase H tasks each ship one slice
+// + CODE_OF_CONDUCT + handbook docs). tasks each ship one slice
 // of the bundle; H-5 ships the README v1.0 curation (post-flip identity
-// `hades-system`, MIT license framing, gitnexus removed per Plan 19 +
-// decisión 6, badges row, Plan 15 narrative section). The umbrella test
+// `hades-system`, MIT license framing, gitnexus removed +
+// policy, badges row, narrative section). The umbrella test
 // `tests/compliance/inv_zen_317_docs_maturity_test.go` (H-8) composes
 // per-doc presence + size + sentinel checks; this file owns the
 // finer-grained README content assertions.
@@ -26,17 +27,17 @@
 //
 // Acceptance criteria gated:
 //
-//  1. README.md exists at repo root, non-empty, size > 200 LOC (curated
-//     post-v1.0 narrative is verbose; baseline is well above this floor).
-//  2. License framing — contains "MIT" literal in license context;
-//     does NOT carry "Apache-2.0 sovereignty" framing (superseded by
-//  3. Identity — contains "hades-system" literal (public org); contains
-//     "HADES" literal (brand).
-//  4. Caronte mentioned (sole code-graph per Plan 19 + decisión 6).
-//  5. No bypass-tier internals leak per decisión 17-c (regex anti-pattern
-//     gate; see bypassTierLeakPatterns_README below).
-//  6. Plan 15 v1.0 narrative section present ("What Plan 15 adds (v1.0.0").
-//  7. Badges row present (license badge + at least one other badge).
+// 1. README.md exists at repo root, non-empty, size > 200 LOC (curated
+// post-v1.0 narrative is verbose; baseline is well above this floor).
+// 2. License framing — contains "MIT" literal in license context;
+// does NOT carry "Apache-2.0 sovereignty" framing (superseded by
+// 3. Identity — contains "hades-system" literal (public org); contains
+// "HADES" literal (brand).
+// 4. Caronte mentioned.
+// 5. No bypass-tier internals leak policy (regex anti-pattern
+// gate; see bypassTierLeakPatterns_README below).
+// 6. v1.0 narrative section present.
+// 7. Badges row present (license badge + at least one other badge).
 //
 // Composes into `make verify-invariants` via the standard compliance suite.
 package compliance

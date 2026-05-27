@@ -2,13 +2,13 @@
 // Package cli — doctor_caronte.go
 //
 // Caronte is the in-daemon, Apache-2.0 sovereign code-graph engine
-// (Plan 19). This section probes its five health surfaces:
-//   - caronte.engine.healthy    — engine constructed + Degraded()==false
-//   - caronte.index.freshness   — last-index age vs index-currency threshold
-//   - caronte.language.coverage — which of Go/TS/Py/Rust parsers loaded
-//   - caronte.project-db.status — per-project .zen/caronte.db reachable
-//   - caronte.rerank.available  — BGE reranker model installed (Phase F;
-//     inv-zen-278; missing → KNN-distance order)
+// . This section probes its five health surfaces:
+// - caronte.engine.healthy — engine constructed + Degraded()==false
+// - caronte.index.freshness — last-index age vs index-currency threshold
+// - caronte.language.coverage — which of Go/TS/Py/Rust parsers loaded
+// - caronte.project-db.status — per-project.zen/caronte.db reachable
+// - caronte.rerank.available — BGE reranker model installed (;
+// invariant; missing → KNN-distance order)
 //
 // invokes the `mcp_zen-swarm_caronte_get_health` MCP tool via
 // /v1/mcpgateway JSON-RPC tools/call and synthesizes the probe rows

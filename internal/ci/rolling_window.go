@@ -5,13 +5,13 @@
 // the gate is meaningful); the WindowSize is the lookback depth (50 by
 // default). Implementation invariants:
 //
-//  1. Real-failure cap (MaxRealFails) is checked BEFORE the ratio gate.
-//     Rationale real_fail > MaxRealFails is a stricter signal than
-//     ratio violation; failing-fast on it yields better diagnostic.
-//  2. Failures with empty Bucket are treated as "real" for safety
-//     (never silently excluded from the real-fail count).
-//  3. Sample-size gate fires first to avoid divide-by-zero on tiny
-//     denominators.
+// 1. Real-failure cap (MaxRealFails) is checked BEFORE the ratio gate.
+// Rationale real_fail > MaxRealFails is a stricter signal than
+// ratio violation; failing-fast on it yields better diagnostic.
+// 2. Failures with empty Bucket are treated as "real" for safety
+// (never silently excluded from the real-fail count).
+// 3. Sample-size gate fires first to avoid divide-by-zero on tiny
+// denominators.
 //
 // Coverage target ≥90% per CLAUDE.md security/correctness-critical list
 // (analogue to validator/cost_ledger families).
@@ -41,10 +41,10 @@ func DefaultRollingWindow() RollingWindow {
 // list. Returns (pass, reason). Empty reason on pass; populated with
 // operator-actionable detail when fail.
 //
-// Gate ordering (per inv-zen-275 contract):
-//  1. Sample size (denom ≥ MinSampleSize)
-//  2. Real-fail cap (real_fail ≤ MaxRealFails)
-//  3. Success ratio (success / denom ≥ MinSuccess / WindowSize)
+// Gate ordering:
+// 1. Sample size (denom ≥ MinSampleSize)
+// 2. Real-fail cap (real_fail ≤ MaxRealFails)
+// 3. Success ratio (success / denom ≥ MinSuccess / WindowSize)
 //
 // Pre-condition: commits MUST have Bucket assigned via Classify (see
 // classifier.go). Bucket="" + Status="failure" is treated as "real"

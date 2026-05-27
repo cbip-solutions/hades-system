@@ -4,18 +4,18 @@
 //
 // Per spec §1 Q13, zen day owns two default schedules:
 //
-//   - Morning brief: `0 8 * * 1-5` (Mon-Fri 08:00 local) with a 2h
-//     `if_within` catch-up window (MissPolicyCatchUpBounded).
-//   - EOD digest:    `0 18 * * 1-5` (Mon-Fri 18:00 local) with a 4h
-//     `if_within` catch-up window.
+// - Morning brief: `0 8 * * 1-5` (Mon-Fri 08:00 local) with a 2h
+// `if_within` catch-up window (MissPolicyCatchUpBounded).
+// - EOD digest: `0 18 * * 1-5` (Mon-Fri 18:00 local) with a 4h
+// `if_within` catch-up window.
 //
 // Both schedules are persisted as `scheduler.TierRoutine` rows under
 // project alias `_global` (the cross-project flow loop, distinct from
 // any individual project alias). The Action field carries the well-known
-// dispatch token (`morning-brief` or `eod-digest`) Phase D `scheduler.Fire`
-// routes to the zenday composer (Phase I daemon wiring).
+// dispatch token (`morning-brief` or `eod-digest`) `scheduler.Fire`
+// routes to the zenday composer.
 //
-// inv-zen-031 boundary: this file declares its only persistence
+// invariant boundary: this file declares its only persistence
 // dependency as the package-local view of `scheduler.Store` — the same
 // 9-method interface scheduler/ uses internally and that the daemon
 // satisfies via `internal/daemon/scheduleradapter.Adapter`. zenday
@@ -33,15 +33,15 @@
 //
 // Operator override file shape (zen-day.toml):
 //
-//	[morning_brief]
-//	cron = "0 9 * * *"        # default "0 8 * * 1-5"
-//	if_within_hours = 3       # default 2
-//	enabled = true            # default true; false skips registration
+// [morning_brief]
+// cron = "0 9 * * *" # default "0 8 * * 1-5"
+// if_within_hours = 3 # default 2
+// enabled = true # default true; false skips registration
 //
-//	[eod_digest]
-//	cron = "0 19 * * *"        # default "0 18 * * 1-5"
-//	if_within_hours = 5        # default 4
-//	enabled = true             # default true; false skips registration
+// [eod_digest]
+// cron = "0 19 * * *" # default "0 18 * * 1-5"
+// if_within_hours = 5 # default 4
+// enabled = true # default true; false skips registration
 //
 // Missing file → defaults; missing fields per section → defaults for
 // just those fields (see LoadZenDayConfig).

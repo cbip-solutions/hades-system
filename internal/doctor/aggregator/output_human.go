@@ -3,8 +3,8 @@
 // human-readable renderer with `--spotlight` (hide pass rows) +
 // `--ascii` (non-emoji fallback) flags per Q5=C+ orthogonal-flag set.
 //
-// Phase F1 ships the post-Run batched variant (renders the fully-populated
-// Report); Phase F5 wires the channel-based streaming variant when the
+// ships the post-Run batched variant (renders the fully-populated
+// Report); wires the channel-based streaming variant when the
 // `--format=human-stream` flag lands.
 package aggregator
 

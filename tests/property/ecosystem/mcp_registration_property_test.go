@@ -1,17 +1,17 @@
-//go:build property && cgo
+// go:build property && cgo
 
-// tests/property/ecosystem/mcp_registration_property_test.go (Plan 14 Phase H Task H-7-8)
+// tests/property/ecosystem/mcp_registration_property_test.go
 //
-// inv-zen-202: Plan 4 MCP wraps Plan 14 — the research.ecosystem_docs
+// invariant: MCP wraps — the research.ecosystem_docs
 // capability backed by `internal/mcp/research.EcosystemDocs` MUST
-// satisfy the Plan 4 `EcosystemBackend` interface (compile-time
+// satisfy the `EcosystemBackend` interface (compile-time
 // assertion) and honour:
 //
-//  1. Validation gates — empty-query returns
-//     ErrEcosystemDocsEmptyQuery for any ecosystem input; empty-eco
-//     returns ErrEcosystemDocsEmptyEcosystem for any query input.
-//  2. Graceful degradation — nil-Dispatcher (and typed-nil) returns
-//     (nil, nil) on valid inputs (no panic, no error).
+// 1. Validation gates — empty-query returns
+// ErrEcosystemDocsEmptyQuery for any ecosystem input; empty-eco
+// returns ErrEcosystemDocsEmptyEcosystem for any query input.
+// 2. Graceful degradation — nil-Dispatcher (and typed-nil) returns
+// (nil, nil) on valid inputs (no panic, no error).
 //
 // Property: across 1000 random (query, eco, dispatcherPresent) tuples,
 // the validation matrix above holds.

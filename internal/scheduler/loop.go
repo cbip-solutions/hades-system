@@ -71,18 +71,18 @@ func (l *Loop) Action() string { return l.action }
 // before relying on Done() / SessionID(). Spawns a watcher goroutine
 // that closes Done() when:
 //
-//   - the parent context (`ctx`) cancels (daemon shutdown), OR
-//   - the bound session's Done() fires (tmux session died).
+// - the parent context (`ctx`) cancels (daemon shutdown), OR
+// - the bound session's Done() fires (tmux session died).
 //
 // Either path drains atomically: `done` closes exactly once via
 // sync.Once, the watcher returns, and Done() callers unblock.
 //
-// Refuses
+// # Refuses
 //
-//   - nil session         → ErrInvalidSchedule (defence in depth).
-//   - second Bind on same → returns "already bound" error; the
-//     watcher goroutine spawned by the first Bind owns the cancel
-//     func and the close(done) responsibility.
+// - nil session → ErrInvalidSchedule (defence in depth).
+// - second Bind on same → returns "already bound" error; the
+// watcher goroutine spawned by the first Bind owns the cancel
+// func and the close(done) responsibility.
 //
 // Why parent ctx is captured (not stored): we derive a child ctx with
 // cancel and store ONLY the cancel func + bind result. The watcher

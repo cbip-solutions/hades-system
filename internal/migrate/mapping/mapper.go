@@ -132,7 +132,7 @@ func mapHooks(inv *source.Inventory, plan *Plan, preset Preset) error {
 
 // knownSettingsKeys is the set of top-level settings.json fields the mapper
 // understands. Any other field encountered triggers strict-mode halt or
-// lenient warning per inv-zen-183 "no silent drop".
+// lenient warning per invariant "no silent drop".
 var knownSettingsKeys = map[string]bool{
 	"permissions": true,
 	"env":         true,

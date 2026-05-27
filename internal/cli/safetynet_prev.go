@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — safetynet_prev.go (Plan 5 Phase N N-5).
+// Package cli — safetynet_prev.go.
 //
 // `zen safetynet prev {install,show,exec}` manages the pinned-prior
 // bin/zen-prev binary (Q2 C element 1). The exec sub-command pipes a

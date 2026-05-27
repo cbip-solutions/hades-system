@@ -32,16 +32,16 @@ const binaryHeadBytes = 4096
 // (Doc returned, FrontmatterJSON nil); only ErrBinaryContent and
 // hard I/O errors propagate.
 //
-// Per inv-zen-130: Parse MUST NOT populate AuditChainAnchor /
+// Per invariant: Parse MUST NOT populate AuditChainAnchor /
 // EcosystemJoinKeys / CaronteSymbolRefs even if the operator's YAML
-// frontmatter contains keys with those names. Plan 9 / Plan 14 / caronte
+// frontmatter contains keys with those names. / / caronte
 // are the authoritative writers for those fields.
 //
 // Title fallback chain (spec §3.5 + §4.5):
-//  1. Frontmatter `title:` field if it exists, parses cleanly, decodes
-//     to a non-empty string.
-//  2. First `^# ` ATX-style H1 heading anywhere in the body.
-//  3. Basename of sf.Path with the `.md` extension stripped.
+// 1. Frontmatter `title:` field if it exists, parses cleanly, decodes
+// to a non-empty string.
+// 2. First `^# ` ATX-style H1 heading anywhere in the body.
+// 3. Basename of sf.Path with the `.md` extension stripped.
 //
 // LastModified is populated from sf.ModTime (the scanner's stat at
 // enumeration time); the parser does NOT re-stat. LastIndexed is the
@@ -50,7 +50,7 @@ const binaryHeadBytes = 4096
 //
 // Boundary this function uses stdlib + gopkg.in/yaml.v3 only. No
 // internal/store import (separate-DB boundary per knowledge package
-// docs). No net/http (inv-zen-129 no remote queries).
+// docs). No net/http.
 func Parse(sf ScannedFile) (Doc, error) {
 	raw, err := os.ReadFile(sf.Path)
 	if err != nil {
@@ -69,7 +69,7 @@ func Parse(sf ScannedFile) (Doc, error) {
 		LastModified: time.Unix(0, sf.ModTime).UTC(),
 		LastIndexed:  time.Now().UTC(),
 		// Extension-hook fields LEFT AS ZERO sql.NullString (Valid=false).
-		// inv-zen-130: parser MUST NOT populate. Plan 9 (audit_chain_anchor),
+		// invariant: parser MUST NOT populate. (audit_chain_anchor),
 		// are the authoritative writers at materialization time.
 		AuditChainAnchor:  sql.NullString{},
 		EcosystemJoinKeys: sql.NullString{},

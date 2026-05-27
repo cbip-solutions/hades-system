@@ -1,32 +1,32 @@
 // SPDX-License-Identifier: MIT
 // Package store — audit_chain.go
 //
-// CRUD wrappers for Plan 9 Phase B chain integrity columns on
+// CRUD wrappers chain integrity columns on
 // audit_events_raw + the audit_partition_seals table.
 //
-// Boundary (inv-zen-031): the chain layer (internal/audit/chain) NEVER
+// Boundary: the chain layer (internal/audit/chain) NEVER
 // imports this file directly — it goes through internal/daemon/auditadapter
 // which translates between chain.* value types and store row types via
 // field-by-field copy.
 //
 // All chain-related UPDATEs are permitted by the migration 059 REFUSE
 // triggers ONLY when:
-//   - The append-only columns (id/project_id/type/payload_json/emitted_at)
-//     are NOT touched
-//   - The chain hash columns transition from ” to non-empty (one-time write)
-//   - The partition_id transitions from ” to non-empty (one-time write)
-//   - The tessera_leaf_id transitions from NULL to non-NULL (one-time write)
+// - The append-only columns (id/project_id/type/payload_json/emitted_at)
+// are NOT touched
+// - The chain hash columns transition from ” to non-empty (one-time write)
+// - The partition_id transitions from ” to non-empty (one-time write)
+// - The tessera_leaf_id transitions from NULL to non-NULL (one-time write)
 //
-// Phase B audit_chain.go scope:
-//   - GetChainTip          — read prev_hash for chain compute
-//   - GetEventByID         — read full row for chain walker / verify
-//   - UpdateChainColumns   — set prev_hash + record_hash + partition_id (one-time)
-//   - UpdateTesseraLeafID  — set tessera_leaf_id (one-time, post-batch)
-//   - InsertPartitionSeal  — write monthly seal record
-//   - GetPartitionSeal     — read seal by partition_id
-//   - ListPartitions       — query audit_events_partitions view
-//   - BackfillScan         — id-ordered cursor for one-time backfill
-//   - ListEventsForPartition — id-ordered events in a partition (verify-chain)
+// audit_chain.go scope:
+// - GetChainTip — read prev_hash for chain compute
+// - GetEventByID — read full row for chain walker / verify
+// - UpdateChainColumns — set prev_hash + record_hash + partition_id (one-time)
+// - UpdateTesseraLeafID — set tessera_leaf_id (one-time, post-batch)
+// - InsertPartitionSeal — write monthly seal record
+// - GetPartitionSeal — read seal by partition_id
+// - ListPartitions — query audit_events_partitions view
+// - BackfillScan — id-ordered cursor for one-time backfill
+// - ListEventsForPartition — id-ordered events in a partition (verify-chain)
 package store
 
 import (

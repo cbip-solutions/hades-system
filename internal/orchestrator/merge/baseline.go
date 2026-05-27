@@ -88,19 +88,19 @@ type BaselineFailedPayload struct {
 //
 // Mode → suite selection:
 //
-//	ModeNormal, ModeDegraded60       → suite.Full
-//	ModeDegraded80, ModeEmergencyOnly → suite.Smoke
+// ModeNormal, ModeDegraded60 → suite.Full
+// ModeDegraded80, ModeEmergencyOnly → suite.Smoke
 //
 // SmokeFailFast tier (EmergencyOnly mode) sets the env var
 // ZEN_MERGE_FAIL_FAST=1 so test runners can opt into fail-fast.
 //
 // Returns wrapped ErrBaselineFailed on:
-//   - Non-zero exit code
-//   - TestExecutor returns an error
-//   - Test stdout malformed / unparseable
-//   - Context cancellation mid-run
+// - Non-zero exit code
+// - TestExecutor returns an error
+// - Test stdout malformed / unparseable
+// - Context cancellation mid-run
 //
-// inv-zen-106 atomicity: callers (Phase D engine.go) MUST NOT proceed to
+// invariant atomicity: callers MUST NOT proceed to
 // candidate execution after this method returns a wrapped ErrBaselineFailed;
 // the engine state-machine guard surfaces the constraint as a runtime panic
 // in development builds.

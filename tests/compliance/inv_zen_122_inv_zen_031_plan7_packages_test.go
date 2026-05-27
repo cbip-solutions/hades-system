@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// plan7PackagesForbiddenStoreImport lists the Plan 7 packages that are
+// plan7PackagesForbiddenStoreImport lists the packages that are
 // FORBIDDEN from importing internal/store. As Plans 7 B-G land, append
 // to this slice (e.g., internal/quota/, internal/scheduler/, internal/inbox/,
 // internal/zenday/, internal/knowledge/, internal/tmuxlife/).
@@ -19,7 +19,7 @@ import (
 //
 // J-3..J-6 deferred — knowledge / scheduler / inbox / tmuxlife now own
 // concrete Prober types (internal/{knowledge,scheduler,inbox,tmuxlife}/
-// prober.go). Per inv-zen-031 + inv-zen-122 the prober packages MUST NOT
+// prober.go). Per invariant + invariant the prober packages MUST NOT
 // import internal/store; the daemon-side adapter package crosses the
 // boundary on their behalf (e.g. inboxadapter, scheduleradapter).
 var plan7PackagesForbiddenStoreImport = []string{

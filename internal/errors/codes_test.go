@@ -836,17 +836,17 @@ func TestCatalogCategoryDistribution(t *testing.T) {
 }
 
 // TestCatalogSeverityDistribution asserts the catalog's per-severity
-// distribution. Spec §Q6 + Plan 18c master + v0.20.0 Phase E assign:
+// distribution. Spec §Q6 + master + v0.20.0 assign:
 //
-//   - SeverityFatal: 1 (internal-uncaught)
-//   - SeverityError: 18 Phase A + 2 Phase F (migrate.allowlist-violation,
-//     migrate.write-failed) + 1 v0.20.0 Phase E (daemon.endpoint-not-found)
-//   - 1 v0.20.1 fix #2 (daemon.responded-with-error) = 22
-//   - SeverityWarn:  6 + 2 Phase F (migrate.symlink-out-of-scope,
-//     migrate.dry-run-required) = 8
-//   - SeverityInfo:  6 (reserved slots) + 1 Phase F (cli.no-op) = 7
+// - SeverityFatal: 1 (internal-uncaught)
+// - SeverityError: 18 + 2 (migrate.allowlist-violation,
+// migrate.write-failed) + 1 v0.20.0 (daemon.endpoint-not-found)
+// - 1 v0.20.1 fix #2 (daemon.responded-with-error) = 22
+// - SeverityWarn: 6 + 2 (migrate.symlink-out-of-scope,
+// migrate.dry-run-required) = 8
+// - SeverityInfo: 6 (reserved slots) + 1 (cli.no-op) = 7
 //
-// Total 38 post v0.20.1 (31 Phase A + 5 Phase F + 1 v0.20.0 Phase E +
+// Total 38 post v0.20.1 (31 + 5 + 1 v0.20.0 +
 // 1 v0.20.1 fix #2 additive).
 //
 // Discipline every new catalog entry MUST update both this counts table
@@ -937,7 +937,7 @@ func TestEndpointNotFoundCodeRegistered(t *testing.T) {
 
 // TestEndpointNotFoundDistinctFromDaemonNotRunning asserts the two codes
 // surface as separate *CodedError values; errors.Is on one MUST NOT match
-// the other. Sister-test for the inv-zen-275 catalog distinction.
+// the other. Sister-test for the invariant catalog distinction.
 func TestEndpointNotFoundDistinctFromDaemonNotRunning(t *testing.T) {
 	e1 := Wrap(CodeEndpointNotFound, stderrors.New("404"))
 	e2 := Wrap("daemon.not-running", stderrors.New("ECONNREFUSED"))

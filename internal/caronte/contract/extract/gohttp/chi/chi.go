@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package chi implements the chi HTTP route extractor for Plan 20 Phase D.
+// Package chi implements the chi HTTP route extractor
 //
 // It walks a Go package via go/parser (NOT go/packages — see "Type-resolution
 // strategy" below) and finds every call expression of the form:
 //
-//   - `<routerVar>.<HTTPMethod>(<path>, <handler>)` — Get/Post/Put/Delete/...
-//   - `<routerVar>.Route(<prefix>, func(r chi.Router){...})` — sub-router prefix
-//   - `<routerVar>.Group(func(r chi.Router){...})` — middleware scope (no prefix)
-//   - `<routerVar>.Mount(<prefix>, <subRouter>)` — cross-package composition
+// - `<routerVar>.<HTTPMethod>(<path>, <handler>)` — Get/Post/Put/Delete/...
+// - `<routerVar>.Route(<prefix>, func(r chi.Router){...})` — sub-router prefix
+// - `<routerVar>.Group(func(r chi.Router){...})` — middleware scope (no prefix)
+// - `<routerVar>.Mount(<prefix>, <subRouter>)` — cross-package composition
 //
 // It threads the receiver-variable binding to confirm the receiver is a chi
 // router (initialized via `chi.NewRouter()` / `chi.NewMux()`, or accepted as
@@ -17,11 +17,11 @@
 // Detect(file, content) gates by the `github.com/go-chi/chi` import (any
 // major version) — quick byte-scan before the parse pass.
 //
-// # Type-resolution strategy (Stage-0 §R6d divergence)
+// # Type-resolution strategy
 //
-// The plan's Stage-0 anticipated reusing Plan 19 C's semantic.Resolver +
+// The plan's anticipated reusing C's semantic.Resolver +
 // golang.org/x/tools/go/packages for router-var type-info; the as-built
-// divergence (documented in the plan's §"Stage-0 divergences from
+// divergence (documented in the plan's §" divergences from
 // master/spec" #2) noted go/packages would be heavyweight (10-60 s per
 // project) and substituted a per-file packages.Load instead.
 //
@@ -38,11 +38,11 @@
 // chi router iff its assignment / parameter type / type-conversion source
 // names the chi package (the import-alias name from the file's import block).
 //
-// Boundary (inv-zen-230 + inv-zen-271): imports only
+// Boundary: imports only
 // `internal/caronte/store` + `internal/caronte/contract/extract` + the
 // standard library. Does NOT import `internal/store` (daemon store boundary)
 // nor `golang.org/x/tools/go/packages` (kept out of the dep chain for Phase
-// D Wave 3; future Phase F may add types-info via Plan 19 C's existing
+// D Wave 3; future may add types-info C's existing
 // loadgo.go path).
 package chi
 

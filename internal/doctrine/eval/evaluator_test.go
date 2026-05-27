@@ -1,7 +1,7 @@
 // Package eval_test covers the dynamic per-call doctrine evaluator
-// (Plan 13 Phase F6).
+// .
 //
-// Coverage targets per spec §6.2 + ≥95% security-critical (inv-zen-184
+// Coverage targets per spec §6.2 + ≥95% security-critical (invariant
 // emission gate is the load-bearing MCP-call boundary check; the eval
 // matrix MUST be exhaustively covered for the 3-profile baseline +
 // custom profile fallback).

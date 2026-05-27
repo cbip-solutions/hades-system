@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package mcpgateway — contract_federation_health.go (Plan 20 Phase I).
+// Package mcpgateway — contract_federation_health.go.
 //
 // Handler for the `federation_health` MCP tool. The `workspace` arg is
 // OPTIONAL empty → daemon-wide health (aggregate over all workspaces);

@@ -264,7 +264,7 @@ func TestAdapterResetEmitsAuditEvent(t *testing.T) {
 
 func TestAdapterTransactionRollsBackOnAuditFailure(t *testing.T) {
 	// If the audit INSERT fails, the priority_overrides INSERT MUST also
-	// roll back — atomicity is load-bearing for inv-zen-115 / Plan 9
+	// roll back — atomicity is load-bearing for invariant /
 	// audit chain integrity.
 	//
 	// We simulate audit failure by dropping the events table after a

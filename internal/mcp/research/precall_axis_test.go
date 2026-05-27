@@ -1,5 +1,5 @@
-// precall_axis_test.go — regression tests for C-7 (CodeReview Plan 4
-// Phase I): every research-MCP PreCall site MUST use one of the four
+// precall_axis_test.go — regression tests for C-7 (CodeReview
+// ): every research-MCP PreCall site MUST use one of the four
 // daemon-recognised axes (project | doctrine | stage | worker_id) so
 // the SEMANTIC budget gate is enforced (not silently downgraded to a
 // NoOp by the daemon's BudgetCapStatus handler).

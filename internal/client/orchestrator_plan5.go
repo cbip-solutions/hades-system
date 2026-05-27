@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — orchestrator_plan5.go (Plan 5 Phase N).
+// Package client — orchestrator_plan5.go.
 //
 // The sibling internal/client/orchestrator.go owns the dispatcher-tier
 // types (PinReq / StatusResult / etc.) and is a frozen contract;
@@ -8,10 +8,10 @@
 //
 // Type categories grouped by phase-N task:
 //
-//	N-2  orchestrator state / pool / depth / capture / replay
-//	N-3  autonomy show / check / mode
-//	N-4  doctrine propose-list / show / ack / deny / revert
-//	N-5  safetynet status / divergence / regression / drift
+// N-2 orchestrator state / pool / depth / capture / replay
+// N-3 autonomy show / check / mode
+// N-4 doctrine propose-list / show / ack / deny / revert
+// N-5 safetynet status / divergence / regression / drift
 package client
 
 import "context"

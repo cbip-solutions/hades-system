@@ -2,7 +2,7 @@
 // Package cli — audit_event.go
 //
 // zen://audit/<id> deep-link by dialing the daemon's GET
-// /v1/audit/event/<id> endpoint shipped by Phase D
+// /v1/audit/event/<id> endpoint shipped by
 // (internal/daemon/handlers/audit_event.go).
 //
 // The command accepts both bare event-IDs ("evt-abc123") and the URL
@@ -10,16 +10,16 @@
 // side BEFORE the round-trip so the daemon always receives the bare
 // id. Output formats: text (default; human-readable summary) or json.
 //
-// inv-zen-172: daemon validates event-id existence + auth + doctrine-
+// invariant: daemon validates event-id existence + auth + doctrine-
 // aware filtering. The CLI is a transparent surface — recoverable
 // vs unrecoverable error mapping mirrors knowledge/inbox patterns.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract):
 //
-//   - 0 success
-//   - 1 operator-recoverable: empty ID, daemon 404 (event missing),
-//     daemon 422 (auth/doctrine rejection)
-//   - 2 unrecoverable: transport, decode, daemon 5xx
+// - 0 success
+// - 1 operator-recoverable: empty ID, daemon 404 (event missing),
+// daemon 422 (auth/doctrine rejection)
+// - 2 unrecoverable: transport, decode, daemon 5xx
 package cli
 
 import (

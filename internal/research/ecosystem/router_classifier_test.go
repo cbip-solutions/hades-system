@@ -1063,12 +1063,12 @@ func TestRetrainAndPersist_WriteCheckpointFailure(t *testing.T) {
 // TestLogisticClassifier_ScoreSoftmaxParallel runs GOMAXPROCS workers ×
 // `iter` iterations against a single trained classifier with a shared
 // probe embedding. Asserts:
-//   - no -race violation (the test MUST be run with `-race`)
-//   - every result is bitwise identical to the single-threaded baseline
-//     (within 1e-9 to allow for floating-point summation reorder, which
-//     should NOT happen here because the algorithm is deterministic on
-//     fixed inputs, but the tolerance buys us against any future inner-loop
-//     refactor that introduced FMA-induced jitter).
+// - no -race violation (the test MUST be run with `-race`)
+// - every result is bitwise identical to the single-threaded baseline
+// (within 1e-9 to allow for floating-point summation reorder, which
+// should NOT happen here because the algorithm is deterministic on
+// fixed inputs, but the tolerance buys us against any future inner-loop
+// refactor that introduced FMA-induced jitter).
 func TestLogisticClassifier_ScoreSoftmaxParallel(t *testing.T) {
 	rng := rand.New(rand.NewSource(42))
 	corpus := generateLabeledCorpus(rng, 500)

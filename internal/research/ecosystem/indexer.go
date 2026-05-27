@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -470,7 +471,7 @@ func (idx *Indexer) Stage1Binary(
 // computes cosine similarity against `queryFP`, and returns the top
 // `topK` candidates sorted descending by cosine score. ChunkCandidate
 // metadata (ContentText, SymbolPath, SourceURL, VersionIntroduced,
-// Kind, PackageID) is populated as a side benefit so the Phase D
+// Kind, PackageID) is populated as a side benefit so the
 // dispatcher and downstream BGE reranker can consume the row without a
 // second SELECT against ecosystem_chunks.
 //
@@ -486,10 +487,10 @@ func (idx *Indexer) Stage1Binary(
 // we short-circuit and return the first `topK` candidates with
 // CosineScore == 0 — caller-visible degeneracy, no math-domain error.
 //
-// Sort insertion sort. Stage 2 typically operates on topK ≈ 50
-// candidates from Stage 1's top-200; insertion sort's O(n²) is
+// Sort insertion sort. typically operates on topK ≈ 50
+// candidates from top-200; insertion sort's O(n²) is
 // faster than O(n log n) for n ≤ ~100 and avoids the standard library
-// sort allocation overhead. Tune if Phase D dispatcher passes much
+// sort allocation overhead. Tune if dispatcher passes much
 // larger candidate sets.
 func (idx *Indexer) Stage2FP32Rerank(
 	ctx context.Context,
@@ -618,13 +619,13 @@ type CachedEmbedding struct {
 // because all rows with the same fingerprint MUST carry identical
 // embeddings per the cross-shape invariant (C-1).
 //
-// Phase B ingester usage:
+// ingester usage:
 //
-//	if cached, err := idx.LookupExistingEmbedding(ctx, chunk.Fingerprint); cached != nil {
-//	    chunk.EmbeddingBin256d, chunk.EmbeddingFP32_1536d = cached.Bin, cached.FP32
-//	} else {
-//	    // call embedder
-//	}
+// if cached, err := idx.LookupExistingEmbedding(ctx, chunk.Fingerprint); cached != nil {
+// chunk.EmbeddingBin256d, chunk.EmbeddingFP32_1536d = cached.Bin, cached.FP32
+// } else {
+// // call embedder
+// }
 func (idx *Indexer) LookupExistingEmbedding(ctx context.Context, fingerprint string) (*CachedEmbedding, error) {
 	if fingerprint == "" {
 		return nil, errors.New("ecosystem: LookupExistingEmbedding fingerprint required")
@@ -775,13 +776,13 @@ func parseUint(s string) (uint64, error) {
 // hash: sha256(seq | evt | payload | parent_hash), hex-encoded.
 //
 // MUST match InMemoryRAGAuditChain.chainHashFormula (mock_chain.go) +
-// the Phase D production wrapper formula. If this drifts, the per-DB
+// the production wrapper formula. If this drifts, the per-DB
 // mirror row's self_hash will not equal the canonical chain row's
 // self_hash, breaking tamper-detection cross-checks.
 //
 // Encoding "%d|%d|" prefix + payload bytes + "|<parent>" suffix.
 // Stable across implementations (any change requires synchronised
-// updates in mock_chain.go::chainHashFormula AND the Phase D wrapper).
+// updates in mock_chain.go::chainHashFormula AND the wrapper).
 func computeSelfHashHex(seq int64, evt int, payload []byte, parentHash string) string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "%d|%d|", seq, evt)
@@ -793,22 +794,22 @@ func computeSelfHashHex(seq int64, evt int, payload []byte, parentHash string) s
 }
 
 // =============================================================================
-// Cross-version query path — Plan 14 Phase E Task E-6
+// Cross-version query path — Task E-6
 // =============================================================================
 //
 // IsCrossVersionQuery (package-level helper) + Indexer.QueryCrossVersion
 // (SQL pivot over ecosystem_changes) implement the VersionRAG
-// cross-version intent path consumed by Phase D dispatcher.Query at the
+// cross-version intent path consumed by dispatcher.Query at the
 // intent-routing step (step 1). When IsCrossVersionQuery returns true,
 // the dispatcher fans out to QueryCrossVersion (instead of the normal
 // vector + BM25 retrieval) and returns the resulting []ChangeNode as
 // the answer surface.
 //
-// inv-zen-193 (Change-node graph consistency): every ecosystem_changes
+// invariant (Change-node graph consistency): every ecosystem_changes
 // row's (version_from, version_to) MUST correspond to ecosystem_versions
 // rows via FK chain. QueryCrossVersion is a READ-only operation; the
-// invariant is enforced at WRITE time (Phase B-9 + Phase C indexer
-// upsertChange) AND verified at audit time (Phase E-7 SweepChangeNodes
+// invariant is enforced at WRITE time ( + indexer
+// upsertChange) AND verified at audit time ( SweepChangeNodes
 // consistency verifier). This method makes no claim about consistency
 // — it returns whatever ecosystem_changes contains for the given pivot.
 
@@ -840,14 +841,14 @@ func IsCrossVersionQuery(query string) (matched bool, versionFrom, versionTo str
 // sorted by (change_type, symbol_path) — alphabetic on the change_type
 // enum value, then on the symbol_path string.
 //
-// SQL
+// # SQL
 //
-//	SELECT id, package_id, version_from, version_to, change_type,
-//	       COALESCE(symbol_path, ''), COALESCE(description, ''),
-//	       source_extracted
-//	FROM ecosystem_changes
-//	WHERE package_id = ? AND version_from = ? AND version_to = ?
-//	ORDER BY change_type, symbol_path
+// SELECT id, package_id, version_from, version_to, change_type,
+// COALESCE(symbol_path, ”), COALESCE(description, ”),
+// source_extracted
+// FROM ecosystem_changes
+// WHERE package_id = ? AND version_from = ? AND version_to = ?
+// ORDER BY change_type, symbol_path
 //
 // The COALESCE wrappers on symbol_path + description handle the schema's
 // nullable columns: ecosystem_changes.symbol_path TEXT (no NOT NULL) and
@@ -856,41 +857,41 @@ func IsCrossVersionQuery(query string) (matched bool, versionFrom, versionTo str
 // as "no symbol attribution" / "no human description" rather than
 // crashing on a database/sql NULL→string conversion error.
 //
-// Architecture pattern: uses idx.opts.DB (Phase C convention, mirrors
+// Architecture pattern: uses idx.opts.DB ( convention, mirrors
 // BinaryTop200 / FTS5Top200 / HydrateChunks in indexer_query.go), NOT
 // db-as-parameter from the plan-file. Aligns with master §3.13
-// IndexerQueryAdapter contract pattern. Phase D dispatcher will add a
+// IndexerQueryAdapter contract pattern. dispatcher will add a
 // QueryCrossVersion method to that adapter interface separately (it is
 // not part of the C-9 frozen surface; the cross-version path is an
 // E-phase extension consumed via a dispatcher-side cross-version
 // router).
 //
-// inv-zen-193 (Change-node graph consistency): every row's
+// invariant (Change-node graph consistency): every row's
 // (version_from, version_to) MUST correspond to ecosystem_versions rows
 // via FK chain. QueryCrossVersion is a READ-only operation; the
-// invariant is enforced at WRITE time (Phase B-9 + Phase C indexer
-// upsertChange) and verified by the Phase E-7 SweepChangeNodes
+// invariant is enforced at WRITE time ( + indexer
+// upsertChange) and verified by the SweepChangeNodes
 // consistency verifier. This method makes no consistency claim — it
 // returns whatever ecosystem_changes contains for the pivot tuple.
 //
 // Pre-conditions:
-//   - ctx not yet cancelled (early-exit returns ctx.Err with no query).
-//   - idx.opts.DB != nil. NewIndexer enforces but a future refactor
-//     might surface a nil DB; the runtime guard is defense-in-depth
-//     (mirrors BinaryTop200 / FTS5Top200 / HydrateChunks pattern).
+// - ctx not yet cancelled (early-exit returns ctx.Err with no query).
+// - idx.opts.DB != nil. NewIndexer enforces but a future refactor
+// might surface a nil DB; the runtime guard is defense-in-depth
+// (mirrors BinaryTop200 / FTS5Top200 / HydrateChunks pattern).
 //
 // Post-conditions on nil error:
-//   - Returns []ChangeNode of length 0..N (N = number of matching rows).
-//   - All ChangeNodes have PackageID == packageID, VersionFrom ==
-//     versionFrom, VersionTo == versionTo (per the WHERE clause).
-//   - Sort order: (change_type, symbol_path) ASC, ASC.
+// - Returns []ChangeNode of length 0..N (N = number of matching rows).
+// - All ChangeNodes have PackageID == packageID, VersionFrom ==
+// versionFrom, VersionTo == versionTo (per the WHERE clause).
+// - Sort order: (change_type, symbol_path) ASC, ASC.
 //
 // Failure modes (all wrapped):
-//   - ctx.Err() set on entry → returns ctx.Err() unwrapped.
-//   - idx.opts.DB == nil → returns error mentioning "no DB configured".
-//   - QueryContext error → wrapped with %w.
-//   - rows.Scan error → wrapped with %w.
-//   - rows.Err() after iteration → wrapped with %w.
+// - ctx.Err() set on entry → returns ctx.Err() unwrapped.
+// - idx.opts.DB == nil → returns error mentioning "no DB configured".
+// - QueryContext error → wrapped with %w.
+// - rows.Scan error → wrapped with %w.
+// - rows.Err() after iteration → wrapped with %w.
 //
 // IsCrossVersionQuery returns true.
 func (idx *Indexer) QueryCrossVersion(ctx context.Context, packageID int64, versionFrom, versionTo string) ([]ChangeNode, error) {

@@ -1,4 +1,4 @@
-//go:build chaos
+// go:build chaos
 
 package network
 
@@ -37,7 +37,7 @@ func TestRegistryEdgePortsUnique(t *testing.T) {
 // TestRegistryEdgeNamesCanonical guards the canonical edge name set
 // against drift. If a new daemon edge is added the registry MUST
 // be updated AND the scenario count must be re-stated in spec §6.3.
-// inv-zen-305 contract pin.
+// invariant contract pin.
 func TestRegistryEdgeNamesCanonical(t *testing.T) {
 	reg, err := LoadRegistryForTest()
 	if err != nil {

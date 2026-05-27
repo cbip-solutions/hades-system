@@ -256,7 +256,7 @@ func TestRecoveryScheduler_ProbesSuspectByName(t *testing.T) {
 	}
 }
 
-// TestRecoveryScheduler_WritesHealthSamplePerProbe pins the Plan 16 Phase B
+// TestRecoveryScheduler_WritesHealthSamplePerProbe pins the
 // Task 13 behaviour: the RecoveryScheduler MUST write one
 // tier_health_samples row per probe via the installed TierHealthSink. The
 // recorded row carries Provider=Backend.Name(), Tier=Backend.Tier().String(),

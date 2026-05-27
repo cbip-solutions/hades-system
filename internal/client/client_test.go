@@ -187,8 +187,8 @@ func TestHTTPError_ErrorMessageMatchesPreFix(t *testing.T) {
 	}
 }
 
-// TestPostJSONHSendsHeaders asserts the v0.20.0 Phase E header-aware
-// helper propagates per-call headers to the request. inv-zen-275:
+// TestPostJSONHSendsHeaders asserts the v0.20.0 header-aware
+// helper propagates per-call headers to the request. invariant:
 // every caronte CLI client method MUST be able to send
 // X-Zen-Project-ID via this seam.
 func TestPostJSONHSendsHeaders(t *testing.T) {

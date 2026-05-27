@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — apierror.go (Plan 7 Phase I Task I-1).
+// Package handlers — apierror.go.
 //
-// Canonical JSON error/response shape across every Phase I handler.
+// Canonical JSON error/response shape across every handler.
 // Wire format:
 //
-//	{"error":"<human-readable>","code":"<stable-id>","request_id":"<8-hex>"}
+// {"error":"<human-readable>","code":"<stable-id>","request_id":"<8-hex>"}
 //
-// Operator's CLI parses .code for stable error identification (e.g.,
+// Operator's CLI parses.code for stable error identification (e.g.,
 // "alias_unknown", "schedule_not_found", "bad_json", "validation_failed",
 // "unauthorized"). The X-Request-ID response header surfaces the same
 // id for log-correlation when the body is consumed by a streaming

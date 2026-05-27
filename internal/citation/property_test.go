@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// internal/citation/property_test.go — Plan 11 Phase D Task D-7.
+// internal/citation/property_test.go — Task D-7.
 //
 // Property-based 10000-trial round-trip + hash determinism + hash
 // collision-distribution tests. Custom quick.Generator covers BMP +
@@ -8,7 +8,7 @@
 // RetrievalLane combinations, RRFRank sentinel -1 + ranks [0, 1000),
 // nanosecond-precision Expiration, varied ProjectID + AuditEventID.
 //
-// inv-zen-166: load-bearing round-trip preservation anchor (10000 trials).
+// invariant: load-bearing round-trip preservation anchor (10000 trials).
 package citation_test
 
 import (

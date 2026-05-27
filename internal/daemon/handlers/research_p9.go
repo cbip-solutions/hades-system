@@ -1,35 +1,35 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — research_p9.go (Plan 9 Phase H Task H-4).
+// Package handlers — research_p9.go.
 //
-// 4 NEW operator-facing research endpoints surfacing Phase F substrate
+// 4 NEW operator-facing research endpoints surfacing substrate
 // (research findings cache per Q8 A) over /v1/research/*. The cache
-// stats + cache list paths COLLIDE with Plan 4 N's admin handlers
-// (research_cache_admin.go); Phase H replaces the mux registration
-// because the Plan 9 wire shape is a strict superset (additive fields
+// stats + cache list paths COLLIDE with N's admin handlers
+// (research_cache_admin.go); replaces the mux registration
+// because the wire shape is a strict superset (additive fields
 // only; older clients deserialise without breakage).
 //
-// inv-zen-031: handlers consume ResearchStoreP9 interface only — no direct
+// invariant: handlers consume ResearchStoreP9 interface only — no direct
 // import of internal/research/cache or internal/store.
-// inv-zen-088: no fresh LLM dispatch from these handlers; cache reads only.
-// Phase H-10 wires *daemon.Server to satisfy ResearchStoreP9 via the
+// invariant: no fresh LLM dispatch from these handlers; cache reads only.
+// wires *daemon.Server to satisfy ResearchStoreP9 via the
 // production research/cache.Store; during development the 503 makes
 // intent explicit.
 //
-//	GET  /v1/research/history          — Plan 5 eventlog research.* filter
-//	GET  /v1/research/cache/stats      — extends Plan 4 N stats (additive)
-//	POST /v1/research/cache/invalidate — force-stale by query match
-//	GET  /v1/research/cache/list       — extends Plan 4 N list (additive)
+// GET /v1/research/history — eventlog research.* filter
+// GET /v1/research/cache/stats — extends N stats (additive)
+// POST /v1/research/cache/invalidate — force-stale by query match
+// GET /v1/research/cache/list — extends N list (additive)
 //
-// Wire-compatibility: Plan 9 stats + list shapes are JSON strict supersets
-// of Plan 4 N — older clients deserialize cleanly (extra fields ignored).
-// The Plan 4 N handler functions become dead code post-H-10 wiring; left
+// Wire-compatibility: stats + list shapes are JSON strict supersets
+// of N — older clients deserialize cleanly (extra fields ignored).
+// The N handler functions become dead code post-H-10 wiring; left
 // in place for review-friendly diff (CHANGELOG v0.9.0 documents).
 //
 // Boundary invariants:
 //
-//	inv-zen-031: handler never imports internal/store directly.
-//	inv-zen-088: research dispatch goes through dispatcheradapter (Plan 3);
-//	             H-4 reads cache only, never dispatches fresh research.
+// invariant: handler never imports internal/store directly.
+// invariant: research dispatch goes through dispatcheradapter;
+// H-4 reads cache only, never dispatches fresh research.
 package handlers
 
 import (
@@ -43,6 +43,7 @@ type ResearchHistoryFilterP9 struct {
 	Filter    string `json:"filter,omitempty"`
 	Since     int64  `json:"since,omitempty"`
 	ProjectID string `json:"project_id,omitempty"`
+	Limit     int    `json:"limit,omitempty"`
 }
 
 type ResearchHistoryEntryP9 struct {
@@ -103,6 +104,12 @@ func ResearchP9History(s ResearchStoreP9) http.HandlerFunc {
 		if v := q.Get("since"); v != "" {
 			if n, err := strconv.ParseInt(v, 10, 64); err == nil && n >= 0 {
 				filter.Since = n
+			}
+		}
+		filter.Limit = 100
+		if v := q.Get("limit"); v != "" {
+			if n, err := strconv.Atoi(v); err == nil && n > 0 && n <= 500 {
+				filter.Limit = n
 			}
 		}
 		rows, err := s.History(r.Context(), filter)

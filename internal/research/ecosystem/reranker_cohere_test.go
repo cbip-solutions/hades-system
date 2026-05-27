@@ -1,33 +1,33 @@
 // Package ecosystem — reranker_cohere_test.go
 //
-// Tests for CohereRerankV4 (Plan 14 Phase D Task D-4).
+// Tests for CohereRerankV4.
 //
 // Tests use fakeCohereForwarder + fakeKeychain narrow-interface fakes so
 // we exercise every code path WITHOUT importing net/http in this package
-// (inv-zen-191 forward-compat: Plan 14 ecosystem code goes through the
+// (invariant forward-compat: ecosystem code goes through the
 // narrow Forwarder at runtime; tests substitute the narrow interface).
 //
 // Coverage target: ≥90% (security/correctness-critical — privacy gate).
 //
 // Behaviors covered:
-//   - Constructor validation (nil Forwarder / nil Keychain / EnableFallback gate)
-//   - Default knob application (endpoint/model/latency/keychain key/account)
-//   - ErrFallbackDisabled with EnableFallback=false (privacy invariant)
-//   - ErrKeychainTokenMissing surfaced when Keychain returns error
-//   - Happy path: request body marshaling, response parsing, sort + 1-based Rank
-//   - HTTP 401/403 → ErrCohereAuth via errors.Is
-//   - HTTP 429    → ErrCohereRateLimit via errors.Is
-//   - HTTP 5xx    → wrapped CohereHTTPError (errors.As)
-//   - Malformed JSON response → ErrCohereResponse
-//   - Out-of-range index in response → ErrCohereResponse
-//   - len(candidates)==0 → returns (nil, nil) (no Forwarder call)
-//   - topK ≤ 0 or > len(candidates) → coerced to len(candidates)
-//   - topK < len(out) → result truncated
-//   - Sort-stability: descending RerankerScore, ties broken by ChunkID asc
-//   - Context cancellation before lock, after lock, during Forward
-//   - Concurrency: 32 parallel Rerank calls produce 32 successful results
-//   - Close idempotent + post-close Rerank returns error
-//   - CountReranks monotonic
+// - Constructor validation (nil Forwarder / nil Keychain / EnableFallback gate)
+// - Default knob application (endpoint/model/latency/keychain key/account)
+// - ErrFallbackDisabled with EnableFallback=false (privacy invariant)
+// - ErrKeychainTokenMissing surfaced when Keychain returns error
+// - Happy path: request body marshaling, response parsing, sort + 1-based Rank
+// - HTTP 401/403 → ErrCohereAuth via errors.Is
+// - HTTP 429 → ErrCohereRateLimit via errors.Is
+// - HTTP 5xx → wrapped CohereHTTPError (errors.As)
+// - Malformed JSON response → ErrCohereResponse
+// - Out-of-range index in response → ErrCohereResponse
+// - len(candidates)==0 → returns (nil, nil) (no Forwarder call)
+// - topK ≤ 0 or > len(candidates) → coerced to len(candidates)
+// - topK < len(out) → result truncated
+// - Sort-stability: descending RerankerScore, ties broken by ChunkID asc
+// - Context cancellation before lock, after lock, during Forward
+// - Concurrency: 32 parallel Rerank calls produce 32 successful results
+// - Close idempotent + post-close Rerank returns error
+// - CountReranks monotonic
 package ecosystem
 
 import (

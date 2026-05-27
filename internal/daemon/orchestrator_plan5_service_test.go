@@ -3,6 +3,7 @@ package daemon
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -12,8 +13,10 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/client"
 	"github.com/cbip-solutions/hades-system/internal/daemon/orchestrator"
 	"github.com/cbip-solutions/hades-system/internal/daemon/orchestratoradapter"
+	"github.com/cbip-solutions/hades-system/internal/orchestrator/clock"
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/safetynet"
+	"github.com/cbip-solutions/hades-system/internal/orchestrator/worktreepool"
 )
 
 func newTestPlan5Service(t *testing.T) *Plan5OrchestratorService {
@@ -71,6 +74,237 @@ func TestPlan5Service_SessionAndPoolReturnTruthfulIdleSnapshot(t *testing.T) {
 	if pruned != 0 {
 		t.Errorf("PrunePool: got %d, want 0 (no pool to prune)", pruned)
 	}
+}
+
+func TestPlan5Service_SessionAndPoolReportDaemonWorktreePool(t *testing.T) {
+	svc := newTestPlan5Service(t)
+	p, err := worktreepool.NewPool(worktreepool.PoolConfig{
+		RepoRoot:    t.TempDir(),
+		WorktreeDir: t.TempDir(),
+		BranchBase:  "main",
+		Floor:       2,
+		ElasticMax:  5,
+		GCCadence:   time.Hour,
+		Clock:       clock.Real{},
+	}, daemonPlan5TestAppender{}, daemonPlan5TestExecutor{})
+	if err != nil {
+		t.Fatalf("NewPool: %v", err)
+	}
+	t.Cleanup(func() {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+		_ = p.Close(ctx)
+	})
+
+	svc.SetWorktreePool(p)
+
+	info, err := svc.Session()
+	if err != nil {
+		t.Fatalf("Session: %v", err)
+	}
+	if info.BackgroundGoroutines != 2 {
+		t.Fatalf("BackgroundGoroutines = %d, want 2 for worktree prewarm+gc", info.BackgroundGoroutines)
+	}
+
+	pool, err := svc.Pool()
+	if err != nil {
+		t.Fatalf("Pool: %v", err)
+	}
+	if pool.Floor != 2 || pool.Maximum != 5 {
+		t.Fatalf("pool config = floor %d max %d, want floor 2 max 5", pool.Floor, pool.Maximum)
+	}
+	if !pool.HealthOK {
+		t.Fatal("Pool.HealthOK = false, want true for live pool")
+	}
+	if pool.CurrentLeased != 0 {
+		t.Fatalf("CurrentLeased = %d, want 0 before leases", pool.CurrentLeased)
+	}
+}
+
+func TestPlan5Service_SessionReportsInjectedBackgroundSupervisor(t *testing.T) {
+	svc := newTestPlan5Service(t)
+	supervisor := NewPlan5BackgroundSupervisor()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	t.Cleanup(func() {
+		stopCtx, stopCancel := context.WithTimeout(context.Background(), time.Second)
+		defer stopCancel()
+		if err := supervisor.Stop(stopCtx); err != nil {
+			t.Fatalf("background supervisor Stop: %v", err)
+		}
+	})
+
+	if err := supervisor.Start(ctx,
+		Plan5BackgroundRunner{Name: "main-loop", Slots: 1, Run: blockUntilCancelled},
+		Plan5BackgroundRunner{Name: "subscriber-dispatcher", Slots: 1, Run: blockUntilCancelled},
+		Plan5BackgroundRunner{Name: "hra-cadence", Slots: 2, Run: blockUntilCancelled},
+	); err != nil {
+		t.Fatalf("background supervisor Start: %v", err)
+	}
+	svc.SetBackgroundSupervisor(supervisor)
+
+	info, err := svc.Session()
+	if err != nil {
+		t.Fatalf("Session: %v", err)
+	}
+	if info.BackgroundGoroutines != 4 {
+		t.Fatalf("BackgroundGoroutines = %d, want 4 from supervisor slots", info.BackgroundGoroutines)
+	}
+}
+
+func TestPlan5Service_SessionCombinesWorktreePoolAndBackgroundSupervisor(t *testing.T) {
+	svc := newTestPlan5Service(t)
+	p, err := worktreepool.NewPool(worktreepool.PoolConfig{
+		RepoRoot:    t.TempDir(),
+		WorktreeDir: t.TempDir(),
+		BranchBase:  "main",
+		Floor:       1,
+		ElasticMax:  2,
+		GCCadence:   time.Hour,
+		Clock:       clock.Real{},
+	}, daemonPlan5TestAppender{}, daemonPlan5TestExecutor{})
+	if err != nil {
+		t.Fatalf("NewPool: %v", err)
+	}
+	t.Cleanup(func() {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+		_ = p.Close(ctx)
+	})
+	svc.SetWorktreePool(p)
+
+	supervisor := NewPlan5BackgroundSupervisor()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	t.Cleanup(func() {
+		stopCtx, stopCancel := context.WithTimeout(context.Background(), time.Second)
+		defer stopCancel()
+		if err := supervisor.Stop(stopCtx); err != nil {
+			t.Fatalf("background supervisor Stop: %v", err)
+		}
+	})
+	if err := supervisor.Start(ctx,
+		Plan5BackgroundRunner{Name: "drift-watcher", Slots: 1, Run: blockUntilCancelled},
+		Plan5BackgroundRunner{Name: "confirmation-watcher", Slots: 1, Run: blockUntilCancelled},
+	); err != nil {
+		t.Fatalf("background supervisor Start: %v", err)
+	}
+	svc.SetBackgroundSupervisor(supervisor)
+
+	info, err := svc.Session()
+	if err != nil {
+		t.Fatalf("Session: %v", err)
+	}
+	if info.BackgroundGoroutines != 4 {
+		t.Fatalf("BackgroundGoroutines = %d, want 4 (2 pool + 2 supervisor)", info.BackgroundGoroutines)
+	}
+}
+
+func TestPlan5Service_StartBackgroundSupervisorCountsDriftWatcher(t *testing.T) {
+	svc := newTestPlan5Service(t)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	supervisor, err := svc.StartBackgroundSupervisor(ctx)
+	if err != nil {
+		t.Fatalf("StartBackgroundSupervisor: %v", err)
+	}
+	t.Cleanup(func() {
+		stopCtx, stopCancel := context.WithTimeout(context.Background(), time.Second)
+		defer stopCancel()
+		if err := supervisor.Stop(stopCtx); err != nil {
+			t.Fatalf("background supervisor Stop: %v", err)
+		}
+	})
+
+	info, err := svc.Session()
+	if err != nil {
+		t.Fatalf("Session: %v", err)
+	}
+	if info.BackgroundGoroutines != 1 {
+		t.Fatalf("BackgroundGoroutines = %d, want 1 drift watcher", info.BackgroundGoroutines)
+	}
+}
+
+func TestPlan5BackgroundSupervisorLifecycle(t *testing.T) {
+	supervisor := NewPlan5BackgroundSupervisor()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	if err := supervisor.Start(ctx,
+		Plan5BackgroundRunner{Name: "first", Slots: 1, Run: blockUntilCancelled},
+		Plan5BackgroundRunner{Name: "second", Slots: 2, Run: blockUntilCancelled},
+	); err != nil {
+		t.Fatalf("Start: %v", err)
+	}
+	if got := supervisor.Count(); got != 3 {
+		t.Fatalf("Count after Start = %d, want 3", got)
+	}
+	if err := supervisor.Start(ctx, Plan5BackgroundRunner{Name: "again", Slots: 1, Run: blockUntilCancelled}); !errors.Is(err, ErrPlan5BackgroundSupervisorStarted) {
+		t.Fatalf("second Start err = %v, want ErrPlan5BackgroundSupervisorStarted", err)
+	}
+
+	stopCtx, stopCancel := context.WithTimeout(context.Background(), time.Second)
+	defer stopCancel()
+	if err := supervisor.Stop(stopCtx); err != nil {
+		t.Fatalf("Stop: %v", err)
+	}
+	if got := supervisor.Count(); got != 0 {
+		t.Fatalf("Count after Stop = %d, want 0", got)
+	}
+}
+
+func TestPlan5BackgroundSupervisorRejectsInvalidConfig(t *testing.T) {
+	tests := []struct {
+		name    string
+		parent  context.Context
+		runners []Plan5BackgroundRunner
+	}{
+		{
+			name:    "nil parent",
+			parent:  nil,
+			runners: []Plan5BackgroundRunner{{Name: "runner", Slots: 1, Run: blockUntilCancelled}},
+		},
+		{
+			name:    "empty name",
+			parent:  context.Background(),
+			runners: []Plan5BackgroundRunner{{Slots: 1, Run: blockUntilCancelled}},
+		},
+		{
+			name:    "negative slots",
+			parent:  context.Background(),
+			runners: []Plan5BackgroundRunner{{Name: "runner", Slots: -1, Run: blockUntilCancelled}},
+		},
+		{
+			name:    "nil run",
+			parent:  context.Background(),
+			runners: []Plan5BackgroundRunner{{Name: "runner", Slots: 1}},
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := NewPlan5BackgroundSupervisor().Start(tc.parent, tc.runners...)
+			if !errors.Is(err, ErrPlan5BackgroundSupervisorInvalidConfig) {
+				t.Fatalf("Start err = %v, want ErrPlan5BackgroundSupervisorInvalidConfig", err)
+			}
+		})
+	}
+}
+
+func blockUntilCancelled(ctx context.Context) {
+	<-ctx.Done()
+}
+
+type daemonPlan5TestAppender struct{}
+
+func (daemonPlan5TestAppender) Append(context.Context, eventlog.Event) (int64, error) {
+	return 0, nil
+}
+
+type daemonPlan5TestExecutor struct{}
+
+func (daemonPlan5TestExecutor) Run(context.Context, string, ...string) ([]byte, error) {
+	return nil, nil
 }
 
 func TestPlan5Service_SetDepthReturnsConfiguredError(t *testing.T) {

@@ -14,9 +14,9 @@
 // so the caller (eod.go / morning.go) can fold them into the brief
 // footer or telemetry without aborting brief generation.
 //
-// Boundary discipline (inv-zen-031, Phase F slice): every dependency is
+// Boundary discipline: every dependency is
 // an interface accepted via [CollectDeps]; the package never imports
-// internal/store. Production wiring lives in Phase I daemon Start();
+// internal/store. Production wiring lives in daemon Start();
 // tests substitute fakes for each leg.
 package zenday
 

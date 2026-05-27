@@ -1,4 +1,4 @@
-//go:build chaos
+// go:build chaos
 
 package failpoints
 
@@ -51,7 +51,7 @@ func TestSitesLexicographicOrder(t *testing.T) {
 // backwards-compat with older gofail versions a contributor may have
 // installed locally.
 //
-// Sister-assertion: Plan 15 Phase F F-12 smoke surfaced that the
+// Sister-assertion: F-12 smoke surfaced that the
 // previously-shipped enabled-form marker only covered the legacy
 // `gofail.Inject` API; the v0.2.x rewriter (pinned by GOFAIL_VERSION
 // in the Makefile) emits `__fp_<Name>.Acquire`. Without this fix the

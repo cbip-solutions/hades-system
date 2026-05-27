@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package providers — shared HTTP helpers used by every HTTP-based tier
-// backend in the Plan 16 cascade (BypassBackend, AnthropicPaygoBackend,
+// backend in the cascade (BypassBackend, AnthropicPaygoBackend,
 // GeminiBackend, OpenAICompatBackend, OllamaBackend).
 //
 // These helpers were extracted from the routing-layer backend that
@@ -9,7 +9,7 @@
 // implementation glue that every HTTP backend implementation needs
 // and would otherwise duplicate.
 //
-// Invariant (inv-zen-026 §22.5): backends MUST NOT propagate caller-supplied
+// Invariant: backends MUST NOT propagate caller-supplied
 // Content-Type or Authorization headers. Each backend manages those itself
 // (Content-Type is always "application/json"; Authorization is the bearer
 // token configured at construction). The two constants below are the canonical

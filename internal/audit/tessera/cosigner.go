@@ -14,7 +14,7 @@ const pubkeyFingerprintHexLen = 16
 // signature over STH.Digest() and a short opaque correlation token
 // derived from the witness public key.
 //
-// Per inv-zen-145 every entry in the daemon-global checkpoint log
+// Per invariant every entry in the daemon-global checkpoint log
 // (A-7) MUST be a SignedSTH; there is NO unsigned variant in the
 // public type system. The only public path to construct one is via
 // CoSigner.Sign, so a caller cannot bypass the witness signing path
@@ -26,7 +26,7 @@ const pubkeyFingerprintHexLen = 16
 // PubkeyFingerprint is the leading 8 bytes of sha256(witness pubkey
 // PEM) hex-encoded (16 chars). It is opaque — it does NOT reveal the
 // pubkey itself — but it is stable across SignedSTHs produced by the
-// same witness, so Phase B's audit-chain verifier and Phase J's
+// same witness, so audit-chain verifier and
 // doctor can correlate signatures to a witness-rotation generation
 // without parsing the pubkey out of the rotation event payload.
 type SignedSTH struct {

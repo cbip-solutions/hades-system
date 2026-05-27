@@ -5,27 +5,27 @@
 // via probing, keyed by provider name. The daemon spawns it on start and
 // cancels it on shutdown.
 //
-// Design decision (Plan 3 Phase D-3, methodology §4.7.1):
+// Design decision:
 //
 // The plan reference (line 677) specifies Run(ctx context.Context) as a
 // blocking void method — caller must wrap in "go scheduler.Run(ctx)". This
 // implementation deviates by returning <-chan struct{} (like F-7's
 // StartHourlyMaintenance), spawning the goroutine internally. Rationale:
 //
-//  1. Alignment with F-7 StartHourlyMaintenance: one consistent pattern for
-//     all background goroutines in the orchestrator package eliminates an
-//     ad-hoc go call at each call site.
-//  2. Graceful shutdown: the daemon's Stop path can "done := scheduler.Run(ctx);
-//     cancel(); <-done" to confirm the scheduler exited before returning, the
-//     same idiom used for maintenance goroutines.
-//  3. D-6 wiring: "go scheduler.Run(ctx)" becomes "done := scheduler.Run(ctx)"
-//     — the fire-and-forget path still works (caller ignores the channel),
-//     and the graceful path is available without retrofitting.
+// 1. Alignment with F-7 StartHourlyMaintenance: one consistent pattern for
+// all background goroutines in the orchestrator package eliminates an
+// ad-hoc go call at each call site.
+// 2. Graceful shutdown: the daemon's Stop path can "done := scheduler.Run(ctx);
+// cancel(); <-done" to confirm the scheduler exited before returning, the
+// same idiom used for maintenance goroutines.
+// 3. D-6 wiring: "go scheduler.Run(ctx)" becomes "done := scheduler.Run(ctx)"
+// — the fire-and-forget path still works (caller ignores the channel),
+// and the graceful path is available without retrofitting.
 //
 // This deviation is pinned by TestRecoveryScheduler_GracefulShutdown and
 // documented in the commit body.
 //
-// Boundary (inv-zen-031): this file imports stdlib (context, time) and
+// Boundary: this file imports stdlib (context, time) and
 // internal/providers only. The orchestrator package MUST NOT import
 // internal/store directly; boundary crossings flow through
 // internal/daemon/dispatcheradapter.

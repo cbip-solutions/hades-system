@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package client — doctrine.go (Plan 4 Phase N Task N-7).
+// Package client — doctrine.go.
 //
-// Typed wrappers for the Plan 4 doctrine HTTP surface (Phase G handlers
+// Typed wrappers for the doctrine HTTP surface ( handlers
 // in internal/daemon/handlers/doctrine.go):
 //
-//	GET  /v1/doctrine/state    — active doctrine config snapshot
-//	POST /v1/doctrine/validate — static-check a TOML candidate
-//	POST /v1/doctrine/reload   — atomic-swap reload from files
+// GET /v1/doctrine/state — active doctrine config snapshot
+// POST /v1/doctrine/validate — static-check a TOML candidate
+// POST /v1/doctrine/reload — atomic-swap reload from files
 //
 // The CLI in internal/cli/doctrine.go layers list / which / diff / schema
 // on top using the in-process internal/doctrine package (no extra daemon

@@ -44,11 +44,11 @@ func TestInvZen119DoctrineCapaFirewall4h(t *testing.T) {
 // quota.DoctrineDefaults (which falls back to "default" on unknown) per
 // the rationale documented in internal/tmuxlife/lifecycle.go:
 //
-//   - quota's fallback is conservative because cost-side overshoot is
-//     recoverable (operator notices, refunds, adjusts threshold);
-//   - tmuxlife mismapping silently leaves stale tmux sessions running
-//     for hours past the intended TTL — an inv-zen-119 violation. The
-//     panic path keeps the bug visible.
+// - quota's fallback is conservative because cost-side overshoot is
+// recoverable (operator notices, refunds, adjusts threshold);
+// - tmuxlife mismapping silently leaves stale tmux sessions running
+// for hours past the intended TTL — an invariant violation. The
+// panic path keeps the bug visible.
 //
 // Callers consuming untrusted input MUST validate via doctrine.IsValid
 // BEFORE calling DoctrineIdleTTL.

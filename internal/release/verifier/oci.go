@@ -22,8 +22,8 @@ import (
 // a no-op (returns nil) — the cosign subprocess + Rekor network call is
 // skipped for offline-friendly invocation.
 //
-// inv-zen-303 OCI image attestation delegation (Phase D-9 owns
-// implementation; Phase E verifier consumes).
+// invariant OCI image attestation delegation ( owns
+// implementation; verifier consumes).
 func (v *Verifier) VerifyOCIImageSignature(imageRef string) error {
 	if v.Mode == ModeFast {
 		return nil

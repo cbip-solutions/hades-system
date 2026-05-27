@@ -8,7 +8,7 @@ var (
 	_ CheckpointSink = (*Checkpoint)(nil)
 )
 
-// Public methods MUST keep these signatures (Phase B/C/J writers
+// Public methods MUST keep these signatures ( writers
 // pin against them). Calling this var initializer is a side-effect-
 // free way to get the compiler to type-check every method-value
 // expression below; if any signature drifted (e.g. a return type

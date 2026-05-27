@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// internal/caronte/federation_seam.go (Plan 20 Phase I).
+// internal/caronte/federation_seam.go.
 //
-// FederationStore is the narrow seam interface the engine's Plan-20 federation
+// FederationStore is the narrow seam interface the engine's federation
 // ops consume. The concrete *federation.WorkspaceFederationDB satisfies it (via
-// the methods Phase A shipped at internal/caronte/store/federation/*.go).
+// the methods shipped at internal/caronte/store/federation/*.go).
 // Declaring the interface here (NOT importing federation directly) keeps the
 // engine package free of the federation package import (DECISION 7: seam types
 // belong to the OWNING subpackage, but the engine consumes only what it needs
-// via a narrow interface — Phase H wires the concrete *WorkspaceFederationDB
-// through Deps.FederationDB at the composition root in Phase J).
+// via a narrow interface — wires the concrete *WorkspaceFederationDB
+// through Deps.FederationDB at the composition root in ).
 //
-// inv-zen-031 / inv-zen-230 / inv-zen-271 preserved: federation is a sibling
+// invariant / invariant / invariant preserved: federation is a sibling
 // subpackage of caronte/store; the engine sees only the read methods, not the
 // constructor or the open boundary.
 package caronte

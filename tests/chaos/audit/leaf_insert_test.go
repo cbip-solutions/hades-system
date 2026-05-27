@@ -1,8 +1,8 @@
-//go:build chaos
+// go:build chaos
 
 // modes.
 //
-// "Leaf insert" in the inv-zen-054 contract aliases to the tessera
+// "Leaf insert" in the invariant contract aliases to the tessera
 // tile-log Append boundary (tesseraTileUpload at internal/audit
 // /tessera/adapter.go). At the chain-package boundary this is the
 // chain.SealAppender.AppendSeal call — failing here MUST surface a

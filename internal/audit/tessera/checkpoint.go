@@ -113,15 +113,15 @@ func (c *Checkpoint) Append(ctx context.Context, signed SignedSTH) error {
 // CanonicalBytes), then verifies the persisted signature against the
 // supplied pubkey. Returns:
 //
-//   - (true, nil) — STH was found and the signature verifies under pub.
-//   - (false, nil) — STH was found but the signature does NOT verify
-//     under pub (security-relevant: caller's pubkey is wrong, or
-//     the persisted signature was tampered with).
-//   - (false, ErrCheckpointNotFound) — no matching STH in the log
-//     (degraded-substrate signal: project STH was never co-signed).
-//   - (false, err) — any transient I/O / parse failure (propagated
-//     so the doctor can distinguish "log is unreadable" from "STH
-//     never appeared").
+// - (true, nil) — STH was found and the signature verifies under pub.
+// - (false, nil) — STH was found but the signature does NOT verify
+// under pub (security-relevant: caller's pubkey is wrong, or
+// the persisted signature was tampered with).
+// - (false, ErrCheckpointNotFound) — no matching STH in the log
+// (degraded-substrate signal: project STH was never co-signed).
+// - (false, err) — any transient I/O / parse failure (propagated
+// so the doctor can distinguish "log is unreadable" from "STH
+// never appeared").
 //
 // Mirrors verifyInclusionWithReader's bundle-walk pattern from sth.go:
 // reads ReadCheckpoint to bound the walk, then iterates entry bundles
@@ -137,7 +137,7 @@ func (c *Checkpoint) Append(ctx context.Context, signed SignedSTH) error {
 // Timestamp is wall-clock at synthesis time and is included in
 // CanonicalBytes. A daemon restart can produce a second STH with the
 // same (ProjectID, Size, RootHash) but a fresh Timestamp; both will
-// be persisted in the log and either will Verify. Phase B's audit
+// be persisted in the log and either will Verify. audit
 // chain verifier dedupes on (ProjectID, Size, RootHash) before
 // querying Verify; this method is intentionally
 // timestamp-discriminating so a callers passing a specific STH (e.g.
@@ -158,23 +158,23 @@ func (c *Checkpoint) Verify(ctx context.Context, pub *ecdsa.PublicKey, sth STH) 
 //
 // Steps
 //
-//  1. Compute the target CanonicalBytes from the supplied STH; this
-//     is the byte-for-byte key we compare against persisted leaves.
-//  2. Read the latest signed checkpoint via lr.ReadCheckpoint. A
-//     missing-file error collapses to ErrCheckpointNotFound (the
-//     log has not yet published any checkpoint, so by definition
-//     no STH is durable). Other I/O errors propagate.
-//  3. Parse the envelope; if cp.Size == 0 the log is empty —
-//     ErrCheckpointNotFound.
-//  4. Walk each EntryBundleWidth-sized bundle, decoding every leaf
-//     into a SignedSTH and comparing CanonicalBytes. Decode errors
-//     on individual leaves are skipped (forward-compat with future
-//     codec revs).
-//  5. On a CanonicalBytes match, verify the persisted signature
-//     against the supplied pubkey. Signature verification failure
-//     returns (false, nil) — distinct from not-found — because the
-//     caller has been given a security-relevant negative answer.
-//  6. Exhaust the committed tree without a hit → ErrCheckpointNotFound.
+// 1. Compute the target CanonicalBytes from the supplied STH; this
+// is the byte-for-byte key we compare against persisted leaves.
+// 2. Read the latest signed checkpoint via lr.ReadCheckpoint. A
+// missing-file error collapses to ErrCheckpointNotFound (the
+// log has not yet published any checkpoint, so by definition
+// no STH is durable). Other I/O errors propagate.
+// 3. Parse the envelope; if cp.Size == 0 the log is empty —
+// ErrCheckpointNotFound.
+// 4. Walk each EntryBundleWidth-sized bundle, decoding every leaf
+// into a SignedSTH and comparing CanonicalBytes. Decode errors
+// on individual leaves are skipped (forward-compat with future
+// codec revs).
+// 5. On a CanonicalBytes match, verify the persisted signature
+// against the supplied pubkey. Signature verification failure
+// returns (false, nil) — distinct from not-found — because the
+// caller has been given a security-relevant negative answer.
+// 6. Exhaust the committed tree without a hit → ErrCheckpointNotFound.
 func verifyCheckpointWithReader(ctx context.Context, lr tessera.LogReader, pub *ecdsa.PublicKey, sth STH) (bool, error) {
 	target := sth.CanonicalBytes()
 
@@ -231,21 +231,21 @@ func verifyCheckpointWithReader(ctx context.Context, lr tessera.LogReader, pub *
 
 // Latest returns the most-recent SignedSTH co-signed into the daemon-
 // global checkpoint log along with the current committed tree size.
-// Used by Phase J's `zen doctor audit.tessera.checkpoint` — through
+// Used by `zen doctor audit.tessera.checkpoint` — through
 // CheckpointDoctor.Check (doctor.go) — to surface freshness without
 // reaching into the unexported logReader.
 //
-// Returns
+// # Returns
 //
-//   - (signed, size, nil) — the log has at least one SignedSTH; signed
-//     is the last leaf, size is cp.Size from the latest published
-//     checkpoint envelope.
-//   - (zero, 0, ErrCheckpointNotFound) — the log is empty (no STHs
-//     co-signed yet — normal at daemon-cold-start) or the underlying
-//     posix backend has not yet written a checkpoint blob.
-//   - (zero, size, err) — any transient I/O / parse failure (e.g.
-//     corrupt envelope, malformed leaf bundle); size is best-effort
-//     populated when the envelope parsed but the leaf walk failed.
+// - (signed, size, nil) — the log has at least one SignedSTH; signed
+// is the last leaf, size is cp.Size from the latest published
+// checkpoint envelope.
+// - (zero, 0, ErrCheckpointNotFound) — the log is empty (no STHs
+// co-signed yet — normal at daemon-cold-start) or the underlying
+// posix backend has not yet written a checkpoint blob.
+// - (zero, size, err) — any transient I/O / parse failure (e.g.
+// corrupt envelope, malformed leaf bundle); size is best-effort
+// populated when the envelope parsed but the leaf walk failed.
 //
 // The signature on the returned SignedSTH is NOT verified here — Verify
 // is the security-relevant entrypoint for that. Latest is purely an

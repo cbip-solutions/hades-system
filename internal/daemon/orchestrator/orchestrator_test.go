@@ -399,7 +399,7 @@ func TestForwardPopulatesHTTPMethodAndPath(t *testing.T) {
 }
 
 // TestForwardPopulatesIdempotencyKey — Call.IdempotencyKey is propagated to
-// req.IdempotencyKey verbatim. Plan 2's dedup contract (inv-zen-058) MUST
+// req.IdempotencyKey verbatim. dedup contract MUST
 // survive the orchestrator hop end-to-end; B-8 is the wiring that proves it.
 func TestForwardPopulatesIdempotencyKey(t *testing.T) {
 	t.Parallel()
@@ -422,7 +422,7 @@ func TestForwardPopulatesIdempotencyKey(t *testing.T) {
 }
 
 // TestForwardPopulatesConversationID — Call.ConversationID groups turns in the
-// canonical store (Phase E). MUST flow through to TierRequest.ConversationID
+// canonical store. MUST flow through to TierRequest.ConversationID
 // so backends and the audit pipeline see the same correlation key.
 func TestForwardPopulatesConversationID(t *testing.T) {
 	t.Parallel()

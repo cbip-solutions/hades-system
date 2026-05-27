@@ -38,14 +38,14 @@ func (a *Accessor) SetRegistry(registry map[string]*v1.Schema) {
 //
 // Resolution chain:
 //
-//  1. userDefault (if set via SetUserDefault) → return it.
+// 1. userDefault (if set via SetUserDefault) → return it.
 //
-//  2. registry["max-scope"] hardcoded last-resort fallback → return it.
+// 2. registry["max-scope"] hardcoded last-resort fallback → return it.
 //
-//  3. If both unset → panic with init-order diagnostic. This is the
-//     inv-zen-134 init-order guard: daemon startup MUST call
-//     SetRegistry before any consumer reads. The panic surfaces a
-//     build-bug (likely circular import or missed init) immediately.
+// 3. If both unset → panic with init-order diagnostic. This is the
+// invariant init-order guard: daemon startup MUST call
+// SetRegistry before any consumer reads. The panic surfaces a
+// build-bug (likely circular import or missed init) immediately.
 //
 // Lock-free: only atomic.Pointer.Load operations on the fast path.
 func (a *Accessor) Active() *v1.Schema {
@@ -93,8 +93,8 @@ func SetUserDefault(name string) error {
 
 // SetForProject installs the per-project effective doctrine for
 // projectID. The schema MUST already be merged (baseline + override) by
-// the caller (daemon startup OR reload Phase G OR Plan 5 amendment
-// applier in Phase H); Phase E only stores + retrieves the pointer,
+// the caller (daemon startup OR reload OR amendment
+// applier in ); only stores + retrieves the pointer,
 // never performs merge.
 //
 // Atomicity the per-project map uses sync.Map. New entries are created
@@ -102,7 +102,7 @@ func SetUserDefault(name string) error {
 // entries are replaced via atomic.Pointer.Store on the wrapping
 // *atomic.Pointer (ONE indirection layer). In-flight For() callers
 // observing the prior schema continue to see their pointer's data
-// intact (Go atomic guarantee, inv-zen-092 contract).
+// intact.
 //
 // Programmer errors panic immediately (nil schema, empty projectID) so
 // bugs surface at the SetForProject call site rather than downstream
@@ -110,14 +110,14 @@ func SetUserDefault(name string) error {
 //
 // Called by:
 //
-//   - daemon startup per spec §3.1 step 4 (one call per project with a
-//     `<project>/.zen/doctrine-override.toml` file present).
+// - daemon startup per spec §3.1 step 4 (one call per project with a
+// `<project>/.zen/doctrine-override.toml` file present).
 //
-//   - reload Phase G after file-watcher detects override file change
-//     and the re-merge succeeds + ValidateTighten passes.
+// - reload after file-watcher detects override file change
+// and the re-merge succeeds + ValidateTighten passes.
 //
-//   - Plan 5 Applier (Phase H cross-branch additive) after amendment
-//     write succeeds.
+// - Applier after amendment
+// write succeeds.
 func (a *Accessor) SetForProject(projectID string, schema *v1.Schema) {
 	if schema == nil {
 		panic(fmt.Sprintf(
@@ -198,17 +198,17 @@ func ClearForProject(projectID string) {
 //
 // Semantics vs the related Accessor methods:
 //
-//   - Active() / For(projectID) — Q7 C hybrid resolution: per-project
-//     override → userDefault → registry["max-scope"] fallback. PANICS
-//     on init-order violation (inv-zen-134 guard).
+// - Active() / For(projectID) — Q7 C hybrid resolution: per-project
+// override → userDefault → registry["max-scope"] fallback. PANICS
+// on init-order violation.
 //
-//   - SetUserDefault(name) — installs a doctrine by name as the
-//     userDefault. Returns ErrDoctrineNotFound on miss.
+// - SetUserDefault(name) — installs a doctrine by name as the
+// userDefault. Returns ErrDoctrineNotFound on miss.
 //
-//   - ByName(name) — lookup-only. No userDefault mutation. Returns
-//     ErrDoctrineNotFound on miss instead of panicking. Empty name
-//     also returns ErrDoctrineNotFound: silent fallback was the
-//     Critical-3 bug.
+// - ByName(name) — lookup-only. No userDefault mutation. Returns
+// ErrDoctrineNotFound on miss instead of panicking. Empty name
+// also returns ErrDoctrineNotFound: silent fallback was the
+// Critical-3 bug.
 //
 // Lock-free: only atomic.Pointer.Load + map index on the fast path.
 func (a *Accessor) ByName(name string) (*v1.Schema, error) {

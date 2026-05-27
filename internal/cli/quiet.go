@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — quiet.go (Plan 7 Phase E Task E-13).
+// Package cli — quiet.go.
 //
 // `zen quiet` is the operator-facing entry point for inspecting the
 // quiet-hours config and managing the runtime urgent-pause window
@@ -7,22 +7,22 @@
 //
 // Three flag-driven actions, mutually exclusive:
 //
-//	zen quiet [--list]                    # default: list config
-//	zen quiet --urgent-pause <duration>   # disable urgent-bypass for N
-//	zen quiet --cancel                    # cancel active urgent-pause
+// zen quiet [--list] # default: list config
+// zen quiet --urgent-pause <duration> # disable urgent-bypass for N
+// zen quiet --cancel # cancel active urgent-pause
 //
-// Examples
+// # Examples
 //
-//	$ zen quiet --list
-//	Quiet hours (operator default):  21:00 — 09:00 (weekdays + extended weekends)
-//	Override (active): none
-//	Urgent severity bypass: enabled
+// $ zen quiet --list
+// Quiet hours (operator default): 21:00 — 09:00 (weekdays + extended weekends)
+// Override (active): none
+// Urgent severity bypass: enabled
 //
-//	$ zen quiet --urgent-pause 30m
-//	Urgent bypass paused for 30m (resumes 2026-05-01 12:30 UTC)
+// $ zen quiet --urgent-pause 30m
+// Urgent bypass paused for 30m (resumes 2026-05-01 12:30 UTC)
 //
-//	$ zen quiet --cancel
-//	Urgent pause cancelled
+// $ zen quiet --cancel
+// Urgent pause cancelled
 //
 // The CLI does NOT directly write notifications.toml — operator edits
 // that file manually (file-as-source-of-truth per spec §6.5); the CLI
@@ -31,17 +31,17 @@
 //
 // Production wires through NewQuietCmdProd which adapts *client.Client
 // → QuietClient. Tests inject a fake client via the QuietClientFactory
-// parameter to NewQuietCmd; this mirrors the Plan 7 D-13 schedule + E-12
+// parameter to NewQuietCmd; this mirrors the D-13 schedule + E-12
 // inbox dependency-injection pattern.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract from
-// Phase A):
-//   - 0 success
-//   - 1 operator-recoverable: invalid duration on --urgent-pause,
-//     conflicting flags (e.g., --list + --cancel).
-//   - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
-//     (until SetQuietStore wires; mirrors Plan 2 /v1/messages
-//     graceful-degradation pattern).
+// ):
+// - 0 success
+// - 1 operator-recoverable: invalid duration on --urgent-pause,
+// conflicting flags (e.g., --list + --cancel).
+// - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
+// (until SetQuietStore wires; mirrors /v1/messages
+// graceful-degradation pattern).
 //
 // File-as-source-of-truth: the persistent config (Default + PerProject)
 // is operator-edited TOML and only RE-LOADED via daemon SIGHUP or

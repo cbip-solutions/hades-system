@@ -4,7 +4,7 @@
 // Extracted from main.go for testability (the buildDispatcher function is
 // the testable seam; main.go retains only the os.Exit-on-error glue).
 //
-// Q5=A (generalised by inv-zen-206; Plan 19 Phase L): a nil caronte engine
+// Q5=A: a nil caronte engine
 // returns ErrCaronteBootstrapRequired → main.go aborts startup. The code-graph
 // engine is in-process (no subprocess/binary to install), so the failure is a
 // daemon-construction bug, not a missing dependency.

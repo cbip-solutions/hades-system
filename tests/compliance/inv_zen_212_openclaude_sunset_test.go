@@ -97,9 +97,9 @@ func TestInvZen212NoOpenClaudeBackendSymbols(t *testing.T) {
 }
 
 // TestInvZen212TierOpenClaudeTombstoneKept asserts the OTHER half of
-// inv-zen-212: the TierOpenClaude enum constant SURVIVES. It is the one
+// invariant: the TierOpenClaude enum constant SURVIVES. It is the one
 // permitted remnant — the string "openclaude" is persisted in
-// cost_ledger.tier for pre-Plan-16 historical rows, and provider.go states
+// cost_ledger.tier for pre- historical rows, and provider.go states
 // the Tier String() values MUST NOT change across releases. A change that
 // over-zealously deletes the enum would break decoding of historical audit
 // data; this assertion catches that.

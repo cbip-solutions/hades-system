@@ -1,30 +1,29 @@
 // SPDX-License-Identifier: MIT
 
-// Package integration_test — Plan 15 Phase D-7 nfpm package correctness.
+// Package integration_test — nfpm package correctness.
 //
 // The plan's D-7 ships two surfaces:
 //
-//  1. The `.goreleaser.yml` `nfpms:` block authoring (kept verbatim from
-//     D-1 since the schema fields were complete) — verified statically
-//     by TestNFPMConfig_DesiredFields below.
+// 1. The `.goreleaser.yml` `nfpms:` block authoring (kept verbatim from
+// D-1 since the schema fields were complete) — verified statically
+// by TestNFPMConfig_DesiredFields below.
 //
-//  2. Goreleaser-snapshot-build integration that asserts the 4 produced
-//     packages (linux-amd64.deb + linux-amd64.rpm + linux-arm64.deb +
-//     linux-arm64.rpm) carry the expected metadata. Snapshot
-//     invocation requires the `goreleaser` CLI; on hosts lacking it
-//     (e.g. CI runners that only carry the test harness) we skip the
-//     snapshot test cleanly and rely on the static config gate.
+// 2. Goreleaser-snapshot-build integration that asserts the 4 produced
+// packages (linux-amd64.deb + linux-amd64.rpm + linux-arm64.deb +
+// linux-arm64.rpm) carry the expected metadata. Snapshot
+// invocation requires the `goreleaser` CLI; on hosts lacking it
+// (e.g. CI runners that only carry the test harness) we skip the
+// snapshot test cleanly and rely on the static config gate.
 //
-// inv-zen-294 (3-platform matrix) covers nfpm package presence
+// invariant (3-platform matrix) covers nfpm package presence
 // implicitly via the `nfpms.builds` reference to both zen + zen-swarm-ctld
 // build IDs; D-7 narrows the surface to the deb + rpm metadata schema
 // itself.
 //
 // Build tag `integration` keeps the test out of `make test` baseline;
-// invoked via `go test -tags=integration ./tests/integration/`.
+// invoked via `go test -tags=integration./tests/integration/`.
 //
-//go:build integration
-
+// go:build integration
 package integration_test
 
 import (
@@ -123,7 +122,7 @@ func TestNFPMConfig_DesiredFields(t *testing.T) {
 		t.Errorf("D-7: nfpms[0].license=%q, want 'MIT' (decisión 15)", pkg.License)
 	}
 	if pkg.Vendor != "hades-system" {
-		t.Errorf("D-7: nfpms[0].vendor=%q, want 'hades-system'", pkg.Vendor)
+		t.Errorf("D-7: nfpms[0].vendor=%q, want 'cbip-solutions'", pkg.Vendor)
 	}
 	if !regexp.MustCompile(`hades-(dev|system)`).MatchString(pkg.Maintainer) {
 		t.Errorf("D-7: nfpms[0].maintainer=%q, want hades-system canonical contact", pkg.Maintainer)
@@ -149,7 +148,7 @@ func TestNFPMConfig_DesiredFields(t *testing.T) {
 			t.Errorf("D-7: nfpms[0].formats missing %q (only %v)", f, pkg.Formats)
 		}
 	}
-	// file_name_template MUST embed both .Os and .Arch so the 4
+	// file_name_template MUST embed both.Os and.Arch so the 4
 	// produced filenames are distinct.
 	if !strings.Contains(pkg.FileNameTemplate, "{{ .Os }}") || !strings.Contains(pkg.FileNameTemplate, "{{ .Arch }}") {
 		t.Errorf("D-7: nfpms[0].file_name_template=%q must reference .Os + .Arch", pkg.FileNameTemplate)
@@ -250,7 +249,7 @@ func TestNFPMSnapshotProduces4Packages(t *testing.T) {
 	if len(rpms) != 2 {
 		t.Errorf("D-7: expected 2 .rpm packages, got %d: %v", len(rpms), rpms)
 	}
-	// Each filename MUST carry its arch token (avoids both linux-amd64 .debs
+	// Each filename MUST carry its arch token (avoids both linux-amd64.debs
 	// being produced and the linux-arm64 ones silently dropped).
 	wantArch := map[string]bool{"linux-amd64": false, "linux-arm64": false}
 	for _, p := range append(debs, rpms...) {

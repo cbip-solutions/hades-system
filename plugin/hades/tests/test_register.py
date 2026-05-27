@@ -73,7 +73,7 @@ def _import_plugin_module():
     Mirrors Hermes' own directory-plugin loader at
     ``hermes_cli/plugins.py:1030-1065``: creates a parent namespace package,
     builds a spec with ``submodule_search_locations``, sets ``__package__``
-    + ``__path__`` so the plugin's relative imports (``from .hooks...``)
+    + ``__path__`` so the plugin's relative imports (``from.hooks...``)
     resolve correctly. Each test gets a fresh module via cache eviction.
     """
     import importlib

@@ -48,7 +48,8 @@ func pyIdentFromCommandName(s string) string {
 
 func renderCommandHandler(ident, sidecarBasename string) string {
 	sb := strings.Builder{}
-	sb.WriteString("# Imported by `zen migrate claude-code` (Plan 13 Phase E).\n")
+	sb.WriteString("# SPDX-License-Identifier: MIT\n")
+	sb.WriteString("# Imported by `zen migrate claude-code`.\n")
 	sb.WriteString("# Markdown body lives in `")
 	sb.WriteString(sidecarBasename)
 	sb.WriteString("` (raw, no escape).\n")

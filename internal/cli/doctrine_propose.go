@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctrine_propose.go (Plan 5 Phase N N-4).
+// Package cli — doctrine_propose.go.
 //
 // Adds the amendment-lifecycle sub-commands to the existing zen doctrine
-// namespace (Plan 4 Phase N N-7 owns show/list/validate/which/reload/
+// namespace ( N-7 owns show/list/validate/which/reload/
 // diff/schema). Per Q10 C + spec §6.1:
 //
-//	zen doctrine propose-list
-//	zen doctrine propose-show <id>
-//	zen doctrine ack <id>
-//	zen doctrine deny <id> --reason ...
+// zen doctrine propose-list
+// zen doctrine propose-show <id>
+// zen doctrine ack <id>
+// zen doctrine deny <id> --reason...
 //
 // All four route to the daemon /v1/doctrine/{propose-list,propose-show,
 // ack,deny} endpoints. Deny additionally records reason in the eventlog
-// as EvtOperatorAmendmentDeny (inv-zen-099 operator-override audit;
+// as EvtOperatorAmendmentDeny (invariant operator-override audit;
 // daemon-side enforcement).
 package cli
 

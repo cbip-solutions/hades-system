@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_238_lore_enforcement_test.go
 //
-// inv-zen-238 (Plan 19 Phase I) — Lore enforcement (doctrine-tunable).
+// invariant — Lore enforcement (doctrine-tunable).
 //
 // Doctrine: per spec §10 + §21, the loretrailer go-vet analyzer MUST, WHEN
 // ENABLED (-loretrailer.enabled=true), flag a branch-local commit that touches
@@ -10,11 +10,11 @@
 // Plan19RegisteredAnalyzers().
 //
 // Two halves:
-//  1. Behavior: drive loretrailer.RunWithGitDir over a hermetic temp repo with
-//     a high-risk commit missing a constraint — enabled→1 diag, disabled→0.
-//  2. Registration: assert cmd/zen-doctrine-lint/plan19_extension.go declares
-//     loretrailer.Analyzer in plan19Analyzers (AST scan — the binary is
-//     package main, not importable from compliance, so we scan the source).
+// 1. Behavior: drive loretrailer.RunWithGitDir over a hermetic temp repo with
+// a high-risk commit missing a constraint — enabled→1 diag, disabled→0.
+// 2. Registration: assert cmd/zen-doctrine-lint/plan19_extension.go declares
+// loretrailer.Analyzer in plan19Analyzers (AST scan — the binary is
+// package main, not importable from compliance, so we scan the source).
 //
 // Companion: spec §10 (get_why Lore source); ADR-0111 (Caronte architecture).
 package compliance

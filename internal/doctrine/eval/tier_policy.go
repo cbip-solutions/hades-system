@@ -3,7 +3,7 @@
 // by RuntimeEvaluator to resolve per-MCP risk tiers + active doctrine
 // profile + allow/deny lists.
 //
-// Production impl wraps Plan 8 doctrine.Active accessor; tests substitute
+// Production impl wraps doctrine.Active accessor; tests substitute
 // stubPolicy for deterministic state. This indirection (vs reaching
 // into internal/doctrine directly) keeps the eval package boundary
 // minimal — the caller decides how doctrine state is sourced (file,

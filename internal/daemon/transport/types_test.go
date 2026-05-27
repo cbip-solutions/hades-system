@@ -1,7 +1,7 @@
-// Tests for the package skeleton (Phase B Task B-1).
+// Tests for the package skeleton.
 //
 // These tests pin the sentinel + zero-value contracts that the rest of
-// Phase B (B-2 .. B-8) builds on. Do not delete this file; B-2 keeps it
+// (B-2.. B-8) builds on. Do not delete this file; B-2 keeps it
 // alongside zenswarm_transport_test.go (the plan's "fold into B-2" note
 // became unnecessary once the sentinel anchor remained at package surface).
 package transport_test

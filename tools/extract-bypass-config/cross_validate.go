@@ -11,10 +11,10 @@ import (
 	"strings"
 )
 
-//go:embed testdata/meridian_plugin_sample.go
+// go:embed testdata/meridian_plugin_sample.go
 var meridianFixture []byte
 
-//go:embed testdata/griffinmartin_plugin_sample.json
+// go:embed testdata/griffinmartin_plugin_sample.json
 var griffinmartinFixture []byte
 
 type PluginFields struct {

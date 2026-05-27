@@ -4,22 +4,22 @@
 //
 // Per 2026-05-11 spike artifact §4-5 (consolidating Q10=B Spike-2),
 // the empirical Hermes v0.13.0 pre_llm_call contract is:
-//   - hook callback receives {messages, model, session_id, **kwargs}
-//     (kwargs include project_id, conversation_id, doctrine, tools).
-//   - hook callback returns None OR {"context": "<text>"} per
-//     hermes_cli/plugins.py:1097-1107.
-//   - returning {"context": "<text>"} causes Hermes to prepend <text>
-//     to the next LLM call as a system-context prefix (the plugin does
-//     NOT mutate messages directly — Hermes handles assembly).
+// - hook callback receives {messages, model, session_id, **kwargs}
+// (kwargs include project_id, conversation_id, doctrine, tools).
+// - hook callback returns None OR {"context": "<text>"} per
+// hermes_cli/plugins.py:1097-1107.
+// - returning {"context": "<text>"} causes Hermes to prepend <text>
+// to the next LLM call as a system-context prefix (the plugin does
+// NOT mutate messages directly — Hermes handles assembly).
 //
 // HermesHookFake records every invocation and lets tests inject the
-// {"context": ...} payload returned to Hermes. Used by:
-//   - tests/integration/zenswarm_transport_test.go (verifies hook called
-//     with correct payload)
-//   - tests/replay/augment_capture_test.go (records hook calls for
-//     replay-determinism check)
-//   - downstream chaos / adversarial tests that need a stable Hermes
-//     pre_llm_call stand-in.
+// {"context":...} payload returned to Hermes. Used by:
+// - tests/integration/zenswarm_transport_test.go (verifies hook called
+// with correct payload)
+// - tests/replay/augment_capture_test.go (records hook calls for
+// replay-determinism check)
+// - downstream chaos / adversarial tests that need a stable Hermes
+// pre_llm_call stand-in.
 package testharness
 
 import (

@@ -1,3 +1,4 @@
+// go:build realworld
 //go:build realworld
 // +build realworld
 

@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_merge.go (Plan 6 Phase F F-3 + C-2 wiring).
+// Package cli — doctor_merge.go.
 //
 // `runMergeChecks` is the [plan-6 merge] section of `zen doctor`. It
 // produces 4 spec §6.2 checks against the daemon's /v1/merge/* surface
 // and the host git binary, returning a `[]CheckResult` slice that the
 // doctorAggregateRunE caller appends to the unified results pipeline:
 //
-//	merge.daemon_up         — daemon CacheStatus responds < 100ms
-//	merge.git_version       — git ≥2.40 (re-uses Phase A merge.VersionCheck)
-//	merge.eventlog_writable — proxied via daemon CacheStatus success
-//	                          (the daemon refuses to serve cache status
-//	                          if the merge eventlog is unwritable, so a
-//	                          successful CacheStatus is a transitive
-//	                          attestation that the eventlog is healthy)
-//	merge.cache_health      — cache size + hit rate + last rebuild
+// merge.daemon_up — daemon CacheStatus responds < 100ms
+// merge.git_version — git ≥2.40
+// merge.eventlog_writable — proxied via daemon CacheStatus success
+// (the daemon refuses to serve cache status
+// if the merge eventlog is unwritable, so a
+// successful CacheStatus is a transitive
+// attestation that the eventlog is healthy)
+// merge.cache_health — cache size + hit rate + last rebuild
 //
 // Wiring (C-2 fix, 2026-05-05): doctorAggregateRunE calls runMergeChecks
 // after the orchestrator section, sets Section="Merge" on each row,
@@ -30,9 +30,9 @@
 // (declared in merge.go via type alias of internal/client.MergeClient).
 //
 // Boundary note: this file imports internal/orchestrator/merge for
-// VersionCheck + NewRealGit. inv-zen-104 forbids merge⊥store
-// (compliance test pins ./internal/orchestrator/merge/... → no store);
-// it does NOT forbid CLI ↔ merge. Per inv-zen-104 compliance test
+// VersionCheck + NewRealGit. invariant forbids merge⊥store
+// (compliance test pins./internal/orchestrator/merge/... → no store);
+// it does NOT forbid CLI ↔ merge. Per invariant compliance test
 // (tests/compliance/inv_zen_104_merge_no_store_test.go) the boundary
 // is one-directional and unaffected by this import.
 package cli

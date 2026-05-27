@@ -1,30 +1,30 @@
 // tests/compliance/inv_zen_273_test.go
 //
-// Compliance gate for inv-zen-273 (Plan v0.20.0 Phase C):
+// Compliance gate for invariant:
 // Caronte engine.IndexProject + HTTP /v1/caronte/reindex + CLI
 // `zen caronte reindex` surface MUST exist + behave according to the
 // frozen IndexReport contract (result_types.go::IndexReport):
 //
-//	(a) SOURCE-REGEX
-//	    1. internal/caronte/engine_ops.go declares
-//	       `func (e *Engine) IndexProject(`.
-//	    2. internal/daemon/handlers/caronte.go declares `CaronteReindex(`.
-//	    3. internal/cli/caronte_reindex.go exists and declares
-//	       `func RunCaronteReindex(`.
-//	    4. internal/daemon/server.go registers
-//	       `POST /v1/caronte/reindex`.
+// (a) SOURCE-REGEX
+// 1. internal/caronte/engine_ops.go declares
+// `func (e *Engine) IndexProject(`.
+// 2. internal/daemon/handlers/caronte.go declares `CaronteReindex(`.
+// 3. internal/cli/caronte_reindex.go exists and declares
+// `func RunCaronteReindex(`.
+// 4. internal/daemon/server.go registers
+// `POST /v1/caronte/reindex`.
 //
-//	(b) BEHAVIOURAL
-//	    Seed a tempdir with one trivial .go file → call IndexProject →
-//	    verify Completed=true + NodesCreated > 0 + LanguageCounts["go"]==1
-//	    + the engine's GetHealth reports a matching NodeCount.
+// (b) BEHAVIOURAL
+// Seed a tempdir with one trivial.go file → call IndexProject →
+// verify Completed=true + NodesCreated > 0 + LanguageCounts["go"]==1
+// + the engine's GetHealth reports a matching NodeCount.
 //
-//	(c) SISTER-TEST
-//	    The behavioural test biteps the contract — reverting IndexProject
-//	    to a no-op body (`return IndexReport{ProjectID: projectID}, nil`)
-//	    makes the NodeCount assertion fail (no nodes are written). This
-//	    is the inv-zen-273 idempotency + populate-non-empty-repos
-//	    contract.
+// (c) SISTER-TEST
+// The behavioural test biteps the contract — reverting IndexProject
+// to a no-op body (`return IndexReport{ProjectID: projectID}, nil`)
+// makes the NodeCount assertion fail (no nodes are written). This
+// is the invariant idempotency + populate-non-empty-repos
+// contract.
 //
 // Sister-test pattern (feedback_sister_test_pattern.md): the behavioural
 // test below biteps a no-op regression in IndexProject. To verify the
@@ -32,7 +32,7 @@
 // empty function body and re-run; the NodeCount assertion fails (no
 // nodes written → GetHealth.NodeCount stays 0).
 //
-// inv-zen-273.
+// invariant.
 package compliance
 
 import (

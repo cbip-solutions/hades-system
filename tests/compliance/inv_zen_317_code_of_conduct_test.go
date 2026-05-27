@@ -1,18 +1,19 @@
 // SPDX-License-Identifier: MIT
 
+// go:build !race
 //go:build !race
 // +build !race
 
-// Package compliance — Plan 15 Phase H task H-4 compliance test for
-// inv-zen-317 sub-coverage (CODE_OF_CONDUCT.md component of the H-full
+// Package compliance — task H-4 compliance test for
+// invariant sub-coverage (CODE_OF_CONDUCT.md component of the H-full
 // doc maturity bundle).
 //
-// inv-zen-317 is the umbrella invariant for the H-full doc maturity
+// invariant is the umbrella invariant for the H-full doc maturity
 // bundle (LICENSE + NOTICE + README + CHANGELOG + SECURITY + CONTRIBUTING
 // + CODE_OF_CONDUCT + handoff-v1.0.md + hermes-compat.md +
-// post-v1-dev-workflow.md). Phase H tasks H-1..H-7 each ship a slice
+// post-v1-dev-workflow.md). tasks H-1..H-7 each ship a slice
 // of the bundle; H-4 ships CODE_OF_CONDUCT.md. The umbrella test file
-// `tests/compliance/inv_zen_H1_H7_test.go` (per Plan 15 Phase H §H-8)
+// `tests/compliance/inv_zen_H1_H7_test.go`
 // composes all 7 sub-tests once H-8 lands. Until then, each H-N task
 // owns a focused per-task compliance test file (e.g.
 // inv_zen_H2_changelog_structure_test.go for H-1's CHANGELOG slice;
@@ -31,10 +32,10 @@
 // verbatim from https://www.contributor-covenant.org/version/2/1/
 // code_of_conduct/code_of_conduct.md with EXACTLY ONE substitution:
 // the `[INSERT CONTACT METHOD]` placeholder replaced by
-// `hades-dev@proton.me` (per Plan 15 decisión 16 backup-contact
+// `hades-dev@proton.me` (per policy backup-contact
 // channel, same address as SECURITY.md backup contact).
 //
-// Line-count range note: the Plan 15 Phase H plan spec §H-4 step 3
+// Line-count range note: the plan spec §H-4 step 3
 // states a "canonical range 160-220 lines" — that estimate predates
 // empirical verification of the actual canonical file. The canonical
 // raw markdown at the source URL above is 85 lines (uses single-line
@@ -44,28 +45,28 @@
 // This Go test gates the empirical range [80, 220] which covers
 // (a) the raw canonical form (85 lines), (b) rendered/wrapped
 // variants (~153 lines), and (c) the spec's upper bound (220 lines).
-// Range chosen for verbatim-sourcing fidelity per Plan 15 doctrine
+// Range chosen for verbatim-sourcing fidelity doctrine
 // (do not paraphrase, rewrite, or re-wrap the canonical text).
 //
 // Why this test exists: gates four load-bearing properties of the
 // Contributor Covenant 2.1 sourcing:
 //
-//  1. File presence at repo root (canonical OSS-doc location;
-//     GitHub renders inline on the repo home + community profile).
-//  2. Contributor Covenant brand-line presence (literal
-//     "Contributor Covenant" — the canonical Covenant 2.1 file
-//     contains this string in BOTH the title (`# Contributor
-//     Covenant Code of Conduct`) AND the attribution section (`This
-//     Code of Conduct is adapted from the [Contributor Covenant]…`).
-//  3. Version 2.1 declaration (literal "version 2.1" — case-
-//     sensitive lowercase per canonical file; the canonical text
-//     uses lowercase `version 2.1` in the attribution sentence and
-//     in the URL `version/2/1`).
-//  4. Custom contact substitution (literal `hades-dev@proton.me`
-//     present + NO `[INSERT CONTACT METHOD]` placeholder remaining).
+// 1. File presence at repo root (canonical OSS-doc location;
+// GitHub renders inline on the repo home + community profile).
+// 2. Contributor Covenant brand-line presence (literal
+// "Contributor Covenant" — the canonical Covenant 2.1 file
+// contains this string in BOTH the title (`# Contributor
+// Covenant Code of Conduct`) AND the attribution section (`This
+// Code of Conduct is adapted from the [Contributor Covenant]…`).
+// 3. Version 2.1 declaration (literal "version 2.1" — case-
+// sensitive lowercase per canonical file; the canonical text
+// uses lowercase `version 2.1` in the attribution sentence and
+// in the URL `version/2/1`).
+// 4. Custom contact substitution (literal `hades-dev@proton.me`
+// present + NO `[INSERT CONTACT METHOD]` placeholder remaining).
 //
 // Composes into the verify-release-gates Makefile composite once
-// Phase H-7 ships verify_docs_maturity.sh and Phase G integrates it
+// ships verify_docs_maturity.sh and integrates it
 // into release-gates.yml.
 package compliance
 
@@ -131,7 +132,7 @@ func TestInvZen317_CodeOfConductIsCovenant21(t *testing.T) {
 // TestInvZen317_CodeOfConductContact gates sub-property 4 part 1:
 // the custom contact substitution is present.
 //
-// Per Plan 15 decisión 16, the contact method for code-of-conduct
+// policy, the contact method for code-of-conduct
 // enforcement reports is the `hades-dev@proton.me` Proton alias —
 // the same address used as the SECURITY.md backup channel. Reuses
 // one operator-paced alias for both surfaces (low-friction lifecycle).

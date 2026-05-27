@@ -1,41 +1,41 @@
 // SPDX-License-Identifier: MIT
-// Package cli — schedule.go (Plan 7 Phase D Task D-13).
+// Package cli — schedule.go.
 //
 // `zen schedule <subcommand>` is the operator-facing entry point for
 // the 3-tier scheduler (Routine / Task / Loop) per spec §1 Q8 D + §6.2.
 //
 // Cobra layout (8 leaves under 1 root):
 //
-//	zen schedule
-//	  routine
-//	    create   --project --action --trigger --cron --repo --branch
-//	             --miss-policy --miss-lookback
-//	    list     [--project|--all]
-//	    delete   <id>
-//	    run      <id>
-//	  task       --project --in <DUR> <action>
-//	  loop       --project --interval <DUR> <action>
-//	  history    --id <id> [--since <DUR>]
-//	  queue
+// zen schedule
+// routine
+// create --project --action --trigger --cron --repo --branch
+// --miss-policy --miss-lookback
+// list [--project|--all]
+// delete <id>
+// run <id>
+// task --project --in <DUR> <action>
+// loop --project --interval <DUR> <action>
+// history --id <id> [--since <DUR>]
+// queue
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
-// newClientFromCmd (mirrors the Plan 7 C-12 attach/sessions/layout
+// newClientFromCmd (mirrors the C-12 attach/sessions/layout
 // pattern). Tests inject a fake client via TestOnlyClientFactory at
 // the package level + a per-test ScheduleClient interface.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract from
-// Phase A):
-//   - 0 success
-//   - 1 operator-recoverable: validation reject (missing flag, bogus
-//     duration, --interval below 1min floor), daemon 404 (id not
-//     found / alias not in registry), daemon 422 (cron malformed,
-//     miss-policy unknown).
-//   - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
-//     (Phase I gap on /v1/schedules/{id}/run until FireDeps wires).
+// ):
+// - 0 success
+// - 1 operator-recoverable: validation reject (missing flag, bogus
+// duration, --interval below 1min floor), daemon 404 (id not
+// found / alias not in registry), daemon 422 (cron malformed,
+// miss-policy unknown).
+// - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
+// .
 //
-// Phase I gap: until the daemon mounts the Run dispatch substrate in
-// Phase I, `zen schedule routine run <id>` surfaces 503 → exit 2
-// (infra-issue, not operator-typo). Mirrors the Plan 2 /v1/messages
+// gap: until the daemon mounts the Run dispatch substrate in
+// , `zen schedule routine run <id>` surfaces 503 → exit 2
+// (infra-issue, not operator-typo). Mirrors the /v1/messages
 // graceful-degradation pattern.
 package cli
 

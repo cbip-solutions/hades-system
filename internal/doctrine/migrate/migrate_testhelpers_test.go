@@ -11,17 +11,17 @@ import "testing"
 // `Test*(t *testing.T)` with non-standard signature as malformed. The
 // helper deliberately starts with a lowercase prefix (`registerMigrator…`)
 // to avoid triggering that scan; it remains test-only via _test.go file
-// inclusion + Phase L's noStubAnalyzer allowlist.
+// inclusion + noStubAnalyzer allowlist.
 //
-// Usage
+// # Usage
 //
-//	func TestSomething(t *testing.T) {
-//	    registerMigratorForTest(t, "1.0", func(data []byte) (*v1.Schema, error) {
-//	        return &v1.Schema{SchemaVersion: "0.5"}, nil  // malicious downgrade
-//	    })
-//	    _, err := MigrateChain([]byte(...), "1.0")
-//	    // assert err is ErrSchemaVersionDowngradeRejected
-//	}
+// func TestSomething(t *testing.T) {
+// registerMigratorForTest(t, "1.0", func(data []byte) (*v1.Schema, error) {
+// return &v1.Schema{SchemaVersion: "0.5"}, nil // malicious downgrade
+// })
+// _, err := MigrateChain([]byte(...), "1.0")
+// // assert err is ErrSchemaVersionDowngradeRejected
+// }
 //
 // Cleanup semantics: t.Cleanup restores the prior chain entry (if any) or
 // deletes the injected key entirely. Order is LIFO across nested t.Cleanup

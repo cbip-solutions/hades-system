@@ -3,16 +3,16 @@
 //
 // Cross-plan coordination checks per spec §7.4 Coordination block.
 // Currently 1 active check:
-//   - plan-9-d.aggregator.db-substrate-available
+// - plan-9-d.aggregator.db-substrate-available
 //
 // The daemon's coordination probe inspects:
-//   - internal/knowledge/aggregator/aggregator.go (presence)
+// - internal/knowledge/aggregator/aggregator.go (presence)
 //
-// RETIRED (v0.20.7, inv-zen-290): plan-1-h-prime.executed (Hermes plugin
+// RETIRED: plan-1-h-prime.executed (Hermes plugin
 // format converted) was retired because the underlying landing test
 // (presence of plugin/zen-swarm/plugin.yaml + Hermes markers) is obsolete
-// per ADR-0080. Plan 1 H' was the deferred Claude-Code-plugin conversion
-// path; Plan 18b replaced that path with the Hermes plugin at
+// per ADR-0080. H' was the deferred Claude-Code-plugin conversion
+// path; replaced that path with the Hermes plugin at
 // plugin/hades/ (different canonical location + format). The probe-target
 // plugin/zen-swarm/plugin.yaml never existed at HEAD and always reported
 // "fail" — a misleading active signal in doctor output. No Claude-Code

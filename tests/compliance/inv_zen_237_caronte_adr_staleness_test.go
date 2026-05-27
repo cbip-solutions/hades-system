@@ -181,7 +181,7 @@ func TestInvZen237ADRStalenessFlipsOnCodeChange(t *testing.T) {
 		t.Fatalf("Recompute: %v", err)
 	}
 
-	// inv-zen-237: the link MUST now be stale (code committed after the ADR).
+	// invariant: the link MUST now be stale (code committed after the ADR).
 	links, err := s.ListADRLinksForNode(ctx, node.NodeID)
 	if err != nil {
 		t.Fatalf("ListADRLinksForNode: %v", err)

@@ -2,35 +2,35 @@
 // Package zenday — EOD digest idempotent composer.
 //
 // GenerateEODDigest is the user-facing entry point invoked by both the
-// cron firing (Phase D scheduler at 0 18 * * 1-5) and the operator-pull
+// cron firing and the operator-pull
 // (`bin/zen day --eod`). Per spec §1 Q15 C: the EOD digest composes
 // per-project status sections from `HandoffPosted` events read from the
 // per-project event-log + aggregator cache, with per-project opt-out
 // via `zenswarm.toml [project] zen_day_eod_summary = false` (default
 // `true`).
 //
-// Pipeline
+// # Pipeline
 //
-//  1. Compute today UTC midnight from deps.Clock.Now().
-//  2. Resolve archive path via deps.Paths.EODDigestPath.
-//  3. If !force and os.Stat(path) succeeds → return ErrAlreadyGenerated.
-//  4. Query HandoffPosted events for [today, endOfDay) via
-//     deps.Eventlog.QueryByType. HARD failure: digest cannot be
-//     authoritative without the event-log probe.
-//  5. Decode each EventRecord.PayloadJSON into HandoffPostedPayload;
-//     malformed payloads are silently skipped (doctor probe surfaces).
-//     Dedup per-project: latest Timestamp wins.
-//  6. Read AutonomySnapshot to discover projects with NO handoff today
-//     (manual-mode coverage). SOFT failure: continue with handoffs only.
-//  7. For each project alias (sorted asc), consult
-//     deps.ProjectConfig.IsEODOptedIn → skip section if opted out.
-//  8. Build ProjectStatusSection per project; HandoffPosted wins over
-//     AutonomySnapshot when both exist.
-//  9. Sum cost ledger across projects via deps.Cost.SpendByProject.
-//     SOFT failure: CostWatchUSD = 0.
-//  10. Render → MkdirAll(parent) → WriteFile(path).
-//  11. Emit EODDigestReadyEvent (best-effort: emit-failure does NOT
-//     void the digest; the file is on disk regardless).
+// 1. Compute today UTC midnight from deps.Clock.Now().
+// 2. Resolve archive path via deps.Paths.EODDigestPath.
+// 3. If !force and os.Stat(path) succeeds → return ErrAlreadyGenerated.
+// 4. Query HandoffPosted events for [today, endOfDay) via
+// deps.Eventlog.QueryByType. HARD failure: digest cannot be
+// authoritative without the event-log probe.
+// 5. Decode each EventRecord.PayloadJSON into HandoffPostedPayload;
+// malformed payloads are silently skipped (doctor probe surfaces).
+// Dedup per-project: latest Timestamp wins.
+// 6. Read AutonomySnapshot to discover projects with NO handoff today
+// (manual-mode coverage). SOFT failure: continue with handoffs only.
+// 7. For each project alias (sorted asc), consult
+// deps.ProjectConfig.IsEODOptedIn → skip section if opted out.
+// 8. Build ProjectStatusSection per project; HandoffPosted wins over
+// AutonomySnapshot when both exist.
+// 9. Sum cost ledger across projects via deps.Cost.SpendByProject.
+// SOFT failure: CostWatchUSD = 0.
+// 10. Render → MkdirAll(parent) → WriteFile(path).
+// 11. Emit EODDigestReadyEvent (best-effort: emit-failure does NOT
+// void the digest; the file is on disk regardless).
 //
 // Latest-wins semantics: if `/handoff` was invoked twice today (operator
 // clarified midstream), the second event's contents represent the
@@ -72,7 +72,7 @@ type EODDeps struct {
 
 // HandoffPostedPayload mirrors eventlog.HandoffPostedEvent's wire shape
 // locally so zenday does not import eventlog (avoids the circular-
-// import concern with Plan 5; keeps inv-zen-031 boundary discipline as
+// import concern with ; keeps invariant boundary discipline as
 // zenday → eventlog only via the EventReader interface).
 //
 // JSON tags MUST match eventlog.HandoffPostedEvent exactly so the

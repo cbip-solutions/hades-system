@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_orchestrator_checks.go (Plan 3 Phase F K-6).
+// Package cli — doctor_orchestrator_checks.go.
 //
 // 4 orchestrator-level health checks for `zen doctor`. Mirrors the
 // runBypassChecks pattern from doctor_checks.go. Probes the daemon
@@ -7,10 +7,10 @@
 // typed client surface added in K-3 and K-4.
 //
 // Checks (in display order):
-//  1. orchestrator.daemon-route-reachable — GET /v1/orchestrator/status returns 200
-//  2. orchestrator.tier-states-clean      — all tiers in StateClosed; WARN if any non-closed
-//  3. orchestrator.pin-overrides-reachable— GET /v1/orchestrator/pins returns 200
-//  4. orchestrator.budget-reachable       — GET /v1/budget returns 200
+// 1. orchestrator.daemon-route-reachable — GET /v1/orchestrator/status returns 200
+// 2. orchestrator.tier-states-clean — all tiers in StateClosed; WARN if any non-closed
+// 3. orchestrator.pin-overrides-reachable— GET /v1/orchestrator/pins returns 200
+// 4. orchestrator.budget-reachable — GET /v1/budget returns 200
 package cli
 
 import (

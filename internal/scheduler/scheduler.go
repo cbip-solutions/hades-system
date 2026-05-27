@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package scheduler implements the 3-tier (Routine/Task/Loop) scheduler
-// for zen-swarm-ctld with deterministic jitter (inv-zen-120),
+// for zen-swarm-ctld with deterministic jitter,
 // doctrine-tunable miss policy + bounded catch-up + coalescing
-// (inv-zen-121), and single-egress dispatch via Plan 3 dispatcher
-// (inv-zen-080 / inv-zen-123).
+// , and single-egress dispatch dispatcher
+// .
 //
-// Boundary (inv-zen-031): this package NEVER imports internal/store.
+// Boundary: this package NEVER imports internal/store.
 // Persistence is bridged via internal/daemon/scheduleradapter/.
 //
-// Boundary (inv-zen-080 / inv-zen-123): scheduler.Fire dispatches
+// Boundary: scheduler.Fire dispatches
 // LLM ONLY via the Dispatcher interface declared in dispatcher_iface.go;
 // it never imports internal/providers or private-tier1-module.
 //

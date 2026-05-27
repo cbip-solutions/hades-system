@@ -12,23 +12,23 @@ import (
 //
 // Algorithm (spec §1 Q9 C):
 //
-//  1. If LastRunAt.IsZero() → no prior fire; missed = 0. We do not
-//     back-fill the period preceding INSERT — that would conflate
-//     routine-creation with catch-up.
-//  2. If TriggerType == TriggerHTTP → missed = 0. HTTP triggers are
-//     push (POST /v1/schedules/{id}/fire), not pull, so by definition
-//     they cannot accumulate "missed" fires regardless of gap.
-//  3. If now <= LastRunAt → missed = 0. Defends against wall-clock
-//     skew (NTP correction, container migration) — the next valid
-//     tick is picked up on the next ComputeMissed call once the
-//     clock advances past LastRunAt.
-//  4. Clamp the gap [LastRunAt, now] to MissLookback. A zero
-//     MissLookback means "unlimited" (no clamp); adapter paths that
-//     omit the column inherit doctrine-default behaviour.
-//  5. Walk the schedule from clamped(LastRunAt) to now and count the
-//     ticks. Subtract 1 — the most recent tick equal to or before
-//     now is the *upcoming fire* (the current tick), not a missed
-//     one.
+// 1. If LastRunAt.IsZero() → no prior fire; missed = 0. We do not
+// back-fill the period preceding INSERT — that would conflate
+// routine-creation with catch-up.
+// 2. If TriggerType == TriggerHTTP → missed = 0. HTTP triggers are
+// push (POST /v1/schedules/{id}/fire), not pull, so by definition
+// they cannot accumulate "missed" fires regardless of gap.
+// 3. If now <= LastRunAt → missed = 0. Defends against wall-clock
+// skew (NTP correction, container migration) — the next valid
+// tick is picked up on the next ComputeMissed call once the
+// clock advances past LastRunAt.
+// 4. Clamp the gap [LastRunAt, now] to MissLookback. A zero
+// MissLookback means "unlimited" (no clamp); adapter paths that
+// omit the column inherit doctrine-default behaviour.
+// 5. Walk the schedule from clamped(LastRunAt) to now and count the
+// ticks. Subtract 1 — the most recent tick equal to or before
+// now is the *upcoming fire* (the current tick), not a missed
+// one.
 //
 // The function is policy-agnostic: it returns the same MissedCount
 // regardless of MissPolicy. The Skip / NotifyOnly behaviour is the
@@ -49,7 +49,7 @@ import (
 // cron that was accepted by the row's original parse (max-scope is
 // the loosest of the three doctrines for granularity).
 //
-// Boundary (inv-zen-031): stdlib + internal/doctrine only. No
+// Boundary: stdlib + internal/doctrine only. No
 // internal/store, internal/providers, or private-tier1-module.
 //
 // Inv-zen-121 contract.
@@ -120,13 +120,13 @@ func ComputeMissed(s *Schedule, now time.Time) MissedFire {
 // from the input MissedFire).
 //
 // Returns (zero BackfillWindow, false) when:
-//   - s == nil (defence-in-depth for adapter paths constructing a
-//     Schedule from a partial daemon.db row).
-//   - s.MissPolicy != MissPolicyCoalesce (Skip / CatchUpBounded /
-//     NotifyOnly all do NOT consolidate; the dispatcher handles
-//     them as N individual fires or audit-only).
-//   - missed.MissedCount == 0 (no fires to coalesce; emitting an
-//     empty window would surface as a no-op fire in the audit log).
+// - s == nil (defence-in-depth for adapter paths constructing a
+// Schedule from a partial daemon.db row).
+// - s.MissPolicy != MissPolicyCoalesce (Skip / CatchUpBounded /
+// NotifyOnly all do NOT consolidate; the dispatcher handles
+// them as N individual fires or audit-only).
+// - missed.MissedCount == 0 (no fires to coalesce; emitting an
+// empty window would surface as a no-op fire in the audit log).
 //
 // Why this is split from ComputeMissed: ComputeMissed is a pure
 // measurement function (always honest about the count, regardless
@@ -136,7 +136,7 @@ func ComputeMissed(s *Schedule, now time.Time) MissedFire {
 // whether to emit a single Fire(BackfillWindow) call or a loop of
 // Fire() calls clamped by the rate-limiter.
 //
-// Boundary (inv-zen-031): stdlib only at this site (Schedule and
+// Boundary: stdlib only at this site (Schedule and
 // MissedFire are in-package types).
 //
 // Inv-zen-121 contract.

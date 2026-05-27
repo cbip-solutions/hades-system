@@ -4,12 +4,12 @@
 // confirmation_policy.go implements Q6 D's per-doctrine threshold engine.
 // It is stateless and side-effect free: callers (confirmation_handler.go)
 // translate ConfirmationAction values into state-machine transitions and event-log
-// appends. The threshold map is loaded from doctrine TOML by Phase L.
+// appends. The threshold map is loaded from doctrine TOML by
 //
 // Invariants
-//   - inv-zen-093 (race-safety) is enforced in confirmation_handler.go;
-//     this file's purity makes that enforcement straightforward.
-//   - Unknown DecisionClass defaults to mandatory pause (defense-in-depth).
+// - invariant (race-safety) is enforced in confirmation_handler.go;
+// this file's purity makes that enforcement straightforward.
+// - Unknown DecisionClass defaults to mandatory pause (defense-in-depth).
 package orchestrator
 
 type DecisionClass string

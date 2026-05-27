@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_propose.go (Plan 9 Phase I Task I-6).
+// Package cli — adr_propose.go.
 //
 // `zen adr propose <topic>` is the interactive ADR draft workflow:
-//  1. POST /v1/adr/propose → daemon auto-assigns next ID, returns ADR stub.
-//  2. Write prefilled MADR YAML frontmatter + empty sections to temp file.
-//  3. Open editorRunner (resolveEditorName() → $VISUAL | $EDITOR | vi).
-//  4. Read back edited content; abort if body is empty.
-//  5. Print confirmation with ADR ID (accept/reject workflow is `zen adr
-//     accept <id> --reason <X>` — a separate I-7 command).
+// 1. POST /v1/adr/propose → daemon auto-assigns next ID, returns ADR stub.
+// 2. Write prefilled MADR YAML frontmatter + empty sections to temp file.
+// 3. Open editorRunner (resolveEditorName() → $VISUAL | $EDITOR | vi).
+// 4. Read back edited content; abort if body is empty.
+// 5. Print confirmation with ADR ID (accept/reject workflow is `zen adr
+// accept <id> --reason <X>` — a separate I-7 command).
 //
 // The editorRunner package-level var enables test substitution without
 // spawning a real vi process.
@@ -47,7 +47,7 @@ formally accept or 'zen adr reject <id> --reason <X>' to reject.`,
 
 			c := newClientFromCmd(cmd)
 
-			draft, err := c.ADRPropose(ctx, topic)
+			draft, err := c.ADRProposeWithPlan(ctx, topic, plan)
 			if err != nil {
 				return ierrors.Wrap(ierrors.Code("daemon.unreachable"), fmt.Errorf("propose: %w", err))
 			}

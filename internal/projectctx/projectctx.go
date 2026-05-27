@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
 // Package projectctx owns project-identity resolution for zen-swarm.
 //
-//   - ProjectID  — sha256 hex of canonical path (AIP-2510 canonical id, Q3).
-//   - Alias      — human alias from zenswarm.toml [project] id, with
-//     fallback <dirname>-<sha256[:8]>.
-//   - Project    — the activated project record returned by Activate().
-//   - PathHistoryEntry / MvDetection — mv-detection support.
-//   - ProjectStore interface — write/read contract; the daemon-side
-//     implementation lives in
-//     internal/daemon/projectctxadapter (which
-//     imports internal/store; this package never does).
+// - ProjectID — sha256 hex of canonical path (AIP-2510 canonical id, Q3).
+// - Alias — human alias from zenswarm.toml [project] id, with
+// fallback <dirname>-<sha256[:8]>.
+// - Project — the activated project record returned by Activate().
+// - PathHistoryEntry / MvDetection — mv-detection support.
+// - ProjectStore interface — write/read contract; the daemon-side
+// implementation lives in
+// internal/daemon/projectctxadapter (which
+// imports internal/store; this package never does).
 //
-// Boundary discipline (inv-zen-031 + inv-zen-122): this package imports
+// Boundary discipline: this package imports
 // only stdlib + github.com/BurntSushi/toml. NEVER imports internal/store.
 // All persistence flows through the ProjectStore interface; the adapter
 // in internal/daemon/projectctxadapter is the ONLY package that may
 // import both projectctx and store.
 //
-// Round-trip invariant (inv-zen-114): for any registered project,
+// Round-trip invariant: for any registered project,
 // alias → IDSha256 → alias must round-trip lossless. The canonical path
 // component is stable as long as the project is not moved (mv-detection
 // catches the latter).
@@ -29,7 +29,7 @@
 // TestCanonicalPathAbsErrorPath, but CI is currently macos-14-only.
 // Package coverage is 92.0% by platform, not test gap. Adding a Linux
 // CI runner would close to 100% — operator decision tracked as
-// follow-up; see HANDOFF.md / NEXT_SESSION notes for Plan 7.
+// follow-up; see HANDOFF.md / NEXT_SESSION notes.
 package projectctx
 
 import (
@@ -93,17 +93,17 @@ func CanonicalPath(path string) (string, error) {
 // projects.
 //
 // JSON tags are canonical: this struct is the wire shape consumed by
-// Phase I HTTP handlers (`internal/daemon/handlers/projects_p7.go`) and
-// Phase J client library (`internal/client/`). Phases I and J MUST NOT
+// HTTP handlers (`internal/daemon/handlers/projects_p7.go`) and
+// client library (`internal/client/`). Phases I and J MUST NOT
 // declare parallel `Project` types — instead, import this type directly
 // or declare an explicit converter function in their own package
-// (Stage 2 review CRITICAL #3 reconciliation, 2026-05-01).
+// .
 //
 // `ArchivedAt` is `*time.Time` (not `time.Time`) so JSON `omitempty` works:
 // time.Time's zero value is a non-empty struct, and `omitempty` does NOT
 // recognize it as empty — a value-typed field would always emit
 // `"archived_at":"0001-01-01T00:00:00Z"` on the wire even for active
-// projects, surprising Phase I/J consumers who rely on field-presence
+// projects, surprising consumers who rely on field-presence
 // semantics. With a pointer, nil omits the field cleanly (matches the
 // "active project" semantic). Use `IsArchived()` to test, not field
 // presence on the Go side.

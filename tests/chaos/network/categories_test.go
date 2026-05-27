@@ -1,6 +1,6 @@
-//go:build chaos
+// go:build chaos
 
-// Toxiproxy-driven chaos package (inv-zen-305).
+// Toxiproxy-driven chaos package.
 //
 // categories_test.go pins the Category taxonomy contract: every
 // canonical toxic maps to exactly one Category, the 3-category set is

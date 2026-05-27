@@ -2,16 +2,16 @@
 // Package queue provides three SQLite-backed durable queues for the
 // zen-swarm workforce layer:
 //
-//   - SharedTaskList  — Kanban board (pending/in_progress/review/done/failed);
-//     concurrent-safe; checkpoint-keyed-by-thread_id; LangGraph pattern.
-//   - CheckpointQueue — async durable channel from generation Worker to L2
-//     tactical reviewer; deadline-stamped per inv-zen-050.
-//   - FixPromptQueue  — async durable channel from L2/L3/L4 reviewer to next
-//     worker iteration.
+// - SharedTaskList — Kanban board (pending/in_progress/review/done/failed);
+// concurrent-safe; checkpoint-keyed-by-thread_id; LangGraph pattern.
+// - CheckpointQueue — async durable channel from generation Worker to L2
+// tactical reviewer; deadline-stamped per invariant.
+// - FixPromptQueue — async durable channel from L2/L3/L4 reviewer to next
+// worker iteration.
 //
-// All three queues are SQLite-backed with WAL mode + busy_timeout=5 s (inv-zen-073).
+// All three queues are SQLite-backed with WAL mode + busy_timeout=5 s.
 // This package declares ONLY interfaces and value types. Concrete SQL-backed
-// implementations live in internal/daemon/workforceadapter (inv-zen-031 boundary).
+// implementations live in internal/daemon/workforceadapter.
 //
 // # project_id isolation contract
 //
@@ -39,10 +39,10 @@
 //
 // Invariant compile-checks:
 //
-//	var _ = DurableQueueOpened() // inv-zen-073: WAL requirement documented at interface level
+// var _ = DurableQueueOpened() // invariant: WAL requirement documented at interface level
 package queue
 
-// DurableQueueOpened is a zero-cost compile-time marker for inv-zen-073.
+// DurableQueueOpened is a zero-cost compile-time marker for invariant.
 // Concrete implementations MUST configure: PRAGMA journal_mode=WAL;
 // PRAGMA synchronous=NORMAL; PRAGMA busy_timeout=5000;
 // This function is called by adapters in their constructor.

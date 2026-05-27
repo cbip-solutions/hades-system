@@ -591,8 +591,8 @@ func TestArchiveProjectAliasReArchivePreservesTimestamp(t *testing.T) {
 	}
 
 	// 3. Second archive at t2 (t2 > t1) MUST NOT overwrite — it must
-	//    return an error (not-found-or-already-archived) and leave the
-	//    original archived_at intact.
+	// return an error (not-found-or-already-archived) and leave the
+	// original archived_at intact.
 	t2 := now + 5000
 	err = ArchiveProjectAlias(s.DB(), "rearchive-test", t2)
 	if err == nil {

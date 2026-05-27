@@ -1,48 +1,48 @@
 // SPDX-License-Identifier: MIT
 // internal/providers/sidecar_backend.go
 //
-// SidecarBackend is the Plan 15 Phase B Tier 1 HTTP TierBackend that talks
+// SidecarBackend is the Tier 1 HTTP TierBackend that talks
 // to the private zen-bypass-tier1 sidecar process running on loopback.
 //
-// Substrate split (Plan 15 decisión 17): the in-process bypass.Client
+// Substrate split: the in-process bypass.Client
 // (BypassBackend, private-tier1-module) is being relocated to a
 // separate private binary (zen-bypass-tier1) speaking the HTTP contract
 // defined in cmd/zen-bypass — the public daemon (this dev repo)
 // communicates with the private sidecar over loopback so:
-//   - the Anthropic-Max-subscription OAuth bypass code never ships in the
-//     public Apache-2.0 distribution (decisión 17-a/b/h);
-//   - the dispatcher (this package's consumer) keeps a uniform
-//     name-based cascade (inv-zen-066 frozen contract C8): "bypass-sidecar"
-//     is the first entry in the operator's profiles.toml cascade, and a
-//     missing/unhealthy sidecar surfaces as ErrSidecarUnavailable →
-//     cascade proceeds to the Plan 16 direct backends (Anthropic paygo,
-//     Gemini, OpenRouter, etc. per ADR-0093 + reference_provider_roster).
+// - the Anthropic-Max-subscription OAuth bypass code never ships in the
+// public Apache-2.0 distribution;
+// - the dispatcher (this package's consumer) keeps a uniform
+// name-based cascade: "bypass-sidecar"
+// is the first entry in the operator's profiles.toml cascade, and a
+// missing/unhealthy sidecar surfaces as ErrSidecarUnavailable →
+// cascade proceeds to the direct backends (Anthropic paygo,
+// Gemini, OpenRouter, etc. per ADR-0093 + reference_provider_roster).
 //
-// HTTP contract (cmd/zen-bypass Phase B-3):
-//   - POST /v1/messages: forwards the Anthropic Messages body verbatim;
-//     returns the upstream response body verbatim. The sidecar owns
-//     auth, cert pinning, idempotency, concurrency, OAuth refresh — this
-//     backend is a thin HTTP client only.
-//   - GET /health: content-free probe (inv-zen-071); 200 == healthy.
-//   - GET /v1/sidecar/info: capability vector (versions + feature flags);
-//     not consumed by Forward — orchestrator surfaces these via `zen status`.
+// HTTP contract:
+// - POST /v1/messages: forwards the Anthropic Messages body verbatim;
+// returns the upstream response body verbatim. The sidecar owns
+// auth, cert pinning, idempotency, concurrency, OAuth refresh — this
+// backend is a thin HTTP client only.
+// - GET /health: content-free probe; 200 == healthy.
+// - GET /v1/sidecar/info: capability vector (versions + feature flags);
+// not consumed by Forward — orchestrator surfaces these via `zen status`.
 //
-// Graceful degradation (inv-zen-280):
-//   - Connection-refused / DNS-fail / timeout / ctx-cancel → ErrSidecarUnavailable.
-//   - 5xx HTTP status → ErrSidecarDegraded.
-//   - 4xx HTTP status → a real upstream contract violation; NOT a fallback
-//     sentinel (returned wrapped; dispatcher's attempt() records failure +
-//     emits CostEvent like any other error). 4xx-as-Unavailable would mask
-//     genuine request-shape bugs.
-//   - 2xx → success; usage tokens parsed from the canonical Anthropic
-//     response envelope (zero on parse-failure — same convention as
-//     BypassBackend, AnthropicPaygoBackend, et al).
+// Graceful degradation:
+// - Connection-refused / DNS-fail / timeout / ctx-cancel → ErrSidecarUnavailable.
+// - 5xx HTTP status → ErrSidecarDegraded.
+// - 4xx HTTP status → a real upstream contract violation; NOT a fallback
+// sentinel (returned wrapped; dispatcher's attempt() records failure +
+// emits CostEvent like any other error). 4xx-as-Unavailable would mask
+// genuine request-shape bugs.
+// - 2xx → success; usage tokens parsed from the canonical Anthropic
+// response envelope (zero on parse-failure — same convention as
+// BypassBackend, AnthropicPaygoBackend, et al).
 //
 // Concurrency NewSidecarBackend constructs an http.Client with a per-request
 // Timeout; the client is goroutine-safe so the SidecarBackend itself is also
 // safe for concurrent Forward / Probe invocation.
 //
-// Boundary discipline (inv-zen-031): this file lives in internal/providers/
+// Boundary discipline: this file lives in internal/providers/
 // (the canonical home for every concrete TierBackend impl); it imports only
 // stdlib. NO import of internal/store, private-tier1-module, or
 // internal/config — registration wiring (RegisterSidecars) lives in

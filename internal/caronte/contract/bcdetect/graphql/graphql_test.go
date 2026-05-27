@@ -119,11 +119,11 @@ func TestGraphQLDetectDirectiveUsageRemoved(t *testing.T) {
 	}
 }
 
-// TestGraphQLDetectSevInsufficient pins the load-bearing Stage-0 divergence
+// TestGraphQLDetectSevInsufficient pins the load-bearing divergence
 // #3 signal: when the Go SDL diff hits a rule class OUTSIDE the canonical
 // six (a custom directive's argument-list extension here), the result MUST
 // carry SevInsufficient with a Kind naming the unclassified rule. This is
-// the deterministic trigger for the Node fallback under the inv-zen-272
+// the deterministic trigger for the Node fallback under the invariant
 // opt-in gate.
 func TestGraphQLDetectSevInsufficient(t *testing.T) {
 	d := NewGraphQLDetector(br.DefaultParams())

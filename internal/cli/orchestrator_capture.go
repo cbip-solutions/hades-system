@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package cli — orchestrator_capture.go (Plan 5 Phase N N-2).
+// Package cli — orchestrator_capture.go.
 //
 // `zen orchestrator capture` writes a deterministic JSONL of one
-// session's events for offline replay (consumed by Phase O replay
+// session's events for offline replay (consumed by replay
 // tier + future debugging). Both --session-id and --output are
 // required; the daemon performs the actual streaming write.
 package cli

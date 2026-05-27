@@ -32,7 +32,7 @@ type LoreIndexResult struct {
 }
 
 // loreTrailerKeys maps the four canonical Lore-* git-trailer keys (spec §10)
-// to the locked store.TrailerKind consts (Phase A C-4). Case-sensitive on the
+// to the locked store.TrailerKind consts. Case-sensitive on the
 // canonical Title-Case-with-hyphens form: a worker MUST write the exact key
 // the doctrine specifies, so a typo'd "lore-constraint" conveys no intent and
 // is correctly ignored (no silent mis-attribution).

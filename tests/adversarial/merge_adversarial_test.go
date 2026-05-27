@@ -1,4 +1,4 @@
-//go:build adversarial
+// go:build adversarial
 
 package adversarial
 

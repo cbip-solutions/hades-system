@@ -326,7 +326,7 @@ func TestAdapterImplementsCostSink(t *testing.T) {
 	}
 }
 
-// TestAdapterInsert_CarriesProvider pins the Plan 16 Phase B C8 contract:
+// TestAdapterInsert_CarriesProvider pins the C8 contract:
 // dispatcher.CostEvent.Provider (the registry Name of the backend that
 // handled the attempt) MUST round-trip into the dispatcher-flavoured
 // CostLedgerRow.Provider so per-provider attribution survives the
@@ -442,7 +442,7 @@ func TestAdapterInsertCostLedgerRoundtrip(t *testing.T) {
 // orchestrator.ErrDuplicateIdempotency (via errors.Is). The store-level
 // sentinel store.ErrDuplicateIdempotency MUST NOT be exposed at the
 // orchestrator boundary — that would force orchestrator callers to take
-// a transitive dependency on store types, defeating inv-zen-031.
+// a transitive dependency on store types, defeating invariant.
 func TestAdapterDuplicateIdempotencyWrapsOrchestratorSentinel(t *testing.T) {
 	t.Parallel()
 	s := openIntegrationStore(t)

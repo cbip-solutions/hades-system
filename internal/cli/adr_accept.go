@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_accept.go (Plan 9 Phase I Task I-7).
+// Package cli — adr_accept.go.
 //
 // `zen adr accept <id> --reason <X>` calls POST /v1/adr/accept.
-// --reason is mandatory per inv-zen-146; cobra MarkFlagRequired enforces
+// --reason is mandatory per invariant; cobra MarkFlagRequired enforces
 // presence; RunE enforces non-empty (whitespace-only is also rejected).
 package cli
 

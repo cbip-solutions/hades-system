@@ -1,38 +1,39 @@
+// go:build property
 //go:build property
 // +build property
 
 // Three properties, each fuzzed via testing/quick:
 //
-//  1. (Hard cap never silently bypassed.) For any doctrine and any
-//     sequence of pre-flight checks that result in Allowed=true, the
-//     classification by quota.ClassifyUsage MUST match the doctrine's
-//     enforcement rule:
-//     - max-scope:     Allowed=true at hard-cap is the warn-only
-//     contract — but PreFlight ALSO sets SoftWarn=true
-//     (so the operator still sees the audit signal).
-//     No silent bypass means: at HardCap+, if Allowed
-//     then SoftWarn MUST be true.
-//     - default:       Allowed=true ⇒ used < HardCapPct (or override
-//     active). At HardCap+ without override: Allowed
-//     MUST be false.
-//     - capa-firewall: Allowed=true ⇒ used < 95% of cap (or override
-//     active). At >=95% without override: Allowed MUST
-//     be false.
+// 1. (Hard cap never silently bypassed.) For any doctrine and any
+// sequence of pre-flight checks that result in Allowed=true, the
+// classification by quota.ClassifyUsage MUST match the doctrine's
+// enforcement rule:
+// - max-scope: Allowed=true at hard-cap is the warn-only
+// contract — but PreFlight ALSO sets SoftWarn=true
+// (so the operator still sees the audit signal).
+// No silent bypass means: at HardCap+, if Allowed
+// then SoftWarn MUST be true.
+// - default: Allowed=true ⇒ used < HardCapPct (or override
+// active). At HardCap+ without override: Allowed
+// MUST be false.
+// - capa-firewall: Allowed=true ⇒ used < 95% of cap (or override
+// active). At >=95% without override: Allowed MUST
+// be false.
 //
-//  2. (Doctrine semantics — reason-string contract.) When PreFlight
-//     denies, the Reason string MUST encode the layer + doctrine +
-//     status that produced the deny, in the canonical
-//     "<layer>:<doctrine>:<status>:<detail>" form. This pins the
-//     observability contract the daemon's `/v1/inbox` and `/v1/day`
-//     handlers depend on.
+// 2. (Doctrine semantics — reason-string contract.) When PreFlight
+// denies, the Reason string MUST encode the layer + doctrine +
+// status that produced the deny, in the canonical
+// "<layer>:<doctrine>:<status>:<detail>" form. This pins the
+// observability contract the daemon's `/v1/inbox` and `/v1/day`
+// handlers depend on.
 //
-//  3. (WFQ fairness bound.) Under balanced weights, no project's
-//     dispatch share deviates >25% from its expected share over
-//     N=500..1000 ops. The drainer is in-test (TryDispatch round-robin)
-//     so the property is purely the WFQ math, not the production
-//     scheduler thread.
+// 3. (WFQ fairness bound.) Under balanced weights, no project's
+// dispatch share deviates >25% from its expected share over
+// N=500..1000 ops. The drainer is in-test (TryDispatch round-robin)
+// so the property is purely the WFQ math, not the production
+// scheduler thread.
 //
-// Extends inv-zen-115 + inv-zen-116 + inv-zen-119/121.
+// Extends invariant + invariant + invariant/121.
 //
 // # Drift notes (vs plan-template heredoc)
 //
@@ -40,20 +41,20 @@
 // live codebase: `quota.HardCap{...}`, `quota.SetCap`,
 // `quota.NewPreFlight`, `quota.PreFlightDeps{Store, Emitter, Clock}`,
 // `quota.Op{Cost}`, `quota.DecisionAllow / AllowWarn / Deny`,
-// `quota.NewWfqScheduler`, `quota.WfqDeps`, `scheduler.Drain(t, ...)`,
+// `quota.NewWfqScheduler`, `quota.WfqDeps`, `scheduler.Drain(t,...)`,
 // `quota.Doctrine` enum, `clock.NewVirtual`, and
 // `eventlog.NewRecorder`.
 //
-// Real surface (already exercised by Phase B + the inv-zen-115/116
+// Real surface (already exercised by + the invariant/116
 // compliance tests):
 //
-//   - quota.PreFlight(ctx, alias, doctrine.Name, PreFlightDeps)
-//     → PreFlightDecision{Allowed, SoftWarn, Reason, NextRetryAt}
-//   - quota.DoctrineDefaults(d) → Thresholds
-//   - quota.ClassifyUsage(used, cap, Thresholds) → CapStatus
-//   - quota.WfqQueue: NewWfqQueue(weights), Enqueue, TryDispatch,
-//     Depth, SetWeight, Weight
-//   - doctrine.NameMaxScope / NameDefault / NameCapaFirewall
+// - quota.PreFlight(ctx, alias, doctrine.Name, PreFlightDeps)
+// → PreFlightDecision{Allowed, SoftWarn, Reason, NextRetryAt}
+// - quota.DoctrineDefaults(d) → Thresholds
+// - quota.ClassifyUsage(used, cap, Thresholds) → CapStatus
+// - quota.WfqQueue: NewWfqQueue(weights), Enqueue, TryDispatch,
+// Depth, SetWeight, Weight
+// - doctrine.NameMaxScope / NameDefault / NameCapaFirewall
 //
 // Reality wins: the properties under test are preserved verbatim; only
 // the binding mechanics change.

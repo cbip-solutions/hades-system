@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — research_cache_admin.go (Plan 4 Phase N Task N-3).
+// Package handlers — research_cache_admin.go.
 //
-// Operator-facing admin endpoints layered on top of the Phase G research
+// Operator-facing admin endpoints layered on top of the research
 // cache primitives. These are NOT used by the research MCP (it uses
 // /v1/research/cache/{get,set}); they exist solely so `zen research
 // cache {list, clear, stats}` and `zen research show <hash>` can surface
 // the cache to operators.
 //
-//	GET  /v1/research/cache/list   — recent entries (limit/offset)
-//	POST /v1/research/cache/clear  — drop entries older than X seconds
-//	GET  /v1/research/cache/stats  — aggregate size + age stats
-//	GET  /v1/research/cache/show?hash=<sha>  — raw row including JSON body
+// GET /v1/research/cache/list — recent entries (limit/offset)
+// POST /v1/research/cache/clear — drop entries older than X seconds
+// GET /v1/research/cache/stats — aggregate size + age stats
+// GET /v1/research/cache/show?hash=<sha> — raw row including JSON body
 //
-// inv-zen-001: Unix socket only.
-// inv-zen-031: never imports internal/store directly; ResearchCacheAdminCtx
+// invariant: Unix socket only.
+// invariant: never imports internal/store directly; ResearchCacheAdminCtx
 // is the bridge.
 package handlers
 

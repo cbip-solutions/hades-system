@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package inbox owns the per-project notification storage substrate plus
-// the 2-stage outbox bridge to the daemon-level aggregator cache (Plan 7
-// Phase E, spec §1 Q11/Q12).
+// the 2-stage outbox bridge to the daemon-level aggregator cache (
+// , spec §1 Q11/Q12).
 //
 // Severity, dedup, batch window, cross-project collapse, and quiet-hours
 // gating all live here. The package NEVER imports internal/store
-// (inv-zen-031); the inboxadapter package in internal/daemon is the only
+// ; the inboxadapter package in internal/daemon is the only
 // crossing point between this domain layer and the SQL layer.
 package inbox
 

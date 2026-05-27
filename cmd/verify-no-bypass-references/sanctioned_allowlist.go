@@ -3,31 +3,31 @@
 // 5-surface boundary scanner.
 //
 // PUBLIC SNAPSHOT IMPACT: every entry here flags a path that the dev repo
-// LEGITIMATELY retains a "bypass" reference for. The Phase C-13 sync
+// LEGITIMATELY retains a "bypass" reference for. The sync
 // filter (scripts/build_public_snapshot.sh) consumes the same conceptual
 // boundary by EXCLUDING the unsanctioned-public paths from the snapshot
 // manifest (docs/public-manifest/allowlist.yml). Both gates enforce the
 // same property: public-snapshot has zero unsanctioned bypass mentions.
 //
-// Allowlist rationale (decisión 17-a EXTENDED):
+// Allowlist rationale:
 //
-//  1. Daemon-side HTTP client to the localhost sidecar is NOT a bypass
-//     implementation; it forwards via HTTP (decisión 17-d frozen contract).
-//  2. The full private-tier1-module/** subtree is retained in the
-//     dev repo per Stage-0 correction #4; Phase C-13 sync filter strips it
-//     from the public snapshot.
-//  3. `tests/` paths under `tests/compliance/bypass_*` or `tests/realworld/
-//     bypass_*` or `tests/chaos/bypass_*` cover bypass tier residual
-//     invariants; same Phase C-13 filtering applies for the public side.
-//  4. `docs/operations/bypass-sidecar-recipe.md` is the public-facing
-//     community recipe (decisión 17-i) documenting the HTTP API contract,
-//     NOT the bypass implementation.
-//  5. `docs/operations/bypass.md` (Plan 2 in-tree module handbook) +
-//     `docs/operations/bypass-sidecar.md` (Plan 15 sidecar operator
-//     handbook) are PRIVATE-only (Phase B-12 confirms both are excluded
-//     from the public manifest; only `bypass-sidecar-recipe.md` is public).
-//  6. ADRs 0101-0104 + 0118 are bypass-policy ADRs — private per
-//     decisión 17-b (exception list); excluded by Phase C-13 sync filter.
+// 1. Daemon-side HTTP client to the localhost sidecar is NOT a bypass
+// implementation; it forwards via HTTP.
+// 2. The full private-tier1-module/** subtree is retained in the
+// dev repo per correction #4; sync filter strips it
+// from the public snapshot.
+// 3. `tests/` paths under `tests/compliance/bypass_*` or `tests/realworld/
+// bypass_*` or `tests/chaos/bypass_*` cover bypass tier residual
+// invariants; same filtering applies for the public side.
+// 4. `docs/operations/bypass-sidecar-recipe.md` is the public-facing
+// community recipe documenting the HTTP API contract,
+// NOT the bypass implementation.
+// 5. `docs/operations/bypass.md` +
+// `docs/operations/bypass-sidecar.md` ( sidecar operator
+// handbook) are PRIVATE-only ( confirms both are excluded
+// from the public manifest; only `bypass-sidecar-recipe.md` is public).
+// 6. ADRs 0101-0104 + 0118 are bypass-policy ADRs — private per
+// policy (exception list); excluded by sync filter.
 //
 // The allowlist is CONSERVATIVE: each entry has an explicit rationale
 // string; reviewers MUST justify adding a new entry, never silently

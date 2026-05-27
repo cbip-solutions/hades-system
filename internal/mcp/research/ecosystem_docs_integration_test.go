@@ -1,50 +1,50 @@
-// ecosystem_docs_integration_test.go — inv-zen-202 compliance + Plan 4 regression gate.
+// ecosystem_docs_integration_test.go — invariant compliance + regression gate.
 //
 // This file lives in the external test package (research_test) so it exercises the
-// EcosystemDocs adapter through the SAME public surface that Plan 4 callers see
+// EcosystemDocs adapter through the SAME public surface that callers see
 // (dispatch.go fan-out aggregator + server.go tool registration). The internal
 // test file ecosystem_docs_test.go exercises the unexported ecosystemQueryer seam
 // directly; this file exercises the contract a consumer sees.
 //
-// inv-zen-202 three-place enforcement (per plan-file §3.6 "Plan 4 partial replacement
+// invariant three-place enforcement (per plan-file §3.6 " partial replacement
 // migration"):
 //
-//  1. Compile-time assertion (HERE, package-level): *research.EcosystemDocs satisfies
-//     research.EcosystemBackend post-F-2 (the interface gained the Query() method
-//     in F-2 — this gate catches breakage at build time if the production type drifts).
-//  2. Runtime integration test (HERE, TestInvZen202SearchPathPreservesSourceHitShape):
-//     Search() maps QueryResult.Chunks → []SourceHit preserving the Plan 4 SourceHit
-//     schema (Source / URL / Title / Excerpt / Score) so the fan-out aggregator in
-//     dispatch.go does not need to be touched at F-1.
-//  3. Runtime integration test (HERE, TestInvZen202QueryPathReturnsFullQueryResult):
-//     Query() delegates the full Plan 14 *QueryResult by pointer (citations,
-//     verification, abstention, provenance, audit-chain seq preserved — no lossy
-//     mapping in the adapter path).
-//  4. Runtime integration test (HERE, TestInvZen202NilDispatcherGracefulDegradation):
-//     nil Dispatcher returns zero results without panic — the contract that lets
-//     the daemon boot before Phase F dispatcher wiring is completed (Plan 4 MCP
-//     stays operational, returning empty results, not a hard error).
+// 1. Compile-time assertion (HERE, package-level): *research.EcosystemDocs satisfies
+// research.EcosystemBackend post-F-2 (the interface gained the Query() method
+// in F-2 — this gate catches breakage at build time if the production type drifts).
+// 2. Runtime integration test (HERE, TestInvZen202SearchPathPreservesSourceHitShape):
+// Search() maps QueryResult.Chunks → []SourceHit preserving the SourceHit
+// schema (Source / URL / Title / Excerpt / Score) so the fan-out aggregator in
+// dispatch.go does not need to be touched at F-1.
+// 3. Runtime integration test (HERE, TestInvZen202QueryPathReturnsFullQueryResult):
+// Query() delegates the full *QueryResult by pointer (citations,
+// verification, abstention, provenance, audit-chain seq preserved — no lossy
+// mapping in the adapter path).
+// 4. Runtime integration test (HERE, TestInvZen202NilDispatcherGracefulDegradation):
+// nil Dispatcher returns zero results without panic — the contract that lets
+// the daemon boot before dispatcher wiring is completed ( MCP
+// stays operational, returning empty results, not a hard error).
 //
-// Boundary (inv-zen-031): this test imports internal/research/ecosystem (the Plan 14
-// dispatcher canonical types) and internal/mcp/research (the Plan 4 adapter). It MUST
+// Boundary: this test imports internal/research/ecosystem (the
+// dispatcher canonical types) and internal/mcp/research. It MUST
 // NOT import internal/store, net/http, or the production Dispatcher concrete type.
 // Spec §3.5 mandates the adapter is the single integration point.
 //
-// Plan-file F-9 deviation rationale (verified at Stage 0):
+// Plan-file F-9 deviation rationale:
 //
-//	The plan-file F-9 verbatim code typed `EcosystemDocsOptions.Dispatcher` as
-//	*ecosystem.Dispatcher and assumed a Phase D test-helper `NewDispatcherForTest`
-//	would exist. Reality at Stage 0:
-//	  - F-1 typed the field as the unexported `ecosystemQueryer` narrow seam
-//	    (see ecosystem_docs.go package-doc explaining the deviation).
-//	  - Phase D ships NO `NewDispatcherForTest` helper; constructing a real
-//	    *ecosystem.Dispatcher requires Embedder + Reranker + Router + Verifier
-//	    + AbstentionPolicy + versionDetector + aggregators wired post-construction.
-//	F-9 sidesteps both problems by providing a local test stub that satisfies the
-//	narrow `Query(ctx, QueryRequest) (*QueryResult, error)` seam structurally. Go
-//	interface satisfaction is structural — the external test package can pass a
-//	value implementing the seam's method set even when the interface itself is
-//	unexported. This is the same pattern Phase D D-4 / D-7 / D-8 use.
+// The plan-file F-9 verbatim code typed `EcosystemDocsOptions.Dispatcher` as
+// *ecosystem.Dispatcher and assumed a test-helper `NewDispatcherForTest`
+// would exist. Reality at :
+// - F-1 typed the field as the unexported `ecosystemQueryer` narrow seam
+// (see ecosystem_docs.go package-doc explaining the deviation).
+// - ships NO `NewDispatcherForTest` helper; constructing a real
+// *ecosystem.Dispatcher requires Embedder + Reranker + Router + Verifier
+// + AbstentionPolicy + versionDetector + aggregators wired post-construction.
+// F-9 sidesteps both problems by providing a local test stub that satisfies the
+// narrow `Query(ctx, QueryRequest) (*QueryResult, error)` seam structurally. Go
+// interface satisfaction is structural — the external test package can pass a
+// value implementing the seam's method set even when the interface itself is
+// unexported. This is the same pattern D-4 / D-7 / D-8 use.
 package research_test
 
 import (

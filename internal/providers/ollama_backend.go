@@ -2,7 +2,7 @@
 // internal/providers/ollama_backend.go
 //
 // OllamaBackend forwards LLM requests to a local Ollama server via its
-// OpenAI-compatible /v1/chat/completions endpoint (Plan 16 Phase B; spec
+// OpenAI-compatible /v1/chat/completions endpoint ( ; spec
 // §3.6). Ollama runs on localhost with no authentication, so unlike the
 // anthropic_paygo / gemini / openai_compat backends NewOllamaBackend takes
 // no keychain.Resolver (frozen contract C5).
@@ -12,18 +12,18 @@
 // chat-completions on the way out and OpenAI -> canonical on the way back,
 // identically to openai_compat_backend.go. The two share the canonical
 // <-> OpenAI translation helpers anthropicToOpenAIRequest /
-// openAIToAnthropicResponse, shipped by Phase A in translate.go (same
+// openAIToAnthropicResponse, shipped by in translate.go (same
 // package).
 //
 // Design constraints (shared with the other HTTP-based tier backends):
-//   - net/http direct, 90s timeout (Plan 2 bypass.Client convention).
-//   - Token usage parsed from the response "usage" field; non-fatal on
-//     absence (streaming variants omit it; Phase F treats absent as zero).
-//   - Probe issues GET {endpoint}/api/tags (Ollama's model-list endpoint —
-//     content-free, inv-zen-071) to confirm the server is reachable.
+// - net/http direct, 90s timeout.
+// - Token usage parsed from the response "usage" field; non-fatal on
+// absence.
+// - Probe issues GET {endpoint}/api/tags (Ollama's model-list endpoint —
+// content-free, invariant) to confirm the server is reachable.
 //
-// inv-zen-067 compile guard sits below the struct.
-// inv-zen-031 boundary: this file MUST NOT import internal/store.
+// invariant compile guard sits below the struct.
+// invariant boundary: this file MUST NOT import internal/store.
 package providers
 
 import (

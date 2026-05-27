@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — ecosystem.go (Plan 14 Phase G fix-cycle).
+// Package handlers — ecosystem.go.
 //
-// EcosystemHandler interface + 8 HTTP handlers for the Plan 14 ecosystem
+// EcosystemHandler interface + 8 HTTP handlers for the ecosystem
 // docs operator surface. Referenced server-side by:
 //
-//	POST   /v1/ecosystem/pin                              — pin a version
-//	GET    /v1/ecosystem/prune-preview                    — preview cascade counts
-//	DELETE /v1/ecosystem/version                          — hard-remove a version
-//	POST   /v1/ecosystem/ingest-delta                     — schedule delta ingest
-//	POST   /v1/ecosystem/sweep/fingerprints               — re-verify chunk fingerprints
-//	POST   /v1/ecosystem/sweep/change-nodes               — verify Change-node graph
-//	POST   /v1/ecosystem/sweep/rebuild-symbol-index       — rebuild symbol index
-//	POST   /v1/ecosystem/sweep/cas-gc                     — CAS garbage-collect
-//	GET    /v1/ecosystem/new-versions/{eco}               — detect new upstream versions
+// POST /v1/ecosystem/pin — pin a version
+// GET /v1/ecosystem/prune-preview — preview cascade counts
+// DELETE /v1/ecosystem/version — hard-remove a version
+// POST /v1/ecosystem/ingest-delta — schedule delta ingest
+// POST /v1/ecosystem/sweep/fingerprints — re-verify chunk fingerprints
+// POST /v1/ecosystem/sweep/change-nodes — verify Change-node graph
+// POST /v1/ecosystem/sweep/rebuild-symbol-index — rebuild symbol index
+// POST /v1/ecosystem/sweep/cas-gc — CAS garbage-collect
+// GET /v1/ecosystem/new-versions/{eco} — detect new upstream versions
 //
 // Routes registered in registerRoutes() consult the EcosystemHandler()
 // accessor on *daemon.Server. When nil (production wiring deferred until a
@@ -20,22 +20,22 @@
 // verifier + symbol_index façade and calls SetEcosystemHandler), every
 // path returns 503 Service Unavailable so the operator/cron worker sees
 // "feature not configured" rather than a silent 404 from an unmounted
-// route. Mirrors the Plan 7 Phase G-11 KnowledgeIndex pattern + the
+// route. Mirrors the KnowledgeIndex pattern + the
 // HandoffEmitter / DayGenerator nil-safety contracts.
 //
 // Status-code mapping (mirrors knowledge_p7 + day_p7 patterns):
 //
-//	503  — EcosystemHandler() not yet wired (later-phase bootstrap will
-//	       register the façade at boot; tests inject fakes via
-//	       SetEcosystemHandler).
-//	400  — invalid JSON body, missing required field, malformed path param.
-//	404  — (ecosystem, version) tuple does not exist (Pin / Prune /
-//	       PrunePreview); unknown ecosystem name (NewVersions).
-//	409  — version is pinned (Prune cannot proceed); version is already
-//	       pinned (Pin is idempotent no-op; we surface 409 per the client
-//	       contract so the CLI classifyDocsError can map to recoverable).
-//	500  — opaque backend error (sql I/O, integrity sweep failure, etc).
-//	200/204 — success; bodies documented per route below.
+// 503 — EcosystemHandler() not yet wired (later-phase bootstrap will
+// register the façade at boot; tests inject fakes via
+// SetEcosystemHandler).
+// 400 — invalid JSON body, missing required field, malformed path param.
+// 404 — (ecosystem, version) tuple does not exist (Pin / Prune /
+// PrunePreview); unknown ecosystem name (NewVersions).
+// 409 — version is pinned (Prune cannot proceed); version is already
+// pinned (Pin is idempotent no-op; we surface 409 per the client
+// contract so the CLI classifyDocsError can map to recoverable).
+// 500 — opaque backend error (sql I/O, integrity sweep failure, etc).
+// 200/204 — success; bodies documented per route below.
 //
 // Wire contract: request/response shapes here are the daemon-side mirror
 // of internal/client/ecosystem_docs_ops.go. Any drift between this file
@@ -43,7 +43,7 @@
 // JSON request body into a request struct, validates, dispatches to the
 // EcosystemHandler interface, and encodes the response.
 //
-// inv-zen-031 boundary: this handler MAY import
+// invariant boundary: this handler MAY import
 // internal/research/ecosystem for the wire-side ecosystem name constants
 // (`Ecosystem`, `AllEcosystems`) — the boundary applies to
 // `internal/store`, not `internal/research`. The EcosystemHandler

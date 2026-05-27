@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package mcpgateway — contract_contract_diff.go (Plan 20 Phase I).
+// Package mcpgateway — contract_contract_diff.go.
 //
 // Handler for the `contract_diff` MCP tool. Validates required `endpoint` +
 // `since` (REQUIRED here — a diff with no anchor is meaningless; per Task

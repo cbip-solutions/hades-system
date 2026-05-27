@@ -1,33 +1,33 @@
 // SPDX-License-Identifier: MIT
-// Package cli — memory.go (Plan 14 Phase F Task F-4).
+// Package cli — memory.go.
 //
 // `zen memory` is the operator-facing entry point for cross-corpus memory
-// retrieval over the Plan 9 D aggregator (per-project + global pin index)
-// and the Plan 14 ecosystem RAG (Go/Python/TypeScript/Rust docs corpus).
+// retrieval over the D aggregator (per-project + global pin index)
+// and the ecosystem RAG (Go/Python/TypeScript/Rust docs corpus).
 //
 // Five leaves under one root:
 //
-//	zen memory query <free-text>   [--remote] [--limit N] [--format text|json]
-//	zen memory list                [--limit N] [--offset M] [--format text|json]
-//	zen memory pin <note-id>       --reason <text> [--operator <id>]
-//	zen memory unpin <note-id>     [--reason <text>] [--operator <id>]
-//	zen memory promote <note-id>   --reason <text> [--operator <id>]
+// zen memory query <free-text> [--remote] [--limit N] [--format text|json]
+// zen memory list [--limit N] [--offset M] [--format text|json]
+// zen memory pin <note-id> --reason <text> [--operator <id>]
+// zen memory unpin <note-id> [--reason <text>] [--operator <id>]
+// zen memory promote <note-id> --reason <text> [--operator <id>]
 //
 // Semantics
 //
-//   - query: cross-corpus search. With --remote, fans out to BOTH the Plan 9
-//     aggregator AND the Plan 14 ecosystem RAG dispatcher in parallel, then
-//     fuses results via RRF k=60 (Plan 14 standard fusion constant).
-//     Without --remote, queries the aggregator only. Soft-fails when ONE
-//     source errors (renders the other); hard-fails only when BOTH error.
+// - query: cross-corpus search. With --remote, fans out to BOTH the
+// aggregator AND the ecosystem RAG dispatcher in parallel, then
+// fuses results via RRF k=60.
+// Without --remote, queries the aggregator only. Soft-fails when ONE
+// source errors (renders the other); hard-fails only when BOTH error.
 //
-//   - list: enumerate pinned notes from the aggregator's global pin index.
+// - list: enumerate pinned notes from the aggregator's global pin index.
 //
-//   - pin / promote: alias pair (pin is the operator-ergonomics term, promote
-//     the Plan 9 D term). Both call MemoryPromote (POST /v1/knowledge/aggregator/promote).
-//     inv-zen-146: --reason MANDATORY (cobra MarkFlagRequired + RunE TrimSpace check).
+// - pin / promote: alias pair (pin is the operator-ergonomics term, promote
+// the D term). Both call MemoryPromote (POST /v1/knowledge/aggregator/promote).
+// invariant: --reason MANDATORY (cobra MarkFlagRequired + RunE TrimSpace check).
 //
-//   - unpin: reverse promote (POST /v1/knowledge/aggregator/unpromote).
+// - unpin: reverse promote (POST /v1/knowledge/aggregator/unpromote).
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via the
 // memoryClientFactory function variable; tests override it directly to inject
@@ -35,13 +35,13 @@
 // factory threading because memory subcommands share one production constructor).
 //
 // Boundary this file imports internal/client + cobra + stdlib only. No
-// internal/research/ecosystem import (inv-zen-031). Cross-corpus calls go
+// internal/research/ecosystem import. Cross-corpus calls go
 // through the daemon via the client; CLI never talks to dispatcher directly.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract):
-//   - 0 success
-//   - 1 operator-recoverable: empty free-text, empty --reason, daemon 422
-//   - 2 unrecoverable: transport, decode, daemon 5xx
+// - 0 success
+// - 1 operator-recoverable: empty free-text, empty --reason, daemon 422
+// - 2 unrecoverable: transport, decode, daemon 5xx
 package cli
 
 import (

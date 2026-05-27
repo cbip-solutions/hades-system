@@ -1,13 +1,13 @@
 // tests/compliance/inv_zen_291_test.go
 //
-// Compliance gate for inv-zen-291 (v0.20.7 fix #2):
+// Compliance gate for invariant (v0.20.7 fix #2):
 // internal/doctrine/reload/health.go::handleOverflow MUST signal the
 // restartNeeded channel after running force-reload-all so the Start
 // loop swaps the fsnotify watcher for a fresh one (closing the
 // recurrence vector where the saturated kernel queue would immediately
 // re-overflow on the next event burst).
 //
-// Why this gate exists: Plan 8 §4.1 F14 specified force-reload-all on
+// Why this gate exists: §4.1 F14 specified force-reload-all on
 // fsnotify queue overflow but did NOT mandate a watcher restart.
 // Without restart, the parent fsnotify watcher stays bound to the
 // saturated kernel queue (Linux inotify) / kqueue (macOS), so a
@@ -37,7 +37,7 @@
 // RestartNeededSignalForTest accessor — Anchor 2 trips AND the
 // behavioural sister-test fails to compile.
 //
-// inv-zen-291 (v0.20.7 fix #2).
+// invariant (v0.20.7 fix #2).
 package compliance
 
 import (

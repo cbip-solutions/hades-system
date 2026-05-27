@@ -51,9 +51,7 @@ def estimate_latency_ms(
     Args:
         query: The voice query text (operator's spoken intent).
         cross_project: True when the operator asked across project
-            boundaries (Phase B's ``/voice`` slash parser sets this when
-            ``--cross-project`` flag present OR query mentions multiple
-            project ids).
+            boundaries.
         project_count: Number of projects spanned (used only when
             ``cross_project`` is True; ignored otherwise). Values ≤ 1
             collapse to the cross-project baseline floor (no extra
@@ -98,7 +96,7 @@ async def dispatch_voice_query(
     Args:
         query: The voice query text.
         operator_id: Session operator id (audit + inbox attribution).
-        project_id: Active project's sha256 hex (Plan 7 inbox project_id).
+        project_id: Active project's sha256 hex.
         explicit_override: If not None, forces the dispatch mode
             regardless of estimate. Honours the operator's ``--sync`` /
             ``--async`` flag.
@@ -108,9 +106,9 @@ async def dispatch_voice_query(
         client: ``httpx.AsyncClient`` (test injects mock; production
             constructs via
             ``plugin/zen-swarm/transports/zen_swarm_transport.py``).
-        audit_emitter: Emits ``AUDIT_VOICE_QUERY_DISPATCHED`` to Plan 9
+        audit_emitter: Emits ``AUDIT_VOICE_QUERY_DISPATCHED`` to 
             chain.
-        inbox_poster: Posts to Plan 7 inbox via daemon
+        inbox_poster: Posts to  inbox via daemon
             ``/v1/notifications/inbox`` (D-6 wires the canonical impl).
 
     Returns:

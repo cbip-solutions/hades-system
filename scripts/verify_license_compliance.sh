@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT
 #      copyright per sub-decisión 15-1). Verified inline (sentinel grep).
-#   inv-zen-286   LICENSE present + MIT canonical + 'Ika el Zur' copyright
+#   invariant   LICENSE present + MIT canonical + 'Ika el Zur' copyright
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
@@ -43,7 +43,7 @@ MISSING_SPDX_SAMPLE=()
 while IFS= read -r f; do
     [ -z "$f" ] && continue
     case "$f" in
-        ./vendor/*|./.git/*|./node_modules/*|./.venv/*|./venv/*|./.tox/*|./.mypy_cache/*|./.pytest_cache/*|./__pycache__/*|./bin/*|./dist/*|./build/*|./private-tier1-module/*)
+        ./vendor/*|./.git/*|./.claire/*|./node_modules/*|./.venv/*|./venv/*|./.tox/*|./.mypy_cache/*|./.pytest_cache/*|./__pycache__/*|./bin/*|./dist/*|./build/*|./private-tier1-module/*)
             continue
             ;;
     esac
@@ -62,7 +62,7 @@ while IFS= read -r f; do
         fi
     fi
 done < <(find . \
-    \( -path "./vendor" -o -path "./.git" -o -path "./node_modules" -o -name ".venv" -o -name "venv" -o -name ".tox" -o -name ".mypy_cache" -o -name ".pytest_cache" -o -name "__pycache__" -o -path "./bin" -o -path "./dist" -o -path "./build" -o -path "./private-tier1-module" \) -prune \
+    \( -path "./vendor" -o -path "./.git" -o -path "./.claire" -o -path "./node_modules" -o -name ".venv" -o -name "venv" -o -name ".tox" -o -name ".mypy_cache" -o -name ".pytest_cache" -o -name "__pycache__" -o -path "./bin" -o -path "./dist" -o -path "./build" -o -path "./private-tier1-module" \) -prune \
     -o \( -name "*.go" -o -name "*.py" -o -name "*.sh" \) -type f -print 2>/dev/null)
 
 if [ "$MISSING_SPDX_COUNT" -gt 0 ]; then

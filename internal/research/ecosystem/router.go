@@ -11,20 +11,20 @@
 // P50 ≤350ms / P95 ≤700ms budget for the ENTIRE query path. RAGRoute
 // (EuroMLSys 2025; arXiv 2502.19280) demonstrates that local classifiers reach
 // 85-90% routing accuracy at sub-ms inference cost. We achieve this by:
-//  1. Heuristic token-presence pass (~hundreds of ns) handles the high-
-//     precision majority case (canonical ecosystem-specific tokens).
-//  2. Local logistic classifier (~1-2ms) over query embedding for ambiguous
-//     cases.
-//  3. Margin-based mode selection (single / top-2 / broadcast) provides
-//     graceful degradation: when confident, target one ecosystem; when
-//     uncertain, broadcast across all four with RRF weighted by confidence.
+// 1. Heuristic token-presence pass (~hundreds of ns) handles the high-
+// precision majority case (canonical ecosystem-specific tokens).
+// 2. Local logistic classifier (~1-2ms) over query embedding for ambiguous
+// cases.
+// 3. Margin-based mode selection (single / top-2 / broadcast) provides
+// graceful degradation: when confident, target one ecosystem; when
+// uncertain, broadcast across all four with RRF weighted by confidence.
 //
-// inv-zen-200: deterministic ordering — given identical (query, embedding,
+// invariant: deterministic ordering — given identical (query, embedding,
 // classifier checkpoint, RouterConfig), Classify returns byte-identical
 // RoutingDecision. This is load-bearing for cache hits + reproducible audit.
 // The router itself enforces ordering determinism via stable-sort +
 // alphabetical tie-break in rankSoftmax; full cross-eco fan-out determinism
-// (the merged dispatcher.go path) lands in D-9 + property-tests in Phase H.
+// (the merged dispatcher.go path) lands in D-9 + property-tests in
 package ecosystem
 
 import (
@@ -79,7 +79,7 @@ type HeuristicRule struct {
 // Test impl: fixed-score or uniform classifier injected via newTest*.
 //
 // Implementations MUST be safe for concurrent ScoreSoftmax calls (Router is
-// goroutine-safe per inv-zen-200; classifier is a hot-path member).
+// goroutine-safe per invariant; classifier is a hot-path member).
 type QueryClassifier interface {
 	// ScoreSoftmax returns a softmax distribution over the 4 ecosystems given
 	// a 1536-d FP32 query embedding (from jina-code-embeddings-1.5B per Q4=A).
@@ -322,7 +322,7 @@ func validateSoftmax(s map[Ecosystem]float64) error {
 // operators need recall over precision, the classifier handles it.
 //
 // Slice order is load-bearing: it determines `HeuristicMatched` field for
-// audit (first-match-wins) and contributes to inv-zen-200 determinism.
+// audit (first-match-wins) and contributes to invariant determinism.
 func defaultHeuristics() []HeuristicRule {
 	eco := func(s string, e Ecosystem) HeuristicRule {
 		return HeuristicRule{Substring: s, Implies: e, weight: 1.0}
@@ -377,18 +377,18 @@ func defaultHeuristics() []HeuristicRule {
 //
 // # Checkpoint format (little-endian)
 //
-//	magic    [4]byte    "ZSRC" (Zen-Swarm Router Classifier)
-//	version  uint8      1
-//	K        uint8      number of ecosystems
-//	D        uint32     embedding dimension
-//	W        [K*D]float32 row-major weights (per ecosystem then per dim)
-//	B        [K]float32 per-class bias
-//	hash     [32]byte   sha256 over (W || B) bytes
+// magic [4]byte "ZSRC" (Zen-Swarm Router Classifier)
+// version uint8 1
+// K uint8 number of ecosystems
+// D uint32 embedding dimension
+// W [K*D]float32 row-major weights (per ecosystem then per dim)
+// B [K]float32 per-class bias
+// hash [32]byte sha256 over (W || B) bytes
 //
 // The hash is included for two reasons:
-//  1. Authenticate the on-disk checkpoint against tampering / partial writes.
-//  2. Provide a stable CheckpointHash() string for inv-zen-200 audit identity
-//     (RoutingDecision determinism contract; EvtRAGQuery audit payload).
+// 1. Authenticate the on-disk checkpoint against tampering / partial writes.
+// 2. Provide a stable CheckpointHash() string for invariant audit identity
+// (RoutingDecision determinism contract; EvtRAGQuery audit payload).
 //
 // # Concurrency
 //

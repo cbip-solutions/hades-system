@@ -1,33 +1,33 @@
 // SPDX-License-Identifier: MIT
-// Package orchestrator — cost-gating engine (Plan 5 Phase G).
+// Package orchestrator — cost-gating engine.
 //
 // G-1 ships:
-//   - CostProfile value type + 3 canonical built-in fixtures (max-scope,
-//     default, capa-firewall) per spec §1 Q9 D
-//   - LoadThresholdTable(profile, override?) — closed-vocab validation,
-//     per-project tighten-only override, sort by Pct ascending with
-//     PctPAYG last
-//   - CostGatingEngine struct + NewCostGatingEngine constructor with
-//     dep-validation + defaults (pollEvery=500ms; atomTimeout=30s)
-//   - Forward-declared interfaces consumed by G-2/G-3/G-4:
-//     BudgetSnapshotReader, WorkerSet, OrchestratorActuator
-//   - inv-zen-092 compile anchor (atomicityGuardEnforced); runtime
-//     enforcement lands in G-4
+// - CostProfile value type + 3 canonical built-in fixtures (max-scope,
+// default, capa-firewall) per spec §1 Q9 D
+// - LoadThresholdTable(profile, override?) — closed-vocab validation,
+// per-project tighten-only override, sort by Pct ascending with
+// PctPAYG last
+// - CostGatingEngine struct + NewCostGatingEngine constructor with
+// dep-validation + defaults (pollEvery=500ms; atomTimeout=30s)
+// - Forward-declared interfaces consumed by G-2/G-3/G-4:
+// BudgetSnapshotReader, WorkerSet, OrchestratorActuator
+// - invariant compile anchor (atomicityGuardEnforced); runtime
+// enforcement lands in G-4
 //
 // Adaptation notes vs plan code:
-//   - Plan 4 doctrine package is interface-based (Doctrine interface),
-//     not value-typed (Profile struct). Phase L (TOML loader for the
-//     cost_degradation stanza) hasn't shipped. Phase G owns its own
-//     CostProfile + BuiltinCostProfile fixtures matching spec §1 Q9 D
-//     verbatim. When Phase L ships, BuiltinCostProfile is replaced by
-//     a TOML loader returning the same shape; engine code stays put.
-//   - Type renamed from "Action" to "CostAction" for prefix consistency
-//     with the CostAction* constants.
-//   - ThresholdRow.Action field name aligned to test assertion shape
-//     (`{Pct, Action}`).
-//   - Constructor takes a *Config struct (recovery / heartbeat / etc.
-//     pattern) and validates non-nil deps + non-empty session/project
-//     IDs, returning wrapped ErrInvalidConfig per package convention.
+// - doctrine package is interface-based (Doctrine interface),
+// not value-typed (Profile struct). (TOML loader for the
+// cost_degradation stanza) hasn't shipped. owns its own
+// CostProfile + BuiltinCostProfile fixtures matching spec §1 Q9 D
+// verbatim. When ships, BuiltinCostProfile is replaced by
+// a TOML loader returning the same shape; engine code stays put.
+// - Type renamed from "Action" to "CostAction" for prefix consistency
+// with the CostAction* constants.
+// - ThresholdRow.Action field name aligned to test assertion shape
+// (`{Pct, Action}`).
+// - Constructor takes a *Config struct (recovery / heartbeat / etc.
+// pattern) and validates non-nil deps + non-empty session/project
+// IDs, returning wrapped ErrInvalidConfig per package convention.
 package orchestrator
 
 import (
@@ -116,20 +116,20 @@ type ProjectOverride struct {
 }
 
 // CostProfile is the per-doctrine cost-degradation table consumed by
-// Phase G. Three canonical built-ins (BuiltinCostProfile) match spec
-// §1 Q9 D verbatim. Phase L (when shipped) replaces BuiltinCostProfile
+// Three canonical built-ins (BuiltinCostProfile) match spec
+// §1 Q9 D verbatim. (when shipped) replaces BuiltinCostProfile
 // with a TOML loader returning the same shape — engine code untouched.
 //
 // Fields
-//   - DoctrineName: "max-scope" | "default" | "capa-firewall"
-//   - Actions: threshold-key → CostAction string. Keys MUST be exactly
-//     {"60","80","90","100","payg"}; missing keys yield ErrMissingCostActionRow.
-//     Unknown action strings yield ErrUnknownCostAction.
-//   - AtomicityTimeout: per-doctrine cap on the atomic-boundary wait
-//     before warn-and-proceed (G-4). Zero falls back to 30s in
-//     NewCostGatingEngine.
-//   - RecoveryStepInterval: per-doctrine cadence for gradual restoration
-//     (G-6). Set to spec-default 60s for all three built-ins.
+// - DoctrineName: "max-scope" | "default" | "capa-firewall"
+// - Actions: threshold-key → CostAction string. Keys MUST be exactly
+// {"60","80","90","100","payg"}; missing keys yield ErrMissingCostActionRow.
+// Unknown action strings yield ErrUnknownCostAction.
+// - AtomicityTimeout: per-doctrine cap on the atomic-boundary wait
+// before warn-and-proceed (G-4). Zero falls back to 30s in
+// NewCostGatingEngine.
+// - RecoveryStepInterval: per-doctrine cadence for gradual restoration
+// (G-6). Set to spec-default 60s for all three built-ins.
 type CostProfile struct {
 	DoctrineName         string
 	Actions              map[string]string
@@ -246,14 +246,14 @@ func pctFromKey(k string) Pct {
 // Pct ascending with PctPAYG last.
 //
 // Validation order (fail-fast):
-//  1. Each canonical key in thresholdKeyOrder MUST be present in
-//     p.Actions; missing → wrapped ErrMissingCostActionRow.
-//  2. If override has an entry for the key, the override value MUST
-//     parse to a known CostAction; unknown → wrapped ErrUnknownCostAction.
-//  3. The override's severityRank MUST be ≥ the doctrine's
-//     severityRank; lower → wrapped ErrTightenOnlyViolation.
-//  4. The final action (after override resolution) MUST be a member of
-//     knownActions; unknown → wrapped ErrUnknownCostAction.
+// 1. Each canonical key in thresholdKeyOrder MUST be present in
+// p.Actions; missing → wrapped ErrMissingCostActionRow.
+// 2. If override has an entry for the key, the override value MUST
+// parse to a known CostAction; unknown → wrapped ErrUnknownCostAction.
+// 3. The override's severityRank MUST be ≥ the doctrine's
+// severityRank; lower → wrapped ErrTightenOnlyViolation.
+// 4. The final action (after override resolution) MUST be a member of
+// knownActions; unknown → wrapped ErrUnknownCostAction.
 //
 // Sort ascending by Pct numeric value; PctPAYG last (sentinel branch).
 func LoadThresholdTable(p CostProfile, ov *ProjectOverride) ([]ThresholdRow, error) {
@@ -441,13 +441,13 @@ func (e *CostGatingEngine) Evaluate(s BudgetSnapshot) ThresholdRow {
 // same engine. The stoppedCh is single-use; a second Run would
 // double-close. The orchestrator boot path calls Run exactly once.
 //
-// Failure handling (Plan 5 D-2/D-3/E-2/F-2/F-3 audit-trail discipline):
-//   - Snapshot returns error → emit EvtBudgetSnapshotError via
-//     context.WithoutCancel(ctx) so the audit row survives caller
-//     cancellation. Skip Apply for this tick; loop continues.
-//   - Apply returns error → emit EvtBudgetDegradationFailed (also
-//     WithoutCancel). Do NOT update currentRow so the next same-snapshot
-//     tick retries Apply. This makes Apply effectively at-least-once.
+// Failure handling:
+// - Snapshot returns error → emit EvtBudgetSnapshotError via
+// context.WithoutCancel(ctx) so the audit row survives caller
+// cancellation. Skip Apply for this tick; loop continues.
+// - Apply returns error → emit EvtBudgetDegradationFailed (also
+// WithoutCancel). Do NOT update currentRow so the next same-snapshot
+// tick retries Apply. This makes Apply effectively at-least-once.
 //
 // The ticker fires at pollEvery (default 500ms; <1s is a hard
 // requirement for sub-second cap-cross detection per spec §1 Q9).

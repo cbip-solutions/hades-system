@@ -1,15 +1,16 @@
+// go:build property
 //go:build property
 // +build property
 
-// Package property — p13_doctor_schema_version_stable_test.go (Plan 13
-// Phase F-tail IMPORTANT 7 missing-tests completion).
+// Package property — p13_doctor_schema_version_stable_test.go (
+// IMPORTANT 7 missing-tests completion).
 //
 // Property: the doctor full JSON output schemaVersion is a stable
 // "1.0" constant across all aggregator invocations. Operators tooling
 // can rely on this for parsing — a drift would break downstream
 // consumers + violate the spec §2.5 canonical-output contract.
 //
-// Per inv-zen-188 schema_version field present + valid: the aggregator
+// Per invariant schema_version field present + valid: the aggregator
 // MUST embed schemaVersion in every JSON output; the value MUST match
 // the package-level SchemaVersion constant.
 //

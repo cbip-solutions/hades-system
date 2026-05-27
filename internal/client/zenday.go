@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package client — zenday.go (Plan 7 Phase F Task F-10).
+// Package client — zenday.go.
 //
 // Three methods + supporting wire types for the daemon's
 // /v1/zen-day/* surface backing the operator-facing
 // `zen day [--force | --eod | --check-pending]` CLI:
 //
-//	DayMorning      POST /v1/zen-day/morning        — generate / re-render today's morning brief
-//	DayEOD          POST /v1/zen-day/eod            — generate / re-render today's EOD digest
-//	DayCheckPending POST /v1/zen-day/check-pending  — ephemeral introspection (no archive write)
+// DayMorning POST /v1/zen-day/morning — generate / re-render today's morning brief
+// DayEOD POST /v1/zen-day/eod — generate / re-render today's EOD digest
+// DayCheckPending POST /v1/zen-day/check-pending — ephemeral introspection (no archive write)
 //
 // Wire shape: each method returns a zenday.BriefDoc — the rendered
 // brief data, NOT the markdown. The CLI calls zenday.Render(doc) to

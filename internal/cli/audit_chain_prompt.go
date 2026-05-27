@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit_chain_prompt.go (Plan 9 Phase I Task I-1).
+// Package cli — audit_chain_prompt.go.
 //
-// bufio-based interactive prompt helpers used by the Plan 9 interactive
+// bufio-based interactive prompt helpers used by the interactive
 // operator flows:
-//   - `zen audit-chain recover` (spec §6.5 — blank defaults to N)
-//   - `zen audit-chain checkpoint` (operator confirmation before emit)
-//   - `zen audit-chain configure-s3` (overwrite confirmation + field input)
-//   - `zen state pin` (modify-confirmation)
-//   - `zen knowledge promote/unpromote` (gated transitions)
-//   - `zen adr accept/reject/supersede` (state-machine confirmation)
+// - `zen audit-chain recover` (spec §6.5 — blank defaults to N)
+// - `zen audit-chain checkpoint` (operator confirmation before emit)
+// - `zen audit-chain configure-s3` (overwrite confirmation + field input)
+// - `zen state pin` (modify-confirmation)
+// - `zen knowledge promote/unpromote` (gated transitions)
+// - `zen adr accept/reject/supersede` (state-machine confirmation)
 //
 // Privacy-by-default semantics: blank input to promptYN always returns false
 // (no), consistent with spec §6.5 "default deny" for destructive interactive

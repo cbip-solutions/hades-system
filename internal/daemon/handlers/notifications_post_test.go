@@ -9,7 +9,7 @@
 //
 // The endpoint is the daemon-side companion to the cross-repo
 // http_notify HTTP client living in `cbip-solutions/zen-bypass-tier1`.
-// The sidecar maintains NO SQLite state (inv-zen-282); notifications
+// The sidecar maintains NO SQLite state; notifications
 // flow exclusively through this endpoint.
 package handlers
 

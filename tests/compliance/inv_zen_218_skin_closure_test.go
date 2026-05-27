@@ -1,29 +1,29 @@
 // tests/compliance/inv_zen_218_skin_closure_test.go
 //
-// inv-zen-218 (Plan 18a Phase B B-10) — HADES skin module import closure.
+// invariant — HADES skin module import closure.
 //
 // Doctrine: per spec §Q2 + master §B "Critical invariants" + plan-18a
-// Phase B B-1 amendment, the HADES skin module
+// B-1 amendment, the HADES skin module
 // (plugin/hades/skins/hades.py) MUST be a closed system:
 //
-//  1. Imports ONLY from Python stdlib (os, pathlib, logging, typing,
-//     tomllib, etc.).
-//  2. Imports ONLY from hermes_cli (the Hermes plugin contract surface).
-//  3. Reads ONLY from its own assets directory
-//     (plugin/hades/skins/assets/) + palette.toml.
+// 1. Imports ONLY from Python stdlib (os, pathlib, logging, typing,
+// tomllib, etc.).
+// 2. Imports ONLY from hermes_cli (the Hermes plugin contract surface).
+// 3. Reads ONLY from its own assets directory
+// (plugin/hades/skins/assets/) + palette.toml.
 //
 // Forbidden imports (would violate single-egress + privacy + closure):
-//   - requests, httpx, urllib, urllib.request, urllib3, aiohttp
-//   - socket, ssl
-//   - http.client, http.server
-//   - subprocess (no shell-out from a UX-styling module)
-//   - any internal/ package (Go-side daemon-client imports leaking
-//     through Python boundary — would violate inv-zen-031 separation)
-//   - any plugin/hades/{commands,hooks,providers,renderers,
-//     transports} import (skin must NOT couple to operational modules)
+// - requests, httpx, urllib, urllib.request, urllib3, aiohttp
+// - socket, ssl
+// - http.client, http.server
+// - subprocess (no shell-out from a UX-styling module)
+// - any internal/ package (Go-side daemon-client imports leaking
+// through Python boundary — would violate invariant separation)
+// - any plugin/hades/{commands,hooks,providers,renderers,
+// transports} import (skin must NOT couple to operational modules)
 //
 // Test strategy: read hades.py + grep against a forbidden-prefix list.
-// Companion ADR: docs/decisions/0094-hades-skin-closure.md.
+// Companion ADR: architecture records
 package compliance
 
 import (

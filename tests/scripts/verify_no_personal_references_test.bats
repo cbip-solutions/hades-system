@@ -89,6 +89,17 @@ setup() {
     [ "$status" -eq 0 ]
 }
 
+@test "scanner ignores local agent metadata directories" {
+    TMP_LEAK_DIR=$(mktemp -d -t verify-leak.XXXXXX)
+    mkdir -p "$TMP_LEAK_DIR/.agents/skills/example" "$TMP_LEAK_DIR/.claude"
+    echo 'pwd # must be /Users/operator/projects/zen-swarm' > "$TMP_LEAK_DIR/.agents/skills/example/SKILL.md"
+    echo '{"permissions":["Read(//Users/operator/projects/zen-swarm/**)"]}' > "$TMP_LEAK_DIR/.claude/settings.local.json"
+    echo 'const clean = "public"' > "$TMP_LEAK_DIR/legit.go"
+    run bash scripts/verify_no_personal_references.sh --target-dir "$TMP_LEAK_DIR"
+    rm -rf "$TMP_LEAK_DIR"
+    [ "$status" -eq 0 ]
+}
+
 @test "scanner exits non-zero on planted operator personal-name" {
     TMP_LEAK_DIR=$(mktemp -d -t verify-leak.XXXXXX)
     echo "// hello operator, this is a test" > "$TMP_LEAK_DIR/leak.go"

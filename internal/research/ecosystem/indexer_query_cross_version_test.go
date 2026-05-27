@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -5,29 +6,29 @@
 //
 // Tests for IsCrossVersionQuery (package-level regex helper) +
 // Indexer.QueryCrossVersion (SQL pivot over ecosystem_changes), shipped
-// by Plan 14 Phase E Task E-6.
+// Task E-6.
 //
 // Coverage discipline (CLAUDE.md hard rule 5): the cross-version query
-// path is consumed by Phase D dispatcher.go at intent-routing step 1;
+// path is consumed by dispatcher.go at intent-routing step 1;
 // it is security/correctness-critical (drives whether a query hits the
 // VersionRAG change-node pivot vs the normal vector+BM25 retrieval). The
 // suite aims for ≥90% per-fn coverage on both new symbols, including the
 // defense-in-depth branches (nil DB, ctx cancellation, empty result set,
 // regex negative cases).
 //
-// Drift reconciliation (Stage 0 reality-check 2026-05-18):
-//   1. NewIndexer returns (*Indexer, error) — 2-value return. Tests use
-//      the constructor with a fakeAuditEmitter (declared in indexer_test.go
-//      same package) instead of the plan-file's single-return shape.
-//   2. QueryCrossVersion uses idx.opts.DB (Phase C convention, mirrors
-//      BinaryTop200 / FTS5Top200 / HydrateChunks) — NOT db-as-parameter
-//      from the plan-file. Aligns with master §3.13 IndexerQueryAdapter
-//      pattern.
-//   3. Regex refined: the second alternation gains a `(?:\w+\s+)?` group
-//      before the second version capture so 3-part SemVer with a word
-//      prefix ("go 1.22.0 to go 1.23.0 breaking") matches consistently
-//      with the first alternation's existing pre-version-word optional
-//      group. Documented in indexer.go::crossVersionQueryRe.
+// Drift reconciliation:
+// 1. NewIndexer returns (*Indexer, error) — 2-value return. Tests use
+// the constructor with a fakeAuditEmitter (declared in indexer_test.go
+// same package) instead of the plan-file's single-return shape.
+// 2. QueryCrossVersion uses idx.opts.DB ( convention, mirrors
+// BinaryTop200 / FTS5Top200 / HydrateChunks) — NOT db-as-parameter
+// from the plan-file. Aligns with master §3.13 IndexerQueryAdapter
+// pattern.
+// 3. Regex refined: the second alternation gains a `(?:\w+\s+)?` group
+// before the second version capture so 3-part SemVer with a word
+// prefix ("go 1.22.0 to go 1.23.0 breaking") matches consistently
+// with the first alternation's existing pre-version-word optional
+// group. Documented in indexer.go::crossVersionQueryRe.
 //
 // Test infrastructure: reuses setupQueryTestDB + fakeAuditEmitter from
 // indexer_query_test.go + indexer_test.go (same package). Inserts

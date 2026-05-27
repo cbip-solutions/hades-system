@@ -199,7 +199,7 @@ def test_daemon_brief_returns_documented_status_string(tmp_path, monkeypatch):
 
 
 def test_git_brief_returns_empty_outside_repo(tmp_path, monkeypatch):
-    """_git_brief returns '' when cwd is not a git repo (no .git directory)."""
+    """_git_brief returns '' when cwd is not a git repo (no.git directory)."""
     from hermes_plugins.hades.commands.start import _git_brief
 
                                     

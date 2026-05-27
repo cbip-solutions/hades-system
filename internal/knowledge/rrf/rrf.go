@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package rrf implements Reciprocal Rank Fusion (RRF) per Cormack et al. 2009.
 //
-// Extracted from internal/knowledge/aggregator/rrf.go (Plan 9 D, commit
+// Extracted from internal/knowledge/aggregator/rrf.go ( D, commit
 // 8d8f8b03 originally) to a CGO-free sub-package so consumers that cannot
 // link the aggregator's CGO-bound sqlite3 driver (compliance tests using
 // ncruces/go-sqlite3 + internal/augment's compliance fixtures) can reuse
 // the canonical Fuse implementation without inlining a copy.
 //
-// Pre-fix state: Plan 11 Phase C C-5 (aggregator_consumer.go) inlined 135
+// Pre-fix state: C-5 (aggregator_consumer.go) inlined 135
 // LOC of RRF to avoid sqlite-driver "Register called twice" panic when
 // the augment package was imported alongside the compliance test driver.
 // This package replaces the inline copy with a shared, CGO-free
@@ -16,14 +16,14 @@
 //
 // Boundary
 //
-//   - No CGO imports (compile-checked via the no-cgo test build tag).
-//   - No imports of internal/store (inv-zen-031).
-//   - No web calls (inv-zen-129).
+// - No CGO imports (compile-checked via the no-cgo test build tag).
+// - No imports of internal/store.
+// - No web calls.
 //
 // Algorithm (per Cormack et al. 2009 "Reciprocal Rank Fusion outperforms
 // Condorcet and individual Rank Learning Methods"):
 //
-//	score(d) = Σ_s ( boost_s × 1/(k + rank_s(d)) )
+// score(d) = Σ_s ( boost_s × 1/(k + rank_s(d)) )
 //
 // where rank_s(d) is the 1-based rank of document d in source s's result
 // list, boost_s is 1.5 (PinBoost) when source == "pin" else 1.0, and k
@@ -31,11 +31,11 @@
 //
 // Type contract:
 //
-//   - QueryResult mirrors aggregator.QueryResult (and augment.QueryResult)
-//     field-for-field; consumers convert at the boundary if their domain
-//     type carries extra fields.
-//   - TopK is the per-source ranked input window.
-//   - Fuse returns []QueryResult sorted descending by Score, capped to limit.
+// - QueryResult mirrors aggregator.QueryResult (and augment.QueryResult)
+// field-for-field; consumers convert at the boundary if their domain
+// type carries extra fields.
+// - TopK is the per-source ranked input window.
+// - Fuse returns []QueryResult sorted descending by Score, capped to limit.
 package rrf
 
 import "sort"

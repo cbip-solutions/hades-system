@@ -1,20 +1,21 @@
 // SPDX-License-Identifier: MIT
 
+// go:build !race
 //go:build !race
 // +build !race
 
-// Package compliance — Plan 15 Phase A task A-12 compliance test for
-// inv-zen-276.
+// Package compliance — task A-12 compliance test for
+// invariant.
 //
 // Asserts the verify-changelog-completeness gate passes against the live
 // repo. The gate enforces:
 //
-//	(a) every `v*` git tag has either a `## [vN.M.K]` heading in
-//	    CHANGELOG.md OR a row in configs/changelog-omission-allowlist.yaml
-//	    with a non-empty rationale.
-//	(b) flip-aware semantics — allowlist rows for tags >= v1.0.0 are
-//	    rejected (post-v1.0 every release tag MUST carry CHANGELOG
-//	    narrative per Plan-15 v1.0 release decisión 8).
+// (a) every `v*` git tag has either a `## [vN.M.K]` heading in
+// CHANGELOG.md OR a row in configs/changelog-omission-allowlist.yaml
+// with a non-empty rationale.
+// (b) flip-aware semantics — allowlist rows for tags >= v1.0.0 are
+// rejected (post-v1.0 every release tag MUST carry CHANGELOG
+// narrative v1.0 release policy).
 //
 // Why this test exists: even with the bats shell tests in
 // tests/scripts/test_verify_changelog_completeness.bats, the Go test
@@ -23,8 +24,8 @@
 // (b) an operator inadvertently adds a >=v1.0.0 row to the allowlist.
 //
 // Composes into the verify-release-gates Makefile composite (A-8 owns
-// the composite). The 4 deliberate pre-v1.0 omissions (v0.10.0,
-// test asserts the script returns exit 0 against the live repo.
+// the composite). The deliberate pre-v1.0 omissions are pinned in the
+// allowlist; this test asserts the script returns exit 0 against the live repo.
 package compliance
 
 import (
@@ -65,7 +66,7 @@ func TestInvZen276_ChangelogCompleteness(t *testing.T) {
 	}
 }
 
-func TestInvZen276_AllowlistHasFourDeliberateOmissions(t *testing.T) {
+func TestInvZen276_AllowlistHasDeliberateOmissions(t *testing.T) {
 	root := findRepoRoot(t)
 	allowlistPath := filepath.Join(root, "configs", "changelog-omission-allowlist.yaml")
 	body, err := os.ReadFile(allowlistPath)
@@ -74,15 +75,24 @@ func TestInvZen276_AllowlistHasFourDeliberateOmissions(t *testing.T) {
 	}
 	bs := string(body)
 
-	expected := []string{"v0.10.0", "v0.16.0", "v0.18.0", "v0.19.0"}
+	expected := []string{
+		"v0.10.0",
+		"v0.16.0",
+		"v0.17.8",
+		"v0.17.9",
+		"v0.17.10",
+		"v0.17.11",
+		"v0.18.0",
+		"v0.19.0",
+	}
 	for _, tag := range expected {
 
 		marker := "- tag: " + tag
 		if !strings.Contains(bs, marker) {
 			t.Errorf(
 				"inv-zen-276: allowlist missing deliberate omission %q "+
-					"(expected `%s` line). The 4 pre-v1.0 omissions "+
-					"v0.10.0/v0.16.0/v0.18.0/v0.19.0 are load-bearing per "+
+					"(expected `%s` line). The pre-v1.0 omissions "+
+					"are load-bearing per "+
 					"Plan-15 decisión 8 — to remove, add the `## [%s]` heading "+
 					"to CHANGELOG.md first.",
 				tag, marker, tag)

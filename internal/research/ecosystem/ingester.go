@@ -10,24 +10,24 @@
 //
 // Pipeline (one goroutine per package, errgroup-bounded by WorkerCount):
 //
-//	Source.FetchManifest
-//	  → for each pkg → resumability check (Indexer.PackageLastIndexedAt + DeltaOnly)
-//	       → if newer manifest OR delta-only=false:
-//	            Source.FetchPackageDoc
-//	            Chunker.Chunk(doc) → []Chunk   (or synthesizeFallbackChunks when Chunker nil)
-//	            for each chunk: SymbolIndex.Register (when configured)
-//	            Indexer.WriteChunks (single atomic per-package txn; chunks + symbols + changes)
-//	            Indexer.UpdatePackageLastIndexedAt
-//	            Source.FetchChangelog (Phase E consumes; B-10 just dispatches)
-//	            AuditChain.Append(EvtRAGIngestPackage = 98, succeeded=true)
-//	     on per-package error:
-//	            AuditChain.Append(EvtRAGIngestPackage = 98, succeeded=false, error=...)
-//	            atomic.AddInt64(&failed, 1)
-//	            DO NOT propagate — continue with next pkg job.
+// Source.FetchManifest
+// → for each pkg → resumability check (Indexer.PackageLastIndexedAt + DeltaOnly)
+// → if newer manifest OR delta-only=false:
+// Source.FetchPackageDoc
+// Chunker.Chunk(doc) → []Chunk (or synthesizeFallbackChunks when Chunker nil)
+// for each chunk: SymbolIndex.Register (when configured)
+// Indexer.WriteChunks (single atomic per-package txn; chunks + symbols + changes)
+// Indexer.UpdatePackageLastIndexedAt
+// Source.FetchChangelog
+// AuditChain.Append(EvtRAGIngestPackage = 98, succeeded=true)
+// on per-package error:
+// AuditChain.Append(EvtRAGIngestPackage = 98, succeeded=false, error=...)
+// atomic.AddInt64(&failed, 1)
+// DO NOT propagate — continue with next pkg job.
 //
 // Per-package failure isolation guarantees one crash never propagates;
 // IngestResult.PackagesFailed surfaces the per-package failure count
-// (Plan 14 B-10 additive amendment to Phase A IngestResult; spec §4.1).
+// .
 //
 // Resumability per-package check of Indexer.PackageLastIndexedAt BEFORE
 // fetching; if manifest's LastUpdated ≤ last_indexed_at AND req.DeltaOnly,
@@ -36,20 +36,20 @@
 // for skipped + in-flight packages).
 //
 // Race-clean: errgroup + atomic counters + per-worker no shared mutable
-// state except channel + Indexer (Phase C concrete *Indexer is internally
+// state except channel + Indexer ( concrete *Indexer is internally
 // synchronized via SQLite transactions). TestIngester_Ingest_ConcurrentSafety
 // passes -race -count=10 (security/correctness invariant).
 //
 // Doctrine compliance:
-//   - inv-zen-031: ingester does NOT import internal/store / internal/daemon/*
-//     directly; IndexerWriter + SymbolIndexRegistrar narrow interfaces live HERE.
-//   - inv-zen-191: no direct net/http (Source impls own their HTTP via cache.Revalidator).
-//   - EventType slots 98/99 declared canonically at Phase A A-1 in
-//     internal/orchestrator/eventlog/events.go; Phase B consumes by name
-//     (no local uint32 redeclarations).
-//   - Per spec §4.1 per-package atomicity: chunks + symbols + changes flow
-//     through a SINGLE IndexerWriter.WriteChunks call (Phase C concrete
-//     *Indexer wraps that in a single SQLite transaction).
+// - invariant: ingester does NOT import internal/store / internal/daemon/*
+// directly; IndexerWriter + SymbolIndexRegistrar narrow interfaces live HERE.
+// - invariant: no direct net/http (Source impls own their HTTP via cache.Revalidator).
+// - EventType slots 98/99 declared canonically at A-1 in
+// internal/orchestrator/eventlog/events.go; consumes by name
+// (no local uint32 redeclarations).
+// - Per spec §4.1 per-package atomicity: chunks + symbols + changes flow
+// through a SINGLE IndexerWriter.WriteChunks call ( concrete
+// *Indexer wraps that in a single SQLite transaction).
 
 package ecosystem
 
@@ -68,24 +68,24 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
 )
 
-// IndexerWriter is the minimum surface Ingester needs from Phase C indexer impl.
-// B-10 uses this interface; Phase C ships indexerImpl (concrete *Indexer)
+// IndexerWriter is the minimum surface Ingester needs from indexer impl.
+// B-10 uses this interface; ships indexerImpl (concrete *Indexer)
 // satisfying it.
 //
-// Stage 2 amendment 2026-05-15 (C3 reconciliation):
-// Renamed from `Indexer` → `IndexerWriter` to avoid collision with Phase C's
-// concrete `*Indexer` struct. Six-parameter `WriteChunks` aligns with Phase C
+// amendment 2026-05-15 (C3 reconciliation):
+// Renamed from `Indexer` → `IndexerWriter` to avoid collision with
+// concrete `*Indexer` struct. Six-parameter `WriteChunks` aligns with
 // concrete signature (chunks + symbols + changes — single atomic write per
 // package, not three separate calls).
 //
-// PackageLastIndexedAt + UpdatePackageLastIndexedAt are methods on Phase C's
-// `*Indexer` struct (canonical owner); Phase B consumes via this narrow
-// interface to preserve inv-zen-031 boundary discipline (ingester package
+// PackageLastIndexedAt + UpdatePackageLastIndexedAt are methods on
+// `*Indexer` struct (canonical owner); consumes via this narrow
+// interface to preserve invariant boundary discipline (ingester package
 // does NOT import internal/store).
 //
 // Concurrency implementations MUST be safe for concurrent WriteChunks /
 // PackageLastIndexedAt / UpdatePackageLastIndexedAt calls from N goroutines
-// (Phase B ingester fan-out N). Phase C concrete *Indexer relies on SQLite
+// . concrete *Indexer relies on SQLite
 // txn serialization for safety.
 type IndexerWriter interface {
 	WriteChunks(ctx context.Context, pkg PackageRef, version string, chunks []Chunk, symbols []SymbolRef, changes []ChangeNode) error
@@ -96,27 +96,27 @@ type IndexerWriter interface {
 }
 
 // SymbolIndexRegistrar is the minimum surface Ingester needs for symbol
-// registration (verify-at-answer-time cache; Phase F surface).
+// registration.
 //
 // Concurrency implementations MUST be safe for concurrent Register /
-// Lookup calls from N goroutines (Phase B ingester fan-out N).
+// Lookup calls from N goroutines.
 type SymbolIndexRegistrar interface {
 	Register(ctx context.Context, sym SymbolRef) error
 
 	Lookup(ctx context.Context, symPath string) (SymbolRef, bool, error)
 }
 
-// VaultWriter is the minimum surface ProcessVaultNote needs from Plan 7's
-// vault.db. Phase F wires the real impl backed by Plan 7's vault hook +
+// VaultWriter is the minimum surface ProcessVaultNote needs's
+// vault.db. wires the real impl backed's vault hook +
 // sqlite transaction layer. NIL OK at unit-test boundary (ingester silent-
 // skips the write step; audit emit + return remain functional).
 //
-// Declared HERE in ingester.go per inv-zen-031 boundary — Phase B does NOT
+// Declared HERE in ingester.go per invariant boundary — does NOT
 // import internal/store / internal/daemon; narrow interfaces live in
 // internal/research/ecosystem and are wired at daemon-init time.
 //
 // Concurrency implementations MUST be safe for concurrent
-// UpdateEcosystemJoinKeys calls from N goroutines (Phase F real impl relies
+// UpdateEcosystemJoinKeys calls from N goroutines ( real impl relies
 // on SQLite txn serialization; tests' recordingVault uses a mutex).
 type VaultWriter interface {
 	UpdateEcosystemJoinKeys(ctx context.Context, noteID int64, joinKeys []string) error
@@ -224,18 +224,18 @@ func (ing *Ingester) Ingest(ctx context.Context, req IngestRequest) (*IngestResu
 	//
 	// COVERAGE three defensive branches in this producer are intentionally
 	// not exercised by unit tests:
-	//   - `if !ok { continue }` (line ~310): srcKinds default-populated from
-	//     srcMap iteration → kind is ALWAYS in srcMap on the default path; only
-	//     reachable when caller passes IngestRequest.Sources with an unregistered
-	//     SourceType for the ecosystem (operator-API misuse; defensive guard).
-	//   - `if manifest == nil { continue }`: Source impls return either a non-nil
-	//     manifest or an error (mock + concrete impls both honour the contract);
-	//     defensive guard against future impl drift.
-	//   - producer `case <-ctx.Done(): return`: ctx-cancel mid-enumerate is
-	//     timing-dependent — TestIngester_Ingest_ContextCancelMidIngest tries
-	//     to exercise it but the producer typically completes before the
-	//     cancel fires on small manifests. Defensive guard against large-manifest
-	//     cancel-mid-enumerate paths in production.
+	// - `if !ok { continue }` (line ~310): srcKinds default-populated from
+	// srcMap iteration → kind is ALWAYS in srcMap on the default path; only
+	// reachable when caller passes IngestRequest.Sources with an unregistered
+	// SourceType for the ecosystem (operator-API misuse; defensive guard).
+	// - `if manifest == nil { continue }`: Source impls return either a non-nil
+	// manifest or an error (mock + concrete impls both honour the contract);
+	// defensive guard against future impl drift.
+	// - producer `case <-ctx.Done(): return`: ctx-cancel mid-enumerate is
+	// timing-dependent — TestIngester_Ingest_ContextCancelMidIngest tries
+	// to exercise it but the producer typically completes before the
+	// cancel fires on small manifests. Defensive guard against large-manifest
+	// cancel-mid-enumerate paths in production.
 	go func() {
 		defer close(jobs)
 		for _, kind := range srcKinds {
@@ -276,14 +276,14 @@ var errSkipResumability = errors.New("ingester: skip per resumability check")
 // processPackage runs the per-package pipeline.
 //
 // Pipeline
-//  1. resumability check: PackageLastIndexedAt → skip if LastUpdated ≤ last_indexed_at AND deltaOnly
-//  2. fetch doc: Source.FetchPackageDoc
-//  3. chunk: Chunker.Chunk OR synthesizeFallbackChunks (when Chunker nil)
-//  4. symbol register: SymbolIndex.Register per chunk (when SymbolIndex non-nil)
-//  5. write atomically: IndexerWriter.WriteChunks(chunks + symbols + changes)
-//  6. bookkeeping: IndexerWriter.UpdatePackageLastIndexedAt
-//  7. fetch changelog: Source.FetchChangelog (Phase E consumes; B-10 dispatches only)
-//  8. emit audit: AuditChain.Append(EvtRAGIngestPackage, succeeded=true)
+// 1. resumability check: PackageLastIndexedAt → skip if LastUpdated ≤ last_indexed_at AND deltaOnly
+// 2. fetch doc: Source.FetchPackageDoc
+// 3. chunk: Chunker.Chunk OR synthesizeFallbackChunks (when Chunker nil)
+// 4. symbol register: SymbolIndex.Register per chunk (when SymbolIndex non-nil)
+// 5. write atomically: IndexerWriter.WriteChunks(chunks + symbols + changes)
+// 6. bookkeeping: IndexerWriter.UpdatePackageLastIndexedAt
+// 7. fetch changelog: Source.FetchChangelog
+// 8. emit audit: AuditChain.Append(EvtRAGIngestPackage, succeeded=true)
 //
 // Returns nil on full success. Returns errSkipResumability when the
 // package is up-to-date AND deltaOnly==true (caller distinguishes via
@@ -296,12 +296,12 @@ var errSkipResumability = errors.New("ingester: skip per resumability check")
 //
 // startedAt is captured here (at processPackage entry) and threaded to
 // emit* helpers so audit payloads distinguish processing-start from emit
-// time (Plan 14 B-10 fix-cycle 2026-05-18 / IMPORTANT-2; pre-fix the
+// time ( B-10 fix-cycle 2026-05-18 / IMPORTANT-2; pre-fix the
 // emit-time time.Now() served BOTH started_at AND completed_at, which
-// made Phase G ops dashboards lose per-package latency signal).
+// made ops dashboards lose per-package latency signal).
 //
 // deltaOnly carries IngestRequest.DeltaOnly through the worker channel
-// (Plan 14 B-10 fix-cycle 2026-05-18 / CRITICAL-1): force-refresh
+// : force-refresh
 // (DeltaOnly=false) MUST re-ingest "up-to-date" packages — the
 // resumability skip path is reachable ONLY when deltaOnly==true.
 func (ing *Ingester) processPackage(ctx context.Context, eco Ecosystem, src Source, pkg ManifestPackage, deltaOnly bool) error {

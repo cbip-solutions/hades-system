@@ -1,9 +1,9 @@
-//go:build chaos
+// go:build chaos
 
 // SPDX-License-Identifier: MIT
 
 // Package network implements Toxiproxy-driven chaos scenarios
-// across the 8 zen-swarm daemon HTTP edges (inv-zen-305).
+// across the 8 zen-swarm daemon HTTP edges.
 //
 // # Scenario matrix
 //
@@ -12,7 +12,7 @@
 // limit_data, timeout, slicer, down, modify_buffer, modify_rate.
 // Daemon edges: hermes_plugin, ctld, providers_anthropic_paygo,
 // providers_gemini, mcp_research, mcp_budget, mcp_audit, sidecar_bypass
-// (the bypass tier; the canonical sidecar backend post-Plan-16 cascade).
+// .
 //
 // # Why Toxiproxy
 //
@@ -27,7 +27,7 @@
 //
 // # Asserted invariants
 //
-// Each scenario asserts inv-zen-305: the daemon survives the toxicity
+// Each scenario asserts invariant: the daemon survives the toxicity
 // by exercising the documented robustness path (retry / circuit-trip
 // / tier-fallback / audit emission / idempotent rerun). A scenario
 // failure means the documented robustness path did NOT engage.
@@ -50,10 +50,10 @@
 // # Build tag
 //
 // All files in this package live under `//go:build chaos`. Default
-// `go build` / `go test ./...` skips them; CI invokes via
+// `go build` / `go test./...` skips them; CI invokes via
 // `make test-chaos-network`, which sets the tag.
 //
 // # Spec
 //
-// inv-zen-305 contract spec; see CHANGELOG for narrative.
+// invariant contract spec; see CHANGELOG for narrative.
 package network

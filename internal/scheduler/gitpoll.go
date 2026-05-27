@@ -91,16 +91,16 @@ func ParseGitHubURL(u string) (owner, repo string, err error) {
 // signals whether the scheduler loop should fire.
 //
 // Returns
-//   - (true, nil): a NEW SHA was observed (cursor advanced; fire).
-//   - (false, nil): no change OR first poll establishing baseline (cursor
-//     advanced on first poll; do not fire, otherwise every freshly created
-//     git-poll routine would fire immediately on its first cycle).
-//   - (false, non-nil err): poller error (gh missing / network / non-zero
-//     exit / unexpected output / cancelled ctx). Cursor is NOT advanced —
-//     the next poll attempt re-tries against the same baseline.
+// - (true, nil): a NEW SHA was observed (cursor advanced; fire).
+// - (false, nil): no change OR first poll establishing baseline (cursor
+// advanced on first poll; do not fire, otherwise every freshly created
+// git-poll routine would fire immediately on its first cycle).
+// - (false, non-nil err): poller error (gh missing / network / non-zero
+// exit / unexpected output / cancelled ctx). Cursor is NOT advanced —
+// the next poll attempt re-tries against the same baseline.
 //
 // Mutates s.TriggerConfig.LastSeenSHA in-place on every successful poll.
-// Callers (Phase F's loop) must persist the mutation to the store so the
+// Callers must persist the mutation to the store so the
 // cursor survives daemon restart; the cursor is the entire debounce state.
 //
 // Defense-in-depth: rejects nil schedule / non-TriggerGitPoll / nil poller

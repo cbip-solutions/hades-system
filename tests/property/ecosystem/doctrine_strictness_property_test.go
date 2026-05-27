@@ -1,25 +1,25 @@
-//go:build property && cgo
+// go:build property && cgo
 
-// tests/property/ecosystem/doctrine_strictness_property_test.go (Plan 14 Phase H Task H-7-7)
+// tests/property/ecosystem/doctrine_strictness_property_test.go
 //
-// inv-zen-205: doctrine strictness knob honored per profile.
+// invariant: doctrine strictness knob honored per profile.
 //
 // Profiles (spec §2.7 Q7=A FROZEN table):
-//   - max-scope    MaxResults=10  LLMJudge=true  RefuseOnUnverified=false  AuditLevel=all-8-events
-//   - default      MaxResults=5   LLMJudge=false RefuseOnUnverified=false  AuditLevel=query+abstain+verify-failure+answer
-//   - capa-firewall MaxResults=10 LLMJudge=true  RefuseOnUnverified=true   AuditLevel=all-8-events
+// - max-scope MaxResults=10 LLMJudge=true RefuseOnUnverified=false AuditLevel=all-8-events
+// - default MaxResults=5 LLMJudge=false RefuseOnUnverified=false AuditLevel=query+abstain+verify-failure+answer
+// - capa-firewall MaxResults=10 LLMJudge=true RefuseOnUnverified=true AuditLevel=all-8-events
 //
 // Properties tested:
 //
-//  1. Resolution determinism — same doctrine name → identical
-//     DoctrineProfile across 500 random invocations.
-//  2. Per-profile invariants — every field of every built-in profile
-//     matches the spec table exactly.
-//  3. Capa-firewall strictness — capa-firewall.RefuseOnUnverified == true
-//     while default.RefuseOnUnverified == false (capa-firewall MUST be
-//     strictly more conservative than default on the refuse axis).
+// 1. Resolution determinism — same doctrine name → identical
+// DoctrineProfile across 500 random invocations.
+// 2. Per-profile invariants — every field of every built-in profile
+// matches the spec table exactly.
+// 3. Capa-firewall strictness — capa-firewall.RefuseOnUnverified == true
+// while default.RefuseOnUnverified == false (capa-firewall MUST be
+// strictly more conservative than default on the refuse axis).
 //
-// Uses the real DoctrineResolver wired to a Plan 8 Accessor so a drift
+// Uses the real DoctrineResolver wired to a Accessor so a drift
 // in `builtinProfiles` (private) is detected through the public
 // Resolve() return.
 

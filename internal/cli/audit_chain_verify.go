@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit_chain_verify.go (Plan 9 Phase I Task I-2).
+// Package cli — audit_chain_verify.go.
 //
 // `zen audit-chain verify-chain --project <id>` walks the per-project audit
 // chain end-to-end via POST /v1/audit-chain/verify-chain:
-//  1. Per-record hash chain integrity (audit_events_raw.record_hash)
-//  2. Tessera Merkle inclusion proofs (PartitionSeals count)
-//  3. Daemon ECDSA P-256 witness signature on every partition seal (WitnessChecks)
-//  4. Global VerifiedAtUnix timestamp confirms the walk completed
+// 1. Per-record hash chain integrity (audit_events_raw.record_hash)
+// 2. Tessera Merkle inclusion proofs (PartitionSeals count)
+// 3. Daemon ECDSA P-256 witness signature on every partition seal (WitnessChecks)
+// 4. Global VerifiedAtUnix timestamp confirms the walk completed
 //
 // Status OK iff TamperedRecords is empty (len == 0). Any tampered record
 // causes the walk to surface the offending record_id + reason so the operator
 // can immediately invoke `zen audit-chain recover`.
 //
 // Used by:
-//   - `zen doctor audit.chain-integrity` (Phase J)
-//   - `zen autonomy --check` (system-design §10.2.5 prereqs)
-//   - `zen day` morning brief audit section (Phase J)
-//   - operators investigating tamper events
+// - `zen doctor audit.chain-integrity`
+// - `zen autonomy --check` (system-design §10.2.5 prereqs)
+// - `zen day` morning brief audit section
+// - operators investigating tamper events
 //
 // Plan deviation: the plan-file sketched client.AuditChainVerify / AuditChainVerifyResp;
 // H-7 actually shipped client.AuditVerifyChain / client.AuditVerifyResp. This

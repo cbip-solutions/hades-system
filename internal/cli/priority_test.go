@@ -571,7 +571,7 @@ func TestRenderRelativeAgoBranches(t *testing.T) {
 }
 
 // TestPriorityCmdRegisteredOnProjectTree — `zen project priority` MUST
-// be reachable via the project subcommand (replaces Phase A's reserved
+// be reachable via the project subcommand (replaces reserved
 // not-implemented slot).
 func TestPriorityCmdRegisteredOnProjectTree(t *testing.T) {
 	root := NewProjectCmd()

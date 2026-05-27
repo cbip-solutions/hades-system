@@ -1,36 +1,36 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 
 // Package citationadapter bridges the citation package (substrate
-// renderer) to the Plan 9 audit chain so CitationRendered events
+// renderer) to the audit chain so CitationRendered events
 // persist to audit_events_raw + chain-anchor through the same
-// daemon write path that Plan 9 already uses for every other audit
+// daemon write path that already uses for every other audit
 // event (sshexec, budget, doctrine-reload, etc.).
 //
 // Why a dedicated adapter:
 //
-//   - inv-zen-031: the citation package MUST NOT import internal/store
-//     (boundary preserved by interface segregation; citation.AuditEmitter
-//     is the contract). The adapter package lives in internal/daemon/
-//     specifically so it can pull together internal/citation +
-//     daemon.AuditEmitCtx without forcing the citation package into
-//     the daemon's import set.
+// - invariant: the citation package MUST NOT import internal/store
+// (boundary preserved by interface segregation; citation.AuditEmitter
+// is the contract). The adapter package lives in internal/daemon/
+// specifically so it can pull together internal/citation +
+// daemon.AuditEmitCtx without forcing the citation package into
+// the daemon's import set.
 //
-//   - inv-zen-104: same Plan-5 boundary discipline as
-//     bypassadapter/dispatcheradapter — the bridge belongs in
-//     internal/daemon/, not on the citation side.
+// - invariant: same boundary discipline as
+// bypassadapter/dispatcheradapter — the bridge belongs in
+// internal/daemon/, not on the citation side.
 //
-//   - Single-egress for audit writes: forwarding through Server.AuditEmit
-//     means the CitationRendered event walks the same hot path
-//     (audit_events_raw INSERT + Plan 9 chain compute via Phase H
-//     OnEmitRaw when wired) as every other event — there's no
-//     parallel write path to keep in sync.
+// - Single-egress for audit writes: forwarding through Server.AuditEmit
+// means the CitationRendered event walks the same hot path
+// (audit_events_raw INSERT + chain compute via
+// OnEmitRaw when wired) as every other event — there's no
+// parallel write path to keep in sync.
 //
 // Wire-up (cmd/zen-swarm-ctld/main.go):
 //
-//	bridge := citationadapter.New(srv)
-//	reg := citation.NewRegistry()
-//	reg.Register(citation.NewMarkdownFallback(bridge))
-//	srv.SetCitationRegistry(reg)
+// bridge := citationadapter.New(srv)
+// reg := citation.NewRegistry()
+// reg.Register(citation.NewMarkdownFallback(bridge))
+// srv.SetCitationRegistry(reg)
 //
 // TTS, web HTML) will register against the same Registry via
 // SetCitationRegistry hook; each renderer reuses the same bridge so
@@ -56,19 +56,19 @@ type AuditEmitter interface {
 // AuditEmitter.AuditEmit. The CitationRendered event lands in
 // audit_events_raw with:
 //
-//	id          = UUIDv4 (stamped by the adapter — internal emit
-//	              path bypasses the HTTP handler that normally
-//	              owns this)
-//	type        = "CitationRendered"
-//	project_id  = ev.ProjectID            // doctrine privacy scope
-//	emitted_at  = ev.RenderedAt OR        // caller-supplied unix sec
-//	              time.Now().Unix()        // when caller passed 0
-//	payload     = {                       // JSON
-//	  "citation_id":      "c-XXXX",
-//	  "platform":         "markdown" | "ink" | ...,
-//	  "audit_event_link": "zen://audit/<id>",
-//	  "rendered_at":      <ev.RenderedAt copy>,
-//	}
+// id = UUIDv4 (stamped by the adapter — internal emit
+// path bypasses the HTTP handler that normally
+// owns this)
+// type = "CitationRendered"
+// project_id = ev.ProjectID // doctrine privacy scope
+// emitted_at = ev.RenderedAt OR // caller-supplied unix sec
+// time.Now().Unix() // when caller passed 0
+// payload = { // JSON
+// "citation_id": "c-XXXX",
+// "platform": "markdown" | "ink" |...,
+// "audit_event_link": "zen://audit/<id>",
+// "rendered_at": <ev.RenderedAt copy>,
+// }
 //
 // The payload schema mirrors spec §4.6 "CitationRendered anchored
 // payload includes platform + citation_id + audit_event_link" plus the
@@ -77,8 +77,8 @@ type AuditEmitter interface {
 // stamped here.
 //
 // ID + emitted_at stamping: Server.AuditEmit blindly forwards both
-// fields to the audit_events_raw INSERT with no defaulting (per Plan 4
-// Phase G design — the HTTP handler at handlers/audit_emit.go stamps
+// fields to the audit_events_raw INSERT with no defaulting (per
+// design — the HTTP handler at handlers/audit_emit.go stamps
 // both fields before calling Server.AuditEmit). This internal emit path
 // bypasses the HTTP handler, so the adapter MUST stamp them itself or
 // the migration-055 CHECK (emitted_at > 0) + primary-key uniqueness

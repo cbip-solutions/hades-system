@@ -3,30 +3,30 @@
 //
 //
 // The dispatcher is a thin coordination layer between the §3.1 RunStage4
-// lifecycle and Plan 4's workforce.Manager. Given a DispatchRequest it:
+// lifecycle and workforce.Manager. Given a DispatchRequest it:
 //
-//  1. Validates Width > 0 (else ErrInvalidBuildRequest).
-//  2. Leases Width worktrees from the Phase B WorktreePool. On any
-//     lease error the partial set is released and the error is
-//     propagated unwrapped so the caller can errors.Is against
-//     worktreepool.ErrPoolExhausted (Phase E recovery uses that
-//     classification to decide retry budget vs. user-visible error).
-//  3. Tracks the leased set on the dispatcher under d.mu so a
-//     concurrent Shutdown call can release them on the abort path.
-//  4. Emits one EvtWorkerDispatched per leased worktree (payload:
-//     worktree_path + depth).
-//  5. Hands the leases to Workforce.SpawnWorkers; on error returns
-//     wrapped fmt.Errorf("workforce spawn: %w", err) and the deferred
-//     releaseAll cleans the partial lease set.
-//  6. Drains the per-worker result channel, recording each completion
-//     as EvtWorkerCheckpoint and partitioning the counters by Status.
-//     On ctx.Done a single Workforce.AbortAll(ctx) is invoked and the
-//     drain continues until the workforce closes the channel or until
-//     DrainDeadline elapses (defense-in-depth against a workforce that
-//     never closes its result channel after abort).
-//  7. Returns the aggregated DispatchResult plus ctx.Err() if abort was
-//     invoked, or nil on the clean path. If the drain deadline fires
-//     first, returns errors.Join(ctx.Err(), ErrDrainDeadlineExceeded).
+// 1. Validates Width > 0 (else ErrInvalidBuildRequest).
+// 2. Leases Width worktrees from the WorktreePool. On any
+// lease error the partial set is released and the error is
+// propagated unwrapped so the caller can errors.Is against
+// worktreepool.ErrPoolExhausted ( recovery uses that
+// classification to decide retry budget vs. user-visible error).
+// 3. Tracks the leased set on the dispatcher under d.mu so a
+// concurrent Shutdown call can release them on the abort path.
+// 4. Emits one EvtWorkerDispatched per leased worktree (payload:
+// worktree_path + depth).
+// 5. Hands the leases to Workforce.SpawnWorkers; on error returns
+// wrapped fmt.Errorf("workforce spawn: %w", err) and the deferred
+// releaseAll cleans the partial lease set.
+// 6. Drains the per-worker result channel, recording each completion
+// as EvtWorkerCheckpoint and partitioning the counters by Status.
+// On ctx.Done a single Workforce.AbortAll(ctx) is invoked and the
+// drain continues until the workforce closes the channel or until
+// DrainDeadline elapses (defense-in-depth against a workforce that
+// never closes its result channel after abort).
+// 7. Returns the aggregated DispatchResult plus ctx.Err() if abort was
+// invoked, or nil on the clean path. If the drain deadline fires
+// first, returns errors.Join(ctx.Err(), ErrDrainDeadlineExceeded).
 //
 // Shutdown is idempotent: it marks the dispatcher closed under d.mu,
 // swaps the tracked-lease slice, releases those worktrees, and calls
@@ -35,28 +35,28 @@
 //
 // Privacy contract (IMP-3): event payloads + error messages name field
 // keys and sentinel constants but never echo BuildRequest values; the
-// only worker-side string surfaced is r.Err.Error() (Plan 4's worker
+// only worker-side string surfaced is r.Err.Error() ( worker
 // surface is itself bound to the same redaction discipline).
 //
 // Boundary invariants (carry-forward from orchestrator.go):
-//   - inv-zen-090: this file does NOT import internal/workforce/queue.
-//     The Plan 4 workforce.Manager is consumed via the WorkforceManager
-//     interface declared here so eventlog (durable) ⊥ queue (transient)
-//     stays a clean separation; bootstrap (Phase N adapter / daemon
-//     main) wires the real impl when Plan 4 is merged.
-//   - inv-zen-089: this file does NOT import internal/store. Persistence
-//     flows through the eventlog.Appender contract.
+// - invariant: this file does NOT import internal/workforce/queue.
+// The workforce.Manager is consumed via the WorkforceManager
+// interface declared here so eventlog (durable) ⊥ queue (transient)
+// stays a clean separation; bootstrap ( adapter / daemon
+// main) wires the real impl when is merged.
+// - invariant: this file does NOT import internal/store. Persistence
+// flows through the eventlog.Appender contract.
 //
 // Concurrency contract:
-//   - The drain loop's ctx.Done arm guards AbortAll with abortInvoked
-//     so the workforce never sees two concurrent abort signals from the
-//     same Dispatch call.
-//   - d.leased mutation (append / swap on Shutdown) is mu-guarded.
-//   - releaseAll is best-effort: per-worktree Release errors are
-//     swallowed so a single corrupt worktree never blocks cleanup of
-//     the rest of the lease set.
-//   - ctx discipline (IMP-1): every awaitable boundary (Append, Lease,
-//     Release, AbortAll) honours ctx.
+// - The drain loop's ctx.Done arm guards AbortAll with abortInvoked
+// so the workforce never sees two concurrent abort signals from the
+// same Dispatch call.
+// - d.leased mutation (append / swap on Shutdown) is mu-guarded.
+// - releaseAll is best-effort: per-worktree Release errors are
+// swallowed so a single corrupt worktree never blocks cleanup of
+// the rest of the lease set.
+// - ctx discipline (IMP-1): every awaitable boundary (Append, Lease,
+// Release, AbortAll) honours ctx.
 
 package orchestrator
 
@@ -77,15 +77,15 @@ type WorkforceManager interface {
 	AbortAll(ctx context.Context) error
 }
 
-// SpawnRequest is the Plan 4 contract input. Phase D ships the minimum
-// fields Plan 4's Manager.Spawn signature requires; richer fields
+// SpawnRequest is the contract input. ships the minimum
+// fields Manager.Spawn signature requires; richer fields
 // (HRA reviewer hierarchy, cost-tier fan-out, doctrine-driven retry
-// budget) land in Plan 5 Phases F/G/H/M without narrowing this struct.
+// budget) land in Phases F/G/H/M without narrowing this struct.
 //
-// Worktrees is a slice of pointers (canonical Phase B return type) so
+// Worktrees is a slice of pointers so
 // the workforce.Manager can cheaply route per-worker context (path,
 // branch, lease id) without copying the value. The dispatcher owns
-// the lease lifecycle: Plan 4 workers MUST NOT call Release.
+// the lease lifecycle: workers MUST NOT call Release.
 type SpawnRequest struct {
 	SessionID string
 	ProjectID string

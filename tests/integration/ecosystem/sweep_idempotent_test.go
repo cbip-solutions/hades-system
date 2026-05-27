@@ -1,4 +1,4 @@
-//go:build integration && cgo
+// go:build integration && cgo
 
 package ecosystem_test
 

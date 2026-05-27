@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-// Package cli — budget.go (Plan 4 Phase N Task N-4 replaces Plan 1 stub).
+// Package cli — budget.go.
 //
-// `zen budget` is the operator's authoritative interface to the Plan 4
+// `zen budget` is the operator's authoritative interface to the
 // budget engine.
 //
 // Cobra layout (8 leaves + 2 group):
 //
-//	zen budget cap-status  --axis --value
-//	zen budget record      (operator manual axis-tagging; rare)
-//	zen budget axes        --cost-id
-//	zen budget anomaly     --scope --value --window
-//	zen budget events      --since --limit
-//	zen budget pause       --scope --value --reason --yes
-//	zen budget resume      --scope --value --yes
-//	zen budget pause-modes
-//	zen budget rollup      --since --limit (synthetic from events)
+// zen budget cap-status --axis --value
+// zen budget record (operator manual axis-tagging; rare)
+// zen budget axes --cost-id
+// zen budget anomaly --scope --value --window
+// zen budget events --since --limit
+// zen budget pause --scope --value --reason --yes
+// zen budget resume --scope --value --yes
+// zen budget pause-modes
+// zen budget rollup --since --limit (synthetic from events)
 //
 // Option A adaptation: the plan-doc uses `caps {show, set}` whereas the
 // daemon exposes `cap_status` (read) plus `record` (write). The CLI

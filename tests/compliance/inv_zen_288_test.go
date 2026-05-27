@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_288_test.go
 //
-// Compliance gate for inv-zen-288 (v0.20.6 fix #1): the
+// Compliance gate for invariant (v0.20.6 fix #1): the
 // tests/testhelpers/tesseramock package indirects its ECDSA keygen
 // primitive through an unexported package-level variable
 // `genECDSAKey = ecdsa.GenerateKey` so the internal test package can
@@ -46,7 +46,7 @@
 // AND Anchor 1 trips. Both behaviours were verified at v0.20.6 ship
 // time.
 //
-// inv-zen-288 (v0.20.6 fix #1).
+// invariant (v0.20.6 fix #1).
 package compliance
 
 import (

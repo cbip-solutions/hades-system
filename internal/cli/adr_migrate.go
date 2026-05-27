@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_migrate.go (Plan 9 Phase I Task I-8).
+// Package cli — adr_migrate.go.
 //
 // `zen adr migrate [--dry-run] [--plan <range>]` is a one-time operator
-// tool: walk docs/decisions/*.md, parse legacy markdown headers, emit
+// tool: walk architecture records parse legacy markdown headers, emit
 // Structured MADR YAML frontmatter. Idempotent — already-migrated files
 // are skipped.
 //

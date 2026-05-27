@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package eventlog is the durable state-machine record for the autonomous
-// orchestrator (Plan 5, Q5 C). It stores typed events over the EXISTING
-// audit_events_raw table (no migration); Plan 9 wraps with hash-chain
+// orchestrator. It stores typed events over the EXISTING
+// audit_events_raw table (no migration); wraps with hash-chain
 // later. Subscribers register filters and receive push notifications
 // via channel-buffered drop-oldest backpressure (Task A-5). Replay()
 // reconstructs orchestrator state machine + in-flight worker assignments
@@ -10,71 +10,71 @@
 //
 // Boundaries (lint-enforced):
 //
-//	inv-zen-089  internal/orchestrator/* MUST NOT import internal/store.
-//	             Bridge via internal/daemon/orchestratoradapter/ (Phase N).
+// invariant internal/orchestrator/* MUST NOT import internal/store.
+// Bridge via internal/daemon/orchestratoradapter/.
 //
-//	inv-zen-090  internal/orchestrator/eventlog/ MUST NOT import
-//	             internal/workforce/queue/ (Plan 4). The event log records
-//	             STATE; the queues carry MESSAGES. Substrate separation.
+// invariant internal/orchestrator/eventlog/ MUST NOT import
+// internal/workforce/queue/. The event log records
+// STATE; the queues carry MESSAGES. Substrate separation.
 //
-//	inv-zen-095  Replay tolerates at most 5 corrupted events per session
-//	             (each emits ReplayCorruptionDetected). On the 6th, the
-//	             replay halts and the orchestrator transitions HARD_PAUSED
-//	             (driven by the caller; Replay returns ErrCorruptionBudget
-//	             exceeded).
+// invariant Replay tolerates at most 5 corrupted events per session
+// (each emits ReplayCorruptionDetected). On the 6th, the
+// replay halts and the orchestrator transitions HARD_PAUSED
+// (driven by the caller; Replay returns ErrCorruptionBudget
+// exceeded).
 //
 // Event types are frozen at 39 typed structs across the 27 spec §2.5
-// categories. Plan 5 G-2 added 2 (43-44); G-4 added 1 (45); G-6 added
+// categories. G-2 added 2 (43-44); G-4 added 1 (45); G-6 added
 // 2 (46-47); H-8 added 1 (48); I-5 added 1 (49); J-2 wired 3 (40-42);
-// K-7 added 1 (50). Plan 7 F-1 added 1 (51, EvtHandoffPosted) for the
+// K-7 added 1 (50). F-1 added 1 (51, EvtHandoffPosted) for the
 // /handoff slash command + zen day --eod integration.
-// docs/superpowers/specs/2026-05-14-zen-swarm-plan-14-ecosystem-rag-design.md §4.6.
+// internal design record §4.6.
 // Slots 71-91 are reserved for future plans; next free integer is 100.
 //
 // # Adding a new event type
 //
-//  1. Pick the next free integer (events.go tracks 1..70 and 92..99
-//     as used; slots 71-91 are reserved for future plans; next free
-//     after Plan 14 Phase A-1 is 100). Never insert in middle, never
-//     reuse retired numbers, never re-order — the integer is persisted
-//     in audit_events_raw and load-bearing for Plan 9 hash-chain replay
-//     AND Plan 14 ecosystem_audit_chain replay.
-//  2. Declare `EvtX EventType = N` in events.go.
-//  3. Add typed struct X with Type() returning EvtX + Payload() returning
-//     canonical JSON.
-//  4. Add EvtX to AllEventTypes() return slice.
-//  5. Add a case for EvtX to String() switch.
-//  6. Add a case for EvtX to Decode() switch.
-//  7. Add a row to events_test.go TestExhaustiveTypeAndPayload table.
-//  8. Update spec §2.5 + this doc.go category counter.
-//  9. Verify coverage stays 100% on internal/orchestrator/eventlog.
+// 1. Pick the next free integer (events.go tracks 1..70 and 92..99
+// as used; slots 71-91 are reserved for future plans; next free
+// after is 100). Never insert in middle, never
+// reuse retired numbers, never re-order — the integer is persisted
+// in audit_events_raw and load-bearing hash-chain replay
+// AND ecosystem_audit_chain replay.
+// 2. Declare `EvtX EventType = N` in events.go.
+// 3. Add typed struct X with Type() returning EvtX + Payload() returning
+// canonical JSON.
+// 4. Add EvtX to AllEventTypes() return slice.
+// 5. Add a case for EvtX to String() switch.
+// 6. Add a case for EvtX to Decode() switch.
+// 7. Add a row to events_test.go TestExhaustiveTypeAndPayload table.
+// 8. Update spec §2.5 + this doc.go category counter.
+// 9. Verify coverage stays 100% on internal/orchestrator/eventlog.
 //
 // # Privacy contract (mandatory for all emitters)
 //
-// Eventlog payloads are persisted to audit_events_raw (Plan 4 v22) and
+// Eventlog payloads are persisted to audit_events_raw and
 // queryable post-hoc. Free-text fields MAY contain leaked secrets if
 // emitted verbatim from worker output, LLM responses, or git diffs.
 //
 // Emitters MUST redact via internal/redact before constructing events:
-//   - Summary, Findings, DiffSummary, Rationale, Reason, Output: pre-redact
-//   - File paths: usually safe; pre-redact if path contains a token
-//   - Commit SHAs, IDs, counts: never redact (load-bearing for replay/audit)
+// - Summary, Findings, DiffSummary, Rationale, Reason, Output: pre-redact
+// - File paths: usually safe; pre-redact if path contains a token
+// - Commit SHAs, IDs, counts: never redact (load-bearing for replay/audit)
 //
 // Eventlog does NOT re-redact at write time. The contract is single-
-// direction: emitter is responsible. Plan 2's redact.Secret type may be
+// direction: emitter is responsible. redact.Secret type may be
 // used to type-enforce this in future iterations; current contract is
 // doc + review.
 //
-// Phase A defines the wire schema; Plan 2 redact + Phase N adapter
+// defines the wire schema; redact + adapter
 // connect emitters to the storage layer.
 //
-// The compile-check below ensures inv-zen-090 wiring at package init time.
+// The compile-check below ensures invariant wiring at package init time.
 package eventlog
 
 // substrateSeparated is a compile-time marker that this package compiles
 // without importing internal/workforce/queue. Removing the line below
 // MUST NOT cause a missing import; if a future contributor accidentally
-// imports queue, the inv-zen-090 compliance test fails.
+// imports queue, the invariant compliance test fails.
 var _ = substrateSeparated()
 
 func substrateSeparated() bool { return true }

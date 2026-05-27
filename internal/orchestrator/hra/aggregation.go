@@ -33,11 +33,11 @@ type Aggregator interface {
 // "needs_fix"; ack == fix → "needs_fix" + Disagreement (pessimistic
 // tie-break — escalating a tie costs operator attention but
 // suppressing one risks shipping a bug). Sub-majority winners (winner
-// strictly less than ⌈(N+1)/2⌉) flag Disagreement so Phase F's
+// strictly less than ⌈(N+1)/2⌉) flag Disagreement so
 // confirmation policy can reflect the soft consensus.
 //
 // Collects DISTINCT fix-proposal payload strings for downstream
-// FMV voting (Phase I): duplicate proposals from concurrent reviewer
+// FMV voting: duplicate proposals from concurrent reviewer
 // assemblies de-dup via the props set. Order in FixProposals is map
 // iteration order (non-deterministic by Go spec); callers MUST NOT
 // depend on ordering.

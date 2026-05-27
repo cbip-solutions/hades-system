@@ -15,31 +15,31 @@ import (
 //
 // Layer model (Q4 C, defense-in-depth):
 //
-//   - Layer A — `git worktree prune`: removes .git/worktrees/{name} admin
-//     entries that no longer reference an existing directory on disk.
-//     Cheap, idempotent, safe to run from a periodic ticker.
-//   - Layer B — filesystem `rm -rf` of leaked dirs (worktree dir without
-//     admin entry; admin entry without dir): more expensive + intent-
-//     driven, runs only via the public PruneOrphans API.
+// - Layer A — `git worktree prune`: removes.git/worktrees/{name} admin
+// entries that no longer reference an existing directory on disk.
+// Cheap, idempotent, safe to run from a periodic ticker.
+// - Layer B — filesystem `rm -rf` of leaked dirs (worktree dir without
+// admin entry; admin entry without dir): more expensive + intent-
+// driven, runs only via the public PruneOrphans API.
 //
 // gcLoop drives Layer A every tick. Layer B is invoked synchronously from
 // PruneOrphans (operator-driven via `zen doctor worktree-pool prune` →
-// orchestrator adapter, Phase N). On a Layer-A failure, gcLoop emits
-// EvtWorktreePoolDegraded with reason=gc-prune-failed so HRA Phase I Q8
+// orchestrator adapter, ). On a Layer-A failure, gcLoop emits
+// EvtWorktreePoolDegraded with reason=gc-prune-failed so HRA Q8
 // cost-pressure downgrade can react. Success is silent (the norm).
 //
 // Concurrency contract:
-//   - Subprocess invocation runs UNLOCKED — the prune can take a moment
-//     under disk pressure and we MUST NOT block Lease/Release/Close behind
-//     a slow git invocation. The prune wrapper itself touches no pool
-//     state; it is a pure subprocess fan-out.
-//   - p.gcCtx threads the context through prune so Close-driven
-//     cancellation kills any in-flight prune subprocess via Phase A
-//     osExecExecutor's exec.CommandContext.
-//   - On p.gcCtx.Done observation, the loop returns cleanly. defer
-//     close(p.gcDone) signals the Close path to stop waiting.
+// - Subprocess invocation runs UNLOCKED — the prune can take a moment
+// under disk pressure and we MUST NOT block Lease/Release/Close behind
+// a slow git invocation. The prune wrapper itself touches no pool
+// state; it is a pure subprocess fan-out.
+// - p.gcCtx threads the context through prune so Close-driven
+// cancellation kills any in-flight prune subprocess via
+// osExecExecutor's exec.CommandContext.
+// - On p.gcCtx.Done observation, the loop returns cleanly. defer
+// close(p.gcDone) signals the Close path to stop waiting.
 //
-// Phase A Clock seam (Q14 C, IMP-2): the ticker is built via
+// Clock seam (Q14 C, IMP-2): the ticker is built via
 // p.clk.NewTicker so tests inject *clock.Fake to drive cadence
 // deterministically (no wall-clock sleeps in test mode).
 func (p *concretePool) gcLoop() {
@@ -82,22 +82,22 @@ func (p *concretePool) runLayerA(ctx context.Context) error {
 //
 // Safety guards (defense-in-depth Q4 C):
 //
-//   - Pool-prefix filter: only dirs named `{PoolID}-...` or
-//     `zen-pool-{PoolID}-...` are candidates. WorktreeDir may legitimately
-//     host dirs from other pools or operator artefacts (rare but
-//     possible) — we do NOT touch them.
-//   - leased + warm membership: a dir with the right prefix that
-//     happens to back an in-flight worktree (e.g., spawnOne in flight,
-//     or warm slice live) is skipped. This closes the race where Layer
-//     B observes a dir on disk before its `git worktree add` completes
-//     and registers the admin entry.
-//   - Errors accumulate in report.Errors and do NOT abort the sweep —
-//     the partial-success contract lets dashboards see counters AND
-//     failure detail in a single report.
+// - Pool-prefix filter: only dirs named `{PoolID}-...` or
+// `zen-pool-{PoolID}-...` are candidates. WorktreeDir may legitimately
+// host dirs from other pools or operator artefacts (rare but
+// possible) — we do NOT touch them.
+// - leased + warm membership: a dir with the right prefix that
+// happens to back an in-flight worktree (e.g., spawnOne in flight,
+// or warm slice live) is skipped. This closes the race where Layer
+// B observes a dir on disk before its `git worktree add` completes
+// and registers the admin entry.
+// - Errors accumulate in report.Errors and do NOT abort the sweep —
+// the partial-success contract lets dashboards see counters AND
+// failure detail in a single report.
 //
 // B-7 ships the full Layer B body. B-8 adds adversarial test coverage
 // (concurrent leaseSlowPath spawn vs Layer B sweep, mid-sweep Close,
-// partial os.RemoveAll failures) and the .AdminOnlyCleared accounting
+// partial os.RemoveAll failures) and the.AdminOnlyCleared accounting
 // (admin entries with no dir on disk — Layer A clears these but the
 // count is reported here via list diffs in PruneOrphans).
 func (p *concretePool) runLayerB(ctx context.Context, report *PruneReport) {

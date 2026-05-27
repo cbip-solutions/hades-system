@@ -3,18 +3,18 @@
 //
 // Posts an Anthropic-shaped messages request to the daemon's
 // /v1/messages endpoint with X-Zen-Profile=research-synthesize.
-// Today (Plan 4 timeline) /v1/messages is served by the Plan 2
+// Today /v1/messages is served by the
 // anthropic-bypass route — the X-Zen-Profile header is recorded for
-// audit but does NOT route requests differently per profile. Plan 3
+// audit but does NOT route requests differently per profile.
 // (orchestrator) is the future extension point that will introduce
 // per-profile multi-backend routing; this file's request shape is
 // already compatible with that future change. Doc updated post-review
-// I-2 to reflect actual current behaviour (Plan 3 not yet merged on
+// I-2 to reflect actual current behaviour ( not yet merged on
 // main).
 //
 // Citation extraction: best-effort scan of fenced JSON code block in
 // the response (`json {"citations":[...]}`) — captures synthesizer-
-// emitted citations for inv-zen-075 verification downstream. Found
+// emitted citations for invariant verification downstream. Found
 // citations are returned as RawCitation; the cite verifier (Task I-9)
 // converts them to VerifiedCitation.
 package research

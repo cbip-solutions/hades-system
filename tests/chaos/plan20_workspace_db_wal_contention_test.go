@@ -11,29 +11,29 @@
 // multi-reader semantics, with _busy_timeout=5000 + SetMaxOpenConns(1),
 // MUST hold:
 //
-//   - no "database is locked" errors surface to callers (busy_timeout
-//     absorbs transient contention);
-//   - PRAGMA integrity_check post-load reports "ok" (no corruption);
-//   - read goroutines never observe a partially-applied write (no row
-//     with mid-INSERT values; SQLite snapshot isolation under WAL
-//     guarantees this; we re-assert it).
+// - no "database is locked" errors surface to callers (busy_timeout
+// absorbs transient contention);
+// - PRAGMA integrity_check post-load reports "ok" (no corruption);
+// - read goroutines never observe a partially-applied write (no row
+// with mid-INSERT values; SQLite snapshot isolation under WAL
+// guarantees this; we re-assert it).
 //
 // Bite-check (empirical, per feedback_plan_template_drift.md "reality wins"):
-//   - The plan-L spec proposed: drop _busy_timeout=5000 from federation/db.go
-//     DSN → expect "database is locked" surface to callers. EMPIRICAL FINDING
-//     (verified at write-time): with SetMaxOpenConns(1) at the Go pool layer,
-//     contention is absorbed BEFORE SQLite's busy_timeout matters — the
-//     bite-check at this load level does NOT trip.
-//   - The empirically-effective bite-check: drop SetMaxOpenConns(1) +
-//     _busy_timeout AND _journal_mode=WAL together (revert to multi-conn +
-//     DELETE journal); at sufficiently-high concurrency this DOES surface
-//     locked errors. Even then mattn/go-sqlite3's internal mutex absorbs
-//     small-N contention; the test is sized for the production load shape.
-//   - The structural protection here is the COMBINATION of WAL +
-//     _busy_timeout + SetMaxOpenConns(1); removing the combination is the
-//     real regression mode. This test asserts the combination holds (no
-//     locked errors + no corruption + integrity_check ok) under sustained
-//     write+read load.
+// - The plan-L spec proposed: drop _busy_timeout=5000 from federation/db.go
+// DSN → expect "database is locked" surface to callers. EMPIRICAL FINDING
+// (verified at write-time): with SetMaxOpenConns(1) at the Go pool layer,
+// contention is absorbed BEFORE SQLite's busy_timeout matters — the
+// bite-check at this load level does NOT trip.
+// - The empirically-effective bite-check: drop SetMaxOpenConns(1) +
+// _busy_timeout AND _journal_mode=WAL together (revert to multi-conn +
+// DELETE journal); at sufficiently-high concurrency this DOES surface
+// locked errors. Even then mattn/go-sqlite3's internal mutex absorbs
+// small-N contention; the test is sized for the production load shape.
+// - The structural protection here is the COMBINATION of WAL +
+// _busy_timeout + SetMaxOpenConns(1); removing the combination is the
+// real regression mode. This test asserts the combination holds (no
+// locked errors + no corruption + integrity_check ok) under sustained
+// write+read load.
 //
 // Why TDD via revert-impl bite-check: the WAL + _busy_timeout DSN is
 // already wired (federation/db.go line 112); this test pins the JOINT
@@ -42,8 +42,7 @@
 // writer threshold without restoring WAL+timeout) surfaces the regression
 // in this gate's PRAGMA integrity_check + locked-err counter.
 
-//go:build chaos && cgo
-
+// go:build chaos && cgo
 package chaos
 
 import (
@@ -64,11 +63,11 @@ import (
 // busy_timeout + single-writer-pool posture under sustained concurrent
 // write+read load:
 //
-//   - 10 concurrent writer goroutines (W) each register their own
-//     workspace + insert N links + breaking_changes;
-//   - 8 concurrent reader goroutines (R) iterate workspaces + endpoints
-//   - breaking_changes in tight loops;
-//   - on completion, run PRAGMA integrity_check; assert "ok".
+// - 10 concurrent writer goroutines (W) each register their own
+// workspace + insert N links + breaking_changes;
+// - 8 concurrent reader goroutines (R) iterate workspaces + endpoints
+// - breaking_changes in tight loops;
+// - on completion, run PRAGMA integrity_check; assert "ok".
 //
 // Under WAL + single-writer + _busy_timeout=5000 every operation MUST
 // succeed without "database is locked" errors. Reader/writer goroutines

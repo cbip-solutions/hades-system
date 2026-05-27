@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — state_regenerate.go (Plan 9 Phase I Task I-10).
+// Package cli — state_regenerate.go.
 //
 // `zen state regenerate [--dry-run]` calls POST /v1/state/regenerate.
 // With --dry-run the TOML file is NOT rewritten; a diff of what would

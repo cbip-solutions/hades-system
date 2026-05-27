@@ -182,7 +182,7 @@ func TestAttachSingleFieldTmuxCmdRejected(t *testing.T) {
 // TestAttachTestModeEcho — when running under `go test`, the cobra RunE
 // MUST NOT actually exec tmux (would replace the test process); instead
 // it echoes the daemon-returned command to stdout. isTestMode() detects
-// the .test binary suffix.
+// the.test binary suffix.
 func TestAttachTestModeEcho(t *testing.T) {
 	wantCmd := "tmux -S /tmp/zen-swarm.sock attach -t zen-internal-platform-x-deadbeef:orch"
 	c := &fakeAttachClient{tmuxExecCmd: wantCmd}

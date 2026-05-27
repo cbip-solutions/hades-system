@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
 // tests/testharness/sshd_fake.go
 //
-// Phase L Task L-1 — embedded crypto/ssh server harness.
+// Task L-1 — embedded crypto/ssh server harness.
 //
 // FakeSSHD listens on a random localhost port, accepts any agent key,
 // and runs a scripted handler returning bytes + exit code. Supports:
-//   - normal stdout/stderr scripted output
-//   - interactive prompt simulation (Stdout content emitted before
-//     any benign output by the test handler)
-//   - raw scripted bytes (RawStdout / RawStderr) for adversarial tests
-//   - delayed responses (handler returns Delay)
-//   - max active connections guard
+// - normal stdout/stderr scripted output
+// - interactive prompt simulation (Stdout content emitted before
+// any benign output by the test handler)
+// - raw scripted bytes (RawStdout / RawStderr) for adversarial tests
+// - delayed responses (handler returns Delay)
+// - max active connections guard
 //
-// Reused by Phase L unit/integration/adversarial/compliance tests AND by
-// future Plan 5+ phases that test ssh-exec paths.
+// Reused by unit/integration/adversarial/compliance tests AND by
+// future + phases that test ssh-exec paths.
 //
 // Why a fake instead of real OpenSSH?
-//   - Deterministic timing (no jitter from the OS scheduler).
-//   - Adversarial scripting: real OpenSSH cannot be coerced into emitting
-//     raw TIOCSTI bytes; we need byte-level control.
-//   - CI portability: no need to install OpenSSH on every runner.
+// - Deterministic timing (no jitter from the OS scheduler).
+// - Adversarial scripting: real OpenSSH cannot be coerced into emitting
+// raw TIOCSTI bytes; we need byte-level control.
+// - CI portability: no need to install OpenSSH on every runner.
 //
 // Realworld test (tests/realworld/sshexec_actual_test.go) covers actual
 // OpenSSH path under build tag `realworld`.

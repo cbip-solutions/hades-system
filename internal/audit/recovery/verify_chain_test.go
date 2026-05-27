@@ -280,7 +280,7 @@ func TestVerifyChainDetectsWitnessSignatureFailure(t *testing.T) {
 // (false, non-nil) branch on WitnessVerifier — VerifyChain MUST bubble
 // the error back to the caller WITHOUT setting PathWitnessSignatureInvalid
 // (a verify-path infrastructure failure is NOT a tamper signal).
-// Closure for Plan 9 cross-phase review CRITICAL-1.
+// Closure cross-phase review CRITICAL-1.
 func TestVerifyChainPropagatesWitnessVerifyError(t *testing.T) {
 	r1 := makeChainRecord(nil, 1, "audit.foo", `{"k":"v"}`, 1700000000, "leaf1")
 	seal := SealMeta{

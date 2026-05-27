@@ -67,7 +67,7 @@ func New(runner Runner) *Verifier {
 	return &Verifier{
 		Platforms: canonicalPlatforms,
 		Runner:    runner,
-		Owner:     "hades-system",
+		Owner:     "cbip-solutions",
 		Repo:      "hades-system",
 		Mode:      ModeFull,
 	}
@@ -225,8 +225,8 @@ func (v *Verifier) VerifyCGOSupplementEntries(art ReleaseArtifact) error {
 		return fmt.Errorf("parse merged SBOM %s: %w", cdxPath, err)
 	}
 	// The 3 supplement components that MUST be present in every merged
-	// CycloneDX. Mirrors configs/cgo-supplement.cdx.json post Stage-0
-	// reality-check (Phase E-2 amend).
+	// CycloneDX. Mirrors configs/cgo-supplement.cdx.json post
+	// reality-check.
 	wantNames := map[string]bool{
 		"sqlite-vec":             false,
 		"Foundation framework":   false,

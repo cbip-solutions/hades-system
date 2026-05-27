@@ -2,20 +2,20 @@
 // Package budget implements the zen-swarm budget MCP server.
 //
 // The server exposes seven stdio tools wrapping the daemon /v1/budget/* HTTP
-// endpoints via the internal/mcp/client typed wrapper (Phase H). All budget
+// endpoints via the internal/mcp/client typed wrapper. All budget
 // logic — multi-axis accounting, z-score anomaly detection, hierarchical
-// hard-pause state machine — lives in internal/budget/ (Phase F) and is
+// hard-pause state machine — lives in internal/budget/ and is
 // accessed exclusively through the daemon HTTP API (Q9 B: daemon owns shared
 // state).
 //
 // Boundary invariants:
-//   - inv-zen-031: this package NEVER imports internal/store, internal/budget/,
-//     or internal/daemon/. Only internal/mcp/client/ and stdlib.
-//   - inv-zen-086: no HTTP server code in this package; go-sdk stdio canonical.
-//   - inv-zen-085: the HTTP client (Phase H) enforces daemon-socket-only egress.
+// - invariant: this package NEVER imports internal/store, internal/budget/,
+// or internal/daemon/. Only internal/mcp/client/ and stdlib.
+// - invariant: no HTTP server code in this package; go-sdk stdio canonical.
+// - invariant: the HTTP client enforces daemon-socket-only egress.
 //
 // (internal/store/cost_ledger.go) is the single write-path for cost rows.
-// Phase J never inserts cost rows; the tag tool uses /v1/budget/record to
+// never inserts cost rows; the tag tool uses /v1/budget/record to
 // post axis attribution only (AmountUSD=0).
 //
 // Daemon semantic of POST /v1/budget/record amount_usd=0: the daemon treats

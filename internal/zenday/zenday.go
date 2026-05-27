@@ -86,9 +86,9 @@ func (bt BriefType) String() string {
 // "scheduled-job:internal-platform-x.cost-sweep" | "external:gh:internal-platform-x#34").
 //
 // JSON tags are canonical: this struct is the wire shape consumed by
-// Phase I HTTP handlers (`internal/daemon/handlers/zenday.go`) via
-// `type ZenDayItem = zenday.BriefItem`. Stage 2 review CRITICAL #9
-// reconciliation (2026-05-01): Phase I MUST NOT declare a parallel
+// HTTP handlers (`internal/daemon/handlers/zenday.go`) via
+// `type ZenDayItem = zenday.BriefItem`. review CRITICAL #9
+// reconciliation (2026-05-01): MUST NOT declare a parallel
 // `ZenDayItem` struct that drops fields silently.
 type BriefItem struct {
 	Rank LeverageRank `json:"rank"`

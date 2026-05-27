@@ -1,13 +1,14 @@
-// tests/orchestrator_chaos/merge_chaos_test.go (Plan 6 Phase E Task E-5).
+// tests/orchestrator_chaos/merge_chaos_test.go.
 //
 // Orchestrator-chaos tier validates the recovery flow per spec §3.6 — daemon
-// SIGKILL mid-merge → restart → cache rebuilt from eventlog. For Phase E we
+// SIGKILL mid-merge → restart → cache rebuilt from eventlog. For we
 // test the merge-side contract abstractly: daemon-restart is simulated by
 // reconstructing a fresh merge.Cache and invoking Cache.Rebuild on the
 // captured pre-SIGKILL event stream. The full daemon-subprocess analog ships
-// in orchestrator_chaos_test.go (Plan 5 Phase O Task O-7); this file focuses
+// in orchestrator_chaos_test.go; this file focuses
 // on the merge-package contract decoupled from the daemon transport.
 //
+// go:build orchestrator_chaos
 //go:build orchestrator_chaos
 // +build orchestrator_chaos
 

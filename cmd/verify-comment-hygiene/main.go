@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Command verify-comment-hygiene runs Phase K classifier scan + godoc lint.
+// Command verify-comment-hygiene runs classifier scan + godoc lint.
 //
-// Composite Go binary mirroring cmd/verify-30-ci-green pattern (Plan 15 A-5).
+// Composite Go binary mirroring cmd/verify-30-ci-green pattern.
 // Composes scripts/verify_no_task_context_comments.sh + scripts/verify_godoc_clean.sh
-// into a single CI release-gate target consumable by Phase G aggregator.
+// into a single CI release-gate target consumable by aggregator.
 //
 // Exit codes:
 //
-//	0 — both checks clean
-//	1 — rot patterns found
-//	2 — godoc violations found
-//	3 — IO error (script invocation, scan failure)
+// 0 — both checks clean
+// 1 — rot patterns found
+// 2 — godoc violations found
+// 3 — IO error (script invocation, scan failure)
 package main
 
 import (

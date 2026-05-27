@@ -65,8 +65,8 @@ async def query_daemon(
     body is returned (not None) so the top-level handler can detect and
     dispatch the three-line error block.
 
-    Phase C-2 ships the happy-path semantics (every endpoint OK).
-    Phase C-3 extends with degraded-mode classification: None marks
+     ships the happy-path semantics (every endpoint OK).
+     extends with degraded-mode classification: None marks
     a degraded field which downstream rendering surfaces as
     ``<field>: unavailable (...)`` per spec §Q5.
     """
@@ -105,7 +105,7 @@ async def query_daemon(
 def classify_field_state(response: dict[str, Any] | None) -> str:
     """Return 'ok' if response is non-None, 'degraded' otherwise.
 
-    Schema-v1 state classifier per spec §Q5 + inv-zen-221.
+    Schema-v1 state classifier per spec §Q5 + invariant.
     """
     return "ok" if response is not None else "degraded"
 

@@ -1,26 +1,26 @@
 // SPDX-License-Identifier: MIT
-// Package cli — error_render.go (Plan 18c Phase B).
+// Package cli — error_render.go.
 //
 // Render is the SINGLE error-rendering entry point for the zen + hades
 // CLI binaries. Every cobra RunE boundary routes through this function
 // via the cobra integration in cmd/zen/main.go + cmd/hades/main.go.
 //
-// Output format (per spec §Q6 + Plan 18a Phase B palette):
+// Output format:
 //
-//	HADES <short title from catalog>   (#c41e3a crimson)
-//	  <gray body template, sprintf'd with context vars>  (#999 gray)
-//	  → <green recovery hint from catalog>  (#10b981 green)
+// HADES <short title from catalog> (#c41e3a crimson)
+// <gray body template, sprintf'd with context vars> (#999 gray)
+// → <green recovery hint from catalog> (#10b981 green)
 //
-// inv-zen-088 boundary: Render is PURE. It does NOT make network/IO
-// calls; it only formats. The catalog lookup is in-process (Phase A's
+// invariant boundary: Render is PURE. It does NOT make network/IO
+// calls; it only formats. The catalog lookup is in-process (
 // internal/errors package).
 //
-// inv-zen-219 boundary: Render's output is HADES-branded by construction
-// — the catalog entries (Phase A) supply HADES-branded titles + bodies
+// invariant boundary: Render's output is HADES-branded by construction
+// — the catalog entries supply HADES-branded titles + bodies
 // + recovery hints; Render only reformats them.
 //
-// Defense in depth (Phase B Task B-5): uncoded errors (raw fmt.Errorf
-// or panics caught by recover() in main.go) are rendered via the Phase A
+// Defense in depth: uncoded errors (raw fmt.Errorf
+// or panics caught by recover() in main.go) are rendered via the
 // reserved "internal-uncaught" code with the cause embedded in the body.
 package cli
 
@@ -206,12 +206,12 @@ func renderCatalogMiss(code errors.Code, useColor bool) string {
 // cobra's Execute return value.
 //
 // Mapping
-//   - nil          → 0 (success)
-//   - severity fatal → 2 (unrecoverable; daemon unreachable; panic; etc.)
-//   - severity error → 1 (operator-recoverable; bad input; daemon 4xx)
-//   - severity warn  → 0 (warning printed but process succeeded)
-//   - severity info  → 0 (informational)
-//   - uncoded error  → 2 (defense-in-depth: treat unknowns as fatal)
+// - nil → 0 (success)
+// - severity fatal → 2 (unrecoverable; daemon unreachable; panic; etc.)
+// - severity error → 1 (operator-recoverable; bad input; daemon 4xx)
+// - severity warn → 0 (warning printed but process succeeded)
+// - severity info → 0 (informational)
+// - uncoded error → 2 (defense-in-depth: treat unknowns as fatal)
 //
 // stderrors.As unwraps the chain so wrapped *CodedError still maps
 // correctly even when further wrapped with fmt.Errorf.

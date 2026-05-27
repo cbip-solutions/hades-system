@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18a_integration_test
 
 import (
@@ -142,7 +141,7 @@ func TestPlan18aFoundation_WriterEnforcesInvZen217(t *testing.T) {
 	}
 	s := string(body)
 
-	// inv-zen-217: stdio form for zen-swarm-ctld must NOT appear; HTTP
+	// invariant: stdio form for zen-swarm-ctld must NOT appear; HTTP
 	// transport markers MUST appear.
 	if strings.Contains(s, "command: zen-swarm-ctld") {
 		t.Errorf("inv-zen-217 violation: stdio form leaked through pipeline:\n%s", s)

@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
-// Package cli — workspace.go (Plan 20 Phase I).
+// Package cli — workspace.go.
 //
 // `zen workspace {init,list,members,link,remove,policy {get,set}}` — 7 verbs
 // total. The DECISION-5 policy-set flow is the load-bearing core:
-//  1. CLI emits the Plan-14 audit row `policy_change_requested` FIRST
-//     (records operator intent regardless of prompt outcome);
-//  2. interactive confirmation prompt via cmd.InOrStdin() + bufio reader;
-//     3a. on confirm + daemon-OK: daemon API call performs the change + emits
-//     a SECOND audit row `policy_change_committed`;
-//     3b. on confirm + daemon-error (e.g. capa-firewall denied): daemon API
-//     call fails + CLI emits `policy_change_failed` (committed intent +
-//     failed execution) before propagating the recoverable error;
-//     3c. on abort: no daemon API call + emits a SECOND audit row
-//     `policy_change_aborted`.
+// 1. CLI emits the audit row `policy_change_requested` FIRST
+// (records operator intent regardless of prompt outcome);
+// 2. interactive confirmation prompt via cmd.InOrStdin() + bufio reader;
+// 3a. on confirm + daemon-OK: daemon API call performs the change + emits
+// a SECOND audit row `policy_change_committed`;
+// 3b. on confirm + daemon-error (e.g. capa-firewall denied): daemon API
+// call fails + CLI emits `policy_change_failed` (committed intent +
+// failed execution) before propagating the recoverable error;
+// 3c. on abort: no daemon API call + emits a SECOND audit row
+// `policy_change_aborted`.
 //
 // Four audit event-types total: `policy_change_requested` (always),
 // `policy_change_committed` (confirm + daemon-OK), `policy_change_failed`
@@ -24,8 +24,8 @@
 // `--yes` bypasses the prompt for scripted runs; non-interactive without
 // `--yes` is rejected (destructive-default-no per CLAUDE.md hard rule).
 //
-// Routes via the daemon /v1/mcpgateway/workspace/* sub-routes (inv-zen-088
-// single-egress, inv-zen-129 no direct net/http). Tests inject
+// Routes via the daemon /v1/mcpgateway/workspace/* sub-routes (invariant
+// single-egress, invariant no direct net/http). Tests inject
 // WorkspaceClient fakes.
 package cli
 

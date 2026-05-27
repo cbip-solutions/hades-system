@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package client — citation.go
 //
-// audit-event daemon endpoints shipped by Phase D (audit_event handler).
-// Phase E only needs the audit-event resolver here; the structured
-// citation rendering lives behind the daemon-side renderer set (Plan 12
-// ships the 6 platform renderers; Plan 11 ships only the
+// audit-event daemon endpoints shipped by (audit_event handler).
+// only needs the audit-event resolver here; the structured
+// citation rendering lives behind the daemon-side renderer set (
+// ships the 6 platform renderers; ships only the
 // markdown_fallback).
 package client
 

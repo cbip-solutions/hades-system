@@ -1,25 +1,25 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// RequireOperatorIdentity middleware (Plan 5 Phase F Task F-5,
-// inv-zen-099).
+// RequireOperatorIdentity middleware ( Task F-5,
+// invariant).
 //
-// The Phase N daemon accepts operator overrides (confirmation ack/deny,
+// The daemon accepts operator overrides (confirmation ack/deny,
 // doctrine revert, autonomy mode change, depth flag) over a Unix domain
 // socket. This middleware is the SINGLE audit channel through which every
 // authorized override flows: it
 //
-//  1. Pulls peer credentials from the underlying *net.UnixConn — no
-//     `--user-id` flag, no header, no body field is ever trusted (the
-//     daemon process trusts the kernel, not the wire).
-//  2. Verifies the peer UID matches the daemon's ProcessUID. Mismatch
-//     surfaces ErrOperatorIdentityMismatch and EMITS NOTHING via this
-//     audit channel. Per spec §7.1, failed-auth events live in daemon
-//     access logs — putting them here would drown real overrides in
-//     impostor noise. (The threat model treats peer-cred mismatch as
-//     an external authn failure, not an internal authz event.)
-//  3. On match: appends EvtOperatorOverrideApplied with payload
-//     {OperatorUID, OperatorReason, OverrideKind} so audit consumers and
-//     override to (UID, reason, kind) without lossy fall-through.
+// 1. Pulls peer credentials from the underlying *net.UnixConn — no
+// `--user-id` flag, no header, no body field is ever trusted (the
+// daemon process trusts the kernel, not the wire).
+// 2. Verifies the peer UID matches the daemon's ProcessUID. Mismatch
+// surfaces ErrOperatorIdentityMismatch and EMITS NOTHING via this
+// audit channel. Per spec §7.1, failed-auth events live in daemon
+// access logs — putting them here would drown real overrides in
+// impostor noise. (The threat model treats peer-cred mismatch as
+// an external authn failure, not an internal authz event.)
+// 3. On match: appends EvtOperatorOverrideApplied with payload
+// {OperatorUID, OperatorReason, OverrideKind} so audit consumers and
+// override to (UID, reason, kind) without lossy fall-through.
 //
 // Platform-specific peer-cred lookups live in peercred_{linux,darwin,
 // other}.go — Linux uses SO_PEERCRED via golang.org/x/sys/unix.
@@ -27,10 +27,10 @@
 // (the cross-platform wrapper from x/sys/unix on Darwin). The syscall is
 // isolated behind the OperatorIdentityConfig.PeerCredentials function
 // variable so unit tests inject a fake; cross-platform compilation is
-// guarded by `GOOS=linux go build ./...` + `GOOS=darwin go build ./...`
+// guarded by `GOOS=linux go build./...` + `GOOS=darwin go build./...`
 // in the F-5 gate set.
 //
-// Phase F ships the middleware + audit emission only. Phase N wires the
+// ships the middleware + audit emission only. wires the
 // HTTP handler chain so /v1/confirmations/{ack,deny}, /v1/doctrine/revert,
 // /v1/autonomy, /v1/depth all funnel through Authenticate before
 // mutating orchestrator state. Adding a new operator-override surface
@@ -51,7 +51,7 @@ import (
 var ErrOperatorIdentityMismatch = errors.New("orchestrator: operator UID mismatch")
 
 // OverrideKind enumerates the audited override surfaces. Every surface
-// in Phase F + future Phase L (autonomy mode) + Phase H (depth flag)
+// in + future (autonomy mode) + (depth flag)
 // MUST go through Authenticate before mutating orchestrator state; the
 // kind value lands verbatim in the EvtOperatorOverrideApplied audit
 // row's override_kind field.
@@ -59,7 +59,7 @@ var ErrOperatorIdentityMismatch = errors.New("orchestrator: operator UID mismatc
 // The set is intentionally CLOSED: new overrides must add a new
 // constant + a new test row in TestRequireOperatorIdentity_AllOverrideKinds_Audited.
 // This is the same closed-taxonomy discipline applied to EventType
-// (Phase A) and DecisionClass (Phase F-1).
+// and DecisionClass.
 type OverrideKind string
 
 const (
@@ -100,12 +100,12 @@ func NewOperatorIdentityMiddleware(cfg OperatorIdentityConfig) *OperatorIdentity
 //
 // Failure modes (each surfaces a wrapped error and an empty
 // OperatorIdentity, and emits NO audit event):
-//   - peer-cred lookup error: wrapped as "peer-cred lookup: ..." (the
-//     underlying syscall error survives errors.Is)
-//   - UID mismatch: wrapped ErrOperatorIdentityMismatch with the
-//     observed UIDs in the message; errors.Is(err,
-//     ErrOperatorIdentityMismatch) is the load-bearing test
-//   - Append failure: wrapped as "append OperatorOverrideApplied: ..."
+// - peer-cred lookup error: wrapped as "peer-cred lookup:..." (the
+// underlying syscall error survives errors.Is)
+// - UID mismatch: wrapped ErrOperatorIdentityMismatch with the
+// observed UIDs in the message; errors.Is(err,
+// ErrOperatorIdentityMismatch) is the load-bearing test
+// - Append failure: wrapped as "append OperatorOverrideApplied:..."
 //
 // Failed-auth attempts are NOT logged via this audit channel — daemon
 // access logs handle them separately to avoid masking real overrides
@@ -113,7 +113,7 @@ func NewOperatorIdentityMiddleware(cfg OperatorIdentityConfig) *OperatorIdentity
 //
 // ctx is caller-controlled. Peer-cred lookup is fast (one syscall, no
 // I/O), and Append is bounded by the eventlog emitter (RawEmitter at
-// Phase A); cancellation propagates naturally. We do NOT use
+// ); cancellation propagates naturally. We do NOT use
 // context.WithoutCancel here — F-2/F-3's cleanup paths use it for
 // Resume on the rollback path because cleanup must outlive cancellation,
 // but Authenticate has no cleanup obligation (no state was committed

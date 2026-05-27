@@ -110,7 +110,7 @@ def test_skill_md_has_hades_branding(
     skill_name: str,
     requires_name_hades: bool,
 ) -> None:
-    """Phase E rebrand: every SKILL.md prose body contains 'HADES' as a
+    """ rebrand: every SKILL.md prose body contains 'HADES' as a
     current-product reference and contains NO non-allowlisted 'zen-swarm'.
     """
     skill_path = SKILLS_ROOT / skill_name / "SKILL.md"
@@ -141,7 +141,7 @@ def test_skill_md_frontmatter_name_field_is_hades(
     requires_name_hades: bool,
 ) -> None:
     """Meta-skill SKILL.md: frontmatter `name: hades` is canonical per
-    Phase A A-6 rename + Phase E-10a rebrand.
+     A-6 rename +  rebrand.
     """
     skill_path = SKILLS_ROOT / skill_name / "SKILL.md"
     body = skill_path.read_text(encoding="utf-8")
@@ -164,10 +164,10 @@ def test_skill_md_frontmatter_name_field_is_hades(
 
 
 def test_skill_count_unchanged() -> None:
-    """Sister-test: Phase E MUST NOT add or remove SKILL.md files.
+    """Sister-test:  MUST NOT add or remove SKILL.md files.
 
     The expected count is exactly 13 (per spec §Q3 IN-table line "SKILL.md
-    content (13 skills)"). Phase A renamed `zen-swarm/SKILL.md` to
+    content (13 skills)").  renamed `zen-swarm/SKILL.md` to
     `hades/SKILL.md` — count remains 13.
     """
     skill_paths = sorted(SKILLS_ROOT.glob("*/SKILL.md"))

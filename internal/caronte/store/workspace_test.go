@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -319,7 +320,7 @@ func TestWorkspaceCrossRepoLink_NoLinkStore_KeepsPlan19Behavior(t *testing.T) {
 }
 
 // TestWorkspaceCrossRepoLink_LinkStoreErrorPropagates asserts a downstream
-// persistence error fans out as a clean wrapped error (callers in Phase F
+// persistence error fans out as a clean wrapped error (callers in
 // switch on it). Review I1 extension: the in-memory `pending` ledger
 // MUST NOT be polluted when the persistent write fails — ledger and
 // store are kept in lock-step (persist-then-append).
@@ -365,7 +366,7 @@ func TestWorkspaceCrossRepoLink_LinkStoreErrorPropagates(t *testing.T) {
 
 // TestWorkspaceCrossRepoLink_LinkStorePreservesCallerSetFields asserts a
 // caller-set non-zero ResolvedAt + non-empty LinkMethod SURVIVE the
-// default-population branch — the Phase F linker constructs the full
+// default-population branch — the linker constructs the full
 // 8-field literal directly and the seam must not clobber those values.
 // Review I1 extension: the in-memory pending ledger entry and the
 // fake-linkStore captured entry MUST be byte-identical (single source
@@ -580,7 +581,7 @@ func TestEnableGraphQLNodeFallbackPortDelegatesFalse(t *testing.T) {
 }
 
 // TestEnableGraphQLNodeFallbackPortErrorFailsClosed pins the fail-closed
-// contract: a port-lookup error MUST degrade to false (the inv-zen-272
+// contract: a port-lookup error MUST degrade to false (the invariant
 // spawn gate is fail-closed under any persistence failure; a transient
 // federation-DB error must NEVER open the spawn site). The accessor's
 // contract is bool-only: the error is swallowed (the port impl is the
@@ -597,7 +598,7 @@ func TestEnableGraphQLNodeFallbackPortErrorFailsClosed(t *testing.T) {
 	}
 	// Even though the port would return enabled=true, the error MUST
 	// fail-closed to false. A transient persistence failure must NEVER
-	// open the inv-zen-272 spawn gate.
+	// open the invariant spawn gate.
 	if got := w.EnableGraphQLNodeFallback(); got {
 		t.Errorf("EnableGraphQLNodeFallback() with port error = %v; want false (fail-closed contract)", got)
 	}

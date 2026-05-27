@@ -12,31 +12,31 @@
 // express.
 //
 // State transitions:
-//   - closed (default): provider permitted; outcomes feed the rolling-window
-//     TierHealth. On N consecutive failures (FailureThreshold) the breaker
-//     transitions to suspect.
-//   - suspect: provider denied; AttemptRecovery may be called by the recovery
-//     scheduler (Phase D-3) to invoke backend.Probe. Probe success → closed
-//     (and the underlying TierHealth is reset so the next outcome stream
-//     starts fresh). Probe failure → open with openAt = time.Now().
-//   - open: provider denied; AttemptRecovery is a no-op until time.Since(openAt)
-//     >= Cooldown, after which the same suspect → probe path runs.
-//   - ANY → closed on RecordSuccess (a successful real-traffic call is the
-//     strongest signal of recovery).
+// - closed (default): provider permitted; outcomes feed the rolling-window
+// TierHealth. On N consecutive failures (FailureThreshold) the breaker
+// transitions to suspect.
+// - suspect: provider denied; AttemptRecovery may be called by the recovery
+// scheduler to invoke backend.Probe. Probe success → closed
+// (and the underlying TierHealth is reset so the next outcome stream
+// starts fresh). Probe failure → open with openAt = time.Now().
+// - open: provider denied; AttemptRecovery is a no-op until time.Since(openAt)
+// >= Cooldown, after which the same suspect → probe path runs.
+// - ANY → closed on RecordSuccess (a successful real-traffic call is the
+// strongest signal of recovery).
 //
 // Concurrency model:
-//   - One sync.Mutex (cb.mu) protects the cb.breakers map and every tierState.
-//   - AttemptRecovery uses a two-phase lock pattern: it acquires the lock
-//     to read state and decide whether to probe, releases the lock so the
-//     probe (potentially slow network round-trip) does not block other
-//     providers, then re-acquires the lock to commit the post-probe state.
-//     The tierState pointer is re-fetched after re-locking; in practice
-//     this returns the same pointer (entries are never deleted) but the
-//     re-fetch is a defensive guard against future map-replacement changes.
-//   - All other methods (Permit, RecordSuccess, RecordFailure, State)
-//     are simple Lock/defer-Unlock — fast, no I/O.
+// - One sync.Mutex (cb.mu) protects the cb.breakers map and every tierState.
+// - AttemptRecovery uses a two-phase lock pattern: it acquires the lock
+// to read state and decide whether to probe, releases the lock so the
+// probe (potentially slow network round-trip) does not block other
+// providers, then re-acquires the lock to commit the post-probe state.
+// The tierState pointer is re-fetched after re-locking; in practice
+// this returns the same pointer (entries are never deleted) but the
+// re-fetch is a defensive guard against future map-replacement changes.
+// - All other methods (Permit, RecordSuccess, RecordFailure, State)
+// are simple Lock/defer-Unlock — fast, no I/O.
 //
-// Boundary (inv-zen-031): this file imports stdlib + internal/providers
+// Boundary: this file imports stdlib + internal/providers
 // only. The orchestrator package MUST NOT import internal/store directly;
 // boundary crossings flow through internal/daemon/dispatcheradapter.
 
@@ -173,17 +173,17 @@ func (cb *CircuitBreaker) RecordRateLimited(name string, retryAfter time.Duratio
 	ts.cooldownUntil = time.Now().Add(rateLimitCooldown(retryAfter, ts.rlAttempt))
 }
 
-// AttemptRecovery is called by the recovery scheduler (Phase D-3) or
+// AttemptRecovery is called by the recovery scheduler or
 // on-demand to attempt to heal a Suspect or post-cooldown Open provider.
 // Returns true iff the provider is StateClosed after this call (heal).
 //
 // Behaviour by current state:
-//   - Closed: returns true immediately (already healthy).
-//   - Suspect: invokes backend.Probe. Success → Closed (true), TierHealth
-//     reset. Failure → Open (false), openAt = time.Now().
-//   - Open with cooldown not elapsed: no probe; returns false.
-//   - Open with cooldown elapsed: transitions to Suspect, then runs the
-//     suspect probe path above.
+// - Closed: returns true immediately (already healthy).
+// - Suspect: invokes backend.Probe. Success → Closed (true), TierHealth
+// reset. Failure → Open (false), openAt = time.Now().
+// - Open with cooldown not elapsed: no probe; returns false.
+// - Open with cooldown elapsed: transitions to Suspect, then runs the
+// suspect probe path above.
 //
 // Concurrency the probe runs OUTSIDE the breaker's lock. A slow probe
 // MUST NOT block other providers' RecordSuccess / RecordFailure / Permit

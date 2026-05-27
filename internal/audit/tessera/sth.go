@@ -136,7 +136,7 @@ func newTesseraAppender(ctx context.Context, projectID string, s *posixStorage, 
 // newCheckpointSigner produces an ephemeral note.Signer suitable for
 // Tessera's WithCheckpointSigner option. The Tessera library mandates
 // a non-nil signer in AppendOptions.valid(); using a fresh Ed25519
-// key at construction time keeps Phase A self-contained (no operator
+// key at construction time keeps self-contained (no operator
 // setup) while preserving the structural invariant that every
 // persisted checkpoint carries an Ed25519 signature alongside its
 // origin/size/root_hash.
@@ -147,7 +147,7 @@ func newTesseraAppender(ctx context.Context, projectID string, s *posixStorage, 
 // daemon-global Checkpoint (A-7) passes `sthOriginPrefix + "-checkpoint"`
 // so its checkpoints never collide with any per-project tile-log's.
 //
-// Phase A-5 ships these ephemeral signatures unverified; the daemon
+// ships these ephemeral signatures unverified; the daemon
 // witness (ECDSA P-256 in the Witness type from A-2) is the
 // authoritative tamper-evidence signer and is wired through A-6's
 // CoSigner over the STH stream. The note signer here exists solely
@@ -166,9 +166,9 @@ func newCheckpointSigner(name string) (note.Signer, error) {
 //
 // Tessera v1.0.2 contract:
 //
-//	Add(ctx, *Entry) → IndexFuture; future() blocks until the leaf
-//	is durably persisted to the underlying driver. Errors are
-//	surfaced via future(), not at the call site.
+// Add(ctx, *Entry) → IndexFuture; future() blocks until the leaf
+// is durably persisted to the underlying driver. Errors are
+// surfaced via future(), not at the call site.
 //
 // STH publication is decoupled from this hot path: the
 // checkpoint-watcher goroutine (started by newTesseraAppender) polls

@@ -1,42 +1,42 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_doctrine.go (Plan 8 Phase N Task N-1; replaces
+// Package cli — doctor_doctrine.go ( Task N-1; replaces
 // spec §6.2 doctor template).
 //
 // PLAN 4 BASELINE (preserved by name):
-//   - doctrine.active.resolves
-//   - doctrine.builtins.load
+// - doctrine.active.resolves
+// - doctrine.builtins.load
 //
 // PLAN 8 EXTENDS to 11 checks (9 new + 2 extended):
-//   - doctrine.active.resolves                  (extended; per-project chain)
-//   - doctrine.builtins.load                    (extended; schema_version=1.0)
-//   - doctrine.overrides.per-project.healthy    (NEW)
-//   - doctrine.reload.watcher.healthy           (NEW)
-//   - doctrine.telemetry.subscriber.healthy     (NEW)
-//   - doctrine.lint.analyzers.registered        (NEW; in-process)
-//   - doctrine.schema.migration.status          (NEW)
-//   - doctrine.reinforcement.templates.parse    (NEW; in-process)
-//   - doctrine.amendments.pending               (NEW)
-//   - doctrine.events.recent                    (NEW)
-//   - doctrine.transverse.axioms.hardcoded      (NEW; in-process)
+// - doctrine.active.resolves (extended; per-project chain)
+// - doctrine.builtins.load (extended; schema_version=1.0)
+// - doctrine.overrides.per-project.healthy (NEW)
+// - doctrine.reload.watcher.healthy (NEW)
+// - doctrine.telemetry.subscriber.healthy (NEW)
+// - doctrine.lint.analyzers.registered (NEW; in-process)
+// - doctrine.schema.migration.status (NEW)
+// - doctrine.reinforcement.templates.parse (NEW; in-process)
+// - doctrine.amendments.pending (NEW)
+// - doctrine.events.recent (NEW)
+// - doctrine.transverse.axioms.hardcoded (NEW; in-process)
 //
 // BOUNDARY-PIVOT FROM PLAN: the plan envisioned three additional doctor-
 // introspection HTTP endpoints (/v1/doctrine/reload-state, /lint-status,
-// /telemetry-status) that Phase J did not ship. Phase N consumes the
+// /telemetry-status) that did not ship. consumes the
 // actually-shipped surface:
 //
-//   - in-process: builtins.load, reinforcement.templates.parse,
-//     transverse.axioms.hardcoded, lint.analyzers.registered (compile-time
-//     references to internal/doctrine/lint/analyzers/{nostub,nostore,
-//     conventional_commit}.Analyzer singletons)
-//   - GET /v1/doctrine/active     — active.resolves
-//   - GET /v1/doctrine/status     — reload.watcher.healthy (uses
-//     WatcherHealthy + LastReloadOk)
-//   - GET /v1/doctrine/list       — overrides.per-project.healthy +
-//     schema.migration.status (filter by Source="project" + check
-//     SchemaVersion ≠ CurrentSchemaVersion)
-//   - GET /v1/doctrine/history    — telemetry.subscriber.healthy
-//     (filter for DoctrineAutonomousReverted) + events.recent
-//   - GET /v1/doctrine/propose-list — amendments.pending
+// - in-process: builtins.load, reinforcement.templates.parse,
+// transverse.axioms.hardcoded, lint.analyzers.registered (compile-time
+// references to internal/doctrine/lint/analyzers/{nostub,nostore,
+// conventional_commit}.Analyzer singletons)
+// - GET /v1/doctrine/active — active.resolves
+// - GET /v1/doctrine/status — reload.watcher.healthy (uses
+// WatcherHealthy + LastReloadOk)
+// - GET /v1/doctrine/list — overrides.per-project.healthy +
+// schema.migration.status (filter by Source="project" + check
+// SchemaVersion ≠ CurrentSchemaVersion)
+// - GET /v1/doctrine/history — telemetry.subscriber.healthy
+// (filter for DoctrineAutonomousReverted) + events.recent
+// - GET /v1/doctrine/propose-list — amendments.pending
 //
 // Each check has its own pure function (context.Context, *client.Client)
 // CheckResult and a 3-second timeout. NO STUBS: every function returns a

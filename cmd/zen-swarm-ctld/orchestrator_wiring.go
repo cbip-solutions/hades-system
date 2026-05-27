@@ -1,59 +1,59 @@
 // SPDX-License-Identifier: MIT
-// Package main — orchestrator_wiring.go (Plan 16 Phase B Task 17 cutover:
+// Package main — orchestrator_wiring.go ( Task 17 cutover:
 // the 2-tier hard-wire is gone; the dispatcher now resolves a profile to
 // an ordered provider-name cascade against the runtime registry).
 //
 // Assembles the full LLM-traffic chain at daemon boot:
 //
-//   bypass.Client (Plan 2)
-//     ↓ (adapter: bypass.Request ↔ providers.TierRequest semantics)
-//   BypassClient impl
-//     ↓
-//   providers.BypassBackend  ────┐
-//                                │
-//   providers.toml cascade ──────┤── dispatcher.Dispatcher  ← AsyncEmitter
-//   (anthropic-paygo, gemini,    │                          → costLedgerSink (cost_ledger)
-//    deepseek-direct, ollama,    │                          ← *CircuitBreaker (per-Name)
-//    moonshot-kimi, …)           │                          ← *RecoveryScheduler
-//                                │
-//                                ↓
-//                         orchestrator.Orchestrator
-//                                ↓
-//                         Server.SetOrchestrator → POST /v1/messages
+// bypass.Client
+// ↓ (adapter: bypass.Request ↔ providers.TierRequest semantics)
+// BypassClient impl
+// ↓
+// providers.BypassBackend ────┐
+// │
+// providers.toml cascade ──────┤── dispatcher.Dispatcher ← AsyncEmitter
+// (anthropic-paygo, gemini, │ → costLedgerSink (cost_ledger)
+// deepseek-direct, ollama, │ ← *CircuitBreaker (per-Name)
+// moonshot-kimi, …) │ ← *RecoveryScheduler
+// │
+// ↓
+// orchestrator.Orchestrator
+// ↓
+// Server.SetOrchestrator → POST /v1/messages
 //
 // The cascade composition lives in *config.ProfileResolver (built-in
 // defaults ∪ profiles.toml ∪ projects.toml[orchestrator] ∪
-// .zen-swarm.toml — merge per inv-zen-066). The runtime registry
+// .zen-swarm.toml — merge per invariant). The runtime registry
 // (*providers.Registry) is built by providers_init.go from
 // ~/.config/zen-swarm/providers/providers.toml; the daemon-startup gate
-// inv-zen-211 (verifyCascadeCompleteness in main.go) refuses to start
+// invariant (verifyCascadeCompleteness in main.go) refuses to start
 // if any cascade names an unregistered provider.
 //
-// Master frozen contract C5 (Phase A): the bypass backend is registered
+// Master frozen contract C5: the bypass backend is registered
 // HERE, not in providers_init.go — it needs the *bypass.Client built by
 // main.go's bootstrap, which providers_init deliberately does not touch.
 // So buildOrchestrator owns one and only one Register() call: the
 // "bypass" entry. Every other backend is registered by providers_init
 // from providers.toml.
 //
-// Graceful-degradation contract preserved end-to-end (inv-zen-080-friendly):
+// Graceful-degradation contract preserved end-to-end:
 //
-//   - bypass.Client unavailable (no creds, no config, Keychain locked) →
-//     "bypass" backend is registered with a disabled stub that returns
-//     ErrTierUnavailable on every Forward. The cascade simply skips it.
-//   - A providers.toml entry whose Keychain key is absent → providers_init
-//     registers it as a disabled stub (cascade skips, `zen providers
-//     verify` surfaces it). Same end-shape as the bypass-disabled path.
-//   - Every backend in a cascade fails → dispatcher returns
-//     ErrAllTiersUnavailable; the proxy maps it to 503 (same operator-
-//     visible behaviour as Plan 2's "/v1/messages returns 503" contract).
+// - bypass.Client unavailable (no creds, no config, Keychain locked) →
+// "bypass" backend is registered with a disabled stub that returns
+// ErrTierUnavailable on every Forward. The cascade simply skips it.
+// - A providers.toml entry whose Keychain key is absent → providers_init
+// registers it as a disabled stub (cascade skips, `zen providers
+// verify` surfaces it). Same end-shape as the bypass-disabled path.
+// - Every backend in a cascade fails → dispatcher returns
+// ErrAllTiersUnavailable; the proxy maps it to 503 (same operator-
+// visible behaviour as "/v1/messages returns 503" contract).
 //
-// inv-zen-031: this file does the cross-package wiring (orchestrator +
+// invariant: this file does the cross-package wiring (orchestrator +
 // dispatcher + providers + dispatcheradapter + bypass.Client) that no
 // internal/* package is allowed to do itself.
 //
 // PHASE D-6 KILL: noopBreaker was search-and-replaced with the real
-// *orchestrator.CircuitBreaker (now keyed by provider Name post-Plan-16).
+// *orchestrator.CircuitBreaker.
 // The dispatcher consults the live state machine (closed → suspect →
 // open) on every Permit and updates it on every Record{Success,Failure}.
 // The breaker's recovery-probe loop is the *orchestrator.RecoveryScheduler
@@ -62,12 +62,12 @@
 // PLAN 16 T17 KILL: the `tier1/tier2` hard-wire + the
 // ZEN_OPENCLAUDE_ENDPOINT/TOKEN env-var path + the inlineTwoTier*
 // compile-keep shims + the noopCostSink placeholder — all deleted.
-// CostSink path now lands in cost_ledger via costLedgerSink (Plan 16
-// Phase B Task 18).
+// CostSink path now lands in cost_ledger via costLedgerSink (
+// Task 18).
 //
 // PHASE 8 PLACEHOLDER: CircuitBreakerConfig is constructed with zero values
 // here so NewCircuitBreaker applies its defaults (FailureThreshold=3,
-// Window=5m, Cooldown=10m). Plan 8 doctrine-implementation will read the
+// Window=5m, Cooldown=10m). doctrine-implementation will read the
 // per-doctrine TOML schema and override these knobs. Until then defaults
 // are the contract.
 
@@ -141,17 +141,17 @@ type buildOrchestratorDeps struct {
 	Resolver *config.ProfileResolver
 }
 
-// buildOrchestrator assembles the full Plan 16 LLM-traffic chain plus the
-// Phase E I-5 operator-facing pin overrides + PAYG safety net.
+// buildOrchestrator assembles the full LLM-traffic chain plus the
+// I-5 operator-facing pin overrides + PAYG safety net.
 //
-// The pre-Plan-16 positional signature (bypassClient, st, notifier) is
+// The pre- positional signature (bypassClient, st, notifier) is
 // gone — at 5 inputs a struct (buildOrchestratorDeps) is materially
 // cleaner. Registry + Resolver are now load-bearing: the dispatcher
 // resolves a cascade per request against deps.Registry / deps.Resolver
 // (no more hard-coded tier1/tier2).
 //
 // Compatibility contract: a disabled "bypass" backend is registered into
-// deps.Registry HERE for operator profiles created before the Plan 15
+// deps.Registry HERE for operator profiles created before the
 // sidecar extraction. The real Tier 1 provider is "bypass-sidecar", wired by
 // dispatcheradapter.RegisterSidecars in main.go when sidecars.toml declares a
 // healthy localhost sidecar.
@@ -162,7 +162,7 @@ type buildOrchestratorDeps struct {
 // ErrTierUnavailable / ErrAllTiersUnavailable surfaced by Forward, mapped
 // by the proxy to 503.
 //
-// inv-zen-031 boundary: orchestrator + dispatcher + providers MUST NOT
+// invariant boundary: orchestrator + dispatcher + providers MUST NOT
 // import internal/store. dispatcheradapter is the bridge; PinStoreAdapter
 // (I-4) is its sibling for the PinStore path (Go method-name collision
 // forced a separate type — Adapter.Insert vs PinStoreAdapter.Insert have
@@ -192,7 +192,7 @@ func buildOrchestrator(deps buildOrchestratorDeps) Built {
 	// tier_health_samples row per probe so the operator dashboard +
 	// scheduler heuristics can observe provider health over time.
 	// dispatcheradapter.TierHealthSampleAdapter is the boundary bridge
-	// (orchestrator MUST NOT import internal/store per inv-zen-031).
+	// .
 	scheduler.SetHealthSink(dispatcheradapter.NewTierHealthSampleAdapter(deps.Store))
 
 	disp := dispatcher.New(deps.Registry, deps.Resolver, emitter, breaker)

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// activation.go — Plan 7 Phase A: orchestration entry point.
+// activation.go — : orchestration entry point.
 //
-// Activate is the load-bearing function every Plan 7+ caller consumes
+// Activate is the load-bearing function every + caller consumes
 // for project-identity bootstrap. Per spec §3.1, it resolves the
 // canonical project_id from canonicalPath, looks up the alias in the
 // store, detects mv if applicable, and INSERTs or UPDATEs as needed.
 //
-// inv-zen-031 + inv-zen-122: Activate operates against the
+// invariant + invariant: Activate operates against the
 // ProjectStore interface; the concrete adapter (internal/daemon/
 // projectctxadapter) is the ONLY package crossing the projectctx /
 // store boundary.

@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit_chain_history.go (Plan 9 Phase I Task I-2).
+// Package cli — audit_chain_history.go.
 //
-// `zen audit-chain history` queries Plan 5 audit_events_raw augmented with
-// the Plan 9 chain extension columns via GET /v1/audit-chain/history:
+// `zen audit-chain history` queries audit_events_raw augmented with
+// the chain extension columns via GET /v1/audit-chain/history:
 //
-//	PrevHash       — previous record's hash (chain linkage)
-//	RecordHash     — SHA-256 of this event's canonical bytes
-//	TesseraLeafID  — leaf index in the Tessera tile-log (*int64, nil if not yet tiled)
-//	PartitionID    — monthly partition tag (e.g. "2026_05")
+// PrevHash — previous record's hash (chain linkage)
+// RecordHash — SHA-256 of this event's canonical bytes
+// TesseraLeafID — namespaced leaf id in the Tessera tile-log (*string, nil if not yet tiled)
+// PartitionID — monthly partition tag (e.g. "2026_05")
 //
 // Output table (default) or json/yaml (--format flag). Table adds three
-// chain-proof columns beyond the Plan 4 `zen audit events` surface:
+// chain-proof columns beyond the `zen audit events` surface:
 //
-//	REC_HASH  (truncated 16 chars)  TESSERA_LEAF  PARTITION
+// REC_HASH (truncated 16 chars) TESSERA_LEAF PARTITION
 //
 // Flags --project, --filter (type-prefix), --since, --limit. All are
 // optional — no project filter returns events across all projects.
@@ -24,7 +24,6 @@ package cli
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -102,7 +101,7 @@ Chain-proof columns added vs ` + "`zen audit events`" + `:
 					if leafID == nil {
 						return "-"
 					}
-					return strconv.FormatInt(*leafID, 10)
+					return *leafID
 				}},
 				{Header: "PARTITION", Field: func(r any) string {
 					p := r.(client.AuditHistoryEntry).PartitionID

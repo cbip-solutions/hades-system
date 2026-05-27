@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
-// cite.go — citation verification + formatter (inv-zen-075).
+// cite.go — citation verification + formatter.
 //
 // Type system:
-//   - RawCitation: producer-side type (synthesizer LLM output, raw
-//     hit list). Cannot flow into the formatter or downstream
-//     consumer; the type system rejects this at compile time.
-//   - VerifiedCitation: consumer-side type. Only Cite.Verify can
-//     produce a VerifiedCitation, and only after a HEAD probe + DNS
-//     check passes.
+// - RawCitation: producer-side type (synthesizer LLM output, raw
+// hit list). Cannot flow into the formatter or downstream
+// consumer; the type system rejects this at compile time.
+// - VerifiedCitation: consumer-side type. Only Cite.Verify can
+// produce a VerifiedCitation, and only after a HEAD probe + DNS
+// check passes.
 //
-// Verification (inv-zen-075):
-//   - HEAD probe: outbound HTTP HEAD; must return 2xx or 3xx (4xx/5xx
-//     drops the citation).
-//   - DNS NXDOMAIN: any net.*Error with "no such host" drops the
-//     citation.
-//   - Non-HTTP URLs (file://, caronte:// code-graph node schemes) are passed
-//     through without probing — they are by-construction local.
-//   - Concurrent verification with bounded fan-out (default 8) for
-//     latency control on large citation sets.
+// Verification:
+// - HEAD probe: outbound HTTP HEAD; must return 2xx or 3xx (4xx/5xx
+// drops the citation).
+// - DNS NXDOMAIN: any net.*Error with "no such host" drops the
+// citation.
+// - Non-HTTP URLs (file://, caronte:// code-graph node schemes) are passed
+// through without probing — they are by-construction local.
+// - Concurrent verification with bounded fan-out (default 8) for
+// latency control on large citation sets.
 package research
 
 import (

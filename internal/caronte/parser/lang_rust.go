@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -17,7 +18,7 @@ import (
 
 // rustCaptures maps the rust.scm @definition.<kind> capture names to
 // store.NodeKind. A Rust trait → KindInterface; a struct/enum → KindStruct
-// (Phase A froze no "enum" kind; the language column disambiguates). Keys
+// . Keys
 // MUST match queries/rust.scm.
 var rustCaptures = map[string]store.NodeKind{
 	"definition.function":  store.KindFunction,

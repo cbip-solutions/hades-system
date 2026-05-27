@@ -1,41 +1,41 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — audit_p9.go (Plan 9 Phase H Task H-1).
+// Package handlers — audit_p9.go.
 //
-// 10 NEW operator-facing audit endpoints surfacing the Phase A-C audit
+// 10 NEW operator-facing audit endpoints surfacing the audit
 // substrate (tessera tile-log + chain integrity + Litestream + recovery)
-// over /v1/audit-chain/*. inv-zen-150 + inv-zen-031: handlers consume the
+// over /v1/audit-chain/*. invariant + invariant: handlers consume the
 // AuditCtxP9 interface and never import internal/audit/* directly.
 //
-//	POST /v1/audit-chain/verify-chain          — walk chain + return tamper events
-//	GET  /v1/audit-chain/history               — Plan 5 eventlog with chain proofs
-//	POST /v1/audit-chain/recover               — two-phase: plan-only OR plan+execute
-//	GET  /v1/audit-chain/partition-seals       — per-project seal list
-//	POST /v1/audit-chain/checkpoint            — capa-firewall manual checkpoint
-//	GET  /v1/audit-chain/cold-archive/list     — list S3 partitions
-//	POST /v1/audit-chain/cold-archive/restore  — restore one partition from S3
-//	POST /v1/audit-chain/witness/rotate        — daemon-global witness key rotation
-//	GET  /v1/audit-chain/witness/pubkey        — daemon-global witness pubkey + meta
-//	POST /v1/audit-chain/configure-s3          — per-project S3 credential setup
+// POST /v1/audit-chain/verify-chain — walk chain + return tamper events
+// GET /v1/audit-chain/history — eventlog with chain proofs
+// POST /v1/audit-chain/recover — two-phase: plan-only OR plan+execute
+// GET /v1/audit-chain/partition-seals — per-project seal list
+// POST /v1/audit-chain/checkpoint — capa-firewall manual checkpoint
+// GET /v1/audit-chain/cold-archive/list — list S3 partitions
+// POST /v1/audit-chain/cold-archive/restore — restore one partition from S3
+// POST /v1/audit-chain/witness/rotate — daemon-global witness key rotation
+// GET /v1/audit-chain/witness/pubkey — daemon-global witness pubkey + meta
+// POST /v1/audit-chain/configure-s3 — per-project S3 credential setup
 //
-// Auth ACL (per inv-zen-146): verify-chain / history / recover /
+// Auth ACL: verify-chain / history / recover /
 // partition-seals / cold-archive list+restore / configure-s3 are
 // project-scoped (caller's effective-project set must include the named
-// project — wrapper auth.ProjectScopedMiddleware enforces in Phase H-6).
+// project — wrapper auth.ProjectScopedMiddleware enforces in ).
 // checkpoint / witness/* are operator-global (peer-cred only via
-// auth.PeerCredOnly — inherited from Plan 7 boundary).
+// auth.PeerCredOnly — inherited boundary).
 //
-// Graceful degradation (Plan 2 pattern): any nil AuditCtxP9 passed to a
+// Graceful degradation: any nil AuditCtxP9 passed to a
 // constructor returns an http.HandlerFunc that immediately responds with
 // HTTP 503 {"error":"feature not configured","code":"plan9_audit_unavailable"}.
-// Phase H-10 wires *daemon.Server to satisfy AuditCtxP9 once the Phase
+// wires *daemon.Server to satisfy AuditCtxP9 once the Phase
 // A-C adapter is available; during development the 503 makes intent
 // explicit.
 //
 // Boundary invariants:
 //
-//	inv-zen-031: handler never imports internal/store directly.
-//	inv-zen-150: handler never imports internal/audit/{tessera,chain,
-//	             litestream,recovery} directly; all calls go via AuditCtxP9.
+// invariant: handler never imports internal/store directly.
+// invariant: handler never imports internal/audit/{tessera,chain,
+// litestream,recovery} directly; all calls go via AuditCtxP9.
 package handlers
 
 import (
@@ -67,23 +67,23 @@ type HistoryFilterP9 struct {
 }
 
 type HistoryEntryP9 struct {
-	ID            string `json:"id"`
-	ProjectID     string `json:"project_id"`
-	Type          string `json:"type"`
-	PayloadJSON   string `json:"payload_json"`
-	EmittedAt     int64  `json:"emitted_at"`
-	PrevHash      string `json:"prev_hash,omitempty"`
-	RecordHash    string `json:"record_hash,omitempty"`
-	TesseraLeafID *int64 `json:"tessera_leaf_id,omitempty"`
-	PartitionID   string `json:"partition_id,omitempty"`
+	ID            string  `json:"id"`
+	ProjectID     string  `json:"project_id"`
+	Type          string  `json:"type"`
+	PayloadJSON   string  `json:"payload_json"`
+	EmittedAt     int64   `json:"emitted_at"`
+	PrevHash      string  `json:"prev_hash,omitempty"`
+	RecordHash    string  `json:"record_hash,omitempty"`
+	TesseraLeafID *string `json:"tessera_leaf_id,omitempty"`
+	PartitionID   string  `json:"partition_id,omitempty"`
 }
 
 type PartitionSealP9 struct {
 	PartitionID       string `json:"partition_id"`
-	FirstRecordID     int64  `json:"first_record_id"`
-	LastRecordID      int64  `json:"last_record_id"`
+	FirstRecordID     string `json:"first_record_id"`
+	LastRecordID      string `json:"last_record_id"`
 	FinalRecordHash   string `json:"final_record_hash"`
-	TesseraSealLeafID int64  `json:"tessera_seal_leaf_id"`
+	TesseraSealLeafID string `json:"tessera_seal_leaf_id"`
 	DaemonWitnessSig  string `json:"daemon_witness_sig"`
 	SealedAtUnix      int64  `json:"sealed_at_unix"`
 }

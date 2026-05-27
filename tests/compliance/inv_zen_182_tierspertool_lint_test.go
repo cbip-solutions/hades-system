@@ -1,10 +1,10 @@
 // tests/compliance/inv_zen_182_tierspertool_lint_test.go
 //
-// Spec §8.6 inv-zen-182 compliance test: the tierspertool doctrine
+// Spec §8.6 invariant compliance test: the tierspertool doctrine
 // lint analyzer (internal/doctrine/lint/analyzers/tierspertool) MUST
-// be wired into the Plan 8 lint stack (cmd/zen-doctrine-lint/main.go).
+// be wired into the lint stack (cmd/zen-doctrine-lint/main.go).
 // Static analysis at lint time catches drift between the catalog
-// (Phase A internal/onboard/mcp/catalog.go) and the [capa_firewall.tiers]
+// and the [capa_firewall.tiers]
 // TOML section.
 //
 // location per spec §8.6.

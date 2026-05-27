@@ -1,8 +1,8 @@
 // internal/orchestrator/apply/merge_engine_skip_test.go
 //
 // No build tag — runs in every test invocation (default + `-tags test`).
-// Documents the canonical t.Skip pattern that Phase J + Phase H + future
-// test suites MUST adopt for any scenario requiring Plan 6's real
+// Documents the canonical t.Skip pattern that + + future
+// test suites MUST adopt for any scenario requiring real
 // MergeEngine. Visible in the default build because the documentation
 // (and the discipline of skipping cross-worker tests) applies even when
 // the fake is not compiled in.
@@ -12,7 +12,7 @@ import "testing"
 
 // TestMergeEngine_CrossWorker_NotYetShipped is the canonical skip-pattern
 // reference. Any test that would normally exercise a real cross-worker
-// merge winner-decision MUST guard with the same message — Plan 6's
+// merge winner-decision MUST guard with the same message —
 // first commit greps for it and removes the guards once
 // MergeEngineRealEngine is wired.
 //

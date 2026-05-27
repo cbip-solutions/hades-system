@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18a_integration_test
 
 import (
@@ -21,24 +20,24 @@ import (
 // hint otherwise); these sandboxes set HOME to a temp dir with no LaunchAgent
 // installed, so the hint path is exercised (no real launchctl). D-6 now
 // asserts the curated shape:
-//   - exit code != 0 (wrapper failed gracefully; did NOT crash)
-//   - stdout/stderr contains "hades daemon" (the shipped recovery command)
-//   - stdout/stderr contains the substring matching the UDS path
-//   - stdout/stderr contains "HADES: daemon not running"
-//   - stdout/stderr does NOT contain a Go panic traceback
-//     ("goroutine 1 [running]:" pattern or "panic:" prefix)
+// - exit code != 0 (wrapper failed gracefully; did NOT crash)
+// - stdout/stderr contains "hades daemon" (the shipped recovery command)
+// - stdout/stderr contains the substring matching the UDS path
+// - stdout/stderr contains "HADES: daemon not running"
+// - stdout/stderr does NOT contain a Go panic traceback
+// ("goroutine 1 [running]:" pattern or "panic:" prefix)
 //
-// inv-zen-088 (single-egress, pre-existing): the wrapper does NOT attempt
+// invariant (single-egress, pre-existing): the wrapper does NOT attempt
 // to dial the daemon directly when the UDS is absent — it surfaces the
 // hint and exits via the child's exit code (or 127 if the binary itself
 // is missing from PATH).
 //
 // Scenario coverage:
-//  1. UDS absent + stub hermes exits non-zero → hint MUST appear.
-//  2. UDS absent + zen passthrough exits non-zero → hint MUST appear.
-//  3. UDS absent + hermes binary not on PATH (127 path) → hint MUST appear.
-//  4. UDS present + child exits non-zero → hint MUST NOT appear (false-
-//     positive guard; the hint is daemon-down-specific).
+// 1. UDS absent + stub hermes exits non-zero → hint MUST appear.
+// 2. UDS absent + zen passthrough exits non-zero → hint MUST appear.
+// 3. UDS absent + hermes binary not on PATH (127 path) → hint MUST appear.
+// 4. UDS present + child exits non-zero → hint MUST NOT appear (false-
+// positive guard; the hint is daemon-down-specific).
 func TestPlan18aFoundation_ChaosDaemonDownPlaceholderHint(t *testing.T) {
 	t.Parallel()
 	hadesBin := buildHadesBinary(t)
@@ -160,14 +159,14 @@ func TestPlan18aFoundation_ChaosDaemonDownPlaceholderHint(t *testing.T) {
 // assertChaosHintShape factors the substring assertions for the chaos hint
 // out so each sub-test reads cleanly. Hint MUST contain (v0.17.2 / ADR-0099):
 //
-//	"HADES: daemon not running"  — banner-style header
-//	"hades daemon"               — shipped recovery command family
-//	udsPath                      — actual UDS probe path (echoed in hint)
+// "HADES: daemon not running" — banner-style header
+// "hades daemon" — shipped recovery command family
+// udsPath — actual UDS probe path (echoed in hint)
 //
 // Hint MUST NOT contain:
 //
-//	"panic:"                     — Go runtime panic
-//	"goroutine 1 [running]:"     — panic traceback signature
+// "panic:" — Go runtime panic
+// "goroutine 1 [running]:" — panic traceback signature
 func assertChaosHintShape(t *testing.T, out, udsPath string) {
 	t.Helper()
 	wantSubs := []string{

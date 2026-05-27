@@ -2,17 +2,17 @@
 // Package testhelpers — PluginSlashRunner exercises the OpenClaude plugin
 // slash-command bash bodies against a mocked daemon HTTP surface.
 //
-// Used by Plan 7 Phase H integration tests:
-//   - tests/integration/handoff_event_emit_test.go (H-4)
-//   - tests/integration/slash_zen_day_test.go      (H-5)
-//   - tests/integration/slash_inbox_test.go        (H-6)
+// Used integration tests:
+// - tests/integration/handoff_event_emit_test.go (H-4)
+// - tests/integration/slash_zen_day_test.go (H-5)
+// - tests/integration/slash_inbox_test.go (H-6)
 //
-// Why a mocked daemon (not testhelpers.SpawnDaemon): Phase H must run
-// without Phase I (daemon endpoint owner) shipping. Phase H tests stub
+// Why a mocked daemon (not testhelpers.SpawnDaemon): must run
+// without (daemon endpoint owner) shipping. tests stub
 // the endpoint contract; when Phases F + I land, these tests continue
 // to pass — the contract is invariant. The mock also avoids the macOS
 // Keychain bootstrap overhead documented in tests/testhelpers/daemon.go
-// (ZEN_BYPASS_DISABLE_KEYCHAIN=1 workaround) — Phase H exercises only
+// (ZEN_BYPASS_DISABLE_KEYCHAIN=1 workaround) — exercises only
 // the HTTP / bash surface, independent of the bypass module.
 //
 // Why direct bash execution: the slash command body IS the production

@@ -1,30 +1,30 @@
-// Compliance test for inv-zen-075: citation-verification gate.
+// Compliance test for invariant: citation-verification gate.
 //
 // Two complementary checks:
 //
-//  1. Type-distinction (compile-checked): cite.go defines RawCitation
-//     and VerifiedCitation as distinct types. The Format method's
-//     signature MUST take []VerifiedCitation, not []RawCitation, so
-//     that any caller attempting to pass an unverified hit list is
-//     rejected at compile time. We assert this via go/parser AST
-//     inspection of the file.
+// 1. Type-distinction (compile-checked): cite.go defines RawCitation
+// and VerifiedCitation as distinct types. The Format method's
+// signature MUST take []VerifiedCitation, not []RawCitation, so
+// that any caller attempting to pass an unverified hit list is
+// rejected at compile time. We assert this via go/parser AST
+// inspection of the file.
 //
-//  2. Runtime gate (behavioral): a CiteVerifier presented with a
-//     RawCitation pointing at a non-existent host (DNS NXDOMAIN)
-//     MUST return zero verified citations.
+// 2. Runtime gate (behavioral): a CiteVerifier presented with a
+// RawCitation pointing at a non-existent host (DNS NXDOMAIN)
+// MUST return zero verified citations.
 //
-// SPLIT — Plan 14 Phase F Task F-1 (2026-05-18):
+// SPLIT — Task F-1 (2026-05-18):
 //
-//	The runtime portion (3 tests + complianceFakeBackend helper) relocated to
-//	tests/compliance/inv_zen_075_runtime/inv_zen_075_runtime_test.go to isolate
-//	the test binary from internal/mcp/research's new transitive
-//	github.com/mattn/go-sqlite3 dependency (introduced by ecosystem_docs.go
-//	wiring to internal/research/ecosystem/Dispatcher → internal/knowledge/aggregator).
-//	The shared `compliance` test binary already links
-//	github.com/ncruces/go-sqlite3 via internal/store; registering both drivers
-//	under the same "sqlite3" name panics at init() ("Register called twice for
-//	driver sqlite3"). Pattern mirrors p11_audit_url and the inv_zen_148 header
-//	note — both document the same driver-conflict landmine.
+// The runtime portion (3 tests + complianceFakeBackend helper) relocated to
+// tests/compliance/inv_zen_075_runtime/inv_zen_075_runtime_test.go to isolate
+// the test binary from internal/mcp/research's new transitive
+// github.com/mattn/go-sqlite3 dependency (introduced by ecosystem_docs.go
+// wiring to internal/research/ecosystem/Dispatcher → internal/knowledge/aggregator).
+// The shared `compliance` test binary already links
+// github.com/ncruces/go-sqlite3 via internal/store; registering both drivers
+// under the same "sqlite3" name panics at init() ("Register called twice for
+// driver sqlite3"). Pattern mirrors p11_audit_url and the inv_zen_148 header
+// note — both document the same driver-conflict landmine.
 //
 // What remains here: AST-only checks. No runtime imports of
 // internal/mcp/research; the file uses stdlib go/parser + go/ast against

@@ -42,9 +42,9 @@ func parseStrictSemver(v string) (major, minor, patch int, err error) {
 // failure (e.g. ValidateTighten appends it to hardErrs as a TightenViolation).
 //
 // Replaces the prior semverGreaterOrEqual which:
-//   - silently treated "abc" as 0 → ("abc","def") returned true
-//   - dropped extra segments → ("1.2.3.4","1.2.3") returned true
-//   - accepted 2-segment versions → ("1.2","1.2.3") returned true
+// - silently treated "abc" as 0 → ("abc","def") returned true
+// - dropped extra segments → ("1.2.3.4","1.2.3") returned true
+// - accepted 2-segment versions → ("1.2","1.2.3") returned true
 //
 // Reviewer IMPORTANT #2 closes those holes.
 func semverGreaterOrEqualStrict(a, b string) (bool, error) {

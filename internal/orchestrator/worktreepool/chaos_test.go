@@ -1,12 +1,12 @@
-//go:build chaos
+// go:build chaos
 
 // Package worktreepool chaos-tier tests. Compiled ONLY under
-// `-tags=chaos`; the default `go test` skips this file (per Plan 5
+// `-tags=chaos`; the default `go test` skips this file (per
 // spec §5.1, the chaos tier is opt-in to avoid paying the 30 s +
 // 5,000-call cost on every PR run).
 //
 // The harness exercises the B-1..B-8 implementation under realistic
-// concurrent load matching Phase I HRA voting + Phase J ApplyEngine
+// concurrent load matching HRA voting + ApplyEngine
 // fan-out: 50 goroutines × 100 Lease/Release iterations with random
 // subprocess-failure injection. Pool integrity invariants asserted
 // post-quiesce; race detector + goleak per-test verify no concurrency

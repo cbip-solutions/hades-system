@@ -1,16 +1,15 @@
 # Changelog
 
-All notable public changes to HADES system are documented in this file.
+All notable changes to HADES system are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-Public releases start at `v1.0.0`; earlier private development history is
-preserved outside this curated public distribution.
+The first tagged source release is `v1.0.0`.
 
 ## [v1.0.0] - 2026-05-25
 
 ### Added
 
-- HADES system public release under the MIT License.
+- HADES system v1.0.0 release under the MIT License.
 - Local daemon, CLI, TUI, Hermes plugin, and four MCP servers for agentic
   development workflows.
 - Autonomous orchestration primitives: task queues, worktree management,
@@ -22,31 +21,27 @@ preserved outside this curated public distribution.
 - Contract Federation on top of Caronte for endpoint extraction, consumer
   discovery, breaking-change classification, workspace policy, and coordinated
   cross-repository fix recommendations.
-- Root-level public documentation for installation, contribution, release
-  notes, license posture, and security reporting.
+- Root-level documentation for installation, contribution, release notes,
+  license posture, and security reporting.
 - Security policy using GitHub Security Advisories as the primary private
   vulnerability reporting channel.
-- DCO-based contribution workflow and public release rulesets.
+- DCO-based contribution workflow and release rulesets.
 
 ### Changed
 
-- Public identity is `github.com/cbip-solutions/hades-system`.
-- Public distribution is produced from an allowlisted snapshot, with private
-  operator history and environment-specific material excluded.
-- Public documentation is curated at the repository root for users and
-  contributors rather than shipped as a verbatim development log.
+- Repository identity is `github.com/cbip-solutions/hades-system`.
+- Documentation is organized at the repository root for users and contributors.
 - Optional advanced Anthropic integration is exposed as a sidecar contract
-  rather than an in-tree private implementation.
+  rather than an in-process backend.
 
 ### Security
 
-- Added gitleaks scanning for the public snapshot.
-- Added privacy and identity hygiene checks for public release material.
-- Added comment-hygiene and Go documentation gates to reduce task-context rot in
-  public code.
+- Added secret scanning for release material.
+- Added identity and local-path checks for release material.
+- Added Go documentation gates for exported public APIs.
 
 ### Notes
 
-- The authoritative public source begins at `v1.0.0`.
+- The tagged source release line begins at `v1.0.0`.
 - The project remains single-maintainer and best-effort for community support;
   see [CONTRIBUTING.md](CONTRIBUTING.md).

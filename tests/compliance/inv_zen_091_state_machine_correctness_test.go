@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_091_state_machine_correctness_test.go
 //
-// inv-zen-091 — State machine transitions ∈ TransitionTable.
+// invariant — State machine transitions ∈ TransitionTable.
 //
 // Compliance witness: re-derives the canonical 28 transitions from
 // spec §1 Q6 D INDEPENDENTLY of the runtime TransitionTable and
@@ -9,7 +9,7 @@
 // (no extras), (c) the runtime Transition method rejects an
 // adversarial illegal probe.
 //
-// This is the third witness for inv-zen-091 (code: TransitionTable
+// This is the third witness for invariant (code: TransitionTable
 // + _validTransitions; unit test: TestTransitionTableHas28*; this
 // file). Three places to catch one drift.
 //

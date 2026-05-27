@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package views — cost.go (Plan 12 Phase C Task C-7, F3 panel).
+// Package views — cost.go.
 //
 // 4-axis cost dashboard + augmentation cache stats. Live data from
-// /v1/budget?range=24h (Plan 3+4) + /v1/augment/summary (Plan 11) via
+// /v1/budget?range=24h + /v1/augment/summary via
 // the AugmentCache helper.
 package views
 
@@ -94,8 +94,8 @@ func (v *CostView) View() string {
 		body += mutedStyle.Render("    (no spend recorded)") + "\n"
 	} else {
 		for _, t := range v.byTier {
-			body += fmt.Sprintf("    %-20s  %-12s  $%.4f\n",
-				truncateView(t.Project+"/"+t.Profile, 20), t.Tier, t.SpendUSD)
+			body += fmt.Sprintf("    %-28s  %-12s  $%.4f\n",
+				truncateView(t.Project+"/"+t.Profile, 28), t.Tier, t.SpendUSD)
 		}
 	}
 	body += "\n  augmentation cache:\n"

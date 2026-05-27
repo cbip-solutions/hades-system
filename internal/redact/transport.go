@@ -11,13 +11,13 @@ import (
 
 // RedactingTransport is an http.RoundTripper that:
 //
-//  1. Sets the Authorization header from a Secret at the moment of
-//     transmission, never storing the plaintext on the caller's
-//     request struct.
-//  2. Replaces every Authorization header value in dump output with
-//     Marker, so accidental httputil.DumpRequestOut calls cannot leak.
-//  3. Provides SafeDumpRequest / SafeDumpResponse helpers that callers
-//     MUST use instead of httputil.DumpRequest{,Out}.
+// 1. Sets the Authorization header from a Secret at the moment of
+// transmission, never storing the plaintext on the caller's
+// request struct.
+// 2. Replaces every Authorization header value in dump output with
+// Marker, so accidental httputil.DumpRequestOut calls cannot leak.
+// 3. Provides SafeDumpRequest / SafeDumpResponse helpers that callers
+// MUST use instead of httputil.DumpRequest{,Out}.
 //
 // Inv-zen-052 (compile-checked): every HTTP path in
 // private-tier1-module that issues outbound requests must use a

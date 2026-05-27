@@ -1,3 +1,4 @@
+// go:build !race
 //go:build !race
 // +build !race
 
@@ -13,7 +14,7 @@ import (
 )
 
 // TestADR0060FrontmatterValid verifies ADR-0060 (Tessera vendor mode)
-// validates against docs/decisions/_schema.json — the Plan 9 ADRs are
+// validates against architecture records — the ADRs are
 // the FIRST corpus for the Structured MADR validator and MUST be
 // exemplar quality.
 //

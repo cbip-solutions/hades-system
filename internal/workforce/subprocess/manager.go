@@ -121,7 +121,7 @@ type ManagerOptions struct {
 	Recovery RecoveryConfig
 }
 
-// Manager owns subprocess lifecycles for the workforce. Phase C ships
+// Manager owns subprocess lifecycles for the workforce. ships
 // SpawnEphemeral + Release in C-4; AcquirePersistent in C-5; TTL evictor
 // in C-6; crash detector + recovery in C-7.
 //

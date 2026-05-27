@@ -2,27 +2,27 @@
 // internal/daemon/dispatcher/dispatcher.go
 //
 // Dispatcher is the single-egress-point for LLM traffic from zen-swarm-side
-// callers (Plan 4 workers, Plan 4 MCPs, Plan 5 orchestrator subagents). Every
+// callers. Every
 // LLM request flows through Forward, which:
 //
-//  1. Consults BreakerState for which named providers are currently permitted.
-//  2. Forward resolves req.Profile to an ordered cascade of provider names via
-//     the ProfileResolver, then iterates the cascade — for each name it looks
-//     up the backend in the BackendRegistry, consults BreakerState by name, and
-//     attempts the call; the first success returns, otherwise it continues to
-//     the next name; an exhausted cascade returns ErrAllTiersUnavailable.
-//  3. Emits one CostEvent per attempt (success or failure) for the cost
-//     ledger via the CostEmitter interface (real impl lands in Phase B-5
-//     cost_emit.go and Phase F cost ledger; tests use a recording stub).
-//  4. Returns the upstream response unchanged on success, or
-//     ErrAllTiersUnavailable when no provider in the cascade could serve.
+// 1. Consults BreakerState for which named providers are currently permitted.
+// 2. Forward resolves req.Profile to an ordered cascade of provider names via
+// the ProfileResolver, then iterates the cascade — for each name it looks
+// up the backend in the BackendRegistry, consults BreakerState by name, and
+// attempts the call; the first success returns, otherwise it continues to
+// the next name; an exhausted cascade returns ErrAllTiersUnavailable.
+// 3. Emits one CostEvent per attempt (success or failure) for the cost
+// ledger via the CostEmitter interface (real impl lands in
+// cost_emit.go and cost ledger; tests use a recording stub).
+// 4. Returns the upstream response unchanged on success, or
+// ErrAllTiersUnavailable when no provider in the cascade could serve.
 //
 // Concurrency Forward is safe for concurrent invocation as long as the
 // underlying TierBackend impls are (they document this themselves) and the
 // supplied BreakerState + CostEmitter are. The Dispatcher itself holds no
 // mutable state.
 //
-// Boundary (inv-zen-031): this package MUST NOT import internal/store. The
+// Boundary: this package MUST NOT import internal/store. The
 // dispatcheradapter package bridges Dispatcher to the store via the
 // CostEmitter interface so this package stays decoupled from persistence.
 
@@ -50,7 +50,7 @@ type CostEvent struct {
 	Profile string
 
 	// Provider is the registry name of the backend that handled (or
-	// attempted) this request — Backend.Name(). Added in Plan 16 Phase B
+	// attempted) this request — Backend.Name(). Added in
 	// (frozen contract C8): the dispatcher cascade iterates named
 	// providers and the circuit breaker decides at Name granularity, so
 	// cost MUST be attributable per-provider. Always populated, even on
@@ -74,11 +74,11 @@ type CostEvent struct {
 }
 
 // CostEmitter receives one CostEvent per Forward attempt. The real impl
-// (Phase B-5 + Phase F) writes to cost_ledger; tests use an in-memory
+// writes to cost_ledger; tests use an in-memory
 // recorder. Emitter errors are intentionally swallowed by the dispatcher:
 // a downstream-ledger blip MUST NOT shadow a successful LLM response, and
-// Phase F runs a periodic audit (cost_ledger drift check) to catch any
-// gaps. inv-zen-031: the emitter itself talks to internal/store, never the
+// runs a periodic audit (cost_ledger drift check) to catch any
+// gaps. invariant: the emitter itself talks to internal/store, never the
 // dispatcher.
 type CostEmitter interface {
 	Emit(ctx context.Context, evt CostEvent) error
@@ -156,39 +156,39 @@ func New(registry BackendRegistry, resolver ProfileResolver, emitter CostEmitter
 // iterates it. Returns the upstream response on the first success, or
 // ErrAllTiersUnavailable when no provider in the cascade could serve.
 //
-// Algorithm (Plan 16 Phase B — frozen contract C6):
+// Algorithm:
 //
-//  1. resolver.Resolve(req.Profile, req.Project) -> []name. A resolver
-//     error is returned to the caller verbatim (a misconfigured profile
-//     is a fail-fast condition, not a degraded path).
+// 1. resolver.Resolve(req.Profile, req.Project) -> []name. A resolver
+// error is returned to the caller verbatim (a misconfigured profile
+// is a fail-fast condition, not a degraded path).
 //
-//  2. For each name in cascade order:
-//     a. registry.Get(name). On error (provider not registered — e.g.
-//     a Keychain-disabled backend) skip it: no CostEvent (no call
-//     happened), continue to the next name.
-//     b. breaker.Permit(name) == false -> skip: no CostEvent, continue.
-//     c. attempt(ctx, backend, name, req). On success return resp, nil.
-//     d. On failure the breaker outcome + CostEvent are already
-//     recorded by attempt(); continue to the next name.
+// 2. For each name in cascade order:
+// a. registry.Get(name). On error (provider not registered — e.g.
+// a Keychain-disabled backend) skip it: no CostEvent (no call
+// happened), continue to the next name.
+// b. breaker.Permit(name) == false -> skip: no CostEvent, continue.
+// c. attempt(ctx, backend, name, req). On success return resp, nil.
+// d. On failure the breaker outcome + CostEvent are already
+// recorded by attempt(); continue to the next name.
 //
-//  3. After any failed attempt, if the caller's ctx is done, return
-//     ctx.Err() immediately and do NOT attempt the next provider
-//     (the caller has given up; another upstream RTT burns budget for a
-//     response that will be discarded).
+// 3. After any failed attempt, if the caller's ctx is done, return
+// ctx.Err() immediately and do NOT attempt the next provider
+// (the caller has given up; another upstream RTT burns budget for a
+// response that will be discarded).
 //
-//  4. Cascade exhausted with no success -> ErrAllTiersUnavailable
-//     (callers map this to 503 + Retry-After).
+// 4. Cascade exhausted with no success -> ErrAllTiersUnavailable
+// (callers map this to 503 + Retry-After).
 //
 // Context handling: a ctx that is already done when Forward is entered
 // surfaces as ctx.Err() before any provider is attempted. A ctx that
 // becomes done mid-cascade surfaces after the in-flight attempt resolves.
-// CostEvents for failed attempts are STILL recorded on cancel (Phase F
+// CostEvents for failed attempts are STILL recorded on cancel (
 // drift-audit fidelity); only the further upstream call is suppressed.
 //
-// inv-zen-088 single-egress: every LLM dispatch from a zen-swarm caller
+// invariant single-egress: every LLM dispatch from a zen-swarm caller
 // flows through this method. The TierRequest is forwarded to backends
 // unchanged; header injection / canonical body encoding / credential
-// unwrapping are concerns of headers.go and the backends. inv-zen-068:
+// unwrapping are concerns of headers.go and the backends. invariant:
 // the dispatcher never inspects credential values.
 func (d *Dispatcher) Forward(ctx context.Context, req providers.TierRequest) (*providers.TierResponse, error) {
 
@@ -319,7 +319,7 @@ func (d *Dispatcher) Wfq() *quota.WfqQueue {
 
 // PreFlightCheck delegates to the configured PreFlight function (or
 // quota.PreFlight if none injected). Returns the decision verbatim so
-// the caller (Phase D scheduler / Plan 7 dispatch flow) can branch on
+// the caller can branch on
 // Allowed + SoftWarn + Reason without re-classifying.
 //
 // Empty alias is rejected at the seam — every dispatch must originate
@@ -335,7 +335,7 @@ func (d *Dispatcher) Wfq() *quota.WfqQueue {
 // PreFlight delegate inside the seam is also nil-checked for the same
 // reason.
 //
-// inv-zen-080 invariant: this method is decision-only. It MUST NOT
+// invariant invariant: this method is decision-only. It MUST NOT
 // invoke a provider backend (tier1 / tier2.Forward), MUST NOT enqueue
 // into the WFQ, MUST NOT emit a CostEvent. The accompanying tests
 // assert these post-conditions explicitly (TestPreFlightCheckNeverCallsProviders,

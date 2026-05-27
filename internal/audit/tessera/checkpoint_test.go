@@ -520,7 +520,7 @@ func TestSignedSTHCodecRoundTrip(t *testing.T) {
 	if decoded.PubkeyFingerprint != original.PubkeyFingerprint {
 		t.Errorf("PubkeyFingerprint = %q, want %q", decoded.PubkeyFingerprint, original.PubkeyFingerprint)
 	}
-	// CanonicalBytes round-trip MUST be byte-identical: Phase B's
+	// CanonicalBytes round-trip MUST be byte-identical:
 	// chain verifier compares CanonicalBytes when reconstructing
 	// SignedSTHs from the daemon-global log.
 	if !bytes.Equal(decoded.STH.CanonicalBytes(), original.STH.CanonicalBytes()) {

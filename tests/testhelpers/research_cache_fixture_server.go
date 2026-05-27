@@ -3,25 +3,25 @@
 //
 // ResearchCacheFixtureServer is an httptest.Server with deterministic,
 // semantically-named paths used by the research-cache revalidator tests
-// (Plan 9 Phase F-7, internal/research/cache/revalidator_test.go).
+// .
 //
 // Each path exercises one response scenario:
 //
-//	/fresh-etag   — HEAD returns 304 (If-None-Match matches); used for
-//	                TestRevalidator304Fresh + TestRevalidatorRedirectFollowed.
-//	/changed-etag — HEAD returns 200 with a new body; GET returns the
-//	                new body (different from the fixture hash). Used for
-//	                TestRevalidator200ContentMismatch.
-//	/timeout      — sleeps 6 s then returns 200; used for
-//	                TestRevalidatorTimeoutRespected (Revalidator.timeout=200ms).
-//	/500          — always returns 500; used for
-//	                TestRevalidator500RetriesThenFails.
-//	/redirect     — returns 301 → /fresh-etag; used for
-//	                TestRevalidatorRedirectFollowed.
-//	/404          — always returns 404; used for
-//	                TestRevalidator404DemotesStale.
-//	/poisoned     — returns 200 HEAD but a different body on GET;
-//	                reserved for future adversarial tests (inv-zen-T9).
+// /fresh-etag — HEAD returns 304 (If-None-Match matches); used for
+// TestRevalidator304Fresh + TestRevalidatorRedirectFollowed.
+// /changed-etag — HEAD returns 200 with a new body; GET returns the
+// new body (different from the fixture hash). Used for
+// TestRevalidator200ContentMismatch.
+// /timeout — sleeps 6 s then returns 200; used for
+// TestRevalidatorTimeoutRespected (Revalidator.timeout=200ms).
+// /500 — always returns 500; used for
+// TestRevalidator500RetriesThenFails.
+// /redirect — returns 301 → /fresh-etag; used for
+// TestRevalidatorRedirectFollowed.
+// /404 — always returns 404; used for
+// TestRevalidator404DemotesStale.
+// /poisoned — returns 200 HEAD but a different body on GET;
+// reserved for future adversarial tests (inv-zen-T9).
 //
 // Sha256Hex is a convenience wrapper around crypto/sha256 returning the
 // lowercase hexadecimal digest of data. Used by revalidator_test.go to

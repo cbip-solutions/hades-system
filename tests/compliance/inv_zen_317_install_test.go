@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 
+// go:build !race
 //go:build !race
 // +build !race
 
@@ -42,9 +43,9 @@ func TestInvZen317_InstallPrerequisites(t *testing.T) {
 	data, _ := readINSTALL(t)
 	text := string(data)
 
-	re := regexp.MustCompile(`Go 1\.(25\+?|26)`)
+	re := regexp.MustCompile(`Go 1\.26\+?`)
 	if !re.MatchString(text) {
-		t.Fatalf("INSTALL.md missing Go 1.25+ (or 1.26) prerequisite declaration")
+		t.Fatalf("INSTALL.md missing Go 1.26+ prerequisite declaration")
 	}
 }
 

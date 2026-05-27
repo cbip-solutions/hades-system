@@ -12,7 +12,7 @@ var (
 	ErrNilWorktreePath = errors.New("worker: worktreePath must be non-empty (inv-zen-087: Plan 5 WorktreePool owns allocation; Plan 4 is consumer-only)")
 
 	// ErrNilSession is returned (and panicked) by Worker constructors when
-	// the subprocess.Session is nil. Phase C SubprocessManager.SpawnEphemeral
+	// the subprocess.Session is nil. SubprocessManager.SpawnEphemeral
 	// (or AcquirePersistent for persistent variants) MUST be called before
 	// constructing the Worker.
 	ErrNilSession = errors.New("worker: subprocess.Session must be non-nil (acquire via subprocess.Manager)")

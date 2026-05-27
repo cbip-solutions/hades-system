@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — reranker_bge.go
 //
-// BGE-reranker-v2-m3 cross-encoder reranker (Plan 14 Phase D Task D-3 per
-// spec §2.6 Q6=A + inv-zen-198).
+// BGE-reranker-v2-m3 cross-encoder reranker ( Task D-3 per
+// spec §2.6 Q6=A + invariant).
 //
 // # Model
 //
@@ -15,23 +15,23 @@
 //
 // # Backends
 //
-//	BGEBackendMock — deterministic Go-only scorer used in unit tests.
-//	                 Scores candidates by lexical overlap (Jaccard on
-//	                 whitespace-split, lowercased tokens) between query
-//	                 and content, mixed 90:10 with the pre-rerank
-//	                 SimilarityScore. Pure-Go, no external deps.
-//	BGEBackendMPS  — ONNX Runtime on Apple Silicon (CoreML execution
-//	                 provider). Tokenizer: HuggingFace WordPiece
-//	                 (tokenizer.json co-located with the ONNX file).
-//	                 Backed by an injected onnxRunner instance; production
-//	                 wiring lives in reranker_bge_onnx.go (build tag `cgo`)
-//	                 — daemon supplies the runner from Phase F config.
-//	BGEBackendCPU  — same as MPS but with CPUExecutionProvider. Used as
-//	                 fallback when MPS provider unavailable (e.g., x86).
+// BGEBackendMock — deterministic Go-only scorer used in unit tests.
+// Scores candidates by lexical overlap (Jaccard on
+// whitespace-split, lowercased tokens) between query
+// and content, mixed 90:10 with the pre-rerank
+// SimilarityScore. Pure-Go, no external deps.
+// BGEBackendMPS — ONNX Runtime on Apple Silicon (CoreML execution
+// provider). Tokenizer: HuggingFace WordPiece
+// (tokenizer.json co-located with the ONNX file).
+// Backed by an injected onnxRunner instance; production
+// wiring lives in reranker_bge_onnx.go (build tag `cgo`)
+// — daemon supplies the runner from config.
+// BGEBackendCPU — same as MPS but with CPUExecutionProvider. Used as
+// fallback when MPS provider unavailable (e.g., x86).
 //
 // # Latency invariants
 //
-// inv-zen-198: p95 ≤300ms for 100 candidates on M4 MPS. Enforced via
+// invariant: p95 ≤300ms for 100 candidates on M4 MPS. Enforced via
 // reranker_bge_bench_integration_test.go (build tag `integration`).
 //
 // # Goroutine safety

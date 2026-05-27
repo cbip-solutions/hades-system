@@ -7,20 +7,20 @@
 // holds an open atomic unit (commit boundary not yet signaled).
 //
 // Three assertions:
-//   1. Zero-degradation-during-atomic-unit: with WorkerSet never signaling
-//      and clock advanced under the atomicity_timeout, NO state-mutating
-//      actuator method may fire (only RestoreDefaults is permitted —
-//      that's the recovery / Continue path which deliberately bypasses
-//      the guard per G-5).
-//   2. Timeout-deterministic: advancing the fake clock by exactly the
-//      doctrine atomicity_timeout (default 30s) causes the
-//      EvtCostGatingAtomicityTimeout warn event to fire and Apply to
-//      proceed (warn-and-proceed pattern).
-//   3. Post-commit-applies: when WorkerSet.SignalAtomicBoundary fires,
-//      the queued Apply unblocks and the actuator method is invoked.
+// 1. Zero-degradation-during-atomic-unit: with WorkerSet never signaling
+// and clock advanced under the atomicity_timeout, NO state-mutating
+// actuator method may fire (only RestoreDefaults is permitted —
+// that's the recovery / Continue path which deliberately bypasses
+// the guard per G-5).
+// 2. Timeout-deterministic: advancing the fake clock by exactly the
+// doctrine atomicity_timeout (default 30s) causes the
+// EvtCostGatingAtomicityTimeout warn event to fire and Apply to
+// proceed (warn-and-proceed pattern).
+// 3. Post-commit-applies: when WorkerSet.SignalAtomicBoundary fires,
+// the queued Apply unblocks and the actuator method is invoked.
 //
 // Default build tags (no //go:build compliance) — make verify-invariants
-// runs these alongside inv-zen-101/093/099 per the established pattern.
+// runs these alongside invariant/093/099 per the established pattern.
 
 package compliance_test
 

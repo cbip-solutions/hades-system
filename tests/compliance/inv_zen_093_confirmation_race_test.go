@@ -2,22 +2,22 @@
 //
 // tests/compliance/inv_zen_093_confirmation_race_test.go
 //
-// inv-zen-093 (race-safety, spec §3.5):
+// invariant (race-safety, spec §3.5):
 //
-//	Every concurrent HandleAck call carrying the SAME EventID must
-//	result in AT MOST ONE successful ack; all others must return
-//	ErrConfirmationStale. This enforces the single-pending-request
-//	invariant: once an ack is committed, h.pending is cleared so any
-//	subsequent or concurrent ack targeting the same EventID finds an
-//	empty pending slot and receives ErrConfirmationStale.
+// Every concurrent HandleAck call carrying the SAME EventID must
+// result in AT MOST ONE successful ack; all others must return
+// ErrConfirmationStale. This enforces the single-pending-request
+// invariant: once an ack is committed, h.pending is cleared so any
+// subsequent or concurrent ack targeting the same EventID finds an
+// empty pending slot and receives ErrConfirmationStale.
 //
 // Tests:
-//  1. TestInvZen093_ConcurrentAcksAtMostOneSucceeds — 64 goroutines
-//     race to ack the same EventID; exactly 1 succeeds.
-//  2. TestInvZen093_StaleEventIDRejected — replayed ack (same EventID
-//     after first ack committed) returns ErrConfirmationStale.
+// 1. TestInvZen093_ConcurrentAcksAtMostOneSucceeds — 64 goroutines
+// race to ack the same EventID; exactly 1 succeeds.
+// 2. TestInvZen093_StaleEventIDRejected — replayed ack (same EventID
+// after first ack committed) returns ErrConfirmationStale.
 //
-// No build tags: default `go test ./tests/compliance/` runs these.
+// No build tags: default `go test./tests/compliance/` runs these.
 package compliance_test
 
 import (

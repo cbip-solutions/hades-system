@@ -1,5 +1,5 @@
 // Package cleanup_test covers the state-retention policy enforcement
-// per Q12=D + inv-zen-187 (Plan 13 Phase F7).
+// per Q12=D + invariant.
 //
 // Coverage targets: ≥90% on the package (security-critical: data
 // lifecycle enforcement).

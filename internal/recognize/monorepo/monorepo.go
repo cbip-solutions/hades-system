@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 // Package monorepo implements walk-UP workspace detection per spec §2.4 Q4=B
 // + SOTA-3 #4. Walks from a starting absolute path toward filesystem root,
-// stopping at either the .git boundary or root. Returns the first matching
+// stopping at either the.git boundary or root. Returns the first matching
 // workspace marker per the priority order:
 //
-//  1. pnpm-workspace.yaml
-//  2. turbo.json
-//  3. nx.json
-//  4. rush.json
-//  5. lerna.json
-//  6. Cargo.toml with [workspace] table
-//  7. go.work
-//  8. BUILD.bazel + MODULE.bazel (both required)
-//  9. pants.toml
+// 1. pnpm-workspace.yaml
+// 2. turbo.json
+// 3. nx.json
+// 4. rush.json
+// 5. lerna.json
+// 6. Cargo.toml with [workspace] table
+// 7. go.work
+// 8. BUILD.bazel + MODULE.bazel (both required)
+// 9. pants.toml
 //
 // Rationale (spec §2.4 + SOTA-3 #4): when operator runs zen recognize inside
 // e.g. apps/web/ of a monorepo, recognize would mis-classify the inner package
@@ -102,7 +102,7 @@ func dirHasGit(dir string) bool {
 	return err == nil
 }
 
-// WalkUp walks from absPath up to filesystem root or .git boundary,
+// WalkUp walks from absPath up to filesystem root or.git boundary,
 // returning the first workspace match. Zero-value Workspace{} when none found.
 //
 // Per spec §2.4 + SOTA-3 #4. PRECONDITION: absPath MUST be absolute.

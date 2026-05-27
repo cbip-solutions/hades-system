@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // tier_health_adapter.go — boundary bridge: orchestrator.TierHealthSink ->
-// store.tier_health_samples (Plan 16 Phase B; inv-zen-031 + inv-zen-214).
+// store.tier_health_samples.
 //
 // TierHealthSampleAdapter satisfies orchestrator.TierHealthSink and
 // forwards each sample to store.InsertTierHealthSample via 1:1 field
@@ -9,7 +9,7 @@
 // *Adapter already carries Insert (CostSink) + InsertCostLedger
 // (CostStore). Same rationale + precedent as PinStoreAdapter.
 //
-// Boundary (inv-zen-031): this file imports internal/store — that is the
+// Boundary: this file imports internal/store — that is the
 // architectural intent; dispatcheradapter IS the boundary that absorbs the
 // store dependency. The orchestrator package never sees store types.
 //

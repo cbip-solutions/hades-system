@@ -7,7 +7,7 @@ import (
 	"testing/fstest"
 )
 
-//go:embed testdata
+// go:embed testdata
 var testdataFS embed.FS
 
 func subFS(t *testing.T, subdir string) fs.FS {

@@ -1,12 +1,12 @@
-//go:build chaos
+// go:build chaos
 
-// Package chaos — p13_backup_roundtrip_test.go (Plan 13 Phase F-tail
+// Package chaos — p13_backup_roundtrip_test.go (
 // IMPORTANT 7 missing-tests completion).
 //
 // Chaos: backup → restore roundtrip MUST preserve file contents bit-for-
 // bit even under adversarial input (sparse files, special characters in
 // names, nested directories). Per spec §2.5 + §2.12 + §5.1 +
-// inv-zen-177 backup-before-modify substrate.
+// invariant backup-before-modify substrate.
 //
 // Build tag `chaos` excludes from default CI.
 package chaos

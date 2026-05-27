@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli implements the zen CLI commands.
 //
-// All subcommands talk to zen-swarm-ctld via internal/client. Phase F
+// All subcommands talk to zen-swarm-ctld via internal/client.
 // scaffolds all ~25 commands; real implementations land in Plans 2-15.
 package cli
 

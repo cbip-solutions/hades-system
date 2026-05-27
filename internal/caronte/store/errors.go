@@ -5,17 +5,17 @@
 // index) and the CRUD surface every Caronte layer (parse → resolve →
 // structure → evolution → intent) writes through.
 //
-// Boundary (inv-zen-230): this package and ALL its callers under
+// Boundary: this package and ALL its callers under
 // internal/caronte/ NEVER import internal/store. The per-project DB FILE
 // is opened by path ONLY inside internal/daemon/caronteadapter, which
 // injects the resulting *sql.DB here via Open. The compliance test
 // tests/compliance/inv_zen_230_caronte_no_store_import_test.go enforces
 // the prohibition; caronteBoundarySentinel is the runtime witness.
 //
-// Isolation (inv-zen-231, extends inv-zen-163): there is exactly one
+// Isolation: there is exactly one
 // caronte.db per canonical project path (<canonical>/.zen/caronte.db).
 // This package holds a single injected handle and has no cross-project
-// query surface; cross-project federation (Phase M / Plan 20) is a
+// query surface; cross-project federation is a
 // distinct, capa-firewall-gated path.
 //
 // Driver choice: mattn/go-sqlite3 (CGO) hosts the sqlite-vec C extension,
@@ -23,7 +23,7 @@
 // (store_nocgo.go) returns ErrCGODisabled so the daemon cross-compiles
 // and degrades gracefully (no KNN; the engine surfaces degraded_mode).
 //
-// inv-zen-129: this package makes NO web calls; sqlite-vec is a local C
+// invariant: this package makes NO web calls; sqlite-vec is a local C
 // extension.
 package store
 

@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: MIT
-// Package client — projects.go (Plan 7 Phase J Task J-2).
+// Package client — projects.go.
 //
 // Three typed wrappers for the daemon's project-aggregate doctor surface
-// that Phase I declares and Phase J's RunFullProbe orchestrator consumes:
+// that declares and RunFullProbe orchestrator consumes:
 //
-//   - GET /v1/projects                         → ProjectsListAll
-//   - GET /v1/projects/{alias}/doctor          → ProjectDoctorReport
-//   - GET /v1/meta/snapshot                    → MetaSnapshot
+// - GET /v1/projects → ProjectsListAll
+// - GET /v1/projects/{alias}/doctor → ProjectDoctorReport
+// - GET /v1/meta/snapshot → MetaSnapshot
 //
 // Method-name reconciliation note (drift from spec): the spec named the
 // per-alias doctor wrapper `ProjectDoctor`. That symbol already exists in
 // project.go with a different signature (POST /v1/projects/doctor with
-// alias+cwd+rebind from Phase A Task A-8). Renaming the existing method
-// would break Phase A's contract; instead we use `ProjectDoctorReport`
+// alias+cwd+rebind from Task A-8). Renaming the existing method
+// would break contract; instead we use `ProjectDoctorReport`
 // for the GET-based aggregate-doctor wrapper introduced here. Same
 // rationale for `ProjectsListAll` (avoids confusion with handler-side
-// ProjectsList) and the new typed Project struct (mirrors the Phase I
-// daemon wire shape, distinct from the Phase A response struct).
+// ProjectsList) and the new typed Project struct (mirrors the
+// daemon wire shape, distinct from the response struct).
 //
-// The wire shapes here MUST stay in sync with the Phase I daemon
+// The wire shapes here MUST stay in sync with the daemon
 // handlers (`internal/daemon/handlers/projects.go` GET routes, currently
 // scaffolded as `notImplemented` returning 501 — the orchestrator
-// surfaces a Warn probe in that interim state and the Phase I full-shape
+// surfaces a Warn probe in that interim state and the full-shape
 // implementation will populate the response).
 package client
 

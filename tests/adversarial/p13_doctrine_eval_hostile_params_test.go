@@ -1,14 +1,14 @@
-//go:build adversarial
+// go:build adversarial
 
 // Package adversarial — p13_doctrine_eval_hostile_params_test.go (Plan
-// 13 Phase F-tail F-imp IMPORTANT 7).
+// 13 F-imp IMPORTANT 7).
 //
 // Adversarial: the doctrine evaluator MUST handle hostile/malformed
 // params without panic, never leak secret values via paramKeys, and
 // never escalate decisions outside the capa-firewall escalation rules.
 //
 // Build tag `adversarial` excludes this file from default CI; opt-in
-// via `go test -tags=adversarial ./tests/adversarial/...`.
+// via `go test -tags=adversarial./tests/adversarial/...`.
 package adversarial
 
 import (

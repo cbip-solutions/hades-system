@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package cli — autonomy.go (Plan 5 Phase N N-3).
+// Package cli — autonomy.go.
 //
 // `zen autonomy` exposes the 3-layer autonomy resolution (Q11 C) and
 // the Q13 D pre-flight check matrix:
 //
-//	zen autonomy show                          — effective mode + chain
-//	zen autonomy --check [--verbose]           — Q13 D check matrix
-//	zen autonomy --check --allow-soft-warnings — proceed past soft fails
-//	zen autonomy mode <manual|semi|full>       — write override
-//	zen autonomy mode --reset                  — clear override
+// zen autonomy show — effective mode + chain
+// zen autonomy --check [--verbose] — Q13 D check matrix
+// zen autonomy --check --allow-soft-warnings — proceed past soft fails
+// zen autonomy mode <manual|semi|full> — write override
+// zen autonomy mode --reset — clear override
 //
-// Capa-firewall doctrine (inv-zen-100) hard-blocks any non-manual
+// Capa-firewall doctrine hard-blocks any non-manual
 // override at the daemon. The CLI surfaces the daemon's 403 response
 // as a human-readable "capa-firewall" error so the operator knows
 // exactly why the request was refused.

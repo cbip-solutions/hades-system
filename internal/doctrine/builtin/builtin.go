@@ -7,41 +7,41 @@
 //
 // Each built-in doctrine ships as a physical TOML file in this package
 // directory. //go:embed compiles them into the binary at build time.
-// LoadAll() parses every embedded file through the Phase B parser
+// LoadAll() parses every embedded file through the parser
 // (BurntSushi/toml strict mode + MetaData.Undecoded() fail-on-extras) and
-// the Phase A schema validator (reflection-based ranges/ranks + cross-field
+// the schema validator (reflection-based ranges/ranks + cross-field
 // invariants), returning a Registry keyed by canonical name plus a joined
 // error. The error is non-nil ONLY in catastrophic build-bug scenarios
 // (an embedded TOML fails to parse OR validate); the daemon init code
-// (Phase E) panics on non-nil err because the only way to reach that
+// panics on non-nil err because the only way to reach that
 // branch is to ship a corrupted binary.
 //
 // # Q3 C Tier 1 — Transverse axioms hardcoded operator-only
 //
 // The four transverse axioms (no_tech_debt, no_stubs, build_final_product,
 // no_defer) are declared TRUE in every built-in TOML's
-// [doctrine_transverse] section. The Phase B parser rejects
+// [doctrine_transverse] section. The parser rejects
 // [doctrine_transverse] in user TOMLs (returning
-// *doctrineerrors.TransverseOverrideAttempt per inv-zen-135). LoadAll()
+// *doctrineerrors.TransverseOverrideAttempt per invariant). LoadAll()
 // passes ParseOpts{AllowTransverseDeclaration: true} to opt INTO the
 // transverse-allowed parse mode; this option is set ONLY in this package
-// and ONLY for the embedded files. Reload (Phase G), per-project override
-// (Phase G + Phase H), and amendment-apply (Phase H) parse paths MUST NOT
+// and ONLY for the embedded files. Reload, per-project override
+// , and amendment-apply parse paths MUST NOT
 // pass this option.
 //
-// # inv-zen-133 — Boundary
+// # invariant — Boundary
 //
-// This package does NOT import internal/store. The Phase L
+// This package does NOT import internal/store. The
 // noStoreImportAnalyzer enforces this at compile time via golangci-lint
 // (and via analysistest fixtures in internal/doctrine/lint/analysistest/).
 //
-// # inv-zen-134 — Sole accessor
+// # invariant — Sole accessor
 //
-// External callers (Plan 4 worker, Plan 5 orchestrator, Plan 6 merge,
-// (Phase E), NOT through this package's per-doctrine accessors directly.
+// External callers ( worker, orchestrator, merge,
+// , NOT through this package's per-doctrine accessors directly.
 // The per-doctrine accessors (MaxScope/Default/CapaFirewall) exist for
-// init-path callers (Phase E's accessor seeding) and for the CLI debug
-// command `zen doctrine show <name>` (Phase I). All three are read-only.
+// init-path callers and for the CLI debug
+// command `zen doctrine show <name>`. All three are read-only.
 package builtin
 
 import (
@@ -55,7 +55,7 @@ import (
 	v1 "github.com/cbip-solutions/hades-system/internal/doctrine/schema/v1"
 )
 
-//go:embed *.toml
+// go:embed *.toml
 var embedded embed.FS
 
 var canonicalNames = []string{"max-scope", "default", "capa-firewall"}
@@ -125,9 +125,9 @@ var (
 // per-stage attribution can errors.As() the joined error to extract
 // individual *LoadError values (each carries Source + Stage + Wrapped).
 //
-// Signature standardized post Stage 2 self-review CRITICAL #2: returns
+// Signature standardized post self-review CRITICAL #2: returns
 // `(map[string]*v1.Schema, error)` (Registry is a transparent alias).
-// Phase E + Phase G + Phase J all consume this canonical shape; the
+// + + all consume this canonical shape; the
 // joined error preserves per-stage attribution without forcing every
 // caller to handle a slice.
 func LoadAll() (map[string]*v1.Schema, error) {

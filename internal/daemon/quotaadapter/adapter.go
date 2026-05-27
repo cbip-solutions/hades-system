@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
 // Package quotaadapter bridges *store.Store to internal/quota's
-// OverrideStore interface (Layer 3 operator override per Plan 7 spec
+// OverrideStore interface (Layer 3 operator override spec
 // §1 Q10).
 //
-// inv-zen-031 boundary: internal/quota MUST NOT import internal/store.
+// invariant boundary: internal/quota MUST NOT import internal/store.
 // This adapter is the only package permitted to translate between
 // quota.Override (value type owned by the quota package) and
 // store.PriorityOverrideRow (SQLite-backed row owned by store). The
 // import list of this file is the single legitimate co-location of
 // internal/quota and internal/store anywhere in the codebase, enforced
-// by the inv-zen-122 compliance test in
+// by the invariant compliance test in
 // tests/compliance/inv_zen_122_inv_zen_031_plan7_packages_test.go.
 //
-// inv-zen-115 audit hook: every Set / Reset emits an event row in the
+// invariant audit hook: every Set / Reset emits an event row in the
 // shared events table inside the SAME transaction as the
-// priority_overrides change. Atomicity is load-bearing — Plan 9 hash-
+// priority_overrides change. Atomicity is load-bearing — hash-
 // chain integrity depends on event-row presence whenever the
 // priority_overrides row mutates. The transaction commits only after
 // BOTH the row write AND the audit event row write succeed; a failure
@@ -24,10 +24,10 @@
 // copy between the quota-side type (quota.Override) and the store-side
 // type (store.PriorityOverrideRow). Two type sets are intentional,
 // mirroring the bypassadapter / projectctxadapter pattern:
-//  1. The quota package never gains a transitive SQLite dependency so
-//     unit tests stay fast and run cross-platform.
-//  2. Future schema changes (e.g., adding a column) absorb here without
-//     rippling into internal/quota.
+// 1. The quota package never gains a transitive SQLite dependency so
+// unit tests stay fast and run cross-platform.
+// 2. Future schema changes (e.g., adding a column) absorb here without
+// rippling into internal/quota.
 //
 // Time precision: the priority_overrides schema (migration 060) stores
 // expires_at + created_at as TIMESTAMP (RFC3339 TEXT under the
@@ -59,7 +59,7 @@ func New(s *store.Store) *Adapter {
 }
 
 // NewOverrideStore returns the adapter typed as quota.OverrideStore.
-// Daemon bootstrap (Phase I) consumes via this constructor; the wider
+// Daemon bootstrap consumes via this constructor; the wider
 // *Adapter exposes other helpers daemon bootstrap doesn't need.
 //
 // The *store.Store argument MUST be non-nil; a nil store causes the

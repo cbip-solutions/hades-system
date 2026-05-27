@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package cli — knowledge_p9_unpromote.go (Plan 9 Phase I Task I-5).
+// Package cli — knowledge_p9_unpromote.go.
 //
 // `zen knowledge-p9 unpromote <note-id>` — reverse a prior promote.
 //
-// Mirror of promote with inverse semantics. inv-zen-146 applies equally:
-//  1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
-//  2. strings.TrimSpace check in RunE — rejects whitespace-only values.
+// Mirror of promote with inverse semantics. invariant applies equally:
+// 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
+// 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 //
 // Wire method: KnowledgeUnpromoteP9(ctx, noteID, reason) → error (204 No Content).
-// The daemon emits a vault.note_unpromoted_from_global Plan 8 audit event
-// anchored on the Plan 9 chain.
+// The daemon emits a vault.note_unpromoted_from_global audit event
+// anchored on the chain.
 package cli
 
 import (
@@ -25,6 +25,7 @@ import (
 
 func knowledge9UnpromoteCmd() *cobra.Command {
 	var reason string
+	var project string
 
 	cmd := &cobra.Command{
 		Use:   "unpromote <note-id>",
@@ -47,7 +48,7 @@ The unpromote event is anchored on the Plan 9 chain and visible via
 			ctx, cancel := context.WithTimeout(cmd.Context(), 30*time.Second)
 			defer cancel()
 
-			if err := newClientFromCmd(cmd).KnowledgeUnpromoteP9(ctx, noteID, reason); err != nil {
+			if err := newClientFromCmd(cmd).KnowledgeUnpromoteProjectP9(ctx, noteID, project, reason); err != nil {
 				return err
 			}
 
@@ -57,6 +58,7 @@ The unpromote event is anchored on the Plan 9 chain and visible via
 	}
 
 	cmd.Flags().StringVar(&reason, "reason", "", "Operator rationale (required; inv-zen-146)")
+	cmd.Flags().StringVar(&project, "project", "", "Source project ID when note_id is not globally unique")
 
 	_ = cmd.MarkFlagRequired("reason")
 

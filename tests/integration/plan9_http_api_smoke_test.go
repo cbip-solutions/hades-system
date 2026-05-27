@@ -351,11 +351,11 @@ func (s *smokeKnowledgeAdapterP9) Query(_ context.Context, _ handlers.KnowledgeQ
 	}, nil
 }
 
-func (s *smokeKnowledgeAdapterP9) Promote(_ context.Context, _, _, _ string) error {
+func (s *smokeKnowledgeAdapterP9) Promote(_ context.Context, _, _, _, _ string) error {
 	return nil
 }
 
-func (s *smokeKnowledgeAdapterP9) Unpromote(_ context.Context, _, _, _ string) error {
+func (s *smokeKnowledgeAdapterP9) Unpromote(_ context.Context, _, _, _, _ string) error {
 	return nil
 }
 
@@ -374,12 +374,15 @@ func (s *smokeKnowledgeAdapterP9) Rebuild(_ context.Context, _ string) (handlers
 
 type smokeADRCtx struct{}
 
-func (s *smokeADRCtx) Propose(_ context.Context, _ string) (handlers.ADRDoc, error) {
+func (s *smokeADRCtx) Propose(_ context.Context, _, planRange string) (handlers.ADRDoc, error) {
+	if planRange == "" {
+		planRange = "plan-9"
+	}
 	return handlers.ADRDoc{
 		ID:          "ADR-0002",
 		Status:      "proposed",
 		Topic:       "smoke test topic",
-		Plan:        "plan-9",
+		Plan:        planRange,
 		Frontmatter: map[string]string{"status": "proposed"},
 		CreatedAt:   time.Now().Unix(),
 		UpdatedAt:   time.Now().Unix(),

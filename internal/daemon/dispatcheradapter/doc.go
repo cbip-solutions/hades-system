@@ -1,42 +1,42 @@
 // SPDX-License-Identifier: MIT
 // Package dispatcheradapter bridges the dispatcher's CostSink seam to
-// internal/store. Per inv-zen-031, the dispatcher / orchestrator /
+// internal/store. Per invariant, the dispatcher / orchestrator /
 // providers packages MUST NOT import internal/store; this package is
 // the boundary that absorbs the dependency.
 //
-// Mirrors the Plan 2 bypassadapter pattern: store-aware translation
+// Mirrors the bypassadapter pattern: store-aware translation
 // lives here, exposing typed methods that satisfy the dispatcher's
 // CostSink interface (a single Insert(ctx, CostEvent) method today,
-// extensible by composition if Plan 4+ grows the seam).
+// extensible by composition if + grows the seam).
 //
 // Type-translation strategy. The package defines its own
 // CostLedgerRow value type rather than reusing dispatcher.CostEvent
 // directly when calling the store. The two are intentionally identical
 // in shape; keeping them distinct buys two things:
 //
-//  1. The dispatcher package never gains a transitive dependency on
-//     internal/store — pure unit tests stay fast and tier-1
-//     bypass code stays minimal.
+// 1. The dispatcher package never gains a transitive dependency on
+// internal/store — pure unit tests stay fast and tier-1
+// bypass code stays minimal.
 //
-//  2. Future store-side schema changes (e.g., adding a column,
-//     splitting tokens by cache-hit class, or persisting per-attempt
-//     idempotency keys) ripple only through this adapter; CostEvent
-//     is the on-the-wire shape between dispatcher and emitter and is
-//     stabilised by Plan 3 spec.
+// 2. Future store-side schema changes (e.g., adding a column,
+// splitting tokens by cache-hit class, or persisting per-attempt
+// idempotency keys) ripple only through this adapter; CostEvent
+// is the on-the-wire shape between dispatcher and emitter and is
+// stabilised spec.
 //
-// Transitional shape (Phase B-7 vs Phase C). The Store interface
-// declared in this package is the contract Phase C's
+// Transitional shape. The Store interface
+// declared in this package is the contract
 // (*store.Store).InsertCostLedger MUST satisfy. Until that method
-// lands (Phase C migration 040_cost_ledger.sql + corresponding CRUD),
+// lands,
 // the daemon wires the adapter against an in-memory implementation in
-// tests; once Phase C ships, the daemon entry point passes the real
+// tests; once ships, the daemon entry point passes the real
 // *store.Store directly — the concrete type satisfies the interface
 // structurally, no glue required. This keeps B-7 fully decoupled from
-// Phase C scope while still producing complete, production-shaped code
+// scope while still producing complete, production-shaped code
 // (zen-swarm doctrine: build the final shape, not a scaffold).
 //
 // Scope discipline. The adapter implements ONLY dispatcher.CostSink.
-// dispatcher.BreakerState wire-up is Phase D's job (real circuit
+// dispatcher.BreakerState wire-up is job (real circuit
 // breaker) or B-8's daemon wiring (where any noop stand-in MUST be
 // constructed and documented at the wiring site, not embedded as
 // permissive methods on this Adapter). Permanent permissive methods

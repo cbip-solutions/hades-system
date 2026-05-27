@@ -1,11 +1,11 @@
-// Package compliance — inv-zen-121: scheduler miss-policy follows
+// Package compliance — invariant: scheduler miss-policy follows
 // doctrine matrix + rate-limit 1/30s/project on max-scope catch-up.
 //
-// Spec §1 Q9 C / §7.2 inv-zen-121 wording:
+// Spec §1 Q9 C / §7.2 invariant wording:
 //
-//	"Per-doctrine miss policy MUST map max-scope=CatchUpBounded,
-//	default=Skip, capa-firewall=NotifyOnly; rate-limit 1/30s/project
-//	enforced on catch-up dispatches."
+// "Per-doctrine miss policy MUST map max-scope=CatchUpBounded,
+// default=Skip, capa-firewall=NotifyOnly; rate-limit 1/30s/project
+// enforced on catch-up dispatches."
 //
 // This test is the cross-package, boundary-side witness. The in-package
 // test surface in internal/scheduler/miss_policy_test.go locks
@@ -16,22 +16,22 @@
 //
 // Coverage matrix:
 //
-//	(a) DoctrineMissPolicy maps the three canonical doctrines + the
-//	    safe-default fallback for unknown / empty names.
-//	(b) EffectiveMissPolicy override semantics:
-//	    - non-zero per-Schedule override wins over doctrine default;
-//	    - zero (Skip) on default doctrine: respected (Skip is the
-//	      doctrine default anyway);
-//	    - zero (Skip) on max-scope: treated as "unset", falls through
-//	      to CatchUpBounded;
-//	    - nil receiver: returns DoctrineMissPolicy(d) without panic.
-//	(c) Catch-up rate-limit 1/30s/project: feed N concurrent fires
-//	    through the live Fire() pipeline with a fake-clock-driven rate
-//	    limiter; assert that the limiter is consulted on every
-//	    catch-up dispatch and that exactly the budgeted fires get
-//	    through.
+// (a) DoctrineMissPolicy maps the three canonical doctrines + the
+// safe-default fallback for unknown / empty names.
+// (b) EffectiveMissPolicy override semantics:
+// - non-zero per-Schedule override wins over doctrine default;
+// - zero (Skip) on default doctrine: respected (Skip is the
+// doctrine default anyway);
+// - zero (Skip) on max-scope: treated as "unset", falls through
+// to CatchUpBounded;
+// - nil receiver: returns DoctrineMissPolicy(d) without panic.
+// (c) Catch-up rate-limit 1/30s/project: feed N concurrent fires
+// through the live Fire() pipeline with a fake-clock-driven rate
+// limiter; assert that the limiter is consulted on every
+// catch-up dispatch and that exactly the budgeted fires get
+// through.
 //
-// Boundary (inv-zen-031): this test imports only internal/scheduler +
+// Boundary: this test imports only internal/scheduler +
 // internal/doctrine + internal/quota + stdlib. It does NOT touch
 // internal/store, internal/providers, or private-tier1-module.
 //

@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -5,35 +6,35 @@
 
 // Package cache — dispatcher.go
 //
-// Dispatcher is the cache-aware research MCP integration layer (Plan 9
-// Phase F-10). It composes the exact lookup (F-5), semantic lookup (F-6),
+// Dispatcher is the cache-aware research MCP integration layer (
+// ). It composes the exact lookup (F-5), semantic lookup (F-6),
 // HEAD revalidation (F-7), and fresh MCP dispatch into the canonical
 // LookupOrDispatch flow defined in spec §3.5.
 //
 // # Flow
 //
-//  1. Validate projectID (inv-zen-148): empty → ErrProjectIDRequired.
-//  2. Emit EventResearchDispatchInitiated.
-//  3. If !SkipCache:
-//     a. LookupExact → on hit, revalidate (unless SkipRevalidate), emit
-//     cache_hit_exact + findings_returned, return.
-//     b. Embedder.Embed → LookupSemantic → on hit, revalidate, emit
-//     cache_hit_semantic + findings_returned, return.
-//  4. MCP.Dispatch (fresh research).
-//  5. Writeback: INSERT research_dispatches (DONE) + INSERT research_findings
-//     (StoreBody per finding) + INSERT research_query_vec (if embedding != nil).
-//  6. Emit findings_returned, return LookupResult{HitReason: CacheHitFresh}.
+// 1. Validate projectID: empty → ErrProjectIDRequired.
+// 2. Emit EventResearchDispatchInitiated.
+// 3. If !SkipCache:
+// a. LookupExact → on hit, revalidate (unless SkipRevalidate), emit
+// cache_hit_exact + findings_returned, return.
+// b. Embedder.Embed → LookupSemantic → on hit, revalidate, emit
+// cache_hit_semantic + findings_returned, return.
+// 4. MCP.Dispatch (fresh research).
+// 5. Writeback: INSERT research_dispatches (DONE) + INSERT research_findings
+// (StoreBody per finding) + INSERT research_query_vec (if embedding != nil).
+// 6. Emit findings_returned, return LookupResult{HitReason: CacheHitFresh}.
 //
-// # MCPClient boundary (inv-zen-088 single-egress)
+// # MCPClient boundary
 //
 // All MCP calls go through the MCPClient interface; in production this is
-// wired to internal/daemon/dispatcheradapter (Phase H glue). The cache package
+// wired to internal/daemon/dispatcheradapter. The cache package
 // NEVER makes direct HTTP or provider calls — those live in the provider tier.
 //
 // # Embedder boundary
 //
 // The Embedder interface produces 384-float32 embeddings. In production this
-// is wired to the Phase D model shared at daemon startup; in tests an inline
+// is wired to the model shared at daemon startup; in tests an inline
 // mock is used (see dispatcher_test.go). A nil Embedder causes semantic lookup
 // to be skipped gracefully (embedding not available — fall straight to MCP).
 //
@@ -42,10 +43,10 @@
 // Cache hits are revalidated via Revalidator.Validate before being returned to
 // the caller, unless SkipRevalidate=true (used in tests for determinism). When
 // revalidation returns FreshnessExpired the finding is not updated here — gc
-// (Phase G) handles removal; the dispatcher returns the stale result with the
+// handles removal; the dispatcher returns the stale result with the
 // freshness status as-is so the caller sees the full picture.
 //
-// # inv-zen-031
+// # invariant
 //
 // This package MUST NOT import internal/store. The MCPClient + Embedder
 // interfaces and the Sink interface decouple the cache package from the daemon

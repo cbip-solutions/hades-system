@@ -3,21 +3,21 @@
 //
 // Operator migration tooling for legacy /zen-swarm:* slash command
 // references in operator home-directory surfaces. Subcommand
-// `hades migrate plan-18 --from-zen-swarm-aliases` (or `zen migrate plan-18 ...`
+// `hades migrate plan-18 --from-zen-swarm-aliases` (or `zen migrate plan-18...`
 // via the wrapper). Idempotent + dry-run-by-default + allowlist-scoped +
 // atomic per-file writes + backup directory.
 //
-// Spec ref: docs/superpowers/specs/2026-05-20-zen-swarm-plan-18-hades-system-unified-ux-design.md §Q4
-// Plan ref: docs/superpowers/plans/2026-05-20-plan-18c-phase-F-migration-tooling.md
+// Spec ref: internal design record §Q4
+// Plan ref: internal design record
 //
-// Catalog codes consumed (Phase A + Phase F additive):
-//   - migrate.allowlist-violation
-//   - migrate.symlink-out-of-scope
-//   - migrate.write-failed
-//   - migrate.dry-run-required
-//   - cli.no-op
+// Catalog codes consumed:
+// - migrate.allowlist-violation
+// - migrate.symlink-out-of-scope
+// - migrate.write-failed
+// - migrate.dry-run-required
+// - cli.no-op
 //
-// Compliance gate (Phase G): inv-zen-222 — idempotency + scope guarantee.
+// Compliance gate: invariant — idempotency + scope guarantee.
 package cli
 
 import (
@@ -41,7 +41,7 @@ type MigratePlan18Opts struct {
 	HomeDir string
 	// DryRun, when true, prints diffs but does not mutate files.
 	// Default (zero value) is FALSE; cobra flag parser sets to TRUE by default,
-	// so the cobra path always overrides; programmatic Phase G callers MUST set
+	// so the cobra path always overrides; programmatic callers MUST set
 	// DryRun=true explicitly when they intend dry-run mode.
 	DryRun bool
 

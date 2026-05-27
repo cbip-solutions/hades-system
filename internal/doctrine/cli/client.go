@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package cli — client.go (Plan 8 Phase I Task I-1).
+// Package cli — client.go.
 //
 // Typed daemon HTTP client wrapper for /v1/doctrine/* routes consumed by
-// Phase I + Phase K CLI subcommands. Wraps net/http with descriptive
+// + CLI subcommands. Wraps net/http with descriptive
 // error messages in español.
 //
 // The wrapper intentionally lives under internal/doctrine/cli/ (NOT under
-// internal/client/) so Phase I owns its full request/response surface
-// without fighting Plan 4 v1's existing internal/client/doctrine.go
-// (which serves Plan 4 v1 routes — different shape). Phase N will collapse
+// internal/client/) so owns its full request/response surface
+// without fighting v1's existing internal/client/doctrine.go
+// . will collapse
 // the v1+v2 client surfaces; until then they coexist.
 package cli
 
@@ -133,10 +133,10 @@ func (c *Client) Validate(ctx context.Context, againstBaseline, tomlBody string)
 	return out, err
 }
 
-// AmendmentProposal mirrors the wire format Plan 5 emits at
+// AmendmentProposal mirrors the wire format emits at
 // /v1/doctrine/propose-list (defined in internal/client.DoctrineProposal).
-// Phase K declares its own typed wrapper here to keep the Phase I+K cli
-// package self-contained — the field tags MUST match Plan 5's wire bytes
+// declares its own typed wrapper here to keep the +K cli
+// package self-contained — the field tags MUST match wire bytes
 // exactly. Drift surfaces as Unmarshal failures on integration tests.
 type AmendmentProposal struct {
 	ID                    string `json:"id"`

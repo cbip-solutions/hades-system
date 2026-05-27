@@ -43,7 +43,7 @@ func (r *Regenerator) Regenerate(ctx context.Context, fresh Manifest, existingPa
 	var existing Manifest
 	if _, decErr := toml.NewDecoder(bytes.NewReader(body)).Decode(&existing); decErr != nil {
 		// Existing TOML malformed: return ErrManifestInvalid.
-		// The regenerate-and-diff CI gate (inv-zen-151) will surface
+		// The regenerate-and-diff CI gate will surface
 		// the problem; we do NOT silently fall back to fresh-only values
 		// because that would constitute a T10 threat (silent manual-field loss).
 		return Manifest{}, fmt.Errorf("%w: parse %s: %v", ErrManifestInvalid, existingPath, decErr)

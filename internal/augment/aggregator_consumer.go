@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: MIT
-// Package augment — AggregatorConsumer wraps Plan 9 D's
+// Package augment — AggregatorConsumer wraps D's
 // internal/knowledge/aggregator query surface (via the KnowledgeIndex +
 // Embedder seams) for single-project augmentation.
 //
-// Q11=α (Stage 0 reality-check applied 2026-05-10 post Plan 9 D ship):
+// Q11=α:
 // methods + a package-level aggregator.Fuse function + aggregator.Embedder
-// interface. Stage 2 fix: the wrapper consumes the *Aggregator query surface
+// interface. fix: the wrapper consumes the *Aggregator query surface
 // via the KnowledgeIndex seam; the Embedder is a separate seam.
 //
 // Method mapping (5-lane RRF Q2=C):
-//   - Lane 2 (FTS5 BM25):       AggregatorConsumer.Lane2FTS -> KnowledgeIndex.QueryFTS
-//   - Lane 4 (sqlite-vec KNN):  AggregatorConsumer.Lane4Vec -> Embedder.Embed + KnowledgeIndex.QueryVec
-//   - Lane 5 (temporal):        AggregatorConsumer.Lane5Temporal -> KnowledgeIndex.QueryFTS + decay
-//   - RRF k=60 fusion:          AggregatorConsumer.RunRRF -> rrf.Fuse (canonical CGO-free)
+// - Lane 2 (FTS5 BM25): AggregatorConsumer.Lane2FTS -> KnowledgeIndex.QueryFTS
+// - Lane 4 (sqlite-vec KNN): AggregatorConsumer.Lane4Vec -> Embedder.Embed + KnowledgeIndex.QueryVec
+// - Lane 5 (temporal): AggregatorConsumer.Lane5Temporal -> KnowledgeIndex.QueryFTS + decay
+// - RRF k=60 fusion: AggregatorConsumer.RunRRF -> rrf.Fuse (canonical CGO-free)
 //
 // Lanes 1 + 3 (caronte.query / caronte.context) are NOT served by this
 // consumer — they go through Pipeline's McpGateway.CallTool.
 //
-// inv-zen-031: this file imports github.com/cbip-solutions/hades-system/internal/knowledge/rrf
-// (canonical CGO-free Fuse, post Plan 11 Phase C fix-cycle Important-2)
+// invariant: this file imports github.com/cbip-solutions/hades-system/internal/knowledge/rrf
+//
 // but NOT internal/knowledge/aggregator (which transitively pulls CGO sqlite3)
 // and NOT internal/store.
 

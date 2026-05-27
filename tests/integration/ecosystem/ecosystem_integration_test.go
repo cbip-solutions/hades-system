@@ -1,4 +1,4 @@
-//go:build integration && cgo
+// go:build integration && cgo
 
 package ecosystem_test
 
@@ -204,11 +204,11 @@ func (a *symbolIndexLookupAdapter) Contains(eco ecosystem.Ecosystem, symbolPath,
 // — never confabulate.
 //
 // Cross-package signal:
-//   - SymbolIndex (symbol_index.go) Register the REAL symbol
-//   - symbolIndexLookupAdapter (this file) bridges to SymbolIndexLookup
-//   - Verifier.Verify (verifier.go) cascade resolves real symbol via stage A
-//     (SymbolIndex hit), resolves fake symbol via stage A miss + no stage C
-//     runner → Exists=false with Source=skipped
+// - SymbolIndex (symbol_index.go) Register the REAL symbol
+// - symbolIndexLookupAdapter (this file) bridges to SymbolIndexLookup
+// - Verifier.Verify (verifier.go) cascade resolves real symbol via stage A
+// (SymbolIndex hit), resolves fake symbol via stage A miss + no stage C
+// runner → Exists=false with Source=skipped
 //
 // Drift: a regression in Verifier.verifyOne that silently treats "not in
 // index" as Exists=true (the classic hallucination bug) surfaces here.
@@ -281,7 +281,7 @@ func (b *budgetGatedIngester) IngestDelta(ctx context.Context, _eco string, _ver
 // TestEcosystemIntegration_BudgetGatesCronIngestDispatch wires
 // (ecosystem.BudgetMonitor × budgetGatedIngester façade × cronWorkerFacade)
 // across two package boundaries. Validates the production handoff:
-// Overflow status (inv-zen-199) MUST block IngestDelta dispatch — the
+// Overflow status MUST block IngestDelta dispatch — the
 // cron worker may NOT silently fan out 4 IngestDelta calls when storage
 // is at ≥150% of target.
 //

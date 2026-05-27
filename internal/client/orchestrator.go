@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package client — orchestrator.go (Plan 3 Phase F K-3 — REAL).
+// Package client — orchestrator.go.
 //
 // Typed helper methods for /v1/orchestrator/* endpoints exercised by the
-// `zen orchestrator` CLI subcommands. Replaces the Plan 2 stub set
+// `zen orchestrator` CLI subcommands. Replaces the stub set
 // (OrchestratorStatus + OrchestratorPin/Unpin against /switch) with a
-// six-method surface backed by the Phase B+C+D+E components.
+// six-method surface backed by the +C+D+E components.
 package client
 
 import "context"

@@ -6,10 +6,10 @@
 // the guard returns a partial summary rather than fail-loud.
 //
 // Truncation strategy (load-bearing ordering):
-//   1. Drop volatile FusedResults from tail (lowest RRF score first).
-//   2. Trim CommunitySummaries' Symbols + Files lists to top-N per cluster.
-//   3. Drop CommunitySummaries from tail (lowest aggregate score first).
-//   4. ALWAYS keep ProjectMeta (minimum viable static portion).
+// 1. Drop volatile FusedResults from tail (lowest RRF score first).
+// 2. Trim CommunitySummaries' Symbols + Files lists to top-N per cluster.
+// 3. Drop CommunitySummaries from tail (lowest aggregate score first).
+// 4. ALWAYS keep ProjectMeta (minimum viable static portion).
 
 package augment
 

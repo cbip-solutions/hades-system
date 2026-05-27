@@ -7,7 +7,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/doctrine/builtin"
 )
 
-// TestCapaFirewallAutoUpgradeNoneHardGuard verifies inv-zen-100
+// TestCapaFirewallAutoUpgradeNoneHardGuard verifies invariant
 // generalized: capa-firewall MUST have auto_upgrade="none" (cannot
 // auto-upgrade ever).
 func TestCapaFirewallAutoUpgradeNoneHardGuard(t *testing.T) {
@@ -21,7 +21,7 @@ func TestCapaFirewallAutoUpgradeNoneHardGuard(t *testing.T) {
 	}
 }
 
-// TestCapaFirewallAutonomyAssistedMandatory covers Plan 5 Q11 C hard guard:
+// TestCapaFirewallAutonomyAssistedMandatory covers Q11 C hard guard:
 // capa-firewall.mode MUST be assisted (operator gates ALL substantive
 // decisions); CheckMode MUST be strict.
 func TestCapaFirewallAutonomyAssistedMandatory(t *testing.T) {

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package cli — write.go (Plan 8 Phase I Tasks I-4 + I-5 + I-6).
+// Package cli — write.go.
 //
 // Write group commands. Three operate directly on the local filesystem
 // (init, migrate, override edit) because they're operator-explicit by
 // nature; one (reload) hits the daemon HTTP API for manual reload trigger.
 //
-// inv-zen-137 (daemon NEVER auto-writes): all writeback to TOML files is
+// invariant (daemon NEVER auto-writes): all writeback to TOML files is
 // operator-explicit. This file's commands ARE the operator-explicit path.
 package cli
 

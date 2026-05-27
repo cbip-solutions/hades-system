@@ -1,15 +1,15 @@
 // tests/compliance/inv_zen_228_bident_inline_glyph_test.go
 //
-// inv-zen-260 (HADES UI gaps / Task 2) — bident inline glyph.
+// invariant (HADES UI gaps / Task 2) — bident inline glyph.
 //
 // Root cause of GAP 4: the initial palette.toml draft used the fleur-de-lis
 // (⚜, U+269C) for inline prompt and response glyphs — visually clashing with
 // the box-drawing bident (╨, U+2568) used in the HADES ASCII banner.
 //
-// inv-zen-260 pins the fix: the [branding] table in
+// invariant pins the fix: the [branding] table in
 // plugin/hades/skins/palette.toml MUST
-//  1. contain NO occurrence of the fleur-de-lis character (⚜, U+269C), and
-//  2. set prompt_symbol to exactly the bident (╨, U+2568).
+// 1. contain NO occurrence of the fleur-de-lis character (⚜, U+269C), and
+// 2. set prompt_symbol to exactly the bident (╨, U+2568).
 //
 // This is a source-level compliance guard (read the TOML file as text;
 // assert the two properties above). The behavioral companion is the

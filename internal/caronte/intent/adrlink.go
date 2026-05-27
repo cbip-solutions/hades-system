@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -277,10 +278,10 @@ func (l *ADRLinker) linkExplicitFromCode(ctx context.Context) error {
 	return nil
 }
 
-// adrPathIndex maps ADR id (ADR-NNNN) → repo-rel path (docs/decisions/NNNN-*.md).
+// adrPathIndex maps ADR id (ADR-NNNN) → repo-rel path (architecture records).
 //
 // The id is sourced from each file's YAML frontmatter `id:` field (canonical
-// per inv-zen-285); when the frontmatter is absent or has no usable `id:`
+// per invariant); when the frontmatter is absent or has no usable `id:`
 // field, the index falls back to filename-derivation ("ADR-" + first 4 chars).
 //
 // Why frontmatter wins: across the repo, ADR identity is declared in the

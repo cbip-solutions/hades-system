@@ -1,12 +1,12 @@
-// layout_test.go — Plan 7 Phase C Task C-12 CLI tests.
+// layout_test.go — Task C-12 CLI tests.
 //
 // Tests cover:
-//   - `zen layout repaint <alias>` propagates alias to client
-//   - missing alias = usage error
-//   - daemon error propagation + exit-code categorisation
-//   - HTTP path coverage: client → daemon POST /v1/sessions/{alias}/layout/repaint
-//     via httptest, including 404 → recoverable + 503 → unrecoverable
-//   - subcommand registration: `layout` MUST have a `repaint` leaf
+// - `zen layout repaint <alias>` propagates alias to client
+// - missing alias = usage error
+// - daemon error propagation + exit-code categorisation
+// - HTTP path coverage: client → daemon POST /v1/sessions/{alias}/layout/repaint
+// via httptest, including 404 → recoverable + 503 → unrecoverable
+// - subcommand registration: `layout` MUST have a `repaint` leaf
 package cli
 
 import (

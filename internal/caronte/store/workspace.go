@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -49,18 +50,18 @@ func WithLinkStore(ls linkStorePort) WorkspaceOption {
 }
 
 // graphqlNodeFallbackPort is the narrow indirection through which the
-// inv-zen-272 production wiring (Plan 20 Phase G spec-review MAJOR fix)
+// invariant production wiring
 // reads the persistent caronte_workspaces.enable_graphql_node_fallback
 // flag without creating an import cycle (the federation package imports
 // internal/caronte/store for value types, so a direct import of
 // federation.WorkspaceFederationDB here would cycle). The daemon
-// composition root (Phase J) wires a tiny adapter over
+// composition root wires a tiny adapter over
 // federation.WorkspaceFederationDB.GetWorkspace behind this interface.
 //
 // EnableGraphQLNodeFallback returns the persisted flag for the workspaceID
 // the Workspace was constructed with. Returning (false, nil) on lookup
 // failure is the graceful-degrade contract: an unreachable federation DB
-// MUST NOT open the gate; the Plan 20 default is gate-closed (the
+// MUST NOT open the gate; the default is gate-closed (the
 // SevInsufficient result is surfaced to the operator instead of triggering
 // a Node spawn). Implementations MAY return a wrapped error for
 // observability; the Workspace accessor swallows the error and degrades
@@ -140,25 +141,25 @@ func (w *Workspace) AuthorizeProjects(projects []string) error {
 	return w.authorize(projects)
 }
 
-// EnableGraphQLNodeFallback is the inv-zen-272 production-wiring accessor.
+// EnableGraphQLNodeFallback is the invariant production-wiring accessor.
 // Returns the persisted caronte_workspaces.enable_graphql_node_fallback
-// flag for this workspace (Phase A C-2 schema column) via the
+// flag for this workspace via the
 // graphqlNodeFallbackPort seam wired at construction with
 // WithGraphQLNodeFallbackPort.
 //
-// Gate-closed defaults (the Plan 20 conservative posture):
+// Gate-closed defaults:
 //
-//   - Port unset (nil) → returns false. The default Workspace constructed
-//     via NewWorkspace has no port; the daemon composition root (Phase J)
-//     is the only production caller that wires WithGraphQLNodeFallbackPort.
-//     gate-closed.
-//   - Port lookup error (e.g., unreachable federation DB) → returns false.
-//     The error is intentionally NOT surfaced — the inv-zen-272 spawn
-//     gate MUST be fail-closed (a transient persistence failure must
-//     NEVER open the spawn-site by accident). The port implementation
-//     SHOULD log the error for observability; this accessor's contract
-//     is bool-only so consumers (bcdetect.Pipeline.Fan) can treat the
-//     result as a simple gate condition.
+// - Port unset (nil) → returns false. The default Workspace constructed
+// via NewWorkspace has no port; the daemon composition root
+// is the only production caller that wires WithGraphQLNodeFallbackPort.
+// gate-closed.
+// - Port lookup error (e.g., unreachable federation DB) → returns false.
+// The error is intentionally NOT surfaced — the invariant spawn
+// gate MUST be fail-closed (a transient persistence failure must
+// NEVER open the spawn-site by accident). The port implementation
+// SHOULD log the error for observability; this accessor's contract
+// is bool-only so consumers (bcdetect.Pipeline.Fan) can treat the
+// result as a simple gate condition.
 //
 // Acquires the same read lock as Projects() / AuthorizeProjects() (mu.RLock
 // inside). Safe to call concurrently. Uses context.Background() at the
@@ -224,29 +225,29 @@ func (w *Workspace) FederatedQuery(ctx context.Context, q FederatedQuery) ([]Fed
 
 // CrossRepoLink validates a cross-repo contract edge and records it. Both
 // CallRepo + EndpointRepo MUST be roster members; under a privacy-locked
-// doctrine a cross-repo link (CallRepo != EndpointRepo) is denied. Plan 19
-// records the validated link in an in-memory ledger (w.pending); Plan 20
+// doctrine a cross-repo link (CallRepo != EndpointRepo) is denied.
+// records the validated link in an in-memory ledger (w.pending);
 // extends with a persistent contract_links table via w.linkStore (a
 // federation.LinkStore wired at the daemon composition root). The
 // persistent write runs AFTER w.authorize so capa-firewall consistency is
-// preserved (inv-zen-264). A link to a non-member repo is refused
+// preserved. A link to a non-member repo is refused
 // (ErrUnauthorizedProject) — never a false cross-workspace link.
 //
 // are populated INSIDE this method — the signature stays unchanged so
 // the C-2 columns the table requires. Defaults respect non-zero
-// caller-set values so a custom-resolved link from the Phase F linker
+// caller-set values so a custom-resolved link from the linker
 // survives the seam untouched.
 //
 // Review I1 atomicity contract: ledger and store are kept in lock-step.
 // The sequence is:
 //
-//  1. authorize() gate (capa-firewall)
-//  2. populate FIX-4 defaults (ResolvedAt, LinkMethod) — applied
-//     UNCONDITIONALLY so the ledger snapshot mirrors the persisted row
-//     even when w.linkStore is nil (Plan 19 path)
-//  3. persist via w.linkStore.Append (when non-nil) — FAILURE PROPAGATES
-//     and the ledger is NOT modified
-//  4. append to in-memory ledger ONLY on persist success
+// 1. authorize() gate (capa-firewall)
+// 2. populate FIX-4 defaults (ResolvedAt, LinkMethod) — applied
+// UNCONDITIONALLY so the ledger snapshot mirrors the persisted row
+// even when w.linkStore is nil
+// 3. persist via w.linkStore.Append (when non-nil) — FAILURE PROPAGATES
+// and the ledger is NOT modified
+// 4. append to in-memory ledger ONLY on persist success
 //
 // Rationale previously the ledger was appended FIRST. Two divergence
 // modes resulted — (a) a failed Append left the ledger with an entry

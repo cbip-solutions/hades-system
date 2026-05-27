@@ -1,5 +1,4 @@
-//go:build cgo
-
+// go:build cgo
 package bcdetect
 
 import (
@@ -21,19 +20,19 @@ import (
 // SUCCEEDS (row + consumers + audit committed). Iteration 1's
 // row+consumers commit succeeds, BUT EmitAudit fails (injected via the
 // emitAuditFn seam). Pipeline.Fan MUST:
-//  1. RETURN the wrapped EmitAudit error (NEVER silently swallow).
-//  2. HALT the loop — NO iteration 2+ work attempted (in this test
-//     there is no iteration 2, but the assertion is shape-preserving:
-//     the second finding's row+consumers ARE persisted because their tx
-//     committed BEFORE emitAuditFn fired; what does NOT happen is the
-//     subsequent finding being processed AT ALL).
-//  3. The audit chain has a GAP for iteration 1's row — gated indirectly
-//     by the audit-emit error returning before the success-path event
-//     append.
+// 1. RETURN the wrapped EmitAudit error (NEVER silently swallow).
+// 2. HALT the loop — NO iteration 2+ work attempted (in this test
+// there is no iteration 2, but the assertion is shape-preserving:
+// the second finding's row+consumers ARE persisted because their tx
+// committed BEFORE emitAuditFn fired; what does NOT happen is the
+// subsequent finding being processed AT ALL).
+// 3. The audit chain has a GAP for iteration 1's row — gated indirectly
+// by the audit-emit error returning before the success-path event
+// append.
 //
 // This is the partial-state contract: persist → audit → on audit failure,
 // the row is in SQLite, the audit chain has no leaf for it, the loop
-// halts. Pre-Phase-H BreakingEvent-replay coordination MUST treat this
+// halts. Pre- BreakingEvent-replay coordination MUST treat this
 // as a known shape (a row without a matching audit leaf is the failed
 // iteration's signature; not a bug, the documented behaviour).
 //

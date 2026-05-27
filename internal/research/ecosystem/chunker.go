@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -330,13 +331,13 @@ func (c *Chunker) emitChunkWithContent(
 //
 // Strategy per grammar:
 //
-//   - source_file / program / module / document: emit the first
-//     declaration-like content (package clause, header, title) plus
-//     up to N more lines of identifiers.
-//   - class_declaration / interface_declaration / type_declaration:
-//     emit the declaration line ("class Foo extends Bar {") plus the
-//     leading doc comment if present.
-//   - trait_item / impl_item: emit the trait/impl signature.
+// - source_file / program / module / document: emit the first
+// declaration-like content (package clause, header, title) plus
+// up to N more lines of identifiers.
+// - class_declaration / interface_declaration / type_declaration:
+// emit the declaration line ("class Foo extends Bar {") plus the
+// leading doc comment if present.
+// - trait_item / impl_item: emit the trait/impl signature.
 //
 // Fallback extract the first source line of the node, truncated to
 // maxLeafTokens*4 chars.
@@ -467,28 +468,28 @@ func approxTokens(s string) int {
 // Sep 2024 CR blog: prepending a chunk-in-context description before
 // embedding cuts top-K failure 49% → 67% (with rerank).
 //
-// Behavior
+// # Behavior
 //
-//   - When EnableContextualPrefix is false, returns "" + nil error (chunker
-//     is operating in B-1 mode; no LLM dispatch).
-//   - When DoctrineProfile is nil and EnableContextualPrefix is true,
-//     returns an error (init-order bug signal; daemon-init wiring is
-//     incomplete).
-//   - When SelectiveCRKinds is non-empty and chunk.Kind is not in the
-//     trigger set, returns "" + nil error (C5 selective path).
-//   - Otherwise dispatches to the configured backend (Ollama for
-//     qwen/llama/gemma model prefixes; DispatcherClient for claude/
-//     deepseek prefixes) per DoctrineProfile.CRPrefixLLM, truncates
-//     response to 60-80 tokens, and returns the trimmed prefix.
+// - When EnableContextualPrefix is false, returns "" + nil error (chunker
+// is operating in B-1 mode; no LLM dispatch).
+// - When DoctrineProfile is nil and EnableContextualPrefix is true,
+// returns an error (init-order bug signal; daemon-init wiring is
+// incomplete).
+// - When SelectiveCRKinds is non-empty and chunk.Kind is not in the
+// trigger set, returns "" + nil error (C5 selective path).
+// - Otherwise dispatches to the configured backend (Ollama for
+// qwen/llama/gemma model prefixes; DispatcherClient for claude/
+// deepseek prefixes) per DoctrineProfile.CRPrefixLLM, truncates
+// response to 60-80 tokens, and returns the trimmed prefix.
 //
 // Failure-mode per DoctrineProfile.RefuseOnUnverified:
 //
-//   - capa-firewall (RefuseOnUnverified=true): LLM error or <60-token
-//     response → returns the error to the caller (chunker aborts).
-//   - default / max-scope (RefuseOnUnverified=false): LLM error or
-//     <60-token response → returns "" + nil error (chunker continues
-//     with an empty prefix; Ingester aggregates per-package failures
-//     for observability).
+// - capa-firewall (RefuseOnUnverified=true): LLM error or <60-token
+// response → returns the error to the caller (chunker aborts).
+// - default / max-scope (RefuseOnUnverified=false): LLM error or
+// <60-token response → returns "" + nil error (chunker continues
+// with an empty prefix; Ingester aggregates per-package failures
+// for observability).
 //
 // The DoctrineProfile.RefuseOnUnverified knob is the single source of
 // truth for failure-mode policy — Chunker MUST NOT bake doctrine names

@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -18,11 +19,11 @@ import (
 // Candidates ordered by ascending Hamming distance (closest first),
 // scoped to the requested ecosystem via the ecosystem_packages JOIN.
 //
-// Phase D dispatcher consumes this as one of two parallel retrieval
+// dispatcher consumes this as one of two parallel retrieval
 // legs per ecosystem (the other is FTS5Top200); the two result sets
 // are RRF-fused and re-ranked downstream.
 //
-// CRITICAL wire-format invariant (inv-zen-203, C-3 inheritance):
+// CRITICAL wire-format invariant:
 // queryEmbBin MUST be wrapped as `vec_bit(?)` in the SQL MATCH
 // clause — sqlite-vec BIT[N] virtual tables REJECT raw `?` bindings
 // with "Inserted vector for the embedding column is expected to be
@@ -36,37 +37,37 @@ import (
 // 0.0 = all-bits-different).
 //
 // Pre-conditions:
-//   - len(queryEmbBin) == 32 (256 bits packed little-endian; sqlite-vec
-//     BIT[256] wire format).
-//   - idx.opts.DB != nil (NewIndexer enforces but a future refactor
-//     might surface a nil DB; the runtime guard is defense-in-depth).
-//   - ctx not yet cancelled (early-exit returns ctx.Err with no query).
+// - len(queryEmbBin) == 32 (256 bits packed little-endian; sqlite-vec
+// BIT[256] wire format).
+// - idx.opts.DB != nil (NewIndexer enforces but a future refactor
+// might surface a nil DB; the runtime guard is defense-in-depth).
+// - ctx not yet cancelled (early-exit returns ctx.Err with no query).
 //
 // Post-conditions on nil error:
-//   - Returns []Candidate of length 0..200.
-//   - All Candidates have Ecosystem == eco (per-ecosystem JOIN filter).
-//   - SimilarityScore monotonically non-increasing across the slice
-//     (mirrors the ORDER BY v.distance ASC).
+// - Returns []Candidate of length 0..200.
+// - All Candidates have Ecosystem == eco (per-ecosystem JOIN filter).
+// - SimilarityScore monotonically non-increasing across the slice
+// (mirrors the ORDER BY v.distance ASC).
 //
 // versionFilter semantics: empty → no filter (all versions); non-empty →
 // matches chunks where stable_in_json contains the literal version
 // token (LIKE '%"<version>"%'). Note this is a substring match on the
 // JSON-encoded array; it accepts "1.22.0" but NOT "1.22" (a substring
-// like the start of "1.22.0"). Phase D version-cascade resolves the
+// like the start of "1.22.0"). version-cascade resolves the
 // canonical version BEFORE calling this method, so the filter operates
 // on a literal version string. The substring approach mirrors the
 // dispatcher's hybrid-fusion expectation that version-mismatched chunks
 // drop out at the SQL layer rather than during downstream rerank.
 //
 // Failure modes (all wrapped):
-//   - len(queryEmbBin) != 32 → returns error mentioning "want 32".
-//   - idx.opts.DB == nil → returns error mentioning "no DB configured".
-//   - ctx.Err() set on entry → returns ctx.Err() unwrapped (database/sql
-//     convention — propagate cancellation transparently).
-//   - QueryContext error (closed DB, bad SQL syntax) → wrapped with %w.
-//   - rows.Scan error (schema-column mismatch) → wrapped with %w.
-//   - rows.Err() after iteration (driver mid-stream failure) → returned
-//     as the second return value alongside the partial slice.
+// - len(queryEmbBin) != 32 → returns error mentioning "want 32".
+// - idx.opts.DB == nil → returns error mentioning "no DB configured".
+// - ctx.Err() set on entry → returns ctx.Err() unwrapped (database/sql
+// convention — propagate cancellation transparently).
+// - QueryContext error (closed DB, bad SQL syntax) → wrapped with %w.
+// - rows.Scan error (schema-column mismatch) → wrapped with %w.
+// - rows.Err() after iteration (driver mid-stream failure) → returned
+// as the second return value alongside the partial slice.
 func (idx *Indexer) BinaryTop200(
 	ctx context.Context,
 	queryEmbBin []byte,
@@ -230,11 +231,11 @@ func bm25ToSim(score float64) float64 {
 //
 // The columns MUST be (in this order):
 //
-//	c.id            int64
-//	c.content_text  string
-//	c.symbol_path   string  (nullable per migration 003)
-//	c.source_url    string  (NOT NULL per migration 003)
-//	score           float64 (raw distance / bm25)
+// c.id int64
+// c.content_text string
+// c.symbol_path string (nullable per migration 003)
+// c.source_url string (NOT NULL per migration 003)
+// score float64 (raw distance / bm25)
 //
 // scoreFn maps raw→[0,1].
 func (idx *Indexer) scanCandidates(

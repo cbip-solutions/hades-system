@@ -50,28 +50,28 @@ func NewIdleReaper(manager *Manager, doctrineFor func(alias string) doctrine.Nam
 
 // IsIdle returns true iff the session is eligible for teardown:
 //
-//  1. s != nil and s.Status == StatusActive (other statuses are not
-//     reap candidates — the reaper has no work for Idle/Archived/Orphaned).
-//  2. None of HasOperatorAttach / HasAutonomousWorker / HasScheduledJob
-//     (any one is a hard veto; spec §1 Q7 D activity-veto contract).
-//  3. doctrineFor(alias) is NOT max-scope (max-scope = never reap;
-//     IdleTTLIsInfinity short-circuit; inv-zen-119 carrier).
-//  4. time.Since(effective LastAttachAt) > DoctrineIdleTTL(doctrine).
+// 1. s != nil and s.Status == StatusActive (other statuses are not
+// reap candidates — the reaper has no work for Idle/Archived/Orphaned).
+// 2. None of HasOperatorAttach / HasAutonomousWorker / HasScheduledJob
+// (any one is a hard veto; spec §1 Q7 D activity-veto contract).
+// 3. doctrineFor(alias) is NOT max-scope (max-scope = never reap;
+// IdleTTLIsInfinity short-circuit; invariant carrier).
+// 4. time.Since(effective LastAttachAt) > DoctrineIdleTTL(doctrine).
 //
 // Effective-LastAttachAt failsafe ladder:
-//   - deps.LastAttachAt if non-zero (daemon Phase I: precise tmux probe);
-//   - else s.LastAttachAt (daemon.db row written by Manager.Attach);
-//   - else s.CreatedAt (session never attached — measure from creation);
-//   - else return false (no timestamp at all; do NOT reap an unanchored
-//     session — over-cautious is the safe default per asymmetric-failure
-//     analysis in IdleDeps doc).
+// - deps.LastAttachAt if non-zero;
+// - else s.LastAttachAt (daemon.db row written by Manager.Attach);
+// - else s.CreatedAt (session never attached — measure from creation);
+// - else return false (no timestamp at all; do NOT reap an unanchored
+// session — over-cautious is the safe default per asymmetric-failure
+// analysis in IdleDeps doc).
 //
 // The doctrine TTL conversion uses int(ttl)*time.Hour because IdleTTL is
 // declared in hours (lifecycle.go IdleTTL doc), and the IdleReaper is
 // the only consumer that needs Duration arithmetic — keeping conversion
 // at the boundary preserves the integer-hours contract for TOML round-trip.
 //
-// inv-zen-119: the doctrine TTL matrix is the load-bearing rule; tests
+// invariant: the doctrine TTL matrix is the load-bearing rule; tests
 // TestIsIdleMaxScopeNeverReaped + TestIsIdleDefault24h +
 // TestIsIdleCapaFirewall4h each verify one cell.
 func (r *IdleReaper) IsIdle(s *Session, deps IdleDeps) bool {
@@ -104,7 +104,7 @@ func (r *IdleReaper) IsIdle(s *Session, deps IdleDeps) bool {
 //
 // Concurrency serializes per-tick work. Multiple Run() goroutines from
 // one process is a programmer error (not enforced here; documented). The
-// daemon (Phase I) starts exactly one Run() per process at startup.
+// daemon starts exactly one Run() per process at startup.
 //
 // Tick errors (ListSessions failure, store unavailable) are logged but
 // do NOT exit the loop — the reaper's contract is "best-effort sweeper",

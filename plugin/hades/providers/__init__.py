@@ -21,7 +21,7 @@ def _load_default_base_url() -> str:
     ``submodule_search_locations=[<providers-dir>]`` (see
     ``providers/__init__.py:_import_plugin_dir`` in Hermes itself), which
     means relative imports above the providers/ directory (``from
-    .._constants``) do NOT resolve in production — there is no parent
+   .._constants``) do NOT resolve in production — there is no parent
     package wrapping providers/ in that load mode. The test environment
     DOES wrap it under ``hermes_plugins.hades.providers`` (see
     plugin's ``conftest.py``), where relative imports would work.

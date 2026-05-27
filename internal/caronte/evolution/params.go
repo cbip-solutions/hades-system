@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package evolution is Caronte's L4 layer: the git-history-derived signals
 // the structural layers (L1 parse, L2 resolve, L3 k-core/SCC) cannot see.
-// It produces two products into the per-project caronte.db (via the Phase A
+// It produces two products into the per-project caronte.db (via the
 // store API): the CO-CHANGE matrix (which files change together, code-maat
 // coupling_degree) and per-file CHURN (touch-count + author-count over a
 // window). Both are computed by parsing `git log` (os/exec) and filtered to
 // reject mega-commits + gated by a cold-start threshold so the engine never
 // fabricates a coupling score from too little history.
 //
-// Boundary (inv-zen-230, inherited from Phase A): this package and all of
+// Boundary: this package and all of
 // internal/caronte NEVER import internal/store. It writes through the
 // injected *store.Store handle; it does not open a DB.
 //

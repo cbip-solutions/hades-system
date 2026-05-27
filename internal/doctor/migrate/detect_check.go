@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package migrate (internal/doctor/migrate) ships the
 // `claude-code-install-detected` doctor check (info-level hint). This is
-// the Plan 13 surface-migration auto-detection per SOTA-2 "surface
+// the surface-migration auto-detection per SOTA-2 "surface
 // migration when state detected" pattern (Q1=C rationale).
 //
-// Boundary (inv-zen-031): migrate doctor sub-package consumes ONLY
+// Boundary: migrate doctor sub-package consumes ONLY
 // internal/doctor/check; MUST NOT import internal/store. The check is
 // read-only (no recursion into ~/.claude/; only top-level marker probe).
 //

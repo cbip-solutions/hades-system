@@ -5,9 +5,9 @@
 // so onboarding integration tests don't hang on macOS CI runners where
 // the login keychain is locked.
 //
-// Phase A surfaces work daemon-less (preflight / prefs / plugin / mcp
+// surfaces work daemon-less (preflight / prefs / plugin / mcp
 // are pure-function or filesystem-only); this shim sets up the env
-// scaffolding subsequent Phase B/C/D/E/F integration tests inherit.
+// scaffolding subsequent integration tests inherit.
 //
 // Design note: a richer daemon harness (`SpawnDaemon` /
 // `SpawnDaemonWithPID`) already exists in `tests/testhelpers/daemon.go`
@@ -15,13 +15,13 @@
 // to exist (run `make build` first) and is invoked by e2e + chaos suites.
 // The onboarding harness here is intentionally LIGHTER — it surfaces
 // the env-var contract without spawning a real daemon process, because
-// Phase A onboarding code never speaks to the daemon. When Phase B/C/D
+// onboarding code never speaks to the daemon. When
 // integration tests need the daemon they should compose:
 //
-//	td := testhelpers.NewOnboardTestDaemon(t)
-//	defer td.Stop()
-//	uds := testhelpers.SpawnDaemon(t)  // inherits the env var
-//	// ...
+// td := testhelpers.NewOnboardTestDaemon(t)
+// defer td.Stop()
+// uds := testhelpers.SpawnDaemon(t) // inherits the env var
+// //...
 //
 // The Stop() method is safe to call multiple times (idempotent) and
 // restores the env to its pre-test state via t.Cleanup or explicit

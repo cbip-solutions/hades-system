@@ -15,7 +15,7 @@ import (
 // uses the literal pre-collapse form via paramNamesMatch in resolve.go).
 //
 // Output shape: `<UPPER-METHOD> <path>` (space-separated). Spec §6 D3 +
-// §13.1 corpus drives this; sister-test to every extractor in Phase D + E
+// §13.1 corpus drives this; sister-test to every extractor in + E
 // (the link side MUST agree byte-for-byte on the key, otherwise every
 // link silently misses).
 func HTTPKey(method, rawPath string) string {

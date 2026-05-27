@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — orchestrator_state.go (Plan 5 Phase N N-2).
+// Package cli — orchestrator_state.go.
 //
 // `zen orchestrator state` shows the current state-machine snapshot
 // (session id, state, mode, background goroutine count, recent

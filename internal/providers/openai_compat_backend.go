@@ -3,7 +3,7 @@
 //
 // OpenAICompatBackend is the TierBackend for any provider speaking the
 // OpenAI chat-completions API (TierGenericOpenAICompat). One backend
-// type, N config-driven instances: the Plan 16 roster routes DeepSeek,
+// type, N config-driven instances: the roster routes DeepSeek,
 // Moonshot, Zhipu, Perplexity, SiliconFlow, and OpenRouter through it
 // (spec §3.6) — each is a distinct [[providers]] entry with its own
 // endpoint, model, family, and Keychain key.
@@ -13,9 +13,9 @@
 // anthropicToOpenAIRequest before the call, openAIToAnthropicResponse
 // after — so the dispatcher and cost ledger always see canonical bytes.
 //
-// inv-zen-031: imports internal/keychain (boundary-neutral), not
+// invariant: imports internal/keychain (boundary-neutral), not
 // internal/store / private-tier1-module.
-// inv-zen-067 compile guard below the struct. inv-zen-068: API key is a
+// invariant compile guard below the struct. invariant: API key is a
 // redact.Secret revealed only at header-injection time.
 package providers
 

@@ -2,15 +2,15 @@
 // Package cli — doctor_augment.go
 //
 // §7.4 Augmentation block. Each check probes the daemon's
-// /v1/augment/probe?check=<name> route shipped by Phase C.
+// /v1/augment/probe?check=<name> route shipped by
 //
 // Probe ordering (matches §7.4 spec exactly):
-//  1. augment.endpoint-reachable
-//  2. augment.budget.headroom
-//  3. augment.cache.hit-rate
-//  4. augment.latency.p50-p99
-//  5. augment.5-lane-rrf.healthy
-//  6. augment.privacy-filter.tested
+// 1. augment.endpoint-reachable
+// 2. augment.budget.headroom
+// 3. augment.cache.hit-rate
+// 4. augment.latency.p50-p99
+// 5. augment.5-lane-rrf.healthy
+// 6. augment.privacy-filter.tested
 package cli
 
 import (

@@ -11,8 +11,8 @@ import (
 
 // PreFlightDecision is the result of a 3-layer pre-flight check.
 //
-// Stage 2 review CRITICAL #7 reconciliation (2026-05-01): this struct is
-// the canonical decision shape consumed by Phase D scheduler via the
+// review CRITICAL #7 reconciliation (2026-05-01): this struct is
+// the canonical decision shape consumed by scheduler via the
 // `scheduler.QuotaPreFlightChecker` interface. The scheduler MUST NOT
 // declare a parallel `QuotaPreFlightDecision` type.
 type PreFlightDecision struct {

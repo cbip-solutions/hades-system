@@ -4,7 +4,7 @@
 // mutation). Per spec §0.2 MaxScopeBuiltin is the OOTB experience: an
 // operator who never edits TOML still gets max-scope behaviour.
 //
-// Naming constructors are *Builtin to avoid collision with Plan 1's
+// Naming constructors are *Builtin to avoid collision with
 // MaxScope/Default/CapaFirewall struct types in doctrine.go.
 
 package doctrine

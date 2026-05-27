@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — docs_prune.go (Plan 14 Phase G Task G-5b).
+// Package cli — docs_prune.go.
 //
 // `zen docs prune --ecosystem <X> --version <Y>` hard-removes the
 // (ecosystem, version) row and cascade-deletes its chunks, chunks_fp32,
@@ -28,16 +28,16 @@
 // History NewDocsPruneCmd previously took a factory + DryRun/Confirm
 // bools on a single POST; now uses preview + prompt + DELETE.
 //
-// Boundary (inv-zen-031): does NOT import internal/research/ecosystem.
+// Boundary: does NOT import internal/research/ecosystem.
 // Architecture CLI calls daemon HTTP; daemon owns the cascaded write.
 //
 // Exit codes (per spec §6.2):
 //
-//	0  success (dry-run preview OR confirmed delete OR operator-aborted prompt)
-//	1  recoverable: neither --dry-run nor --confirm passed (safety gate),
-//	   both passed (mutual exclusion), invalid --ecosystem, missing --version,
-//	   daemon 404 (unknown tuple), daemon 409 (pinned version)
-//	2  unrecoverable: transport, decode, daemon 5xx
+// 0 success (dry-run preview OR confirmed delete OR operator-aborted prompt)
+// 1 recoverable: neither --dry-run nor --confirm passed (safety gate),
+// both passed (mutual exclusion), invalid --ecosystem, missing --version,
+// daemon 404 (unknown tuple), daemon 409 (pinned version)
+// 2 unrecoverable: transport, decode, daemon 5xx
 package cli
 
 import (

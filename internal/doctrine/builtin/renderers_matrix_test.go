@@ -1,4 +1,4 @@
-// Package builtin — renderers_matrix_test.go (Plan 12 Phase E M-5 fix).
+// Package builtin — renderers_matrix_test.go.
 //
 // Migration test: pin the [renderers] block shape in the three built-in
 // doctrine TOMLs against the matrix the Python plugin's
@@ -7,18 +7,18 @@
 //
 // The matrix the plugin used:
 //
-//	max-scope:     all 7 platforms enabled
-//	default:       all 7 platforms enabled
-//	capa-firewall: ink + email + markdown_fallback only (voice/telegram/
-//	               slack/web DISABLED for privacy)
+// max-scope: all 7 platforms enabled
+// default: all 7 platforms enabled
+// capa-firewall: ink + email + markdown_fallback only (voice/telegram/
+// slack/web DISABLED for privacy)
 //
 // The test asserts the doctrine TOMLs encode exactly the same matrix +
-// adds the inv-zen-084 additive-only contract: capa-firewall's set MUST
+// adds the invariant additive-only contract: capa-firewall's set MUST
 // be a strict subset of default's set. If a future doctrine edit grows
 // capa-firewall's enabled set (relaxing the privacy boundary), this test
 // fails loud — preventing silent regression.
 //
-// Closes M-5 of Plan 12 Phase E expanded scope.
+// Closes M-5 of expanded scope.
 package builtin_test
 
 import (
@@ -70,7 +70,7 @@ func TestRenderersBuiltinMatrix(t *testing.T) {
 	}
 }
 
-// TestRenderersCapaFirewallStrictSubset asserts the inv-zen-084 additive-
+// TestRenderersCapaFirewallStrictSubset asserts the invariant additive-
 // only contract on the renderer matrix: capa-firewall's allowed set MUST
 // be a strict subset of default's allowed set. A future doctrine edit
 // that relaxes the privacy boundary (e.g., adding telegram to

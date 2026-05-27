@@ -396,8 +396,8 @@ func TestAuditP9_History_AdapterErr(t *testing.T) {
 func TestAuditP9_PartitionSeals_OK(t *testing.T) {
 	fake := &fakeAuditAdapterP9{
 		partitionResults: [][]PartitionSealP9{{
-			{PartitionID: "2026_04", FirstRecordID: 1, LastRecordID: 1000, SealedAtUnix: 100},
-			{PartitionID: "2026_05", FirstRecordID: 1001, LastRecordID: 2000, SealedAtUnix: 200},
+			{PartitionID: "2026_04", FirstRecordID: "evt-1", LastRecordID: "evt-1000", SealedAtUnix: 100},
+			{PartitionID: "2026_05", FirstRecordID: "evt-1001", LastRecordID: "evt-2000", SealedAtUnix: 200},
 		}},
 	}
 	h := AuditP9PartitionSeals(fake)

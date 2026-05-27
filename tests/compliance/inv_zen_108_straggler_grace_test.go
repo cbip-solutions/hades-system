@@ -1,8 +1,8 @@
-//go:build timeaccel
+// go:build timeaccel
 
 // tests/compliance/inv_zen_108_straggler_grace_test.go
 //
-// Compliance gate for inv-zen-108: straggler-kill SIGTERM → grace →
+// Compliance gate for invariant: straggler-kill SIGTERM → grace →
 // SIGKILL escalation timing.
 //
 // implements the per-candidate watchdog goroutine that owns the
@@ -13,11 +13,11 @@
 // carrying the candidate id, "SIGKILL" canonical signal name, and the
 // configured grace period in milliseconds. The contract:
 //
-//   - The grace window MUST be respected: if the candidate exits BEFORE
-//     grace elapses, the supervisor stops the timer and emits no event.
-//   - Once grace elapses with the candidate still running, the
-//     supervisor MUST emit EvtMergeStragglerKilled within bounded
-//     wall-clock latency (no leaks, no permanent hangs).
+// - The grace window MUST be respected: if the candidate exits BEFORE
+// grace elapses, the supervisor stops the timer and emits no event.
+// - Once grace elapses with the candidate still running, the
+// supervisor MUST emit EvtMergeStragglerKilled within bounded
+// wall-clock latency (no leaks, no permanent hangs).
 //
 // This compliance gate is the runtime expression of that contract: drive
 // a hanging candidate (`ignoreCtxHang`-style: a plain time.Sleep that
@@ -36,7 +36,7 @@
 // (default-skipped in plain `go test`; included via `go test -tags=timeaccel`).
 //
 // Plan deviation (deterministic hangingRunner): the plan suggested a
-// ctx-honouring `select { case <-ctx.Done(): return; case <-time.After(d): ... }`
+// ctx-honouring `select { case <-ctx.Done(): return; case <-time.After(d):... }`
 // runner with a 200ms hang. Under the production runner's defer LIFO
 // (close(done) before ccancel), a ctx-honouring runner returns at the
 // 50ms ctx-fire boundary; close(done) then runs BEFORE the supervisor's
@@ -48,9 +48,9 @@
 // done stays open for the entire 200ms; the supervisor sees cctx.Done()
 // at t=50ms (parent ctx fired), arms AfterFunc(30ms), and emits at
 // t≈80ms — well before the candidate's Sleep completes. This is the
-// production scenario inv-zen-108 actually guards against.
+// production scenario invariant actually guards against.
 //
-// Reference: docs/superpowers/specs/2026-05-01-zen-swarm-plan-6-merge-engine-design.md §8.3 inv-zen-108
+// Reference: internal design record §8.3 invariant
 //
 // Drift adaptation per task instructions: package compliance (not
 // _test) to match the predominant tests/compliance convention. Local

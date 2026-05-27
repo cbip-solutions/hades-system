@@ -1,9 +1,9 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// tests/compliance/inv_zen_166_citation_serialize_test.go — Plan 11 Phase D D-8.
+// tests/compliance/inv_zen_166_citation_serialize_test.go — D-8.
 //
-// Compliance test for inv-zen-166: citation envelope structured
-// serialization preserves to Plan 9 Tessera audit chain natively
+// Compliance test for invariant: citation envelope structured
+// serialization preserves to Tessera audit chain natively
 // (no flattening, no field loss).
 //
 // Anchored at compile-time via internal/citation/sentinel.go's
@@ -140,14 +140,14 @@ func TestInvZen166CitationEnvelopeSerializePreserves(t *testing.T) {
 	}
 }
 
-// TestInvZen166RetiredGitnexusSourceAliasResolves is the Plan 19 Phase L
-// back-compat gate (inv-zen-166): the code-graph citation sources were renamed
+// TestInvZen166RetiredGitnexusSourceAliasResolves is the
+// back-compat gate: the code-graph citation sources were renamed
 // gitnexus_* -> caronte_* in the cutover, but the Tessera audit chain has
 // HISTORICAL leaves whose envelope payload carries the OLD "gitnexus_query" /
 // "gitnexus_context" wire values. `zen audit` inspection of those pre-cutover
 // rows MUST still resolve them — citation.ParseCitationSource keeps the old
 // values as read-side aliases mapping to the current caronte_* enum. A
-// regression here would make pre-Plan-19 audit events un-inspectable (a silent
+// regression here would make pre- audit events un-inspectable (a silent
 // history-loss bug), so this test bite-checks the alias by deserializing a
 // synthetic leaf carrying the retired value.
 func TestInvZen166RetiredGitnexusSourceAliasResolves(t *testing.T) {

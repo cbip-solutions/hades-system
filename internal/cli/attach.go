@@ -1,36 +1,36 @@
 // SPDX-License-Identifier: MIT
-// Package cli — attach.go (Plan 7 Phase C Task C-12).
+// Package cli — attach.go.
 //
 // `zen attach <alias> [--window <name>]` is the operator-facing entry
 // point for re-entering a per-project tmux session. If the session is
 // Idle/Archived, the daemon spawns lazy (Q7 D TriggerExplicitAttach).
 // Default window: orch (per spec §6.3).
 //
-// Lifecycle
+// # Lifecycle
 //
-//  1. CLI validates --window against the canonical 6-window set
-//     (orch/leads/workers/hra/logs/scratch) BEFORE any daemon RTT.
-//     Defence-in-depth: the daemon also validates via tmuxlife.AllWindows.
-//     Client-side validation gives operator zero-RTT typo feedback.
+// 1. CLI validates --window against the canonical 6-window set
+// (orch/leads/workers/hra/logs/scratch) BEFORE any daemon RTT.
+// Defence-in-depth: the daemon also validates via tmuxlife.AllWindows.
+// Client-side validation gives operator zero-RTT typo feedback.
 //
-//  2. CLI calls AttachClient.AttachSession(ctx, alias, window). Production
-//     wraps *client.Client → POST /v1/sessions/{alias}/attach → returns
-//     the daemon-rendered tmux command-line.
+// 2. CLI calls AttachClient.AttachSession(ctx, alias, window). Production
+// wraps *client.Client → POST /v1/sessions/{alias}/attach → returns
+// the daemon-rendered tmux command-line.
 //
-//  3. Under `go test` (isTestMode), the CLI echoes the returned command
-//     to stdout instead of exec-ing tmux (would replace the test process).
-//     Production replaces self via os/exec.Command + Run (the cobra layer
-//     surrenders the TTY to the new tmux client).
+// 3. Under `go test` (isTestMode), the CLI echoes the returned command
+// to stdout instead of exec-ing tmux (would replace the test process).
+// Production replaces self via os/exec.Command + Run (the cobra layer
+// surrenders the TTY to the new tmux client).
 //
-// Exit-code mapping (per spec §6.2; ErrRecoverable contract from Phase A):
-//   - 0 success
-//   - 1 operator-recoverable: --window invalid, daemon 404 alias-not-found
-//     or archived
-//   - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503 Phase I gap
+// Exit-code mapping:
+// - 0 success
+// - 1 operator-recoverable: --window invalid, daemon 404 alias-not-found
+// or archived
+// - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503 gap
 //
-// Phase I gap: until the daemon ships POST /v1/sessions/{alias}/attach
-// in Phase I, the route returns 503. The CLI surfaces 503 as exit 2
-// (infra-issue, not operator-typo). This mirrors the Plan 2
+// gap: until the daemon ships POST /v1/sessions/{alias}/attach
+// in, the route returns 503. The CLI surfaces 503 as exit 2
+// (infra-issue, not operator-typo). This mirrors the
 // /v1/messages graceful-degradation pattern: client method shipped
 // early, daemon route added in a follow-up phase.
 package cli
@@ -112,9 +112,9 @@ Exit codes (spec §6.2):
 				}
 				return ierrors.Wrap(ierrors.Code("daemon.unreachable"), fmt.Errorf("attach: %w", err))
 			}
-			// Daemon contract: tmuxCmd MUST be at least "tmux ...". A
+			// Daemon contract: tmuxCmd MUST be at least "tmux...". A
 			// shorter / empty string is a daemon contract violation
-			// (Phase I handler bug); surface as error rather than
+			// ; surface as error rather than
 			// exec a malformed command.
 			fields := strings.Fields(tmuxCmd)
 			if len(fields) < 2 {

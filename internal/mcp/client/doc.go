@@ -12,17 +12,17 @@
 // plumbing.
 //
 // Security invariants enforced by this package:
-//   - inv-zen-085: outbound requests from MCPs are restricted to the
-//     daemon Unix socket plus a sealed allowedHosts whitelist
-//     (arxiv.org, api.github.com, duckduckgo.com, configurable Firecrawl
-//     host). Any request targeting a non-whitelisted host returns
-//     ErrHostNotAllowed before network I/O.
-//   - inv-zen-031: this package NEVER imports internal/store directly.
-//     It is a pure MCP-side library.
-//   - inv-zen-083: audit emit events are never silently discarded.
-//     emit.go writes a local buffer file when the daemon is unreachable;
-//     wires full drain-on-restart recovery via the EmitClient.DrainBuffer
-//     and EmitClient.DrainAllBuffers methods.
+// - invariant: outbound requests from MCPs are restricted to the
+// daemon Unix socket plus a sealed allowedHosts whitelist
+// (arxiv.org, api.github.com, duckduckgo.com, configurable Firecrawl
+// host). Any request targeting a non-whitelisted host returns
+// ErrHostNotAllowed before network I/O.
+// - invariant: this package NEVER imports internal/store directly.
+// It is a pure MCP-side library.
+// - invariant: audit emit events are never silently discarded.
+// emit.go writes a local buffer file when the daemon is unreachable;
+// wires full drain-on-restart recovery via the EmitClient.DrainBuffer
+// and EmitClient.DrainAllBuffers methods.
 //
 // Auth the daemon auth token is read once at construction time from
 // ~/.config/zen-swarm/auth-token (or a custom path in Config). The file
@@ -38,14 +38,14 @@
 // see Client.Do for the full rule.
 //
 // Concurrency contracts:
-//   - Client: safe for concurrent use after construction (immutable
-//     post-init).
-//   - CacheClient, BudgetClient: safe for concurrent use after
-//     construction (no in-process mutable state).
-//   - EmitClient: safe for concurrent Emit calls. DrainBuffer is also
-//     safe to call concurrently with Emit on the same instance — it
-//     uses a rotation pattern (rename live buffer to .draining, then
-//     process the snapshot) so ongoing Emits append to a fresh buffer
-//     while Drain works. DrainAllBuffers (orphan recovery) MUST be
-//     called only at process startup, when no Emit is in flight.
+// - Client: safe for concurrent use after construction (immutable
+// post-init).
+// - CacheClient, BudgetClient: safe for concurrent use after
+// construction (no in-process mutable state).
+// - EmitClient: safe for concurrent Emit calls. DrainBuffer is also
+// safe to call concurrently with Emit on the same instance — it
+// uses a rotation pattern (rename live buffer to.draining, then
+// process the snapshot) so ongoing Emits append to a fresh buffer
+// while Drain works. DrainAllBuffers (orphan recovery) MUST be
+// called only at process startup, when no Emit is in flight.
 package client

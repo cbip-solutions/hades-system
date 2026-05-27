@@ -14,7 +14,7 @@ import (
 type fakeADRIndex struct {
 	mu sync.Mutex
 
-	proposeArgs    []string
+	proposeArgs    []proposeArgs
 	proposeResults []ADRDoc
 	proposeErr     error
 
@@ -48,6 +48,10 @@ type graphArgs struct {
 	Depth int
 }
 
+type proposeArgs struct {
+	Topic, PlanRange string
+}
+
 type transitionArgs struct {
 	ID, Reason string
 }
@@ -56,10 +60,10 @@ type supersedeArgs struct {
 	OldID, NewID, Reason string
 }
 
-func (f *fakeADRIndex) Propose(_ context.Context, topic string) (ADRDoc, error) {
+func (f *fakeADRIndex) Propose(_ context.Context, topic, planRange string) (ADRDoc, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	f.proposeArgs = append(f.proposeArgs, topic)
+	f.proposeArgs = append(f.proposeArgs, proposeArgs{topic, planRange})
 	if f.proposeErr != nil {
 		return ADRDoc{}, f.proposeErr
 	}
@@ -172,7 +176,7 @@ func TestADR_Propose_Happy(t *testing.T) {
 		}},
 	}
 	h := ADRPropose(fake)
-	body := map[string]any{"topic": "tessera-batch-cadence-tuning"}
+	body := map[string]any{"topic": "tessera-batch-cadence-tuning", "plan_range": "plan-9"}
 	b, _ := json.Marshal(body)
 	req := httptest.NewRequest(http.MethodPost, "/v1/adr/propose", bytes.NewReader(b))
 	req.Header.Set("Content-Type", "application/json")
@@ -188,7 +192,7 @@ func TestADR_Propose_Happy(t *testing.T) {
 	if resp.ID != "ADR-0070" {
 		t.Errorf("id: got %q, want ADR-0070", resp.ID)
 	}
-	if len(fake.proposeArgs) != 1 || fake.proposeArgs[0] != "tessera-batch-cadence-tuning" {
+	if len(fake.proposeArgs) != 1 || fake.proposeArgs[0] != (proposeArgs{"tessera-batch-cadence-tuning", "plan-9"}) {
 		t.Errorf("proposeArgs: %v", fake.proposeArgs)
 	}
 }

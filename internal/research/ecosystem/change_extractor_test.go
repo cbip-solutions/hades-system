@@ -731,13 +731,13 @@ func TestParseChangelog_KeepAChangelogStarBullets(t *testing.T) {
 // Task E-4 — ChangeExtractor.DeepDiff implicit Change node generator tests
 //
 // Load-bearing contract:
-//   - Every DeepDiff-emitted node carries SourceExtracted="implicit_deepdiff"
-//     (constant ecosystem.SourceImplicitDeepDiff) — the tag E-3
-//     "explicit_changelog" and future E-5 "haiku_inferred" MUST differ from.
-//   - DeepDiff is deterministic (no LLM): same inputs → same node set
-//     (order may vary across runs due to map iteration; downstream sorts
-//     by SymbolPath if total order matters).
-//   - Nil inputs MUST NOT panic (defense-in-depth, inv-zen-031 boundary).
+// - Every DeepDiff-emitted node carries SourceExtracted="implicit_deepdiff"
+// (constant ecosystem.SourceImplicitDeepDiff) — the tag E-3
+// "explicit_changelog" and future E-5 "haiku_inferred" MUST differ from.
+// - DeepDiff is deterministic (no LLM): same inputs → same node set
+// (order may vary across runs due to map iteration; downstream sorts
+// by SymbolPath if total order matters).
+// - Nil inputs MUST NOT panic.
 // =============================================================================
 
 func TestDeepDiff_AddedSymbols(t *testing.T) {
@@ -1357,7 +1357,7 @@ func TestEnrichWithHaiku_DefaultDoctrine(t *testing.T) {
 
 // TestEnrichWithHaiku_NilDescriber_NoPanic verifies LLMJudgeEnabled=true
 // with a nil HaikuDescriber does NOT panic and returns nodes unchanged.
-// This is defense-in-depth: a partially-wired dispatcher (e.g., Plan 3
+// This is defense-in-depth: a partially-wired dispatcher (e.g.,
 // provider unavailable at construction time) MUST degrade gracefully
 // rather than crash the ecosystem pipeline.
 func TestEnrichWithHaiku_NilDescriber_NoPanic(t *testing.T) {

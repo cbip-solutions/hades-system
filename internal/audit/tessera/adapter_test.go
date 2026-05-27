@@ -282,7 +282,7 @@ func TestAdapterWitnessCoSignSealAfterCloseFails(t *testing.T) {
 // the witness-nil branch in WitnessCoSignSeal. cmd/zen-swarm-ctld
 // MUST call Attach before issuing co-signatures; if it doesn't (or
 // passes nil to detach during compromise-response), callers receive
-// ErrWitnessKeyMissing so doctor + Plan 7 inbox can route the alert
+// ErrWitnessKeyMissing so doctor + inbox can route the alert
 // instead of letting the daemon emit unsigned seals.
 func TestAdapterWitnessCoSignSealWithoutWitnessReturnsKeyMissing(t *testing.T) {
 	a, _ := newTempAdapter(t, "p1")
@@ -434,8 +434,8 @@ func TestAdapterVerifySealSignatureWrapsLoadError(t *testing.T) {
 }
 
 func TestNoStoreImportInPackageSource(t *testing.T) {
-	// inv-zen-031: internal/audit/tessera MUST NOT import internal/store.
-	// Walk every .go file in the package, grep imports.
+	// invariant: internal/audit/tessera MUST NOT import internal/store.
+	// Walk every.go file in the package, grep imports.
 	entries, err := os.ReadDir(".")
 	if err != nil {
 		t.Fatalf("ReadDir: %v", err)

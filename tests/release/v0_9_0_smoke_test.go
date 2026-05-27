@@ -1,4 +1,4 @@
-//go:build release_smoke
+// go:build release_smoke
 
 package release
 

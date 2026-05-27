@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
                                           
-"""TTS-ready voice renderer for citation envelopes (Plan 12 Phase A Task A-7)."""
+"""TTS-ready voice renderer for citation envelopes."""
 
 from __future__ import annotations
 

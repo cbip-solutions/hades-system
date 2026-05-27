@@ -2,13 +2,13 @@
 // Package projectsaliasadapter bridges *store.Store → mcpgateway.ProjectsAliasResolver.
 //
 // This package exists outside internal/daemon/mcpgateway on purpose:
-// inv-zen-031 forbids the mcpgateway package from importing internal/store
+// invariant forbids the mcpgateway package from importing internal/store
 // directly. The adapter is the explicit boundary-crosser that owns the
 // SQL queries against projects_alias and exposes a single-method
 // interface (mcpgateway.ProjectsAliasResolver) to the gateway.
 //
 // Adapter pattern mirror: this file mirrors internal/daemon/projectctxadapter
-// (the Plan 7 reference). Both packages satisfy a single interface owned
+// . Both packages satisfy a single interface owned
 // by their consumer (projectctx.ProjectStore / mcpgateway.ProjectsAliasResolver),
 // both wrap *store.Store, both translate to/from the store row types.
 // Adopting the same idiom keeps the daemon-side adapter surface uniform.
@@ -26,8 +26,8 @@
 // ever needs to support >1000 projects, the map can be swapped for a
 // container/list LRU without changing the public surface.
 //
-// inv-zen-277: alias resolver returns canonical id_sha256 OR ErrAliasNotFound.
-// inv-zen-031: this package crosses the mcpgateway↔store boundary on
+// invariant: alias resolver returns canonical id_sha256 OR ErrAliasNotFound.
+// invariant: this package crosses the mcpgateway↔store boundary on
 // mcpgateway's behalf (sanctioned bridge).
 package projectsaliasadapter
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — cochange.go (Plan 19 Phase K).
+// Package cli — cochange.go.
 //
 // `zen cochange <file>` lists files historically co-changed with <file>
 // (code-maat coupling). Surfaces invisible coupling so a worker does not

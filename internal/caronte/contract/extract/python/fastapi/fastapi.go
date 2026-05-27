@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -33,7 +34,7 @@ func init() {
 func (e *Extractor) Language() extract.Language { return extract.LangPython }
 
 // Frameworks reports the framework identifiers this extractor implements.
-// Phase F's staleness join + the registry's (Language, framework) collision
+// staleness join + the registry's (Language, framework) collision
 // check both consult this; do NOT add aliases here.
 func (e *Extractor) Frameworks() []string { return []string{"fastapi"} }
 

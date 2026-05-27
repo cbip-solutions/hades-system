@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package views — memory.go (Plan 12 Phase C Task C-7, F8 panel).
+// Package views — memory.go.
 //
 // Memory inspector — knowledge index entries (recent + per-type
 // counts) via /v1/knowledge/stats.

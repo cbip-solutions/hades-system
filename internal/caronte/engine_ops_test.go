@@ -1,29 +1,30 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
-// Package caronte — engine_ops_test.go (Plan 20 Phase I fix-up I-4).
+// Package caronte — engine_ops_test.go.
 //
-// Sister-tests for the 8 Plan-20 federation ops on the cgo *Engine: each op
+// Sister-tests for the 8 federation ops on the cgo *Engine: each op
 // MUST refuse with ErrFederationUnavailable when Deps.FederationDB is nil
-// (the boot-time wiring gap; Phase J wires the FederationDB at composition
+// (the boot-time wiring gap; wires the FederationDB at composition
 // root). The gateway proxy depends on this sentinel for per-mode escalate()
-// (spec §15 graceful degradation — Plan-19 ops continue serving; only the
-// 8 Plan-20 federation ops are unavailable).
+// (spec §15 graceful degradation — ops continue serving; only the
+// 8 federation ops are unavailable).
 //
 // Before this file the 8 ops were exercised only via fakeCaronteEngine in
 // the proxy tests (internal/daemon/mcpgateway/caronte_proxy_test.go); the
 // fake bypasses the real engine. A refactor that removed the
-// `if e.deps.FederationDB == nil { return ..., ErrFederationUnavailable }`
+// `if e.deps.FederationDB == nil { return..., ErrFederationUnavailable }`
 // short-circuit would have gone undetected by the proxy tests. These 8
 // sister-tests bite that regression directly + pin the documented behaviour
 // of each op (per feedback_sister_test_pattern.md).
 //
 // GetContract is a special case post-Fix-I-2: it returns
-// ErrFederationUnavailable UNCONDITIONALLY in Phase I (whether
+// ErrFederationUnavailable UNCONDITIONALLY in (whether
 // FederationDB is nil or not — see TestGetContract_ReturnsFederationUnavailableUntilPhaseH
 // in engine_get_contract_test.go for the wired-DB variant). The nil-DB test
 // here still applies (same return value), and the file kept symmetric across
-// all 8 ops so a future Phase-H wiring change must update every op's contract
+// all 8 ops so a future wiring change must update every op's contract
 // at once.
 package caronte
 
@@ -161,7 +162,7 @@ func newIndexEngine(t *testing.T) (e *Engine, projectID, srcRoot string) {
 
 // TestIndexProjectEmptyDirReturnsZeroCounts asserts a reindex against an
 // empty source root succeeds (Completed=true) with zero file/node counts.
-// Walker MUST tolerate empty + the .zen/ subdir (skipped per skip-list).
+// Walker MUST tolerate empty + the.zen/ subdir (skipped per skip-list).
 func TestIndexProjectEmptyDirReturnsZeroCounts(t *testing.T) {
 	e, projectID, _ := newIndexEngine(t)
 	rep, err := e.IndexProject(context.Background(), projectID)
@@ -261,7 +262,7 @@ func C() {}
 	}
 }
 
-// TestIndexProjectAutoResolvesEdges asserts inv-zen-284 (v0.20.1 fix #4):
+// TestIndexProjectAutoResolvesEdges asserts invariant (v0.20.1 fix #4):
 // after a successful walk against a valid Go module fixture, IndexProject
 // auto-triggers semantic.Resolver.ResolveProject so the IndexReport
 // surfaces a non-zero EdgesCreated count (the call-graph fan-out + the

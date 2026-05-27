@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package knowledgetypes defines shared pure-Go types and interfaces for
-// the knowledge aggregator subsystem (Plan 9 Phase D-12).
+// the knowledge aggregator subsystem.
 //
 // This package exists specifically to break the CGO driver conflict between
 // internal/knowledge/aggregator (which via db.go imports mattn/go-sqlite3)
@@ -18,13 +18,13 @@
 //
 // Import topology (driver-conflict free):
 //
-//	internal/knowledge/aggregator   → knowledgetypes (no CGO)
-//	internal/daemon/knowledgeadapter → knowledgetypes (no CGO)
-//	cmd/zen-swarm-ctld              → aggregator (mattn) + daemon (ncruces)
-//	                                  mattn wins init() race; ncruces skips
+// internal/knowledge/aggregator → knowledgetypes (no CGO)
+// internal/daemon/knowledgeadapter → knowledgetypes (no CGO)
+// cmd/zen-swarm-ctld → aggregator (mattn) + daemon (ncruces)
+// mattn wins init() race; ncruces skips
 //
-// inv-zen-031: this package does NOT import internal/store.
-// inv-zen-129: this package does NOT import net/http.
+// invariant: this package does NOT import internal/store.
+// invariant: this package does NOT import net/http.
 package knowledgetypes
 
 import "context"

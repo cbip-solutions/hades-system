@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -18,10 +19,10 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/research/ecosystem"
 )
 
-//go:embed arxiv_testdata/cs_PL_atom_response.xml
+// go:embed arxiv_testdata/cs_PL_atom_response.xml
 var arxivAtomXML []byte
 
-//go:embed arxiv_testdata/sample_paper.pdf
+// go:embed arxiv_testdata/sample_paper.pdf
 var arxivSamplePDF []byte
 
 func TestArxivSource_Ecosystem(t *testing.T) {

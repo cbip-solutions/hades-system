@@ -1,3 +1,4 @@
+// go:build property
 //go:build property
 // +build property
 
@@ -5,7 +6,7 @@
 // M=100..1000 ops drawn from the inbox/aggregator API, the daemon-level
 // AggregatorCacheStore row's project_id MUST match the per-project
 // authoritative source for that NotificationID. Extends the unit-tier
-// inv-zen-113 fuzz at tests/compliance/inv_zen_113_no_cross_project_inbox_leak_test.go
+// invariant fuzz at tests/compliance/inv_zen_113_no_cross_project_inbox_leak_test.go
 // (N=5 × 200 ops × 5 seeds) to a randomized scale of N=5..20 × M=100..1000
 // via testing/quick with deterministic seeding.
 //
@@ -15,18 +16,18 @@
 // codebase: `inbox.AuthoritativeStore`, `inbox.NewOutboxBridge`,
 // `inbox.NewRebuilder`, `inbox.NewAggregatorCache`, `clock.NewVirtual`,
 // `eventlog.NewRecorder`, `projectctx.ProjectID(testhelpers.MakeProjectID(i))`,
-// and `cache.Iterate`. The real surface (already exercised by Phase E +
-// existing inv-zen-113 compliance test) is:
+// and `cache.Iterate`. The real surface (already exercised by +
+// existing invariant compliance test) is:
 //
-//   - inbox.NewMemStore()                      — per-project authoritative
-//   - inboxadapter.NewAdapter(perProject, daemonStore) — bridge + cache
-//   - Adapter.Insert(ctx, *Notification)       — 2-stage write (auth + cache)
-//   - Adapter.Ack / Adapter.Snooze             — mutation
-//   - Adapter.Delete(ctx, projectID)           — cascade
-//   - Adapter.InsertCache(ctx, CacheRow)       — direct cache write
-//   - Adapter.Query(ctx, ListFilter)           — cache read
-//   - Adapter.List(ctx, ListFilter)            — per-project read
-//   - Adapter.Rebuild(ctx, []inbox.Store)      — cache rehydrate
+// - inbox.NewMemStore() — per-project authoritative
+// - inboxadapter.NewAdapter(perProject, daemonStore) — bridge + cache
+// - Adapter.Insert(ctx, *Notification) — 2-stage write (auth + cache)
+// - Adapter.Ack / Adapter.Snooze — mutation
+// - Adapter.Delete(ctx, projectID) — cascade
+// - Adapter.InsertCache(ctx, CacheRow) — direct cache write
+// - Adapter.Query(ctx, ListFilter) — cache read
+// - Adapter.List(ctx, ListFilter) — per-project read
+// - Adapter.Rebuild(ctx, []inbox.Store) — cache rehydrate
 //
 // Reality wins (per per-project memory feedback_plan_template_drift.md):
 // the property under test (no cross-project leak under random ops) is
@@ -218,10 +219,10 @@ func runIsolationScenario(t *testing.T, sc scenario) string {
 		}
 
 		// (b) Per-project List MUST NEVER return rows from a different
-		//     project. With all N projects sharing one in-memory store,
-		//     the SQL `project_id = ?` clause is the load-bearing
-		//     isolation; this assertion fails if a future refactor
-		//     accidentally drops it.
+		// project. With all N projects sharing one in-memory store,
+		// the SQL `project_id = ?` clause is the load-bearing
+		// isolation; this assertion fails if a future refactor
+		// accidentally drops it.
 		for _, pid := range pids {
 			ns, err := a.List(ctx, inbox.ListFilter{
 				ProjectID:    pid,

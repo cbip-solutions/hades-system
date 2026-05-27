@@ -915,7 +915,7 @@ func TestEmptyPoolWarnUsesDefaultLoggerWhenNil(t *testing.T) {
 }
 
 // TestInvokeToolUnknown asserts the canonical gateway entry point
-// (Server.InvokeTool — Plan 11 mcpgateway uniform seam) returns an
+// returns an
 // error for unrecognised tool names. The audit MCP exposes only
 // audit_review; any other name MUST be rejected.
 func TestInvokeToolUnknown(t *testing.T) {

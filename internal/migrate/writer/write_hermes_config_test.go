@@ -61,7 +61,7 @@ func TestWriteHermesConfig_RawSourceMentioned(t *testing.T) {
 
 // TestWriteHermesConfig_PreservesOperatorModel — C-1 regression guard.
 // Mapper synthesises BodyBytes with operator's model string; writer MUST
-// emit it under default_provider.model. inv-zen-183 (no silent drop).
+// emit it under default_provider.model. invariant (no silent drop).
 func TestWriteHermesConfig_PreservesOperatorModel(t *testing.T) {
 	t.Parallel()
 	tmp := t.TempDir()
@@ -151,7 +151,7 @@ func TestWriteHermesConfig_PreservesOperatorMCPServers(t *testing.T) {
 
 // TestWriteHermesConfig_OperatorServerCollisionWithGateway — when operator
 // names a server "zen-swarm", we MUST NOT silently overwrite either side.
-// Operator's entry wins (inv-zen-183 no silent drop); a comment notes the
+// Operator's entry wins; a comment notes the
 // collision.
 func TestWriteHermesConfig_OperatorServerCollisionWithGateway(t *testing.T) {
 	t.Parallel()

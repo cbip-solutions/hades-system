@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-// Package nostub implements noStubAnalyzer for zen-swarm Plan 8 (spec §1 Q4 B).
+// Package nostub implements noStubAnalyzer for zen-swarm (spec §1 Q4 B).
 //
 // Detects production-code stubs that violate CLAUDE.md project doctrine
 // "No stubs, código completo":
 //
-//  1. nostub-panic       : panic("not implemented") and case-insensitive variants
-//  2. nostub-errnotimpl  : return errors.ErrNotImplementedPlanN where N <= released-plan
-//  3. nostub-todo        : // TODO implement later as first body comment
-//  4. nostub-empty-method: empty body on concrete-type method with non-trivial signature
+// 1. nostub-panic : panic("not implemented") and case-insensitive variants
+// 2. nostub-errnotimpl : return errors.ErrNotImplementedPlanN where N <= released-plan
+// 3. nostub-todo : // TODO implement later as first body comment
+// 4. nostub-empty-method: empty body on concrete-type method with non-trivial signature
 //
 // Configurable via flags:
 //
-//	-nostub.released-plan=8   # ErrNotImplementedPlanN where N <= this is reported
+// -nostub.released-plan=8 # ErrNotImplementedPlanN where N <= this is reported
 package nostub
 
 import (

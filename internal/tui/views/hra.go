@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package views — hra.go (Plan 12 Phase C Task C-7, F5 panel).
+// Package views — hra.go.
 //
-// Human-Review-Attention queue per Plan 5. The daemon does not expose
+// Human-Review-Attention queue. The daemon does not expose
 // a dedicated /v1/orchestrator/hra endpoint; the closest live data is
-// /v1/orchestrator/state (Plan 5) which carries the active session's
+// /v1/orchestrator/state which carries the active session's
 // state-machine snapshot + recent transitions. F5 renders the
 // transitions that match the HRA-attention pattern (state==hra_*) +
 // degrades cleanly when no session is active.

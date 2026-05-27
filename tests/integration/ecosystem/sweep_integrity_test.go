@@ -1,4 +1,4 @@
-//go:build integration && cgo
+// go:build integration && cgo
 
 package ecosystem_test
 
@@ -19,7 +19,7 @@ import (
 // MUST have after ecosystem.ApplyMigrations runs against an empty DB.
 //
 // Source of truth: internal/research/ecosystem/migrations/
-// 003_ecosystem_chunks.sql lines 16-37. Phase G migration 009 alters
+// 003_ecosystem_chunks.sql lines 16-37. migration 009 alters
 // ecosystem_versions (adds indefinite_retain) but does NOT touch
 // ecosystem_chunks — so the chunks column set is purely from 003.
 //
@@ -33,7 +33,7 @@ import (
 // ecosystem_chunks ADD/DROP COLUMN must update this slice in the same
 // commit; otherwise this test fails and surfaces the drift. The
 // schema-stability invariant guarded here is the supporting check for
-// inv-zen-204 (idempotent sweep): a sweep CANNOT be idempotent if the
+// invariant (idempotent sweep): a sweep CANNOT be idempotent if the
 // schema mutates between runs.
 var expectedEcosystemChunksColumns = []string{
 	"id",

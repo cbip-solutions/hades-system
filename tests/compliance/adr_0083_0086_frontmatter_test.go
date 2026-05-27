@@ -1,3 +1,4 @@
+// go:build !race
 //go:build !race
 // +build !race
 
@@ -164,7 +165,7 @@ func TestADR0086_PersistenceStateModelAndPluginFallback(t *testing.T) {
 }
 
 // mandatorySections lists the canonical Structured MADR section headers
-// that every Plan 13 ADR MUST carry.
+// that every ADR MUST carry.
 var mandatorySections = []string{
 	"## Context",
 	"## Decision",
@@ -175,7 +176,7 @@ var mandatorySections = []string{
 	"## Related ADRs",
 }
 
-// assertNoClaudeAttribution enforces inv-zen-004: ADR content MUST NOT
+// assertNoClaudeAttribution enforces invariant: ADR content MUST NOT
 // include Claude attribution markers anywhere in the body.
 func assertNoClaudeAttribution(t *testing.T, adrID, body string) {
 	t.Helper()

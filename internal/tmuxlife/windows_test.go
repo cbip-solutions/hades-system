@@ -30,7 +30,7 @@ func TestWindowNameValues(t *testing.T) {
 	}
 }
 
-// TestDaemonOwnedExcludesScratch is load-bearing for inv-zen-118 (snapshot
+// TestDaemonOwnedExcludesScratch is load-bearing for invariant (snapshot
 // privacy): scratch MUST be partitioned to operator-owned. If a future
 // edit accidentally moved scratch into DaemonOwnedWindows, snapshot save
 // would include scratch contents — privacy violation.

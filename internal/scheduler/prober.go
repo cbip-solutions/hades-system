@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package scheduler — prober.go
 //
-// Phase J Task J-4 adapter: exposes a slim Prober implementation that
+// Task J-4 adapter: exposes a slim Prober implementation that
 // the cli/doctor_scheduler.go layer consumes (cli.SchedulerProber). The
-// split keeps inv-zen-031 clean (internal/cli imports internal/scheduler;
+// split keeps invariant clean (internal/cli imports internal/scheduler;
 // internal/scheduler does NOT import internal/store).
 //
-// Phase J prefers closure injection over Store interface accretion.
+// prefers closure injection over Store interface accretion.
 // Each subsystem-specific query (queue depth, missed fires) flows
 // through a function value supplied by the daemon main loop, which
-// already owns the *store.Store handle. This keeps Phase D's Store
+// already owns the *store.Store handle. This keeps Store
 // interface minimal (CRUD + ListDue + AppendHistory) and isolates
 // doctor-only queries from the production hot path.
 //
@@ -41,13 +41,13 @@ type QueueDepthFn func(ctx context.Context, now time.Time) (total int, byProject
 type MissedFiresFn func(ctx context.Context, since time.Time) (total int, byProject map[string]int, err error)
 
 // WfqStatusFn returns the maximum WFQ saturation % across active queues
-// + the alias of the project at that max. Wired over Phase B
+// + the alias of the project at that max. Wired over
 // quota.WfqStatus.
 //
 // MUST be safe for concurrent use.
 type WfqStatusFn func(ctx context.Context) (maxPct int, maxAlias string, err error)
 
-// DispatcherPingFn verifies the Plan 3 dispatcher is bound + reachable
+// DispatcherPingFn verifies the dispatcher is bound + reachable
 // at the daemon's HTTP level. Returns nil if reachable; error otherwise.
 // Wired by the daemon over the dispatcheradapter health probe.
 //

@@ -4,10 +4,10 @@
 // Honors linguist-* overrides per spec §2.4 Q4=B. Subset implementation:
 // recognizes pattern lines of the form
 //
-//	<glob> linguist-language=<X>
-//	<glob> linguist-vendored=true
-//	<glob> linguist-generated=true
-//	<glob> linguist-documentation=true
+// <glob> linguist-language=<X>
+// <glob> linguist-vendored=true
+// <glob> linguist-generated=true
+// <glob> linguist-documentation=true
 //
 // where <glob> is a fnmatch-style pattern (e.g. `*.foo`, `vendor/**`,
 // `legacy/*`). Patterns matching the leading `legacy/*` apply to direct

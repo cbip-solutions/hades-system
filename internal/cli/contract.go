@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package cli — contract.go (Plan 20 Phase I).
+// Package cli — contract.go.
 //
-//	zen contract <endpoint>           — text/JSON dump for an endpoint (mirrors get_contract MCP).
-//	zen contract validate <repo>      — validate caronte.yaml against schema v1 (§6 corpus).
-//	zen contract why <change_id>      — D7 Lore-attribution for a breaking_changes row.
+// zen contract <endpoint> — text/JSON dump for an endpoint (mirrors get_contract MCP).
+// zen contract validate <repo> — validate caronte.yaml against schema v1 (§6 corpus).
+// zen contract why <change_id> — D7 Lore-attribution for a breaking_changes row.
 //
 // Routes via the daemon /v1/mcpgateway/contract* sub-routes → caronte engine.
-// Single-egress preserved (inv-zen-088). Tests inject ContractClient fakes.
+// Single-egress preserved. Tests inject ContractClient fakes.
 // Capa-firewall errors (store.ErrCrossProjectDenied / ErrUnauthorizedProject)
 // surface as actionable operator hints via classifyCapaFirewallError
-// (DECISION 4 — mirrors Plan 19 K's classifyMCPGatewayError shape).
+// .
 package cli
 
 import (
@@ -131,8 +131,9 @@ func NewContractCmdProd() *cobra.Command {
 }
 
 type ContractValidateFlags struct {
-	Repo   string
-	Format string
+	Repo        string
+	WorkspaceID string
+	Format      string
 }
 
 func NewContractValidateCmd(factory func(cmd *cobra.Command) ContractClient) *cobra.Command {
@@ -146,7 +147,7 @@ unknown target_repo; inline secrets (blacklisted field names); regex past
 MaxPatternRunes; regex-DoS pattern; invalid unresolved_policy. Routes via
 the daemon (single-egress, inv-zen-088).`,
 		Example: `  zen contract validate /path/to/projects/backend
-  zen contract validate . --format json`,
+  zen contract validate . --workspace ws-1 --format json`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
@@ -158,6 +159,7 @@ the daemon (single-egress, inv-zen-088).`,
 			return RunContractValidate(ctx, c, flags, cmd.OutOrStdout())
 		},
 	}
+	cmd.Flags().StringVar(&flags.WorkspaceID, "workspace", "", "workspace id whose member roster validates target_repo")
 	cmd.Flags().StringVar(&flags.Format, "format", "text", "output format: text|json")
 	return cmd
 }
@@ -169,7 +171,9 @@ func RunContractValidate(ctx context.Context, c ContractClient, flags ContractVa
 	if flags.Format != "text" && flags.Format != "json" {
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("--format %q must be text or json", flags.Format))
 	}
-	resp, err := c.ContractValidate(ctx, client.ContractValidateRequest{Repo: flags.Repo})
+	resp, err := c.ContractValidate(ctx, client.ContractValidateRequest{
+		Repo: flags.Repo, WorkspaceID: strings.TrimSpace(flags.WorkspaceID),
+	})
 	if err != nil {
 		return classifyCapaFirewallError(err, "contract validate")
 	}

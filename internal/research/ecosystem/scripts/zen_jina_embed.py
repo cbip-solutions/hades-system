@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
 """
-zen_jina_embed.py — Plan 14 Phase C JinaCodeEmbeddings subprocess.
+zen_jina_embed.py —   JinaCodeEmbeddings subprocess.
 
 Hosts jinaai/jina-code-embeddings-1.5b via sentence-transformers on M4 MPS
 (falls back to CPU on non-Apple platforms). Reads JSON-line requests from
-stdin, writes JSON-line responses to stdout. Mirrors the Plan 7 G
+stdin, writes JSON-line responses to stdout. Mirrors the  G
 zen_embed.py protocol used by internal/knowledge/embed/mps.go.
 
 Protocol:
@@ -27,8 +27,8 @@ The cross-shape invariant matters: EmbedBoth must produce a binary that
 matches the binary derived from quantizing the first 256 dims of fp32.
 Shim mode enforces this so embedder_test.go can assert the contract.
 
-inv-zen-031: this script never imports network libraries. Reads stdin /
-writes stdout only. Operator's daemon owns network egress per Plan 9 F.
+invariant: this script never imports network libraries. Reads stdin /
+writes stdout only. Operator's daemon owns network egress F.
 """
 
 import sys

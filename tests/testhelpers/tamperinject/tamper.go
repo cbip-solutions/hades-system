@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 //
 // Provides four corruption operations:
-//   - ModifyRecordHashRaw — bypass SQLite REFUSE triggers via raw connection.
-//   - CorruptTesseraTile — flip a byte in a tile file.
-//   - SwapWitnessSig — replace daemon witness signature in checkpoint JSON.
-//   - CorruptTilePartial — truncate a tile file (partial-upload simulation).
+// - ModifyRecordHashRaw — bypass SQLite REFUSE triggers via raw connection.
+// - CorruptTesseraTile — flip a byte in a tile file.
+// - SwapWitnessSig — replace daemon witness signature in checkpoint JSON.
+// - CorruptTilePartial — truncate a tile file (partial-upload simulation).
 //
 // Used by tests/adversarial/audit_chain_adversarial_test.go (K-8) to
 // drive the contract: even after corruption bypasses primary defense,

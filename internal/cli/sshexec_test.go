@@ -609,7 +609,7 @@ func payloadOf(t *testing.T, events []client.AuditEmitReq, eventType string) map
 // TestDispatcherAuditEmitter_DaemonDown ensures emit failures don't
 // panic or block. Audit emission MUST NOT prevent CLI completion (the
 // audit pipeline is best-effort from the operator's perspective; the
-// daemon-side EmitClient wraps inv-zen-083 no-loss separately).
+// daemon-side EmitClient wraps invariant no-loss separately).
 func TestDispatcherAuditEmitter_DaemonDown(t *testing.T) {
 	cli := client.NewWithBaseURL("http://127.0.0.1:1")
 	em := newDispatcherAuditEmitter(cli, "p1")

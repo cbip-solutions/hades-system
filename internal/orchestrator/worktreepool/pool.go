@@ -22,7 +22,7 @@ var ErrPoolExhausted = errors.New("worktreepool: pool exhausted (elasticMax reac
 
 type PoolConfig struct {
 	// RepoRoot is the absolute path to the bare/normal git repo the pool
-	// adds worktrees against. Phase D sets this from the project record.
+	// adds worktrees against. sets this from the project record.
 	// MUST be absolute (filepath.IsAbs) and non-empty.
 	RepoRoot string
 
@@ -35,13 +35,13 @@ type PoolConfig struct {
 
 	// Floor is the minimum number of warm worktrees the prewarm goroutine
 	// keeps available. Doctrine map (Q4 C):
-	//   max-scope=8, default=3, capa-firewall=5.
+	// max-scope=8, default=3, capa-firewall=5.
 	// MUST be > 0.
 	Floor int
 
 	// ElasticMax is the upper bound on TOTAL worktrees (warm + leased).
 	// Lease() blocks/spawns up to this ceiling. Doctrine map:
-	//   max-scope=32, default=12, capa-firewall=15.
+	// max-scope=32, default=12, capa-firewall=15.
 	// MUST be >= Floor.
 	ElasticMax int
 
@@ -57,7 +57,7 @@ type PoolConfig struct {
 	// empty.
 	PoolID string
 
-	// Clock is the injectable wall-clock + timer abstraction (Phase A
+	// Clock is the injectable wall-clock + timer abstraction (
 	// Q14 C). Production code leaves this nil so NewPool installs
 	// clock.Real{}; tests inject *clock.Fake to drive deterministic
 	// time advancement for the saturation debounce window
@@ -66,7 +66,7 @@ type PoolConfig struct {
 	// Doctrine note: every orchestrator-tier component that consumes
 	// time MUST take a Clock seam (see clock package godoc). Direct
 	// time.Now / time.NewTicker calls in production code are an
-	// anti-pattern enforced by a Phase O lint pass.
+	// anti-pattern enforced by a lint pass.
 	Clock clock.Clock
 }
 
@@ -220,7 +220,7 @@ func NewPool(cfg PoolConfig, emitter EventEmitter, exec Executor) (Pool, error) 
 	if cfg.GCCadence == 0 {
 		cfg.GCCadence = 5 * time.Minute
 	}
-	// IMP-2: Phase A Clock seam. Default to clock.Real{} so production
+	// IMP-2: Clock seam. Default to clock.Real{} so production
 	// callers never need to think about it; tests inject *clock.Fake
 	// for deterministic time advancement (saturation debounce window,
 	// future B-7 GC cadence). The cfg field captures the operator-
@@ -295,20 +295,20 @@ func (p *concretePool) Close(ctx context.Context) error {
 // nil maps; an unsynchronized Lease that already passed closed.Load can
 // panic on send to nil signalSlot). Pattern:
 //
-//	if p.closed.Load() {
-//	    return nil, ErrPoolClosed   // fast-path hint
-//	}
-//	p.mu.Lock()
-//	defer p.mu.Unlock()
-//	if p.closed.Load() {            // re-check under mu — REQUIRED
-//	    return nil, ErrPoolClosed
-//	}
-//	// ... touch warm/leased/signalSlot here, safe under mu
+// if p.closed.Load() {
+// return nil, ErrPoolClosed // fast-path hint
+// }
+// p.mu.Lock()
+// defer p.mu.Unlock()
+// if p.closed.Load() { // re-check under mu — REQUIRED
+// return nil, ErrPoolClosed
+// }
+// //... touch warm/leased/signalSlot here, safe under mu
 //
 // Forward-looking sentinels (declared in subsequent tasks):
-//   - ErrPoolDegraded: B-2 ENOSPC + subsequent disk-pressure recovery
-//     (HRA Phase I uses to downgrade to plurality-only per Q8)
-//   - ErrSubprocessTimeout: B-2 git worktree subprocess deadlines
+// - ErrPoolDegraded: B-2 ENOSPC + subsequent disk-pressure recovery
+//
+// - ErrSubprocessTimeout: B-2 git worktree subprocess deadlines
 
 // Lease returns a worktree for write. B-3 implements the warm fast path:
 // under p.mu, if len(p.warm) > 0 pop the tail entry, move it into the
@@ -374,7 +374,7 @@ func (p *concretePool) leaseSlowPath(ctx context.Context) (*Worktree, error) {
 				// + Signal). The classifier (subprocess.go) attaches
 				// ErrPoolDegraded as the `extra` sentinel on each of
 				// those four classes, so a single errors.Is check
-				// captures the full HRA Phase I Q8 cost-pressure
+				// captures the full HRA Q8 cost-pressure
 				// surface uniformly. The reason field disambiguates
 				// for downstream consumers (dashboards, HRA voting
 				// strategy selection). Non-pressure classes (Branch

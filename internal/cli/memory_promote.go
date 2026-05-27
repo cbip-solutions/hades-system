@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package cli — memory_promote.go (Plan 14 Phase F Task F-4).
+// Package cli — memory_promote.go.
 //
 // `zen memory promote <note-id>` pins a note to the global aggregator pin
-// index. promote is the Plan 9 D canonical term; `zen memory pin` is the
+// index. promote is the D canonical term; `zen memory pin` is the
 // CLI-ergonomic alias for the same daemon endpoint.
 //
-// inv-zen-146 gates (same as pin):
-//  1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
-//  2. strings.TrimSpace check in RunE — rejects whitespace-only values.
+// invariant gates (same as pin):
+// 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
+// 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 package cli
 
 import (

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package client — schedule.go (Plan 7 Phase D Task D-13).
+// Package client — schedule.go.
 //
 // Six methods + supporting wire types for the daemon's
 // /v1/schedules/* surface backing the operator-facing
 // `zen schedule {routine, task, loop, history, queue}` CLI:
 //
-//	ScheduleCreate   POST /v1/schedules                — create routine
-//	ScheduleList     GET  /v1/schedules                — list (filter by alias / all)
-//	ScheduleDelete   POST /v1/schedules/{id}/delete    — soft-delete (Disabled then DELETE)
-//	ScheduleRun      POST /v1/schedules/{id}/run       — manual trigger (Fire)
-//	ScheduleHistory  GET  /v1/schedules/{id}/history   — fire-history rows in window
-//	ScheduleQueue    GET  /v1/schedules/queue          — next-24h fire queue
+// ScheduleCreate POST /v1/schedules — create routine
+// ScheduleList GET /v1/schedules — list (filter by alias / all)
+// ScheduleDelete POST /v1/schedules/{id}/delete — soft-delete (Disabled then DELETE)
+// ScheduleRun POST /v1/schedules/{id}/run — manual trigger (Fire)
+// ScheduleHistory GET /v1/schedules/{id}/history — fire-history rows in window
+// ScheduleQueue GET /v1/schedules/queue — next-24h fire queue
 //
 // Field names + JSON tags align with the daemon-side handler in
 // internal/daemon/handlers/schedule_p7.go. Times use RFC3339 over the
@@ -19,9 +19,9 @@
 // "task", "loop", "success", "failed", "skipped", "rate-limited") so the
 // CLI can render them without a translation table.
 //
-// Phase I gap: until the daemon mounts the /v1/schedules/* routes in
-// Phase I, every call returns 503. The CLI surfaces 503 as exit 2
-// (infra-issue, not operator-typo). Mirrors the Plan 2 /v1/messages
+// gap: until the daemon mounts the /v1/schedules/* routes in
+// , every call returns 503. The CLI surfaces 503 as exit 2
+// (infra-issue, not operator-typo). Mirrors the /v1/messages
 // graceful-degradation pattern: client method shipped early, daemon
 // route ships in a follow-up phase.
 package client

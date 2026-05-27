@@ -141,8 +141,8 @@ type mockKnowledgeP9 struct{}
 func (mockKnowledgeP9) Query(_ context.Context, _ handlers.KnowledgeQueryReqP9) ([]handlers.KnowledgeResultP9, error) {
 	return []handlers.KnowledgeResultP9{}, nil
 }
-func (mockKnowledgeP9) Promote(_ context.Context, _, _, _ string) error   { return nil }
-func (mockKnowledgeP9) Unpromote(_ context.Context, _, _, _ string) error { return nil }
+func (mockKnowledgeP9) Promote(_ context.Context, _, _, _, _ string) error   { return nil }
+func (mockKnowledgeP9) Unpromote(_ context.Context, _, _, _, _ string) error { return nil }
 func (mockKnowledgeP9) List(_ context.Context, _ string, _ bool) ([]handlers.KnowledgeNoteP9, error) {
 	return []handlers.KnowledgeNoteP9{}, nil
 }
@@ -152,7 +152,7 @@ func (mockKnowledgeP9) Rebuild(_ context.Context, _ string) (handlers.KnowledgeR
 
 type mockADRP9 struct{}
 
-func (mockADRP9) Propose(_ context.Context, _ string) (handlers.ADRDoc, error) {
+func (mockADRP9) Propose(_ context.Context, _, _ string) (handlers.ADRDoc, error) {
 	return handlers.ADRDoc{}, nil
 }
 func (mockADRP9) Show(_ context.Context, _ string) (handlers.ADRDoc, error) {

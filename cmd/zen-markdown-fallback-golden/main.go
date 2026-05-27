@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// cmd/zen-markdown-fallback-golden — Plan 12 Phase A fix-cycle I-2.
+// cmd/zen-markdown-fallback-golden — fix-cycle I-2.
 //
 // Parity oracle for the Python wrapper-level markdown fallback in
 // plugin/zen-swarm/renderers/__init__.py::_emit_markdown_fallback. The Go
@@ -12,15 +12,15 @@
 //
 // Operator usage:
 //
-//	make bin/zen-markdown-fallback-golden
-//	bin/zen-markdown-fallback-golden \
-//	    -id c-test0001 \
-//	    -payload "MergeEngine.Score()" \
-//	    -audit-event-id evt-0001 \
-//	    -project-id p \
-//	    -doctrine default \
-//	    -lane semantic \
-//	    -confidence 0.5
+// make bin/zen-markdown-fallback-golden
+// bin/zen-markdown-fallback-golden \
+// -id c-test0001 \
+// -payload "MergeEngine.Score()" \
+// -audit-event-id evt-0001 \
+// -project-id p \
+// -doctrine default \
+// -lane semantic \
+// -confidence 0.5
 //
 // CI invocation: the Python parity test auto-discovers the binary at
 // bin/zen-markdown-fallback-golden and falls back to an in-Python

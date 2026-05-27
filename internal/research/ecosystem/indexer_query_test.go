@@ -1,30 +1,31 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
 // Package ecosystem — indexer_query_test.go
 //
-// Tests for Indexer.BinaryTop200 + FTS5Top200 + HydrateChunks (Plan 14
-// Phase C Task C-9 — Stage 2 amendment 2026-05-15).
+// Tests for Indexer.BinaryTop200 + FTS5Top200 + HydrateChunks (
+// Task C-9 — amendment 2026-05-15).
 //
 // Coverage discipline (CLAUDE.md hard rule 5): security/correctness-
 // critical files require ≥90% per-function coverage. indexer_query.go
-// ships the query-side surface Phase D dispatcher.go consumes; the
+// ships the query-side surface dispatcher.go consumes; the
 // Hamming + FTS5 + JOIN read paths must be fully exercised including
 // every defense-in-depth branch (nil DB, bad query-vector length, empty
 // queryText short-circuit, empty chunkIDs short-circuit, ctx
 // cancellation, missing chunk IDs not erroring).
 //
-// Drift reconciliation (Stage 0 reality-check 2026-05-18):
-//   1. aggregator constructor uses New(Options), NOT NewAggregator() +
-//      ConfigureDatabase(). The DB() accessor (added by THIS task)
-//      returns Options.DB.
-//   2. migration helper is ApplyMigrations(db), NOT
-//      applyEcosystemMigrations(t, db).
-//   3. vec_bit(?) wire-format is MANDATORY on the read side too (C-3
-//      inheritance) — sqlite-vec BIT[256] rejects raw `?` bindings.
-//   4. existing Stage1Binary at indexer.go:732 is untouched; BinaryTop200
-//      is the NEW adapter-named method with the topK fixed at 200 +
-//      Candidate (vs ChunkCandidate) return type per master §3.13.
+// Drift reconciliation:
+// 1. aggregator constructor uses New(Options), NOT NewAggregator() +
+// ConfigureDatabase(). The DB() accessor (added by THIS task)
+// returns Options.DB.
+// 2. migration helper is ApplyMigrations(db), NOT
+// applyEcosystemMigrations(t, db).
+// 3. vec_bit(?) wire-format is MANDATORY on the read side too (C-3
+// inheritance) — sqlite-vec BIT[256] rejects raw `?` bindings.
+// 4. existing Stage1Binary at indexer.go:732 is untouched; BinaryTop200
+// is the NEW adapter-named method with the topK fixed at 200 +
+// Candidate (vs ChunkCandidate) return type per master §3.13.
 //
 // Build tag `cgo`: this file requires sqlite3 + sqlite-vec virtual table
 // support (registered via ApplyMigrations).

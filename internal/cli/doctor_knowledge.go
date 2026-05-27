@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_knowledge.go
 //
-// Phase J Task J-3: knowledge subsystem doctor probe. Five aspects
+// Task J-3: knowledge subsystem doctor probe. Five aspects
 // (integrity, last_indexed, cpu_budget, watcher_status, extension_hooks)
 // per spec §6.7. Implementation delegates to KnowledgeProber interface;
 // fakes in tests, real adapter in internal/knowledge/prober.go.
 //
-// inv-zen-129: NEVER issues HTTP request; --remote handling is daemon-side
-// (returns deferred-Plan-14 sentinel). RunKnowledgeProbe stays local.
-// inv-zen-130: probe surface includes a sanity check that extension hook
-// columns are NULL by default in Plan 7.
+// invariant: NEVER issues HTTP request; --remote handling is daemon-side
+// . RunKnowledgeProbe stays local.
+// invariant: probe surface includes a sanity check that extension hook
+// columns are NULL by default in
 package cli
 
 import (

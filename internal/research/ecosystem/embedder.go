@@ -18,8 +18,8 @@ import (
 // Embedder produces both retrieval-stage embeddings for a text input.
 //
 // Concurrency implementations MUST be safe for concurrent EmbedBinary256d /
-// EmbedFP32_1536d / EmbedBoth / EmbedBatch calls (Phase B ingester batches
-// N goroutines per package; Phase D dispatcher embeds the query string
+// EmbedFP32_1536d / EmbedBoth / EmbedBatch calls ( ingester batches
+// N goroutines per package; dispatcher embeds the query string
 // + reranker candidates concurrently).
 //
 // Lifecycle Close releases native ONNX runtime + GPU memory (for jina-code
@@ -55,7 +55,7 @@ type EmbedderConfig struct {
 // NoopEmbedder — test-helper implementation
 //
 // Returns zero-valued embeddings of the correct shape (32 bytes / 1536 floats).
-// Production wiring of Dispatcher MUST NOT receive NoopEmbedder — Phase D
+// Production wiring of Dispatcher MUST NOT receive NoopEmbedder —
 // Task D-9 asserts the Embedder is non-noop at NewDispatcher time. This
 // type exists for tests that exercise non-embedder logic (router /
 // abstention / citation / verifier) in isolation.
@@ -100,10 +100,10 @@ func (NoopEmbedder) EmbedBatch(ctx context.Context, texts []string) ([][]byte, [
 func (NoopEmbedder) Close() error { return nil }
 
 // ErrEmbedderNoopInProduction is returned by Dispatcher's init path
-// (Phase D Task D-9) if a NoopEmbedder is passed in Options.Embedder
+// if a NoopEmbedder is passed in Options.Embedder
 // without an explicit test-mode override. Tests that exercise
 // non-embedder logic MUST set Options.AllowNoopEmbedder = true (or use
-// the test-only `newTestDispatcher` helper at Phase D).
+// the test-only `newTestDispatcher` helper at ).
 var ErrEmbedderNoopInProduction = fmt.Errorf("research/ecosystem: NoopEmbedder used in production wiring (Phase D D-9 guard)")
 
 type JinaCodeEmbeddings struct {
@@ -383,7 +383,7 @@ func (e *JinaCodeEmbeddings) request(ctx context.Context, texts []string, shape 
 // against zen_jina_embed.py's quantize_binary_256 plus sqlite-vec docs).
 //
 // Panics on input length != 256 — callers MUST slice properly. This is a
-// defense-in-depth guard: silent miscompression would corrupt the Stage 1
+// defense-in-depth guard: silent miscompression would corrupt the
 // retrieval index and surface as undetectable recall loss downstream.
 func quantizeBinary256(fp32 []float32) []byte {
 	if len(fp32) != 256 {
@@ -402,28 +402,28 @@ func quantizeBinary256(fp32 []float32) []byte {
 // VoyageCode3 — operator-opt-in API fallback embedder (Task C-2).
 //
 // Spec §2.4 Q4=A alternative path: voyage-code-3 hosted API (Anthropic-blessed
-// per docs.voyageai.com). Routes ALL HTTP egress through Plan 3 dispatcher via
-// the narrow Forwarder interface declared below (Plan 10 B-6 narrow-interface
+// per docs.voyageai.com). Routes ALL HTTP egress through dispatcher via
+// the narrow Forwarder interface declared below ( B-6 narrow-interface
 // pattern). Tokens come from macOS Keychain at (service="voyage-api-token",
 // account="zen-swarm") by default — never accept tokens via struct field or
 // env var (defense-in-depth: prevents accidental token leakage through logs
 // or process listings).
 //
 // Privacy doctrine (LOAD-BEARING):
-//   - EnableFallback defaults to FALSE. Operator must opt in via
-//     ~/.config/zen-swarm/providers/ecosystem-embedder.toml [fallback]
-//     enable_fallback = true. Without opt-in, every Embed* method returns
-//     ErrFallbackDisabled before any Keychain lookup or Forwarder call.
-//   - Tokens are cached in-memory after first Keychain fetch to avoid
-//     repeated unlock prompts on high-throughput batches.
+// - EnableFallback defaults to FALSE. Operator must opt in via
+// ~/.config/zen-swarm/providers/ecosystem-embedder.toml [fallback]
+// enable_fallback = true. Without opt-in, every Embed* method returns
+// ErrFallbackDisabled before any Keychain lookup or Forwarder call.
+// - Tokens are cached in-memory after first Keychain fetch to avoid
+// repeated unlock prompts on high-throughput batches.
 //
 // Boundary doctrine:
-//   - inv-zen-191 forward-compat: this type does NOT import net/http
-//     directly; HTTP egress flows through Forwarder which the daemon
-//     orchestrator wires to a concrete *providers.Dispatcher at runtime.
-//   - inv-zen-031: no internal/providers import here — the narrow Forwarder
-//     interface keeps the boundary clean (mirrors the bypassadapter +
-//     dispatcheradapter split in internal/daemon/).
+// - invariant forward-compat: this type does NOT import net/http
+// directly; HTTP egress flows through Forwarder which the daemon
+// orchestrator wires to a concrete *providers.Dispatcher at runtime.
+// - invariant: no internal/providers import here — the narrow Forwarder
+// interface keeps the boundary clean (mirrors the bypassadapter +
+// dispatcheradapter split in internal/daemon/).
 //
 // Cross-shape invariant (preserves recall parity with the primary jina
 // path): EmbedBoth / EmbedBinary256d / EmbedBatch all produce the binary
@@ -443,12 +443,12 @@ type Forwarder interface {
 	// Forward sends the marshalled Voyage request body and returns the
 	// raw response body. The Forwarder is responsible for: URL routing
 	// (api.voyageai.com/v1/embeddings), bearer-token auth header
-	// injection, HTTP transport, and per-Plan-3 single-egress audit
+	// injection, HTTP transport, and per- single-egress audit
 	// logging. Returns either:
-	//   - (body, nil) on 2xx
-	//   - (nil, *VoyageHTTPError) on a Voyage HTTP non-2xx response, so
-	//     the caller can branch on StatusCode for retry semantics
-	//   - (nil, transportErr) on a transport-level fault (timeout, refused)
+	// - (body, nil) on 2xx
+	// - (nil, *VoyageHTTPError) on a Voyage HTTP non-2xx response, so
+	// the caller can branch on StatusCode for retry semantics
+	// - (nil, transportErr) on a transport-level fault (timeout, refused)
 	//
 	// IMPORTANT implementers MUST surface HTTP non-2xx as *VoyageHTTPError
 	// (errors.As-compatible) so the retry semantics in fetchBatch can
@@ -543,10 +543,10 @@ type voyageResponse struct {
 // VoyageHTTPError is the structured error type the Forwarder MUST return
 // for any Voyage HTTP non-2xx response. fetchBatch uses errors.As to
 // branch on StatusCode for retry semantics:
-//   - 429 (rate-limit) + 5xx: retried with exponential backoff
-//   - 401 (auth) + other 4xx: NOT retried (permanent until creds change)
+// - 429 (rate-limit) + 5xx: retried with exponential backoff
+// - 401 (auth) + other 4xx: NOT retried (permanent until creds change)
 //
-// EXPORTED so the real Plan 3 dispatcher (in internal/providers, a
+// EXPORTED so the real dispatcher (in internal/providers, a
 // separate package wired by the daemon orchestrator) can construct this
 // type when an upstream HTTP error reaches it. The narrow Forwarder
 // interface contract is: "non-2xx HTTP responses MUST be returned as

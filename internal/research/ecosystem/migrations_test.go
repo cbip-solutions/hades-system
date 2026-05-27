@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -382,7 +383,7 @@ func TestChunksForeignKeyEnforced(t *testing.T) {
 }
 
 // TestAuditChainEventTypeCheckRejectsOutOfRange covers both CHECK
-// boundaries (91 = one below valid range; 100 = one above). Plan 14
+// boundaries (91 = one below valid range; 100 = one above).
 // EventType slots are exactly 92..99; values outside MUST be rejected
 // at the SQL layer (defense-in-depth: ChainEmitter validates Go-side
 // too, but the schema CHECK is the load-bearing backstop).

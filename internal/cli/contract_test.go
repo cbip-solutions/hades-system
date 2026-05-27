@@ -16,6 +16,7 @@ type fakeContractClient struct {
 	contractResp *client.ContractResponse
 	validateResp *client.ContractValidateResponse
 	whyResp      *client.ContractWhyResponse
+	validateReq  client.ContractValidateRequest
 	err          error
 }
 
@@ -25,10 +26,11 @@ func (f *fakeContractClient) Contract(_ context.Context, _ client.ContractReques
 	}
 	return f.contractResp, nil
 }
-func (f *fakeContractClient) ContractValidate(_ context.Context, _ client.ContractValidateRequest) (*client.ContractValidateResponse, error) {
+func (f *fakeContractClient) ContractValidate(_ context.Context, req client.ContractValidateRequest) (*client.ContractValidateResponse, error) {
 	if f.err != nil {
 		return nil, f.err
 	}
+	f.validateReq = req
 	return f.validateResp, nil
 }
 func (f *fakeContractClient) ContractWhy(_ context.Context, _ client.ContractWhyRequest) (*client.ContractWhyResponse, error) {
@@ -125,6 +127,17 @@ func TestRunContractValidateHappyPathText(t *testing.T) {
 	}
 	if !strings.Contains(buf.String(), "valid") || !strings.Contains(buf.String(), "repo-b") {
 		t.Errorf("output = %q", buf.String())
+	}
+}
+
+func TestRunContractValidatePassesWorkspaceID(t *testing.T) {
+	c := &fakeContractClient{validateResp: &client.ContractValidateResponse{Valid: true, SchemaVersion: 1}}
+	var buf bytes.Buffer
+	if err := RunContractValidate(context.Background(), c, ContractValidateFlags{Repo: "/r", WorkspaceID: "ws-1", Format: "text"}, &buf); err != nil {
+		t.Fatalf("RunContractValidate: %v", err)
+	}
+	if c.validateReq.WorkspaceID != "ws-1" {
+		t.Fatalf("WorkspaceID = %q; want ws-1", c.validateReq.WorkspaceID)
 	}
 }
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — merge_dto.go (Plan 6 Phase F Task F-4).
+// Package client — merge_dto.go.
 //
 // Wire DTOs + the MergeClient interface for the daemon's /v1/merge/*
 // surface. F-2 originally declared these in internal/cli; F-4 hoists
@@ -14,20 +14,20 @@
 //
 // Wire-types decoupling vs internal/orchestrator/merge: these structs
 // are pure JSON-tagged value types with NO import of merge or any
-// other domain package — inv-zen-104 preserved end-to-end.
+// other domain package — invariant preserved end-to-end.
 //
 // Drift resolutions (carried over from F-2):
 //
-//   - Drift C — output references Evt* constants only (no Event* /
-//     EventType*).
-//   - Drift D — anomaly list decodes EvtMergeAnomalyDetected payload
-//     via AnomalyDetectedPayload.Type discriminator (one EventType,
-//     switch on Type).
-//   - Drift E — cache status surfaces RebuildError from
-//     MergeCacheRebuiltPayload (no separate
-//     EvtMergeCacheRebuildFailed).
-//   - Drift F — Event/Payload shape consumed verbatim via
-//     json.Unmarshal.
+// - Drift C — output references Evt* constants only (no Event* /
+// EventType*).
+// - Drift D — anomaly list decodes EvtMergeAnomalyDetected payload
+// via AnomalyDetectedPayload.Type discriminator (one EventType,
+// switch on Type).
+// - Drift E — cache status surfaces RebuildError from
+// MergeCacheRebuiltPayload (no separate
+// EvtMergeCacheRebuildFailed).
+// - Drift F — Event/Payload shape consumed verbatim via
+// json.Unmarshal.
 package client
 
 import (

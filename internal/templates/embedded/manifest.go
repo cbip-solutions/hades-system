@@ -2,7 +2,7 @@
 // Package embedded — manifest.go.
 //
 // Pure-data file: declares per-template Title + ShortDescription +
-// RecommendedFor strings consumed by the Phase A wizard when rendering
+// RecommendedFor strings consumed by the wizard when rendering
 // the "What kind of project?" question and by `zen new --list-templates`.
 package embedded
 

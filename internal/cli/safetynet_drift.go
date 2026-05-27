@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package cli — safetynet_drift.go (Plan 5 Phase N N-5).
+// Package cli — safetynet_drift.go.
 //
 // `zen safetynet drift {run,history}` triggers and inspects the
-// doctrine-drift detector (Q2 C element 4 — Plan 5 M-6 safetynet.Drift).
+// doctrine-drift detector.
 package cli
 
 import (

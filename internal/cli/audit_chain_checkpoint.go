@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit_chain_checkpoint.go (Plan 9 Phase I Task I-3).
+// Package cli — audit_chain_checkpoint.go.
 //
 // `zen audit-chain checkpoint --reason "<X>"` is the capa-firewall manual
 // checkpoint surface (spec §6.1 Q4 B). Operators trigger an immediate
@@ -7,15 +7,15 @@
 // operations (release tag, doctrine amendment, large migration). The reason
 // string is stored in the chain anchor for forensic traceability.
 //
-// inv-zen-146: --reason is MANDATORY. cobra MarkFlagRequired checks that
+// invariant: --reason is MANDATORY. cobra MarkFlagRequired checks that
 // the flag is present but does NOT enforce non-empty; RunE performs the
 // second guard (strings.TrimSpace) so an explicit --reason "" is also
 // rejected before the HTTP call.
 //
 // Plan deviation (implementer brief): the plan-file sketched a struct-based
 // AuditChainCheckpointReq / AuditChainCheckpointResp. H-7 actually shipped:
-//   - client.AuditCheckpoint(ctx, reason, doctrine string) AuditCheckpointResp
-//   - AuditCheckpointResp{CheckpointID, TesseraSTH, AnchoredAt}
+// - client.AuditCheckpoint(ctx, reason, doctrine string) AuditCheckpointResp
+// - AuditCheckpointResp{CheckpointID, TesseraSTH, AnchoredAt}
 //
 // This file uses the H-7 actuals.
 package cli

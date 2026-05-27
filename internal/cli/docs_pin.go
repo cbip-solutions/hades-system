@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Package cli — docs_pin.go (Plan 14 Phase G Task G-5a).
+// Package cli — docs_pin.go.
 //
 // `zen docs pin --ecosystem <X> --version <Y>` sets
 // ecosystem_versions.indefinite_retain=true for the (ecosystem, version)
 // tuple via daemon POST /v1/ecosystem/pin. Pinned versions are:
 //
-//   - Never archived (excluded from the 2-prior-stable retention window
-//     governed by the Q9=A cron sweep).
-//   - Never auto-pruned by background storage-budget enforcement.
-//   - Only hard-removable via explicit `zen docs unpin` followed by
-//     `zen docs prune --confirm`; the daemon refuses to prune pinned
-//     versions with 409 Conflict.
+// - Never archived (excluded from the 2-prior-stable retention window
+// governed by the Q9=A cron sweep).
+// - Never auto-pruned by background storage-budget enforcement.
+// - Only hard-removable via explicit `zen docs unpin` followed by
+// `zen docs prune --confirm`; the daemon refuses to prune pinned
+// versions with 409 Conflict.
 //
 // Architecture CLI calls daemon HTTP; daemon owns the write transaction.
-// Boundary (inv-zen-031): does NOT import internal/research/ecosystem.
+// Boundary: does NOT import internal/research/ecosystem.
 //
 // Operator gate: requires explicit --ecosystem + --version flags (no
 // positional arg, reducing typo-driven misuse). A promptYN confirmation
@@ -27,11 +27,11 @@
 //
 // Exit codes (per spec §6.2):
 //
-//	0  success (pin committed by daemon, or operator aborted at prompt)
-//	1  recoverable: missing/invalid --ecosystem, missing --version, daemon
-//	   404 (unknown tuple), daemon 409 (already pinned — operator can
-//	   accept no-op)
-//	2  unrecoverable: transport, decode, daemon 5xx
+// 0 success (pin committed by daemon, or operator aborted at prompt)
+// 1 recoverable: missing/invalid --ecosystem, missing --version, daemon
+// 404 (unknown tuple), daemon 409 (already pinned — operator can
+// accept no-op)
+// 2 unrecoverable: transport, decode, daemon 5xx
 package cli
 
 import (

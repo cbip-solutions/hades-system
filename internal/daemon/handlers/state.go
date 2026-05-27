@@ -1,28 +1,28 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — state.go (Plan 9 Phase H Task H-5).
+// Package handlers — state.go.
 //
-// 5 NEW operator-facing system-state endpoints surfacing Phase G
+// 5 NEW operator-facing system-state endpoints surfacing
 // substrate (docs/system-state.toml auto-derived + manual per Q9 E)
 // over /v1/state/*. Boundary constraints:
 //
-//   - inv-zen-031: handler never imports internal/state/manifest directly.
-//     All access goes through the StateService interface; H-10 wires
-//     *daemon.Server to satisfy StateService via the production
-//     state/manifest.Walker + Pinner.
-//   - inv-zen-146: pin endpoint validates non-empty reason → 400 otherwise
-//     ("auto-pin bypass structurally impossible from this surface").
+// - invariant: handler never imports internal/state/manifest directly.
+// All access goes through the StateService interface; H-10 wires
+// *daemon.Server to satisfy StateService via the production
+// state/manifest.Walker + Pinner.
+// - invariant: pin endpoint validates non-empty reason → 400 otherwise
+// ("auto-pin bypass structurally impossible from this surface").
 //
-// Graceful degradation (Plan 2 pattern): any nil StateService passed to a
+// Graceful degradation: any nil StateService passed to a
 // constructor returns an http.HandlerFunc that immediately responds with
 // HTTP 503 {"error":"feature not configured","code":"plan9_state_unavailable"}.
 //
 // Endpoints
 //
-//	GET  /v1/state/show       — render full manifest (TOML + parsed)
-//	POST /v1/state/regenerate — walk auth sources, rewrite auto-derived sections
-//	POST /v1/state/verify     — regenerate-and-diff (CI gate)
-//	POST /v1/state/pin        — set manual field + emit state.manual_field_changed
-//	GET  /v1/state/history    — chain replay filtered by manual events + field
+// GET /v1/state/show — render full manifest (TOML + parsed)
+// POST /v1/state/regenerate — walk auth sources, rewrite auto-derived sections
+// POST /v1/state/verify — regenerate-and-diff (CI gate)
+// POST /v1/state/pin — set manual field + emit state.manual_field_changed
+// GET /v1/state/history — chain replay filtered by manual events + field
 package handlers
 
 import (
@@ -69,7 +69,7 @@ type StateService interface {
 	Verify(ctx context.Context) (StateDiffP9, error)
 
 	// Pin sets a manual field value and emits state.manual_field_changed into
-	// the Plan 9 chain. reason MUST be non-empty (inv-zen-146); callers
+	// the chain. reason MUST be non-empty; callers
 	// validate before calling Pin.
 	// Returns error when the field is not flagged x-manual-field=true in the
 	// schema (rejected fields must not be silently accepted).

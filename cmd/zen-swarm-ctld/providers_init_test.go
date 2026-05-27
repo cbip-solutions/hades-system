@@ -111,7 +111,7 @@ type = "not-a-real-type"
 // when bypass-config.json is absent (graceful-degradation path documented
 // in main.go:239-246).
 //
-// The authoritative inv-zen-211 gate lives in verifyCascadeCompleteness
+// The authoritative invariant gate lives in verifyCascadeCompleteness
 // (orchestrator_wiring.go) which runs AFTER buildOrchestrator with the
 // full registry. Asserting BuildProviderRegistry succeeds here keeps the
 // two layers' responsibilities aligned with the C5 split.

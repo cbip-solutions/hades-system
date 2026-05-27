@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Package nostore implements noStoreImportAnalyzer for zen-swarm Plan 8
-// (spec §1 Q4 B + Q16 D). Subsumes inv-zen-031 and generalizes to inv-zen-133.
+// Package nostore implements noStoreImportAnalyzer for zen-swarm
+// (spec §1 Q4 B + Q16 D). Subsumes invariant and generalizes to invariant.
 //
 // Detects imports of github.com/cbip-solutions/hades-system/internal/store from
 // packages OUTSIDE the bridge-adapter allowlist. The bridge pattern requires
@@ -9,9 +9,9 @@
 //
 // Configurable via flag:
 //
-//	-nostore.allowlist=pkg1,pkg2,...   # additional allowlisted packages
-//	                                     # (comma-separated; appended to the
-//	                                     # compile-baked default allowlist)
+// -nostore.allowlist=pkg1,pkg2,... # additional allowlisted packages
+// # (comma-separated; appended to the
+// # compile-baked default allowlist)
 package nostore
 
 import (
@@ -99,14 +99,14 @@ func effectiveAllowlist() map[string]bool {
 // Match semantics: full string equality OR a path-component-bounded
 // suffix match in either direction. Specifically, a match succeeds when:
 //
-//  1. pkgPath == allowed (canonical case for production builds), OR
-//  2. allowed has suffix "/" + pkgPath (production module path matched
-//     against an analysistest-synthesized truncated path, e.g.,
-//     pkgPath="no-store-import/good" matches allowed
-//     "github.com/cbip-solutions/hades-system/no-store-import/good"), OR
-//  3. pkgPath has suffix "/" + allowed (defensive symmetric: allowlist
-//     entry without full module prefix matched against a fully-qualified
-//     production path).
+// 1. pkgPath == allowed (canonical case for production builds), OR
+// 2. allowed has suffix "/" + pkgPath (production module path matched
+// against an analysistest-synthesized truncated path, e.g.,
+// pkgPath="no-store-import/good" matches allowed
+// "github.com/cbip-solutions/hades-system/no-store-import/good"), OR
+// 3. pkgPath has suffix "/" + allowed (defensive symmetric: allowlist
+// entry without full module prefix matched against a fully-qualified
+// production path).
 //
 // The path-component boundary "/" prevents over-permissive substring
 // matches: a hypothetical future package named "internal/daemon/foo/
@@ -118,9 +118,9 @@ func effectiveAllowlist() map[string]bool {
 // (without the full "internal/daemon/bypassadapter") cannot match an
 // arbitrary "/bypassadapter" appearing elsewhere in the analyzed path.
 //
-// Phase L IMPORTANT #1 (pre-flight to Phase M dogfood): tightened from
+// IMPORTANT #1: tightened from
 // raw bidirectional HasSuffix to component-bounded HasSuffix to close
-// the over-permissive matching gap surfaced by Phase L self-review.
+// the over-permissive matching gap surfaced by self-review.
 func pkgIsAllowlisted(pkgPath string, allow map[string]bool) bool {
 	if allow[pkgPath] {
 		return true

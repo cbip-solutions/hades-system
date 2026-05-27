@@ -2,7 +2,7 @@
 """Tests for ZenSwarmTransport — the Python half of the cross-language
 LLM-dispatch bridge.
 
-inv-zen-164: every Hermes LLM dispatch routes through this class. The
+invariant: every Hermes LLM dispatch routes through this class. The
 tests assert the HTTP envelope shape, the X-Zen-Transport header, and
 the absence of authorisation headers (defence in depth).
 """
@@ -91,7 +91,7 @@ def test_complete_returns_completedresponse_with_audit_event_id(
     fake_daemon, canned_response_handler
 ):
     """Reviewer I2: ``complete()`` MUST surface the daemon's
-    ``audit_event_id`` so Plan 12 citation renderers can deep-link via
+    ``audit_event_id`` so  citation renderers can deep-link via
     ``zen://audit/<id>``. The previous return shape (just the inner
     JSON body) discarded this metadata silently.
     """
@@ -234,7 +234,7 @@ def test_complete_completedresponse_defends_against_bad_audit_event_id_type(fake
     """Defence in depth: if the daemon returns ``audit_event_id`` as a
     non-string (e.g. an int because of a JSON encoder regression), the
     transport coerces to empty string rather than letting the wrong
-    type leak into Plan 12 citation renderers that build zen://audit/<id>
+    type leak into  citation renderers that build zen://audit/<id>
     URIs.
     """
 
@@ -609,7 +609,7 @@ def test_provider_transport_alias_dropped():
 
     Keeping the alias risked code review confusing ``ZenSwarmTransport``
     for a subclass of the real ABC. The alias is dropped; the class is
-    reachable as ``ZenSwarmTransport`` directly. inv-zen-164 compliance
+    reachable as ``ZenSwarmTransport`` directly. invariant compliance
     greps target ``class ZenSwarmTransport`` (the canonical name); no
     production code depends on the alias.
     """

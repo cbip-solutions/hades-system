@@ -1,16 +1,16 @@
-//go:build chaos
+// go:build chaos
 
-// DST harness self-tests (Plan 15 Phase F sub-task F-5).
+// DST harness self-tests.
 //
 // These pin the load-bearing contracts of the harness package:
 //
-//   - Seed reproducibility (same seed + mix → same action stream).
-//   - Cross-seed divergence (different seed → different stream).
-//   - Mix weighting (long-run frequency matches declared weights
-//     within a deterministic tolerance — bounded by the PRNG).
-//   - Action ↔ String round-trip (FormatStream/ParseStream).
-//   - FailureInjector pairing (Inject and Recover idempotent + the
-//     onActive / onClear callbacks fire exactly once per state flip).
+// - Seed reproducibility (same seed + mix → same action stream).
+// - Cross-seed divergence (different seed → different stream).
+// - Mix weighting (long-run frequency matches declared weights
+// within a deterministic tolerance — bounded by the PRNG).
+// - Action ↔ String round-trip (FormatStream/ParseStream).
+// - FailureInjector pairing (Inject and Recover idempotent + the
+// onActive / onClear callbacks fire exactly once per state flip).
 //
 // The harness self-tests do NOT need synctest bubbling; they exercise
 // the Scheduler + Mix + injector primitives in plain test goroutines.

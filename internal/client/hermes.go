@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package client — hermes.go
 //
-// /v1/hermes/probe?check=<name> route. Daemon side ships in Phase A
+// /v1/hermes/probe?check=<name> route. Daemon side ships in
 // (mcpgateway). Probe contract matches the BypassDoctor pattern
-// (Plan 2 spec §8.5): per-check name → {status, detail} response.
+// : per-check name → {status, detail} response.
 package client
 
 import (

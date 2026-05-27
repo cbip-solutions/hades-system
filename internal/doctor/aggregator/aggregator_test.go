@@ -1,9 +1,9 @@
-// Package aggregator_test exercises the Plan 13 Phase F doctor
+// Package aggregator_test exercises the doctor
 // aggregator orchestrator contract: parallel-bounded execution,
 // per-check timeout, Tessera audit emit, JSON schemaVersion=1.0 output,
 // context-cancel partial report.
 //
-// Per Plan 13 Phase F Task F1 (TDD): tests are written FIRST and MUST
+// Per Task F1 (TDD): tests are written FIRST and MUST
 // fail (no impl yet); subsequent steps wire aggregator.New + Run.
 package aggregator_test
 
@@ -260,7 +260,7 @@ func TestAggregatorEmptyChecks(t *testing.T) {
 //
 // This is the defense-in-depth contract documented in the Check interface
 // godoc (check.go:47-48: "Run(ctx) returns the DiagnosticResult; honors
-// ctx.Done()..."). All Phase F production checks honour ctx, but the
+// ctx.Done()..."). All production checks honour ctx, but the
 // aggregator must guarantee the post-Run override fires if any check
 // implementation drifts. Without this test, the override branch is
 // uncovered: existing TestAggregatorPerCheckTimeout uses slowCheck which

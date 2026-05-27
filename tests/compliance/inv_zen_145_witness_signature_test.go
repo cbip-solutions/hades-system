@@ -1,33 +1,33 @@
 // tests/compliance/inv_zen_145_witness_signature_test.go
 //
-// Compliance gate for inv-zen-145 (daemon witness signature mandatory on
+// Compliance gate for invariant (daemon witness signature mandatory on
 // daemon_global_checkpoint_log + hash-then-sign discipline).
 //
-// Invariant text (inv-zen-145):
+// Invariant text:
 //
-//	"Every entry appended to the daemon-global checkpoint log MUST carry a
-//	 valid daemon witness signature. The Checkpoint.Append surface refuses
-//	 SignedSTH values whose Signature slice is empty by returning
-//	 ErrUnsignedSTH. Additionally, every signing surface in the tessera
-//	 package hashes its input via sha256 BEFORE invoking ECDSA — the witness
-//	 private key never signs raw payload bytes."
+// "Every entry appended to the daemon-global checkpoint log MUST carry a
+// valid daemon witness signature. The Checkpoint.Append surface refuses
+// SignedSTH values whose Signature slice is empty by returning
+// ErrUnsignedSTH. Additionally, every signing surface in the tessera
+// package hashes its input via sha256 BEFORE invoking ECDSA — the witness
+// private key never signs raw payload bytes."
 //
 // Two enforcement points, two test assertions:
 //
-//  1. Mandatory-signature gate (Checkpoint.Append):
-//     Construct a SignedSTH with empty Signature; call Checkpoint.Append;
-//     assert errors.Is(err, ErrUnsignedSTH). This catches a regression
-//     where the empty-signature guard at internal/audit/tessera/checkpoint.go
-//     line ~169-175 is relaxed.
+// 1. Mandatory-signature gate (Checkpoint.Append):
+// Construct a SignedSTH with empty Signature; call Checkpoint.Append;
+// assert errors.Is(err, ErrUnsignedSTH). This catches a regression
+// where the empty-signature guard at internal/audit/tessera/checkpoint.go
+// line ~169-175 is relaxed.
 //
-//  2. Hash-then-sign discipline (Adapter.WitnessCoSignSeal):
-//     A signature produced by WitnessCoSignSeal over a payload P MUST be a
-//     valid ECDSA-P256 signature over sha256(P), NOT over raw P. The
-//     compliance check verifies the signature against sha256(P) (must
-//     succeed) AND against P un-hashed (must fail), proving the hashing
-//     happens on the production path.
+// 2. Hash-then-sign discipline (Adapter.WitnessCoSignSeal):
+// A signature produced by WitnessCoSignSeal over a payload P MUST be a
+// valid ECDSA-P256 signature over sha256(P), NOT over raw P. The
+// compliance check verifies the signature against sha256(P) (must
+// succeed) AND against P un-hashed (must fail), proving the hashing
+// happens on the production path.
 //
-// Plan-file: docs/superpowers/plans/2026-05-07-plan-9-phase-K-tests.md
+// Plan-file: internal design record
 // lines 4176-4225 (Task K-11 Step 3). The plan-file's pseudocode used
 // speculative API ("CheckpointLog{store}", "AppendUnsigned", an
 // "UnsignedRejectedError" wrapper struct, and an
@@ -37,7 +37,7 @@
 // rather than the speculative one — the invariant guarantee (an unsigned
 // STH cannot reach the daemon-global log) is identical, and we add the
 // hash-then-sign half explicitly because the plan-file's mission notes
-// it ("inv-zen-145 hash-then-sign witness; payload bytes hashed before
+// it ("invariant hash-then-sign witness; payload bytes hashed before
 // signing").
 //
 // Driver isolation note: this test imports
@@ -45,7 +45,7 @@
 // link any SQLite driver, so it coexists cleanly with the compliance
 // package's existing ncruces driver registration (inv_zen_073_test.go).
 //
-// Refs: spec §7.2 lines 1666-1679 (Plan 9 invariant declaration);
+// Refs: spec §7.2 lines 1666-1679;
 // sentinel declared in internal/audit/tessera/errors.go;
 // WitnessCoSignSeal hash-then-sign at adapter.go line ~367-372.
 package compliance
@@ -73,7 +73,7 @@ func inv145TestConfig() tessera.Config {
 // Signature slice is empty MUST be refused with ErrUnsignedSTH, never
 // persisted.
 //
-// This is the load-bearing inv-zen-145 assertion. Without it, an
+// This is the load-bearing invariant assertion. Without it, an
 // internal bug or a malicious caller could short-circuit the witness
 // path and write an STH with no signature — making the chain anchor
 // non-verifiable downstream.
@@ -145,15 +145,15 @@ func TestInvZen145_CheckpointRejectsUnsignedSTH(t *testing.T) {
 //
 // Test strategy:
 //
-//   - Generate a witness, attach it to a per-project Adapter.
-//   - Call WitnessCoSignSeal(payload) to obtain a signature `sig`.
-//   - Load the witness pubkey.
-//   - Compute h = sha256(payload).
-//   - Assert VerifyWithPubkey(pub, h, sig) is TRUE.
-//   - Assert VerifyWithPubkey(pub, payload, sig) is FALSE (proves the
-//     signing surface hashed; otherwise the un-hashed verification
-//     would also succeed for short payloads, and the discipline would
-//     be undetectable).
+// - Generate a witness, attach it to a per-project Adapter.
+// - Call WitnessCoSignSeal(payload) to obtain a signature `sig`.
+// - Load the witness pubkey.
+// - Compute h = sha256(payload).
+// - Assert VerifyWithPubkey(pub, h, sig) is TRUE.
+// - Assert VerifyWithPubkey(pub, payload, sig) is FALSE (proves the
+// signing surface hashed; otherwise the un-hashed verification
+// would also succeed for short payloads, and the discipline would
+// be undetectable).
 func TestInvZen145_WitnessCoSignSealHashesPayloadFirst(t *testing.T) {
 	t.Setenv("ZEN_BYPASS_DISABLE_KEYCHAIN", "1")
 
@@ -200,7 +200,7 @@ func TestInvZen145_WitnessCoSignSealHashesPayloadFirst(t *testing.T) {
 	// (a) Signature MUST verify against sha256(payload). If this
 	// fails, WitnessCoSignSeal is signing something OTHER than the
 	// sha256 digest of the supplied payload — either a different
-	// preimage or a different hash function — and inv-zen-145 is
+	// preimage or a different hash function — and invariant is
 	// violated.
 	digest := sha256.Sum256(payload)
 	if !tessera.VerifyWithPubkey(pub, digest[:], sig) {
@@ -209,7 +209,7 @@ func TestInvZen145_WitnessCoSignSealHashesPayloadFirst(t *testing.T) {
 
 	// (b) Signature MUST NOT verify against the un-hashed payload
 	// bytes. If this succeeds, WitnessCoSignSeal is signing raw
-	// payload bytes — exactly the regression inv-zen-145 forbids.
+	// payload bytes — exactly the regression invariant forbids.
 	//
 	// VerifyWithPubkey expects a 32-byte digest input; passing an
 	// arbitrary-length payload normally returns false because ECDSA

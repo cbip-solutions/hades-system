@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package hermes ships Plan 13 Phase F2 doctor checks for Hermes
+// Package hermes ships doctor checks for Hermes
 // substrate verification: install + plugin-format. Each check satisfies
 // the internal/doctor/check.Check interface.
 //
-// Boundary (inv-zen-031): hermes package consumes ONLY internal/doctor/check
+// Boundary: hermes package consumes ONLY internal/doctor/check
 // + the OS exec/PATH facilities (via the Detector seam); MUST NOT import
 // internal/store.
 //

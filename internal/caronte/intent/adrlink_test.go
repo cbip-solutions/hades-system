@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -426,7 +427,7 @@ func TestExplicitRefBothDirections(t *testing.T) {
 }
 
 // TestADRPathIndexFrontmatterIDWins is the load-bearing assertion for the
-// inv-zen-285 contract: when an ADR's filename and frontmatter `id:` field
+// invariant contract: when an ADR's filename and frontmatter `id:` field
 // disagree (the legitimate renumber-on-merge case where the canonical id
 // shifts but the filename is deferred), adrPathIndex MUST resolve ADR-NNNN
 // via the frontmatter id, NOT via the first four characters of the filename.

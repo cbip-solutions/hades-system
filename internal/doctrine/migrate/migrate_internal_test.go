@@ -11,7 +11,7 @@ import (
 )
 
 // TestMigrateChainRejectsDowngradeFromMaliciousMigrator pins the
-// inv-zen-142 defence-in-depth check: even if a buggy or malicious
+// invariant defence-in-depth check: even if a buggy or malicious
 // Migrator is registered that produces a *v1.Schema with a lower
 // SchemaVersion than the source, the dispatcher MUST refuse to return
 // it via ErrSchemaVersionDowngradeRejected.

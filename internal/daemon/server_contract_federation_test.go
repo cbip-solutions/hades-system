@@ -8,6 +8,12 @@ import (
 
 type fakeContractFederation struct{}
 
+func (f *fakeContractFederation) ValidateContractManifest(_ context.Context, _, _ string) (ContractManifestValidation, error) {
+	return ContractManifestValidation{}, nil
+}
+func (f *fakeContractFederation) RegisterWorkspace(_ context.Context, _ Workspace) error {
+	return nil
+}
 func (f *fakeContractFederation) ListWorkspaces(_ context.Context) ([]Workspace, error) {
 	return nil, nil
 }
@@ -19,6 +25,18 @@ func (f *fakeContractFederation) ListRecentBreakingChanges(_ context.Context, _ 
 }
 func (f *fakeContractFederation) ListWorkspaceMembers(_ context.Context, _ string) ([]Member, error) {
 	return nil, nil
+}
+func (f *fakeContractFederation) AddWorkspaceMember(_ context.Context, _ Member) error {
+	return nil
+}
+func (f *fakeContractFederation) RemoveWorkspace(_ context.Context, _ string) (int64, error) {
+	return 0, nil
+}
+func (f *fakeContractFederation) GetWorkspacePolicy(_ context.Context, _ string) (string, error) {
+	return "", nil
+}
+func (f *fakeContractFederation) SetWorkspacePolicy(_ context.Context, _, _ string) error {
+	return nil
 }
 func (f *fakeContractFederation) GetBreakingChangeWithConsumers(_ context.Context, _ string) (BreakingChange, []BreakingChangeConsumer, error) {
 	return BreakingChange{}, nil, nil
@@ -64,6 +82,21 @@ func TestSetContractFederationNilSafe(t *testing.T) {
 	}
 }
 
+func TestContractFederationRESTAdapterNilSafe(t *testing.T) {
+	s := newTestServer(t)
+	if s.ContractFederationREST() != nil {
+		t.Error("ContractFederationREST() non-nil before SetContractFederation")
+	}
+	s.SetContractFederation(&fakeContractFederation{})
+	if s.ContractFederationREST() == nil {
+		t.Error("ContractFederationREST() nil after SetContractFederation")
+	}
+	s.SetContractFederation(nil)
+	if s.ContractFederationREST() != nil {
+		t.Error("ContractFederationREST() non-nil after SetContractFederation(nil)")
+	}
+}
+
 func TestContractCoordinatorNilByDefault(t *testing.T) {
 	s := newTestServer(t)
 	if s.ContractCoordinator() != nil {
@@ -100,7 +133,7 @@ func TestSetContractCoordinatorNilSafe(t *testing.T) {
 // TestContractFederationForDaemon_InterfaceContractStable pins the
 // interface method set: drift here breaks the structural contract that
 // the wiring file's compile-time anchor (var _ daemon.ContractFederationForDaemon
-// = fedDB) depends on. The list mirrors Stage-0 J-0.7 (Phase A as-shipped
+// = fedDB) depends on. The list mirrors J-0.7 ( as-shipped
 // Wave-1 surface).
 //
 // Sister-test per [[feedback_sister_test_pattern]] — any method
@@ -109,12 +142,18 @@ func TestSetContractCoordinatorNilSafe(t *testing.T) {
 func TestContractFederationForDaemon_InterfaceContractStable(t *testing.T) {
 	iface := reflect.TypeOf((*ContractFederationForDaemon)(nil)).Elem()
 	wantMethods := []string{
+		"AddWorkspaceMember",
 		"Close",
 		"GetBreakingChangeWithConsumers",
 		"GetWorkspace",
+		"GetWorkspacePolicy",
 		"ListRecentBreakingChanges",
 		"ListWorkspaceMembers",
 		"ListWorkspaces",
+		"RegisterWorkspace",
+		"RemoveWorkspace",
+		"SetWorkspacePolicy",
+		"ValidateContractManifest",
 	}
 	if got := iface.NumMethod(); got != len(wantMethods) {
 		t.Fatalf("ContractFederationForDaemon has %d methods, want %d (%v)",

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Package compliance — Plan 15 Phase B Task B-15 consolidated compliance
-// gate suite for the 8 phase-B invariants (inv-zen-278..285, placeholder
+// Package compliance — Task B-15 consolidated compliance
+// gate suite for the 8 phase-B invariants (invariant..285, placeholder
 // IDs B1..B8 pending merge-time renumber reconciliation per the renumber-
 // on-merge playbook).
 //
@@ -12,108 +12,108 @@
 // `-run '^TestInvZenB[0-9]+_'` regex filter (matches B1..B13 placeholder
 // IDs across files). This aggregator additionally contributes:
 //
-//	- TestInvZenB1_B8_AllInvariantsHaveTestImplementations
-//	    a META-completeness gate asserting EACH of the 8 invariants has
-//	    at least one authoritative test file present in the dev repo. Any
-//	    accidental deletion of a sub-test file (e.g. a refactor wave that
-//	    drops inv_zen_B9_brew_formula_test.go) fails this meta-gate even
-//	    if every other phase-B sub-test passes.
+// - TestInvZenB1_B8_AllInvariantsHaveTestImplementations
+// a META-completeness gate asserting EACH of the 8 invariants has
+// at least one authoritative test file present in the dev repo. Any
+// accidental deletion of a sub-test file (e.g. a refactor wave that
+// drops inv_zen_B9_brew_formula_test.go) fails this meta-gate even
+// if every other phase-B sub-test passes.
 //
-//	- TestInvZenB4_SingleEgressPreserved (inv-zen-281)
-//	    Authored here per spec §B-15 step 2; NOT yet covered by any other
-//	    task. Asserts SidecarBackend's TierBackend-interface compliance +
-//	    that NO direct `bypass.Forward(` call sites exist outside the
-//	    extracted sidecar process (defense-in-depth boundary scan).
+// - TestInvZenB4_SingleEgressPreserved
+// Authored here per spec §B-15 step 2; NOT yet covered by any other
+// task. Asserts SidecarBackend's TierBackend-interface compliance +
+// that NO direct `bypass.Forward(` call sites exist outside the
+// extracted sidecar process (defense-in-depth boundary scan).
 //
-//	- TestInvZenB5_DaemonOnlyStoreOwnership (inv-zen-282)
-//	    Authored here per spec §B-15 step 2; env-var-gated (skips when
-//	    ZEN_BYPASS_TIER1_ROOT is not set so local dev runs pass without a
-//	    private-repo checkout). Asserts the extracted sidecar source
-//	    contains ZERO database/sql + sqlite3-driver + internal/store
-//	    import sites (daemon-only store ownership preserved per
-//	    inv-zen-282 + ADR-0102 architectural boundary).
+// - TestInvZenB5_DaemonOnlyStoreOwnership
+// Authored here per spec §B-15 step 2; env-var-gated (skips when
+// ZEN_BYPASS_TIER1_ROOT is not set so local dev runs pass without a
+// private-repo checkout). Asserts the extracted sidecar source
+// contains ZERO database/sql + sqlite3-driver + internal/store
+// import sites (daemon-only store ownership preserved per
+// invariant + ADR-0102 architectural boundary).
 //
-//	- TestInvZenB7_CapabilityNegotiation (inv-zen-284)
-//	    Compliance sister-test that asserts the canonical integration
-//	    test file exists at the documented path AND that the public
-//	    surface of `internal/daemon/dispatcheradapter.FetchSidecarCapabilities`
-//	    + `Capabilities.HasFeature` is present at the contract location.
-//	    The end-to-end behavioural assertions live in the integration
-//	    test (which `verify-sidecar-capability-negotiation` invokes
-//	    separately); this sister-test is a deletion-proof traceability
-//	    anchor — if someone deletes the integration test file in a
-//	    rebase mistake, this gate fails before CI reaches the integration
-//	    run.
+// - TestInvZenB7_CapabilityNegotiation
+// Compliance sister-test that asserts the canonical integration
+// test file exists at the documented path AND that the public
+// surface of `internal/daemon/dispatcheradapter.FetchSidecarCapabilities`
+// + `Capabilities.HasFeature` is present at the contract location.
+// The end-to-end behavioural assertions live in the integration
+// test (which `verify-sidecar-capability-negotiation` invokes
+// separately); this sister-test is a deletion-proof traceability
+// anchor — if someone deletes the integration test file in a
+// rebase mistake, this gate fails before CI reaches the integration
+// run.
 //
 // Invariant ID to authoritative-test mapping (8 invariants × N test files):
 //
-//	inv-zen-278 — Zero bypass references in public-snapshot perimeter
-//	              (5-surface boundary scan: AST + tests + docs + configs + SQL)
-//	  Scanner cmd:      cmd/verify-no-bypass-references/{main.go,main_test.go,
-//	                    sanctioned_allowlist.go}             (W7-B7)
-//	  Compliance sister: tests/compliance/inv_zen_B6_split_table_test.go
-//	                    (TestInvZenB6_BoundaryScanPresent +
-//	                     TestInvZenB6_HookInstalled)           (W7-B6)
-//	  Per-PR diff hook:  .github/workflows/anti-bypass-reintroduction-on-pr.yml
-//	                                                          (W7-B16)
+// invariant — Zero bypass references in public-snapshot perimeter
+// (5-surface boundary scan: AST + tests + docs + configs + SQL)
+// Scanner cmd: cmd/verify-no-bypass-references/{main.go,main_test.go,
+// sanctioned_allowlist.go} (W7-B7)
+// Compliance sister: tests/compliance/inv_zen_B6_split_table_test.go
+// (TestInvZenB6_BoundaryScanPresent +
+// TestInvZenB6_HookInstalled) (W7-B6)
+// Per-PR diff hook:.github/workflows/anti-bypass-reintroduction-on-pr.yml
+// (W7-B16)
 //
-//	inv-zen-279 — /v1 HTTP API surface frozen forever; NO /v2 routes
-//	  Compliance test:  tests/compliance/inv_zen_B10_v1_freeze_test.go
-//	                    (TestInvZenB10_NoV2RoutesInDevRepo +
-//	                     TestInvZenB10_NoV2StringLiteralsInDevRepo +
-//	                     TestInvZenB10_CanonicalDaemonSidecarContractRoutesPresent +
-//	                     TestInvZenB10_NoV2InGithubWorkflows)    (W7-B10)
+// invariant — /v1 HTTP API surface frozen forever; NO /v2 routes
+// Compliance test: tests/compliance/inv_zen_B10_v1_freeze_test.go
+// (TestInvZenB10_NoV2RoutesInDevRepo +
+// TestInvZenB10_NoV2StringLiteralsInDevRepo +
+// TestInvZenB10_CanonicalDaemonSidecarContractRoutesPresent +
+// TestInvZenB10_NoV2InGithubWorkflows) (W7-B10)
 //
-//	inv-zen-280 — Sidecar absent → graceful degrade to Plan 16 cascade
-//	  Unit tests:       internal/providers/sidecar_backend_test.go
-//	                    (TestSidecarBackend_ConnectionRefused_* +
-//	                     TestSidecarBackend_5xx_ReturnsErrSidecarDegraded +
-//	                     TestSidecarBackend_Timeout_* +
-//	                     TestSidecarBackend_FallbackChainProceedsToPlan16Cascade)
-//	                                                            (W7-B4)
-//	  Note: the dispatcher cascade falling through to Plan 16 is asserted
-//	  here at the unit layer; the daemon-level end-to-end is covered by
-//	  the W7-B16 integration smoke (a downstream consumer of the same
-//	  sentinel errors).
+// invariant — Sidecar absent → graceful degrade to cascade
+// Unit tests: internal/providers/sidecar_backend_test.go
+// (TestSidecarBackend_ConnectionRefused_* +
+// TestSidecarBackend_5xx_ReturnsErrSidecarDegraded +
+// TestSidecarBackend_Timeout_* +
+// TestSidecarBackend_FallbackChainProceedsToPlan16Cascade)
+// (W7-B4)
+// Note: the dispatcher cascade falling through to is asserted
+// here at the unit layer; the daemon-level end-to-end is covered by
+// the W7-B16 integration smoke (a downstream consumer of the same
+// sentinel errors).
 //
-//	inv-zen-281 — Single-egress preserved (sidecar = standard TierBackend)
-//	  Compliance test:  TestInvZenB4_SingleEgressPreserved (THIS FILE)
-//	  Supporting unit:  internal/providers/sidecar_backend_test.go
-//	                    (TestSidecarBackend_Name / Tier / Capabilities)
+// invariant — Single-egress preserved (sidecar = standard TierBackend)
+// Compliance test: TestInvZenB4_SingleEgressPreserved (THIS FILE)
+// Supporting unit: internal/providers/sidecar_backend_test.go
+// (TestSidecarBackend_Name / Tier / Capabilities)
 //
-//	inv-zen-282 — Daemon-only store ownership (sidecar = HTTP client)
-//	  Compliance test:  TestInvZenB5_DaemonOnlyStoreOwnership (THIS FILE)
-//	                    Env-var-gated; full assertion runs in CI with the
-//	                    private cbip-solutions/zen-bypass-tier1 mounted.
+// invariant — Daemon-only store ownership (sidecar = HTTP client)
+// Compliance test: TestInvZenB5_DaemonOnlyStoreOwnership (THIS FILE)
+// Env-var-gated; full assertion runs in CI with the
+// private cbip-solutions/zen-bypass-tier1 mounted.
 //
-//	inv-zen-283 — Brew Formula service block + NO license DSL field
-//	  Compliance test:  tests/compliance/inv_zen_B9_brew_formula_test.go
-//	                    (TestInvZenB9_BrewFormulaServiceBlock +
-//	                     TestInvZenB9_BrewFormulaNoLicenseField)   (W7-B9)
-//	  ADR migration sister: tests/compliance/inv_zen_B13_adr_migration_test.go
-//	                    (TestInvZenB13_BypassADRsAbsentFromPublicRepo +
-//	                     TestInvZenB13_BypassADRsPresentInPrivateRepo) (W7-B13)
+// invariant — Brew Formula service block + NO license DSL field
+// Compliance test: tests/compliance/inv_zen_B9_brew_formula_test.go
+// (TestInvZenB9_BrewFormulaServiceBlock +
+// TestInvZenB9_BrewFormulaNoLicenseField) (W7-B9)
+// ADR migration sister: tests/compliance/inv_zen_B13_adr_migration_test.go
+// (TestInvZenB13_BypassADRsAbsentFromPublicRepo +
+// TestInvZenB13_BypassADRsPresentInPrivateRepo) (W7-B13)
 //
-//	inv-zen-284 — Capability negotiation via /v1/sidecar/info
-//	  Compliance test:  TestInvZenB7_CapabilityNegotiation (THIS FILE)
-//	  Integration test: tests/integration/sidecar_capability_negotiation_test.go
-//	                    (TestSidecarCapabilityNegotiation_*)        (W7-B10)
+// invariant — Capability negotiation via /v1/sidecar/info
+// Compliance test: TestInvZenB7_CapabilityNegotiation (THIS FILE)
+// Integration test: tests/integration/sidecar_capability_negotiation_test.go
+// (TestSidecarCapabilityNegotiation_*) (W7-B10)
 //
-//	inv-zen-285 — Public-snapshot terminology framing + CHANGELOG curation
-//	  Compliance test (INSTALL.md):
-//	                    tests/compliance/inv_zen_B8_install_framing_test.go
-//	                    (TestInvZenB8_InstallMDPaygoCascadeDefault +
-//	                     TestInvZenB8_InstallMDFramedTerminology +
-//	                     TestInvZenB8_InstallMDNoPrivateRepoRefs +
-//	                     TestInvZenB8_InstallMDCommunityRecipeLink +
-//	                     TestInvZenB8_InstallMDSidecarsTOMLDocumented) (W7-B14)
-//	  Compliance test (CHANGELOG curation):
-//	                    tests/compliance/inv_zen_B11_curation_table_present_test.go
-//	                    (TestInvZenB11_CurationTablePresent +
-//	                     TestInvZenB11_CurationTableCoversAllReleases +
-//	                     TestInvZenB11_CurationTablePrivacyHeader)    (W7-B11)
+// invariant — Public-snapshot terminology framing + CHANGELOG curation
+// Compliance test (INSTALL.md):
+// tests/compliance/inv_zen_B8_install_framing_test.go
+// (TestInvZenB8_InstallMDPaygoCascadeDefault +
+// TestInvZenB8_InstallMDFramedTerminology +
+// TestInvZenB8_InstallMDNoPrivateRepoRefs +
+// TestInvZenB8_InstallMDCommunityRecipeLink +
+// TestInvZenB8_InstallMDSidecarsTOMLDocumented) (W7-B14)
+// Compliance test (CHANGELOG curation):
+// tests/compliance/inv_zen_B11_curation_table_present_test.go
+// (TestInvZenB11_CurationTablePresent +
+// TestInvZenB11_CurationTableCoversAllReleases +
+// TestInvZenB11_CurationTablePrivacyHeader) (W7-B11)
 //
-// inv-zen-031 (boundary discipline) — this file imports stdlib + go/ast only;
+// invariant (boundary discipline) — this file imports stdlib + go/ast only;
 // does NOT import internal/store, private-tier1-module, or any
 // daemon package. The B7 sister-test verifies the dispatcheradapter
 // package surface via a file-existence + grep check on the published API
@@ -302,19 +302,19 @@ func TestInvZenB5_DaemonOnlyStoreOwnership(t *testing.T) {
 }
 
 // TestInvZenB7_CapabilityNegotiation is the compliance sister-test for
-// inv-zen-284. The end-to-end behavioural assertions live in the
+// invariant. The end-to-end behavioural assertions live in the
 // integration test (run separately via `make verify-sidecar-capability-
 // negotiation`); this sister-test is a deletion-proof traceability
 // anchor + a thin surface-level check:
 //
-//	(a) tests/integration/sidecar_capability_negotiation_test.go exists
-//	    at the documented path.
-//	(b) The dispatcheradapter package source file declares the canonical
-//	    FetchSidecarCapabilities function + the Capabilities.HasFeature
-//	    method (string-grep on the source — the compliance package MUST
-//	    NOT import the daemon-tier package per inv-zen-031 boundary).
-//	(c) The integration test file references the required path
-//	    `/v1/sidecar/info` (the FROZEN contract route per decisión 17-d).
+// (a) tests/integration/sidecar_capability_negotiation_test.go exists
+// at the documented path.
+// (b) The dispatcheradapter package source file declares the canonical
+// FetchSidecarCapabilities function + the Capabilities.HasFeature
+// method (string-grep on the source — the compliance package MUST
+// NOT import the daemon-tier package per invariant boundary).
+// (c) The integration test file references the required path
+// `/v1/sidecar/info`.
 //
 // A future rebase that accidentally deletes the integration test file
 // or renames FetchSidecarCapabilities fails THIS gate before CI even

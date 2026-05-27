@@ -1,28 +1,29 @@
+// go:build property
 //go:build property
 // +build property
 
 // Four properties, each fuzzed via testing/quick or asserted on a
 // curated boundary table:
 //
-//  1. Valid 5-field Vixie expressions (numeric only — names rejected
-//     per scheduler.containsToken policy) produce a non-empty schedule
-//     whose Next() fires within 1 day from the reference time. The
-//     Feb-29 leap-year edge is bounded by the worst-case 367-day cap.
+// 1. Valid 5-field Vixie expressions (numeric only — names rejected
+// per scheduler.containsToken policy) produce a non-empty schedule
+// whose Next() fires within 1 day from the reference time. The
+// Feb-29 leap-year edge is bounded by the worst-case 367-day cap.
 //
-//  2. Extended Quartz syntax (L, W, ?, named tokens MON..SUN /
-//     JAN..DEC, MON#3, embedded #) is rejected with ErrInvalidCron.
-//     This is the runtime witness that scheduler.ParseCron's extended-
-//     token gate stays sealed; a future regression that re-enables
-//     the underlying parser's named-month support would surface here.
+// 2. Extended Quartz syntax (L, W, ?, named tokens MON..SUN /
+// JAN..DEC, MON#3, embedded #) is rejected with ErrInvalidCron.
+// This is the runtime witness that scheduler.ParseCron's extended-
+// token gate stays sealed; a future regression that re-enables
+// the underlying parser's named-month support would surface here.
 //
-//  3. Boundary numeric values (0/59 minute, 0/23 hour, 1/31 day-of-
-//     month, 1/12 month, 0/6 day-of-week) parse and produce a
-//     first-fire time within the documented window.
+// 3. Boundary numeric values (0/59 minute, 0/23 hour, 1/31 day-of-
+// month, 1/12 month, 0/6 day-of-week) parse and produce a
+// first-fire time within the documented window.
 //
-//  4. Determinism: parsing the same expression twice produces the same
-//     Next() values across 100 successive iterations.
+// 4. Determinism: parsing the same expression twice produces the same
+// Next() values across 100 successive iterations.
 //
-// Reinforces: spec §4.3 + Phase D parser contract; the 5-field Vixie
+// Reinforces: spec §4.3 + parser contract; the 5-field Vixie
 // syntax is the only sanctioned cron surface. Extended Quartz operators
 // MUST NEVER silently parse — that would write portable-looking schedules
 // to daemon.db that silently mean different things across operator

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit_chain_recover.go (Plan 9 Phase I Task I-2).
+// Package cli — audit_chain_recover.go.
 //
 // `zen audit-chain recover --project <id> --from <ts>` is the spec §6.5
 // interactive tamper-recovery flow. It calls the single POST
 // /v1/audit-chain/recover endpoint twice (H-7 two-phase semantics):
 //
-//	Pass 1: confirm=false → preview AuditRecoverPlan (no destructive action)
-//	Pass 2: confirm=true  → execute the plan; returns AuditRecoverResult
+// Pass 1: confirm=false → preview AuditRecoverPlan (no destructive action)
+// Pass 2: confirm=true → execute the plan; returns AuditRecoverResult
 //
 // H-7 deviation from plan-file: the plan-file sketched three separate
 // endpoints (/recover/plan, /recover/execute, /recover/resume). H-7 shipped
@@ -17,13 +17,13 @@
 // Two operator-confirmation checkpoints (privacy-by-default + max-scope
 // HALT-per-project per Q10 D):
 //
-//	Checkpoint 1: After plan display  → "Continue? [y/N]"
-//	Checkpoint 2: After execution     → "Resume audit appends for project <X>? [y/N]"
+// Checkpoint 1: After plan display → "Continue? [y/N]"
+// Checkpoint 2: After execution → "Resume audit appends for project <X>? [y/N]"
 //
 // Operator decline at either checkpoint short-circuits the flow:
-//   - Decline at checkpoint 1: no confirm=true call; project stays paused.
-//   - Decline at checkpoint 2: recovery completed but project stays paused;
-//     operator must re-run to resume (no destructive side effect from decline).
+// - Decline at checkpoint 1: no confirm=true call; project stays paused.
+// - Decline at checkpoint 2: recovery completed but project stays paused;
+// operator must re-run to resume (no destructive side effect from decline).
 //
 // "Resume" in H-7 is implicit: a confirmed recovery (confirm=true) naturally
 // positions the chain for new appends. We output a clear message either way

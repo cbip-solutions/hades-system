@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — adr_history.go (Plan 9 Phase I Task I-7).
+// Package cli — adr_history.go.
 //
 // `zen adr history <id>` calls GET /v1/adr/history?id=... and renders
 // the transition log for one ADR. Wire type: []client.ADRTransition.

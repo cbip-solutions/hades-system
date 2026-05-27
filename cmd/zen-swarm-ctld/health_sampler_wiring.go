@@ -7,13 +7,13 @@
 // autonomy matrix) and never via VerifyDocs (autonomy-gate concern).
 //
 // Five health keys:
-//   - research_mcp_up   (HTTP probe via /health endpoint)
-//   - gitnexus_up       (PATH probe via exec.LookPath)
-//   - event_log_writable (adapter write-probe via service)
-//   - adapters_clean    (in-process atomic; service.HealthAdaptersClean)
-//   - last_session_clean (read-only DB query; service.HealthLastSessionClean)
+// - research_mcp_up (HTTP probe via /health endpoint)
+// - gitnexus_up (PATH probe via exec.LookPath)
+// - event_log_writable (adapter write-probe via service)
+// - adapters_clean (in-process atomic; service.HealthAdaptersClean)
+// - last_session_clean (read-only DB query; service.HealthLastSessionClean)
 //
-// inv-zen-224: none of these paths calls RunCheck or EmitRaw on each poll.
+// invariant: none of these paths calls RunCheck or EmitRaw on each poll.
 package main
 
 import (

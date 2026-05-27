@@ -9,48 +9,47 @@
 // per-project sandbox (`../../etc/passwd`, an absolute path to an
 // operator-secret tempfile, a symlink whose target escapes the root).
 //
-// As-built reality (per Stage-0 verification):
-//   - extract.Default() resolves capability-detected extractors via
-//     RouteExtractor.Detect(file, content). Detect is content-aware
-//     (sniffs imports / decorators / IDL markers); non-source content
-//     fails the gate.
-//   - Some extractors (gohttp/chi) re-read the filesystem via
-//     ExtractFromPackage(filepath.Dir(file), ""): the file argument's
-//     parent directory becomes the read scope. This means the path
-//     argument transitively controls a directory read, NOT just an
-//     in-memory parse.
-//   - Path-traversal protection is the CALLER's responsibility: the
-//     daemon's watcher + linker construct file paths from
-//     filepath.WalkDir(projectRoot, ...) which inherently stays
-//     within the root.
+// As-built reality:
+// - extract.Default() resolves capability-detected extractors via
+// RouteExtractor.Detect(file, content). Detect is content-aware
+// (sniffs imports / decorators / IDL markers); non-source content
+// fails the gate.
+// - Some extractors (gohttp/chi) re-read the filesystem via
+// ExtractFromPackage(filepath.Dir(file), ""): the file argument's
+// parent directory becomes the read scope. This means the path
+// argument transitively controls a directory read, NOT just an
+// in-memory parse.
+// - Path-traversal protection is the CALLER's responsibility: the
+// daemon's watcher + linker construct file paths from
+// filepath.WalkDir(projectRoot,...) which inherently stays
+// within the root.
 //
 // The adversarial contract this test pins (defence-in-depth):
 //
-//   1. extract.Default().Resolve(hostilePath, operatorContent) MUST NOT
-//      classify a non-source operator file as a route source — i.e.,
-//      the Detect predicates reject operator-secret bytes.
-//   2. If a driver bug DOES pass a hostile path to an extractor (after
-//      Detect returns false, in a misconfigured caller), the extractor
-//      MUST NOT mutate the operator file or write files into the
-//      project root.
-//   3. The operator file's content NEVER appears in any extracted row
-//      (APIEndpoint.Path / APICall.BaseURLRef / TargetPathTemplate).
+// 1. extract.Default().Resolve(hostilePath, operatorContent) MUST NOT
+// classify a non-source operator file as a route source — i.e.,
+// the Detect predicates reject operator-secret bytes.
+// 2. If a driver bug DOES pass a hostile path to an extractor (after
+// Detect returns false, in a misconfigured caller), the extractor
+// MUST NOT mutate the operator file or write files into the
+// project root.
+// 3. The operator file's content NEVER appears in any extracted row
+// (APIEndpoint.Path / APICall.BaseURLRef / TargetPathTemplate).
 //
 // Hostile-path corpus (the 4 traversal shapes):
 //
-//   - relative traversal (`../../operator-secret.txt`);
-//   - absolute path to an operator-secret tempfile;
-//   - encoded traversal (`..%2F..%2F` literal — defence against URL-
-//     decoded extractor paths);
-//   - symlink WITHIN the project pointing OUTSIDE.
+// - relative traversal (`../../operator-secret.txt`);
+// - absolute path to an operator-secret tempfile;
+// - encoded traversal (`..%2F..%2F` literal — defence against URL-
+// decoded extractor paths);
+// - symlink WITHIN the project pointing OUTSIDE.
 //
 // Bite-check: a hostile extractor that scanned arbitrary bytes for HTTP
 // substring would leak the sentinel. This test pins that the as-built
 // extractors are grammar / import / decorator driven — not byte-pattern
 // driven.
 
-//go:build adversarial
-
+// go:build adversarial
 package adversarial
 
 import (

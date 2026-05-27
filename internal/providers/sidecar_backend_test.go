@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // internal/providers/sidecar_backend_test.go
 //
-// External-package tests for SidecarBackend (Plan 15 Phase B-4). The
+// External-package tests for SidecarBackend. The
 // SidecarBackend is the Tier 1 HTTP client that talks to the private
-// zen-bypass-tier1 sidecar running on loopback. inv-zen-280 graceful
+// zen-bypass-tier1 sidecar running on loopback. invariant graceful
 // degradation: a connection-refused / timeout / 5xx response surfaces as
 // a typed sentinel (ErrSidecarUnavailable / ErrSidecarDegraded) so the
 // dispatcher's existing cascade-iteration logic (BackendRegistry +
-// ProfileResolver per inv-zen-066 frozen contract C8) falls through to
-// the next named provider in the operator's profile cascade (Plan 16
+// ProfileResolver per invariant frozen contract C8) falls through to
+// the next named provider in the operator's profile cascade (
 // direct backends per ADR-0093).
 package providers_test
 

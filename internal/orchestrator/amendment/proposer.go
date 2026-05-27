@@ -17,11 +17,11 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
 )
 
-// EventEmitter narrows the Phase A eventlog.Appender to the surface
+// EventEmitter narrows the eventlog.Appender to the surface
 // Proposer (and the rest of the amendment package) needs. The narrower
 // signature (returning only error) lets tests substitute lightweight
 // fakes that do not need to fabricate event_ids; production wiring
-// (Plan 5 Phase N) adapts eventlog.Log.Append (which returns
+// adapts eventlog.Log.Append (which returns
 // (int64, error)) to this interface by discarding the id.
 //
 // The full eventlog.Event Validation contract (SessionID + ProjectID

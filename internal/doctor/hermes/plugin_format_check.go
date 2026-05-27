@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package hermes — plugin_format_check.go ships the `hermes.plugin-format`
-// doctor check (inv-zen-176 + inv-zen-190). Validates plugin directory
-// shape matches Phase H' canonical Hermes plugin format; rejects CC
+// doctor check. Validates plugin directory
+// shape matches canonical Hermes plugin format; rejects CC
 // remnants + OpenClaude (legacy) markers.
 //
-// Boundary (inv-zen-031): consumes ONLY internal/doctor/check + the
+// Boundary: consumes ONLY internal/doctor/check + the
 // PluginPathResolver injection seam; MUST NOT import internal/store.
 package hermes
 
@@ -73,7 +73,7 @@ var canonicalFiles = []string{
 
 // remnantMarkers signal CC (Claude-Code legacy) or OpenClaude scaffolds
 // that have NOT been migrated to Hermes plugin format. Their presence is
-// inv-zen-176 violation; the check returns StatusFail with hint to run
+// invariant violation; the check returns StatusFail with hint to run
 // `zen migrate claude-code` first.
 //
 // SECURITY this slice is the canonical taxonomy of legacy markers;
@@ -88,13 +88,13 @@ var remnantMarkers = []string{
 // Run probes the resolved plugin directory + validates format.
 //
 // Decision tree:
-//  1. Context cancelled → StatusSkip (defense-in-depth per Check.Run godoc)
-//  2. Resolver error → StatusSkip + scaffold hint
-//  3. Directory missing → StatusFail + config-init hint
-//  4. Path not directory → StatusFail
-//  5. Remnant marker present → StatusFail + migrate hint (inv-zen-176)
-//  6. Canonical file missing → StatusFail + scaffold hint (inv-zen-190)
-//  7. All checks pass → StatusPass
+// 1. Context cancelled → StatusSkip (defense-in-depth per Check.Run godoc)
+// 2. Resolver error → StatusSkip + scaffold hint
+// 3. Directory missing → StatusFail + config-init hint
+// 4. Path not directory → StatusFail
+// 5. Remnant marker present → StatusFail + migrate hint
+// 6. Canonical file missing → StatusFail + scaffold hint
+// 7. All checks pass → StatusPass
 //
 // Context cancellation: per spec §3.3 + check.go:47-48 godoc contract,
 // Run MUST honour ctx.Done() and emit StatusSkip on cancellation. The

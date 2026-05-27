@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Command verify-no-bypass-references runs the 5-surface boundary scan
-// per decisión 17-a EXTENDED — extends Plan 2 boundary lint beyond AST
+// policy EXTENDED — extends boundary lint beyond AST
 // to FIVE surfaces (AST + tests + docs + configs + SQL migrations).
 //
 // PUBLIC SNAPSHOT IMPACT: the scanner enforces that the dev repo's
 // retained "bypass" mentions live only in sanctioned paths (see
-// sanctioned_allowlist.go). The Phase C-13 sync filter
+// sanctioned_allowlist.go). The sync filter
 // (scripts/build_public_snapshot.sh + docs/public-manifest/allowlist.yml)
 // consumes the same conceptual boundary by EXCLUDING the unsanctioned
 // paths from the public snapshot. Both gates enforce the property:
@@ -13,31 +13,31 @@
 //
 // Surfaces
 //
-//  1. AST imports + qualified identifiers (.go files via go/ast)
-//  2. tests/ directory text-grep (sanctioned helpers preserved)
-//  3. docs/ directory text-grep (sanctioned ops + ADRs + plans preserved)
-//  4. configs/ directory text-grep (sanctioned sidecars.toml.example preserved)
-//  5. internal/store/migrations/ SQL — fails on bypass-* CREATE TABLE
-//     (inv-zen-282 daemon-only store ownership preserved)
+// 1. AST imports + qualified identifiers (.go files via go/ast)
+// 2. tests/ directory text-grep (sanctioned helpers preserved)
+// 3. docs/ directory text-grep (sanctioned ops + ADRs + plans preserved)
+// 4. configs/ directory text-grep (sanctioned sidecars.toml.example preserved)
+// 5. internal/store/migrations/ SQL — fails on bypass-* CREATE TABLE
+//
 //
 // Forbidden tokens:
 //
-//	bypass, anthropic-bypass, private-tier1-module,
-//	BypassClient, BypassBackend
+// bypass, anthropic-bypass, private-tier1-module,
+// BypassClient, BypassBackend
 //
 // Exit codes:
 //
-//	0 — scanner clean (zero unsanctioned bypass mentions across 5 surfaces)
-//	1 — at least one unsanctioned bypass mention found
-//	2 — IO error (unreadable directory, parse failure)
+// 0 — scanner clean (zero unsanctioned bypass mentions across 5 surfaces)
+// 1 — at least one unsanctioned bypass mention found
+// 2 — IO error (unreadable directory, parse failure)
 //
 // Usage
 //
-//	make verify-no-bypass-references
-//	go run ./cmd/verify-no-bypass-references
-//	go run ./cmd/verify-no-bypass-references --root=/path/to/repo
+// make verify-no-bypass-references
+// go run./cmd/verify-no-bypass-references
+// go run./cmd/verify-no-bypass-references --root=/path/to/repo
 //
-// inv-zen-B1 placeholder (eventually renumbered via Phase B-15).
+// inv-zen-B1 placeholder.
 package main
 
 import (

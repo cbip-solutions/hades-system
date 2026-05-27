@@ -15,33 +15,33 @@
 // TmuxLayoutDriftDetected events but never auto-reverts. Recovery is
 // operator-invoked via `zen layout repaint <alias>`.
 //
-// Boundary (inv-zen-031): tmuxlife does NOT import internal/store. Storage
+// Boundary: tmuxlife does NOT import internal/store. Storage
 // access flows through the SessionStore interface (declared in session.go,
 // added in C-2..C-4) implemented by internal/daemon/handlers/sessions.go
-// (Phase I). The package depends only on the Go standard library.
+// . The package depends only on the Go standard library.
 //
 // Invariants enforced:
-//   - inv-zen-117: every tmux invocation includes -S /tmp/zen-swarm.sock.
-//     ExecTmux panics on -S absence; SocketPath const is the single source.
-//   - inv-zen-118: scratch window contents NEVER serialized to snapshot.
-//     Save() writes tmux-resurrect config excluding :scratch and validates
-//     post-tar that no scratch sentinel surfaced (added in C-9).
-//   - inv-zen-119: idle TTL applied per doctrine. DoctrineIdleTTL maps the
-//     three standard doctrines; per-project override via zenswarm.toml is
-//     read at activation time (Phase A projectctx) and threaded through
-//     the IdleReaper.doctrineFor callback (added in C-10).
+// - invariant: every tmux invocation includes -S /tmp/zen-swarm.sock.
+// ExecTmux panics on -S absence; SocketPath const is the single source.
+// - invariant: scratch window contents NEVER serialized to snapshot.
+// Save() writes tmux-resurrect config excluding :scratch and validates
+// post-tar that no scratch sentinel surfaced (added in C-9).
+// - invariant: idle TTL applied per doctrine. DoctrineIdleTTL maps the
+// three standard doctrines; per-project override via zenswarm.toml is
+// read at activation time and threaded through
+// the IdleReaper.doctrineFor callback (added in C-10).
 package tmuxlife
 
 import "errors"
 
 // SocketPath is the canonical zen-swarm tmux socket path.
 //
-// inv-zen-117: every tmux invocation MUST include -S SocketPath; the default
+// invariant: every tmux invocation MUST include -S SocketPath; the default
 // tmux socket /tmp/tmux-<uid> is forbidden because it would contaminate the
 // operator's regular tmux namespace with zen-spawned sessions.
 //
 // File permissions are 0600 owner-only after first creation (set by tmux
-// itself; daemon does NOT chmod). Plan 7 spec §7.3 "Tmux contamination
+// itself; daemon does NOT chmod). spec §7.3 "Tmux contamination
 // prevention Layer 3" documents the permission model.
 const SocketPath = "/tmp/zen-swarm.sock"
 

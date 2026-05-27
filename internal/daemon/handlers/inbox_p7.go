@@ -1,32 +1,32 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — inbox_p7.go (Plan 7 Phase E Task E-12).
+// Package handlers — inbox_p7.go.
 //
-// Three routes for the Plan 7 inbox operator surface:
+// Three routes for the inbox operator surface:
 //
-//	POST /v1/inbox/list     — list cached notifications (cross-project)
-//	POST /v1/inbox/ack      — acknowledge a notification by id (sets AckedAt)
-//	POST /v1/inbox/snooze   — snooze a notification until a future time
+// POST /v1/inbox/list — list cached notifications (cross-project)
+// POST /v1/inbox/ack — acknowledge a notification by id (sets AckedAt)
+// POST /v1/inbox/snooze — snooze a notification until a future time
 //
 // These operate on the inbox_aggregator_cache substrate (migration 058
-// + Phase E adapter) via internal/inbox.AggregatorCacheStore +
+// + adapter) via internal/inbox.AggregatorCacheStore +
 // internal/inbox.Store.Ack/Snooze. The InboxStore interface this
 // handler consumes is the read+write surface the daemon-level cache
-// adapter satisfies; per inv-zen-031 the handler never imports
+// adapter satisfies; per invariant the handler never imports
 // internal/store directly — the inboxadapter is the single bridge.
 //
 // Status-code mapping (mirrors the projects_p7 + schedule_p7 patterns):
 //
-//	503  — InboxStore() not yet wired (cmd/zen-swarm-ctld registers
-//	       the adapter at boot; tests inject fakes via SetInboxStore).
-//	400  — invalid JSON / missing required fields (id, until).
-//	404  — notification id not found (ack/snooze paths surface
-//	       inbox.ErrNotFound from the backend).
-//	422  — validation rejected the input (severity not in 4-tier enum,
-//	       id ≤ 0, snooze until missing).
-//	500  — opaque backend error (sql I/O, transactional failure).
-//	200  — success; bodies documented per route below.
+// 503 — InboxStore() not yet wired (cmd/zen-swarm-ctld registers
+// the adapter at boot; tests inject fakes via SetInboxStore).
+// 400 — invalid JSON / missing required fields (id, until).
+// 404 — notification id not found (ack/snooze paths surface
+// inbox.ErrNotFound from the backend).
+// 422 — validation rejected the input (severity not in 4-tier enum,
+// id ≤ 0, snooze until missing).
+// 500 — opaque backend error (sql I/O, transactional failure).
+// 200 — success; bodies documented per route below.
 //
-// inv-zen-031 boundary: this handler imports internal/inbox value
+// invariant boundary: this handler imports internal/inbox value
 // types only (Severity / CacheRow / ListFilter / sentinel errors). No
 // internal/store imports — the InboxStore interface is structural and
 // the daemon-side accessor returns it as the same interface, keeping
@@ -35,9 +35,9 @@
 //
 // CLI surface (handled in internal/cli/inbox.go):
 //
-//	zen inbox [--severity X] [--unacked] [--project alias] [--since DUR] [--limit N]
-//	zen inbox ack <id>
-//	zen inbox snooze <id> --until <duration>
+// zen inbox [--severity X] [--unacked] [--project alias] [--since DUR] [--limit N]
+// zen inbox ack <id>
+// zen inbox snooze <id> --until <duration>
 package handlers
 
 import (

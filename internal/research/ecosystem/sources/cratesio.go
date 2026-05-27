@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -21,7 +22,7 @@
 // "source_file" — the tree-sitter Rust grammar's root node) and README
 // (KindGuide, from the API's "crate.readme" markdown body). The full
 // crates.io JSON body is preserved in RawBody for downstream chunker
-// re-parsing in Phase B chunker.go (which applies tree-sitter Rust grammar
+// re-parsing in chunker.go (which applies tree-sitter Rust grammar
 // to per-symbol code blocks AND tree-sitter Markdown to README bodies).
 //
 // When the opt-in FetchDocsRs option is set, FetchPackageDoc additionally
@@ -37,8 +38,8 @@
 // `crate.repository` field (a free-form string; crates.io does not
 // constrain it to a particular VCS host) and probes two known changelog
 // locations in order:
-//   1. master/CHANGELOG.md  (Keep-a-Changelog on master — older convention)
-//   2. main/CHANGELOG.md    (Keep-a-Changelog on main — modern default)
+// 1. master/CHANGELOG.md (Keep-a-Changelog on master — older convention)
+// 2. main/CHANGELOG.md (Keep-a-Changelog on main — modern default)
 // First hit wins. When no candidate succeeds OR when no repository URL is
 // discoverable OR when the repository URL is non-GitHub, returns a non-nil
 // Changelog with FormatDetected = "not-available" (NOT an error — many
@@ -50,14 +51,14 @@
 // extracts list-bullet entries under heading rows).
 //
 // All HTTP egress routes via the narrow FetchClient interface declared in
-// pkgdev.go; no direct net/http imports (inv-zen-152 + inv-zen-191).
+// pkgdev.go; no direct net/http imports.
 // Per-source TTL = 7d (registered in source-ttls.toml at A-10; crates
 // publish less frequently than npm/pypi).
 //
-// Boundary (inv-zen-031): this file MAY import internal/research/cache
+// Boundary: this file MAY import internal/research/cache
 // + internal/research/ecosystem (parent). It MUST NOT import internal/store
 // or internal/providers. Verified by `go test -run TestEcosystemBoundary`
-// and Phase H vet analyzer no_web_in_ecosystem.
+// and vet analyzer no_web_in_ecosystem.
 //
 // Concurrency CratesIOSource is safe for concurrent use from multiple
 // goroutines after construction (immutable opts; the underlying

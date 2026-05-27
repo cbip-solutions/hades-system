@@ -22,7 +22,7 @@ type S3Downloader interface {
 }
 
 type VerifierInterface interface {
-	VerifyChain(ctx context.Context, projectID string) (*VerifyResult, error)
+	VerifyChain(ctx context.Context, projectID, stagingDir string) (*VerifyResult, error)
 }
 
 type ColdArchiveMeta struct {
@@ -33,6 +33,10 @@ type ColdArchiveMeta struct {
 type SealStoreReader interface {
 	ListSeals(ctx context.Context, projectID string) ([]SealMeta, error)
 	ColdArchiveMetaFor(ctx context.Context, projectID, partitionID string) (ColdArchiveMeta, error)
+}
+
+type ColdArchiveExtractor interface {
+	ExtractColdArchive(ctx context.Context, archivePath, dstDir string) error
 }
 
 type RestoreResult struct {
@@ -49,10 +53,28 @@ type Restorer struct {
 	verifier    VerifierInterface
 	seals       SealStoreReader
 	stagingRoot string
+	extractor   ColdArchiveExtractor
 
 	contentHashFor func(stagingPath, partitionID string) (string, error)
+	promoteFn      func(stagingDir, projectID string) error
+}
 
-	promoteFn func(stagingDir, projectID string) error
+type Option func(*Restorer)
+
+func WithPromote(fn func(stagingDir, projectID string) error) Option {
+	return func(r *Restorer) {
+		if fn != nil {
+			r.promoteFn = fn
+		}
+	}
+}
+
+func WithColdArchiveExtractor(extractor ColdArchiveExtractor) Option {
+	return func(r *Restorer) {
+		if extractor != nil {
+			r.extractor = extractor
+		}
+	}
 }
 
 func NewRestorer(
@@ -61,16 +83,22 @@ func NewRestorer(
 	v VerifierInterface,
 	seals SealStoreReader,
 	stagingRoot string,
+	opts ...Option,
 ) *Restorer {
-	return &Restorer{
+	r := &Restorer{
 		litestream:     ls,
 		downloader:     dl,
 		verifier:       v,
 		seals:          seals,
 		stagingRoot:    stagingRoot,
+		extractor:      TarGzipExtractor{},
 		contentHashFor: defaultContentHashFor,
 		promoteFn:      defaultPromote,
 	}
+	for _, opt := range opts {
+		opt(r)
+	}
+	return r
 }
 
 func (r *Restorer) Restore(
@@ -120,11 +148,15 @@ func (r *Restorer) Restore(
 			return nil, fmt.Errorf("recovery: content hash mismatch partition %s: got %s want %s",
 				s.PartitionID, gotHash, expected.ContentHash)
 		}
+		tesseraDir := filepath.Join(stagingDir, "projects", projectID, "audit", "tessera")
+		if err := r.extractor.ExtractColdArchive(ctx, dst, tesseraDir); err != nil {
+			return nil, fmt.Errorf("recovery: extract partition %s: %w", s.PartitionID, err)
+		}
 		res.PartitionsRestored++
 	}
 
 	fmt.Fprintln(stdout, "  Step 3/4: verify-chain --strict")
-	verRes, err := r.verifier.VerifyChain(ctx, projectID)
+	verRes, err := r.verifier.VerifyChain(ctx, projectID, stagingDir)
 	if err != nil {
 		return nil, fmt.Errorf("recovery: verify-chain: %w", err)
 	}
@@ -164,6 +196,5 @@ func defaultContentHashFor(stagingPath, partitionID string) (string, error) {
 }
 
 func defaultPromote(stagingDir, projectID string) error {
-
-	return nil
+	return errors.New("recovery: promote hook not configured")
 }

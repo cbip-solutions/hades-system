@@ -4,25 +4,25 @@
 // header (set by the Python ZenSwarmTransport in plugin/zen-swarm/transports/).
 //
 // Behaviour
-//  1. Decode JSON body into ForwardedRequest.
-//  2. Translate to providers.TierRequest (preserving SessionID, Profile,
-//     Project, Model, IdempotencyKey, Body).
-//  3. Call dispatcher.Forward — single-egress chokepoint per inv-zen-088.
-//  4. On success: emit Plan 9 Tessera audit anchor (best-effort; failure
-//     does not block forwarding); encode response as ForwardedResponse;
-//     write back to caller.
-//  5. On dispatcher error: respond 502 with the wrapped error message and
-//     emit a MessageForwardFailed anchor (best-effort).
+// 1. Decode JSON body into ForwardedRequest.
+// 2. Translate to providers.TierRequest (preserving SessionID, Profile,
+// Project, Model, IdempotencyKey, Body).
+// 3. Call dispatcher.Forward — single-egress chokepoint per invariant.
+// 4. On success: emit Tessera audit anchor (best-effort; failure
+// does not block forwarding); encode response as ForwardedResponse;
+// write back to caller.
+// 5. On dispatcher error: respond 502 with the wrapped error message and
+// emit a MessageForwardFailed anchor (best-effort).
 //
 // What MessagesHandler does NOT do:
-//   - Inject credentials (defence in depth: tokens never cross the Python ↔
-//     Go boundary; Plan 2 bypass module attaches them inside the dispatcher
-//     chain).
-//   - Log request bodies (operator privacy: bodies may carry user prompts).
-//   - Retry on dispatcher failure (dispatcher's own breaker handles failover;
-//     transport layer is a thin pass-through).
-//   - Implement augmentation (lives in /v1/augment — Phase B-4 ships shell;
-//     Phase C ships pipeline).
+// - Inject credentials (defence in depth: tokens never cross the Python ↔
+// Go boundary; bypass module attaches them inside the dispatcher
+// chain).
+// - Log request bodies (operator privacy: bodies may carry user prompts).
+// - Retry on dispatcher failure (dispatcher's own breaker handles failover;
+// transport layer is a thin pass-through).
+// - Implement augmentation (lives in /v1/augment — ships shell;
+// ships pipeline).
 //
 // Concurrency safe for concurrent invocation. Holds an immutable Dispatcher
 // + AuditAnchor; both are goroutine-safe per their respective contracts.
@@ -56,7 +56,7 @@ const (
 
 // NewMessagesHandler constructs a MessagesHandler bound to the given
 // dispatcher + anchor. dispatcher MUST be non-nil; anchor MAY be nil
-// (graceful degradation when Plan 9 audit chain is offline).
+// .
 func NewMessagesHandler(dispatcher Dispatcher, anchor AuditAnchor) *MessagesHandler {
 	if dispatcher == nil {
 		panic("transport.NewMessagesHandler: dispatcher is required")

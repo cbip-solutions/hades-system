@@ -16,7 +16,7 @@
 // InjectCrash / Reset. The production interface (LitestreamMgr) has
 // exactly one method:
 //
-//	Status(ctx context.Context) (state string, lagSec int64, err error)
+// Status(ctx context.Context) (state string, lagSec int64, err error)
 //
 // The mock starts in "replicating" state (healthy). InjectCrash
 // transitions it to "crashed" state; subsequent Status calls return

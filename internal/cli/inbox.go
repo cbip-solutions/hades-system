@@ -1,44 +1,44 @@
 // SPDX-License-Identifier: MIT
-// Package cli — inbox.go (Plan 7 Phase E Task E-12).
+// Package cli — inbox.go.
 //
 // `zen inbox <subcommand>` is the operator-facing entry point for the
 // per-project inbox storage + cross-project aggregator cache (spec §6.5).
 //
 // Cobra layout (3 leaves under 1 root):
 //
-//	zen inbox                                     # list (default)
-//	  ack <id>                                    # set AckedAt = now
-//	  snooze <id> --until <duration>              # set SnoozedUntil
+// zen inbox # list (default)
+// ack <id> # set AckedAt = now
+// snooze <id> --until <duration> # set SnoozedUntil
 //
-// Examples
+// # Examples
 //
-//	$ zen inbox
-//	ID    SEVERITY        PROJECT     EVENT                  AGE
-//	#234  urgent          internal-platform-x   hra.l4_alert           1h
+// $ zen inbox
+// ID SEVERITY PROJECT EVENT AGE
+// #234 urgent internal-platform-x hra.l4_alert 1h
 //
-//	$ zen inbox --severity urgent --since 24h --limit 10
-//	$ zen inbox --format json | jq '.[].notification_id'
+// $ zen inbox --severity urgent --since 24h --limit 10
+// $ zen inbox --format json | jq '.[].notification_id'
 //
-//	$ zen inbox ack 234
-//	✓ Acked notification #234
+// $ zen inbox ack 234
+// ✓ Acked notification #234
 //
-//	$ zen inbox snooze 230 --until 8h
-//	✓ Snoozed #230 until 2026-05-07T20:00:00Z
+// $ zen inbox snooze 230 --until 8h
+// ✓ Snoozed #230 until 2026-05-07T20:00:00Z
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
-// newClientFromCmd (mirrors the Plan 7 C-12 attach/sessions/layout +
+// newClientFromCmd (mirrors the C-12 attach/sessions/layout +
 // D-13 schedule pattern). Tests inject a fake client via the
 // InboxClientFactory parameter to NewInboxCmd; production wires through
 // NewInboxCmdProd which adapts *client.Client → InboxClient.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract from
-// Phase A):
-//   - 0 success
-//   - 1 operator-recoverable: invalid --severity, malformed --since,
-//     malformed --until, daemon 404 (notification id not found).
-//   - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
-//     (until SetInboxStore wires; mirrors Plan 2 /v1/messages
-//     graceful-degradation pattern).
+// ):
+// - 0 success
+// - 1 operator-recoverable: invalid --severity, malformed --since,
+// malformed --until, daemon 404 (notification id not found).
+// - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
+// (until SetInboxStore wires; mirrors /v1/messages
+// graceful-degradation pattern).
 //
 // Severity flag validates client-side against the 4-tier enum
 // (inbox.ParseSeverity); invalid value returns inbox.ErrInvalidSeverity

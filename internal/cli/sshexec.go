@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — sshexec.go (Plan 4 Phase N Task N-6).
+// Package cli — sshexec.go.
 //
 // `zen ssh-exec` exposes the security-grade ssh-exec MCP. Validation
 // and allowlist queries are handled locally via internal/mcp/sshexec
@@ -8,19 +8,19 @@
 //
 // Cobra layout (6 leaves):
 //
-//	zen ssh-exec validate     --cmd --project [--toml]
-//	zen ssh-exec allowlist show --project [--toml]
-//	zen ssh-exec allowlist add  --project --pattern --yes
-//	zen ssh-exec allowlist remove --project --pattern --yes
-//	zen ssh-exec audit-log    --project --since --limit
-//	zen ssh-exec exec         --host --cmd --cwd --timeout --project --toml
+// zen ssh-exec validate --cmd --project [--toml]
+// zen ssh-exec allowlist show --project [--toml]
+// zen ssh-exec allowlist add --project --pattern --yes
+// zen ssh-exec allowlist remove --project --pattern --yes
+// zen ssh-exec audit-log --project --since --limit
+// zen ssh-exec exec --host --cmd --cwd --timeout --project --toml
 //
-// Option A adaptation: Phase N invokes internal/mcp/sshexec.Validate /
+// Option A adaptation: invokes internal/mcp/sshexec.Validate /
 // ResolveAllowlist directly. exec uses sshexec.Run with explicit auth
 // (operator's local SSH agent). The plan-doc described an SSE streaming
 // /v1/sshexec/exec daemon route that proxies the MCP child via
 // Streamable-HTTP framing; that wiring is deferred to a future plan
-// (Plan 5+ when the daemon-side MCP proxy lands). Phase N delivers a
+// . delivers a
 // complete operator surface using the same package the MCP uses.
 package cli
 
@@ -68,7 +68,7 @@ func loadAllowlistForCmd(cmd *cobra.Command) (*sshexec.Allowlist, error) {
 	// internal/mcp/sshexec/allowlist.go::ResolveAllowlist says
 	// "projectTOMLPath may be empty: doctrine alone is the source".
 	// Make the CLI honour that contract by falling through to "" when
-	// the default ./zenswarm.toml is absent. Operators can still pass
+	// the default./zenswarm.toml is absent. Operators can still pass
 	// an explicit --toml=/path/that/must/exist and that case is treated
 	// as required (we do NOT silently fall through if the operator
 	// asked for a specific file).
@@ -430,7 +430,7 @@ func sshExecAuditLogCmd() *cobra.Command {
 			}
 			ctx, cancel := context.WithTimeout(cmd.Context(), 5*time.Second)
 			defer cancel()
-			// inv-zen-082 (review F-5): MUST filter on the canonical
+			// invariant (review F-5): MUST filter on the canonical
 			// `ssh_exec.` prefix (underscore) — this matches what the
 			// MCP Emitter at internal/mcp/sshexec/emit.go::EmitStarted/
 			// Completed/Denied/InteractiveBlocked actually writes
@@ -518,7 +518,7 @@ func sshExecExecCmd() *cobra.Command {
 			ctx, cancel := context.WithTimeout(cmd.Context(), req.Timeout+30*time.Second)
 			defer cancel()
 			sink := &cliStreamSink{out: cmd.OutOrStdout(), errw: cmd.ErrOrStderr()}
-			// inv-zen-082 (review F-1): wire a real audit emitter that
+			// invariant (review F-1): wire a real audit emitter that
 			// POSTs ssh_exec.{started,completed,denied,interactive_blocked}
 			// events to the daemon /v1/audit/emit endpoint. Pre-fix the
 			// CLI passed &sshexec.NopAuditEmitter{} which silently
@@ -526,7 +526,7 @@ func sshExecExecCmd() *cobra.Command {
 			// exec --yes` produced ZERO audit rows — operators couldn't
 			// reconstruct the session afterwards. The dispatcher uses a
 			// detached context (Background) so emission survives past
-			// the parent ctx cancellation (mirrors the Phase L Emitter
+			// the parent ctx cancellation (mirrors the Emitter
 			// design in internal/mcp/sshexec/emit.go::emit).
 			emitter := newDispatcherAuditEmitter(newClientFromCmd(cmd), allow.Project)
 			result, err := sshexec.Run(ctx, req, vr, allow, auth, sink, emitter)
@@ -571,7 +571,7 @@ func (s *cliStreamSink) Emit(chunk sshexec.StreamChunk) error {
 // dispatcherAuditEmitter implements sshexec.AuditEmitter by POSTing
 // each event to the daemon's /v1/audit/emit endpoint via *client.Client.
 //
-// inv-zen-082 (review F-1): every Run call MUST emit
+// invariant (review F-1): every Run call MUST emit
 // ssh_exec.{started,completed,denied,interactive_blocked} so operators
 // can reconstruct security-grade SSH sessions after the fact. The
 // pre-fix CLI used &sshexec.NopAuditEmitter{} which silently dropped
@@ -580,23 +580,23 @@ func (s *cliStreamSink) Emit(chunk sshexec.StreamChunk) error {
 //
 // Design choices:
 //
-//   - Fire-and-forget audit emission with a fresh 5s deadline derived
-//     from context.Background(). Parent ctx cancellation does NOT
-//     affect audit emission — this is INTENTIONAL: audit must outlive
-//     operator-cancelled commands so the security trail is always
-//     produced. Mirrors the Phase L Emitter design in
-//     internal/mcp/sshexec/emit.go::emit.
-//   - Errors are returned to sshexec.Run which treats them as
-//     best-effort and never fails the parent command. A daemon-down
-//     state should not block a successful command. The daemon's
-//     EmitClient at internal/mcp/client/emit.go provides inv-zen-083
-//     no-loss buffering for the MCP path; the CLI path is used by
-//     direct operators and a daemon-down state surfaces via
-//     `zen doctor sshexec` rather than command failure.
-//   - Payload schema matches internal/mcp/sshexec/emit.go: same keys
-//     so audit-log queries don't need to discriminate by source.
+// - Fire-and-forget audit emission with a fresh 5s deadline derived
+// from context.Background(). Parent ctx cancellation does NOT
+// affect audit emission — this is INTENTIONAL: audit must outlive
+// operator-cancelled commands so the security trail is always
+// produced. Mirrors the Emitter design in
+// internal/mcp/sshexec/emit.go::emit.
+// - Errors are returned to sshexec.Run which treats them as
+// best-effort and never fails the parent command. A daemon-down
+// state should not block a successful command. The daemon's
+// EmitClient at internal/mcp/client/emit.go provides invariant
+// no-loss buffering for the MCP path; the CLI path is used by
+// direct operators and a daemon-down state surfaces via
+// `zen doctor sshexec` rather than command failure.
+// - Payload schema matches internal/mcp/sshexec/emit.go: same keys
+// so audit-log queries don't need to discriminate by source.
 //
-// Review C-2 (Stage 2): pre-fix the struct stored a `parentCtx` field
+// Review C-2: pre-fix the struct stored a `parentCtx` field
 // that was never consulted by emit() (which always derives from
 // context.Background()). The dead field + misleading docstring are
 // removed; the constructor signature drops the redundant ctx parameter.
@@ -609,7 +609,7 @@ type dispatcherAuditEmitter struct {
 //
 // Each emit call uses a fresh 5s deadline derived from
 // context.Background() (NOT the caller's ctx) so audit emission survives
-// parent ctx cancellation — this is intentional per inv-zen-082: the
+// parent ctx cancellation — this is intentional per invariant: the
 // security trail must always be produced even if the operator cancels
 // the surrounding command.
 func newDispatcherAuditEmitter(c *client.Client, projectID string) *dispatcherAuditEmitter {

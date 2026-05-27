@@ -12,7 +12,7 @@ def dashboard_handler(raw_args: str) -> str | None:
     Args:
         raw_args: Operator's args after the slash command name. For
             /hades:dashboard (no args), this is the empty string. Future
-            enhancements may parse sub-flags here, but Phase D ships bare
+            enhancements may parse sub-flags here, but  ships bare
             invocation.
 
     Returns:

@@ -1,43 +1,43 @@
 // tests/compliance/inv_zen_220_error_render_coverage_test.go
 //
-// inv-zen-220 (Plan 18c Phase G G-2/G-3) — Error render coverage.
+// invariant — Error render coverage.
 //
-// Doctrine: per spec §Q6 + master §G "Critical invariants" + Plan 18c
-// Phase A (error catalog) + Phase B (Render wrapper), every error path
+// Doctrine: per spec §Q6 + master §G "Critical invariants" +
+// (error catalog) + (Render wrapper), every error path
 // that reaches the user MUST route through
 // internal/cli/error_render.go::Render() — never via raw fmt.Errorf
 // returns at the cobra RunE boundary or os.Exit(non-zero) calls outside
 // the defense-in-depth recover() catch-all in main.go.
 //
 // Go-AST half (this section):
-//   - Walks internal/cli/*.go + cmd/zen/main.go
-//   - Visits cobra RunE function bodies (heuristic: signature
-//     `func(cmd *cobra.Command, args []string) error` OR anonymous
-//     function assigned to a RunE field via `RunE: func(...)`)
-//   - Flags raw `fmt.Errorf(...)` direct returns at the boundary
-//   - Flags `os.Exit(N)` calls where N != 0 outside the catch-all
+// - Walks internal/cli/*.go + cmd/zen/main.go
+// - Visits cobra RunE function bodies (heuristic: signature
+// `func(cmd *cobra.Command, args []string) error` OR anonymous
+// function assigned to a RunE field via `RunE: func(...)`)
+// - Flags raw `fmt.Errorf(...)` direct returns at the boundary
+// - Flags `os.Exit(N)` calls where N != 0 outside the catch-all
 //
-// Note: cmd/hades/main.go uses stdlib-only (no cobra) per Plan 18a
+// Note: cmd/hades/main.go uses stdlib-only (no cobra)a
 // spec §3.2; it is excluded from the RunE AST scan. The os.Exit scan
 // covers cmd/hades/main.go but allowlists its main() function as a
 // catch-all entry point.
 //
 // Python-AST half (appended below):
-//   - Invokes `python3 -c "import ast..."` per plugin/hades/commands/*.py
-//   - Flags un-routed `raise` statements inside *_handler functions
-//     (Hermes plugin convention for slash-command handlers)
+// - Invokes `python3 -c "import ast..."` per plugin/hades/commands/*.py
+// - Flags un-routed `raise` statements inside *_handler functions
+// (Hermes plugin convention for slash-command handlers)
 //
 // Allowlist (legitimate bypasses):
-//   - Test files (*_test.go, *_test.py) — never scanned
-//   - The catch-all recover block in cmd/zen/main.go:main +
-//     cmd/hades/main.go:main (entry-point boundary)
-//   - Build-tag-gated files (//go:build !test, //go:build integration)
+// - Test files (*_test.go, *_test.py) — never scanned
+// - The catch-all recover block in cmd/zen/main.go:main +
+// cmd/hades/main.go:main (entry-point boundary)
+// - Build-tag-gated files (//go:build !test, //go:build integration)
 //
 // Failure message: aggregates all violations into a single t.Errorf so
 // the implementer sees the full surface at once (per
 // inv_zen_218_skin_closure_test.go aggregation precedent).
 //
-// Companion ADR: docs/decisions/0096-error-ux-framework.md
+// Companion ADR: architecture records
 package compliance
 
 import (

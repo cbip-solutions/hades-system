@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package orchestratoradapter is the inv-zen-089 boundary bridge between
+// Package orchestratoradapter is the invariant boundary bridge between
 // internal/orchestrator/* and internal/store. It is the ONLY package in
 // the daemon binary that imports BOTH internal/orchestrator/... AND
 // internal/store. The orchestrator subsystems consume small persistence-
@@ -8,31 +8,31 @@
 //
 // What the adapter satisfies (post-M-1 final shapes):
 //
-//   - eventlog.RawEmitter          — durable seam for *eventlog.Log
-//     (audit_events_raw round-trip; wrapping payload_json with
-//     reserved __session_id / __event_id / __ts_ns metadata so QueryRaw
-//     can rehydrate eventlog.Record instances cleanly).
-//   - safetynet.HealthWriter       — durable seam for *safetynet.Regression
-//     (substrate_health Insert OR IGNORE for idempotency + Recent
-//     window queries).
-//   - amendment.EventEmitter       — narrow interface returned by
-//     AmendmentEventEmitter() that wraps a *eventlog.Log constructed
-//     with this adapter as the RawEmitter and discards the int64 id.
-//   - amendment.ReloadSignal       — returned by AmendmentReloadSignal()
-//     which delegates to the canonical *amendment.HTTPReloadSignal
-//     (POST /v1/doctrine/reload with retry semantics).
+// - eventlog.RawEmitter — durable seam for *eventlog.Log
+// (audit_events_raw round-trip; wrapping payload_json with
+// reserved __session_id / __event_id / __ts_ns metadata so QueryRaw
+// can rehydrate eventlog.Record instances cleanly).
+// - safetynet.HealthWriter — durable seam for *safetynet.Regression
+// (substrate_health Insert OR IGNORE for idempotency + Recent
+// window queries).
+// - amendment.EventEmitter — narrow interface returned by
+// AmendmentEventEmitter() that wraps a *eventlog.Log constructed
+// with this adapter as the RawEmitter and discards the int64 id.
+// - amendment.ReloadSignal — returned by AmendmentReloadSignal()
+// which delegates to the canonical *amendment.HTTPReloadSignal
+// (POST /v1/doctrine/reload with retry semantics).
 //
 // What the adapter explicitly does NOT satisfy (the orchestrator never
 // asked for these — kept here to prevent future drift):
 //
-//   - amendment.Repository         — there is NO such interface; ADRs
-//     are markdown files under docs/decisions/{,proposed,rejected}/
-//     materialised by amendment.{Proposer,Applier,Reverter}.
-//   - worktreepool.LeaseStore      — there is NO such interface;
-//     leases are in-memory only (warm slice + leased map).
+// - amendment.Repository — there is NO such interface; ADRs
+// are markdown files under architecture records
+// materialised by amendment.{Proposer,Applier,Reverter}.
+// - worktreepool.LeaseStore — there is NO such interface;
+// leases are in-memory only (warm slice + leased map).
 //
 // Inv-zen-102 cost-ledger isolation: this adapter MUST NOT write the
-// cost_ledger table directly. All cost-ledger writes flow through Plan 3
+// cost_ledger table directly. All cost-ledger writes flow through
 // dispatcher → internal/daemon/dispatcheradapter. Compliance test in
 // tests/compliance/inv_zen_102_cost_ledger_isolation_test.go.
 //

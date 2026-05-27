@@ -1,5 +1,5 @@
 // tests/integration/plugin_lifecycle/makefile_plugin_test.go
-//go:build integration
+// go:build integration
 
 package plugin_lifecycle_test
 

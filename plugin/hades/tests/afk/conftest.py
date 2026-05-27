@@ -12,7 +12,7 @@ import pytest
 
 @pytest.fixture
 def daemon_url() -> str:
-    """Canonical zen-swarm-ctld TCP listen URL (matches Phase A constant)."""
+    """Canonical zen-swarm-ctld TCP listen URL."""
     return "http://localhost:4471"
 
 

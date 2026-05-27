@@ -4,7 +4,7 @@ set -euo pipefail
 
 if [[ $# -lt 1 ]]; then
   echo "usage: $0 IMAGE_REFERENCE" >&2
-  echo "  e.g. $0 ghcr.io/hades-system/hades-system:v1.0.0" >&2
+  echo "  e.g. $0 ghcr.io/cbip-solutions/hades-system:v1.0.0" >&2
   exit 2
 fi
 
@@ -16,7 +16,7 @@ if ! command -v cosign >/dev/null 2>&1; then
   exit 1
 fi
 
-CERT_IDENTITY_REGEXP="${COSIGN_CERT_IDENTITY_REGEXP:-https://github.com/hades-system/hades-system/\\.github/workflows/release\\.yml@.*}"
+CERT_IDENTITY_REGEXP="${COSIGN_CERT_IDENTITY_REGEXP:-https://github.com/cbip-solutions/hades-system/\\.github/workflows/release\\.yml@.*}"
 OIDC_ISSUER="${COSIGN_OIDC_ISSUER:-https://token.actions.githubusercontent.com}"
 
 DIGEST_REF=""
@@ -53,7 +53,7 @@ fi
 echo "verify_docker_image_signed.sh: cosign signature OK: ${DIGEST_REF}"
 
 if command -v gh >/dev/null 2>&1; then
-  if gh attestation verify "oci://${DIGEST_REF}" --owner hades-system --repo hades-system >/dev/null 2>&1; then
+  if gh attestation verify "oci://${DIGEST_REF}" --repo cbip-solutions/hades-system >/dev/null 2>&1; then
     echo "verify_docker_image_signed.sh: SLSA L2 attestation OK: ${DIGEST_REF}"
   else
     echo "verify_docker_image_signed.sh: SLSA L2 attestation INVALID for ${DIGEST_REF}; inv-zen-298 VIOLATED" >&2

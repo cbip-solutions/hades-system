@@ -1,12 +1,12 @@
 // tests/compliance/inv_zen_103_adr_range_test.go
 //
-// Compliance test for inv-zen-103 (Plan 5 Phase K-7):
+// Compliance test for invariant:
 //
-//	amendment.NextAvailableID enforces the Plan 5 reserved ADR range
-//	[0020, 0029]. When all 10 slots are consumed (across docs/decisions/,
-//	docs/decisions/proposed/, docs/decisions/rejected/) the function
-//	returns ErrADRRangeExhausted; out-of-range files (base ADRs 0001+,
-//	future plan ranges 0030+) MUST NOT block Plan 5 allocation.
+// amendment.NextAvailableID enforces the reserved ADR range
+// [0020, 0029]. When all 10 slots are consumed (across architecture records
+// architecture records architecture records) the function
+// returns ErrADRRangeExhausted; out-of-range files (base ADRs 0001+,
+// future plan ranges 0030+) MUST NOT block allocation.
 package compliance
 
 import (
@@ -36,7 +36,7 @@ func TestInvZen103ADRRangeExhaustion(t *testing.T) {
 
 func TestInvZen103ADRRangeIgnoresOutOfRange(t *testing.T) {
 	dir := t.TempDir()
-	// Future plan ranges + base ADRs MUST NOT block Plan 5 allocation.
+	// Future plan ranges + base ADRs MUST NOT block allocation.
 	if err := os.WriteFile(filepath.Join(dir, "0001-base.md"), []byte("x"), 0o644); err != nil {
 		t.Fatal(err)
 	}

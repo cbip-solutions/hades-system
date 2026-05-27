@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — bypass.go (Plan 2 Phase L Task L-2 + L-3).
+// Package handlers — bypass.go.
 //
 // Handlers for the /v1/bypass/* endpoints. They consult the daemon
 // pointer for the bypass.Client (via the BypassForwarder accessor) and
-// the AuditWriter / AuditRetention pipelines from Phase G. When a
-// concrete operation has no Phase B-K backend symbol yet, the handler
+// the AuditWriter / AuditRetention pipelines from When a
+// concrete operation has no backend symbol yet, the handler
 // returns a structured 200 with shape-correct fields so the operator
 // surface (CLI + zen day brief) is exercised end-to-end and the
 // behaviour can be back-filled by later phases without altering the

@@ -1,13 +1,13 @@
 // tests/compliance/inv_zen_173_adr_coverage_test.go
 //
-// Compliance test for inv-zen-173: Plan 17 alternative trigger
+// Compliance test for invariant: alternative trigger
 // conditions (Tree-sitter + LLM-augmented in-house code-graph) MUST be
-// captured in ADR-0082 at docs/decisions/0082-*.md.
+// captured in ADR-0082 at architecture records
 //
 // Spec §8.2 row 173. Triple-anchor:
-//   - compile-check: file existence grep at build time
-//   - runtime test: doctor check ADR coverage (Phase E doctor extension)
-//   - compliance test (this file)
+// - compile-check: file existence grep at build time
+// - runtime test: doctor check ADR coverage
+// - compliance test (this file)
 package compliance
 
 import (

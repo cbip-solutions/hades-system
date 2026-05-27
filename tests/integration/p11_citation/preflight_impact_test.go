@@ -1,4 +1,4 @@
-//go:build integration
+// go:build integration
 
 package p11_citation_test
 
@@ -79,7 +79,7 @@ func TestPreflightImpact_CapaFirewallReturns204Even(t *testing.T) {
 	defer resp.Body.Close()
 
 	// capa-firewall doctrine MUST return 204 (no augmentation) regardless
-	// of preflight mode — inv-zen-170 enforcement.
+	// of preflight mode — invariant enforcement.
 	if resp.StatusCode != http.StatusNoContent {
 		t.Errorf("capa-firewall + preflight: status = %d, want 204 (inv-zen-170)", resp.StatusCode)
 	}

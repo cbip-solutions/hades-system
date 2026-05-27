@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package eventlog — capture.go (Plan 5 Phase O Task O-1).
+// Package eventlog — capture.go.
 //
 // Capture serializes a session's event log to a JSONL stream with a
 // signed-metadata header and a closing footer. LLM bodies are redacted
@@ -8,24 +8,24 @@
 //
 // The on-disk envelope is frozen at version=1 (Task O-1):
 //
-//	line 1   {"kind":"header", version, session_id, captured_at, redacted, metadata_sha256}
-//	line 2-N {"kind":"event",  event_id, timestamp, event_type, payload}
-//	line N+1 {"kind":"footer", event_count, first_event_id, last_event_id}
+// line 1 {"kind":"header", version, session_id, captured_at, redacted, metadata_sha256}
+// line 2-N {"kind":"event", event_id, timestamp, event_type, payload}
+// line N+1 {"kind":"footer", event_count, first_event_id, last_event_id}
 //
 // Replay (Task O-2) recomputes metadata_sha256 from header/footer fields
 // and rejects fixtures with mismatching signatures (ErrCorruptedFixture).
 //
 // Invariant flow:
-//   - inv-zen-095 (corruption bounded): replay tolerates ≤5 corrupted
-//     events before transitioning HARD_PAUSED. Capture writes the footer
-//     LAST so a mid-stream daemon kill produces a fixture that fails sha
-//     verification fast (rather than silently truncated).
+// - invariant (corruption bounded): replay tolerates ≤5 corrupted
+// events before transitioning HARD_PAUSED. Capture writes the footer
+// LAST so a mid-stream daemon kill produces a fixture that fails sha
+// verification fast (rather than silently truncated).
 //
 // Decoupling this Capture is a pure value-shape function over the
-// Phase A Record type and a Querier. It is independent of (and
+// Record type and a Querier. It is independent of (and
 // complementary to) internal/daemon/orchestrator_plan5_service.go's
 // Capture method, which writes a per-row JSON envelope used by the
-// daemon's HTTP API. Phase O Task O-1 ships the canonical fixture
+// daemon's HTTP API. Task O-1 ships the canonical fixture
 // format used by the replay tier.
 package eventlog
 

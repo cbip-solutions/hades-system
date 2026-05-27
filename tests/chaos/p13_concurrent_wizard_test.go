@@ -1,6 +1,6 @@
-//go:build chaos
+// go:build chaos
 
-// Package chaos — p13_concurrent_wizard_test.go (Plan 13 Phase F-tail
+// Package chaos — p13_concurrent_wizard_test.go (
 // IMPORTANT 7 missing-tests completion).
 //
 // Chaos: concurrent wizard invocations MUST NOT share state — each

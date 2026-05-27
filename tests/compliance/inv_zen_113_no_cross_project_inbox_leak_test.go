@@ -1,11 +1,11 @@
-// Package compliance — inv-zen-113: per-project inbox isolation,
+// Package compliance — invariant: per-project inbox isolation,
 // no cross-project leak in the daemon-level aggregator cache.
 //
-// Spec §5.5 + §7.2 inv-zen-113 wording (Plan 7 Phase E):
+// Spec §5.5 + §7.2 invariant wording:
 //
-//	"Cross-project inbox isolation: every cache row's project_id MUST
-//	match its originating per-project source DB; List(projectID=X)
-//	MUST NEVER return rows from any project Y != X."
+// "Cross-project inbox isolation: every cache row's project_id MUST
+// match its originating per-project source DB; List(projectID=X)
+// MUST NEVER return rows from any project Y != X."
 //
 // This test is the cross-package, boundary-side property witness for
 // the no-cross-project-leak invariant. The in-package coverage in
@@ -19,13 +19,13 @@
 //
 // Property under test:
 //
-//	(a) Every cache row reachable via Adapter.Query has a project_id
-//	    that names one of the registered projects.
-//	(b) Per-project Adapter.List(ProjectID=pid) NEVER returns a row
-//	    whose ProjectID != pid — even when all per-project sources
-//	    share a single backing store (test-mode aggregation pattern).
+// (a) Every cache row reachable via Adapter.Query has a project_id
+// that names one of the registered projects.
+// (b) Per-project Adapter.List(ProjectID=pid) NEVER returns a row
+// whose ProjectID != pid — even when all per-project sources
+// share a single backing store (test-mode aggregation pattern).
 //
-// Boundary (inv-zen-031): this test imports internal/daemon/
+// Boundary: this test imports internal/daemon/
 // inboxadapter (the only crossing point) + internal/inbox + internal/
 // store. internal/inbox itself does NOT import internal/store; the
 // adapter is the bridge.

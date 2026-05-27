@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Package fix ships the Plan 13 Phase F doctor `Fix(ctx, FixMode) error`
-// implementations + the destructive-confirmation guard (inv-zen-178).
+// Package fix ships the doctor `Fix(ctx, FixMode) error`
+// implementations + the destructive-confirmation guard.
 //
 // Each per-check Fix impl satisfies internal/doctor/check.Check.Fix; the
 // concrete check (e.g., internal/doctor/hermes.InstallCheck) holds a
@@ -8,17 +8,17 @@
 // to fix.Apply (which runs GuardDestructive first, then the per-fix
 // Apply method).
 //
-// Boundary (inv-zen-031): fix package consumes ONLY internal/doctor/check
+// Boundary: fix package consumes ONLY internal/doctor/check
 // + internal/doctor/backup + internal/migrate/writer (for plugin-format
 // scaffolder) + stdlib; MUST NOT import internal/store. Per-fix shell-out
 // uses os/exec.CommandContext (no daemon HTTP round-trip — fix runs
 // locally regardless of daemon state).
 //
-// Stage 2 review: the destructive-confirm gate is the load-bearing safety
+// review: the destructive-confirm gate is the load-bearing safety
 // net. The compile-check guard `_ Destructive = (*XyzFix)(nil)` in every
 // destructive Fix impl file is the canonical enforcement mechanism (per
-// inv-zen-178). The runtime gate (GuardDestructive) is the second line.
-// The third line is the operator backup-before-modify (inv-zen-177)
+// invariant). The runtime gate (GuardDestructive) is the second line.
+// The third line is the operator backup-before-modify
 // shipped in internal/doctor/backup (F4).
 package fix
 
@@ -31,11 +31,11 @@ import (
 )
 
 // Destructive is the interface a destructive Fix MUST satisfy (per
-// inv-zen-178). The compile-check guard `_ Destructive = (*XyzFix)(nil)`
+// invariant). The compile-check guard `_ Destructive = (*XyzFix)(nil)`
 // in each destructive Fix impl file enforces this at build time.
 //
-// Phase F destructive Fix impls in F3: PluginFormatFix (deletes plugin
-// remnants + restores fresh). Future destructive Fix additions (Plan 14+)
+// destructive Fix impls in F3: PluginFormatFix (deletes plugin
+// remnants + restores fresh). Future destructive Fix additions
 // MUST also declare the interface guard.
 type Destructive interface {
 	Name() string

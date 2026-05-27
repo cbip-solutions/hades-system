@@ -12,11 +12,11 @@ import (
 
 // Migrator is a registered V→V+1 converter for doctrine schema migration.
 //
-// Per Q15 A + inv-zen-137: every Migrator MUST return *v1.Schema only.
+// Per Q15 A + invariant: every Migrator MUST return *v1.Schema only.
 // No Migrator may write to disk; persistent write-back is operator-explicit
 // via the CLI (`zen doctrine migrate <path> --confirm`).
 //
-// Per inv-zen-142 defence-in-depth: the dispatcher (MigrateChain) verifies
+// Per invariant defence-in-depth: the dispatcher (MigrateChain) verifies
 // the returned schema's SchemaVersion >= the source version and returns
 // ErrSchemaVersionDowngradeRejected if a Migrator misbehaves. Migrator
 // authors should still set SchemaVersion to the target version in their
@@ -86,9 +86,9 @@ func MigrateChain(data []byte, fromVersion string) (*v1.Schema, error) {
 // Trust-tier note: passthrough invokes parser.ParseStrict with
 // AllowTransverseDeclaration=true because the migrate package's Migrator
 // signature is opts-free by design (see doc.go "Trust-tier delegation note").
-// Callers that need transverse-rejection enforcement (Phase G reload of
+// Callers that need transverse-rejection enforcement ( reload of
 // user-edited files) MUST handle that concern separately. Passthrough cares
-// only about structural decode-ability; inv-zen-135 transverse policy is
+// only about structural decode-ability; invariant transverse policy is
 // adjacent, not core, to the migrate package.
 func passthrough(data []byte) (*v1.Schema, error) {
 	var target v1.Schema

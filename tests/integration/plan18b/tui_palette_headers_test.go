@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package plan18b_integration_test
 
 import (
@@ -106,7 +105,7 @@ func TestPlan18bJInt4_TUIPaletteAndHeaders(t *testing.T) {
 
 // TestPlan18bJInt4_TUIPaletteGoNoLegacyZenSwarmInPalette asserts that the
 // palette/palette.go declarations do NOT carry forward any legacy zen-swarm
-// brand strings as comments. Defense-in-depth over the inv-zen-219 AST scan
+// brand strings as comments. Defense-in-depth over the invariant AST scan
 // (which catches string literals but not comments).
 //
 // Note: The package comment in styles.go says "zen-swarm dashboard TUI" —

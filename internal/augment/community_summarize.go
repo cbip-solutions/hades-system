@@ -5,10 +5,10 @@
 // triples.
 //
 // Algorithm
-//   1. Cluster fused results by file-path common-prefix (>= 2 dirs deep).
-//   2. Per cluster: derive ClusterID, Topic, Files, Symbols, NoteIDs, TokenCount.
-//   3. Cap output at MaxCommunitiesDefault (5).
-//   4. Sort clusters by aggregate Score descending.
+// 1. Cluster fused results by file-path common-prefix (>= 2 dirs deep).
+// 2. Per cluster: derive ClusterID, Topic, Files, Symbols, NoteIDs, TokenCount.
+// 3. Cap output at MaxCommunitiesDefault (5).
+// 4. Sort clusters by aggregate Score descending.
 //
 // Determinism same input -> same output (stabilizes Anthropic prompt cache).
 

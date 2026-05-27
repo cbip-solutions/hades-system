@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: MIT
-// Package testharness provides shared in-memory mocks for Plan 11 + 12
+// Package testharness provides shared in-memory mocks + 12
 // test suites. AggregatorFake implements augment.KnowledgeIndex +
-// augment.Embedder (Phase C narrow seams over the Plan 9 D shipped
+// augment.Embedder ( narrow seams over the D shipped
 // substrate) and lets tests inject canned per-lane results +
 // deterministic embeddings.
 //
 // Canonical contract (verified against internal/augment/types.go):
-//   - augment.KnowledgeIndex returns []augment.QueryResult (NOT
-//     []aggregator.QueryResult). The augment package re-declares
-//     QueryResult as a thin alias to keep its import surface narrow.
-//   - augment.Embedder is the upstream embedding seam.
-//   - Tests that want to exercise RRF fusion directly use the
-//     package-level aggregator.Fuse(perSourceTopKs, k, limit); convert
-//     augment.QueryResult <-> aggregator.QueryResult via field copy.
+// - augment.KnowledgeIndex returns []augment.QueryResult (NOT
+// []aggregator.QueryResult). The augment package re-declares
+// QueryResult as a thin alias to keep its import surface narrow.
+// - augment.Embedder is the upstream embedding seam.
+// - Tests that want to exercise RRF fusion directly use the
+// package-level aggregator.Fuse(perSourceTopKs, k, limit); convert
+// augment.QueryResult <-> aggregator.QueryResult via field copy.
 //
 // Mock contract: AggregatorFake is a stateful mock; tests Seed* +
 // Inject* before calling methods. Concurrent access is safe via
 // embedded sync.Mutex.
 //
-// Why a fake (not a stub): Phase F integration + property + chaos
+// Why a fake (not a stub): integration + property + chaos
 // tests need real lane-by-lane behavior (deterministic ordering, error
 // injection, per-lane breakdown). A bare stub returning empty would
-// not exercise Phase C's pipeline glue.
+// not exercise pipeline glue.
 package testharness
 
 import (

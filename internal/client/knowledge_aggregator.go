@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-// Package client — knowledge_aggregator.go (Plan 9 Phase D-12).
+// Package client — knowledge_aggregator.go.
 //
-// Five typed methods wrapping the five Plan 9 daemon aggregator routes:
+// Five typed methods wrapping the five daemon aggregator routes:
 //
-//	AggQuery     POST /v1/knowledge/aggregator/query
-//	AggPromote   POST /v1/knowledge/aggregator/promote
-//	AggUnpromote POST /v1/knowledge/aggregator/unpromote
-//	AggList      GET  /v1/knowledge/aggregator/list
-//	AggRebuild   POST /v1/knowledge/aggregator/rebuild
+// AggQuery POST /v1/knowledge/aggregator/query
+// AggPromote POST /v1/knowledge/aggregator/promote
+// AggUnpromote POST /v1/knowledge/aggregator/unpromote
+// AggList GET /v1/knowledge/aggregator/list
+// AggRebuild POST /v1/knowledge/aggregator/rebuild
 //
-// These are DISTINCT from the Plan 7 knowledge client methods
+// These are DISTINCT from the knowledge client methods
 // (KnowledgeQuery/KnowledgeReindex/KnowledgeStats in knowledge.go) which
-// back /v1/knowledge/{query,reindex,stats}. Both surfaces coexist; Plan 9
+// back /v1/knowledge/{query,reindex,stats}. Both surfaces coexist;
 // adds the aggregator-specific routes.
 //
 // Wire types mirror handlers/knowledge_aggregator.go exactly (single
@@ -19,7 +19,7 @@
 // the aggregator package — it decodes into its own local types (AggXxxReq /
 // AggXxxResp) to keep the client package free of CGO dependencies.
 //
-// inv-zen-129: this file imports stdlib only (context + time); the *Client
+// invariant: this file imports stdlib only (context + time); the *Client
 // transport handles net/http. No aggregator or internal/store imports.
 package client
 

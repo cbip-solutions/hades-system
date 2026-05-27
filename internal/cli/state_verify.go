@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package cli — state_verify.go (Plan 9 Phase I Task I-10).
+// Package cli — state_verify.go.
 //
 // `zen state verify` calls POST /v1/state/verify and is the CI gate for
 // docs/system-state.toml freshness. On drift (Match=false) the command
 // exits non-zero so `make verify-invariants` fails the build.
 //
-// inv-zen-146 boundary: verify is read-only (no --reason required); only
-// `pin` modifies state and enforces inv-zen-146.
+// invariant boundary: verify is read-only (no --reason required); only
+// `pin` modifies state and enforces invariant.
 package cli
 
 import (

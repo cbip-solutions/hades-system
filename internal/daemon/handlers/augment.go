@@ -1,41 +1,41 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — augment.go (Plan 11 Phase B Task B-4 endpoint shell;
-// Phase C extends with the 5-lane RRF pipeline).
+// Package handlers — augment.go ( Task B-4 endpoint shell;
+// extends with the 5-lane RRF pipeline).
 //
-// /v1/augment is the daemon-side endpoint the Phase H' Python
+// /v1/augment is the daemon-side endpoint the Python
 // plugin/zen-swarm/hooks/llm_handlers.py:pre_llm_call hook callback
-// (extended by Plan 11 Phase B Task B-6) calls before each LLM
+// calls before each LLM
 // completion. The endpoint:
 //
-//  1. Reads the active doctrine's augmentation config (Plan 8 doctrine
-//     schema § [doctrine.augmentation]).
-//  2. When enable = false (capa-firewall default per inv-zen-170), returns
-//     204 No Content. Hermes treats this as "proceed unaugmented".
-//  3. When enabled, runs the 5-lane RRF retrieval pipeline (Phase C) and
-//     returns an AugmentResponse envelope with static_context (system
-//     prompt portion, eligible for Anthropic prompt cache) + volatile
-//     context (user-message portion) + citations[].
+// 1. Reads the active doctrine's augmentation config ( doctrine
+// schema § [doctrine.augmentation]).
+// 2. When enable = false, returns
+// 204 No Content. Hermes treats this as "proceed unaugmented".
+// 3. When enabled, runs the 5-lane RRF retrieval pipeline and
+// returns an AugmentResponse envelope with static_context (system
+// prompt portion, eligible for Anthropic prompt cache) + volatile
+// context (user-message portion) + citations[].
 //
-// Phase B SHIPS:
-//   - Endpoint routing + JSON request/response shapes
-//   - Doctrine-gate veto path (204 for capa-firewall)
-//   - Empty envelope when augmentation is enabled but pipeline absent
-//   - Error handling (400 / 405 / 500)
+// SHIPS:
+// - Endpoint routing + JSON request/response shapes
+// - Doctrine-gate veto path (204 for capa-firewall)
+// - Empty envelope when augmentation is enabled but pipeline absent
+// - Error handling (400 / 405 / 500)
 //
-// Phase B does NOT ship (Phase C lands):
-//   - 5-lane RRF retrieval (caronte.query + aggregator FTS5 + caronte.context
-//     + cross-encoder reranker + temporal scoring)
-//   - GraphRAG community summarization
-//   - Anthropic prompt cache static/volatile split
-//   - Privacy filter at retrieval boundary (cross-project doctrine respect)
-//   - Token budget gate (Plan 4 budget MCP cap_status)
-//   - Plan 9 Tessera audit anchor for AugmentationStarted/Completed events
+// does NOT ship:
+// - 5-lane RRF retrieval (caronte.query + aggregator FTS5 + caronte.context
+// + cross-encoder reranker + temporal scoring)
+// - GraphRAG community summarization
+// - Anthropic prompt cache static/volatile split
+// - Privacy filter at retrieval boundary (cross-project doctrine respect)
+// - Token budget gate
+// - Tessera audit anchor for AugmentationStarted/Completed events
 //
 // Returning an empty envelope is the production behaviour when no
-// retrieval has been performed; Phase C replaces it with the populated
+// retrieval has been performed; replaces it with the populated
 // envelope. This is NOT a stub — the doctrine-gate, the envelope
 // contract, and the error-handling are complete; only the retrieval is
-// deferred to Phase C (whose whole purpose is to land it).
+// deferred to (whose whole purpose is to land it).
 
 package handlers
 
@@ -138,15 +138,15 @@ const maxAugmentBodyBytes = 4 << 20
 // immediately).
 //
 // The handler:
-//  1. Validates method (POST only) → 405 if not.
-//  2. Decodes JSON body → 400 on malformed.
-//  3. Reads doctrine augmentation config → 500 on read error.
-//  4. If enable = false → 204 (Hermes proceeds unaugmented).
-//  5. Otherwise returns 200 + AugmentResponse envelope (empty in Phase B;
-//     populated by Phase C's pipeline).
+// 1. Validates method (POST only) → 405 if not.
+// 2. Decodes JSON body → 400 on malformed.
+// 3. Reads doctrine augmentation config → 500 on read error.
+// 4. If enable = false → 204 (Hermes proceeds unaugmented).
+// 5. Otherwise returns 200 + AugmentResponse envelope (empty in ;
+// populated by pipeline).
 //
 // The handler does NOT log prompt content (operator privacy: prompts may
-// carry sensitive context). Plan 9 audit anchor for the request itself
+// carry sensitive context). audit anchor for the request itself
 // uses PromptHash, never raw Prompt.
 func Augment(dr DoctrineReader) http.HandlerFunc {
 	if dr == nil {
@@ -195,7 +195,7 @@ func Augment(dr DoctrineReader) http.HandlerFunc {
 }
 
 // AugmentWithPipeline returns the http.HandlerFunc for /v1/augment with
-// the Phase C augment.Pipeline wired in.
+// the augment.Pipeline wired in.
 //
 // Behavior matches Augment(dr) except: when the doctrine permits, the
 // handler invokes `runner` (which wraps augment.Pipeline.Run) and returns

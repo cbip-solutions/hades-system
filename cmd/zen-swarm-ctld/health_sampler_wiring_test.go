@@ -2,9 +2,9 @@
 //
 // Tests the health-sampler compute closure built by buildHealthComputeClosure.
 // Asserts
-//   - The closure returns a snapshot containing all five health dependency keys.
-//   - The snapshot never contains autonomy-only keys (verify_docs, ci_consecutive,
-//     adrs_valid, etc.) — the compute MUST NOT call CheckEngine.RunCheck.
+// - The closure returns a snapshot containing all five health dependency keys.
+// - The snapshot never contains autonomy-only keys (verify_docs, ci_consecutive,
+// adrs_valid, etc.) — the compute MUST NOT call CheckEngine.RunCheck.
 //
 // This is a unit test at the compute-closure level (the plan's "assert at the
 // compute-closure level" fallback — a full daemon boot test would require

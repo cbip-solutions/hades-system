@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_031_plan9_aggregator_test.go
 //
-// Compliance gate for inv-zen-031 (Plan 9 Phase D extension): the knowledge
+// Compliance gate for invariant: the knowledge
 // aggregator and embed packages MUST NOT import internal/store. The daemon
 // package is the only legitimate layer that spans both internal/store (daemon
 // DB) and the aggregator subsystem, with server_knowledge_aggregator.go as the
@@ -8,40 +8,40 @@
 //
 // D-12 architecture deviation from the original plan-file:
 //
-//	The plan-file described knowledgeadapter as having constructor
-//	NewAdapter(*store.Store, vaultDir) and importing internal/store directly.
-//	The actual implementation uses NewAdapterFromDB(*sql.DB) and does NOT
-//	import internal/store. This is intentional (CGO driver conflict isolation):
-//	keeping internal/store out of knowledgeadapter means the adapter's test
-//	binary only links mattn/go-sqlite3; ncruces/go-sqlite3 is never pulled in.
-//	The daemon glue file (server_knowledge_aggregator.go) is the single point
-//	that calls s.store.DB() and forwards the *sql.DB to knowledgeadapter.
+// The plan-file described knowledgeadapter as having constructor
+// NewAdapter(*store.Store, vaultDir) and importing internal/store directly.
+// The actual implementation uses NewAdapterFromDB(*sql.DB) and does NOT
+// import internal/store. This is intentional (CGO driver conflict isolation):
+// keeping internal/store out of knowledgeadapter means the adapter's test
+// binary only links mattn/go-sqlite3; ncruces/go-sqlite3 is never pulled in.
+// The daemon glue file (server_knowledge_aggregator.go) is the single point
+// that calls s.store.DB() and forwards the *sql.DB to knowledgeadapter.
 //
 // Two tests in this file:
 //
-//  1. TestInvZen031Plan9AggregatorNoStoreImport — walks internal/knowledge/
-//     aggregator/ and internal/knowledge/embed/ (ALL .go files, including
-//     tests). Asserts zero imports containing "internal/store". Test files are
-//     included because even test code in the aggregator package must not reach
-//     into the daemon's store layer — that would break the CGO isolation.
+// 1. TestInvZen031Plan9AggregatorNoStoreImport — walks internal/knowledge/
+// aggregator/ and internal/knowledge/embed/ (ALL.go files, including
+// tests). Asserts zero imports containing "internal/store". Test files are
+// included because even test code in the aggregator package must not reach
+// into the daemon's store layer — that would break the CGO isolation.
 //
-//  2. TestInvZen031KnowledgeAdapterLegitimateBridge — asserts that the daemon
-//     package collectively spans both layers: there must exist at least one
-//     .go file in internal/daemon/ that imports internal/store, AND at least
-//     one .go file in internal/daemon/ that imports internal/daemon/
-//     knowledgeadapter (or aggregatorbridge or internal/knowledge/aggregator).
-//     Together these two files (which may be different files in the same
-//     package) form the legitimate cross-layer bridge.
+// 2. TestInvZen031KnowledgeAdapterLegitimateBridge — asserts that the daemon
+// package collectively spans both layers: there must exist at least one
+// .go file in internal/daemon/ that imports internal/store, AND at least
+// one.go file in internal/daemon/ that imports internal/daemon/
+// knowledgeadapter (or aggregatorbridge or internal/knowledge/aggregator).
+// Together these two files (which may be different files in the same
+// package) form the legitimate cross-layer bridge.
 //
-//     Rationale for two-file check instead of single-file: the D-12
-//     architecture intentionally splits the bridge across two files in the
-//     daemon package (server.go imports internal/store; server_knowledge_
-//     aggregator.go imports knowledgeadapter). Requiring a single file to
-//     import both would be an artificial constraint that the architecture
-//     deliberately avoids for CGO isolation reasons. The package-level
-//     assertion is the correct inv-zen-031 bridge test for D-12.
+// Rationale for two-file check instead of single-file: the D-12
+// architecture intentionally splits the bridge across two files in the
+// daemon package (server.go imports internal/store; server_knowledge_
+// aggregator.go imports knowledgeadapter). Requiring a single file to
+// import both would be an artificial constraint that the architecture
+// deliberately avoids for CGO isolation reasons. The package-level
+// assertion is the correct invariant bridge test for D-12.
 //
-// inv-zen-031: aggregator/embed do not import internal/store.
+// invariant: aggregator/embed do not import internal/store.
 package compliance
 
 import (

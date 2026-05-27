@@ -6,17 +6,17 @@
 // last_beat} map; any worker whose last beat is older than Timeout
 // (default 2×Interval = 60 s) is treated as dead. For each dead worker:
 //
-//  1. Emit an EvtWorkerDeath audit row with class=TRANSIENT_INFRA,
-//     reason="heartbeat_timeout", task_id=last-known-assignment, and
-//     retry_count=0 (RecoveryEngine fills the cumulative retry count
-//     in the paired EvtWorkerRedispatched row).
-//  2. Invoke RecoveryEngine.HandleWorkerDeath with the canonical
-//     sentinel ErrHeartbeatTimeout (classified as TRANSIENT_INFRA per
-//     Task E-1 Classify rule 2). The engine applies the per-doctrine
-//     retry budget and emits the WorkerRedispatched row.
+// 1. Emit an EvtWorkerDeath audit row with class=TRANSIENT_INFRA,
+// reason="heartbeat_timeout", task_id=last-known-assignment, and
+// retry_count=0 (RecoveryEngine fills the cumulative retry count
+// in the paired EvtWorkerRedispatched row).
+// 2. Invoke RecoveryEngine.HandleWorkerDeath with the canonical
+// sentinel ErrHeartbeatTimeout (classified as TRANSIENT_INFRA per
+// Task E-1 Classify rule 2). The engine applies the per-doctrine
+// retry budget and emits the WorkerRedispatched row.
 //
 // The two-event pair (Death + Redispatched) is the load-bearing
-// integration contract for Phase E-6 replay reconstruction: replay
+// integration contract for replay reconstruction: replay
 // pairs them by worker_id+task_id to determine which workers still
 // need re-dispatch after orchestrator restart.
 //
@@ -48,8 +48,8 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
 )
 
-// HeartbeatProbe is the read-only liveness view of Plan 4 worker (and
-// future reviewer) subprocesses. The real implementation in Plan 4
+// HeartbeatProbe is the read-only liveness view of worker (and
+// future reviewer) subprocesses. The real implementation in
 // queries worker.SubprocessManager for the in-memory last-beat
 // timestamp map; tests inject deterministic fakes (see fakeProbe).
 //
@@ -127,7 +127,7 @@ func (m *HeartbeatMonitor) Run(ctx context.Context) {
 //
 // Probe error: swallowed (loop continues). The Append return is
 // ignored: a transient audit-store failure is observed elsewhere
-// (engine.OnCorruption / inv-zen-095), and we MUST still drive the
+// , and we MUST still drive the
 // recovery engine so the doctrine retry budget advances even when
 // the audit emit lost the row. The HandleWorkerDeath call's own
 // audit emission has the same discipline.

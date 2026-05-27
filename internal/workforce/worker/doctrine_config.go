@@ -5,10 +5,10 @@ import "time"
 
 // DoctrineConfig provides per-worker doctrine values needed at runtime.
 //
-// Phase A ships doctrine.Resolver as a layered config-loader that returns
+// ships doctrine.Resolver as a layered config-loader that returns
 // a fully-merged Schema; runtime values used by the Worker live inside
 // Schema (e.g., Schema.Workforce.DoctrineReinforcementTemplatePointer,
-// Schema.Subprocess.PersistentTTLSliding). Phase D's Worker does NOT
+// Schema.Subprocess.PersistentTTLSliding). Worker does NOT
 // import internal/doctrine directly so this small interface decouples
 // the worker package from the Schema shape (lets the daemon
 // workforceadapter own the bridge: read Resolver → produce

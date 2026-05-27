@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_audit_emitter.go (Plan 13 Phase F-tail F-imp).
+// Package cli — doctor_audit_emitter.go.
 //
-// Wires a shared audit-emitter adapter that satisfies the
+// # Wires a shared audit-emitter adapter that satisfies the
 //
-//	aggregator.Emitter
-//	fix.Emitter
-//	cleanup.Emitter
-//	eval.Emitter
+// aggregator.Emitter
+// fix.Emitter
+// cleanup.Emitter
+// eval.Emitter
 //
 // shape (all four interfaces use the identical
 // `Emit(ctx, eventType string, payload []byte) (auditHash string, err error)`
@@ -18,7 +18,7 @@
 // (`zen doctor full`, `zen state cleanup`, `zen doctor restore`, and
 // the daemon-side eval boundary via cmd/zen-swarm-ctld) all want the
 // same daemon round-trip behaviour: marshal once, POST to /v1/audit/emit,
-// return the resulting audit hash. The boundary (inv-zen-031) is
+// return the resulting audit hash. The boundary is
 // preserved: this is a CLI-layer adapter that consumes the daemon
 // client — it does NOT touch internal/store.
 package cli
@@ -31,17 +31,17 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/client"
 )
 
-// DaemonAuditEmitter is the production audit emitter for Plan 13 F-tail
+// DaemonAuditEmitter is the production audit emitter F-tail
 // CLI surfaces. Wraps a daemon-bound *client.Client; each Emit call
 // performs one POST /v1/audit/emit round-trip.
 //
 // Failure semantics (best-effort):
-//   - Daemon unreachable / 5xx → logs a warning via the slog default
-//     logger and returns ("", err). Callers (aggregator / fix / cleanup
-//     / eval) tolerate this per their respective Emitter contracts.
-//   - Daemon reachable + 2xx → returns the daemon-assigned event ID as
-//     the audit hash (the Tessera-anchored chain hash flows through
-//     /v1/audit/events later; the ID is sufficient for forensic trace).
+// - Daemon unreachable / 5xx → logs a warning via the slog default
+// logger and returns ("", err). Callers (aggregator / fix / cleanup
+// / eval) tolerate this per their respective Emitter contracts.
+// - Daemon reachable + 2xx → returns the daemon-assigned event ID as
+// the audit hash (the Tessera-anchored chain hash flows through
+// /v1/audit/events later; the ID is sufficient for forensic trace).
 //
 // Construction prefer NewDaemonAuditEmitter(client) at the CLI entry
 // point; the surface is intentionally interface-free so callers can

@@ -1,5 +1,4 @@
-//go:build integration
-
+// go:build integration
 package mcpgateway_integration_test
 
 import (

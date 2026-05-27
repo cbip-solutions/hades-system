@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package daemon — server_audit_query.go (Plan 4 Phase N Task N-5).
+// Package daemon — server_audit_query.go.
 //
 // Operator audit-query methods on *Server backing handlers.AuditQueryCtx.
 // The MCP-side audit_events_raw write path (server_phase_g_defaults.go's
@@ -25,7 +25,7 @@ const doctrineCapaFirewall = "capa-firewall"
 // fail-closed (capa-firewall). Kept in sync with internal/doctrine
 // builtin labels (`max-scope`, `default`, `capa-firewall` — spec §3.1).
 //
-// inv-zen-172: this set is the trust boundary between extracted-and-
+// invariant: this set is the trust boundary between extracted-and-
 // accepted vs. fail-closed. New doctrine names introduced in future
 // plans MUST be added here AND in the visibility-matrix doc in
 // internal/daemon/handlers/audit_event.go.

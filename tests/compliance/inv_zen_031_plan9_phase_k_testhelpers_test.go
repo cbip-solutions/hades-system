@@ -1,8 +1,8 @@
 // tests/compliance/inv_zen_031_plan9_phase_k_testhelpers_test.go
 //
-// inv-zen-031 boundary extension for Plan 9 Phase K-17:
+// invariant boundary extension:
 //
-//	tests/testhelpers/  MUST NOT be imported by any internal/* package.
+// tests/testhelpers/ MUST NOT be imported by any internal/* package.
 //
 // Why this boundary matters
 // =========================
@@ -17,7 +17,7 @@
 // testhelpers, the production binary would carry test-only code +
 // test-only behaviour into operator-facing surfaces.
 //
-// inv-zen-031 originally pinned: bypass/providers/dispatcher/
+// invariant originally pinned: bypass/providers/dispatcher/
 // orchestrator packages NEVER import internal/store directly.
 // internal/* code NEVER imports tests/testhelpers/. The two boundary
 // rules share the same enforcement style (AST walk + import check)
@@ -36,7 +36,7 @@
 // won't, since per-package _test.go usually imports specific narrow
 // sub-mocks).
 //
-// Phase J test (inv_zen_031_plan9_phase_j_test.go), Plan 7 Phase B
+// test (inv_zen_031_plan9_phase_j_test.go),
 // test (inv_zen_122_inv_zen_031_plan7_packages_test.go).
 package compliance
 

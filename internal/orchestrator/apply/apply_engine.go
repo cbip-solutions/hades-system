@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // internal/orchestrator/apply/apply_engine.go
 //
-// ApplyEngine — Q1 D live correction (real Plan 5). See doc.go for the
-// package-level Q1 D split rationale + inv-zen-089/097 statements.
+// ApplyEngine — Q1 D live correction. See doc.go for the
+// package-level Q1 D split rationale + invariant/097 statements.
 package apply
 
 import (
@@ -35,9 +35,9 @@ type Event struct {
 	Stderr    string
 }
 
-// Emitter is the apply-engine's collaborator (Phase A eventlog.Log satisfies
-// it via the Phase N adapter that converts apply.Event → eventlog.Event).
-// Kept narrow to honour inv-zen-089 — apply has no direct dependency on
+// Emitter is the apply-engine's collaborator ( eventlog.Log satisfies
+// it via the adapter that converts apply.Event → eventlog.Event).
+// Kept narrow to honour invariant — apply has no direct dependency on
 // internal/store, AND no direct dependency on the eventlog package either.
 //
 // Implementations MUST be safe to call from a context.WithoutCancel-derived
@@ -78,19 +78,19 @@ type Result struct {
 }
 
 // ApplyEngine is the Q1 D contract: live correction at a worker branch's
-// commit boundary, sequential, single-branch. Plan 6 owns cross-worker
+// commit boundary, sequential, single-branch. owns cross-worker
 // integration via MergeEngine (declared in merge_engine.go).
 //
 // Implementations MUST:
 //
-//   - Honour ctx cancellation between every shell-out (the engine
-//     short-circuits on ctx.Err() before each subprocess).
-//   - Emit EventApplyAttempted before `git apply` runs.
-//   - Emit EventApplySucceeded XOR EventApplyReverted (never both,
-//     never neither, on a non-error return path).
-//   - Use context.WithoutCancel(ctx) for the audit emit so a caller
-//     cancellation does not drop the row.
-//   - Refuse to operate on a dirty working tree (ErrWorkingTreeDirty).
+// - Honour ctx cancellation between every shell-out (the engine
+// short-circuits on ctx.Err() before each subprocess).
+// - Emit EventApplyAttempted before `git apply` runs.
+// - Emit EventApplySucceeded XOR EventApplyReverted (never both,
+// never neither, on a non-error return path).
+// - Use context.WithoutCancel(ctx) for the audit emit so a caller
+// cancellation does not drop the row.
+// - Refuse to operate on a dirty working tree (ErrWorkingTreeDirty).
 type ApplyEngine interface {
 	ApplyFix(ctx context.Context, workerBranch string, fix FixPrompt) (Result, error)
 }

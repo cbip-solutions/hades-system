@@ -1,38 +1,38 @@
 // SPDX-License-Identifier: MIT
-// Package dispatcheradapter is the bridge from the Plan 3 dispatcher to
-// the Plan 4 budget engine. It is the SINGLE import-edge between
-// internal/daemon/dispatcher/ and internal/budget/, satisfying inv-zen-031:
+// Package dispatcheradapter is the bridge from the dispatcher to
+// the budget engine. It is the SINGLE import-edge between
+// internal/daemon/dispatcher/ and internal/budget/, satisfying invariant:
 // internal/budget/ never imports internal/store/ directly; this package
 // imports both.
 //
-// # Plan 4 Phase F surface
+// # surface
 //
-// BudgetAdapter (Phase F Task F-6) implements budget.BudgetStore against
+// BudgetAdapter implements budget.BudgetStore against
 // *store.Store and exposes:
 //
-//   - PreCall(scopes, caps, estimated)              — hierarchical cap check
-//   - PostCall(costID, axisTags)                    — write axis tags only
-//   - PostCallWithCost(costID, axisTags, costUSD)   — full chain: tags +
-//     anomaly window append + detector update + auto-pause-on-trigger
-//   - RunBudgetSchedulers(ctx)                      — pause auto-resume goroutine
+// - PreCall(scopes, caps, estimated) — hierarchical cap check
+// - PostCall(costID, axisTags) — write axis tags only
+// - PostCallWithCost(costID, axisTags, costUSD) — full chain: tags +
+// anomaly window append + detector update + auto-pause-on-trigger
+// - RunBudgetSchedulers(ctx) — pause auto-resume goroutine
 //
 // # Option A coordination (METHODOLOGY.md §4.7.5)
 //
 // branch but NOT yet merged to main; cost_ledger does not exist on this
 // branch. The plan-spec called for PostCall to read cost_usd via a JOIN
-// against cost_ledger. To allow Phase F to ship standalone:
+// against cost_ledger. To allow to ship standalone:
 //
-//   - PostCall(ctx, costID, axisTags) writes axis tags only (Tagger-only).
-//   - PostCallWithCost(ctx, costID, axisTags, costUSD) is the variant the
-//     dispatcher will call, passing the upstream response's cost_usd
-//     directly (already known at the call site without needing to
-//     re-query cost_ledger). This is structurally cleaner than the
-//     plan's read-after-write JOIN approach.
-//   - RolledUSDByAxis returns (0, nil). After Plan 3 F-1 merges, a
-//     follow-up task will replace the body with the JOIN against
-//     cost_ledger; tests assert the (0, nil) contract today.
+// - PostCall(ctx, costID, axisTags) writes axis tags only (Tagger-only).
+// - PostCallWithCost(ctx, costID, axisTags, costUSD) is the variant the
+// dispatcher will call, passing the upstream response's cost_usd
+// directly (already known at the call site without needing to
+// re-query cost_ledger). This is structurally cleaner than the
+// plan's read-after-write JOIN approach.
+// - RolledUSDByAxis returns (0, nil). After F-1 merges, a
+// follow-up task will replace the body with the JOIN against
+// cost_ledger; tests assert the (0, nil) contract today.
 //
-// # Boundary discipline (inv-zen-031)
+// # Boundary discipline
 //
 // internal/budget/ has zero imports of internal/store/. The BudgetStore
 // interface declared in internal/budget/axes.go is the only surface
@@ -40,7 +40,7 @@
 // dispatcher (internal/daemon/dispatcher/) will call only the exported
 // PreCall/PostCall(*) methods; it never reaches into internal/budget/
 // directly (the AST grep test in tests/compliance/inv_zen_076_test.go
-// enforces this once Phase G wires the import).
+// enforces this once wires the import).
 package dispatcheradapter
 
 import (
@@ -84,7 +84,7 @@ func (a *BudgetAdapter) SetAnomalyConfig(threshold float64, window int) {
 	a.detector = budget.NewAnomalyDetector(a, threshold, window)
 }
 
-// PreCall is the inv-zen-076 entry point. Dispatcher MUST call before
+// PreCall is the invariant entry point. Dispatcher MUST call before
 // every backend.Forward(...).
 func (a *BudgetAdapter) PreCall(ctx context.Context, scopes budget.Scopes, caps budget.Caps, estimated float64) (budget.Decision, error) {
 	return a.gate.Check(ctx, scopes, caps, estimated)

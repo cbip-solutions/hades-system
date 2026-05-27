@@ -22,7 +22,7 @@ from hermes_plugins.hades.hooks.llm_handlers import (
 @pytest.fixture(autouse=True)
 def isolate_client():
     """Reset the module-level daemon client between tests + force
-    ZEN_HOOK_DRY_RUN so the Phase H' event-poster subprocess is
+    ZEN_HOOK_DRY_RUN so the  event-poster subprocess is
     short-circuited (rc=0, no real subprocess).
     """
     with patch.dict(os.environ, {"ZEN_HOOK_DRY_RUN": "1"}):
@@ -123,7 +123,7 @@ def test_pre_llm_call_returns_context_on_200(install_mock_client):
 
 
 def test_pre_llm_call_returns_none_on_204(install_mock_client):
-    """inv-zen-170: capa-firewall doctrine returns 204 → callback returns None."""
+    """invariant: capa-firewall doctrine returns 204 → callback returns None."""
 
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(204)
@@ -159,7 +159,7 @@ def test_pre_llm_call_returns_none_on_network_error(install_mock_client):
 
 
 def test_pre_llm_call_returns_none_on_empty_envelope(install_mock_client):
-    """Phase B daemon returns empty envelope; callback must not emit empty context."""
+    """ daemon returns empty envelope; callback must not emit empty context."""
 
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
@@ -297,9 +297,9 @@ def test_pre_llm_call_handles_string_content_blocks_in_list(install_mock_client)
 
 
 def test_pre_llm_call_sends_conversation_id_to_daemon(install_mock_client):
-    """Cross-language wire-format symmetry (Phase B reviewer I1): the
+    """Cross-language wire-format symmetry: the
     Python plugin MUST emit ``conversation_id`` in the JSON envelope so
-    the Go-side ``AugmentRequest`` decoder populates the field. Phase C
+    the Go-side ``AugmentRequest`` decoder populates the field. 
     consumes ConversationID for 5-lane RRF thread grouping; a silent
     drop here yields null retrieval scopes.
     """
@@ -377,7 +377,7 @@ def test_pre_llm_call_uses_last_user_message_for_prompt(install_mock_client):
 
 
 def test_pre_llm_call_forwards_json_safe_kwargs_to_event_payload():
-    """Phase H' baseline behaviour: extra **kwargs primitives flow into the
+    """ baseline behaviour: extra **kwargs primitives flow into the
     audit event payload via invoke_event_poster. Verify the forward-path
     iterates over kwargs.
     """

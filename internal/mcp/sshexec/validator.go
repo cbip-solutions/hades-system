@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/validator.go
 //
-// Phase L Task L-2 — Go port of the Plan 1 Python _validate_command.
+// Task L-2 — Go port of the Python _validate_command.
 //
 // Strict-prefix-match + forbidden-chars scan. Returns ValidationResult
 // (typed; never a bare bool). The exec layer's Run signature requires a
 // ValidationResult value with OK=true; a missing validation step is a
-// compile error (Task L-5 anchor for inv-zen-082).
+// compile error.
 //
-// Invariant inv-zen-082 — allowlist enforcement: forbidden chars +
+// Invariant invariant — allowlist enforcement: forbidden chars +
 // non-prefix-match commands MUST be rejected. Test corpus
 // tests/adversarial/payloads/cmd_injection.txt enforces ≥50 attack vectors.
 

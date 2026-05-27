@@ -5,18 +5,18 @@
 //
 // Responsibilities (per spec §2.9 Q9=A + §4.4):
 //
-//	Every 6 hours: poll upstream registries (pkg.go.dev, PyPI, npm,
-//	  crates.io); on new version detected → schedule Dispatcher.IngestDelta
-//	  for the changed ecosystem via the daemon HTTP API.
-//	Sunday 03:00 local: full integrity sweep covering all 4 ecosystems:
-//	  verifier.SweepChunkFingerprints × 4 ecosystems
-//	  verifier.SweepChangeNodes × 4 ecosystems
-//	  symbol_index.Rebuild × 4 ecosystems
-//	  cas.GarbageCollect × 1
+// Every 6 hours: poll upstream registries (pkg.go.dev, PyPI, npm,
+// crates.io); on new version detected → schedule Dispatcher.IngestDelta
+// for the changed ecosystem via the daemon HTTP API.
+// Sunday 03:00 local: full integrity sweep covering all 4 ecosystems:
+// verifier.SweepChunkFingerprints × 4 ecosystems
+// verifier.SweepChangeNodes × 4 ecosystems
+// symbol_index.Rebuild × 4 ecosystems
+// cas.GarbageCollect × 1
 //
 // Launchd lifecycle: managed by com.zen-swarm.docs-cron.plist LaunchAgent
 // (G-3 ships the plist). KeepAlive=true means launchd auto-restarts on
-// crash — worker MUST be idempotent on restart (inv-zen-204). All sweep
+// crash — worker MUST be idempotent on restart. All sweep
 // operations are re-entrant; partial runs that crash mid-sweep resume
 // cleanly on next invocation.
 //
@@ -24,14 +24,14 @@
 // as injected interfaces. The default production wiring (daemonCronClient)
 // routes every operation through the zen-swarm-ctld daemon over a Unix
 // socket, NOT a direct ecosystem-database import. This preserves boundary
-// inv-zen-031 (only internal/daemon/ talks to internal/store and
+// invariant (only internal/daemon/ talks to internal/store and
 // internal/research/ecosystem; this binary lives in cmd/).
 //
-// Boundary (inv-zen-031): does NOT import internal/store, does NOT import
+// Boundary: does NOT import internal/store, does NOT import
 // internal/research/ecosystem, does NOT import internal/cli. Daemon
 // coordination over UDS is the canonical surface; this binary uses
 // net/http with a custom UDS dialer (local IPC, not network egress, so
-// inv-zen-191 "no third-party HTTPS calls in credential path" is not
+// invariant "no third-party HTTPS calls in credential path" is not
 // engaged — see §4.4 daemon-side coordination contract).
 package main
 
@@ -251,10 +251,10 @@ func (w *CronWorker) PollUpstream(ctx context.Context) error {
 //
 // Per spec the sweep is:
 //
-//  1. verifier.SweepChunkFingerprints per ecosystem (re-verify sha256)
-//  2. verifier.SweepChangeNodes per ecosystem (Change-node graph consistency)
-//  3. symbol_index.Rebuild per ecosystem (in-memory refresh)
-//  4. cas.GarbageCollect (Plan 9 F CAS GC, once across all ecosystems)
+// 1. verifier.SweepChunkFingerprints per ecosystem (re-verify sha256)
+// 2. verifier.SweepChangeNodes per ecosystem (Change-node graph consistency)
+// 3. symbol_index.Rebuild per ecosystem (in-memory refresh)
+// 4. cas.GarbageCollect
 //
 // Steps 1-3 run in parallel across ecosystems (within each ecosystem they
 // run sequentially); step 4 runs after all per-ecosystem work completes.

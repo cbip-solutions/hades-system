@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Privacy filter tests — capa-firewall doctrine isolation per inv-zen-163."""
+"""Privacy filter tests — capa-firewall doctrine isolation per invariant."""
 
 from __future__ import annotations
 

@@ -6,7 +6,7 @@
 // daemon-side cost ledger + override store + WFQ queue. The dispatcher
 // (internal/daemon/dispatcher.PreFlightCheck) consumes the assembled
 // PreFlightDeps to run the 3-layer pre-flight gate without itself
-// touching internal/store — that is the inv-zen-031 boundary this
+// touching internal/store — that is the invariant boundary this
 // adapter package absorbs.
 //
 // Why a separate file (vs. extending dispatcheradapter.go): the
@@ -17,10 +17,10 @@
 // stateless, no struct receiver, just an assembly function plus the
 // CostLedgerReader interface that decouples it from any specific
 // *store.Store implementation. Tests inject fakes; daemon wiring
-// passes the *store.Store via a thin shim (Plan 7 Phase D scheduler
+// passes the *store.Store via a thin shim ( scheduler
 // composition or a future cost_ledger reader implementation).
 //
-// inv-zen-031 boundary: this file imports internal/quota +
+// invariant boundary: this file imports internal/quota +
 // internal/doctrine + stdlib only. internal/store is reached
 // indirectly via the CostLedgerReader interface — implementations
 // (fakes in tests, *store.Store-backed shim in daemon) live elsewhere.
@@ -47,13 +47,13 @@ import (
 // from many goroutines.
 //
 // Semantics
-//   - "Cap = 0" means "no cap configured" (downstream PreFlight
-//     short-circuits to OK for that scope).
-//   - "Used = 0" is a valid, non-error value for projects with no
-//     ledger entries yet.
-//   - Per-tier maps may be empty (no per-tier limits configured); the
-//     bridge guarantees a non-nil empty map downstream so PreFlight
-//     does not have to nil-guard.
+// - "Cap = 0" means "no cap configured" (downstream PreFlight
+// short-circuits to OK for that scope).
+// - "Used = 0" is a valid, non-error value for projects with no
+// ledger entries yet.
+// - Per-tier maps may be empty (no per-tier limits configured); the
+// bridge guarantees a non-nil empty map downstream so PreFlight
+// does not have to nil-guard.
 type CostLedgerReader interface {
 	ProjectUsage(ctx context.Context, alias string) (int64, error)
 
@@ -72,7 +72,7 @@ type CostLedgerReader interface {
 // runtime sources. The function is the single import-edge between the
 // dispatcher's pre-flight gate and the daemon's persistence layer:
 // dispatcher → BuildPreFlightDeps → CostLedgerReader (interface) →
-// *store.Store (implementation, daemon-side). inv-zen-031 boundary
+// *store.Store (implementation, daemon-side). invariant boundary
 // preserved: neither the dispatcher nor internal/quota sees
 // *store.Store.
 //
@@ -90,7 +90,7 @@ type CostLedgerReader interface {
 //
 // Unit (dollars / cents / tokens) is opaque to BuildPreFlightDeps; the
 // caller's ledger + cap configuration MUST agree on a unit. The Plan
-// 4 + Plan 7 ledger conventionally uses USD-cents.
+// 4 + ledger conventionally uses USD-cents.
 func BuildPreFlightDeps(
 	ctx context.Context,
 	alias string,

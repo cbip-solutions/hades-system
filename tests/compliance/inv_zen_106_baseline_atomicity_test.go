@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_106_baseline_atomicity_test.go
 //
-// Compliance gate for inv-zen-106: baseline-fail aborts merge atomically.
+// Compliance gate for invariant: baseline-fail aborts merge atomically.
 //
 // When the BaselineRunner.Run returns a wrapped ErrBaselineFailed (i.e.,
 // the test suite did not pass on the merge-base before any candidate is
@@ -12,25 +12,25 @@
 // run on top of a broken tree and produce false positives in the
 // integration-SHA outcome.
 //
-// Engine-pipeline contract: the inv-zen-106 short-circuit is a pure
+// Engine-pipeline contract: the invariant short-circuit is a pure
 // pipeline-level invariant (baseline → candidates with atomicity at
-// the boundary). Phase D's engine.go ships the production pipeline;
+// the boundary). engine.go ships the production pipeline;
 // here we mirror the contract via a minimal in-test lambda so the
-// invariant is enforceable BEFORE Phase D lands. Once Phase D ships,
+// invariant is enforceable BEFORE lands. Once ships,
 // the same lambda-shape is what engine.New().Merge() implements.
 //
 // Two sibling assertions:
-//  1. TestInvZen106BaselineFailAbortsAtomically — full atomicity check:
-//     baseline fails (ExitCode=1) → candidate runner is invoked 0 times,
-//     worktree leases match releases, EvtBaselineFailed emitted,
-//     EvtCandidateStarted not emitted.
-//  2. TestInvZen106BaselineFailReleaseSurvivesPanic — defer-based
-//     release of the worktree even on the unhappy path. The defer in
-//     concreteBaseline.Run is the operational guard; the test asserts
-//     the lease/release counters match after a baseline-fail run, which
-//     would only happen if the defer fired.
+// 1. TestInvZen106BaselineFailAbortsAtomically — full atomicity check:
+// baseline fails (ExitCode=1) → candidate runner is invoked 0 times,
+// worktree leases match releases, EvtBaselineFailed emitted,
+// EvtCandidateStarted not emitted.
+// 2. TestInvZen106BaselineFailReleaseSurvivesPanic — defer-based
+// release of the worktree even on the unhappy path. The defer in
+// concreteBaseline.Run is the operational guard; the test asserts
+// the lease/release counters match after a baseline-fail run, which
+// would only happen if the defer fired.
 //
-// Reference: docs/superpowers/specs/2026-05-01-zen-swarm-plan-6-merge-engine-design.md §4.1 #9-10 + §8.3 inv-zen-106
+// Reference: internal design record §4.1 #9-10 + §8.3 invariant
 //
 // Drift adaptation per Task B-7 instructions: package compliance (not
 // _test) to match the predominant tests/compliance convention. Local

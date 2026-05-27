@@ -1,14 +1,14 @@
-// Package compliance — inv-zen-124: severity is a frozen 4-tier enum
+// Package compliance — invariant: severity is a frozen 4-tier enum
 // enforced at BOTH the SQLite schema layer (CHECK constraint on the
 // inbox.severity column) AND the Go domain layer (inbox.ValidSeverity
 // + inbox.ParseSeverity).
 //
-// Spec §1 Q12 B + §7.2 inv-zen-124 wording (Plan 7 Phase E):
+// Spec §1 Q12 B + §7.2 invariant wording:
 //
-//	"Severity column CHECK constraint enforces the 4-tier enum
-//	{urgent, action-needed, info-immediate, info-digest}; any string
-//	outside this set MUST be rejected at the SQL layer in addition to
-//	the Go layer."
+// "Severity column CHECK constraint enforces the 4-tier enum
+// {urgent, action-needed, info-immediate, info-digest}; any string
+// outside this set MUST be rejected at the SQL layer in addition to
+// the Go layer."
 //
 // This test is the cross-package, boundary-side defense-in-depth witness:
 // the in-package coverage in internal/inbox/severity_test.go locks the Go
@@ -19,16 +19,16 @@
 //
 // Coverage matrix:
 //
-//	(a) SQL CHECK rejects every probe outside the 4-tier set:
-//	    empty string, capitalized variants ("Urgent", "URGENT"),
-//	    arbitrary strings, alternate-format strings, neighbor labels
-//	    from other severity vocabularies (panic, warn, info, trace),
-//	    and qualified strings ("Severity::Urgent").
-//	(b) SQL CHECK accepts every canonical tier from
-//	    inbox.AllSeverities() — i.e. the Go-side and SQL-side
-//	    enum sets are byte-identical.
+// (a) SQL CHECK rejects every probe outside the 4-tier set:
+// empty string, capitalized variants ("Urgent", "URGENT"),
+// arbitrary strings, alternate-format strings, neighbor labels
+// from other severity vocabularies (panic, warn, info, trace),
+// and qualified strings ("Severity::Urgent").
+// (b) SQL CHECK accepts every canonical tier from
+// inbox.AllSeverities() — i.e. the Go-side and SQL-side
+// enum sets are byte-identical.
 //
-// Boundary (inv-zen-031): this test imports internal/inbox + internal/
+// Boundary: this test imports internal/inbox + internal/
 // store. internal/inbox does NOT import internal/store; this file
 // composes the two only at the test surface to assert defense-in-depth
 // across the layers, never producing a one-way dependency in production.

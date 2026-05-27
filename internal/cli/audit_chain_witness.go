@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit_chain_witness.go (Plan 9 Phase I Task I-4).
+// Package cli — audit_chain_witness.go.
 //
 // `zen audit-chain witness` exposes daemon witness key management:
 //
-//	rotate   Rotate daemon ECDSA P-256 keypair; --reason MANDATORY (inv-zen-146).
-//	         Old key kept for overlap window; rotation event anchored on chain.
-//	pubkey   Print the current daemon witness pubkey + fingerprint.
-//	         Read-only; used by external auditors verifying daemon-global
-//	         STH co-signatures.
+// rotate Rotate daemon ECDSA P-256 keypair; --reason MANDATORY.
+// Old key kept for overlap window; rotation event anchored on chain.
+// pubkey Print the current daemon witness pubkey + fingerprint.
+// Read-only; used by external auditors verifying daemon-global
+// STH co-signatures.
 //
 // Plan deviation (implementer): plan-file sketched AuditChainWitnessRotateReq
 // struct and AuditChainWitnessRotateResp / AuditChainWitnessPubkeyResp types.
 // H-7 actually shipped:
 //
-//	client.AuditWitnessRotate(ctx, reason string) (AuditRotateResult, error)
-//	  AuditRotateResult{NewKeyFingerprint, OldKeyFingerprint, RotatedAt}
-//	  (NO OverlapWindowDays in the H-7 struct)
+// client.AuditWitnessRotate(ctx, reason string) (AuditRotateResult, error)
+// AuditRotateResult{NewKeyFingerprint, OldKeyFingerprint, RotatedAt}
+// (NO OverlapWindowDays in the H-7 struct)
 //
-//	client.AuditWitnessPubkey(ctx) (AuditWitnessPubkey, error)
-//	  AuditWitnessPubkey{PubkeyPEM, Fingerprint, CreatedAt, RotationCount}
-//	  (NOT HexPub / IssuedAt / NotAfterAt as plan-file proposed)
+// client.AuditWitnessPubkey(ctx) (AuditWitnessPubkey, error)
+// AuditWitnessPubkey{PubkeyPEM, Fingerprint, CreatedAt, RotationCount}
+// (NOT HexPub / IssuedAt / NotAfterAt as plan-file proposed)
 //
 // This file uses the H-7 actuals throughout.
 package cli

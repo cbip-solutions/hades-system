@@ -4,28 +4,28 @@
 // `zen doctor state-system` delegates to StateProber declared in probe.go;
 // 3 results:
 //
-//   - state.last_regenerate_age
-//   - state.manual_field_count
-//   - state.missing_source_count
+// - state.last_regenerate_age
+// - state.manual_field_count
+// - state.missing_source_count
 //
 // Architecture (J-1 precedent):
 //
-//	StateProber interface declared in probe.go (CLI side).
-//	Substrate prober.go files (internal/state/manifest/) are NOT modified
-//	per J-1 pattern.
-//	Production wiring in cmd/zen-swarm-ctld/main.go.
+// StateProber interface declared in probe.go (CLI side).
+// Substrate prober.go files (internal/state/manifest/) are NOT modified
+// per J-1 pattern.
+// Production wiring in cmd/zen-swarm-ctld/main.go.
 //
-// Naming
+// # Naming
 //
-//	Use="state-system" to avoid collision with:
-//	  - `zen state` (NewStateCmd in state.go — Plan 9 I-10 system state CRUD)
-//	  - `zen doctor` child commands from other Plans
-//	The cobra Use field is "state-system"; file is doctor_state.go.
+// Use="state-system" to avoid collision with:
+// - `zen state`
+// - `zen doctor` child commands from other Plans
+// The cobra Use field is "state-system"; file is doctor_state.go.
 //
-// Boundary (inv-zen-031):
+// Boundary:
 //
-//	This file imports only cli-internal types + cobra + context + stdlib.
-//	Does NOT import internal/state/manifest concrete types.
+// This file imports only cli-internal types + cobra + context + stdlib.
+// Does NOT import internal/state/manifest concrete types.
 package cli
 
 import (
@@ -40,8 +40,8 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunSystemStateProbe orchestrates the system-state doctor check (Plan 9
-// Phase J Task J-2, spec §6.2).
+// RunSystemStateProbe orchestrates the system-state doctor check (
+// Task J-2, spec §6.2).
 //
 // Delegates to DoctorDeps.StateProber.Probe(ctx) and returns the resulting
 // ProbeResult slice unchanged. Returns a non-nil error if StateProber is nil
@@ -50,10 +50,10 @@ import (
 // Typical result count: 3 (last_regenerate_age + manual_field_count +
 // missing_source_count). Callers MUST NOT branch on len(results) == 3.
 //
-// Doctrine reference: last_regenerate_age thresholds per inv-zen-149:
+// Doctrine reference: last_regenerate_age thresholds per invariant:
 //
-//	max-scope doctrine: 24h; default doctrine: 168h; capa-firewall: 24h.
-//	WARN at 1×-2× threshold; FAIL at >2× threshold (stale TOML).
+// max-scope doctrine: 24h; default doctrine: 168h; capa-firewall: 24h.
+// WARN at 1×-2× threshold; FAIL at >2× threshold (stale TOML).
 func RunSystemStateProbe(ctx context.Context, deps DoctorDeps) ([]ProbeResult, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err

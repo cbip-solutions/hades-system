@@ -1,7 +1,8 @@
+// go:build replay
 //go:build replay
 // +build replay
 
-// tests/replay/plan9_chain_replay_test.go (Plan 9 Phase K-9).
+// tests/replay/plan9_chain_replay_test.go.
 //
 // Replay-tier validation of the chain layer's three load-bearing
 // determinism + integrity properties, asserted independently of
@@ -15,29 +16,29 @@
 // satisfies chain.EventStore), which IS the per-project axis. The
 // three scenarios PRESERVE the original intent (determinism,
 // cross-event-type integrity, per-project isolation) and assert each
-// chain-layer property in isolation against shipped Phase A+B APIs.
+// chain-layer property in isolation against shipped +B APIs.
 //
 // Three scenarios:
 //
-//  1. TestReplay_ChainHashesByteIdentical — re-derive record_hash via
-//     chain.Compute(prev, type, payload, ts) for every row returned by
-//     auditadapter.ListEventsForPartition; assert recomputed == stored.
-//     This is the load-bearing determinism contract; chain.Walk
-//     implements the same check internally, so this test asserts the
-//     property in isolation against the EventStore satisfier.
+// 1. TestReplay_ChainHashesByteIdentical — re-derive record_hash via
+// chain.Compute(prev, type, payload, ts) for every row returned by
+// auditadapter.ListEventsForPartition; assert recomputed == stored.
+// This is the load-bearing determinism contract; chain.Walk
+// implements the same check internally, so this test asserts the
+// property in isolation against the EventStore satisfier.
 //
-//  2. TestReplay_MultipleEventTypesIntegrity — append rows with four
-//     distinct Plan 9 event_type strings (audit/vault/research/state);
-//     chain.Walk(ctx, aa, proj) MUST report zero Tampered + zero
-//     GapsDetected regardless. The chain does not discriminate by
-//     event_type.
+// 2. TestReplay_MultipleEventTypesIntegrity — append rows with four
+// distinct event_type strings (audit/vault/research/state);
+// chain.Walk(ctx, aa, proj) MUST report zero Tampered + zero
+// GapsDetected regardless. The chain does not discriminate by
+// event_type.
 //
-//  3. TestReplay_PerProjectIsolation — inv-zen-150 (per-project blast
-//     radius). Interleave proj-A and proj-B rows in the same partition;
-//     chain.Walk(ctx, aa, "proj-A") MUST report EventsWalked == 30
-//     (not 60). Symmetric for proj-B. Tessera leaf-id prefix shape
-//     verified opportunistically (only when populated; auditadapter
-//     without WithTessera leaves tessera_leaf_id NULL).
+// 3. TestReplay_PerProjectIsolation — invariant (per-project blast
+// radius). Interleave proj-A and proj-B rows in the same partition;
+// chain.Walk(ctx, aa, "proj-A") MUST report EventsWalked == 30
+// (not 60). Symmetric for proj-B. Tessera leaf-id prefix shape
+// verified opportunistically (only when populated; auditadapter
+// without WithTessera leaves tessera_leaf_id NULL).
 //
 // Build tag: replay. Opt-in via `make test-replay`.
 package replay_test

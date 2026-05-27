@@ -1,4 +1,4 @@
-//go:build integration && cgo
+// go:build integration && cgo
 
 // Package ecosystem_test — live_fallback_integration_test.go
 //
@@ -7,40 +7,40 @@
 //
 // Scope rationale — what's reachable from external pkg:
 //
-//   - The full Dispatcher.LiveFallback call path requires injecting
-//     `sources`, `researchMCP`, `findingsCache`, `indexerDelta` —
-//     these are PACKAGE-PRIVATE Dispatcher fields wired only via
-//     same-package fixture construction (dispatcher_fallback_test.go
-//     buildFallbackFixture). Cross-package callers cannot exercise the
-//     full fallback flow through the public NewDispatcher Options.
+// - The full Dispatcher.LiveFallback call path requires injecting
+// `sources`, `researchMCP`, `findingsCache`, `indexerDelta` —
+// these are PACKAGE-PRIVATE Dispatcher fields wired only via
+// same-package fixture construction (dispatcher_fallback_test.go
+// buildFallbackFixture). Cross-package callers cannot exercise the
+// full fallback flow through the public NewDispatcher Options.
 //
-//   - WHAT EXTERNAL PACKAGES CAN VERIFY: the LiveFallback contract's
-//     audit-emission shape (inv-zen-203 "fresh_dispatch=true on EvtRAGQuery
-//     emitted BEFORE any downstream dispatch") is enforced by the
-//     RAGAuditEmitter + InMemoryRAGAuditChain primitives — both of which
-//     ARE exported. This file proves the documented contract holds
-//     end-to-end through the public surface (NewRAGAuditEmitter,
-//     NewInMemoryRAGAuditChain, RAGQueryPayload, the canonical 8 event
-//     types), independently of the Dispatcher orchestration.
+// - WHAT EXTERNAL PACKAGES CAN VERIFY: the LiveFallback contract's
+// audit-emission shape (invariant "fresh_dispatch=true on EvtRAGQuery
+// emitted BEFORE any downstream dispatch") is enforced by the
+// RAGAuditEmitter + InMemoryRAGAuditChain primitives — both of which
+// ARE exported. This file proves the documented contract holds
+// end-to-end through the public surface (NewRAGAuditEmitter,
+// NewInMemoryRAGAuditChain, RAGQueryPayload, the canonical 8 event
+// types), independently of the Dispatcher orchestration.
 //
-//   - In particular: the Audit-FIRST ordering guarantee (§4.3 inv-zen-203
-//     "audit chain captures dispatch reason BEFORE any downstream live
-//     network call") is testable cross-package by driving the
-//     RAGAuditEmitter directly + asserting the chain row is persisted
-//     atomically with fresh_dispatch=true visible in the payload.
+// - In particular: the Audit-FIRST ordering guarantee (§4.3 invariant
+// "audit chain captures dispatch reason BEFORE any downstream live
+// network call") is testable cross-package by driving the
+// RAGAuditEmitter directly + asserting the chain row is persisted
+// atomically with fresh_dispatch=true visible in the payload.
 //
 // Why this complements the same-package dispatcher_fallback_test.go:
 //
-//   - dispatcher_fallback_test.go covers the full 7 LiveFallback scenarios
-//     using package-private fixture wiring. Those tests succeed when the
-//     SAME-package internals agree.
+// - dispatcher_fallback_test.go covers the full 7 LiveFallback scenarios
+// using package-private fixture wiring. Those tests succeed when the
+// SAME-package internals agree.
 //
-//   - THIS file's tests cover the EXTERNAL-package contract: a downstream
-//     consumer (daemon Phase F, future integrations, third-party
-//     subscribers) that depends on the emitted audit row shape MUST be
-//     able to round-trip RAGQueryPayload through the chain. Any drift in
-//     the payload JSON encoding (renamed field, new mandatory field,
-//     type change) surfaces here from the external-package perspective.
+// - THIS file's tests cover the EXTERNAL-package contract: a downstream
+// consumer (daemon, future integrations, third-party
+// subscribers) that depends on the emitted audit row shape MUST be
+// able to round-trip RAGQueryPayload through the chain. Any drift in
+// the payload JSON encoding (renamed field, new mandatory field,
+// type change) surfaces here from the external-package perspective.
 //
 // Build tags `integration && cgo` match the directory convention.
 package ecosystem_test
@@ -67,17 +67,17 @@ func newLiveFallbackTestEmitter(t *testing.T) (*ecosystem.InMemoryRAGAuditChain,
 }
 
 // TestLiveFallbackIntegration_AuditEmittedBeforeAnyDispatch enforces the
-// inv-zen-203 ordering guarantee from the EXTERNAL-package perspective:
+// invariant ordering guarantee from the EXTERNAL-package perspective:
 // when the LiveFallback path emits its EvtRAGQuery row, the row MUST
 // land in the chain WITH `fresh_dispatch=true` in the payload, BEFORE
 // any downstream operation runs. This is verified by:
 //
-//	(a) emitting one EvtRAGQuery payload via the public RAGAuditEmitter
-//	    surface (the same surface LiveFallback consumes internally)
-//	(b) asserting chain.Len() reports the row immediately (synchronous
-//	    persistence — no buffering / async dispatch in the emitter)
-//	(c) asserting payload.fresh_dispatch decodes to true round-trip
-//	(d) asserting payload.doctrine is the configured profile name
+// (a) emitting one EvtRAGQuery payload via the public RAGAuditEmitter
+// surface (the same surface LiveFallback consumes internally)
+// (b) asserting chain.Len() reports the row immediately (synchronous
+// persistence — no buffering / async dispatch in the emitter)
+// (c) asserting payload.fresh_dispatch decodes to true round-trip
+// (d) asserting payload.doctrine is the configured profile name
 //
 // A regression that buffers Emit calls (async-flush mode), drops the
 // fresh_dispatch field, or coerces it through a different JSON encoder
@@ -237,7 +237,7 @@ func TestLiveFallbackIntegration_SynthesisPathFullEventSequence(t *testing.T) {
 	}
 
 	// The first event MUST carry fresh_dispatch=true (LiveFallback
-	// inv-zen-203 enforcement). A regression that emits Query AFTER
+	// invariant enforcement). A regression that emits Query AFTER
 	// Retrieval (wrong order) would break this even if the chain itself
 	// records the events.
 	first := chain.Get(1)

@@ -1,7 +1,7 @@
-//go:build property
+// go:build property
 
-// Package property — p13_doctrine_eval_determinism_test.go (Plan 13
-// Phase F-tail F-imp IMPORTANT 7).
+// Package property — p13_doctrine_eval_determinism_test.go (
+// F-imp IMPORTANT 7).
 //
 // Property: identical inputs to eval.RuntimeEvaluator.EvaluateCall MUST
 // produce identical (decision, evidence) tuples + identical audit
@@ -10,7 +10,7 @@
 // can't reconcile audit events across daemon runs).
 //
 // Build tag `property` excludes this file from default CI; opt-in via
-// `make test-property` or `go test -tags=property ./tests/property/...`.
+// `make test-property` or `go test -tags=property./tests/property/...`.
 package property
 
 import (

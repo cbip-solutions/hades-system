@@ -1,10 +1,10 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// internal/citation/envelope_test.go — Plan 11 Phase D Task D-2.
+// internal/citation/envelope_test.go — Task D-2.
 //
 // 10000-trial round-trip property test + Hash() determinism + Hash()
 // collision-distribution + EnvelopeFromAuditEvent constructor + strict
-// validation tests covering inv-zen-166.
+// validation tests covering invariant.
 package citation_test
 
 import (

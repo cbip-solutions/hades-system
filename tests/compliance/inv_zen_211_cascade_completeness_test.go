@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_211_cascade_completeness_test.go
 //
-// Compliance gate for inv-zen-211 (cascade completeness — daemon-startup
+// Compliance gate for invariant (cascade completeness — daemon-startup
 // check). The daemon's main.go runs verifyCascadeCompleteness AFTER
 // buildOrchestrator: for every OPERATOR-supplied cascade (profiles.toml
 // via ProfileResolver.OperatorProfileNames(), plus projects.toml
@@ -11,13 +11,13 @@
 // Built-in roster defaults (BuiltinProfileDefaults) are EXCLUDED — they
 // are aspirational stubs of the v1.0 OSS roster and the operator wires
 // them on demand; gating them would block the out-of-box empty-config
-// boot. Plan 16 Phase B T22 hot-fix.
+// boot. T22 hot-fix.
 //
 // Three-place triple:
 //
-//	(1) spec §8 inv-zen-211 text
-//	(2) this compliance test (source-level marker grep + helper-presence check)
-//	(3) Makefile verify-inv-zen-211 target
+// (1) spec §8 invariant text
+// (2) this compliance test (source-level marker grep + helper-presence check)
+// (3) Makefile verify-invariant target
 package compliance_test
 
 import (

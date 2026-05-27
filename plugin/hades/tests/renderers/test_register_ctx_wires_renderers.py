@@ -60,7 +60,7 @@ def test_register_default_renderers_idempotent() -> None:
 def test_zen_internal_registry_dispatch_simulation(
     sample_augmentation_result: AugmentationResult,
 ) -> None:
-    """Simulate Phase H' register(ctx) wiring zen-internal RendererRegistry.
+    """Simulate  register(ctx) wiring zen-internal RendererRegistry.
 
     Sequence (in production):
     1. Hermes loads ``plugin/zen-swarm/__init__.py`` and calls its

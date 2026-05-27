@@ -1,63 +1,63 @@
-// Package compliance — inv-zen-128: HandoffPostedEvent payload conforms
+// Package compliance — invariant: HandoffPostedEvent payload conforms
 // to the canonical 8-field schema frozen by spec §1 Q15 + master plan
 // §"HandoffPosted event coordination". Defense-in-depth: a compile-time
 // anchor (HandoffPostedEvent.Type() returning EvtHandoffPosted +
 // Decode() registering EvtHandoffPosted in its switch) plus a runtime
 // JSON Marshal/Unmarshal round-trip property fuzz N=100.
 //
-// Spec §1 Q15 + §7.2 inv-zen-128 wording (Plan 7 Phase F-1):
+// Spec §1 Q15 + §7.2 invariant wording:
 //
-//	"HandoffPosted event payload conforms to schema. Compile-check via
-//	 _ HandoffPostedEvent.Type() = EvtHandoffPosted registration;
-//	 runtime via Decode() switch handles EvtHandoffPosted returning
-//	 typed struct; round-trips JSON Marshal/Unmarshal + verifies field
-//	 set (8 fields per spec)."
+// "HandoffPosted event payload conforms to schema. Compile-check via
+// _ HandoffPostedEvent.Type() = EvtHandoffPosted registration;
+// runtime via Decode() switch handles EvtHandoffPosted returning
+// typed struct; round-trips JSON Marshal/Unmarshal + verifies field
+// set (8 fields per spec)."
 //
-// Phase H + I will extend this with daemon HTTP handler validation
+// + I will extend this with daemon HTTP handler validation
 // (4xx on schema mismatch + AutonomousState enum carve-out per Layer 3
-// of defense-in-depth); this Phase F-13 boundary witness pins the
+// of defense-in-depth); this boundary witness pins the
 // wire schema at the type-system + JSON layer.
 //
 // Coverage matrix:
 //
-//	(a) Round-trip fuzz N=100 with deterministic seed (128): random
-//	    HandoffPostedEvent values (random commit/blocker counts, random
-//	    timestamps, random AutonomousState picked from the 4 canonical
-//	    {active|paused|idle|complete} values). Marshal -> Unmarshal
-//	    MUST preserve every field byte-identically.
-//	(b) Decode() switch arm: a hand-crafted JSON byte slice routes to
-//	    HandoffPostedEvent via eventlog.Decode(EvtHandoffPosted, body)
-//	    — proves the cross-package decoder dispatch table contains
-//	    the EvtHandoffPosted entry, not just the typed struct itself.
-//	(c) Field-set exactly 8: a zero-value HandoffPostedEvent marshals
-//	    to JSON, the JSON is unmarshalled into map[string]any, and the
-//	    8 canonical field keys (project_id, project_alias, timestamp,
-//	    summary, recent_commits, autonomous_state, blockers,
-//	    next_session_action) MUST be present, no more, no fewer. A
-//	    refactor that adds a 9th field without updating the spec /
-//	    consumer expectations would break Phase H plugin emit + Phase
-//	    I daemon HTTP handler in lockstep; this test catches the drift
-//	    in CI before it ships.
-//	(d) JSON tag canonical names: the spec §1 Q15 freezes the
-//	    snake_case JSON keys (project_id, project_alias, timestamp,
-//	    summary, recent_commits, autonomous_state, blockers,
-//	    next_session_action). A refactor that flips to camelCase or
-//	    accidentally drops the json:"..." struct tag would surface as
-//	    a missing-field assertion in (c) AND a serialization mismatch
-//	    in (a).
-//	(e) AutonomousState canonical 4-value set: the typed struct
-//	    accepts any string for forward-compat, but Phase H emitters +
-//	    Phase I handler MUST agree on the 4-value set. The fuzz
-//	    constructs payloads using only canonical states; a future
-//	    addition (e.g., "suspended") MUST be recorded in spec §1 Q15 +
-//	    propagated through this set + the daemon handler validator.
-//	(f) Empty-slice round-trip: when RecentCommits or Blockers is the
-//	    empty slice, Marshal MUST emit a JSON array (possibly empty,
-//	    not null). The omitempty tag is intentionally absent on these
-//	    fields per spec — they are always present on the wire to give
-//	    consumers a stable shape.
+// (a) Round-trip fuzz N=100 with deterministic seed (128): random
+// HandoffPostedEvent values (random commit/blocker counts, random
+// timestamps, random AutonomousState picked from the 4 canonical
+// {active|paused|idle|complete} values). Marshal -> Unmarshal
+// MUST preserve every field byte-identically.
+// (b) Decode() switch arm: a hand-crafted JSON byte slice routes to
+// HandoffPostedEvent via eventlog.Decode(EvtHandoffPosted, body)
+// — proves the cross-package decoder dispatch table contains
+// the EvtHandoffPosted entry, not just the typed struct itself.
+// (c) Field-set exactly 8: a zero-value HandoffPostedEvent marshals
+// to JSON, the JSON is unmarshalled into map[string]any, and the
+// 8 canonical field keys (project_id, project_alias, timestamp,
+// summary, recent_commits, autonomous_state, blockers,
+// next_session_action) MUST be present, no more, no fewer. A
+// refactor that adds a 9th field without updating the spec /
+// consumer expectations would break plugin emit + Phase
+// I daemon HTTP handler in lockstep; this test catches the drift
+// in CI before it ships.
+// (d) JSON tag canonical names: the spec §1 Q15 freezes the
+// snake_case JSON keys (project_id, project_alias, timestamp,
+// summary, recent_commits, autonomous_state, blockers,
+// next_session_action). A refactor that flips to camelCase or
+// accidentally drops the json:"..." struct tag would surface as
+// a missing-field assertion in (c) AND a serialization mismatch
+// in (a).
+// (e) AutonomousState canonical 4-value set: the typed struct
+// accepts any string for forward-compat, but emitters +
+// handler MUST agree on the 4-value set. The fuzz
+// constructs payloads using only canonical states; a future
+// addition (e.g., "suspended") MUST be recorded in spec §1 Q15 +
+// propagated through this set + the daemon handler validator.
+// (f) Empty-slice round-trip: when RecentCommits or Blockers is the
+// empty slice, Marshal MUST emit a JSON array (possibly empty,
+// not null). The omitempty tag is intentionally absent on these
+// fields per spec — they are always present on the wire to give
+// consumers a stable shape.
 //
-// Boundary (inv-zen-031): this test imports only
+// Boundary: this test imports only
 // internal/orchestrator/eventlog + stdlib. eventlog is the load-bearing
 // surface; the dispatcheradapter / store layers are not touched.
 //
@@ -110,8 +110,8 @@ func TestInvZen128_HandoffPostedRoundTripFuzz(t *testing.T) {
 // a HandoffPostedEvent typed value. A refactor that drops the
 // EvtHandoffPosted arm from the Decode switch (e.g., a merge-conflict
 // resolution silently deleting the case) would break every cross-Plan
-// consumer that goes through Decode (Phase I HTTP handler + Phase F EOD
-// digest composer + future Plan 8/11 routing). This boundary witness
+// consumer that goes through Decode ( HTTP handler + EOD
+// digest composer + future routing). This boundary witness
 // catches that drift.
 func TestInvZen128_DecodeRoutesToHandoffPostedEvent(t *testing.T) {
 	body := []byte(`{` +
@@ -200,7 +200,7 @@ func TestInvZen128_FieldSetExactlyEight(t *testing.T) {
 // consumer agreement loop: a payload constructed with each canonical
 // AutonomousState value MUST round-trip cleanly. Future additions to
 // the canonical set (e.g., spec amendment introduces "suspended") MUST
-// be added to canonicalAutonomousStates here AND the Phase I daemon
+// be added to canonicalAutonomousStates here AND the daemon
 // HTTP handler validator in lockstep; a failure here is a load-bearing
 // signal that the validator drifted.
 func TestInvZen128_AutonomousStateCanonicalSetCovered(t *testing.T) {

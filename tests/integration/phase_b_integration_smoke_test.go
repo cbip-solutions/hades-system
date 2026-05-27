@@ -1,54 +1,53 @@
 // SPDX-License-Identifier: MIT
 //
-// Package integration_test — Plan 15 Phase B Task B-16.3 end-to-end
+// Package integration_test — Task B-16.3 end-to-end
 // integration smoke test for the daemon ↔ sidecar ↔ notification flow.
 //
 // Per W7-B16 mandate (Wave 7 dispatch closure of W7-B8 deferred wiring),
 // this file exercises three load-bearing seams of the daemon's
-// Phase-B-side substrate:
+// substrate:
 //
-//  1. SidecarBackend message routing: the dispatcher's TierBackend
-//     façade delegates POST /v1/messages to the configured loopback
-//     sidecar URL, forwards the request body verbatim, and returns
-//     the upstream response without rewrite.
+// 1. SidecarBackend message routing: the dispatcher's TierBackend
+// façade delegates POST /v1/messages to the configured loopback
+// sidecar URL, forwards the request body verbatim, and returns
+// the upstream response without rewrite.
 //
-//  2. Notifications-flow daemon ingestion: the daemon endpoint
-//     POST /v1/notifications/post receives a sidecar-emitted notification
-//     payload (severity / source / ts / payload) and persists it through
-//     the NotificationsInserter seam — the canonical bypass.HTTPNotifier
-//     callback round-trip the sidecar uses for tier-switch /
-//     refresh-permanent-fail / cert-pin / anomaly-threshold events.
+// 2. Notifications-flow daemon ingestion: the daemon endpoint
+// POST /v1/notifications/post receives a sidecar-emitted notification
+// payload (severity / source / ts / payload) and persists it through
+// the NotificationsInserter seam — the canonical bypass.HTTPNotifier
+// callback round-trip the sidecar uses for tier-switch /
+// refresh-permanent-fail / cert-pin / anomaly-threshold events.
 //
-//  3. Graceful degradation on sidecar stop: when the loopback sidecar
-//     vanishes mid-test, SidecarBackend.Forward surfaces
-//     ErrSidecarUnavailable so the dispatcher's name-based cascade
-//     (inv-zen-066 / inv-zen-280) proceeds to the next configured
-//     provider rather than hanging or returning a hidden 5xx.
+// 3. Graceful degradation on sidecar stop: when the loopback sidecar
+// vanishes mid-test, SidecarBackend.Forward surfaces
+// ErrSidecarUnavailable so the dispatcher's name-based cascade
+// proceeds to the next configured
+// provider rather than hanging or returning a hidden 5xx.
 //
 // The three sub-tests are independent (each spins its own httptest.Server)
 // so they document the three contracts in isolation; a regression in
 // one does not mask the others.
 //
-// Build-tag posture (per Plan 15 spec line 2849): the file is gated by
+// Build-tag posture: the file is gated by
 // `//go:build integration` so `make test` in CI without the integration
 // tag skips it (the brew-installed sidecar is not present on stock CI
 // runners). Run locally via:
 //
-//	go test -tags=integration ./tests/integration/ -run TestPhaseB
+// go test -tags=integration./tests/integration/ -run TestPhaseB
 //
-// Boundary discipline (inv-zen-031): this file imports
+// Boundary discipline: this file imports
 // internal/providers (SidecarBackend) + internal/daemon/handlers
 // (NotificationsPost) + internal/store (Notification value type) +
 // stdlib. It does NOT import private-tier1-module (extracted to
-// the private repo per Plan 15 Phase B-2).
+// the private repo).
 //
-// Plan-15 invariant placeholder: inv-zen-B16-3 (concrete inv-zen-NNN
+// invariant placeholder: inv-zen-B16-3 (concrete inv-zen-NNN
 // allocated at merge-time renumber reconciliation per the renumber-on-
 // merge playbook; current high-water tracked in
 // reference_invariant_numbering memory).
 
-//go:build integration
-
+// go:build integration
 package integration_test
 
 import (

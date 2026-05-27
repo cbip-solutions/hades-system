@@ -7,18 +7,18 @@
 // the validate-then-swap pipeline (parser.ParseStrict → schema.Validate →
 // schema.ValidateTighten if per-project → atomic swap via active.Set*). Validation
 // failures keep the previously-loaded schema active (last-good fallback) and emit
-// DoctrineReloadFailed via the Plan 5 eventlog. Repeated failures (5+ within a
+// DoctrineReloadFailed via the eventlog. Repeated failures (5+ within a
 // 60-second window) trigger a per-path 1-minute cooldown to protect the daemon
 // from a wedged file.
 //
-// Reuses Plan 7 Q16 + Qx-2 D file-watcher infrastructure (fsnotify wrapper +
+// Reuses Q16 + Qx-2 D file-watcher infrastructure (fsnotify wrapper +
 // 25% CPU pool + debounce reset-on-event pattern); zero new infra.
 //
-// Boundary (inv-zen-031 / inv-zen-133): zero imports of internal/store; Phase 8
+// Boundary: zero imports of internal/store; Phase 8
 // reload package is downstream of parser + schema + active + errors only, plus
 // fsnotify + eventlog interface.
 //
-// Atomicity (inv-zen-138): Watcher does NOT mutate active.Accessor's sync.Pointer
+// Atomicity: Watcher does NOT mutate active.Accessor's sync.Pointer
 // directly; delegates to active.SetForProject + active.SetUserDefault, which own
 // the Store call. Watcher concurrency contract: AddPath, NotifyForce,
 // SubscribeReloadEvents safe for concurrent callers; Start runs in a single

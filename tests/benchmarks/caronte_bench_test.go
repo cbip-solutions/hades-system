@@ -1,5 +1,4 @@
-//go:build benchmark && cgo
-
+// go:build benchmark && cgo
 package benchmarks
 
 import (

@@ -1,46 +1,46 @@
 // SPDX-License-Identifier: MIT
 // cmd/zen-swarm-ctld/contract_federation_wiring.go
 //
-// workspace federation substrate (Phase A WorkspaceFederationDB) +
-// the L10 Coordinator (Phase H OrchestratorCoordinator).
+// workspace federation substrate +
+// the L10 Coordinator.
 //
-// This file is the daemon's composition root for Plan 20: it is the
+// This file is the daemon's composition root: it is the
 // ONLY layer that imports BOTH internal/daemon (for the narrow
 // ContractFederationForDaemon + ContractCoordinatorForDaemon
 // interfaces) AND the concrete internal/caronte/store/federation +
 // internal/caronte/coordinated packages. The intermediate layers see
-// only the narrow seam interfaces (inv-zen-031 boundary; mirrors the
+// only the narrow seam interfaces (invariant boundary; mirrors the
 //
 // Three public helpers exported to main.go (J-8):
 //
-//   - buildContractFederation(deps contractFederationWiringDeps)
-//     (*federation.WorkspaceFederationDB,
-//     *coordinated.OrchestratorCoordinator, error)
-//     Opens the workspace.db via Phase A's federation.Open(ctx,
-//     statePath, opts...) (variadic Option per as-built Wave-1),
-//     constructs the Phase H Coordinator via plain struct-literal
-//     with capability-detected pool (nil-tolerant per D9 — Plan 5
-//     WorktreePool not yet daemon-wired at v0.19.0 ship; present →
-//     ModeAutonomy, absent → ModeSurface). Returns both concretes;
-//     main.go defers Close on fedDB + injects via the two narrow
-//     adapters below.
+// - buildContractFederation(deps contractFederationWiringDeps)
+// (*federation.WorkspaceFederationDB,
+// *coordinated.OrchestratorCoordinator, error)
+// Opens the workspace.db via federation.Open(ctx,
+// statePath, opts...) (variadic Option per as-built Wave-1),
+// constructs the Coordinator via plain struct-literal
+// with capability-detected pool (nil-tolerant per D9 —
+// WorktreePool not yet daemon-wired at v0.19.0 ship; present →
+// ModeAutonomy, absent → ModeSurface). Returns both concretes;
+// main.go defers Close on fedDB + injects via the two narrow
+// adapters below.
 //
-//   - newFederationDaemonAdapter(*federation.WorkspaceFederationDB)
-//     ContractFederationForDaemon
-//     Thin adapter that translates federation.* row types into the
-//     daemon-package mirror types so the daemon sees only its own
-//     value types (inv-zen-031). Pure mapping; no behaviour change.
+// - newFederationDaemonAdapter(*federation.WorkspaceFederationDB)
+// ContractFederationForDaemon
+// Thin adapter that translates federation.* row types into the
+// daemon-package mirror types so the daemon sees only its own
+// value types. Pure mapping; no behaviour change.
 //
-//   - newCoordinatorDaemonAdapter(*coordinated.OrchestratorCoordinator)
-//     ContractCoordinatorForDaemon
-//     Thin adapter that translates coordinated.DispatchDecision into
-//     daemon.DispatchDecision (typed DispatchMode → string at the
-//     boundary). Pure mapping; ring-buffer reads delegate to the
-//     coordinator's RecentDispatches.
+// - newCoordinatorDaemonAdapter(*coordinated.OrchestratorCoordinator)
+// ContractCoordinatorForDaemon
+// Thin adapter that translates coordinated.DispatchDecision into
+// daemon.DispatchDecision (typed DispatchMode → string at the
+// boundary). Pure mapping; ring-buffer reads delegate to the
+// coordinator's RecentDispatches.
 //
 // PLUS defaultPolicyOracle — the production
-// coordinated.AutonomyOracle impl (Phase H's seam). Master AS-BUILT
-// CORRECTION #14 (MINOR-8 resolution): Phase J ships the sole
+// coordinated.AutonomyOracle impl. Master AS-BUILT
+// CORRECTION #14 (MINOR-8 resolution): ships the sole
 // production oracle for v0.19.0; co-located with the wiring file
 // because both live in the daemon composition root. Consults
 // WorkspacePolicy.PrivacyLocked() + a small blast-radius heuristic
@@ -51,9 +51,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/cbip-solutions/hades-system/internal/audit/tessera"
+	cyaml "github.com/cbip-solutions/hades-system/internal/caronte/contract/yaml"
 	"github.com/cbip-solutions/hades-system/internal/caronte/coordinated"
 	"github.com/cbip-solutions/hades-system/internal/caronte/store"
 	"github.com/cbip-solutions/hades-system/internal/caronte/store/federation"
@@ -162,6 +166,60 @@ func (a *federationDaemonAdapter) GetWorkspace(ctx context.Context, workspaceID 
 	}, nil
 }
 
+func (a *federationDaemonAdapter) ValidateContractManifest(ctx context.Context, repo, workspaceID string) (daemon.ContractManifestValidation, error) {
+	manifestPath, repoRoot := resolveContractManifestPath(repo)
+	roster, err := a.validationRoster(ctx, repoRoot, workspaceID)
+	if err != nil {
+		return daemon.ContractManifestValidation{}, err
+	}
+	m, err := cyaml.Load(manifestPath, roster)
+	if err != nil {
+		return daemon.ContractManifestValidation{
+			Valid: false,
+			Errors: []daemon.ContractManifestError{
+				contractManifestValidationError(err, manifestPath),
+			},
+		}, nil
+	}
+	services := make([]daemon.ContractManifestService, 0, len(m.Services))
+	for _, svc := range m.Services {
+		services = append(services, daemon.ContractManifestService{
+			BaseURLRef: contractManifestBaseURLRef(svc),
+			TargetRepo: svc.TargetRepo,
+		})
+	}
+	return daemon.ContractManifestValidation{
+		Valid:         true,
+		SchemaVersion: m.SchemaVersion,
+		Services:      services,
+	}, nil
+}
+
+func (a *federationDaemonAdapter) RegisterWorkspace(ctx context.Context, row daemon.Workspace) error {
+	return a.db.RegisterWorkspace(ctx, federation.WorkspaceRow{
+		WorkspaceID: row.WorkspaceID, OwningProject: row.OwningProject,
+		PolicyLocked: row.PolicyLocked, CreatedAt: row.CreatedAt, SchemaVersion: row.SchemaVersion,
+	})
+}
+
+func (a *federationDaemonAdapter) AddWorkspaceMember(ctx context.Context, row daemon.Member) error {
+	return a.db.AddMember(ctx, federation.MemberRow{
+		WorkspaceID: row.WorkspaceID, ProjectID: row.ProjectID, RegisteredAt: row.RegisteredAt,
+	})
+}
+
+func (a *federationDaemonAdapter) RemoveWorkspace(ctx context.Context, workspaceID string) (int64, error) {
+	return a.db.RemoveWorkspace(ctx, workspaceID)
+}
+
+func (a *federationDaemonAdapter) GetWorkspacePolicy(ctx context.Context, workspaceID string) (string, error) {
+	return a.db.GetWorkspacePolicy(ctx, workspaceID)
+}
+
+func (a *federationDaemonAdapter) SetWorkspacePolicy(ctx context.Context, workspaceID, policy string) error {
+	return a.db.SetWorkspacePolicy(ctx, workspaceID, policy)
+}
+
 func (a *federationDaemonAdapter) ListRecentBreakingChanges(ctx context.Context, workspaceID string, limit int) ([]daemon.BreakingChange, error) {
 	raw, err := a.db.ListRecentBreakingChanges(ctx, workspaceID, limit)
 	if err != nil {
@@ -240,6 +298,118 @@ func (a *federationDaemonAdapter) Close() error {
 }
 
 var _ daemon.ContractFederationForDaemon = (*federationDaemonAdapter)(nil)
+
+func resolveContractManifestPath(repo string) (manifestPath, repoRoot string) {
+	clean := filepath.Clean(strings.TrimSpace(repo))
+	if filepath.Base(clean) == "caronte.yaml" {
+		return clean, filepath.Dir(clean)
+	}
+	return filepath.Join(clean, "caronte.yaml"), clean
+}
+
+func (a *federationDaemonAdapter) validationRoster(ctx context.Context, repoRoot, workspaceID string) ([]string, error) {
+	if workspaceID != "" {
+		members, err := a.ListWorkspaceMembers(ctx, workspaceID)
+		if err != nil {
+			return nil, err
+		}
+		return memberProjectIDs(members), nil
+	}
+	workspaces, err := a.db.ListWorkspaces(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if len(workspaces) == 1 {
+		members, err := a.ListWorkspaceMembers(ctx, workspaces[0].WorkspaceID)
+		if err != nil {
+			return nil, err
+		}
+		if len(members) > 0 {
+			return memberProjectIDs(members), nil
+		}
+	}
+	return siblingRoster(repoRoot), nil
+}
+
+func memberProjectIDs(members []daemon.Member) []string {
+	ids := make([]string, 0, len(members))
+	for _, m := range members {
+		if m.ProjectID != "" {
+			ids = append(ids, m.ProjectID)
+		}
+	}
+	sort.Strings(ids)
+	return ids
+}
+
+func siblingRoster(repoRoot string) []string {
+	absRoot, err := filepath.Abs(repoRoot)
+	if err != nil {
+		absRoot = filepath.Clean(repoRoot)
+	}
+	base := filepath.Base(absRoot)
+	seen := map[string]bool{}
+	if base != "." && base != string(filepath.Separator) && base != "" {
+		seen[base] = true
+	}
+	entries, err := os.ReadDir(filepath.Dir(absRoot))
+	if err == nil {
+		for _, entry := range entries {
+			name := entry.Name()
+			if entry.IsDir() && !strings.HasPrefix(name, ".") {
+				seen[name] = true
+			}
+		}
+	}
+	roster := make([]string, 0, len(seen))
+	for id := range seen {
+		roster = append(roster, id)
+	}
+	sort.Strings(roster)
+	return roster
+}
+
+func contractManifestBaseURLRef(s cyaml.Service) string {
+	switch {
+	case s.BaseURLEnv != "":
+		return "${" + s.BaseURLEnv + "}"
+	case s.BaseURL != "":
+		return s.BaseURL
+	default:
+		return s.BaseURLPattern
+	}
+}
+
+func contractManifestValidationError(err error, path string) daemon.ContractManifestError {
+	return daemon.ContractManifestError{
+		Code:    contractManifestErrorCode(err),
+		Message: err.Error(),
+		Path:    path,
+	}
+}
+
+func contractManifestErrorCode(err error) string {
+	switch {
+	case errors.Is(err, cyaml.ErrMissingSchemaVersion):
+		return "missing_schema_version"
+	case errors.Is(err, cyaml.ErrMultipleBaseURLVariants):
+		return "multiple_base_url_variants"
+	case errors.Is(err, cyaml.ErrUnknownTargetRepo):
+		return "unknown_target_repo"
+	case errors.Is(err, cyaml.ErrInlineSecret):
+		return "inline_secret"
+	case errors.Is(err, cyaml.ErrPatternTooLong):
+		return "pattern_too_long"
+	case errors.Is(err, cyaml.ErrPatternRegexDoS):
+		return "pattern_regex_dos"
+	case errors.Is(err, cyaml.ErrInvalidUnresolvedPolicy):
+		return "invalid_unresolved_policy"
+	case errors.Is(err, os.ErrNotExist):
+		return "manifest_not_found"
+	default:
+		return "invalid_manifest"
+	}
+}
 
 func deriveSeverity(kind string) string {
 	switch kind {
@@ -362,6 +532,8 @@ func (p boolPolicy) PrivacyLocked() bool { return p.locked }
 type wireContractFederationOpts struct {
 	WorkspaceID string
 
+	Pool worktreepool.Pool
+
 	FederationProjectID string
 
 	RecentDispatchCap int
@@ -381,11 +553,11 @@ type wireContractFederationOpts struct {
 // NOT by the federation closer).
 //
 // Errors surface as bootstrap-required (main.go os.Exit(1)s):
-//   - nil srv → defense-in-depth refusal (would NPE in SetContract*)
-//   - nil tesseraMgr → cannot resolve audit adapter (inv-zen-269)
-//   - federation.WorkspaceDBPath fail → no XDG anchor in env (Phase A C-1)
-//   - tesseraMgr.ProjectAdapter fail → audit subsystem misconfigured
-//   - buildContractFederation fail → federation DB or coordinator wire-up failed
+// - nil srv → defense-in-depth refusal (would NPE in SetContract*)
+// - nil tesseraMgr → cannot resolve audit adapter
+// - federation.WorkspaceDBPath fail → no XDG anchor in env
+// - tesseraMgr.ProjectAdapter fail → audit subsystem misconfigured
+// - buildContractFederation fail → federation DB or coordinator wire-up failed
 //
 // Mirrors the buildCaronteEngine + srv.SetCaronteEngine pattern at
 // main.go:520-543; the helper exists so the call-site is one line + the
@@ -422,7 +594,7 @@ func wireContractFederation(
 	fedDB, coord, err := buildContractFederation(contractFederationWiringDeps{
 		ctx:               ctx,
 		audit:             auditAdapter,
-		pool:              nil,
+		pool:              opts.Pool,
 		doctrine:          newProductionDoctrineResolver(),
 		workspaceID:       opts.WorkspaceID,
 		statePath:         statePath,

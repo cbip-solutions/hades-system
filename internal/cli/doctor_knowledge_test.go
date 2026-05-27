@@ -300,8 +300,8 @@ func TestRunKnowledgeProbeWatcherDeadFail(t *testing.T) {
 }
 
 func TestRunKnowledgeProbeExtensionHooksAllSetWarn(t *testing.T) {
-	// Spec §7.2 inv-zen-130: extension columns NULL by default. If 100%
-	// of rows have non-NULL extensions, that means either Plan 9/14 wired
+	// Spec §7.2 invariant: extension columns NULL by default. If 100%
+	// of rows have non-NULL extensions, that means either wired
 	// prematurely or test fixture leaked. Probe MUST surface as Warn.
 	p := &fakeKnowledgeProber{
 		integrity:        "ok",

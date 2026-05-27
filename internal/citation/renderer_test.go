@@ -1,9 +1,9 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// internal/citation/renderer_test.go — Plan 11 Phase D Task D-3.
+// internal/citation/renderer_test.go — Task D-3.
 //
-// Tests for the Renderer interface + Registry + Dispatch routing. Plan 12
-// platform renderers register against Registry; Phase D substrate ships
+// Tests for the Renderer interface + Registry + Dispatch routing.
+// platform renderers register against Registry; substrate ships
 // MarkdownFallback only.
 package citation_test
 

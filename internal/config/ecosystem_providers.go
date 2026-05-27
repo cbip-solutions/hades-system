@@ -2,8 +2,8 @@
 // internal/config/ecosystem_providers.go
 //
 // TOML schema types + Load/Validate/default helpers for the 5 ecosystem
-// provider config files Plan 14 ingester + retrieval pipeline consume at
-// daemon startup (Plan 14 Phase F Task F-8).
+// provider config files ingester + retrieval pipeline consume at
+// daemon startup.
 //
 // Files live at ~/.config/zen-swarm/providers/ (operator home) — NOT in
 // the repo. Missing files use the embedded Go defaults; well-formed files
@@ -13,23 +13,23 @@
 //
 // The five surfaces:
 //
-//   - ecosystem-prefix.toml         — Contextual Retrieval prefix LLM
-//     (qwen2.5:7b / ollama / parallelism=4 baseline; spec §2.3 C2)
-//   - ecosystem-embedder.toml       — Embedding model
-//     (jina-code-embeddings-1.5b / MPS primary; voyage-code-3 fallback)
-//   - ecosystem-reranker.toml       — Reranker + per-ecosystem λ map
-//     (BGE-reranker-v2-m3; inv-zen-198 ≤300ms; inv-zen-196 λ tunable)
-//   - ecosystem-router.toml         — Local classifier + heuristic
-//     pre-filter (no LLM; single-egress doctrine preserved)
-//   - ecosystem-version-detect.toml — 5-layer cascade
-//     (FileParser → regex → optional Haiku → default)
+// - ecosystem-prefix.toml — Contextual Retrieval prefix LLM
+// (qwen2.5:7b / ollama / parallelism=4 baseline; spec §2.3 C2)
+// - ecosystem-embedder.toml — Embedding model
+// (jina-code-embeddings-1.5b / MPS primary; voyage-code-3 fallback)
+// - ecosystem-reranker.toml — Reranker + per-ecosystem λ map
+//
+// - ecosystem-router.toml — Local classifier + heuristic
+// pre-filter (no LLM; single-egress doctrine preserved)
+// - ecosystem-version-detect.toml — 5-layer cascade
+// (FileParser → regex → optional Haiku → default)
 //
 // Validation gates: each Validate* enforces closed-set Backend membership
 // (catches typos like "ollam") + non-negative Parallelism / TimeoutMs /
 // FeatureDim (catches semantically-broken-but-well-formed config).
 //
 // The install script that materializes the TOML files on first run lives
-// downstream (Phase F install / Phase G daemon startup) — F-8 ships only
+// downstream — F-8 ships only
 // the schema + Load/Validate/default surface.
 package config
 

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package memory wraps the auto-memory tree at
-// ~/.claude/projects/<encoded-path>/memory/. Plan 9 implements;
+// ~/.claude/projects/<encoded-path>/memory/. implements;
 package memory
 
 import zerrors "github.com/cbip-solutions/hades-system/internal/errors"

@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: MIT
-// Package orchestrator state machine — Plan 5 Phase C.
+// Package orchestrator state machine —
 //
 // Defines the 9 supervisor states and the canonical TransitionTable of
-// 28 valid transitions per spec §1 Q6 D. inv-zen-091 enforces that
+// 28 valid transitions per spec §1 Q6 D. invariant enforces that
 // every runtime transition is in this table; illegal transitions return
 // ErrIllegalTransition without mutating state and without emitting an
 // event. Concurrent callers serialize through the embedded mutex.
 //
 // Architecture leaf package internal to orchestrator/. Imports only
 // internal/orchestrator/eventlog (event emission) and
-// internal/orchestrator/clock (monotonic timestamps). Phase D's
+// internal/orchestrator/clock (monotonic timestamps).
 // orchestrator.go / dispatcher.go / depth.go siblings will consume
 // this file as the supervisor's authoritative state holder.
 //
 // Invariants
-//   - inv-zen-091: state machine transitions ∈ TransitionTable
-//     (compile-checked exhaustiveness witnesses + runtime rejection +
-//     compliance test in tests/compliance/).
-//   - inv-zen-089: this file does NOT import internal/store.
-//   - inv-zen-090: this file does NOT import internal/workforce/queue.
+// - invariant: state machine transitions ∈ TransitionTable
+// (compile-checked exhaustiveness witnesses + runtime rejection +
+// compliance test in tests/compliance/).
+// - invariant: this file does NOT import internal/store.
+// - invariant: this file does NOT import internal/workforce/queue.
 package orchestrator
 
 import (
@@ -111,7 +111,7 @@ func ParseState(s string) (State, error) {
 // is a free-form short string (e.g. "operator-confirmed",
 // "cost-degradation-80pct", "panic-recovery"). Reason MUST be
 // pre-redacted by the caller — this package emits it verbatim into the
-// event-log payload (privacy IMP-3 carry-forward from Phase A).
+// event-log payload.
 type StateTransition struct {
 	From   State
 	To     State
@@ -119,7 +119,7 @@ type StateTransition struct {
 }
 
 // TransitionTable is the canonical set of 28 valid transitions per
-// spec §1 Q6 D inv-zen-091. The compliance test re-derives this set
+// spec §1 Q6 D invariant. The compliance test re-derives this set
 // from the spec; do NOT add a transition without first amending the
 // spec.
 //
@@ -130,7 +130,7 @@ type StateTransition struct {
 // (RECOVERING_FROM_REPLAY → {Running, DegradedTier,
 // WaitingForConfirmation, Aborting}). The "{any}→
 // RECOVERING_FROM_REPLAY (on daemon restart)" rule from the spec
-// belongs to the Replay code path (Phase E) which constructs a fresh
+// belongs to the Replay code path which constructs a fresh
 // StateMachine after restart rather than entering RECOVERING via
 // Transition; consequently no inbound RECOVERING edges appear in
 // this table.

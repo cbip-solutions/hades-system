@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — reranker_cohere.go
 //
-// Cohere Rerank v4 API fallback (Plan 14 Phase D Task D-4 per spec §2.6 Q6=A
+// Cohere Rerank v4 API fallback ( Task D-4 per spec §2.6 Q6=A
 // alternative C). Operator opt-in only.
 //
 // # Why opt-in
@@ -14,17 +14,17 @@
 // 2025). The dispatcher prefers BGE local but cascades to Cohere when BGE
 // returns no result or exceeds the per-query budget.
 //
-// # Egress path (inv-zen-191 forward-compat)
+// # Egress path
 //
 // This file does NOT import net/http directly. HTTP egress routes through
 // the narrow CohereForwarder interface, which the daemon orchestrator wires
-// to a concrete *providers.Dispatcher at Phase F surface (Plan 10 B-6
+// to a concrete *providers.Dispatcher at surface ( B-6
 // narrow-interface pattern). The dispatcher owns:
 //
-//   - URL routing → https://api.cohere.ai/v2/rerank
-//   - Bearer-token Authorization header injection (from cached token)
-//   - HTTP transport (with Plan 3 cert-pinning + retry/backoff + audit log)
-//   - Mapping HTTP non-2xx to *CohereHTTPError for the caller to branch on
+// - URL routing → https://api.cohere.ai/v2/rerank
+// - Bearer-token Authorization header injection (from cached token)
+// - HTTP transport
+// - Mapping HTTP non-2xx to *CohereHTTPError for the caller to branch on
 //
 // Tests substitute the CohereForwarder interface with fakeCohereForwarder
 // (see reranker_cohere_test.go) to exercise every error/HTTP-status branch
@@ -35,14 +35,14 @@
 //
 // Tokens stored in macOS Keychain via:
 //
-//	security add-generic-password -a zen-swarm -s cohere-api-token -w '<tok>'
+// security add-generic-password -a zen-swarm -s cohere-api-token -w '<tok>'
 //
 // CohereRerankV4Options.TokenKey ("cohere-api-token" by default) +
 // TokenAccount ("zen-swarm" by default) name the Keychain entry. The
 // KeychainAccessor narrow interface (defined in embedder.go) is reused —
 // production wires the real macOS Keychain; tests inject fakeKeychain.
 //
-// inv-zen-191 + privacy doctrine: ensureToken runs ONLY after the
+// invariant + privacy doctrine: ensureToken runs ONLY after the
 // EnableFallback gate; ErrFallbackDisabled (defined in embedder.go and
 // shared across the package) short-circuits at construction. Empty token
 // → ErrKeychainTokenMissing (defense-in-depth: never invoke Forwarder
@@ -52,7 +52,7 @@
 //
 // Rerank is safe for concurrent invocation. token-cache mutex prevents
 // duplicate Keychain consultation; subsequent calls hit the fast path.
-// The Forwarder MUST itself be goroutine-safe (Plan 3 dispatcher guarantees
+// The Forwarder MUST itself be goroutine-safe ( dispatcher guarantees
 // this; daemon orchestrator wires it once at startup).
 //
 // # Latency budget
@@ -108,24 +108,24 @@ func (e *CohereHTTPError) Error() string {
 	return fmt.Sprintf("cohere http %d: %s", e.StatusCode, string(body))
 }
 
-// CohereForwarder is the Plan-14-narrow interface for Plan 3 dispatcher.
+// CohereForwarder is the interface dispatcher.
 // The daemon orchestrator wires a concrete *providers.Dispatcher at runtime
 // (which owns URL routing → api.cohere.ai/v2/rerank, bearer-token auth
-// header injection, HTTP transport, and per-Plan-3 audit logging); tests
+// header injection, HTTP transport, and per- audit logging); tests
 // wire fakeCohereForwarder. This keeps the ecosystem package free of any
-// net/http import (inv-zen-191) and internal/providers import (inv-zen-031).
+// net/http import and internal/providers import.
 //
 // Contract
-//   - On HTTP 2xx: returns (body, nil) — the raw response body for the
-//     caller to json.Unmarshal into cohereResponse.
-//   - On HTTP non-2xx: returns (nil, *CohereHTTPError) — the caller branches
-//     on StatusCode via errors.As. Implementers MUST surface non-2xx as
-//     *CohereHTTPError (errors.As-compatible); returning a generic error
-//     for a 401 would silently elevate to "transport blip" and could
-//     trigger inappropriate retry.
-//   - On transport-level fault (timeout, refused): returns (nil, err) where
-//     err is NOT a *CohereHTTPError. Caller surfaces raw.
-//   - On ctx.Done: returns (nil, ctx.Err()). Caller surfaces raw.
+// - On HTTP 2xx: returns (body, nil) — the raw response body for the
+// caller to json.Unmarshal into cohereResponse.
+// - On HTTP non-2xx: returns (nil, *CohereHTTPError) — the caller branches
+// on StatusCode via errors.As. Implementers MUST surface non-2xx as
+// *CohereHTTPError (errors.As-compatible); returning a generic error
+// for a 401 would silently elevate to "transport blip" and could
+// trigger inappropriate retry.
+// - On transport-level fault (timeout, refused): returns (nil, err) where
+// err is NOT a *CohereHTTPError. Caller surfaces raw.
+// - On ctx.Done: returns (nil, ctx.Err()). Caller surfaces raw.
 type CohereForwarder interface {
 	Forward(ctx context.Context, body []byte) ([]byte, error)
 }

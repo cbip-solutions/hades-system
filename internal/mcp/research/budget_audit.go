@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// budget_audit.go — adapters from Phase H typed clients to the
+// budget_audit.go — adapters from typed clients to the
 // BudgetClient + AuditClient interfaces declared in types.go.
 //
-// The Phase H internal/mcp/client package exposes:
-//   - *client.BudgetClient with CapStatus + Record methods
-//   - *client.EmitClient with Emit method
+// The internal/mcp/client package exposes:
+// - *client.BudgetClient with CapStatus + Record methods
+// - *client.EmitClient with Emit method
 //
 // This file narrows those typed clients into the
 // research-package-local BudgetClient + AuditClient interfaces.
-// The type system enforces the boundary (inv-zen-031).
+// The type system enforces the boundary.
 package research
 
 import (

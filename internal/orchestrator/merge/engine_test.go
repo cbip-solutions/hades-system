@@ -434,7 +434,7 @@ func TestMergeEmitsStartedOnFreshRequest(t *testing.T) {
 // TestMergeBaselineFailAbortsAtomically — Step 4: BaselineRunner.Run returns
 // err → Merge emits EvtMergeFailed{reason: "baseline_failed"} + returns the
 // wrapped error verbatim. Critically, the Runner MUST NOT be invoked
-// (inv-zen-106 atomicity — a failed baseline aborts the pipeline before any
+// (invariant atomicity — a failed baseline aborts the pipeline before any
 // per-candidate work begins; partial outcomes pollute scoring).
 func TestMergeBaselineFailAbortsAtomically(t *testing.T) {
 	t.Parallel()
@@ -458,7 +458,7 @@ func TestMergeBaselineFailAbortsAtomically(t *testing.T) {
 		t.Errorf("Merge err: %v; want wrapping %v", mergeErr, baseErr)
 	}
 
-	// inv-zen-106 atomicity: Runner MUST NOT be called when Baseline failed.
+	// invariant atomicity: Runner MUST NOT be called when Baseline failed.
 	if calls := d.Runner.(*fakeRunnerEng).Calls(); len(calls) != 0 {
 		t.Errorf("Runner.RunCandidates calls on baseline failure = %d, want 0 (inv-zen-106)", len(calls))
 	}
@@ -1215,7 +1215,7 @@ func TestMergeRevertedTrueOnCtxCancelMidPipeline(t *testing.T) {
 		t.Error("MergeOutcome.Reverted = false on mid-pipeline ctx-cancel; want true (spec §3.4)")
 	}
 
-	// inv-zen-106 atomicity: Runner MUST NOT be invoked when the engine
+	// invariant atomicity: Runner MUST NOT be invoked when the engine
 	// catches ctx-cancel post-Baseline (mid-pipeline boundary).
 	if calls := d.Runner.(*fakeRunnerEng).Calls(); len(calls) != 0 {
 		t.Errorf("Runner.RunCandidates calls on mid-pipeline ctx-cancel = %d, want 0", len(calls))

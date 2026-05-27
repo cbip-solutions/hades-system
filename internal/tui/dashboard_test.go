@@ -288,12 +288,12 @@ func TestPollEveryDefaultsTo1s(t *testing.T) {
 }
 
 // TestNewModelDefaultsToCapaFirewall verifies the fail-closed default
-// for the codegraph panel's inv-zen-163 client-side anchor. Construction
+// for the codegraph panel's invariant client-side anchor. Construction
 // must NOT leave the guard at a permissive mode; until Init resolves the
 // daemon's active doctrine the F7 [C] cross-project key MUST be blocked
 // client-side (defense-in-depth pairs with server-side enforcement).
 //
-// MAJOR-1 fix-cycle (Plan 12 Phase C). Before the fix, NewModel left
+// MAJOR-1 fix-cycle. Before the fix, NewModel left
 // codegraph.doctrineMode = "default" (permissive) for the entire
 // dashboard lifetime — Init never called SetDoctrineMode. This test
 // pins the new contract: construction defaults to capa-firewall.

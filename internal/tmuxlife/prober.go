@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package tmuxlife — prober.go
 //
-// Phase J Task J-6 adapter: exposes a Prober implementation that the
+// Task J-6 adapter: exposes a Prober implementation that the
 // cli/doctor_tmux.go layer consumes (cli.TmuxProber). Read-only.
 //
-// inv-zen-117 anchor: ALL tmux invocations go through ExecTmux which
+// invariant anchor: ALL tmux invocations go through ExecTmux which
 // enforces -S flag (forbids default socket /tmp/tmux-<uid>). The Prober
 // follows the same discipline — its ServerReachable always passes the
 // canonical SocketPath constant.
 //
-// Boundary (inv-zen-031): this package does NOT import internal/store.
-// SessionStore is the existing Phase C interface; the daemon wires
+// Boundary: this package does NOT import internal/store.
+// SessionStore is the existing interface; the daemon wires
 // daemon.db's tmux_session_state via the matching adapter at boot.
 //
-// Phase J adds the cpu_budget / drift / socket-permissions surface to
+// adds the cpu_budget / drift / socket-permissions surface to
 // the existing C surface (Spawn / Reap / DriftPoller). The new code is
 // a thin read-only layer; no mutation of session state happens here.
 package tmuxlife
@@ -27,8 +27,8 @@ import (
 )
 
 // ExecFunc is the signature used to invoke tmux. Tests pass a fake.
-// Production wires to ExecTmux (Phase C exec.go) which enforces
-// inv-zen-117 (-S flag mandatory).
+// Production wires to ExecTmux which enforces
+// invariant (-S flag mandatory).
 //
 // MUST be safe for concurrent use.
 type ExecFunc func(ctx context.Context, args ...string) ([]byte, error)

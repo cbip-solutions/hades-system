@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package store — audit.go
 //
-// CRUD wrappers for the Plan 2 Phase G audit triple:
-//   - bypass_audit            (existing v1 table, extended in v4 with conversation_id)
-//   - bypass_audit_bodies     (v5, encrypted bodies, inv-zen-055)
-//   - bypass_audit_pins       (v6, retention-exempt registry, Q7 D)
+// CRUD wrappers for the audit triple:
+// - bypass_audit (existing v1 table, extended in v4 with conversation_id)
+// - bypass_audit_bodies
+// - bypass_audit_pins (v6, retention-exempt registry, Q7 D)
 //
 // The bypass package never imports this file directly — it goes through
 // the in-package adapter at private-tier1-module/audit_integration_adapter.go
@@ -12,7 +12,7 @@
 //
 // The legacy stub in bypass_audit.go (InsertBypassAudit / ListBypassAudit /
 // BypassSuccessRate) returns ErrNotImplementedPlan2 and is preserved for
-// callers that haven't migrated yet; they can be removed in Phase L.
+// callers that haven't migrated yet; they can be removed in
 package store
 
 import (

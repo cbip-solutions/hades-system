@@ -504,7 +504,7 @@ func TestEvalModeDegradationMalformedPayloadIgnored(t *testing.T) {
 // Per project doctrine no-defer / no-tech-debt: this branch is reachable
 // (AnomalyDeps.GenCtr is a public field), testable (~10 LoC inject), exists
 // today (shipped at C-3), and is not forward-looking — so it gets closed
-// inline rather than deferred to a Phase D engine-level test.
+// inline rather than deferred to a engine-level test.
 func TestEmitWithGenCtrPropagatesGenerationID(t *testing.T) {
 	em := &recordingEmitter{}
 	clk := &fakeClock{now: time.Date(2026, 5, 1, 0, 0, 0, 0, time.UTC)}

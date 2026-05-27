@@ -1,8 +1,8 @@
-//go:build property && cgo
+// go:build property && cgo
 
-// tests/property/ecosystem/fallback_audit_property_test.go (Plan 14 Phase H Task H-7-9)
+// tests/property/ecosystem/fallback_audit_property_test.go
 //
-// inv-zen-203: query-time live fallback chained audit event — when the
+// invariant: query-time live fallback chained audit event — when the
 // dispatcher takes the live-fallback path, the audit chain MUST receive
 // an EvtRAGQuery row with payload.fresh_dispatch=true BEFORE any
 // network-side work fires (so the chain captures the dispatch reason
@@ -93,7 +93,7 @@ func TestFallbackAudit_Property_ProvenanceMirrorsDispatchPath(t *testing.T) {
 
 // TestFallbackAudit_Property_EvtRAGQueryIsFirstEmission verifies the
 // ordering invariant: EvtRAGQuery MUST be the FIRST event emitted on
-// the fallback path (dispatcher_fallback.go inv-zen-203 ordering: the
+// the fallback path (dispatcher_fallback.go invariant ordering: the
 // chain must capture the dispatch reason BEFORE any network work runs).
 //
 // Adversarial test: a buggy implementation that emits a network-success

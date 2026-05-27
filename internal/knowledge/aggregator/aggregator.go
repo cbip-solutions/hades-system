@@ -13,22 +13,22 @@
 // fight that contract and require distributed-transaction primitives
 // SQLite cannot provide.
 //
-// Boundary (inv-zen-031): this package imports NO internal/store. The
+// Boundary: this package imports NO internal/store. The
 // PerProjectKnowledgeStore interface is satisfied at daemon-boot time
 // by internal/daemon/knowledgeadapter, the only package that
 // legitimately imports both internal/store AND this aggregator
 // package. Compliance test in tests/compliance/inv_zen_031_*.go enforces.
 //
 // Phase ownership:
-//   - D-2 (this file): struct + constructor + DI seams + sentinels
-//   - D-3..D-7: Promote / Search / Embed / wikilink resolver methods
-//   - D-8: PerProjectKnowledgeStore real implementation in
-//     internal/daemon/knowledgeadapter
-//   - D-9: inv-zen-146 Promote runtime enforcement
-//   - D-10: inv-zen-129 search-no-remote runtime check
-//   - D-11: ChainAnchorComputer real wiring to Phase B
-//   - D-12: PerProjectKnowledgeStore daemon glue
-//   - D-13: zen-CLI wiring + audit-anchor reverse lookup
+// - D-2 (this file): struct + constructor + DI seams + sentinels
+// - D-3..D-7: Promote / Search / Embed / wikilink resolver methods
+// - D-8: PerProjectKnowledgeStore real implementation in
+// internal/daemon/knowledgeadapter
+// - D-9: invariant Promote runtime enforcement
+// - D-10: invariant search-no-remote runtime check
+// - D-11: ChainAnchorComputer real wiring to
+// - D-12: PerProjectKnowledgeStore daemon glue
+// - D-13: zen-CLI wiring + audit-anchor reverse lookup
 package aggregator
 
 import (
@@ -109,28 +109,28 @@ func (a *Aggregator) Close() error {
 }
 
 // DB returns the underlying *sql.DB if Options.DB was supplied at
-// construction; otherwise returns nil. Plan 14 Phase C C-9 amendment
-// (Stage 2 2026-05-15):
+// construction; otherwise returns nil. C-9 amendment
+// :
 //
 // this directly for the cross-ecosystem query surface (BinaryTop200 +
 // FTS5Top200 + HydrateChunks per master §3.13 IndexerQueryAdapter
-// contract). Without this accessor the Phase D dispatcher cannot bridge
+// contract). Without this accessor the dispatcher cannot bridge
 // from its aggregator-owned *sql.DB to the Indexer's read methods.
 //
 // Why additive (vs constructor-time injection): the aggregator is the
 // canonical owner of the *sql.DB lifecycle for the aggregator.db
-// (Plan 9 D). Plan 14's per-ecosystem.db handles live in a DIFFERENT
+// . per-ecosystem.db handles live in a DIFFERENT
 // SQLite file (one per ecosystem per spec §2.2 Q2=A), so the aggregator
 // DOES NOT own the Indexer's *sql.DB — only its own. The DB() accessor
-// surfaces the read-only handle for daemon glue (Phase F) to wire into
+// surfaces the read-only handle for daemon glue to wire into
 // per-ecosystem Indexer constructors. The accessor is additive: it does
 // NOT change the existing aggregator surface; D-3..D-13 methods + the
 // degraded-mode toggle continue to use the same a.db field they always
 // did.
 //
-// Boundary note (inv-zen-031 spirit): this exposes the read-side
-// handle intentionally; Plan 14 Indexer is the SOLE intended caller.
-// A Phase H compliance test (tests/compliance/) enforces that no other
+// Boundary note: this exposes the read-side
+// handle intentionally; Indexer is the SOLE intended caller.
+// A compliance test (tests/compliance/) enforces that no other
 // importer reads DB() without an explicit allowlist entry. The
 // aggregator package itself remains the canonical owner of writes.
 //
@@ -161,7 +161,7 @@ type ChainAnchorComputer interface {
 	//
 	// The createdAt timestamp determines the partition (`YYYY_MM`).
 	// The eventID + payload determine the recordHash. The eventType
-	// is part of the chain.Compute input (Phase B-3 contract).
+	// is part of the chain.Compute input.
 	ComputeAnchor(
 		ctx context.Context,
 		eventID, eventType string,

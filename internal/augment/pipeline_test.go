@@ -707,12 +707,12 @@ func TestPipeline_AuditCompletedError(t *testing.T) {
 	}
 }
 
-// --- Plan 11 Phase C fix-cycle Important-5 + Important-6 regression
+// --- fix-cycle Important-5 + Important-6 regression
 // guards. Pipeline.Run MUST surface auditAnchor.Emit failures + the
 // post-DoctrineGate Load failure rather than discarding errors with
-// blank identifier (`_, _ := ...`). Pre-fix every audit-emit call site
+// blank identifier (`_, _ :=...`). Pre-fix every audit-emit call site
 // after the AugmentationStarted line dropped errors silently —
-// inv-zen-088 "every augmentation event MUST anchor" was breached on
+// invariant "every augmentation event MUST anchor" was breached on
 // any chain-store failure during the DoctrineGate-skip, BudgetGate-skip,
 // CrossProjectQueryFiltered, AugmentationTruncated, or
 // KGQueryDispatched audit-emit paths.
@@ -802,8 +802,8 @@ func TestPipeline_BudgetGateSkipEmitError(t *testing.T) {
 // second Load (post-DoctrineGate.Check) fails, Pipeline.Run MUST
 // surface the error rather than nil-deref schema. Pre-fix
 //
-//	schema, _ := p.doctrineLoaderField.Load(ctx, req.Doctrine)
-//	maxKgTokens := schema.Augmentation.MaxKGTokens  // panic if schema nil
+// schema, _ := p.doctrineLoaderField.Load(ctx, req.Doctrine)
+// maxKgTokens := schema.Augmentation.MaxKGTokens // panic if schema nil
 //
 // would panic on the next line. Fix: handle the error explicitly +
 // return 5xx upstream.

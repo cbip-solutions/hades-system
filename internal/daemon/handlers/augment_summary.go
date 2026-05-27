@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — augment_summary.go (Plan 12 Phase E MAJOR-2 fix).
+// Package handlers — augment_summary.go.
 //
 // GET /v1/augment/summary — daily augmentation stats consumed by:
-//   - internal/zenday — Augmentation section of the morning brief
-//   - internal/tui/views F3 Cost panel (Plan 12 Phase C) via the
-//     AugmentCache thin alias in internal/client/codegraph_plan12.go
+// - internal/zenday — Augmentation section of the morning brief
+// - internal/tui/views F3 Cost panel via the
+// AugmentCache thin alias in internal/client/codegraph_plan12.go
 //
-// Background — Plan 11 substrate gap closure:
+// Background — substrate gap closure:
 //
 // (internal/client/augment.go::AugmentSummary). The daemon side was
-// scoped for follow-up but never landed; the route returned 404. Plan 12
-// Phase C built the F3 augmentation cache stats display on top of that
+// scoped for follow-up but never landed; the route returned 404.
+// built the F3 augmentation cache stats display on top of that
 // wrapper, where it manifested as "augmentation stats render zero
 // forever" in production.
 //
 // This handler closes the gap by deriving the summary from the audit
 // chain: AugmentationStarted + AugmentationCompleted events stamped by
-// the augment.Pipeline (Plan 11 Phase C) carry tokens_consumed,
+// the augment.Pipeline carry tokens_consumed,
 // kg_queries_fired, and cache_hit fields in their payloads. The handler
 // queries the AuditQueryCtx for events of those types within the
 // requested date range and aggregates the counters.
@@ -29,14 +29,14 @@
 // Defensive design: handler tolerates absent audit events (returns zeros
 // with date echoed) and malformed payloads (skipped + counted in a
 // warning log; never crashes). The F3 panel renders zeros as "no
-// activity today" rather than an error — same posture as Plan 2's
+// activity today" rather than an error — same posture as
 // bypass-config 503 graceful-degrade.
 //
-// Cherry-pick narrative: this commit completes the Plan 11 substrate gap
-// inherited by Plan 12 Phase C; could be cherry-picked to a Plan 11.1
+// Cherry-pick narrative: this commit completes the substrate gap
+// inherited; could be cherry-picked to a
 // backport branch if needed.
 //
-// inv-zen-031: handler relies on AuditQueryCtx (interface), not the
+// invariant: handler relies on AuditQueryCtx (interface), not the
 // concrete store.
 
 package handlers

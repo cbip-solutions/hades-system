@@ -1,5 +1,4 @@
-//go:build property
-
+// go:build property
 package ecosystem_test
 
 import (

@@ -3,64 +3,64 @@
 //
 // Coordinator interface (master C-8). Runs the spec §8.3 seven-step flow:
 //
-//  1. capa-firewall gate: b.Workspace.AuthorizeProjects(scope) → on
-//     err, emit EvtFederatedQueryDenied audit row + return the error
-//     (wrapped). The chokepoint inv-zen-269 boundary: even denied
-//     access produces exactly ONE audit leaf (the denial trail).
+// 1. capa-firewall gate: b.Workspace.AuthorizeProjects(scope) → on
+// err, emit EvtFederatedQueryDenied audit row + return the error
+// (wrapped). The chokepoint invariant boundary: even denied
+// access produces exactly ONE audit leaf (the denial trail).
 //
-//  2. oracle decision: c.Autonomy.Decision(b) → DispatchMode.
-//     Defense-in-depth: any value other than ModeAutonomy/ModeSurface
-//     is treated as ModeSurface (oracle bug-safe degradation).
+// 2. oracle decision: c.Autonomy.Decision(b) → DispatchMode.
+// Defense-in-depth: any value other than ModeAutonomy/ModeSurface
+// is treated as ModeSurface (oracle bug-safe degradation).
 //
-//  3. capability-detect Pool:
-//     Pool != nil AND mode == ModeAutonomy → branch (4a) Autonomy.
-//     Pool == nil OR mode == ModeSurface → branch (4b) Surface.
-//     (The Pool-nil-but-mode-Autonomy combination DEGRADES to
-//     Surface — the surface message explicitly notes
-//     "WorktreePool unavailable" so the operator can investigate.)
+// 3. capability-detect Pool:
+// Pool != nil AND mode == ModeAutonomy → branch (4a) Autonomy.
+// Pool == nil OR mode == ModeSurface → branch (4b) Surface.
+// (The Pool-nil-but-mode-Autonomy combination DEGRADES to
+// Surface — the surface message explicitly notes
+// "WorktreePool unavailable" so the operator can investigate.)
 //
-//  4a. Autonomy branch: for each unique repo in b.AffectedConsumers,
-//     call Pool.Lease(ctx) → on err, skip + continue (per-repo
-//     graceful degradation). Successful leases yield DispatchedRepos.
-//     The lease+release pair proves the coordinated-worktree
-//     machinery is reachable from the L10 path; actual worker spawn
-//     over the leased worktrees is the future plan's job. The L10
-//     contract is "coordinate worktrees + audit the coordination".
+// 4a. Autonomy branch: for each unique repo in b.AffectedConsumers,
+// call Pool.Lease(ctx) → on err, skip + continue (per-repo
+// graceful degradation). Successful leases yield DispatchedRepos.
+// The lease+release pair proves the coordinated-worktree
+// machinery is reachable from the L10 path; actual worker spawn
+// over the leased worktrees is the future plan's job. The L10
+// contract is "coordinate worktrees + audit the coordination".
 //
-//  4b. Surface branch: build the structured recommendation via
-//     buildSurfaceMessage (modes.go); DispatchedRepos remains empty.
+// 4b. Surface branch: build the structured recommendation via
+// buildSurfaceMessage (modes.go); DispatchedRepos remains empty.
 //
-//  5. audit emit (the chokepoint — inv-zen-269): emitAuditFn(ctx,
-//     c.Audit, federation.Event{Type: EvtCoordinatedDispatch,
-//     WorkspaceID b.Change.WorkspaceID, Payload: <canonical-json>,
-//     OccurredAt now}) → on err, RETURN err (defense-in-depth: a
-//     missing audit row is a CRITICAL boundary violation; better to
-//     fail the dispatch than to dispatch without audit).
+// 5. audit emit: emitAuditFn(ctx,
+// c.Audit, federation.Event{Type: EvtCoordinatedDispatch,
+// WorkspaceID b.Change.WorkspaceID, Payload: <canonical-json>,
+// OccurredAt now}) → on err, RETURN err (defense-in-depth: a
+// missing audit row is a CRITICAL boundary violation; better to
+// fail the dispatch than to dispatch without audit).
 //
-//  6. ring-buffer append: recordDecision(DispatchDecision{...})
-//     appends to the in-memory ring (rotating on cap); FAST-ACCESS
-//     cache Phase J's TUI reads via RecentDispatches. The persistent
-//     ledger is the Tessera leaf from step 5; the ring is
-//     cache-only.
+// 6. ring-buffer append: recordDecision(DispatchDecision{...})
+// appends to the in-memory ring (rotating on cap); FAST-ACCESS
+// cache TUI reads via RecentDispatches. The persistent
+// ledger is the Tessera leaf from step 5; the ring is
+// cache-only.
 //
-//  7. assemble + return DispatchResult{Mode, DispatchedRepos,
-//     SurfaceMessage, AuditID}.
+// 7. assemble + return DispatchResult{Mode, DispatchedRepos,
+// SurfaceMessage, AuditID}.
 //
-// Boundary discipline (inv-zen-270): this file imports
-//   - context, encoding/json, errors, fmt, sort, sync, time (stdlib)
-//   - github.com/cbip-solutions/hades-system/internal/audit/tessera (LeafID type
-//     + *Adapter field type)
-//   - github.com/cbip-solutions/hades-system/internal/caronte/store/federation
-//     (EmitAudit chokepoint + Event types — Phase A C-11)
-//   - github.com/cbip-solutions/hades-system/internal/orchestrator (the
-//     ContractFixAutonomyOracle interface — NOT
-//     hra/merge/confirmation_policy)
-//   - github.com/cbip-solutions/hades-system/internal/orchestrator/worktreepool
-//     (Pool interface — the SOLE Plan-5/6 bridge per inv-zen-270's
-//     capability-detect carve-out)
+// Boundary discipline: this file imports
+// - context, encoding/json, errors, fmt, sort, sync, time (stdlib)
+// - github.com/cbip-solutions/hades-system/internal/audit/tessera (LeafID type
+// + *Adapter field type)
+// - github.com/cbip-solutions/hades-system/internal/caronte/store/federation
+//
+// - github.com/cbip-solutions/hades-system/internal/orchestrator (the
+// ContractFixAutonomyOracle interface — NOT
+// hra/merge/confirmation_policy)
+// - github.com/cbip-solutions/hades-system/internal/orchestrator/worktreepool
+// (Pool interface — the SOLE bridge per invariant's
+// capability-detect carve-out)
 // It does NOT import internal/orchestrator/hra,
 // internal/orchestrator/merge, internal/orchestrator/confirmation_policy
-// — the inv-zen-270 AST scan asserts this for the WHOLE coordinated/
+// — the invariant AST scan asserts this for the WHOLE coordinated/
 // package import set.
 
 package coordinated
@@ -90,14 +90,14 @@ var ErrCoordinatorNoOracle = errors.New("coordinated: Autonomy oracle not wired"
 
 // ErrCoordinatorNoAudit indicates the Coordinator was constructed
 // without an Audit adapter. Dispatch returns this error before any side
-// effect — every dispatch MUST emit an audit row per inv-zen-269 (the
+// effect — every dispatch MUST emit an audit row per invariant (the
 // single-call-site chokepoint guarantee), so a nil Audit is a wiring
 // bug.
 //
 // Note federation.EmitAudit gracefully degrades on a nil adapter
-// (returns ("", nil) for the bootstrap window). Phase H's stricter
+// (returns ("", nil) for the bootstrap window). stricter
 // stance — refusing nil up-front — is deliberate: by the time the L10
-// Coordinator runs, Plan 14 wiring MUST be live; the Coordinator
+// Coordinator runs, wiring MUST be live; the Coordinator
 // never dispatches in the bootstrap window.
 var ErrCoordinatorNoAudit = errors.New("coordinated: Audit adapter not wired")
 

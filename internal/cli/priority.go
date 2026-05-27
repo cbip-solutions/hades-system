@@ -1,42 +1,42 @@
 // SPDX-License-Identifier: MIT
-// Package cli — priority.go (Plan 7 Phase B Task B-10).
+// Package cli — priority.go.
 //
 // `zen project priority --boost / --reset / --ls` is the operator surface
 // for Layer 3 WFQ priority overrides per spec §1 Q10 + §6.2.
 //
 // Cobra layout (single subcommand, three mutually-exclusive flag actions):
 //
-//	zen project priority --boost <alias> --duration 4h --reason "..."
-//	zen project priority --reset <alias>
-//	zen project priority --ls
+// zen project priority --boost <alias> --duration 4h --reason "..."
+// zen project priority --reset <alias>
+// zen project priority --ls
 //
 // Action mutex: exactly one of --boost / --reset / --ls must be set;
 // any other combination errors out. The mutex check happens BEFORE
 // any HTTP dispatch so operator typos surface immediately.
 //
 // Validation (client-side, before any daemon call):
-//   - alias non-empty (whitespace-trimmed)
-//   - --boost requires --duration ((0, 168h] window) + --reason
-//     (non-empty after trim)
-//   - --multiplier defaults 3.0; bounds (0, 100]
+// - alias non-empty (whitespace-trimmed)
+// - --boost requires --duration ((0, 168h] window) + --reason
+// (non-empty after trim)
+// - --multiplier defaults 3.0; bounds (0, 100]
 //
 // Defence in depth: the same validation runs again at the daemon (in
 // the OverrideStore.Set adapter) and once more at the WFQ hot-path read
 // (quota.ApplyOverride) — three checks for one drift.
 //
 // Output formatting:
-//   - boost: ✓ priority boost queued + project/multiplier/duration/
-//     expires(RFC3339)/reason block (machine-parseable; stable across
-//     releases for `zen day` morning brief composition).
-//   - reset: ✓ priority override removed: <alias>
-//   - ls: ALIAS / MULT / EXPIRES / REASON / CREATED column header +
-//     row-per-override.
+// - boost: ✓ priority boost queued + project/multiplier/duration/
+// expires(RFC3339)/reason block (machine-parseable; stable across
+// releases for `zen day` morning brief composition).
+// - reset: ✓ priority override removed: <alias>
+// - ls: ALIAS / MULT / EXPIRES / REASON / CREATED column header +
+// row-per-override.
 //
-// Exit-code mapping (per spec §6.2 / Phase A ErrRecoverable contract):
-//   - 0 success
-//   - 1 operator-recoverable (validation reject, alias not found via
-//     daemon 404, daemon 422 quota.ErrInvalidOverride)
-//   - 2 unrecoverable (transport, decode, daemon 5xx)
+// Exit-code mapping:
+// - 0 success
+// - 1 operator-recoverable (validation reject, alias not found via
+// daemon 404, daemon 422 quota.ErrInvalidOverride)
+// - 2 unrecoverable (transport, decode, daemon 5xx)
 package cli
 
 import (

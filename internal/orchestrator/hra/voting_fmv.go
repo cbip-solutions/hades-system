@@ -9,16 +9,16 @@
 //
 // # Algorithm
 //
-//  1. For each candidate, lease a fresh worktree from the pool.
-//  2. ApplyFix the candidate's patch into the worktree.
-//  3. Run the project's test suite; collect (pass_count, fail_count).
-//  4. Release the worktree.
-//  5. Sort by (pass_count desc, supporting_reviewers desc).
-//  6. Outcome:
-//       a. all-failed (no candidate has pass>0 AND every candidate had
-//          either an apply error, a run error, or fail>0)        → ErrFMVAllFailed
-//       b. true tie at the top (top-two share both pass+supporters) → ErrFMVTie
-//       c. otherwise                                                → winner
+// 1. For each candidate, lease a fresh worktree from the pool.
+// 2. ApplyFix the candidate's patch into the worktree.
+// 3. Run the project's test suite; collect (pass_count, fail_count).
+// 4. Release the worktree.
+// 5. Sort by (pass_count desc, supporting_reviewers desc).
+// 6. Outcome:
+// a. all-failed (no candidate has pass>0 AND every candidate had
+// either an apply error, a run error, or fail>0) → ErrFMVAllFailed
+// b. true tie at the top (top-two share both pass+supporters) → ErrFMVTie
+// c. otherwise → winner
 //
 // # Disjoint-axis discipline
 //
@@ -36,7 +36,7 @@
 // MUST reflect that even if the caller's ctx fired between Run returning
 // and the emit landing. This matches the H-6 escalation.go discipline
 // (HandleDisagreement uses context.WithoutCancel(context.Background())
-// for the same reason) and Phase G recordCompletion. Cancellation guards
+// for the same reason) and recordCompletion. Cancellation guards
 // the lease/apply/run loop ABOVE the emit; the emit itself runs on a
 // detached audit context.
 //
@@ -137,7 +137,7 @@ type FMVResult struct {
 	Trace []FMVTrace
 
 	// Degraded is true when the algorithm fell back to plurality on
-	// SupportingReviewers (Plan 5 I-5: pool-exhausted; I-7: cost-
+	// SupportingReviewers ( I-5: pool-exhausted; I-7: cost-
 	// pressure). False on the happy / tie / all-failed paths. Callers
 	// that observe Degraded==true MUST consume Reason for the
 	// degradation cause — the audit-event emission is bound to the
@@ -335,7 +335,7 @@ func (f *FMV) emitAllFailed(ctx context.Context, candidateCount, testFailures in
 // agreement at the top of the ranking → ErrFMVTie (caller escalates
 // to L3). The partial trace (candidates already evaluated before the
 // pool exhaustion) is preserved verbatim — pickByAgreementOnly does
-// NOT modify or sort it, because audit consumers (Plan 9 replay) rely
+// NOT modify or sort it, because audit consumers rely
 // on the trace being the literal sequence of candidates the
 // orchestrator was able to evaluate before degradation.
 //

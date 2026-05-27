@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — orchestrator_depth.go (Plan 5 Phase N N-2).
+// Package cli — orchestrator_depth.go.
 //
 // `zen orchestrator depth` overrides the calculated depth/width for a
 // given spec on a given project. --depth and --reset are mutually

@@ -7,21 +7,21 @@
 // RBAC (A-3); subsystem-agnostic via the Subsystem interface.
 //
 // Routing flow per CallRequest:
-//  1. RBAC.Check (doctrine filter → ACL → concurrency gate)
-//  2. ToolRegistry.Lookup (handler resolution)
-//  3. recover-wrapped Handler call
-//  4. Audit emit (ToolDispatched / HandlerPanic)
-//  5. Release concurrency slot via deferred RBAC release()
+// 1. RBAC.Check (doctrine filter → ACL → concurrency gate)
+// 2. ToolRegistry.Lookup (handler resolution)
+// 3. recover-wrapped Handler call
+// 4. Audit emit (ToolDispatched / HandlerPanic)
+// 5. Release concurrency slot via deferred RBAC release()
 //
 // Subsystem.Name() identifies the downstream for observability + audit
 // payloads; the canonical tool name's subsystem segment is the source of
 // truth for routing (a Subsystem is free to expose tools across subsystems
 // in principle, though in practice each Subsystem owns one segment).
 //
-// Phase A wires the in-process MCPs as Subsystem instances via thin
+// wires the in-process MCPs as Subsystem instances via thin
 // adapters lifted from each MCP package's existing Server.InvokeTool
 // method (lifted at the boundary in main.go A-7). The caronte engine is
-// wired the same way via CaronteProxy (Plan 19 Phase L; the engine's Close
+// wired the same way via CaronteProxy ( ; the engine's Close
 // is deferred at the daemon composition root, not in the Dispatcher).
 package mcpgateway
 

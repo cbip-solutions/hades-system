@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package cli — why.go (Plan 19 Phase K).
+// Package cli — why.go.
 //
 // `zen why <symbol>` surfaces the architect's intent for a symbol: linked
 // ADRs (+stale flag), semantic passages, and Lore-trailers from the
 // symbol's commit history. Routes via the daemon /v1/mcpgateway/why route
-// → the native Caronte engine GetWhy (single-egress preserved, inv-zen-088).
+// → the native Caronte engine GetWhy.
 // Tests inject CaronteWhyClient fakes.
 package cli
 

@@ -2,6 +2,8 @@ module github.com/cbip-solutions/hades-system
 
 go 1.26
 
+toolchain go1.26.0
+
 require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/asg017/sqlite-vec-go-bindings v0.1.6

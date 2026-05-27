@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — orchestrator_pool.go (Plan 5 Phase N N-2).
+// Package cli — orchestrator_pool.go.
 //
 // `zen orchestrator pool {status,prune}` exposes the worktree pool
 // surface from Q3 + Q4 — pool counts, leased / elastic / orphan

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package client — inbox.go (Plan 7 Phase E Task E-12).
+// Package client — inbox.go.
 //
 // Three methods + supporting wire types for the daemon's
 // /v1/inbox/* surface backing the operator-facing
 // `zen inbox` CLI:
 //
-//	InboxList    POST /v1/inbox/list    — filter + decode []InboxCacheRow
-//	InboxAck     POST /v1/inbox/ack     — set AckedAt = now on id
-//	InboxSnooze  POST /v1/inbox/snooze  — set SnoozedUntil = until on id
+// InboxList POST /v1/inbox/list — filter + decode []InboxCacheRow
+// InboxAck POST /v1/inbox/ack — set AckedAt = now on id
+// InboxSnooze POST /v1/inbox/snooze — set SnoozedUntil = until on id
 //
 // Field names + JSON tags align with the daemon-side handler in
 // internal/daemon/handlers/inbox_p7.go. Times use RFC3339 over the
@@ -21,7 +21,7 @@
 //
 // 4-tier severity enum referenced (validated server-side):
 //
-//	urgent | action-needed | info-immediate | info-digest
+// urgent | action-needed | info-immediate | info-digest
 package client
 
 import (

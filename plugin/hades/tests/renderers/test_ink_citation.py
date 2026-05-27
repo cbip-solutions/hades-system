@@ -316,7 +316,7 @@ def test_ink_render_card_includes_platform_renders_when_present() -> None:
 def test_ink_render_no_zen_swarm_brand_string_in_component_tree(
     sample_augmentation_result: AugmentationResult,
 ) -> None:
-    """Plan 18b Phase D regression guard: the Ink renderer carries NO
+    """  regression guard: the Ink renderer carries NO
     `zen-swarm` substring in its rendered component tree.
 
     The Hermes Ink TUI renderer emits structured component-tree dicts
@@ -328,8 +328,7 @@ def test_ink_render_no_zen_swarm_brand_string_in_component_tree(
 
     Test data (`project_id="zen-swarm"` in fixtures) is exempt
     because the renderer's `projectId` prop is a pass-through of
-    the operator's project name (per inv-zen-031 boundary the
-    renderer is purely a presentation layer). The check excludes
+    the operator's project name. The check excludes
     `projectId` prop values from the brand-clean assertion.
     """
     import json

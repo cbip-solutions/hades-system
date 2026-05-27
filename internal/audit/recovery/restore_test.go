@@ -51,8 +51,18 @@ type stubVerifier struct {
 	err error
 }
 
-func (s *stubVerifier) VerifyChain(ctx context.Context, projectID string) (*VerifyResult, error) {
+func (s *stubVerifier) VerifyChain(ctx context.Context, projectID, stagingDir string) (*VerifyResult, error) {
 	return s.res, s.err
+}
+
+type stubExtractor struct {
+	called atomic.Int32
+	err    error
+}
+
+func (s *stubExtractor) ExtractColdArchive(ctx context.Context, archivePath, dstDir string) error {
+	s.called.Add(1)
+	return s.err
 }
 
 func TestRestoreHappyPathOperatorApproves(t *testing.T) {
@@ -69,7 +79,8 @@ func TestRestoreHappyPathOperatorApproves(t *testing.T) {
 
 	stdin := strings.NewReader("y\n")
 	var stdout bytes.Buffer
-	r := NewRestorer(rls, dl, verifier, seals, dir)
+	extractor := &stubExtractor{}
+	r := NewRestorer(rls, dl, verifier, seals, dir, WithColdArchiveExtractor(extractor))
 	r.contentHashFor = func(staging, partitionID string) (string, error) { return "abc", nil }
 	r.promoteFn = func(staging, projectID string) error { return nil }
 
@@ -89,6 +100,9 @@ func TestRestoreHappyPathOperatorApproves(t *testing.T) {
 	if dl.called.Load() != 1 {
 		t.Errorf("s3 cp called %d times", dl.called.Load())
 	}
+	if extractor.called.Load() != 1 {
+		t.Errorf("extractor called %d times", extractor.called.Load())
+	}
 	out := stdout.String()
 	if !strings.Contains(out, "Recovery plan") {
 		t.Errorf("missing recovery plan; out = %s", out)
@@ -103,8 +117,10 @@ func TestRestoreOperatorDeclines(t *testing.T) {
 		&stubVerifier{res: &VerifyResult{Clean: true}},
 		&stubSealStoreFull{rowsForList: []SealMeta{{PartitionID: "2026_05"}}, rowByID: map[string]ColdArchiveMeta{"2026_05": {ContentHash: "abc"}}},
 		dir,
+		WithColdArchiveExtractor(&stubExtractor{}),
 	)
 	r.contentHashFor = func(staging, partitionID string) (string, error) { return "abc", nil }
+	r.extractor = &stubExtractor{}
 	var promoted atomic.Bool
 	r.promoteFn = func(staging, projectID string) error {
 		promoted.Store(true)
@@ -160,6 +176,7 @@ func TestRestoreAbortsOnVerifyChainFail(t *testing.T) {
 		dir,
 	)
 	r.contentHashFor = func(staging, partitionID string) (string, error) { return "abc", nil }
+	r.extractor = &stubExtractor{}
 
 	stdin := strings.NewReader("y\n")
 	var stdout bytes.Buffer

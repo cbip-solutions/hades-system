@@ -46,15 +46,15 @@ func (r *Routine) Plan(now time.Time) time.Time {
 //
 // Two canonical call sites:
 //
-//  1. After a successful fire, the dispatcher calls Advance(LastRunAt)
-//     to schedule the next tick — passing LastRunAt (not now) means
-//     the next tick is anchored to the actual fire wall clock, not
-//     to whenever Advance happens to run (which may be later if the
-//     fire took non-trivial time).
-//  2. After daemon recovery, the dispatcher calls Advance(now) to
-//     re-anchor the schedule past the gap. The miss policy
-//     (D-5/D-6/D-12 path) decides whether to backfill the gap; this
-//     function only updates the next-fire pointer.
+// 1. After a successful fire, the dispatcher calls Advance(LastRunAt)
+// to schedule the next tick — passing LastRunAt (not now) means
+// the next tick is anchored to the actual fire wall clock, not
+// to whenever Advance happens to run (which may be later if the
+// fire took non-trivial time).
+// 2. After daemon recovery, the dispatcher calls Advance(now) to
+// re-anchor the schedule past the gap. The miss policy
+// (D-5/D-6/D-12 path) decides whether to backfill the gap; this
+// function only updates the next-fire pointer.
 //
 // Mutates the underlying Schedule in place. Callers MUST persist the
 // mutated row via the scheduleradapter before releasing the

@@ -25,7 +25,7 @@ Expected response includes:
 - `from` / `to` — current value + proposed value
 - `reason` — natural-language rationale
 - `evidence` — list of supporting events / commits / metrics
-- `audit_event_id` — Plan 9 Tessera-anchored event linking
+- `audit_event_id` —  Tessera-anchored event linking
 - `status` — `pending` | `acknowledged` | `denied`
 - `dependent_on` — list of prior amendments this one depends on (if any)
 - `affects_invariants` — list of inv-zen-XXX impacted (if any)
@@ -74,7 +74,7 @@ If status is `acknowledged` or `denied`:
 
 ## Cross-references
 
-- Plan 5 + Plan 8 doctrine-amendment lifecycle
+-  +  doctrine-amendment lifecycle
 - /amendment-list, /amendment-ack, /amendment-deny
 """
 

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package client — workspace.go (Plan 20 Phase I).
+// Package client — workspace.go.
 //
-// Thin pass-throughs for the daemon's Plan 20 workspace REST sub-routes:
+// Thin pass-throughs for the daemon's workspace REST sub-routes:
 // /v1/mcpgateway/workspace/{init,list,members,link,remove,policy/get,policy/set}.
 // 7 methods total — the operator-facing federation lifecycle surface.
 //
-// inv-zen-088 single-egress preserved: every round-trip proxies through the
-// daemon. inv-zen-129 enforced: this file uses ONLY c.postJSON — never
+// invariant single-egress preserved: every round-trip proxies through the
+// daemon. invariant enforced: this file uses ONLY c.postJSON — never
 // net/http directly.
 package client
 

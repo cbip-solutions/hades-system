@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_287_test.go
 //
-// Compliance gate for inv-zen-287 (v0.20.4 fix + v0.20.5 wider-sweep
+// Compliance gate for invariant (v0.20.4 fix + v0.20.5 wider-sweep
 // extension): subprocess-test deadlines in fourteen target test files
 // MUST be at least 30 seconds. Pre-v0.20.4 these sites used a 2-second
 // deadline that starved exec.CommandContext / waitForUDS / waitForCount
@@ -9,25 +9,25 @@
 // exceeded 2s when other lanes saturated the host) and produced
 // false-negative failures in:
 //
-//   - v0.20.4 scope (3 files): TestGhPoller_HeadSHA_* (5 tests in
-//     internal/scheduler) and TestRealPaneListerListPanes* (2 tests
-//     in internal/tmuxlife) plus the HealthMonitor select-case
-//     timeouts in internal/tmuxlife/api_p7_test.go. v0.20.3 HANDOFF
-//     documented both families as PASS-isolated/FAIL-under-load
-//     baselines; v0.20.4 bumped to 30s (15x safety margin).
+// - v0.20.4 scope (3 files): TestGhPoller_HeadSHA_* (5 tests in
+// internal/scheduler) and TestRealPaneListerListPanes* (2 tests
+// in internal/tmuxlife) plus the HealthMonitor select-case
+// timeouts in internal/tmuxlife/api_p7_test.go. v0.20.3 HANDOFF
+// documented both families as PASS-isolated/FAIL-under-load
+// baselines; v0.20.4 bumped to 30s (15x safety margin).
 //
-//   - v0.20.5 wider sweep (11 additional files): cmd/zen-event-poster
-//     daemon-receive deadlines, cmd/hades waitForUDS socket polling,
-//     cmd/zen-swarm-ctld log-drain + subsystem-snapshot + production
-//     boot UDS/TCP smoke polling, tests/testharness openclaude-fake
-//     subprocess crash/hang/read-error/nil-out paths, tests/integration
-//     onboard_customize Wizard.Run integration deadline,
-//     tests/compliance inv-zen-081 sshexec deadline +
-//     inv-zen-175 Hermes-required preflight deadline,
-//     tests/replay inbox_replay row-count polling, and tests/chaos
-//     inbox_aggregator_divergence row-count polling at two sites.
-//     across 11 files) as the "v0.20.5 timing-debt sweep" candidate;
-//     introducing a successor invariant.
+// - v0.20.5 wider sweep (11 additional files): cmd/zen-event-poster
+// daemon-receive deadlines, cmd/hades waitForUDS socket polling,
+// cmd/zen-swarm-ctld log-drain + subsystem-snapshot + production
+// boot UDS/TCP smoke polling, tests/testharness openclaude-fake
+// subprocess crash/hang/read-error/nil-out paths, tests/integration
+// onboard_customize Wizard.Run integration deadline,
+// tests/compliance invariant sshexec deadline +
+// invariant Hermes-required preflight deadline,
+// tests/replay inbox_replay row-count polling, and tests/chaos
+// inbox_aggregator_divergence row-count polling at two sites.
+// across 11 files) as the "v0.20.5 timing-debt sweep" candidate;
+// introducing a successor invariant.
 //
 // Anchor 1 (negative): each target file MUST NOT contain the literal
 // `2*time.Second` nor `2 * time.Second`. A regression that copies the
@@ -50,11 +50,11 @@
 // and is easy to reintroduce via copy-paste from older test files.
 // Pinning the 14 known-affected files prevents the contention
 // regression from coming back through the back door. The
-// single-invariant approach (vs. introducing inv-zen-288 for v0.20.5)
+// single-invariant approach
 // reflects that the v0.20.5 extension is semantically identical to
 // the discipline.
 //
-// inv-zen-287 (v0.20.4 fix; v0.20.5 extension).
+// invariant (v0.20.4 fix; v0.20.5 extension).
 package compliance
 
 import (

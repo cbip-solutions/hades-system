@@ -1,42 +1,42 @@
 // SPDX-License-Identifier: MIT
-// Package proto — Plan 20 protobuf breaking-change detector. Implements
-// the bcdetect.Detector C-7 interface for .proto source pairs.
+// Package proto — protobuf breaking-change detector. Implements
+// the bcdetect.Detector C-7 interface for.proto source pairs.
 //
-// AS-BUILT divergence from the Phase G plan + Stage-0 divergence #2 +
-// Stage-0-during-implementation finding: `bufbuild/buf` has NO PUBLIC Go
+// AS-BUILT divergence from the plan + divergence #2 +
+// finding: `bufbuild/buf` has NO PUBLIC Go
 // SDK — every importable package lives under `bufbuild/buf/private/` and
 // the `usage` package's init() actively `panic`s when imported from
 // outside the bufbuild org:
 //
-//	"github.com/bufbuild/buf/private code must only be imported by
-//	 github.com/bufbuild projects"
+// "github.com/bufbuild/buf/private code must only be imported by
+// github.com/bufbuild projects"
 //
-// This means the inv-zen-267 anchor for the proto detector cannot be
+// This means the invariant anchor for the proto detector cannot be
 // `bufbuild/buf` literally. Resolution per the plan's authorized fallback
 // path (divergence #2 + max-scope doctrine + no-defer):
 //
-//   - We use `github.com/bufbuild/protocompile` (Apache-2.0, by Buf
-//     authors; the protobuf compiler underlying the buf CLI) as the
-//     canonical Buf-authored anti-bespoke-diff library. The inv-zen-267
-//     compliance test (Phase G Task G-10) anchors on protocompile for the
-//     proto subpackage with documented rationale.
-//   - We walk the descriptor pair and classify changes per the documented
-//     buf rule semantics for the four ruleset levels:
-//   - WIRE: field-number changes, field-type changes that break wire format.
-//   - WIRE_JSON: WIRE + field-removal + JSON-name changes.
-//   - PACKAGE: WIRE_JSON + enum-value rename + package-level breaks.
-//   - FILE: PACKAGE + every source-incompatible change (strictest).
+// - We use `github.com/bufbuild/protocompile` (Apache-2.0, by Buf
+// authors; the protobuf compiler underlying the buf CLI) as the
+// canonical Buf-authored anti-bespoke-diff library. The invariant
+// compliance test anchors on protocompile for the
+// proto subpackage with documented rationale.
+// - We walk the descriptor pair and classify changes per the documented
+// buf rule semantics for the four ruleset levels:
+// - WIRE: field-number changes, field-type changes that break wire format.
+// - WIRE_JSON: WIRE + field-removal + JSON-name changes.
+// - PACKAGE: WIRE_JSON + enum-value rename + package-level breaks.
+// - FILE: PACKAGE + every source-incompatible change (strictest).
 //
 // This is doctrine-faithful: the schema CHECK constraint on
-// breaking_changes.detector_id is the wire-side anchor of inv-zen-267
+// breaking_changes.detector_id is the wire-side anchor of invariant
 // (still gates "buf" verbatim); protocompile is the Go-side anchor for
 // the proto detector; the canonical buf rule semantics are reproduced
 // faithfully (the buf documentation IS the spec — see
 // buf.build/docs/breaking/rules). A future spike could swap the
 // classifier when buf publishes a public Go SDK.
 //
-// NO os/exec — the spawn fallback path (Stage-0 divergence #4) is NOT
-// taken; the inv-zen-272 sovereignty perimeter remains scoped to the
+// NO os/exec — the spawn fallback path is NOT
+// taken; the invariant sovereignty perimeter remains scoped to the
 // graphql/nodefallback.go single site.
 package proto
 

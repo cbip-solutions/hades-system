@@ -1,21 +1,21 @@
 // tests/compliance/inv_zen_222_migration_idempotency_test.go
 //
-// inv-zen-222 (Plan 18c Phase G G-5) — Migration tooling idempotency
+// invariant — Migration tooling idempotency
 // + scope.
 //
-// Doctrine: per spec §Q4 + master §G "Critical invariants" + Plan 18c
-// Phase F (internal/cli/migrate_plan18.go), the `hades migrate plan-18
+// Doctrine: per spec §Q4 + master §G "Critical invariants" +
+// (internal/cli/migrate_plan18.go), the `hades migrate plan-18
 // --from-zen-swarm-aliases` tool MUST be:
 //
-//  1. Idempotent — second invocation against post-apply state = no-op
-//     (returns nil + cli.no-op message, zero matches)
-//  2. Dry-run-by-default — explicit Apply=true required to mutate;
-//     DryRun=true must NEVER mutate files
-//  3. Allowlist-scoped — files under .ssh/, .gnupg/, paths outside
-//     the allowlist roots, and symlinks pointing outside the allowlist
-//     are NEVER modified
-//  4. Allowlist count >= 6 — the allowlistEntries slice MUST NOT
-//     silently shrink below 6 entries (spec §Q4 scope contract)
+// 1. Idempotent — second invocation against post-apply state = no-op
+// (returns nil + cli.no-op message, zero matches)
+// 2. Dry-run-by-default — explicit Apply=true required to mutate;
+// DryRun=true must NEVER mutate files
+// 3. Allowlist-scoped — files under.ssh/,.gnupg/, paths outside
+// the allowlist roots, and symlinks pointing outside the allowlist
+// are NEVER modified
+// 4. Allowlist count >= 6 — the allowlistEntries slice MUST NOT
+// silently shrink below 6 entries (spec §Q4 scope contract)
 //
 // Test strategy: build a snapshot of the fixture home dir tree
 // (tests/compliance/testdata/migrate_fixture_home/), invoke
@@ -23,12 +23,12 @@
 // assert per-stage post-state matches the expected tree
 // (tests/compliance/testdata/migrate_fixture_home_expected_apply/).
 //
-// The test also asserts: denylist files (.ssh, .gnupg) are untouched,
+// The test also asserts: denylist files (.ssh,.gnupg) are untouched,
 // outside-allowlist file (Documents/notes.md) is untouched, binary
 // fixture is skipped gracefully, and a symlink pointing outside the
 // allowlist root does not allow tool to modify the target.
 //
-// Companion ADR: docs/decisions/0098-migration-tooling-boundary.md
+// Companion ADR: architecture records
 package compliance
 
 import (

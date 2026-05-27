@@ -6,35 +6,35 @@
 //
 // Pivots vs the plan reference (lines 1052-1392):
 //
-//  1. The CapCounters interface (was CostCounters in the plan) is renamed
-//     to avoid colliding with F-5's *CostCounters struct in
-//     cost_counters.go (same package). Method shape mirrors the F-5 struct:
-//     SessionTotal(sessionID) + ProjectProfileTierTotal(project, profile,
-//     tier, window time.Duration) — so *CostCounters satisfies
-//     CapCounters directly, no adapter needed at I-5 wiring time. The
-//     interface-pin lives in payg_safety_test.go:
-//         var _ CapCounters = (*CostCounters)(nil)
+// 1. The CapCounters interface (was CostCounters in the plan) is renamed
+// to avoid colliding with F-5's *CostCounters struct in
+// cost_counters.go (same package). Method shape mirrors the F-5 struct:
+// SessionTotal(sessionID) + ProjectProfileTierTotal(project, profile,
+// tier, window time.Duration) — so *CostCounters satisfies
+// CapCounters directly, no adapter needed at I-5 wiring time. The
+// interface-pin lives in payg_safety_test.go:
+// var _ CapCounters = (*CostCounters)(nil)
 //
-//  2. CheckCap signature pivoted to take sessionID — required for the
-//     WindowSession lookup, since F-5's SessionTotal is keyed on sessionID
-//     and an unkeyed call cannot retrieve per-session totals. The plan's
-//     reference signature omitted this and would be impossible to wire to
-//     F-5 cleanly.
+// 2. CheckCap signature pivoted to take sessionID — required for the
+// WindowSession lookup, since F-5's SessionTotal is keyed on sessionID
+// and an unkeyed call cannot retrieve per-session totals. The plan's
+// reference signature omitted this and would be impossible to wire to
+// F-5 cleanly.
 //
-//  3. Test-overridable tickInterval field: borrowed from F-7 / I-2 pattern
-//     so WindowResetScheduler can be exercised in unit tests without a
-//     1-hour wait. Default is defaultWindowResetTickInterval (1h);
-//     test-only callers override before invoking WindowResetScheduler.
+// 3. Test-overridable tickInterval field: borrowed from F-7 / I-2 pattern
+// so WindowResetScheduler can be exercised in unit tests without a
+// 1-hour wait. Default is defaultWindowResetTickInterval (1h);
+// test-only callers override before invoking WindowResetScheduler.
 //
-// Boundary (inv-zen-031): this file imports stdlib only (context, errors,
+// Boundary: this file imports stdlib only (context, errors,
 // fmt, sync, time). The orchestrator package MUST NOT import internal/store.
 // Pin pattern matches F-5 / F-7 / I-2 precedent.
 //
-// inv-zen-063 anchor: capOverridesPin lives here. Removing PaygSafety,
+// invariant anchor: capOverridesPin lives here. Removing PaygSafety,
 // CheckCap, HandleCapReached, ErrCapWillExceed, OR the file-scope
 // `var _ = capOverridesPin` reference breaks the build. The runtime
 // ordering invariant — "pin is resolved FIRST, cap is checked SECOND, cap
-// override pin" — is enforced inside Phase H tier_resolver.Select; this
+// override pin" — is enforced inside tier_resolver.Select; this
 // file provides the symbol so the doctrinal contract is mechanically
 // load-bearing.
 

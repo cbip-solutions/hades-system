@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package loretrailer implements the Lore-enforcement go-vet analyzer for
-// zen-swarm Plan 19 Caronte (spec §10; inv-zen-238). WHEN ENABLED
+// zen-swarm Caronte. WHEN ENABLED
 // (-loretrailer.enabled=true; default false, adoption-gated per spec §21), it
 // scans branch-local commit BODIES and flags any commit that touches a
 // high-risk file (the -loretrailer.high-risk-files glob set, supplied by the
@@ -15,7 +15,7 @@
 //
 // DEFAULT OFF: with -loretrailer.enabled=false (the zero value) the analyzer
 // is a no-op — existing zen-doctrine-lint behavior is unchanged. This is the
-// frozen-surface guarantee for the binary (Plan 8/9/14 analyzers untouched).
+// frozen-surface guarantee for the binary.
 package loretrailer
 
 import (

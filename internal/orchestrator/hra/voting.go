@@ -5,20 +5,20 @@
 //
 // # File map (one file per concern)
 //
-//	voting.go       — Plurality (I-1) + EMSDecide (I-3): classification voting
-//	voting_fmv.go   — Functional Majority Voting (I-4..I-7): fix-proposal selection
+// voting.go — Plurality (I-1) + EMSDecide (I-3): classification voting
+// voting_fmv.go — Functional Majority Voting (I-4..I-7): fix-proposal selection
 //
 // # Q8 B references
 //
-//   - Plurality (arXiv:2502.19130v4): classification voting; +13.2% on
-//     reasoning benchmarks vs. single-reviewer baseline.
-//   - FMV       (arXiv:2604.15618):    runtime test signatures as tiebreak
-//     for fix proposals — voting on behaviour, not text.
-//   - EMS       (arXiv:2604.02863):    early termination on majority
-//     convergence — partial-prefix sampling to cap reviewer fan-out.
+// - Plurality (arXiv:2502.19130v4): classification voting; +13.2% on
+// reasoning benchmarks vs. single-reviewer baseline.
+// - FMV (arXiv:2604.15618): runtime test signatures as tiebreak
+// for fix proposals — voting on behaviour, not text.
+// - EMS (arXiv:2604.02863): early termination on majority
+// convergence — partial-prefix sampling to cap reviewer fan-out.
 //
 // All voting in this file is a pure function: no I/O, no clock reads,
-// no goroutines. The HRA layers (Phase H coordinator) supply already-
+// no goroutines. The HRA layers supply already-
 // gathered votes and route the resulting Decision (or sentinel error)
 // into doctrine-shaped events on the eventlog substrate.
 
@@ -99,9 +99,9 @@ func Plurality(votes []ClassificationVote) (Decision, error) {
 // (arXiv:2604.02863) over a partial-prefix of reviewer samples.
 //
 // Returns
-//   - (decision, true, nil) ⇒ partial sample is sufficient; caller stops sampling.
-//   - (zero, false, nil)    ⇒ caller MUST sample more reviewers and call again.
-//   - (zero, false, err)    ⇒ programming error or final-sample tie.
+// - (decision, true, nil) ⇒ partial sample is sufficient; caller stops sampling.
+// - (zero, false, nil) ⇒ caller MUST sample more reviewers and call again.
+// - (zero, false, err) ⇒ programming error or final-sample tie.
 //
 // Convergence rule: let K = totalExpected; threshold T = ceil((K+1)/2).
 // If max(ack_count, fix_count) >= T, the remaining (K - len(samples))

@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — workforce.go (Plan 4 Phase G Task G-4).
+// Package handlers — workforce.go.
 //
 // Read-only inspection endpoints for workforce state:
 //
-//	GET /v1/workforce/specs          — list WorkerSpec rows
-//	GET /v1/workforce/workers        — list active Worker rows
-//	GET /v1/workforce/checkpoints    — list CheckpointQueue entries
-//	GET /v1/workforce/fix_prompts    — list FixPromptQueue entries
-//	GET /v1/workforce/aggregations   — list AggregationStream windows
+// GET /v1/workforce/specs — list WorkerSpec rows
+// GET /v1/workforce/workers — list active Worker rows
+// GET /v1/workforce/checkpoints — list CheckpointQueue entries
+// GET /v1/workforce/fix_prompts — list FixPromptQueue entries
+// GET /v1/workforce/aggregations — list AggregationStream windows
 //
 // All endpoints support limit/offset pagination and type-specific filter params.
 // These endpoints serve operator inspection (zen workforce status) and
 //
-// inv-zen-031: never imports internal/workforce directly; WorkforceCtx is the bridge.
+// invariant: never imports internal/workforce directly; WorkforceCtx is the bridge.
 package handlers
 
 import (

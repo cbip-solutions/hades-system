@@ -4,29 +4,29 @@
 // ldflags injection. The canonical injection point is GoReleaser's
 // .goreleaser.yml builds: block, which sets
 //
-//	-X github.com/cbip-solutions/hades-system/internal/buildinfo.version={{.Version}}
-//	-X github.com/cbip-solutions/hades-system/internal/buildinfo.commit={{.Commit}}
-//	-X github.com/cbip-solutions/hades-system/internal/buildinfo.date={{.CommitDate}}
+// -X github.com/cbip-solutions/hades-system/internal/buildinfo.version={{.Version}}
+// -X github.com/cbip-solutions/hades-system/internal/buildinfo.commit={{.Commit}}
+// -X github.com/cbip-solutions/hades-system/internal/buildinfo.date={{.CommitDate}}
 //
 // so the values are available at runtime via Version() / Commit() / Date().
 //
-// For developer workflows (`go build ./cmd/zen` without -X flags) the
+// For developer workflows (`go build./cmd/zen` without -X flags) the
 // package-level vars default to clear "dev" / "unknown" sentinels so the
 // resulting binary still works and `--version` still prints something
 // useful (just labelled "dev").
 //
-// inv-zen-297 (reproducibility metadata) — three things load-bear on this
+// invariant (reproducibility metadata) — three things load-bear on this
 // package:
 //
-//  1. The Anthropic-style `zen --version` surface MUST embed Version() +
-//     Commit() + Date() so bug reports + CI matrix diagnostics carry the
-//     binary's identity (see cmd/zen, cmd/zen-swarm-ctld).
-//  2. cmd/verify-release-checksums (Phase D-6 operator scope) parses the
-//     `--version` output to cross-check the binaries in dist/ against the
-//     recorded checksum manifest.
-//  3. Plan 9 audit chain emit (internal/audit/chain) records build
-//     provenance with every event via Provenance() — so audit-log forensics
-//     can attribute behaviour to a specific build.
+// 1. The Anthropic-style `zen --version` surface MUST embed Version() +
+// Commit() + Date() so bug reports + CI matrix diagnostics carry the
+// binary's identity (see cmd/zen, cmd/zen-swarm-ctld).
+// 2. cmd/verify-release-checksums parses the
+// `--version` output to cross-check the binaries in dist/ against the
+// recorded checksum manifest.
+// 3. audit chain emit (internal/audit/chain) records build
+// provenance with every event via Provenance() — so audit-log forensics
+// can attribute behaviour to a specific build.
 //
 // Boundary respect: buildinfo MUST NOT import any other zen-swarm package;
 // it sits below every consumer so cycles are structurally impossible. The
@@ -64,7 +64,7 @@ func Platform() string {
 //
 // Canonical format (load-bearing for cmd/verify-release-checksums):
 //
-//	"zen-swarm <version> commit:<commit> date:<date> go:<gover> platform:<plat>"
+// "zen-swarm <version> commit:<commit> date:<date> go:<gover> platform:<plat>"
 //
 // Drift here MUST be paired with an update to verify-release-checksums
 // since the parser anchors on the field keys ("commit:", "date:", "go:",

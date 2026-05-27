@@ -429,7 +429,7 @@ func TestRunCandidatesErrInjectionFromCandidateRunner(t *testing.T) {
 	})
 }
 
-// TestStragglerEmitsAfterGrace exercises inv-zen-108: when a per-candidate
+// TestStragglerEmitsAfterGrace exercises invariant: when a per-candidate
 // ctx fires (deadline or cancel) before Candidate.Run returns, the
 // armStragglerSupervisor goroutine MUST arm a grace timer and, if the
 // candidate has not signalled `done` by the time the grace elapses,
@@ -440,7 +440,7 @@ func TestRunCandidatesErrInjectionFromCandidateRunner(t *testing.T) {
 // Setup uses tight timings so the test stays fast: ctx timeout 50ms,
 // grace 30ms, candidate hang 500ms with ignoreCtxHang=true (emulates a
 // real subprocess that ignores SIGTERM and only stops on SIGKILL —
-// exactly inv-zen-108's production scenario). Because the candidate
+// exactly invariant's production scenario). Because the candidate
 // hangs PAST ctx+grace, the supervisor's first-select catches
 // cctx.Done() at t=50ms (parent-ctx propagation), arms AfterFunc(30ms),
 // and emits at t=80ms — well before Run unblocks at t=500ms.
@@ -533,7 +533,7 @@ func TestStragglerSupervisorExitsOnNormalCompletion(t *testing.T) {
 // TestRunCandidatesGenIDFallbackOnNilGenCtr exercises the runner's
 // genID() helper when RunnerDeps.GenCtr is nil: the emitted all-fail
 // event MUST carry GenerationID=0 (per BaselineRunner symmetry —
-// "0 means unassigned" is detectable by inv-zen-107 compliance tests).
+// "0 means unassigned" is detectable by invariant compliance tests).
 // Closes the doctrine-floor coverage gap on the genID-nil branch.
 func TestRunCandidatesGenIDFallbackOnNilGenCtr(t *testing.T) {
 	cr := &fakeCandidateRunner{

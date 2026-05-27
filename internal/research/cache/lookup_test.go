@@ -1,9 +1,10 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
 // Package cache — lookup_test.go
 //
-// Tests for the Lookup façade (lookup.go, Plan 9 Phase F-10).
+// Tests for the Lookup façade.
 //
 // Lookup(ctx, db, query, embedding, projectID, sessionID) is an
 // exact-then-semantic fall-through helper used by callers that do NOT need
@@ -12,13 +13,13 @@
 //
 // Test scenarios:
 //
-//	TestLookupExactPreferredOverSemantic — exact hit is returned even when
-//	  a semantic embedding is supplied.
-//	TestLookupFallThroughOnExactMiss — exact miss falls through to semantic.
-//	TestLookupNilEmbeddingSkipsSemantic — nil embedding returns ErrCacheMiss
-//	  instead of attempting semantic.
-//	TestLookupBothMiss — no exact or semantic match → ErrCacheMiss.
-//	TestLookupRequiresProjectID — ErrProjectIDRequired when projectID empty.
+// TestLookupExactPreferredOverSemantic — exact hit is returned even when
+// a semantic embedding is supplied.
+// TestLookupFallThroughOnExactMiss — exact miss falls through to semantic.
+// TestLookupNilEmbeddingSkipsSemantic — nil embedding returns ErrCacheMiss
+// instead of attempting semantic.
+// TestLookupBothMiss — no exact or semantic match → ErrCacheMiss.
+// TestLookupRequiresProjectID — ErrProjectIDRequired when projectID empty.
 package cache
 
 import (

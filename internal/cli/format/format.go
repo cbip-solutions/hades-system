@@ -6,25 +6,25 @@
 //
 // Universal flags registered via AttachFlags:
 //
-//	--json       bool   shortcut for --format=json
-//	--quiet      bool   suppress headers + decorative output
-//	--verbose    bool   print request URLs + latencies
-//	--since      string time-bound filter (24h, 7d, 2025-01-01)
-//	--limit      int    cap rows (default 100)
-//	--filter     string namespace-specific post-fetch filter
-//	--format     string table|json|yaml (default table)
+// --json bool shortcut for --format=json
+// --quiet bool suppress headers + decorative output
+// --verbose bool print request URLs + latencies
+// --since string time-bound filter (24h, 7d, 2025-01-01)
+// --limit int cap rows (default 100)
+// --filter string namespace-specific post-fetch filter
+// --format string table|json|yaml (default table)
 //
 // Caller flow:
 //
-//	cmd := &cobra.Command{...}
-//	format.AttachFlags(cmd)
-//	cmd.RunE = func(c *cobra.Command, args []string) error {
-//	    if err := format.ValidateExclusive(c); err != nil { return err }
-//	    opts := format.OptionsFromFlags(c)
-//	    rows, err := fetchRows(c, opts) // namespace-specific
-//	    if err != nil { return err }
-//	    return format.Render(c.OutOrStdout(), opts, rows, columns)
-//	}
+// cmd := &cobra.Command{...}
+// format.AttachFlags(cmd)
+// cmd.RunE = func(c *cobra.Command, args []string) error {
+// if err := format.ValidateExclusive(c); err != nil { return err }
+// opts := format.OptionsFromFlags(c)
+// rows, err := fetchRows(c, opts) // namespace-specific
+// if err != nil { return err }
+// return format.Render(c.OutOrStdout(), opts, rows, columns)
+// }
 package format
 
 import (

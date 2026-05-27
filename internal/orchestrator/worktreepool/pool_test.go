@@ -40,6 +40,50 @@ func TestNewPool_HappyPath(t *testing.T) {
 	}
 }
 
+func TestSnapshotOf_ReportsConcretePoolCountersWithoutGrowingPoolInterface(t *testing.T) {
+	cfg := worktreepool.PoolConfig{
+		RepoRoot:    t.TempDir(),
+		WorktreeDir: t.TempDir(),
+		BranchBase:  "main",
+		Floor:       2,
+		ElasticMax:  4,
+		GCCadence:   time.Hour,
+		Doctrine:    "default",
+	}
+	p, err := worktreepool.NewPool(cfg, &fakeEmitter{}, &fakeExec{})
+	if err != nil {
+		t.Fatalf("NewPool: %v", err)
+	}
+
+	snap, ok := worktreepool.SnapshotOf(p)
+	if !ok {
+		t.Fatal("SnapshotOf did not recognize NewPool result")
+	}
+	if snap.Floor != 2 || snap.ElasticMax != 4 {
+		t.Fatalf("snapshot config = floor %d max %d, want floor 2 max 4", snap.Floor, snap.ElasticMax)
+	}
+	if snap.BackgroundGoroutines != 2 {
+		t.Fatalf("BackgroundGoroutines = %d, want prewarm+gc=2", snap.BackgroundGoroutines)
+	}
+	if snap.Closed {
+		t.Fatal("SnapshotOf reports closed before Close")
+	}
+
+	if err := p.Close(context.Background()); err != nil {
+		t.Fatalf("Close: %v", err)
+	}
+	snap, ok = worktreepool.SnapshotOf(p)
+	if !ok {
+		t.Fatal("SnapshotOf did not recognize closed NewPool result")
+	}
+	if !snap.Closed {
+		t.Fatal("SnapshotOf reports open after Close")
+	}
+	if snap.BackgroundGoroutines != 0 {
+		t.Fatalf("BackgroundGoroutines after Close = %d, want 0", snap.BackgroundGoroutines)
+	}
+}
+
 func TestNewPool_RejectsInvalidConfig(t *testing.T) {
 	tmpRepo := t.TempDir()
 	tmpWT := t.TempDir()
@@ -963,7 +1007,7 @@ func TestPool_Lease_SlowPath_DegradedEmittedForAllPressureClasses(t *testing.T) 
 // TestPool_Lease_SlowPath_NonPressureClassesNoDegradedEmit verifies the
 // negative half of the IMP-1 contract: deterministic-bug / config-error
 // classes (BranchExists, NotARepo, Panic, Other) MUST NOT emit
-// EvtWorktreePoolDegraded. Otherwise HRA Phase I would needlessly
+// EvtWorktreePoolDegraded. Otherwise HRA would needlessly
 // downgrade voting strategy on a typo'd branch name or a programmer
 // bug — both of which a backoff-and-retry policy cannot cure.
 func TestPool_Lease_SlowPath_NonPressureClassesNoDegradedEmit(t *testing.T) {

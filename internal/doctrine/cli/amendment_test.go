@@ -625,8 +625,8 @@ func TestRevert_HappyPath_NoReason(t *testing.T) {
 		t.Errorf("expected Spanish 'revertida' confirmation; got: %s", stdout)
 	}
 	// Operator-manual revert MUST surface DoctrineAmendmentReverted in the
-	// audit trail per inv-zen-141 — distinguish from telemetry-driven
-	// DoctrineAutonomousReverted (Phase H AutoRevert).
+	// audit trail per invariant — distinguish from telemetry-driven
+	// DoctrineAutonomousReverted.
 	if !strings.Contains(stdout, "DoctrineAmendmentReverted") {
 		t.Errorf("expected DoctrineAmendmentReverted event reference; got: %s", stdout)
 	}

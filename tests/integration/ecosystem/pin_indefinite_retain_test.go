@@ -1,4 +1,4 @@
-//go:build integration && cgo
+// go:build integration && cgo
 
 // Package ecosystem_test — pin_indefinite_retain_test.go
 //
@@ -11,19 +11,19 @@
 // seam and asserts the handler delegates the eco/version tuple). The
 // integration test exercises the SQL layer end-to-end:
 //
-//	(1) Open ecosystem.db + apply migrations 001..009 (incl. the Phase G
-//	    G-5 indefinite_retain column).
-//	(2) Seed an ecosystem_packages + ecosystem_versions row with
-//	    indefinite_retain=0 (column default).
-//	(3) Issue the SQL UPDATE the production EcosystemHandler.Pin adapter
-//	    will issue (`UPDATE ecosystem_versions SET indefinite_retain=1
-//	    WHERE ...`).
-//	(4) Re-query and assert the column reads 1.
+// (1) Open ecosystem.db + apply migrations 001..009 (incl. the
+// G-5 indefinite_retain column).
+// (2) Seed an ecosystem_packages + ecosystem_versions row with
+// indefinite_retain=0 (column default).
+// (3) Issue the SQL UPDATE the production EcosystemHandler.Pin adapter
+// will issue (`UPDATE ecosystem_versions SET indefinite_retain=1
+// WHERE...`).
+// (4) Re-query and assert the column reads 1.
 //
-// This proves the database round-trip works: before the Phase G fix-cycle
+// This proves the database round-trip works: before the fix-cycle
 // the column had no production writer in any code path (G-5 added the
 // column + a CLI command but no daemon handler invoked the UPDATE). The
-// daemon-side EcosystemPin handler (Phase G fix-cycle) IS the production
+// daemon-side EcosystemPin handler IS the production
 // writer; its seam adapter (deferred per option B) MUST issue this same
 // SQL UPDATE — this integration test guards the SQL contract.
 //
@@ -71,11 +71,11 @@ import (
 // EcosystemHandler.Pin(ctx, eco, ver). The production adapter (deferred)
 // will translate this to:
 //
-//	UPDATE ecosystem_versions SET indefinite_retain = 1
-//	  WHERE id = (
-//	    SELECT v.id FROM ecosystem_versions v
-//	             JOIN ecosystem_packages p ON p.id = v.package_id
-//	             WHERE p.ecosystem = ? AND v.version = ?)
+// UPDATE ecosystem_versions SET indefinite_retain = 1
+// WHERE id = (
+// SELECT v.id FROM ecosystem_versions v
+// JOIN ecosystem_packages p ON p.id = v.package_id
+// WHERE p.ecosystem = ? AND v.version = ?)
 //
 // This test asserts the UPDATE works against the migrated schema.
 func TestPinIndefiniteRetain_SQLRoundTrip_I2(t *testing.T) {

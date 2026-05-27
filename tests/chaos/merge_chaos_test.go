@@ -1,3 +1,4 @@
+// go:build chaos
 //go:build chaos
 // +build chaos
 

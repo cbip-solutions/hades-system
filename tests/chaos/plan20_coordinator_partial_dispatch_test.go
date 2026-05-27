@@ -7,17 +7,17 @@
 // errors on a subset of Lease calls mid fan-out (e.g., 2 of 4 succeed,
 // 2 fail); the L10 OrchestratorCoordinator MUST:
 //
-//   - skip the failing repos + continue dispatching the successful set
-//     (per-repo degradation — autonomyBranch loops over uniqueRepos and
-//     skips failed leases);
-//   - if ALL leases fail, degrade Mode from Autonomy to Surface;
-//   - in BOTH success-mixed AND all-fail cases, emit the
-//     EvtCoordinatedDispatch audit row (inv-zen-269 chokepoint) — the
-//     audit emission is unconditional on the dispatch outcome (per
-//     spec §8.3 step 5 + orchestrator.go::Dispatch step 5);
-//   - return DispatchResult with the partial DispatchedRepos slice +
-//     nil error (per-repo lease failure is a soft degradation, not a
-//     hard error).
+// - skip the failing repos + continue dispatching the successful set
+// (per-repo degradation — autonomyBranch loops over uniqueRepos and
+// skips failed leases);
+// - if ALL leases fail, degrade Mode from Autonomy to Surface;
+// - in BOTH success-mixed AND all-fail cases, emit the
+// EvtCoordinatedDispatch audit row — the
+// audit emission is unconditional on the dispatch outcome (per
+// spec §8.3 step 5 + orchestrator.go::Dispatch step 5);
+// - return DispatchResult with the partial DispatchedRepos slice +
+// nil error (per-repo lease failure is a soft degradation, not a
+// hard error).
 //
 // The chaos pattern: fire NEW partial-failing dispatches concurrently
 // across many goroutines and assert each one (a) audit-emits exactly
@@ -32,8 +32,7 @@
 // behavior is the spec contract; this test pins it under concurrency
 // stress.
 
-//go:build chaos && cgo
-
+// go:build chaos && cgo
 package chaos
 
 import (
@@ -179,7 +178,7 @@ func TestPlan20ChaosCoordinatorPartialDispatch(t *testing.T) {
 			if len(res.DispatchedRepos) < consumerN {
 				partialDisp.Add(1)
 			}
-			// AuditID MUST be non-empty (audit row emitted; inv-zen-269
+			// AuditID MUST be non-empty (audit row emitted; invariant
 			// chokepoint fired). The DispatchResult zero-value AuditID is
 			// the empty string, which signals NO emission.
 			if res.AuditID == "" {

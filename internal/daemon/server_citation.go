@@ -15,7 +15,7 @@ func (s *Server) SetCitationRegistry(reg *citation.Registry) {
 //
 // Consumers MUST nil-check the return before calling Dispatch /
 // Lookup — the citation package's own Dispatch already handles a
-// nil Registry gracefully via ErrNoRendererMatch, but Plan 12
+// nil Registry gracefully via ErrNoRendererMatch, but
 // platform renderer code at the daemon layer should branch on nil
 // to surface a clear "citation substrate unavailable" error rather
 // than a panic.

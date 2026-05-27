@@ -181,7 +181,7 @@ def _degraded_line(label: str) -> str:
     Spec §Q5 mandates the format:
         <label>: unavailable (daemon path down — try: hades doctor)
 
-    Color: warn-orange (#ffa726) per spec §Q5 + Plan 18a Phase B palette.
+    Color: warn-orange (#ffa726) per spec §Q5 +   palette.
     The label is colored too so the eye lands on the degraded marker
     immediately. C-3 ships the literal text; C-4 wires the color.
     """
@@ -199,7 +199,7 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
     corresponding line surfaces the degraded hint instead of the
     happy-path text. The other fields continue to render normally.
 
-    Color application per spec §Q5 + Plan 18a Phase B palette:
+    Color application per spec §Q5 +   palette:
       - 'ok' / 'live' state markers: ok-green #10b981
       - Body text (PID, UDS, counts, percentages): muted-gray #999
       - Degraded fields (whole line): warn-orange #ffa726
@@ -322,25 +322,25 @@ def _classify_field_state(response: dict[str, Any] | None) -> str:
 
 
 def _render_json(responses: dict[str, dict[str, Any] | None]) -> str:
-    """Render the schema-v1 JSON payload per spec §Q5 + inv-zen-221.
+    """Render the schema-v1 JSON payload per spec §Q5 + invariant.
 
     Schema-v1 shape (frozen for the lifetime of v1 consumers):
         {
           "schema_version": 1,
           "rendered_at": "<ISO-8601 UTC>",
           "fields": {
-            "daemon":   {"state": ..., "pid": ..., "uds_path": ...},
-            "model":    {"state": ..., "active_model": ...},
-            "cascade":  {"state": ..., "active_tier": ..., ...},
-            "bypass":   {"state": ..., "status": ..., ...},
-            "cost_24h": {"state": ..., "spend_24h_usd": ..., ...},
-            "context":  {"state": ..., "used_tokens": ..., ...},
-            "profile":  {"state": ..., "profile_name": ..., ...},
-            "cwd":      {"state": ..., "cwd": ...}
+            "daemon":   {"state":..., "pid":..., "uds_path":...},
+            "model":    {"state":..., "active_model":...},
+            "cascade":  {"state":..., "active_tier":...,...},
+            "bypass":   {"state":..., "status":...,...},
+            "cost_24h": {"state":..., "spend_24h_usd":...,...},
+            "context":  {"state":..., "used_tokens":...,...},
+            "profile":  {"state":..., "profile_name":...,...},
+            "cwd":      {"state":..., "cwd":...}
           }
         }
 
-    Future bumps (v2, v3 ...) per ADR-0097 (Phase G ships).
+    Future bumps (v2, v3...) per ADR-0097.
     """
     health = responses.get("/v1/health")
     cascade = responses.get("/v1/cascade/state")
@@ -424,7 +424,7 @@ def _render_error(envelope: dict[str, str]) -> str:
 
     Color: HADES: prefix in fail-crimson #c41e3a; body in muted-gray
     #999; recovery arrow + hint in ok-green #10b981. Mirrors the
-    Phase B Go-side Render() output shape.
+     Go-side Render() output shape.
     """
     title = envelope.get("title", "internal error")
     body = envelope.get("body", "no body provided")
@@ -475,7 +475,7 @@ def _is_json_mode(raw_args: str) -> bool:
           a different flag in a hypothetical extension).
         - Forward-compat: unknown flags (e.g., `--bogus`) do NOT raise
           — they fall through to text mode silently. Strict
-          rejection would surface via Phase B Render with code
+          rejection would surface via  Render with code
           `cli.arg-validation-fail` if the handler grew an argparse
           surface in a future plan.
 
@@ -498,12 +498,12 @@ def handle_status(raw_args: str) -> str | None:
         raw_args: trailing text after the command name. Recognized
             tokens (whitespace-separated; case-sensitive):
                 --json   Emit machine-readable JSON output per
-                         schema-v1 (inv-zen-221 anchor) instead of
+                         schema-v1 instead of
                          the spec §Q5 human-readable block.
 
             Unknown flags are tolerated (forward-compat) and fall
             through to default (text) mode. A future plan may add
-            stricter argparse + reject unknown flags via Phase A
+            stricter argparse + reject unknown flags via 
             catalog code `cli.arg-validation-fail`.
 
     Returns:

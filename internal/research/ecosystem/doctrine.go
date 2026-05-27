@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // internal/research/ecosystem/doctrine.go
 //
-// DoctrineProfile + DoctrineResolver (Plan 14 Phase A Task A-8; master §3.7).
+// DoctrineProfile + DoctrineResolver.
 //
-// Wraps Plan 8 *active.Accessor (which carries the canonical doctrine
-// pointer via *v1.Schema) and maps the schema to a Plan 14
+// Wraps *active.Accessor (which carries the canonical doctrine
+// pointer via *v1.Schema) and maps the schema to a
 // DoctrineProfile via the frozen `builtinProfiles` table per spec §2.7
 // Q7=A doctrine table.
 //
-// Plan-template drift reconciliation (Stage 2 amendment 2026-05-17):
+// Plan-template drift reconciliation:
 // the original plan-file assumed `v1.Schema` carried a `Name string`
 // field. Reality (verified via `internal/doctrine/schema/v1/schema.go`):
 // v1.Schema is FIELD-NAME-LESS — the doctrine identifier lives only as
@@ -16,7 +16,7 @@
 //
 // Reference precedent (`internal/daemon/server_doctrine.go`
 // `doctrineNameForSchema`): the daemon reverses the lookup via
-// pointer-equality scan over `builtin.LoadAll()`. Plan 14 follows the
+// pointer-equality scan over `builtin.LoadAll()`. follows the
 // same pattern but takes the registry by injection (not via
 // `builtin.LoadAll()`) so test seeding is decoupled from the production
 // embed loader and resolver construction has no I/O dependency.
@@ -118,12 +118,12 @@ type DoctrineResolver struct {
 }
 
 // NewDoctrineResolver constructs a Resolver bound to accessor.
-// Panics on nil accessor (init-order bug; same posture as Plan 8 NewAccessor).
+// Panics on nil accessor.
 //
 // The returned Resolver starts with an empty registry; callers MUST
 // invoke SetRegistry with the same map passed to
 // accessor.SetRegistry BEFORE the first Resolve call. (Production
-// daemon wiring at Phase D ensures both invocations happen during
+// daemon wiring at ensures both invocations happen during
 // startup, before any HTTP handler can reach the resolver.) If
 // SetRegistry is omitted, every Resolve call falls into the
 // custom-doctrine path (returns "default" profile values with empty

@@ -1,6 +1,6 @@
 // doctrines.
 //
-// Drives inv-zen-119 invariant: max-scope ∞ / default 24h /
+// Drives invariant invariant: max-scope ∞ / default 24h /
 // capa-firewall 4h. The IdleReaper.IsIdle predicate is a pure function
 // of (Session, IdleDeps) — its only "time" input is LastAttachAt,
 // compared against the current wall clock via time.Since. We use this
@@ -11,58 +11,59 @@
 //
 // Drift notes (vs plan-template heredoc):
 //
-//   - The plan template referenced fictional surfaces:
-//     `tmuxlife.NewInMemorySessionStore`, `tmuxlife.NewSnapshotter`,
-//     `clock.NewVirtual`, `eventlog.TypeTmuxIdleReaped`,
-//     `eventlog.SeverityInfoImmediate`, `tmuxlife.DoctrineMaxScope` /
-//     `DoctrineDefault` / `DoctrineCapaFirewall`,
-//     `IdleReaperDeps{Store,Emitter,Clock,Period,Snapshotter}`. None
-//     exist. The actual contract:
+// - The plan template referenced fictional surfaces:
+// `tmuxlife.NewInMemorySessionStore`, `tmuxlife.NewSnapshotter`,
+// `clock.NewVirtual`, `eventlog.TypeTmuxIdleReaped`,
+// `eventlog.SeverityInfoImmediate`, `tmuxlife.DoctrineMaxScope` /
+// `DoctrineDefault` / `DoctrineCapaFirewall`,
+// `IdleReaperDeps{Store,Emitter,Clock,Period,Snapshotter}`. None
+// exist. The actual contract:
 //
-//   - `tmuxlife.IdleReaper` is constructed via `NewIdleReaper(*Manager,
-//     func(string) doctrine.Name)` and its `IsIdle(*Session, IdleDeps)`
-//     predicate is the pure-function carrier of inv-zen-119.
-//   - Doctrine TTLs come from `DoctrineIdleTTL(d) IdleTTL` +
-//     `IdleTTLIsInfinity(t) bool`. Per inv-zen-119: max-scope=∞,
-//     default=24, capa-firewall=4 (hours).
-//   - Doctrine names are `doctrine.NameMaxScope`, `doctrine.NameDefault`,
-//     `doctrine.NameCapaFirewall`.
-//   - There is no event-log emission for reaps in the current API
-//     (the reaper logs via `*log.Logger` and calls `m.Teardown`); the
-//     "emit TmuxIdleReaped info-immediate" assertion is dropped. We
-//     verify reap-vs-keep via the `IsIdle` predicate AND by running
-//     `r.tick(ctx)` and observing the logger sink for per-session
-//     teardown attempts (mirrors the unit-test pattern in
-//     `internal/tmuxlife/idle_reaper_test.go`).
-//   - There is no `Snapshotter` type; per-doctrine snapshot behaviour
-//     is encoded in `Manager.Teardown(ctx, alias, snapshot bool)`. The
-//     "max-scope no snapshot, default snapshot, capa-firewall no
-//     snapshot" sub-claim is asserted at the predicate level
-//     (max-scope: never reaped → no snapshot path reached; capa-firewall:
-//     reaped but the production `Teardown` is invoked with snapshot=true
-//     by the reaper unconditionally — the per-doctrine snapshot/no-
-//     snapshot policy is a Plan 7 follow-up wired in `tmuxlife.Manager`
-//     itself, NOT in the reaper). We pin the load-bearing claim
-//     (per-doctrine reap-vs-keep + boundary inclusivity) and document
-//     the snapshot policy as a separate compliance-test surface.
+// - `tmuxlife.IdleReaper` is constructed via `NewIdleReaper(*Manager,
+// func(string) doctrine.Name)` and its `IsIdle(*Session, IdleDeps)`
+// predicate is the pure-function carrier of invariant.
+// - Doctrine TTLs come from `DoctrineIdleTTL(d) IdleTTL` +
+// `IdleTTLIsInfinity(t) bool`. Per invariant: max-scope=∞,
+// default=24, capa-firewall=4 (hours).
+// - Doctrine names are `doctrine.NameMaxScope`, `doctrine.NameDefault`,
+// `doctrine.NameCapaFirewall`.
+// - There is no event-log emission for reaps in the current API
+// (the reaper logs via `*log.Logger` and calls `m.Teardown`); the
+// "emit TmuxIdleReaped info-immediate" assertion is dropped. We
+// verify reap-vs-keep via the `IsIdle` predicate AND by running
+// `r.tick(ctx)` and observing the logger sink for per-session
+// teardown attempts (mirrors the unit-test pattern in
+// `internal/tmuxlife/idle_reaper_test.go`).
+// - There is no `Snapshotter` type; per-doctrine snapshot behaviour
+// is encoded in `Manager.Teardown(ctx, alias, snapshot bool)`. The
+// "max-scope no snapshot, default snapshot, capa-firewall no
+// snapshot" sub-claim is asserted at the predicate level
+// (max-scope: never reaped → no snapshot path reached; capa-firewall:
+// reaped but the production `Teardown` is invoked with snapshot=true
+// by the reaper unconditionally — the per-doctrine snapshot/no-
+// snapshot policy is a follow-up wired in `tmuxlife.Manager`
+// itself, NOT in the reaper). We pin the load-bearing claim
+// (per-doctrine reap-vs-keep + boundary inclusivity) and document
+// the snapshot policy as a separate compliance-test surface.
 //
-//   - The plan template's "BoundaryPrecisely24h" assertion expected
-//     inclusive comparison (reap when elapsed == TTL). The actual
-//     implementation uses strict-greater-than:
-//     `time.Since(effective) > time.Duration(int(ttl))*time.Hour`.
-//     Reality wins: we test that elapsed = TTL is NOT idle (just-fresh)
-//     while elapsed = TTL+1ns IS idle (just-stale). The boundary
-//     property is "exclusive lower bound at TTL"; the docstring
-//     explicitly asserts inclusive behaviour — we lock in the actual
-//     behaviour and surface the mismatch as a documented test claim.
+// - The plan template's "BoundaryPrecisely24h" assertion expected
+// inclusive comparison (reap when elapsed == TTL). The actual
+// implementation uses strict-greater-than:
+// `time.Since(effective) > time.Duration(int(ttl))*time.Hour`.
+// Reality wins: we test that elapsed = TTL is NOT idle (just-fresh)
+// while elapsed = TTL+1ns IS idle (just-stale). The boundary
+// property is "exclusive lower bound at TTL"; the docstring
+// explicitly asserts inclusive behaviour — we lock in the actual
+// behaviour and surface the mismatch as a documented test claim.
 //
-//   - Virtual clock: we use `clock.NewFake` (the canonical Plan 5
-//     timeaccel clock) for the inbox/cron tests. For the reaper, we
-//     don't need a fake clock — `IsIdle` reads `time.Since(LastAttachAt)`
-//     directly, so synthesising elapsed-time via `time.Now().Add(-d)`
-//     is the simpler and more honest pattern. Other timeaccel tests in
-//     this file (cron K-15 + quiet-hours K-16) use `clock.NewFake`.
+// - Virtual clock: we use `clock.NewFake` (the canonical
+// timeaccel clock) for the inbox/cron tests. For the reaper, we
+// don't need a fake clock — `IsIdle` reads `time.Since(LastAttachAt)`
+// directly, so synthesising elapsed-time via `time.Now().Add(-d)`
+// is the simpler and more honest pattern. Other timeaccel tests in
+// this file (cron K-15 + quiet-hours K-16) use `clock.NewFake`.
 //
+// go:build timeaccel
 //go:build timeaccel
 // +build timeaccel
 

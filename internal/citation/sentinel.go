@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// envelopeJSONSchemaSentinel anchors inv-zen-166: every Envelope field
+// envelopeJSONSchemaSentinel anchors invariant: every Envelope field
 // MUST be referenced here. Adding/removing/renaming a field without
 // updating serialization fails compilation.
 //
@@ -35,7 +35,7 @@ func envelopeJSONSchemaSentinel() {
 	_, _ = json.Marshal(&e)
 }
 
-// auditEventHandlerAuthSentinel anchors inv-zen-172: the zen://audit URL
+// auditEventHandlerAuthSentinel anchors invariant: the zen://audit URL
 // handler signature is fixed at the auth-required shape (handler must
 // accept request bound to an authenticated session context; doctrine
 // filter applies before serving the audit row).
@@ -44,7 +44,7 @@ func envelopeJSONSchemaSentinel() {
 // audit_event.go (cross-package compile-anchor — the same precedent
 // used elsewhere for cross-package handler wiring). The sentinel
 // here references the interface shape
-// the handler MUST satisfy; Phase D-5 implements; Phase D-8 compliance
+// the handler MUST satisfy; implements; compliance
 // test verifies runtime auth contract.
 func auditEventHandlerAuthSentinel() {
 

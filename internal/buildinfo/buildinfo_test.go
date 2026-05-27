@@ -4,15 +4,15 @@
 //
 // Verifies the build-metadata embedding surface used by --version on
 // both binaries (cmd/zen + cmd/zen-swarm-ctld) and consumed downstream
-// by cmd/verify-release-checksums (Phase D-6 operator scope) and audit
+// by cmd/verify-release-checksums and audit
 // chain provenance.
 //
-// inv-zen-297 — reproducibility metadata recorded in build:
+// invariant — reproducibility metadata recorded in build:
 //
-//	Version() + Commit() + Date() + GoVersion() + Platform() must be
-//	non-empty and Summary() must contain the five canonical fields.
-//	The .goreleaser.yml builds: block injects values via -X ldflags;
-//	without injection the sentinels "dev" / "unknown" are returned.
+// Version() + Commit() + Date() + GoVersion() + Platform() must be
+// non-empty and Summary() must contain the five canonical fields.
+// The.goreleaser.yml builds: block injects values via -X ldflags;
+// without injection the sentinels "dev" / "unknown" are returned.
 package buildinfo
 
 import (

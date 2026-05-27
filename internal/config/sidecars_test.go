@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/config/sidecars_test.go
 //
-// External-package tests for the Sidecars TOML loader (Plan 15 Phase B-5).
+// External-package tests for the Sidecars TOML loader.
 // Covers happy path, missing-file-not-error, malformed TOML, validation rules
 // (loopback-only URL, tier=1, interval bounds), and the XDG_CONFIG_HOME-aware
 // default path resolution.

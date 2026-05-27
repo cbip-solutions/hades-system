@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-// Package client — knowledge_p9.go (Plan 9 Phase H Task H-8).
+// Package client — knowledge_p9.go.
 //
-// 5 methods on *Client wrapping the Plan 9 Phase H-2 endpoints surfaced at
+// 5 methods on *Client wrapping the endpoints surfaced at
 // /v1/knowledge/{query,promote,unpromote,list,rebuild}. Wire types mirror
 // internal/daemon/handlers/knowledge_p9.go; the "P9" suffix is dropped on
 // the type names at the client side per the convention established in
 // audit_p9.go (client types are unsuffixed; handler types keep the suffix
-// to coexist with Plan 4/7 legacy types inside the daemon package).
+// to coexist with legacy types inside the daemon package).
 //
-// Method names carry the P9 suffix to disambiguate from the Plan 7
+// Method names carry the P9 suffix to disambiguate from the
 // KnowledgeQuery/KnowledgeReindex/KnowledgeStats methods in knowledge.go
 // which back the legacy /v1/knowledge/{query,reindex,stats} POST routes.
-// The Plan 9 H-2 routes use GET for query/list and POST for the mutating
+// The H-2 routes use GET for query/list and POST for the mutating
 // endpoints — the HTTP method alone would not resolve the Go method name
 // collision, hence the explicit P9 suffix.
 //
-// inv-zen-031 boundary: this file imports stdlib only (context, net/url,
+// invariant boundary: this file imports stdlib only (context, net/url,
 // strconv). No internal/daemon, internal/store, or internal/knowledge
 // imports. The *Client transport handles net/http.
 package client
@@ -36,12 +36,13 @@ type KnowledgeQueryReq struct {
 }
 
 type KnowledgeResult struct {
-	NoteID     string  `json:"note_id"`
-	ProjectID  string  `json:"project_id,omitempty"`
-	Path       string  `json:"path,omitempty"`
-	Snippet    string  `json:"snippet,omitempty"`
-	Score      float64 `json:"score"`
-	ChainProof string  `json:"audit_chain_proof,omitempty"`
+	NoteID           string  `json:"note_id"`
+	ProjectID        string  `json:"project_id,omitempty"`
+	Path             string  `json:"path,omitempty"`
+	Snippet          string  `json:"snippet,omitempty"`
+	Score            float64 `json:"score"`
+	AuditChainAnchor string  `json:"audit_chain_anchor,omitempty"`
+	ChainProof       string  `json:"audit_chain_proof,omitempty"`
 }
 
 type KnowledgeNote struct {
@@ -53,8 +54,9 @@ type KnowledgeNote struct {
 }
 
 type KnowledgeRebuildResp struct {
-	JobID     string `json:"job_id"`
-	StartedAt int64  `json:"started_at_unix,omitempty"`
+	JobID        string `json:"job_id"`
+	StartedAt    int64  `json:"started_at_unix,omitempty"`
+	RebuiltCount int    `json:"rebuilt_count,omitempty"`
 }
 
 func (c *Client) KnowledgeQueryP9(ctx context.Context, req KnowledgeQueryReq) ([]KnowledgeResult, error) {
@@ -89,12 +91,26 @@ func (c *Client) KnowledgeQueryP9(ctx context.Context, req KnowledgeQueryReq) ([
 }
 
 func (c *Client) KnowledgePromoteP9(ctx context.Context, noteID, reason string) error {
+	return c.KnowledgePromoteProjectP9(ctx, noteID, "", reason)
+}
+
+func (c *Client) KnowledgePromoteProjectP9(ctx context.Context, noteID, projectID, reason string) error {
 	body := map[string]any{"note_id": noteID, "reason": reason}
+	if projectID != "" {
+		body["project_id"] = projectID
+	}
 	return c.postJSON(ctx, "/v1/knowledge/promote", body, nil)
 }
 
 func (c *Client) KnowledgeUnpromoteP9(ctx context.Context, noteID, reason string) error {
+	return c.KnowledgeUnpromoteProjectP9(ctx, noteID, "", reason)
+}
+
+func (c *Client) KnowledgeUnpromoteProjectP9(ctx context.Context, noteID, projectID, reason string) error {
 	body := map[string]any{"note_id": noteID, "reason": reason}
+	if projectID != "" {
+		body["project_id"] = projectID
+	}
 	return c.postJSON(ctx, "/v1/knowledge/unpromote", body, nil)
 }
 

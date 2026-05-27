@@ -7,14 +7,13 @@
 // peer; on platforms where the canonical syscall is unavailable we
 // fail closed rather than trust caller-supplied data.
 //
-// This file lets `go build ./...` succeed on any GOOS without forcing
+// This file lets `go build./...` succeed on any GOOS without forcing
 // a //go:build linux || darwin guard at every consumer of the
-// orchestrator package. Phase N daemon wiring SHOULD refuse to start
+// orchestrator package. daemon wiring SHOULD refuse to start
 // on a platform where peer-cred is not supported; the error returned
 // here surfaces that decision through the normal Authenticate path.
 
-//go:build !linux && !darwin
-
+// go:build !linux && !darwin
 package orchestrator
 
 import (

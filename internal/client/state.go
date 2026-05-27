@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
-// Package client — state.go (Plan 9 Phase H Task H-9).
+// Package client — state.go.
 //
-// 5 typed wrappers for the Plan 9 Phase H-5 system-state endpoints declared in
+// 5 typed wrappers for the system-state endpoints declared in
 // internal/daemon/handlers/state.go. Wire types mirror the handler declarations;
 // duplication is intentional (client compiles standalone without importing
-// internal/daemon — Plan 4 N convention).
+// internal/daemon — N convention).
 //
-//	GET  /v1/state/show       — StateShow
-//	POST /v1/state/regenerate — StateRegenerate
-//	POST /v1/state/verify     — StateVerify
-//	POST /v1/state/pin        — StatePin
-//	GET  /v1/state/history    — StateHistory
+// GET /v1/state/show — StateShow
+// POST /v1/state/regenerate — StateRegenerate
+// POST /v1/state/verify — StateVerify
+// POST /v1/state/pin — StatePin
+// GET /v1/state/history — StateHistory
 //
-// inv-zen-031: this file imports stdlib only (context, net/url).
+// invariant: this file imports stdlib only (context, net/url).
 // No internal/daemon, internal/store, or internal/state imports.
 //
 // Type-name note: handler types use the P9 suffix (StateManifestP9,
@@ -50,7 +50,7 @@ type StateDiff struct {
 }
 
 // StatePinReq is the body of POST /v1/state/pin.
-// Field and Value are both required. Reason MUST be non-empty (inv-zen-146).
+// Field and Value are both required. Reason MUST be non-empty.
 // OperatorID is optional and overridden by peer-cred in production.
 type StatePinReq struct {
 	Field      string `json:"field"`

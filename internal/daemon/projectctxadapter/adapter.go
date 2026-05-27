@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package projectctxadapter bridges *store.Store to projectctx.ProjectStore.
 //
-// This package exists outside internal/projectctx on purpose: inv-zen-031
+// This package exists outside internal/projectctx on purpose: invariant
 // forbids the projectctx package from importing internal/store. The
 // adapter must therefore live in a daemon-side package that pulls
 // together *store.Store and projectctx.ProjectStore.
@@ -12,13 +12,13 @@
 // (store.ProjectAliasRow, store.PathHistoryRow). The two type sets are
 // intentionally identical in shape; keeping them separate buys two
 // things:
-//  1. The projectctx package never gains a transitive SQLite dependency
-//     so chaos / unit tests stay fast and run cross-platform.
-//  2. Future store-side schema changes (e.g., adding a column) don't
-//     ripple into the projectctx package — the adapter absorbs them.
+// 1. The projectctx package never gains a transitive SQLite dependency
+// so chaos / unit tests stay fast and run cross-platform.
+// 2. Future store-side schema changes (e.g., adding a column) don't
+// ripple into the projectctx package — the adapter absorbs them.
 //
 // Time precision: the projects_alias / path_history schema (migration
-// 057) stores INTEGER unix-MILLISECONDS (UnixMilli), matching the Plan 3
+// 057) stores INTEGER unix-MILLISECONDS (UnixMilli), matching the
 // cost_ledger pattern. The adapter translates time.Time ↔ int64 ms via
 // time.UnixMilli / t.UnixMilli(). Sub-millisecond precision is not
 // preserved on the wire (operator-facing project lifecycle does not need
@@ -28,11 +28,11 @@
 // `archived_at int64` where 0 (NULL on the wire, COALESCE'd to 0 on
 // scan) means "active" and a positive ms timestamp means "archived at
 // that instant". The projectctx-side `Project.ArchivedAt *time.Time`
-// uses a pointer so the JSON `omitempty` tag works correctly (Phase I
+// uses a pointer so the JSON `omitempty` tag works correctly (
 // HTTP handlers consume this shape). nil = active; non-nil = archived.
 //
 // Context cancellation: store-package functions take *sql.DB rather
-// than (ctx, *sql.DB) — they predate Plan 7 ctx-aware refactor. To
+// than (ctx, *sql.DB) — they predate ctx-aware refactor. To
 // honor the projectctx.ProjectStore contract that every method respect
 // ctx.Done(), each adapter method does a defensive ctx.Err() check at
 // entry and returns early with the cancellation error before touching
@@ -40,7 +40,7 @@
 // mid-flight by this layer, but the contract holds for the
 // pre-execution gate.
 //
-// inv-zen-031 boundary enforcement: this file's import list contains
+// invariant boundary enforcement: this file's import list contains
 // both "github.com/cbip-solutions/hades-system/internal/projectctx" and
 // "github.com/cbip-solutions/hades-system/internal/store". This is the ONLY
 // permissible co-location of those two imports anywhere in the codebase.

@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
 
-// Package compliance — Plan 15 Phase B task B-14 compliance test for
-// inv-zen-B8 (INSTALL.md framing discipline per decisión 17-h + 17-i +
+// Package compliance — task B-14 compliance test for
+// inv-zen-B8 (INSTALL.md framing discipline policy +
 // 4 + 11).
 //
 // Purpose: the public-snapshot INSTALL.md is the first surface a new
-// operator reads after the README. Per Plan 15 v1.0 release decisions,
+// operator reads after the README. Per v1.0 release decisions,
 // it MUST:
 //
-//   - lead with the Plan 16 provider cascade as the default (decisión 17-i);
-//   - frame the Tier 1 sidecar as "for advanced Anthropic configurations"
-//     (decisión 17-h), NOT raw "bypass" terminology;
-//   - link the community-recipe HTTP API contract doc
-//     (`docs/operations/bypass-sidecar-recipe.md`) per decisión 17-i;
-//   - omit references to private repos (`cbip-solutions/zen-bypass-tier1`,
-//     `cbip-solutions/homebrew-private-tap`) per decisiones 4 + 11.
+// - lead with the provider cascade as the default;
+// - frame the Tier 1 sidecar as "for advanced Anthropic configurations"
+// , NOT raw "bypass" terminology;
+// - link the community-recipe HTTP API contract doc
+// (`docs/operations/bypass-sidecar-recipe.md`) policy;
+// - omit references to private repos (`cbip-solutions/zen-bypass-tier1`,
+// `cbip-solutions/homebrew-private-tap`) policy
 //
 // The four sub-tests below pin each property independently so a future
 // drift surfaces a precise failure rather than a single boolean.
 //
-// Companion ADR-free (Phase B B-14 ships test+doc only; no ADR allocation
+// Companion ADR-free ( B-14 ships test+doc only; no ADR allocation
 // per spec line 2398). Composes into `make verify-invariants` via the
 // standard compliance suite.
 
@@ -84,7 +84,8 @@ func TestInvZenB8_InstallMDNoPrivateRepoRefs(t *testing.T) {
 		"cbip-solutions/zen-bypass-tier1",
 		"cbip-solutions/homebrew-private-tap",
 		"brew tap cbip-solutions/private-tap",
-		"brew install cbip-solutions",
+		"brew install cbip-solutions/private-tap",
+		"brew install cbip-solutions/homebrew-private-tap",
 		"cbip-solutions/hades-system",
 	}
 	for _, ref := range forbidden {

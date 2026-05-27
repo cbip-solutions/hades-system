@@ -297,11 +297,11 @@ func TestStubTodoCommentRegexCases(t *testing.T) {
 		`// TODO some unrelated note`,
 		`// just a comment`,
 		`// implement this`,
-		// Phase L IMPORTANT #3 (pre-flight to Phase M dogfood):
+		// IMPORTANT #3:
 		// the strict regex MUST NOT match comments with trailing
 		// content such as analysistest // want annotations on the
 		// same line, or arbitrary trailing junk. Pre-fix, the
-		// relaxed (\s*//.*)?  group allowed these to match,
+		// relaxed (\s*//.*)? group allowed these to match,
 		// undermining the strict end-of-line anchor.
 		"// TODO implement later // want `nostub-todo`",
 		"// TODO: implement later // arbitrary trailing text",

@@ -1,3 +1,4 @@
+// go:build property
 //go:build property
 // +build property
 

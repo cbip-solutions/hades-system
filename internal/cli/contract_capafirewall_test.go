@@ -11,7 +11,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/caronte/store"
 )
 
-// TestClassifyCapaFirewallErrorRendersCrossProjectHint sister-pins DECISION 4:
+// TestClassifyCapaFirewallErrorRendersCrossProjectHint sister-pins policy:
 // the rendered hint MUST contain the actionable substrings the operator can grep.
 func TestClassifyCapaFirewallErrorRendersCrossProjectHint(t *testing.T) {
 	err := fmt.Errorf("wrap: %w", store.ErrCrossProjectDenied)
@@ -61,7 +61,7 @@ func TestClassifyCapaFirewallErrorIsExportedForReuse(t *testing.T) {
 	var _ func(err error, op string) error = classifyCapaFirewallError
 }
 
-// TestAllPlan20VerbsRegisterFormatFlag sister-pins DECISION 1: every Plan-20
+// TestAllPlan20VerbsRegisterFormatFlag sister-pins policy: every
 // CLI verb MUST register `--format` (NOT `-o` / `-O`). Iterates the 12
 // verb constructors + asserts each cobra.Command exposes a flag named
 // `format`. Guards against a regressive refactor that adds a POSIX `-o`

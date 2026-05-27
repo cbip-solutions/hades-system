@@ -1,34 +1,34 @@
 // tests/compliance/inv_zen_224_health_side_effect_free_test.go
 //
-// inv-zen-224 (v0.17.7 / A-7) — health endpoints are side-effect-free.
+// invariant (v0.17.7 / A-7) — health endpoints are side-effect-free.
 //
 // Root cause of the v0.17.7 hot-fix: HealthResearchMCPUp, HealthGitnexusUp,
 // and HealthEventLogWritable previously called CheckEngine.RunCheck on EVERY
 // HTTP poll, emitting audit_events_raw rows on every health check and coupling
 // the health surface to the 11-check autonomy matrix.
 //
-// inv-zen-224 pins the fix: the health service methods MUST perform no inline
+// invariant pins the fix: the health service methods MUST perform no inline
 // RunCheck call and no per-call DB write (EmitRaw). Background sampling (via
 // HealthSampler.Run) may still call SampleEventLogWritable — which does call
 // EmitRaw — but ONLY once per cadence, never per HTTP poll.
 //
 // Two assertions:
-//  1. Source guard: HealthResearchMCPUp / HealthGitnexusUp /
-//     HealthEventLogWritable function bodies in
-//     internal/daemon/orchestrator_plan5_service_more.go MUST contain no
-//     "RunCheck(" and no "EmitRaw(" (grep the file, scoped to each function
-//     body).
-//  2. Structural guard: SampleEventLogWritable (the one function ALLOWED to
-//     call EmitRaw, but only at sampler cadence, not per HTTP poll) MUST be
-//     absent from the health-handler dispatch path. The handler file
-//     (internal/daemon/handlers/orchestrator_plan5.go) must NOT call
-//     SampleEventLogWritable.
+// 1. Source guard: HealthResearchMCPUp / HealthGitnexusUp /
+// HealthEventLogWritable function bodies in
+// internal/daemon/orchestrator_plan5_service_more.go MUST contain no
+// "RunCheck(" and no "EmitRaw(" (grep the file, scoped to each function
+// body).
+// 2. Structural guard: SampleEventLogWritable (the one function ALLOWED to
+// call EmitRaw, but only at sampler cadence, not per HTTP poll) MUST be
+// absent from the health-handler dispatch path. The handler file
+// (internal/daemon/handlers/orchestrator_plan5.go) must NOT call
+// SampleEventLogWritable.
 //
 // Note: the behavioral companion — "zero audit_events_raw rows on 50 health
 // polls" — lives in internal/daemon/orchestrator_plan5_health_test.go
 // (TestHealthEventLogWritable_NoPerCallAuditWrite) as an in-package test with
 // direct DB access. That test and this source-level compliance gate together
-// fully cover inv-zen-224.
+// fully cover invariant.
 package compliance
 
 import (

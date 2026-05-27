@@ -42,7 +42,7 @@ func TestSisterClaim_ConfidenceForMethodTupleIsLoadBearing(t *testing.T) {
 // refuse) → this test FAILS with err==nil + repo=="repo-a". Restore →
 // PASS. Pinned at sister-level (not just at the existing resolve_test.go
 // coverage) because the doctrine claim is load-bearing: a regression
-// here would silently downgrade inv-zen-265 + inv-zen-271's no-false-
+// here would silently downgrade invariant + invariant's no-false-
 // link guarantee, and the resolve_test.go variant uses the heavier
 // pattern-collision path; a flat 2-entry collision keeps the bite
 // surface minimal.

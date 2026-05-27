@@ -4,9 +4,9 @@
 // urlparse.go — pluggable template URL parser.
 //
 // Accepts the 3 canonical forms operators paste:
-//   - gh:user/repo                       (GitHub shorthand; cargo-generate precedent)
-//   - https://host/user/repo[.git]       (HTTPS clone URL)
-//   - git@host:user/repo[.git]           (SSH clone URL; requires preconfigured key)
+// - gh:user/repo (GitHub shorthand; cargo-generate precedent)
+// - https://host/user/repo[.git] (HTTPS clone URL)
+// - git@host:user/repo[.git] (SSH clone URL; requires preconfigured key)
 //
 // Rejects every other form (http://, file://, ssh://, malformed). Operators
 // pasting non-canonical URLs get a typed error with the expected format.

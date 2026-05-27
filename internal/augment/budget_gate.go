@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package augment — BudgetGate enforces Plan 4 budget MCP cap_status pre-call
+// Package augment — BudgetGate enforces budget MCP cap_status pre-call
 // check + writes cost_ledger entry post-call.
 //
-// inv-zen-167: every augmentation request MUST pass through BudgetGate.Check
+// invariant: every augmentation request MUST pass through BudgetGate.Check
 // before any LLM/MCP cost is incurred.
 //
 // Two-method contract:
-//   - Check(ctx, BudgetCheckInput) — reads RolledUSDByAxis; returns
-//     (proceed bool, blockedScope string, err error).
-//   - Commit(ctx, BudgetCommitInput) — writes cost_ledger entry with the
-//     augmentation axis attribution; idempotent on RequestID.
+// - Check(ctx, BudgetCheckInput) — reads RolledUSDByAxis; returns
+// (proceed bool, blockedScope string, err error).
+// - Commit(ctx, BudgetCommitInput) — writes cost_ledger entry with the
+// augmentation axis attribution; idempotent on RequestID.
 package augment
 
 import (

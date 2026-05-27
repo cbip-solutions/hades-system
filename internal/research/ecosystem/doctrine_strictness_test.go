@@ -1,7 +1,7 @@
 // internal/research/ecosystem/doctrine_strictness_test.go
 //
 //
-// inv-zen-205: Doctrine strictness knob honored — max-scope chains all 8
+// invariant: Doctrine strictness knob honored — max-scope chains all 8
 // events; default chains 4 (Query+Abstain+Verify-failure+Answer); capa-
 // firewall chains all 8 + refuses on unverified.
 //
@@ -9,27 +9,27 @@
 // step 13, RefuseOnUnverified at step 12, CitationMode at step 10,
 // AbstentionThresholds at step 9, MaxResults at step 8). D-12 wired the
 // emit-level filter in RAGAuditEmitter.shouldEmit. D-13 closes the
-// remaining gaps for FULL inv-zen-205 enforcement:
+// remaining gaps for FULL invariant enforcement:
 //
-//  1. Per-query audit-emitter profile rebind. D-9 binds the RAGAuditEmitter
-//     to the `default` profile at NewDispatcher time; D-13 wires per-Query
-//     rebind via RAGAuditEmitter.SetProfile so the active doctrine's
-//     filter applies (otherwise max-scope queries silently drop
-//     EvtRAGRetrieval + EvtRAGCitation).
+// 1. Per-query audit-emitter profile rebind. D-9 binds the RAGAuditEmitter
+// to the `default` profile at NewDispatcher time; D-13 wires per-Query
+// rebind via RAGAuditEmitter.SetProfile so the active doctrine's
+// filter applies (otherwise max-scope queries silently drop
+// EvtRAGRetrieval + EvtRAGCitation).
 //
-//  2. Verifier SkipStageC per doctrine. Dispatcher.verifyWithDoctrine
-//     constructs a shadow Verifier with SkipStageC=true for default
-//     doctrine (latency budget); max-scope + capa-firewall retain full
-//     3-stage verify.
+// 2. Verifier SkipStageC per doctrine. Dispatcher.verifyWithDoctrine
+// constructs a shadow Verifier with SkipStageC=true for default
+// doctrine (latency budget); max-scope + capa-firewall retain full
+// 3-stage verify.
 //
-//  3. Property-shape determinism per doctrine. Each doctrine yields a
-//     deterministic audit chain for a given happy-path query.
+// 3. Property-shape determinism per doctrine. Each doctrine yields a
+// deterministic audit chain for a given happy-path query.
 //
 // Coverage discipline: per project doctrine `feedback_no_tech_debt.md`,
 // security/correctness-critical files require ≥90% per-function
-// coverage. inv-zen-205 governs hallucination-mitigation behaviour — a
+// coverage. invariant governs hallucination-mitigation behaviour — a
 // silently-dropped audit event weakens tamper-detection guarantees AND
-// downstream replay (Phase H property tests reconstruct queries from
+// downstream replay ( property tests reconstruct queries from
 // the audit chain).
 
 package ecosystem

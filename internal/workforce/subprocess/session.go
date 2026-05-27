@@ -85,20 +85,20 @@ type Message struct {
 
 // Session is the bidirectional handle to an OpenClaude subprocess.
 // Implementations
-//   - openClaudeSession (C-3): wraps os/exec; production transport.
-//   - memSession (this file): in-memory channels; for type-validation tests.
+// - openClaudeSession (C-3): wraps os/exec; production transport.
+// - memSession (this file): in-memory channels; for type-validation tests.
 //
 // Concurrency every method on Session is safe to call from any
 // goroutine, including concurrently with each other.
-//   - Send: concurrent calls are FIFO-ordered via the underlying channel;
-//     callers do not need to serialize.
-//   - Receive: concurrent callers each get a distinct frame in arrival
-//     order (channel-backed; no fan-out).
-//   - Close: idempotent; safe from any goroutine. After Close, Send and
-//     Receive return ErrSessionClosed. Subsequent Close calls return the
-//     same error value as the first call (see I-1).
+// - Send: concurrent calls are FIFO-ordered via the underlying channel;
+// callers do not need to serialize.
+// - Receive: concurrent callers each get a distinct frame in arrival
+// order (channel-backed; no fan-out).
+// - Close: idempotent; safe from any goroutine. After Close, Send and
+// Receive return ErrSessionClosed. Subsequent Close calls return the
+// same error value as the first call (see I-1).
 //
-// inv-zen-086: stdio is the canonical transport; this interface is the
+// invariant: stdio is the canonical transport; this interface is the
 // only entry point for talking to the OpenClaude subprocess. There is
 // no HTTP equivalent in this package (the absence of any HTTP server
 // constructor is the structural enforcement).

@@ -1,6 +1,6 @@
-//go:build property && cgo
+// go:build property && cgo
 
-// tests/property/ecosystem/chunk_fingerprint_property_test.go (Plan 14 Phase H Task H-7-11)
+// tests/property/ecosystem/chunk_fingerprint_property_test.go
 //
 // is the cross-version dedup key (Chunk.Fingerprint per types.go §"ContentText
 // + Fingerprint"). Re-chunking the same content_text MUST produce the
@@ -9,15 +9,15 @@
 //
 // Properties tested:
 //
-//  1. Determinism — fingerprint(content) called twice yields identical
-//     digests across 1000 random ContentText payloads.
-//  2. Content sensitivity — any single-byte mutation of ContentText
-//     produces a DIFFERENT fingerprint (dedup must not silently merge
-//     drift).
-//  3. Independence — fingerprint depends only on ContentText, not on
-//     surrounding fields (SymbolPath, Kind, Version, etc.). Same
-//     content with different metadata MUST collide on fingerprint so
-//     the dedup engine recognises the duplicate.
+// 1. Determinism — fingerprint(content) called twice yields identical
+// digests across 1000 random ContentText payloads.
+// 2. Content sensitivity — any single-byte mutation of ContentText
+// produces a DIFFERENT fingerprint (dedup must not silently merge
+// drift).
+// 3. Independence — fingerprint depends only on ContentText, not on
+// surrounding fields (SymbolPath, Kind, Version, etc.). Same
+// content with different metadata MUST collide on fingerprint so
+// the dedup engine recognises the duplicate.
 //
 // The recipe (sha256 of content_text) is the canonical contract per
 // `internal/research/ecosystem/types.go` Chunk docstring; this file

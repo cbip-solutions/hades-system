@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package cli — safetynet_regression.go (Plan 5 Phase N N-5).
+// Package cli — safetynet_regression.go.
 //
 // `zen safetynet regression {show,query}` reads the substrate_health
 // table via the daemon (Q2 C element 3 — regression-by-self detector
 // from the Apr 23 substrate-regression incident). The adapter at
-// internal/daemon/orchestratoradapter (Phase N N-1) is the persistence
+// internal/daemon/orchestratoradapter is the persistence
 // boundary; safetynet.Recent on the orchestrator side is the consumer
 // surface; this CLI is the operator surface.
 package cli

@@ -4,8 +4,8 @@
 // chi.Router.Get(...) method chain + the {id} URL parameter as a static_path
 // endpoint. The K-3 test extracts this file via the gohttp/chi extractor and
 // asserts:
-//   - api_endpoints row: kind=http, method=GET, path_template=/users/{id}
-//   - extractor_id=gohttp-chi-v1
+// - api_endpoints row: kind=http, method=GET, path_template=/users/{id}
+// - extractor_id=gohttp-chi-v1
 //
 // The fixture has its OWN go.mod (sub-module isolation) so chi v5 does NOT
 // need to be a require of the parent module. The K-3 test invokes the

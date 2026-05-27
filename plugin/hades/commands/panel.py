@@ -99,9 +99,9 @@ def panel_handler(raw_args: str) -> str | None:
     Per spec §Q8 D-pattern: lazygit-style subprocess handoff. Terminal mode is
     captured before spawn and restored after (via _subprocess_handoff helper).
 
-    Per Stage 2 C-5 operator decision (2026-05-21): invalid panel names render
+    Per  C-5 operator decision (2026-05-21): invalid panel names render
     the `cli.arg-validation-fail` HADES block LOCALLY (static
-    _PANEL_VALIDATION_HADES_BLOCK) — no daemon roundtrip. inv-zen-088 is
+    _PANEL_VALIDATION_HADES_BLOCK) — no daemon roundtrip. invariant is
     preserved trivially: this path makes no network calls at all.
     """
                                          

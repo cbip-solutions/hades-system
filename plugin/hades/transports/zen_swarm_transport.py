@@ -30,7 +30,7 @@ class CompletedResponse:
             status verbatim.
         body: Parsed JSON body the upstream provider returned (the
             Anthropic ``Message`` shape for the canonical path, or
-            ``{"type": "error", ...}`` for provider errors). Equivalent
+            ``{"type": "error",...}`` for provider errors). Equivalent
             to the previous ``complete()`` return type — wrapping it in
             this dataclass adds metadata, doesn't change content.
         headers: Upstream-response headers, with secret-shaped header
@@ -39,8 +39,8 @@ class CompletedResponse:
             ``internal/daemon/transport/messages_handler.go``). Common
             useful keys: ``anthropic-ratelimit-requests-remaining``,
             ``request-id``, ``anthropic-organization-id``.
-        audit_event_id: Plan 9 Tessera-anchored audit event ID the
-            daemon assigned to this dispatch. Plan 12 citation renderers
+        audit_event_id:  Tessera-anchored audit event ID the
+            daemon assigned to this dispatch.  citation renderers
             deep-link operator-facing UIs via ``zen://audit/<id>`` URIs;
             losing this metadata at the transport boundary breaks the
             audit-anchor surface. Empty string when the daemon's anchor
@@ -144,10 +144,10 @@ class ZenSwarmTransport:
         Returns a :class:`CompletedResponse` exposing the upstream
         provider's parsed JSON body, the upstream HTTP status, the
         upstream response headers (with secret-shaped keys stripped by
-        the daemon), and the Plan 9 Tessera ``audit_event_id`` the daemon
-        assigned. Phase B reviewer I2: the prior return type was just
+        the daemon), and the  Tessera ``audit_event_id`` the daemon
+        assigned.  reviewer I2: the prior return type was just
         the inner body dict, which silently discarded ``status``,
-        ``headers``, and ``audit_event_id`` — Plan 12 citation renderers
+        ``headers``, and ``audit_event_id`` —  citation renderers
         consume ``audit_event_id`` for ``zen://audit/<id>`` deep links.
 
         Raises:
@@ -223,16 +223,15 @@ class ZenSwarmTransport:
     ) -> Iterator[CompletedResponse]:
         """Stream a completion.
 
-        Phase B yields a single :class:`CompletedResponse` wrapping the
+         yields a single :class:`CompletedResponse` wrapping the
         full response (semantically equivalent to non-streaming for
-        callers); Phase C extends to true incremental SSE relay where
+        callers);  extends to true incremental SSE relay where
         each chunk yields a partial-body CompletedResponse.
 
         Consumers that expect a generator handle single-chunk yields
         gracefully — the on-screen rendering happens after the first chunk
         arrives, which is what ``complete`` provides anyway. SSE incremental
-        relay is a UX optimization that lands when the augmentation pipeline
-        (Phase C) ships SSE-aware response forwarding.
+        relay is a UX optimization that lands when the augmentation pipeline ships SSE-aware response forwarding.
         """
         yield self.complete(messages=messages, model=model, **kwargs)
 

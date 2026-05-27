@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 
-// Package main — production_boot_smoke_test.go (Plan 11 Phase D
+// Package main — production_boot_smoke_test.go (
 // fix-cycle re-review codification).
 //
 // End-to-end smoke test that boots a real daemon on a temp UDS + an
@@ -21,7 +21,7 @@
 // binary on disk + a launchd-managed daemon path. Reproducing the
 // daemon's full boot sequence in Go gets us the same probes against
 // an in-process build with no external state, and the test runs in
-// `make test` (and the Plan 11 Phase D test budget).
+// `make test`.
 package main
 
 import (
@@ -173,8 +173,8 @@ func TestProductionBootSmoke_AuditEmitAndQueryEndToEnd(t *testing.T) {
 	}
 
 	// 5. GET /v1/audit/event/<id> over UDS — peer-cred MUST flow
-	//    through ConnContext, sessionDoctrine MUST resolve max-scope
-	//    via the registry, and the row MUST be visible.
+	// through ConnContext, sessionDoctrine MUST resolve max-scope
+	// via the registry, and the row MUST be visible.
 	udsURL := fmt.Sprintf("http://unix/v1/audit/event/%s", emitResp.ID)
 	resp, err = udsClient.Get(udsURL)
 	if err != nil {
@@ -207,7 +207,7 @@ func TestProductionBootSmoke_AuditEmitAndQueryEndToEnd(t *testing.T) {
 	}
 
 	// 7. GET /v1/doctrine/active over UDS — the registry MUST resolve
-	//    a name (pre-fix: 404 "doctrine: name not found in registry").
+	// a name (pre-fix: 404 "doctrine: name not found in registry").
 	resp, err = udsClient.Get("http://unix/v1/doctrine/active")
 	if err != nil {
 		t.Fatalf("doctrine/active GET over UDS: %v", err)

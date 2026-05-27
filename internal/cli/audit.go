@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-// Package cli — audit.go (Plan 4 Phase N Task N-5).
+// Package cli — audit.go.
 //
 // `zen audit` exposes audit-event read + emit + family/criteria catalogs.
 //
 // Cobra layout (7 leaves):
 //
-//	zen audit emit          --type --project --payload (JSON)
-//	zen audit events        --type --project --since --limit
-//	zen audit verdicts      (alias: events --type=audit_review)
-//	zen audit types         (catalog of distinct event types last 30d)
-//	zen audit families      show
-//	zen audit criteria      list
+// zen audit emit --type --project --payload (JSON)
+// zen audit events --type --project --since --limit
+// zen audit verdicts (alias: events --type=audit_review)
+// zen audit types (catalog of distinct event types last 30d)
+// zen audit families show
+// zen audit criteria list
 //
 // Option A adaptation: the plan-doc enumerated `review --diff <p>` which
-// requires the audit MCP wiring landed in Plan 4 Phase K (the audit MCP
-// is the Plan 4 Phase K deliverable, not Phase I). Phase N delivers
+// requires the audit MCP wiring landed in (the audit MCP
+// is the deliverable, not ). delivers
 // the read/catalog surface complete + real-round-tripped; the
 // `review --diff` proxy command will land additively in a future plan
 // (deferred to a future plan) without changing this surface.

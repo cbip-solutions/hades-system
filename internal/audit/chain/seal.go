@@ -13,7 +13,7 @@ var ErrPartitionEmpty = errors.New("chain: partition has no events to seal")
 
 // SealAppender is the Tessera-side contract SealPartition needs.
 // Satisfied by an adapter that bridges chain (pure-Go, no tessera
-// import) to internal/audit/tessera.Adapter (Phase A). Stage 2 review
+// import) to internal/audit/tessera.Adapter. review
 // CRITICAL-1 + CRITICAL-7 alignment: the LeafID is exchanged here as
 // `string` (caller cast from tessera.LeafID via `string(leafID)`); the
 // daemon witness signature is exchanged as `[]byte` (raw ECDSA bytes).
@@ -24,20 +24,20 @@ var ErrPartitionEmpty = errors.New("chain: partition has no events to seal")
 //
 // AppendSeal MUST be idempotent on (projectID, partitionID): if a leaf
 // for this partition already exists, return the existing leaf_id without
-// appending again. The Phase A spec mandates this property (Phase A
+// appending again. The spec mandates this property (
 // task A-5b); B-6 relies on it for the recovery path (spec §4.1
 // failure mode #6).
 //
 // WitnessCoSignSeal signs the seal payload bytes with the daemon
 // witness key (ECDSA P-256) and returns the raw signature bytes.
-// Backed by Phase A task A-6b.
+// Backed by task A-6b.
 //
 // VerifySealSignature returns true iff `sig` is a valid daemon witness
 // signature over sha256(payload) under the currently-attached daemon
-// witness pubkey.  Phase A's tessera.Adapter satisfies this directly
+// witness pubkey. tessera.Adapter satisfies this directly
 // (see internal/audit/tessera.Adapter.VerifySealSignature); recovery
-// callers (Phase C verify_chain) and Phase J's seal-verify worker
-// consume it via this same interface.  Closes the gap CRITICAL-2
+// callers and seal-verify worker
+// consume it via this same interface. Closes the gap CRITICAL-2
 // surfaced: pre-fix VerifySeal silently returned nil even when the
 // stored daemon_witness_signature was missing, forged, or
 // bytes-corrupted.
@@ -45,7 +45,7 @@ var ErrPartitionEmpty = errors.New("chain: partition has no events to seal")
 // Error semantics: a non-nil error means the verify path itself
 // failed (witness key detached, backend I/O failure, etc.) — chain
 // callers MUST treat that as a transient infra error and bubble it
-// without conflating with ErrChainTampered.  A (false, nil) return
+// without conflating with ErrChainTampered. A (false, nil) return
 // means the signature is well-formed but does not validate under the
 // active pubkey, which IS a tamper signal.
 type SealAppender interface {
@@ -131,17 +131,17 @@ func buildSealPayload(partitionID, finalRecordHash string, eventCount int64, las
 // the events in audit_events_raw AND that the daemon witness signature
 // stored on the seal row validates against the daemon's currently-active
 // witness pubkey. Used by verify-chain (B-7) and the
-// audit.chain-integrity doctor check (Phase J).
+// audit.chain-integrity doctor check.
 //
 // Steps
 //
-//  1. Read seal from store.
-//  2. Read current partition stats.
-//  3. Compare seal.FinalRecordHash against current partition tip
-//     (catches post-seal row mutation / append).
-//  4. Reconstruct the canonical seal payload (byte-identical to the
-//     buffer SealPartition originally signed) and verify the daemon
-//     witness signature via the SealAppender's VerifySealSignature.
+// 1. Read seal from store.
+// 2. Read current partition stats.
+// 3. Compare seal.FinalRecordHash against current partition tip
+// (catches post-seal row mutation / append).
+// 4. Reconstruct the canonical seal payload (byte-identical to the
+// buffer SealPartition originally signed) and verify the daemon
+// witness signature via the SealAppender's VerifySealSignature.
 //
 // Step 4 closes the gap CRITICAL-2 surfaced: pre-fix the verify path
 // returned nil silently even when DaemonWitnessSignature was missing,
@@ -149,16 +149,16 @@ func buildSealPayload(partitionID, finalRecordHash string, eventCount int64, las
 // tessera-side adapter (chain stays stdlib-pure / no crypto/ecdsa
 // import per design); the SealAppender extension makes it accessible
 // without importing internal/audit/tessera here (preserves
-// inv-zen-031).
+// invariant).
 //
 // Returns
-//   - ErrPartitionSealMissing when no seal row exists.
-//   - ErrChainTampered when final_record_hash drifts OR when the
-//     witness signature does not validate under the active pubkey.
-//   - wrapped non-typed errors for transient infra failures (store
-//     I/O, witness-verify backend errors). Callers in Phase J's
-//     seal-verify worker MUST distinguish via errors.Is so
-//     doctrine-specific halt routing fires only on real tamper.
+// - ErrPartitionSealMissing when no seal row exists.
+// - ErrChainTampered when final_record_hash drifts OR when the
+// witness signature does not validate under the active pubkey.
+// - wrapped non-typed errors for transient infra failures (store
+// I/O, witness-verify backend errors). Callers in
+// seal-verify worker MUST distinguish via errors.Is so
+// doctrine-specific halt routing fires only on real tamper.
 func VerifySeal(
 	ctx context.Context,
 	store EventStore,

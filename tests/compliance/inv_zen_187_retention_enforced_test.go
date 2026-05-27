@@ -1,6 +1,6 @@
 // tests/compliance/inv_zen_187_retention_enforced_test.go
 //
-// Spec §8.6 inv-zen-187 compliance test: the state cleanup substrate
+// Spec §8.6 invariant compliance test: the state cleanup substrate
 // (internal/state/cleanup) MUST enforce retention TTLs per Q12=D +
 // spec §2.12. Every expired path MUST emit one evt.state.cleanup.deleted
 // audit event (best-effort; non-blocking).

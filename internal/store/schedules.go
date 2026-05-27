@@ -2,41 +2,41 @@
 package store
 
 //
-// Schema lives in migrations/063_schedules.sql (Phase D-1 ships the
+// Schema lives in migrations/063_schedules.sql ( ships the
 // migration alongside this CRUD). Master plan §"Migration numbering
-// coordination" originally reserved slot 059 for Phase D under an
+// coordination" originally reserved slot 059 for under an
 // A→C→B→D→E execution sequence; reality at HEAD on 2026-05-07 has
-// 057 / 060 / 062 already taken (Phase A / B-6 / C-11) so Phase D-1
+// 057 / 060 / 062 already taken so
 // picks 063 — the next free number on the daemon.db chain. Slot 059
-// is reserved for Phase E inbox storage; slot 061 for Phase G
+// is reserved for inbox storage; slot 061 for
 // knowledge-index DB (separate SQLite file, no daemon.db
-// schemaVersion bump). schemaVersion bump path: 26 (Phase C-11) →
+// schemaVersion bump). schemaVersion bump path: 26 →
 // 27 (this migration).
 //
-// inv-zen-031 boundary: internal/scheduler MUST NEVER import
+// invariant boundary: internal/scheduler MUST NEVER import
 // internal/store. The interface scheduler.Store + scheduler.HistoryStore
 // (declared in D-2..D-12) are bridged to *store.Store by
 // internal/daemon/scheduleradapter — that package's import list is
 // the single legitimate co-location of internal/scheduler and
-// internal/store anywhere in the codebase, enforced by the inv-zen-122
-// compliance test (extended in Phase K).
+// internal/store anywhere in the codebase, enforced by the invariant
+// compliance test.
 //
 // Time handling:
-//   - INTEGER columns store UTC unix seconds (per inv-zen-005).
-//   - The Go-side ScheduleRow / ScheduleHistoryRow use time.Time.
-//   - last_run_at_unix / next_run_at_unix accept NULL: the Go layer
-//     translates 0 unix-seconds → time.Time{} so callers can use
-//     IsZero() consistently. Insert maps zero-value time.Time → NULL.
+// - INTEGER columns store UTC unix seconds.
+// - The Go-side ScheduleRow / ScheduleHistoryRow use time.Time.
+// - last_run_at_unix / next_run_at_unix accept NULL: the Go layer
+// translates 0 unix-seconds → time.Time{} so callers can use
+// IsZero() consistently. Insert maps zero-value time.Time → NULL.
 //
 // Defense-in-depth pattern (mirrors tmux_session_state.go):
-//   - SQL CHECK enforces enum range at the storage floor.
-//   - Go-side validateScheduleTier / validateScheduleTriggerType /
-//     validateScheduleMissPolicy / validateScheduleStatus reject
-//     out-of-range values BEFORE the SQL CHECK fires (better error
-//     message + faster short-circuit).
-//   - validateScheduleTriggerConfig asserts JSON validity (rejects
-//     empty + malformed) so a hand-edited DB row or logic bug
-//     surfaces at the call site rather than at the next tick decode.
+// - SQL CHECK enforces enum range at the storage floor.
+// - Go-side validateScheduleTier / validateScheduleTriggerType /
+// validateScheduleMissPolicy / validateScheduleStatus reject
+// out-of-range values BEFORE the SQL CHECK fires (better error
+// message + faster short-circuit).
+// - validateScheduleTriggerConfig asserts JSON validity (rejects
+// empty + malformed) so a hand-edited DB row or logic bug
+// surfaces at the call site rather than at the next tick decode.
 
 import (
 	"database/sql"

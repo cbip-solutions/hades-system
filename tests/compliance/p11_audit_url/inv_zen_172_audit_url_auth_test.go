@@ -1,8 +1,8 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// tests/compliance/p11_audit_url/inv_zen_172_audit_url_auth_test.go — Plan 11 Phase D D-8.
+// tests/compliance/p11_audit_url/inv_zen_172_audit_url_auth_test.go — D-8.
 //
-// Compliance test for inv-zen-172: zen://audit URL handler validates
+// Compliance test for invariant: zen://audit URL handler validates
 // event-id existence + auth + doctrine privacy.
 //
 // Anchored at compile-time via internal/citation/sentinel.go's
@@ -183,7 +183,7 @@ func TestInvZen172DoctrineMismatchReturns403NotLeakingExistence(t *testing.T) {
 // This complements the runtime tests at
 // internal/daemon/server_session_doctrine_test.go +
 // internal/daemon/handlers/audit_event_test.go; the compliance
-// witness sits here to gate the inv-zen-172 anchor for the release
+// witness sits here to gate the invariant anchor for the release
 // pipeline.
 func TestInvZen172XZenDoctrineHeaderIgnoredByProductionWire(t *testing.T) {
 	t.Parallel()

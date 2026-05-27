@@ -1,13 +1,13 @@
-// sessions_test.go — Plan 7 Phase C Task C-12 CLI tests.
+// sessions_test.go — Task C-12 CLI tests.
 //
 // Tests cover:
-//   - `zen sessions ls` renders all 5 columns (alias, sha8, status,
-//     last-attach, panes) including empty-state path
-//   - tabwriter alignment + RFC3339 last-attach formatting
-//   - never-attached row renders as "never"
-//   - HTTP path coverage: client → daemon GET /v1/sessions via httptest,
-//     including 500 → unrecoverable, 503 → unrecoverable
-//   - subcommand registration: `sessions` MUST have an `ls` subcommand
+// - `zen sessions ls` renders all 5 columns (alias, sha8, status,
+// last-attach, panes) including empty-state path
+// - tabwriter alignment + RFC3339 last-attach formatting
+// - never-attached row renders as "never"
+// - HTTP path coverage: client → daemon GET /v1/sessions via httptest,
+// including 500 → unrecoverable, 503 → unrecoverable
+// - subcommand registration: `sessions` MUST have an `ls` subcommand
 package cli
 
 import (

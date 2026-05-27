@@ -1,3 +1,4 @@
+// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -12,35 +13,35 @@
 //
 // Design notes:
 //
-//  1. embeddingToBytes encodes the query vector as little-endian IEEE-754
-//     float32 bytes — the canonical sqlite-vec binary wire format. Mirrors
-//     float32SliceBytes in internal/knowledge/aggregator/vec.go (Phase D),
-//     verifying the format empirically in D-4 Stage 0 probe (2026-05-09).
+// 1. embeddingToBytes encodes the query vector as little-endian IEEE-754
+// float32 bytes — the canonical sqlite-vec binary wire format. Mirrors
+// float32SliceBytes in internal/knowledge/aggregator/vec.go,
+// verifying the format empirically in D-4 probe (2026-05-09).
 //
-//  2. Threshold filtering (cosine_similarity ≥ SemanticThresholdCosine) is
-//     done in Go after the KNN scan, NOT in SQL. sqlite-vec vec0 MATCH returns
-//     the angular distance on the unit sphere (sqrt(2*(1-cos_sim)) for unit
-//     vectors), NOT (1 - cosine_similarity) directly. The correct conversion:
-//     cosine_similarity = 1 - distance² / 2
-//     This was verified empirically in Phase D Stage 0 probe (2026-05-09)
-//     against sqlite-vec v0.1.6.
+// 2. Threshold filtering (cosine_similarity ≥ SemanticThresholdCosine) is
+// done in Go after the KNN scan, NOT in SQL. sqlite-vec vec0 MATCH returns
+// the angular distance on the unit sphere (sqrt(2*(1-cos_sim)) for unit
+// vectors), NOT (1 - cosine_similarity) directly. The correct conversion:
+// cosine_similarity = 1 - distance² / 2
+// This was verified empirically in probe (2026-05-09)
+// against sqlite-vec v0.1.6.
 //
-//  3. SemanticDistanceThreshold = 1 - SemanticThresholdCosine = 0.08 is the
-//     threshold on (1 - cosine_similarity), NOT on the angular distance itself.
-//     The Go filter checks: (1 - distance²/2) >= SemanticThresholdCosine,
-//     which is equivalent to distance² <= 2*0.08 = 0.16.
+// 3. SemanticDistanceThreshold = 1 - SemanticThresholdCosine = 0.08 is the
+// threshold on (1 - cosine_similarity), NOT on the angular distance itself.
+// The Go filter checks: (1 - distance²/2) >= SemanticThresholdCosine,
+// which is equivalent to distance² <= 2*0.08 = 0.16.
 //
-//  4. KNN query retrieves SemanticTopK=5 candidates; we iterate and return
-//     the first candidate that has status=DONE and ≥1 finding.
+// 4. KNN query retrieves SemanticTopK=5 candidates; we iterate and return
+// the first candidate that has status=DONE and ≥1 finding.
 //
-//  5. selectDispatchByID uses SELECT by SQLite integer rowid — the rowid
-//     returned by the KNN MATCH query. This avoids a TEXT primary-key lookup
-//     when we already have the rowid from the vec0 result set.
+// 5. selectDispatchByID uses SELECT by SQLite integer rowid — the rowid
+// returned by the KNN MATCH query. This avoids a TEXT primary-key lookup
+// when we already have the rowid from the vec0 result set.
 //
-// inv-zen-148 enforced via shared ErrProjectIDRequired (defined in lookup_exact.go).
+// invariant enforced via shared ErrProjectIDRequired (defined in lookup_exact.go).
 // ErrEmbeddingDimension surfaces dimension mismatch before any DB I/O.
 //
-// inv-zen-031: this package MUST NOT import internal/store. Enforced
+// invariant: this package MUST NOT import internal/store. Enforced
 // by the post-implementation boundary check in the workflow and the
 // compliance test at tests/compliance/.
 package cache
@@ -157,7 +158,8 @@ func selectDispatchByID(ctx context.Context, raw *sql.DB, rowid int64) (Dispatch
 	row := raw.QueryRowContext(ctx,
 		`SELECT id, query, status, created_at, updated_at
 		   FROM research_dispatches
-		  WHERE rowid = ?`,
+		  WHERE rowid = ?
+		    AND invalidated_at IS NULL`,
 		rowid,
 	)
 

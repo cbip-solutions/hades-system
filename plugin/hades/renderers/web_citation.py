@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
                                         
-"""Web HTML5 + SVG renderer for citation envelopes (Plan 12 Phase A Task A-8)."""
+"""Web HTML5 + SVG renderer for citation envelopes."""
 
 from __future__ import annotations
 

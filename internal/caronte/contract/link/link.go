@@ -1,4 +1,4 @@
-//go:build cgo
+// go:build cgo
 
 // SPDX-License-Identifier: MIT
 
@@ -350,30 +350,30 @@ func sameHTTPMethod(a, b string) bool {
 }
 
 // ConsumersFor returns the deduplicated set of consumer call sites that
-// link to (endpointID, endpointRepo) inside workspaceID. Phase G's
+// link to (endpointID, endpointRepo) inside workspaceID.
 // breaking-change pipeline consumes this surface (Pipeline.Fan calls
 // (Linker).ConsumersFor to enumerate `[]coordinated.ConsumerRef` for a
-// changed endpoint). FIX-1 of Stage-2 Phase F review locks the signature
-// against the Phase G ConsumerEnumerator port.
+// changed endpoint). FIX-1 of review locks the signature
+// against the ConsumerEnumerator port.
 //
 // Algorithm
-//  1. Read every contract_links row for workspaceID via the federation
-//     read port (no limit; Phase A's ListContractLinks caps at 1000).
-//  2. Filter to rows where (EndpointID, EndpointRepo) match the request.
-//  3. For each matching link, open the call-side repo's caronte.db via
-//     deps.OpenProjectStore(ctx, link.CallRepo) and read the api_calls
-//     row by call_id; then resolve the caller node (graph_nodes) via
-//     GetNode(call.CallerNodeID) for File + Line attribution; build a
-//     coordinated.ConsumerRef carrying Repo / CallID / NodeID / File /
-//     Line.
-//  4. Deduplicate on (Repo, NodeID) — multiple links from the same call
-//     site collapse to one ConsumerRef.
-//  5. Partial-result pattern: on a per-link store-read error, the function
-//     returns the consumers gathered so far PLUS the error so the caller
-//     (Phase G Pipeline.Fan) sees both the partial set and the failure
-//     context — never silently drop a consumer.
+// 1. Read every contract_links row for workspaceID via the federation
+// read port.
+// 2. Filter to rows where (EndpointID, EndpointRepo) match the request.
+// 3. For each matching link, open the call-side repo's caronte.db via
+// deps.OpenProjectStore(ctx, link.CallRepo) and read the api_calls
+// row by call_id; then resolve the caller node (graph_nodes) via
+// GetNode(call.CallerNodeID) for File + Line attribution; build a
+// coordinated.ConsumerRef carrying Repo / CallID / NodeID / File /
+// Line.
+// 4. Deduplicate on (Repo, NodeID) — multiple links from the same call
+// site collapse to one ConsumerRef.
+// 5. Partial-result pattern: on a per-link store-read error, the function
+// returns the consumers gathered so far PLUS the error so the caller
+// sees both the partial set and the failure
+// context — never silently drop a consumer.
 //
-// Boundary (inv-zen-031 + inv-zen-271 + FIX-1 sister-test): this method's
+// Boundary: this method's
 // import set is limited to `internal/caronte/coordinated` (for the value
 // type), `internal/caronte/store` (for the per-repo handle the deps
 // accessor returns), and `internal/caronte/store/federation` (for the

@@ -1,31 +1,31 @@
 // SPDX-License-Identifier: MIT
-// Package views — contract_federation.go (Plan 20 Phase J Task J-3).
+// Package views — contract_federation.go.
 //
 // F7 Code Graph panel "Contract Federation" sub-panel per spec §10.3
-// + master C-14. Renders three sections sourced from the Plan 20
-// workspace federation substrate (Phase A WorkspaceFederationDB),
-// breaking-change events (Phase G + Phase A), and L10 dispatch
-// decisions (Phase H OrchestratorCoordinator):
+// + master C-14. Renders three sections sourced from the
+// workspace federation substrate,
+// breaking-change events, and L10 dispatch
+// decisions:
 //
-//   - workspace roster   : registered workspaces + members + policy
-//   - recent BREAKING    : top-N breaking-change rows by detected_at
-//     (with Lore attribution preview per D7)
-//   - L10 dispatch log   : top-N dispatch decisions by decided_at
-//     (Mode + DispatchedRepos + AuditID)
+// - workspace roster : registered workspaces + members + policy
+// - recent BREAKING : top-N breaking-change rows by detected_at
+// (with Lore attribution preview per D7)
+// - L10 dispatch log : top-N dispatch decisions by decided_at
+// (Mode + DispatchedRepos + AuditID)
 //
 // Wired into F7 codegraph view as the fifth sub-panel mode
 // (subPanelContractFederation, codegraph_keys.go). Operator opens
 // with [F] from the F7 base layout.
 //
 // Data flow: ContractFederationClient seam (interface) — production
-// adapts *client.Client REST methods (the Phase I client surface
-// extended for Phase J via federation_recent.go + a new daemon REST
+// adapts *client.Client REST methods (the client surface
+// extended for via federation_recent.go + a new daemon REST
 // handler); tests inject fakes directly. Refetch() runs one
 // round-trip and delivers contractFederationDataMsg; Update applies
 // it; View renders. lastErr fallback per spec §15 graceful
 // degradation.
 //
-// Privacy / inv-zen-031 / inv-zen-129: this file consumes the daemon
+// Privacy / invariant / invariant: this file consumes the daemon
 // ONLY via internal/client; it does NOT import internal/caronte/*,
 // does NOT touch net/http directly, and does NOT import the
 // federation/coordinator packages (those live behind the daemon's

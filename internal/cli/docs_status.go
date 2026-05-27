@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: MIT
-// Package cli — docs_status.go (Plan 14 Phase F Task F-6).
+// Package cli — docs_status.go.
 //
 // `zen docs status` renders the per-ecosystem corpus snapshot:
 //
-//	ECOSYSTEM  CHUNKS  SYMBOLS  STORAGE  LAST_POLLED      LAST_INDEXED
-//	go         1234    567      10.0 MB  2025-01-09T...   2025-01-09T...
-//	python     890     234      5.0 MB   2025-01-10T...   2025-01-10T...
+// ECOSYSTEM CHUNKS SYMBOLS STORAGE LAST_POLLED LAST_INDEXED
+// go 1234 567 10.0 MB 2025-01-09T... 2025-01-09T...
+// python 890 234 5.0 MB 2025-01-10T... 2025-01-10T...
 //
 // Layout via text/tabwriter so columns auto-align. Timestamps render via
 // formatDocsUnixTime (RFC3339 UTC; zero -> "(never)" sentinel).
 //
 // Output is plain-text only; JSON / machine-readable formats land in
-// Phase G alongside the daemon-side handler so wire shape and rendering
+// alongside the daemon-side handler so wire shape and rendering
 // stay co-evolved.
 //
 // Exit codes (per spec §6.2):
 //
-//	0  success
-//	1  recoverable: daemon 404 / 422 (rare for a read-only GET)
-//	2  unrecoverable: transport, decode, daemon 5xx
+// 0 success
+// 1 recoverable: daemon 404 / 422 (rare for a read-only GET)
+// 2 unrecoverable: transport, decode, daemon 5xx
 package cli
 
 import (

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — ratelimit.go (Plan 4 Phase G Task G-7).
+// Package handlers — ratelimit.go.
 //
-// Token-bucket rate limiter middleware for Plan 4 daemon endpoints.
+// Token-bucket rate limiter middleware daemon endpoints.
 //
 // Algorithm classic token bucket.
-//   - Capacity = rate (burst = 1 second of capacity; doctrine can cap at 2×).
-//   - Refill: one token per (1s / rate); refill computed lazily on each request.
-//   - 429 Too Many Requests when bucket empty; Retry-After header = ms until next token.
+// - Capacity = rate (burst = 1 second of capacity; doctrine can cap at 2×).
+// - Refill: one token per (1s / rate); refill computed lazily on each request.
+// - 429 Too Many Requests when bucket empty; Retry-After header = ms until next token.
 //
 // Per-endpoint thresholds are doctrine-tunable via RateLimitCtx.RateLimitThreshold().
 // The canonical default thresholds live in DefaultRateLimits below; *daemon.Server
-// wires those through RateLimitThreshold() until Phase A's doctrine loader replaces
+// wires those through RateLimitThreshold() until doctrine loader replaces
 // them with operator-tunable values (post-review I-6 fix).
 //
 // # Registry lifetime + per-Server isolation (post-review C-1 fix)
@@ -20,13 +20,13 @@
 // caches it for the life of the Server. RateLimitMiddleware now takes the registry as
 // a parameter so:
 //
-//  1. Test isolation: each test that needs a fresh limiter constructs a new registry,
-//     so no leftover state bleeds across runs (`go test -count=10` passes deterministically).
-//  2. Doctrine reload invalidates buckets: Server.DoctrineReload() calls
-//     registry.InvalidateAll() after the atomic-swap so the next request observes the
-//     new threshold (no stale capacity cached forever).
+// 1. Test isolation: each test that needs a fresh limiter constructs a new registry,
+// so no leftover state bleeds across runs (`go test -count=10` passes deterministically).
+// 2. Doctrine reload invalidates buckets: Server.DoctrineReload() calls
+// registry.InvalidateAll() after the atomic-swap so the next request observes the
+// new threshold (no stale capacity cached forever).
 //
-// inv-zen-001: Unix socket is the transport layer; rate limiter is an additional
+// invariant: Unix socket is the transport layer; rate limiter is an additional
 // per-endpoint guard (defense-in-depth).
 package handlers
 

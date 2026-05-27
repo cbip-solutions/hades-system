@@ -1,32 +1,33 @@
-// tests/replay/merge_replay_test.go (Plan 6 Phase E Task E-3).
+// tests/replay/merge_replay_test.go.
 //
-// Replay-tier validation of inv-zen-105 (replay-determinism) end-to-end at
+// Replay-tier validation of invariant (replay-determinism) end-to-end at
 // the merge.Cache.Rebuild boundary. Lives behind //go:build replay so the
-// default `go test ./...` does not run it; CI invokes `go test -tags=replay`.
+// default `go test./...` does not run it; CI invokes `go test -tags=replay`.
 //
 // Coverage:
 //
-//  1. TestReplay_TwoRebuildsIdenticalCache — same captured event stream
-//     rebuilt twice produces identical caches (size + per-request lookup).
-//     Direct inv-zen-105 assertion at the cache-state level.
+// 1. TestReplay_TwoRebuildsIdenticalCache — same captured event stream
+// rebuilt twice produces identical caches (size + per-request lookup).
+// Direct invariant assertion at the cache-state level.
 //
-//  2. TestReplay_RebuildEmitsErrorOnMalformedPayload — Drift-E enforcement:
-//     a malformed EvtMergeCompleted payload triggers Cache.Rebuild's failure
-//     path, which MUST emit EvtMergeCacheRebuilt with non-empty RebuildError
-//     (NOT a separate EvtMergeCacheRebuildFailed event). Drift-E pinned the
-//     EventType taxonomy at 16 by routing rebuild failures through the
-//     payload's RebuildError field rather than a 17th event type.
+// 2. TestReplay_RebuildEmitsErrorOnMalformedPayload — Drift-E enforcement:
+// a malformed EvtMergeCompleted payload triggers Cache.Rebuild's failure
+// path, which MUST emit EvtMergeCacheRebuilt with non-empty RebuildError
+// (NOT a separate EvtMergeCacheRebuildFailed event). Drift-E pinned the
+// EventType taxonomy at 16 by routing rebuild failures through the
+// payload's RebuildError field rather than a 17th event type.
 //
-//  3. TestReplay_CacheKeyDeterministic — 100 calls to CacheKey on the same
-//     MergeRequest produce identical hashes; the candidate ordering is
-//     intentionally reverse-sorted in the input to exercise CacheKey's
-//     internal sort step (Q5 A: candidate SET, not sequence, is the key).
+// 3. TestReplay_CacheKeyDeterministic — 100 calls to CacheKey on the same
+// MergeRequest produce identical hashes; the candidate ordering is
+// intentionally reverse-sorted in the input to exercise CacheKey's
+// internal sort step (Q5 A: candidate SET, not sequence, is the key).
 //
 // The replayReader + replayEmitter helpers are local to this file (small,
 // single-purpose; no value in promoting them to replay_helpers.go which is
 // scoped to the eventlog-based JSONL fixture loader for the orchestrator
 // suite).
 //
+// go:build replay
 //go:build replay
 // +build replay
 

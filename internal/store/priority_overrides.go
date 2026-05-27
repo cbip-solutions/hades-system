@@ -2,24 +2,24 @@
 package store
 
 //
-// Schema lives in migrations/060_priority_overrides.sql (Phase B-6 ships the
+// Schema lives in migrations/060_priority_overrides.sql ( ships the
 // migration alongside the CRUD; the master plan §"Migration numbering
 // coordination" reserves 060 for the priority_overrides + tmux_session_state
-// joint pair, with Phase C adding tmux_session_state in a follow-up
-// migration). Phase B uses these tables; Phase C extends.
+// joint pair, with adding tmux_session_state in a follow-up
+// migration). uses these tables; extends.
 //
-// inv-zen-031 boundary: internal/quota MUST NOT import internal/store. The
+// invariant boundary: internal/quota MUST NOT import internal/store. The
 // only consumer of these helpers is internal/daemon/quotaadapter — that
 // package's import list is the single legitimate co-location of
 // internal/quota and internal/store anywhere in the codebase, enforced
-// by the inv-zen-122 compliance test.
+// by the invariant compliance test.
 //
-// inv-zen-115 audit hook: every priority_overrides mutation MUST emit a
+// invariant audit hook: every priority_overrides mutation MUST emit a
 // row in the events table inside the SAME transaction. The helpers below
 // expose tx-scoped variants (UpsertPriorityOverrideTx /
 // DeletePriorityOverrideTx / InsertEventTx) so the adapter can compose
 // the multi-statement atomic write. A failure mid-transaction rolls back
-// BOTH the priority_overrides change AND the audit event row — Plan 9
+// BOTH the priority_overrides change AND the audit event row —
 // hash-chain integrity depends on this atomicity.
 
 import (
