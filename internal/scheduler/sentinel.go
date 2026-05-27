@@ -7,7 +7,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/doctrine"
 )
 
-// jitterDeterministicSentinel anchors inv-hades-120: Scheduler jitter
+// jitterDeterministicSentinel anchors invariant: Scheduler jitter
 // offset MUST be deterministic — hash(routine_id) % (10% × period),
 // capped at 15min recurring / 90s one-shot.
 //
@@ -22,7 +22,7 @@ func jitterDeterministicSentinel() bool {
 	return ComputeJitter("inv-hades-120-anchor", time.Hour) <= jitterRecurringCap
 }
 
-// missPolicyDoctrineSentinel anchors inv-hades-121: Per-doctrine miss
+// missPolicyDoctrineSentinel anchors invariant: Per-doctrine miss
 // policy MUST map max-scope=CatchUpBounded, default=Skip,
 // capa-firewall=NotifyOnly; rate-limit 1/30s/project enforced.
 //
@@ -45,7 +45,7 @@ func missPolicyDoctrineSentinel() bool {
 		DoctrineMissPolicy(doctrine.NameCapaFirewall) == MissPolicyNotifyOnly
 }
 
-// dispatcherSingleEgressSentinel anchors inv-hades-123 / inv-hades-080
+// dispatcherSingleEgressSentinel anchors invariant / invariant
 // (scheduler slice): scheduler.Fire MUST dispatch via the Dispatcher
 // interface only; never imports internal/providers or
 // private-tier1-module.

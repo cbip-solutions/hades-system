@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:amendment-ack — Acknowledge + apply HADES doctrine amendment
 
-Apply amendment **{amendment_id}**. This is **audit-logged** via the release design chain (Tessera-anchored event `AmendmentAcknowledged`).
+Apply amendment **{amendment_id}**. This is **audit-logged** via HADES design chain (Tessera-anchored event `AmendmentAcknowledged`).
 
 ## 1. Confirm intent
 
@@ -24,7 +24,7 @@ Wait for operator response before proceeding.
 ```bash
 REASON="{reason}"
 
-# pending endpoint registration: amendment ack (POST) anchored via inv-hades-072
+# pending endpoint registration: amendment ack (POST) anchored via invariant
 curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
@@ -46,7 +46,7 @@ After 200 OK:
 Amendment {amendment_id} acknowledged and applied.
 Audit event: hades://audit/<audit_event_id>
 Applied at: <applied_at>
-Affected invariants: <inv-hades-XXX list>
+Affected invariants: <invariant-XXX list>
 ```
 
 If 422 with dependent amendments:
@@ -58,12 +58,12 @@ Run /amendment-show <dep-id> to investigate, or ack dependents first.
 
 ## 4. NEVER add Claude attribution to audit log entry
 
-The reason text becomes part of audit chain. Operator's reason MUST NOT contain Claude/Anthropic/AI attribution. Daemon's audit handler regex-rejects (the release design substrate hook).
+The reason text becomes part of audit chain. Operator's reason MUST NOT contain Claude/Anthropic/AI attribution. Daemon's audit handler regex-rejects (HADES design substrate hook).
 
 ## Cross-references
 
-- the release design + the release design amendment lifecycle
-- inv-hades-072 amendment audit chain anchor
+- HADES design + HADES design amendment lifecycle
+- invariant amendment audit chain anchor
 - /amendment-list, /amendment-show, /amendment-deny
 """
 

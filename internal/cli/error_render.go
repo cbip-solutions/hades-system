@@ -11,11 +11,11 @@
 // <gray body template, sprintf'd with context vars> (#999 gray)
 // → <green recovery hint from catalog> (#10b981 green)
 //
-// inv-hades-088 boundary: Render is PURE. It does NOT make network/IO
+// invariant boundary: Render is PURE. It does NOT make network/IO
 // calls; it only formats. The catalog lookup is in-process (
 // internal/errors package).
 //
-// inv-hades-219 boundary: Render's output is HADES-branded by construction
+// invariant boundary: Render's output is HADES-branded by construction
 // — the catalog entries supply HADES-branded titles + bodies
 // + recovery hints; Render only reformats them.
 //

@@ -25,7 +25,7 @@ Workflow per task:
 4. Run the test runner (`{{.PrimaryTestRunner}}`); iterate until green.
 5. If fix-loop iter ≥ 3, escalate via daemon (provider rotation).
 6. When green: `git commit` with trailers `HADES-Trace-Id` + `HADES-Provider`
-   + `HADES-Audit-Passed: yes`. **Never** add AI attribution (inv-hades-004).
+   + `HADES-Audit-Passed: yes`. **Never** add AI attribution (invariant).
 
 Constraints:
 - Stay within your worktree.

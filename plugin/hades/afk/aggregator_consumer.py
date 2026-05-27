@@ -15,7 +15,7 @@ def hydrate_from_aggregator_query(
     cache: KGOfflineCache,
     daemon_response: dict[str, Any],
 ) -> int:
-    """Populate the offline cache from the release design D aggregator.Query() results.
+    """Populate the offline cache from HADES design D aggregator.Query() results.
 
     Args:
         cache: The ``KGOfflineCache`` instance (already constructed with

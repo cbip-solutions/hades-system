@@ -24,8 +24,8 @@
 // `--yes` bypasses the prompt for scripted runs; non-interactive without
 // `--yes` is rejected (destructive-default-no per project instructions hard rule).
 //
-// Routes via the daemon /v1/mcpgateway/workspace/* sub-routes (inv-hades-088
-// single-egress, inv-hades-129 no direct net/http). Tests inject
+// Routes via the daemon /v1/mcpgateway/workspace/* sub-routes (invariant
+// single-egress, invariant no direct net/http). Tests inject
 // WorkspaceClient fakes.
 package cli
 

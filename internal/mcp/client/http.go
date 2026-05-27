@@ -190,7 +190,7 @@ func (c *Client) Close() error {
 
 const daemonSentinel = ""
 
-// defaultAllowedHostsSealed is the authoritative whitelist (inv-hades-085).
+// defaultAllowedHostsSealed is the authoritative whitelist (invariant).
 // Changes to this set require an ADR (see architecture records
 // for the precedent on how to extend it).
 //

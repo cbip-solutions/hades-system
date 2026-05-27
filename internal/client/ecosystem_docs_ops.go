@@ -26,7 +26,7 @@
 // in — until then the endpoints surface as 503 and the CLI layer
 // classifies that as unrecoverable (exit 2).
 //
-// Boundary stdlib only. No internal/research/ecosystem import (inv-hades-031);
+// Boundary stdlib only. No internal/research/ecosystem import (invariant);
 // the daemon-side handler is responsible for invoking the trainer (Q15-Q20
 // orchestrator-enforced — see ADR-0067) and for ingester/pruner orchestration.
 //

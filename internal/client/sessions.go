@@ -46,7 +46,7 @@ type attachRequest struct {
 
 // attachResponse is the body of POST /v1/sessions/{alias}/attach.
 // TmuxCmd is the exact command-line the CLI MUST exec to inherit the
-// operator's TTY — daemon-controlled (enforces inv-hades-117 via the -S
+// operator's TTY — daemon-controlled (enforces invariant via the -S
 // SocketPath flag in the rendered tokens). Returned as a single string
 // the CLI splits via strings.Fields; the daemon renders the canonical
 // form with no shell metacharacters.

@@ -14,7 +14,7 @@ Protocol:
 Requires: Python 3.10+; sentence-transformers; torch with MPS support.
 Install: pip install sentence-transformers torch
 
-inv-hades-129: this script does NOT make web calls at runtime. The
+invariant: this script does NOT make web calls at runtime. The
 sentence-transformers model is downloaded on first import (cached at
 ~/.cache/torch/sentence_transformers/) -- first-call cold start downloads
 weights, subsequent calls are local-only. Operator pre-warms via

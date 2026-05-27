@@ -13,8 +13,8 @@
 // `hades audit criteria list` where criteria templates are surfaced
 // via doctrine state (audit.criteria.* keys).
 //
-// inv-hades-001: Unix socket only.
-// inv-hades-031: never imports internal/store directly; AuditQueryCtx is the bridge.
+// invariant: Unix socket only.
+// invariant: never imports internal/store directly; AuditQueryCtx is the bridge.
 package handlers
 
 import (

@@ -17,7 +17,7 @@
 // - migrate.dry-run-required
 // - cli.no-op
 //
-// Compliance gate: inv-hades-222 — idempotency + scope guarantee.
+// Compliance gate: invariant — idempotency + scope guarantee.
 package cli
 
 import (

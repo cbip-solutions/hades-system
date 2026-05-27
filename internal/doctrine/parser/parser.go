@@ -8,7 +8,7 @@
 // as ErrParseFailed (Q5 B + spec §1; research SOTA "silent strictness
 // drift" anti-pattern guard). Per-Q3 C Tier 1, user/override TOMLs that
 // declare the [doctrine_transverse] section are rejected with a typed
-// *errors.TransverseOverrideAttempt (inv-hades-135 enforcement).
+// *errors.TransverseOverrideAttempt (invariant enforcement).
 //
 // The parser is policy-free with respect to schema_version: it returns
 // the literal value via ExtractSchemaVersion and lets the caller (daemon
@@ -16,7 +16,7 @@
 // (Q15 A). It is also I/O-free: callers supply []byte; the `source`
 // argument is a free-form label used only for error wrapping.
 //
-// Boundary parser ⊥ internal/store (inv-hades-133). No store imports;
+// Boundary parser ⊥ internal/store (invariant). No store imports;
 // no I/O outside the bytes passed in.
 package parser
 
@@ -67,7 +67,7 @@ func wrapParseError(err error, source string) error {
 // - Embedded built-in TOMLs: ParseOpts{AllowTransverseDeclaration: true}
 // - User override / per-project override: ParseOpts{} (default)
 //
-// Passing the wrong opts is an inv-hades-135 vulnerability; integration
+// Passing the wrong opts is an invariant vulnerability; integration
 // tests in assert the correct opts at each call site.
 type ParseOpts struct {
 	// AllowTransverseDeclaration enables the [doctrine_transverse]
@@ -75,7 +75,7 @@ type ParseOpts struct {
 	// (max-scope, default, capa-firewall) MAY declare transverse
 	// axioms (Q3 C Tier 1: hardcoded operator-only). User TOMLs and
 	// per-project overrides MUST NOT, and the parser returns
-	// *errors.TransverseOverrideAttempt when they do (inv-hades-135).
+	// *errors.TransverseOverrideAttempt when they do (invariant).
 	AllowTransverseDeclaration bool
 }
 

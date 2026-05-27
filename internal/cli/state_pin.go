@@ -2,7 +2,7 @@
 // Package cli — state_pin.go.
 //
 // `hades state pin <field> <value> --reason <X>` calls POST /v1/state/pin.
-// Enforces inv-hades-146: --reason is both cobra.MarkFlagRequired and
+// Enforces invariant: --reason is both cobra.MarkFlagRequired and
 // non-empty checked in RunE. The operator sees a confirmation prompt
 // (privacy-by-default: blank input = abort, same as audit_chain_cold_archive.go).
 //

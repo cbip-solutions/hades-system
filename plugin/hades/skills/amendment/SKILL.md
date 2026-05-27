@@ -2,15 +2,15 @@
 name: amendment
 description: |
   HADES doctrine-amendment lifecycle: list, show, acknowledge, or deny
-  doctrine-change proposals (the release design + the release design). All decisions audit-logged
-  via the release design Tessera chain. Use when operator invokes /hades:amendment-* commands.
+  doctrine-change proposals (HADES design + HADES design). All decisions audit-logged
+  via HADES design Tessera chain. Use when operator invokes /hades:amendment-* commands.
 license: Proprietary
 agentskills_version: 1.0
 keywords:
   - amendment
   - doctrine-amendment
   - audit-chain
-  - the release design
+  - HADES design
   - lifecycle
   - hades
 ---
@@ -71,11 +71,11 @@ Tessera-anchored `AmendmentDenied` event. Downstream dependents auto-transition 
 
 ## Invariants
 
-- Reason text MUST NOT contain Claude/Anthropic/AI attribution (inv-hades-004; daemon regex-rejects)
+- Reason text MUST NOT contain Claude/Anthropic/AI attribution (invariant; daemon regex-rejects)
 - Denial reason is REQUIRED (load-bearing for audit chain readability)
 
 ## Cross-references
 
-- the release design + the release design doctrine-amendment lifecycle
-- inv-hades-072 amendment audit chain anchor
+- HADES design + HADES design doctrine-amendment lifecycle
+- invariant amendment audit chain anchor
 - /hades:amendment-list, /hades:amendment-show, /hades:amendment-ack, /hades:amendment-deny slash command handlers

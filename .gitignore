@@ -1,7 +1,6 @@
 # Build artifacts
 /bin/
 /dist/
-docs/
 *.exe
 *.so
 *.dylib

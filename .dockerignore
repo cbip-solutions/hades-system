@@ -1,4 +1,4 @@
-# .dockerignore — the release design release track
+# .dockerignore — HADES design release track
 #
 # Excludes large/unneeded files from the Docker build context so the
 # multi-stage build is fast and the resulting image stays minimal.

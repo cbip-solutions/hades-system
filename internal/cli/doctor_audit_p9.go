@@ -13,7 +13,7 @@
 // the typed prober interfaces declared in probe.go (TesseraProber,
 // LitestreamProber, ChainProber, RecoveryProber) injected via DoctorDeps.
 //
-// Boundary (inv-hades-031):
+// Boundary (invariant):
 //
 // This file imports only cli-internal types + cobra + context. It does NOT
 // import internal/store, internal/audit/tessera, internal/audit/chain,

@@ -4,12 +4,12 @@
 // Task J-6 adapter: exposes a Prober implementation that the
 // cli/doctor_tmux.go layer consumes (cli.TmuxProber). Read-only.
 //
-// inv-hades-117 anchor: ALL tmux invocations go through ExecTmux which
+// invariant anchor: ALL tmux invocations go through ExecTmux which
 // enforces -S flag (forbids default socket /tmp/tmux-<uid>). The Prober
 // follows the same discipline — its ServerReachable always passes the
 // canonical SocketPath constant.
 //
-// Boundary (inv-hades-031): this package does NOT import internal/store.
+// Boundary (invariant): this package does NOT import internal/store.
 // SessionStore is the existing interface; the daemon wires
 // daemon.db's tmux_session_state via the matching adapter at boot.
 //
@@ -28,7 +28,7 @@ import (
 
 // ExecFunc is the signature used to invoke tmux. Tests pass a fake.
 // Production wires to ExecTmux which enforces
-// inv-hades-117 (-S flag mandatory).
+// invariant (-S flag mandatory).
 //
 // MUST be safe for concurrent use.
 type ExecFunc func(ctx context.Context, args ...string) ([]byte, error)

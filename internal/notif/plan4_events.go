@@ -6,9 +6,9 @@
 // chain (Slack/email/webhook/etc). This package has no runtime
 // dependencies beyond the standard library and must NEVER import
 // internal packages that carry secrets or credentials. The PII-free
-// invariant (inv-hades-085) is enforced by TestVerifyNoPII.
+// invariant (invariant) is enforced by TestVerifyNoPII.
 //
-// Boundary (inv-hades-031): this package does NOT import internal/store.
+// Boundary (invariant): this package does NOT import internal/store.
 // It is a pure types + constructors package; persistence is the
 // responsibility of internal/daemon/handlers/audit_emit.go.
 //

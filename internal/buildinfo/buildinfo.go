@@ -15,7 +15,7 @@
 // resulting binary still works and `--version` still prints something
 // useful (just labelled "dev").
 //
-// inv-hades-297 (reproducibility metadata) — three things load-bear on this
+// invariant (reproducibility metadata) — three things load-bear on this
 // package:
 //
 // 1. The Anthropic-style `hades --version` surface MUST embed Version() +

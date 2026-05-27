@@ -7,7 +7,7 @@
 // git repo, git missing, ctx cancelled) — downstream sees CommitCount=-1
 // signalling "we don't know".
 //
-// Per inv-hades-031 boundary discipline: this package does NOT import
+// Per invariant boundary discipline: this package does NOT import
 // internal/store; stdlib os/exec + os.Stat only.
 package maturity
 

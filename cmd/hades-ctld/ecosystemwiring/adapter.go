@@ -33,12 +33,12 @@
 // sources surface as wrapped error.
 //
 // - SweepChunkFingerprints recomputes sha256(content_text) per chunk and
-// re-writes chunk_fingerprint where drift detected (inv-hades-202
+// re-writes chunk_fingerprint where drift detected (invariant
 // fingerprint-stability sweep).
 //
 // - SweepChangeNodes delegates to *ChangeExtractor.SweepChangeNodes which
 // rejects orphan (version_from, version_to) tuples against
-// ecosystem_versions (inv-hades-193).
+// ecosystem_versions (invariant).
 //
 // - RebuildSymbolIndex delegates to *SymbolIndex.Rebuild — atomic reload
 // of the per-ecosystem in-memory symbol set from ecosystem_symbols.
@@ -57,7 +57,7 @@
 // Boundary this package is in cmd/hades-ctld/ (composition root); it
 // imports internal/store transitively via internal/research/ecosystem's
 // migrations (sqlite_vec auto-extension) but not internal/store directly.
-// inv-hades-031 enforces the boundary at internal/research/ecosystem/*
+// invariant enforces the boundary at internal/research/ecosystem/*
 // (compliance test tests/compliance/no_store_in_ecosystem_test.go), not
 // at cmd/.
 //
@@ -511,7 +511,7 @@ func (a *Adapter) SweepChunkFingerprints(ctx context.Context, ecoName string) er
 // per-ecosystem DB. Returns wrapped error if ChangeExtractor wasn't
 // wired at construction.
 //
-// The underlying sweep verifies inv-hades-193 (Change-node graph
+// The underlying sweep verifies invariant (Change-node graph
 // consistency): every (version_from, version_to) pair MUST have
 // matching ecosystem_versions rows. Orphans surface as a wrapped error
 // listing the affected ids.

@@ -3,7 +3,7 @@
 //
 // `hades knowledge-p9 promote <note-id>` — operator-gated pin to global index.
 //
-// inv-hades-146: --reason is MANDATORY. Two gates:
+// invariant: --reason is MANDATORY. Two gates:
 // 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
 // 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 //

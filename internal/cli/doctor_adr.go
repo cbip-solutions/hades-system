@@ -19,7 +19,7 @@
 // doctor_adr.go is a new file — release's doctor_audit.go covers audit events;
 // there is no prior Plan doctor_adr.go. No _p9 suffix needed.
 //
-// Boundary (inv-hades-031):
+// Boundary (invariant):
 //
 // This file imports only cli-internal types + cobra + context + stdlib.
 // Does NOT import internal/adr concrete types.

@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// envelopeJSONSchemaSentinel anchors inv-hades-166: every Envelope field
+// envelopeJSONSchemaSentinel anchors invariant: every Envelope field
 // MUST be referenced here. Adding/removing/renaming a field without
 // updating serialization fails compilation.
 //
@@ -35,7 +35,7 @@ func envelopeJSONSchemaSentinel() {
 	_, _ = json.Marshal(&e)
 }
 
-// auditEventHandlerAuthSentinel anchors inv-hades-172: the hades://audit URL
+// auditEventHandlerAuthSentinel anchors invariant: the hades://audit URL
 // handler signature is fixed at the auth-required shape (handler must
 // accept request bound to an authenticated session context; doctrine
 // filter applies before serving the audit row).

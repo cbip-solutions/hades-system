@@ -10,7 +10,7 @@ from hermes_plugins.hades.commands._subprocess_handoff import (
     run_hades_subprocess,
 )
 
-# Frozen 12-panel enum per spec §Q8 + the release design view files.
+# Frozen 12-panel enum per spec §Q8 + HADES design view files.
 # Membership check uses the frozenset for O(1) lookup.
 _VALID_PANELS: frozenset[str] = frozenset(
     {
@@ -101,7 +101,7 @@ def panel_handler(raw_args: str) -> str | None:
 
     Per release stage C-5 operator decision (2026-05-21): invalid panel names render
     the `cli.arg-validation-fail` HADES block LOCALLY (static
-    _PANEL_VALIDATION_HADES_BLOCK) — no daemon roundtrip. inv-hades-088 is
+    _PANEL_VALIDATION_HADES_BLOCK) — no daemon roundtrip. invariant is
     preserved trivially: this path makes no network calls at all.
     """
     # 1. Parse + validate the panel name.

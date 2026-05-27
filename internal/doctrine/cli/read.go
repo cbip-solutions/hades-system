@@ -23,7 +23,7 @@
 // server-side canonicalisation).
 //
 // Validate reads TOML from disk and posts to daemon /v1/doctrine/validate;
-// --against-baseline triggers tighten-only check (inv-hades-136 surface).
+// --against-baseline triggers tighten-only check (invariant surface).
 package cli
 
 import (

@@ -9,7 +9,7 @@
 // # Why this exists
 //
 // The active.Accessor singleton's SetRegistry is documented as the
-// daemon-startup contract (inv-hades-134 init-order guard) in
+// daemon-startup contract (invariant init-order guard) in
 // internal/doctrine/active/active.go:53-65. server.go:511-512 also
 // explicitly references this contract:
 //
@@ -25,7 +25,7 @@
 //
 // - sessionDoctrine returns "" (init-order fail-closed) → every
 // /v1/audit/event/<id> request returns 401 even for valid events
-// (inv-hades-172 production breakage).
+// (invariant production breakage).
 //
 // - /v1/doctrine/active returns 404 "doctrine: name not found in
 // registry" (the daemon literally cannot name its own active

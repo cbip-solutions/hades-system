@@ -27,10 +27,10 @@ def render_short(envelope: dict[str, Any]) -> MobileSummaryCard:
     Drops ``top_fields`` beyond the first 3 (``MobileSummaryCard``'s
     invariant). Preserves ``cache_state`` + ``audit_event_id`` +
     ``project_id`` verbatim — these fields drive release track renderer
-    dispatch and the release design audit chain anchor.
+    dispatch and HADES design audit chain anchor.
 
     Args:
-        envelope: The citation envelope JSON (the release design substrate shape) —
+        envelope: The citation envelope JSON (HADES design substrate shape) —
             see ``internal/citation/envelope.go`` for the canonical Go
             type. Python consumes via daemon HTTP round-trip.
 
@@ -90,14 +90,14 @@ async def expand(
     §1 Q6=B. Operator on AFK platform issues ``/expand evt-1234abcd``;
     Hermes' slash command parser (release track registers the command; this
     function executes it) invokes this coroutine. The daemon's
-    ``GET /v1/audit/event/<id>`` endpoint (the release design substrate shipped per
+    ``GET /v1/audit/event/<id>`` endpoint (HADES design substrate shipped per
     ``internal/daemon/handlers/audit_event.go``) returns the full
     envelope JSON; the AFK module emits an
-    ``AUDIT_MOBILE_EXPANSION_REQUESTED`` audit event for the release design chain
+    ``AUDIT_MOBILE_EXPANSION_REQUESTED`` audit event for HADES design chain
     anchoring before returning to the platform renderer.
 
     Args:
-        citation_id: The the release design citation envelope ID (e.g.
+        citation_id: The HADES design citation envelope ID (e.g.
             ``"evt-1234abcd"``).
         operator_id: The session operator's id (audit chain attribution).
         platform: The active AFK platform (audit event payload).
@@ -134,7 +134,7 @@ async def expand(
     envelope: dict[str, Any] = body["envelope"]
     # Emit audit event AFTER successful resolve — D-6 audit.py wires the
     # canonical implementation. Timestamp emitted as unix milliseconds
-    # (UTC); matches the release design chain convention for cross-platform AFK
+    # (UTC); matches HADES design chain convention for cross-platform AFK
     # telemetry.
     await audit_emitter(
         citation_id=citation_id,

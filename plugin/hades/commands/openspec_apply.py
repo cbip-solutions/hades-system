@@ -34,7 +34,7 @@ curl --unix-socket /tmp/hades-system.sock \\
      http://unix/v1/swarms
 ```
 
-Response includes `swarm_id`. HADES daemon spawns subagents per task following the release design routing.toml + the release design dispatcher.
+Response includes `swarm_id`. HADES daemon spawns subagents per task following HADES design routing.toml + HADES design dispatcher.
 
 ## 3. Stream SSE events
 
@@ -51,16 +51,16 @@ As tasks reach phases (codegen / tests / fix-loop / commit), surface summaries t
 
 Closing this Hermes session does NOT abort the swarm. Reopening this session re-attaches via `/hades:openspec-resume {feature_name}`.
 
-## 5. NO Claude attribution in any swarm-emitted commit (inv-hades-004)
+## 5. NO Claude attribution in any swarm-emitted commit (invariant)
 
-Per inv-hades-004 + project project instructions "Hard rules" #1: every commit message emitted by swarm subagents MUST NOT contain Claude/Anthropic/AI attribution. the release design substrate hook regex-rejects.
+Per invariant + project project instructions "Hard rules" #1: every commit message emitted by swarm subagents MUST NOT contain Claude/Anthropic/AI attribution. HADES design substrate hook regex-rejects.
 
 ## 6. Cross-references
 
 - spec §3.2 apply phase
-- the release design routing.toml + the release design dispatcher
-- the release design worktree manager
-- the release design archive phase (next step)
+- HADES design routing.toml + HADES design dispatcher
+- HADES design worktree manager
+- HADES design archive phase (next step)
 - /hades:openspec-resume (resume mid-flight)
 - /hades:openspec-archive (post-implementation merge)
 """

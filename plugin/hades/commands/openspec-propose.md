@@ -10,7 +10,7 @@ arguments:
 # Propose phase for: {{feature_name}}
 
 You are starting the propose phase for feature `{{feature_name}}`. Per
-spec §3.1 + inv-hades-015, follow this flow:
+spec §3.1 + invariant, follow this flow:
 
 1. **Load the brainstorming skill** explicitly:
    ```
@@ -35,7 +35,7 @@ spec §3.1 + inv-hades-015, follow this flow:
      (advisory mode)
    - `default`: stock templates
 
-4. **When operator runs `/propose-done`**: invoke pre-flight (the release design
+4. **When operator runs `/propose-done`**: invoke pre-flight (HADES design
    wires daemon endpoint that runs RAG audit on tasks.md against the
    codebase).
 

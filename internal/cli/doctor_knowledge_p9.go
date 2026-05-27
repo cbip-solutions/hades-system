@@ -17,7 +17,7 @@
 // Production wiring in cmd/hades-ctld/main.go assigns the concrete
 // substrate adapter satisfying AggregatorProber.
 //
-// Boundary (inv-hades-031):
+// Boundary (invariant):
 //
 // This file imports only cli-internal types + cobra + context + stdlib.
 // Does NOT import internal/knowledge/aggregator concrete types.

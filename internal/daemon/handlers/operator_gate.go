@@ -15,7 +15,7 @@
 // current state with HTTP 200 (no error). This prevents race-condition 4xx
 // responses when multiple callers (budget anomaly + operator CLI) both pause.
 //
-// inv-hades-031: never imports internal/workforce/gate directly.
+// invariant: never imports internal/workforce/gate directly.
 package handlers
 
 import (

@@ -12,7 +12,7 @@
 //
 // All four route to the daemon /v1/doctrine/{propose-list,propose-show,
 // ack,deny} endpoints. Deny additionally records reason in the eventlog
-// as EvtOperatorAmendmentDeny (inv-hades-099 operator-override audit;
+// as EvtOperatorAmendmentDeny (invariant operator-override audit;
 // daemon-side enforcement).
 package cli
 

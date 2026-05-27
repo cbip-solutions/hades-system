@@ -13,8 +13,8 @@ import (
 // dynamic dispatch) through this narrow interface; the daemon composition
 // root wires the real *orchestrator.Orchestrator. Declaring the
 // interface HERE (consumer-side) — not importing a concrete dispatcher —
-// keeps internal/caronte persistence- and transport-agnostic (inv-hades-031)
-// and preserves single-egress (inv-hades-088/236): every Caronte LLM call is a
+// keeps internal/caronte persistence- and transport-agnostic (invariant)
+// and preserves single-egress (invariant/236): every Caronte LLM call is a
 // dispatcher.Forward, never a direct backend dial.
 //
 // The signature mirrors orchestrator.Orchestrator.Forward EXACTLY so the
@@ -27,7 +27,7 @@ type CaronteDispatcher interface {
 	Forward(ctx context.Context, call orchestrator.Call) (*providers.TierResponse, error)
 }
 
-// inv-hades-236 compile anchor: the production *orchestrator.Orchestrator MUST
+// invariant compile anchor: the production *orchestrator.Orchestrator MUST
 // satisfy CaronteDispatcher. If this stops compiling the daemon wiring is
 // broken — fix the orchestrator signature or the wiring, do NOT relax this
 // seam (that would breach single-egress). Mirrors the

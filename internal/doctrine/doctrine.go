@@ -11,8 +11,8 @@
 // TOML → project hadessystem.toml → --doctrine flag) with field-
 // level provenance tracking and ceiling-aware clamping.
 // - LoadFile / Loaded: pure I/O wrapper over BurntSushi/toml with
-// strict-mode unknown-field rejection (inv-hades-088).
-// - ValidateAdditive / ValidateRange: inv-hades-084 enforcement
+// strict-mode unknown-field rejection (invariant).
+// - ValidateAdditive / ValidateRange: invariant enforcement
 // (additive-only Schema evolution unless a doctrine-schema ADR
 // is referenced).
 // - Doctrine + Get / MaxScope / Default / CapaFirewall: the

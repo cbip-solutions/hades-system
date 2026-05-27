@@ -39,12 +39,12 @@
 // surface is itself bound to the same redaction discipline).
 //
 // Boundary invariants (carry-forward from orchestrator.go):
-// - inv-hades-090: this file does NOT import internal/workforce/queue.
+// - invariant: this file does NOT import internal/workforce/queue.
 // The release workforce.Manager is consumed via the WorkforceManager
 // interface declared here so eventlog (durable) ⊥ queue (transient)
 // stays a clean separation; bootstrap ( adapter / daemon
 // main) wires the real impl when release is merged.
-// - inv-hades-089: this file does NOT import internal/store. Persistence
+// - invariant: this file does NOT import internal/store. Persistence
 // flows through the eventlog.Appender contract.
 //
 // Concurrency contract:

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""hades-system AFK richness module — the release design release track."""
+"""hades-system AFK richness module — HADES design release track."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from .types import (
     VoiceFlowMode,
 )
 
-# Audit event canonical names (anchored to the the release design chain via daemon
+# Audit event canonical names (anchored to the HADES design chain via daemon
 # dispatcher). Subscribed by ``internal/audit/chain`` event registry;
 # emitted by D-6 ``audit.py``.
 AUDIT_VOICE_QUERY_DISPATCHED = "afk.voice_query_dispatched"

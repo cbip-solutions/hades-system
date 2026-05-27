@@ -5,7 +5,7 @@
 // (init, migrate, override edit) because they're operator-explicit by
 // nature; one (reload) hits the daemon HTTP API for manual reload trigger.
 //
-// inv-hades-137 (daemon NEVER auto-writes): all writeback to TOML files is
+// invariant (daemon NEVER auto-writes): all writeback to TOML files is
 // operator-explicit. This file's commands ARE the operator-explicit path.
 package cli
 

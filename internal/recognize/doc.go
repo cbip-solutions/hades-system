@@ -27,13 +27,13 @@
 // .linear.{yml,yaml}, etc.).
 //
 // `internal/onboard/mcp/smart_default.go` consumes those
-// fields directly via Tier 3 `Detected fn` evaluation (inv-hades-179
+// fields directly via Tier 3 `Detected fn` evaluation (invariant
 // confidence ≥0.6 threshold).
 //
 // # Invariants enforced by this package
 //
-// - inv-hades-031 — boundary discipline: NEVER import internal/store.
-// - inv-hades-179 — smart-default confidence ≥0.6 threshold (enforced
+// - invariant — boundary discipline: NEVER import internal/store.
+// - invariant — smart-default confidence ≥0.6 threshold (enforced
 // downstream in internal/onboard/mcp/smart_default.go; this package
 // surfaces `Result.PrimaryConfidence` as the threshold input).
 package recognize

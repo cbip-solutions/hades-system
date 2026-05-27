@@ -39,10 +39,10 @@
 // keyword-filtered passes if desired without changing the source code.
 //
 // All HTTP egress routes via the narrow FetchClient interface declared
-// in pkgdev.go; no direct net/http imports (inv-hades-152 + inv-hades-191).
+// in pkgdev.go; no direct net/http imports (invariant + invariant).
 // Per-source TTL = 1d (registered in source-ttls.toml at A-10).
 //
-// Boundary (inv-hades-031): this file MAY import internal/research/cache
+// Boundary (invariant): this file MAY import internal/research/cache
 // + internal/research/ecosystem (parent). It MUST NOT import internal/store
 // or internal/providers. Verified by `go test -run TestEcosystemBoundary`
 // and vet analyzer no_web_in_ecosystem.

@@ -17,9 +17,9 @@ from hades.commands import status_core
 
 logger = logging.getLogger(__name__)
 
-# Module-level schema version constant (inv-hades-221 anchor). Bumped per
+# Module-level schema version constant (invariant anchor). Bumped per
 # ADR-0097 rules; v1 ships with release track and is frozen for the lifetime
-# of v1 consumers (release track compliance test + the release design +N future plans).
+# of v1 consumers (release track compliance test + HADES design +N future plans).
 SCHEMA_VERSION: int = 1
 
 # ---------------------------------------------------------------------------
@@ -33,13 +33,13 @@ _ENDPOINT_TIMEOUT_S: float = status_core.ENDPOINT_TIMEOUT_S
 _ENDPOINTS: tuple[str, ...] = status_core.ENDPOINTS
 
 # Standard degraded-mode hint per spec §Q5. The exact phrasing is
-# stable for inv-hades-221 golden-file comparison.
+# stable for invariant golden-file comparison.
 _DEGRADED_HINT = "unavailable (daemon path down — try: hades doctor)"
 
 # Catalog code for top-level daemon-down condition. Matches release track
 # `internal/errors/codes.go` entry `daemon.not-running` (the daemon's
 # HTTP error responses use the same code string, enforcing consistency
-# across the Go + Python sides — release track inv-hades-220 ships the
+# across the Go + Python sides — release track invariant ships the
 # compliance test for this routing).
 _CODE_DAEMON_NOT_RUNNING = "daemon.not-running"
 
@@ -181,7 +181,7 @@ def _degraded_line(label: str) -> str:
     Spec §Q5 mandates the format:
         <label>: unavailable (daemon path down — try: hades doctor)
 
-    Color: warn-orange (#ffa726) per spec §Q5 + the release design release track palette.
+    Color: warn-orange (#ffa726) per spec §Q5 + HADES design release track palette.
     The label is colored too so the eye lands on the degraded marker
     immediately. C-3 ships the literal text; C-4 wires the color.
     """
@@ -199,7 +199,7 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
     corresponding line surfaces the degraded hint instead of the
     happy-path text. The other fields continue to render normally.
 
-    Color application per spec §Q5 + the release design release track palette:
+    Color application per spec §Q5 + HADES design release track palette:
       - 'ok' / 'live' state markers: ok-green #10b981
       - Body text (PID, UDS, counts, percentages): muted-gray #999
       - Degraded fields (whole line): warn-orange #ffa726
@@ -322,7 +322,7 @@ def _classify_field_state(response: dict[str, Any] | None) -> str:
 
 
 def _render_json(responses: dict[str, dict[str, Any] | None]) -> str:
-    """Render the schema-v1 JSON payload per spec §Q5 + inv-hades-221.
+    """Render the schema-v1 JSON payload per spec §Q5 + invariant.
 
     Schema-v1 shape (frozen for the lifetime of v1 consumers):
         {
@@ -498,7 +498,7 @@ def handle_status(raw_args: str) -> str | None:
         raw_args: trailing text after the command name. Recognized
             tokens (whitespace-separated; case-sensitive):
                 --json   Emit machine-readable JSON output per
-                         schema-v1 (inv-hades-221 anchor) instead of
+                         schema-v1 (invariant anchor) instead of
                          the spec §Q5 human-readable block.
 
             Unknown flags are tolerated (forward-compat) and fall

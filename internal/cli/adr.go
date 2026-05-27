@@ -15,7 +15,7 @@
 // migrate — one-time 39-ADR frontmatter import [I-8]
 // index [--check] — dual manifest regenerate / CI gate [I-8]
 //
-// inv-hades-146: accept / reject / supersede MUST require non-empty --reason.
+// invariant: accept / reject / supersede MUST require non-empty --reason.
 // Cross-cutting compliance test in reason_flag_test.go (I-12).
 //
 // Wire types: client.ADR, client.ADRGraph, client.ADRGraphNode,

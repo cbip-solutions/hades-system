@@ -91,7 +91,7 @@ Further actions:
 
 ## 6. Privacy filter
 
-Per inv-hades-163, if citation crosses doctrine boundary, daemon may return 403 Forbidden.
+Per invariant, if citation crosses doctrine boundary, daemon may return 403 Forbidden.
 
 ## Cross-references
 

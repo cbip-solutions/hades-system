@@ -29,10 +29,10 @@
 // both DBs to avoid "no such rowid" or "cannot UPDATE a virtual table" errors.
 // See the inline comment in embedAndUpdate for the full rationale.
 //
-// inv-hades-031: this file imports NO internal/store. The per-project DB is
+// invariant: this file imports NO internal/store. The per-project DB is
 // accessed via PerProjectKnowledgeStore.OpenProjectVault → type-assert to
 // *sql.DB (same pattern as query.go queryDB).
-// inv-hades-129: no net/http or network imports.
+// invariant: no net/http or network imports.
 package aggregator
 
 import (

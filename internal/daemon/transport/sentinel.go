@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Compile-time anchors for inv-hades-164 (single-egress preservation) and
-// inv-hades-088.
+// Compile-time anchors for invariant (single-egress preservation) and
+// invariant.
 //
 // These sentinels exist so the compliance test can grep the
 // package for the canonical anchor lines and prove the wiring is in place.

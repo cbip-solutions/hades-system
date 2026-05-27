@@ -4,7 +4,7 @@
 // daemon /v1/mcpgateway/{codegraph,impact,context,wiki}. These bypass
 // Hermes (so operators can query the KG without a Hermes session
 // running) but route via the daemon — single-egress + audit chain
-// preserved (inv-hades-088).
+// preserved (invariant).
 //
 // Each command lazily resolves *client.Client at RunE time via
 // newClientFromCmd. Tests inject CodegraphClient interface fakes.

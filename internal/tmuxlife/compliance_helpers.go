@@ -18,7 +18,7 @@ import (
 //
 // Why this file exists (max-scope doctrine, not a stub):
 //
-// - inv-hades-118 lives at THREE layers (resurrect-strategy directive,
+// - invariant lives at THREE layers (resurrect-strategy directive,
 // pre-tar strip, post-tar scan). All three must be exercised by a
 // compliance test that lives OUTSIDE internal/tmuxlife/ so an external
 // reviewer can read it without doing package archaeology. The post-tar
@@ -62,7 +62,7 @@ func (a complianceResurrectAdapter) restore(ctx context.Context, sessionName str
 
 // NewManagerForCompliance constructs a Manager wired to the given store,
 // snapshot directory, and ResurrectExecForCompliance fake. Used EXCLUSIVELY
-// by tests/compliance/inv_hades_118_*_test.go (the inv-hades-118 three-layer
+// by tests/compliance/inv_hades_118_*_test.go (the invariant three-layer
 // witness suite); production callers MUST use New(store).
 //
 // The deterministic clock returns 2026-05-01T14:30:45Z so SnapshotPath

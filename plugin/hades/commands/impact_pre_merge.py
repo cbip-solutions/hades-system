@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:impact-pre-merge — Pre-merge blast radius analysis
 
-You are analyzing the blast radius of merging **{branch}** into the active HADES project's main branch. This wraps the release design augmentation pipeline (`/v1/augment` mode=preflight per spec §4.3) with pre-merge specifics.
+You are analyzing the blast radius of merging **{branch}** into the active HADES project's main branch. This wraps HADES design augmentation pipeline (`/v1/augment` mode=preflight per spec §4.3) with pre-merge specifics.
 
 ## 1. Identify diff scope
 
@@ -59,14 +59,14 @@ Render operator-friendly report:
 ...
 
 ## Doctrine threshold check
-Per the release design doctrine.preflight.impact_thresholds.high:
+Per HADES design doctrine.preflight.impact_thresholds.high:
 - Files exceeding threshold: <count>
 - Recommended: reviewer depth INCREASE proportional to impact
 ```
 
 ## 4. Doctrine integration
 
-Per spec §4.3 + the release design doctrine schema `[doctrine.preflight]`:
+Per spec §4.3 + HADES design doctrine schema `[doctrine.preflight]`:
 - `impact_timeout_ms` per-doctrine (max-scope=2000, default=500, capa-firewall=5000)
 - `impact_thresholds.high/medium` per-doctrine cutoffs
 - `on_timeout = "warn-proceed"` (constant)
@@ -81,19 +81,19 @@ Each preflight call emits `AugmentationStarted` + `AugmentationCompleted` events
 Audit chain: hades://audit/<aggregate_event_id>
 ```
 
-## 6. the release design integration (MergeEngine)
+## 6. HADES design integration (MergeEngine)
 
-Per spec §4.4, the release design winner selection extends with:
+Per spec §4.4, HADES design winner selection extends with:
 ```
 winner = max(test_pass) + max(reviewer_agreement) + min(unintended_blast_radius)
 ```
 
 ## Cross-references
 
-- spec §4.3 the release design orchestrator pre-flight extension
-- spec §4.4 the release design MergeEngine winner extension
+- spec §4.3 HADES design orchestrator pre-flight extension
+- spec §4.4 HADES design MergeEngine winner extension
 - spec §3.4 doctrine.preflight schema
-- inv-hades-167 augmentation budget gated via the release design budget MCP
+- invariant augmentation budget gated via HADES design budget MCP
 """
 
 _PROMPT_NO_BRANCH = """# /hades:impact-pre-merge — Pre-merge blast radius analysis

@@ -8,14 +8,14 @@
 //
 // Why a dedicated adapter:
 //
-// - inv-hades-031: the citation package MUST NOT import internal/store
+// - invariant: the citation package MUST NOT import internal/store
 // (boundary preserved by interface segregation; citation.AuditEmitter
 // is the contract). The adapter package lives in internal/daemon/
 // specifically so it can pull together internal/citation +
 // daemon.AuditEmitCtx without forcing the citation package into
 // the daemon's import set.
 //
-// - inv-hades-104: same release boundary discipline as
+// - invariant: same release boundary discipline as
 // bypassadapter/dispatcheradapter — the bridge belongs in
 // internal/daemon/, not on the citation side.
 //

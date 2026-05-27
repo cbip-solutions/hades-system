@@ -6,9 +6,9 @@
 // private-tier1-module, internal/litestream, and the cohere
 // ecosystem path each carried their own Keychain accessor; bypass's
 // was hard-wired to the refresh-token slot and lived in a package
-// internal/providers may not import (inv-hades-031). This package is
+// internal/providers may not import (invariant). This package is
 // boundary-neutral — importing it from internal/providers does NOT
-// violate inv-hades-031 (it imports only internal/redact + stdlib +
+// violate invariant (it imports only internal/redact + stdlib +
 // github.com/keybase/go-keychain on darwin).
 //
 // Convention service = "hades-system/<provider>", account = "hades-system" —
@@ -53,7 +53,7 @@ var ErrInvalidService = errors.New("keychain: invalid service name")
 // - no leading or trailing - or /
 // - no consecutive separators (-- or // or -/ or /-)
 //
-// inv-hades-068 (no silent credential mismatch): a well-formed service maps
+// invariant (no silent credential mismatch): a well-formed service maps
 // to exactly one env var and exactly one Keychain slot.
 //
 // Implemented as a byte-level scan (no regexp) to avoid the regexp

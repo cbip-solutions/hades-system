@@ -9,7 +9,7 @@
 // implementation glue that every HTTP backend implementation needs
 // and would otherwise duplicate.
 //
-// Invariant (inv-hades-026 §22.5): backends MUST NOT propagate caller-supplied
+// Invariant (invariant §22.5): backends MUST NOT propagate caller-supplied
 // Content-Type or Authorization headers. Each backend manages those itself
 // (Content-Type is always "application/json"; Authorization is the bearer
 // token configured at construction). The two constants below are the canonical

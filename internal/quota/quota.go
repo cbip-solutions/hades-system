@@ -13,7 +13,7 @@
 //
 // # Boundary contract
 //
-// Per inv-hades-031 generalised (spec §2.8): this package imports stdlib
+// Per invariant generalised (spec §2.8): this package imports stdlib
 // + internal/doctrine only. Storage access (the priority_overrides
 // table that backs Layer 3) flows via the OverrideStore interface; the
 // concrete implementation lives in internal/daemon/quotaadapter/ which
@@ -21,7 +21,7 @@
 //
 // # LLM dispatch contract
 //
-// Per inv-hades-080: PreFlight returns a decision only — never invokes a
+// Per invariant: PreFlight returns a decision only — never invokes a
 // provider. The dispatcher consumes the decision and proceeds
 // or denies; this preserves the single-egress-point invariant.
 //
@@ -53,7 +53,7 @@ const (
 
 // String returns a stable human label for logs. Downstream observability
 // (audit events, status responses) depend on these exact strings; do not
-// rename without coordinating an inv-hades-115 update.
+// rename without coordinating an invariant update.
 func (m Mode) String() string {
 	switch m {
 	case ModeWarnOnly:
@@ -167,7 +167,7 @@ const (
 
 // String returns a stable label for logs / audit trail. Downstream
 // observability (audit events, status responses) depends on these exact
-// strings; do not rename without coordinating an inv-hades-115 update.
+// strings; do not rename without coordinating an invariant update.
 func (s CapStatus) String() string {
 	switch s {
 	case CapStatusOK:

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package knowledgeadapter is the inv-hades-031 bridge between
+// Package knowledgeadapter is the invariant bridge between
 // internal/daemon/knowledgeadapter and internal/knowledge/aggregator.
 //
 // The aggregator package (internal/knowledge/aggregator) must NOT import
@@ -35,7 +35,7 @@
 // Close drains the vault DB cache; callers (daemon Stop) MUST call Close
 // after the aggregator is no longer in use to avoid fd leaks.
 //
-// Driver note (inv-hades-031 + driver conflict):
+// Driver note (invariant + driver conflict):
 // This package imports aggregator (which via db.go pulls in mattn/go-sqlite3,
 // a CGO driver). The production daemon binary also uses ncruces/go-sqlite3
 // (via internal/store), but this package does NOT import internal/store
@@ -48,12 +48,12 @@
 // - NewAdapterFromDB(db *sql.DB) — used by tests and by the daemon glue
 // in server_knowledge_aggregator.go (passes s.store.DB()).
 //
-// inv-hades-031: this package imports internal/knowledge/aggregator but NOT
+// invariant: this package imports internal/knowledge/aggregator but NOT
 //
 // internal/store. The daemon glue file is the only place that calls
 // s.store.DB() and forwards the *sql.DB here.
 //
-// inv-hades-129: this package does NOT import net/http.
+// invariant: this package does NOT import net/http.
 package knowledgeadapter
 
 import (

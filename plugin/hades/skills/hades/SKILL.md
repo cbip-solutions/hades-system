@@ -21,7 +21,7 @@ metadata:
   conditional_activation:
     # repo path stays per spec §Q3 BORDERLINE (project filesystem path);
     # operators may relocate the repo. The hint uses a generic placeholder
-    # to avoid leaking operator identity into the public-flip snapshot;
+    # to avoid leaking operator identity into the release tree;
     # individual operators override via ~/.hermes config if needed.
     - cwd_starts_with: /path/to/projects/hades-system
     - cwd_contains: hades-system
@@ -40,7 +40,7 @@ HADES project directory.
 HADES (formerly hades-system) is a multi-project agentic development
 orchestrator. Go-based daemon + CLI + Hermes plugin (this package).
 Privacy-by-default, max-scope doctrine, single-egress-point for LLM
-traffic. Released as private repo at `github.com/cbip-solutions/hades-system`
+traffic. Released as repository at `github.com/cbip-solutions/hades-system`
 (repo URL preserved per spec §Q3 BORDERLINE).
 
 ## Doctrine (load-bearing)
@@ -72,11 +72,11 @@ self-review (release stage reality-check + release stage grep + release stage co
 → execute-plan → release**.
 
 Canonical methodology: `docs/METHODOLOGY.md` in the repo. Quick reference
-in user-level memory at `~/.claude/projects/-path-to-projects-hades-system/memory/feedback_methodology_and_conventions.md`.
+in user-level memory at `local agent memory`.
 
 ## Hard rules
 
-1. **NO AI-attribution markers in commits** (inv-hades-004). Never
+1. **NO AI-attribution markers in commits** (invariant). Never
    `Co-Authored-By: prohibited assistant`, `Generated with prohibited assistant`, or any
    AI-attribution marker. Violations gated automatically by the plugin's
    `pre_tool_call` hook callback — returns `{"action": "block",
@@ -99,7 +99,7 @@ in user-level memory at `~/.claude/projects/-path-to-projects-hades-system/memor
 For session start (post `/clear` or new Hermes session): read `.hades/session.md`
 at repo root. The `on_session_start` hook callback (in
 `plugin/hades/hooks/session_handlers.py`) auto-loads its TL;DR
-section. For canonical Hermes context injection, the release design wires
+section. For canonical Hermes context injection, HADES design wires
 `pre_llm_call` augmentation.
 
 Operator may also invoke `/hades:start` (skill + slash command) for
@@ -119,11 +119,11 @@ multi-platform gateway + skills + memory + Curator + voice + Ink TUI).
 
 ## See also
 
-- `~/.claude/projects/-path-to-projects-hades-system/memory/MEMORY.md` —
+- `local agent memory` —
   per-project memory index
 - `architecture records` — substrate ADR
 - `design records` —
-  the release design design (augmentation pipeline + Hermes UX; the release design replaced gitnexus with caronte)
+  HADES design design (augmentation pipeline + Hermes UX; HADES design replaced gitnexus with caronte)
 - `design records` —
   empirical Hermes v0.13.0 plugin contract
 - `docs/METHODOLOGY.md` — canonical methodology (4 nested levels +

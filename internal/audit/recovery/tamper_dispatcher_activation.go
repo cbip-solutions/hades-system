@@ -19,7 +19,7 @@
 // audit.tamper_detected (one per affected project); emit
 // once (for the originating project).
 //
-// inv-hades-150 enforced: empty ProjectID REJECTED at Dispatch() entry.
+// invariant enforced: empty ProjectID REJECTED at Dispatch() entry.
 // Per-project blast radius preserved unless mode=cascade-halt-all (capa-firewall
 // opt-in only).
 //

@@ -3,7 +3,7 @@
 //
 // AutonomyStateReader is the boundary between hadesday and release's
 // orchestrator-state reader. Production wiring adapts the orchestrator
-// snapshot; tests substitute fakes (per inv-hades-031, hadesday/ never
+// snapshot; tests substitute fakes (per invariant, hadesday/ never
 // imports internal/store).
 package hadesday
 

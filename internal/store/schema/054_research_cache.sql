@@ -1,12 +1,12 @@
 -- schemaVersion: 19
--- the release design release track — research cache table.
+-- HADES design release track — research cache table.
 -- Research MCP (release track) reads/writes via daemon /v1/research/cache/*.
 -- TTL enforced by handler (ttl_unix comparison) + background eviction goroutine in
 -- daemon (every 1h, DELETE WHERE ttl_unix < unixepoch()).
 -- Eviction goroutine wired in internal/daemon/research_cache_evictor.go;
 -- spawned from Server.Start() and torn down by Server.Stop() context cancel
 -- (post-review C-3 fix).
--- the release design does NOT modify this table.
+-- HADES design does NOT modify this table.
 --
 -- CHECK constraints (post-review N-7):
 --   ttl_unix > 0 — defends against accidental zero/negative TTLs that would

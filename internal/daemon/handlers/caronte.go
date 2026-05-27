@@ -10,7 +10,7 @@
 // can `hades caronte reindex` against a daemon without a running Hermes
 // session.
 //
-// inv-hades-031 boundary: this handler does NOT import internal/caronte
+// invariant boundary: this handler does NOT import internal/caronte
 // or internal/daemon/mcpgateway. The engine + alias resolver are
 // consumed through narrow handler-local interfaces
 // (CaronteEngineForReindex + ProjectsAliasResolverForReindex). The
@@ -18,7 +18,7 @@
 // thin-translate to those interfaces (the existing CaronteEngine /
 // mcpgateway.ProjectsAliasResolver instances).
 //
-// inv-hades-277 alias resolution: the handler MUST translate alias →
+// invariant alias resolution: the handler MUST translate alias →
 // canonical id_sha256 BEFORE invoking IndexProject (the engine never
 // sees aliases — its surface keys on canonical id_sha256 always).
 package handlers

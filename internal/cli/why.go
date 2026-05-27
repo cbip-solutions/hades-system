@@ -4,7 +4,7 @@
 // `hades why <symbol>` surfaces the architect's intent for a symbol: linked
 // ADRs (+stale flag), semantic passages, and Lore-trailers from the
 // symbol's commit history. Routes via the daemon /v1/mcpgateway/why route
-// → the native Caronte engine GetWhy (single-egress preserved, inv-hades-088).
+// → the native Caronte engine GetWhy (single-egress preserved, invariant).
 // Tests inject CaronteWhyClient fakes.
 package cli
 

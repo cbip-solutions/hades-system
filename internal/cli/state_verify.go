@@ -5,8 +5,8 @@
 // docs/system-state.toml freshness. On drift (Match=false) the command
 // exits non-zero so `make verify-invariants` fails the build.
 //
-// inv-hades-146 boundary: verify is read-only (no --reason required); only
-// `pin` modifies state and enforces inv-hades-146.
+// invariant boundary: verify is read-only (no --reason required); only
+// `pin` modifies state and enforces invariant.
 package cli
 
 import (

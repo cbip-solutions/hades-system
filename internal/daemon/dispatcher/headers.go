@@ -12,7 +12,7 @@
 // need to filter zero-value headers before forwarding to the upstream tier.
 // - MergeHeaders: explicit wins on conflict, including explicit empty string —
 // the caller's deliberate choice always overrides the ambient context default.
-// - Boundary (inv-hades-031): this file only imports "context" from stdlib.
+// - Boundary (invariant): this file only imports "context" from stdlib.
 // It MUST NOT import internal/store or any other internal package.
 
 package dispatcher

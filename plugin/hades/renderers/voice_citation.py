@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/voice_citation.py
-"""TTS-ready voice renderer for citation envelopes (the release design release track Task A-7)."""
+"""TTS-ready voice renderer for citation envelopes (HADES design release track Task A-7)."""
 
 from __future__ import annotations
 

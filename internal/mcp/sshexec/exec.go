@@ -11,7 +11,7 @@
 // - Host keys are verified through known_hosts unless the test-only
 // HADES_SSH_INSECURE_TEST=1 escape is set.
 // - Run signature requires ValidationResult with OK=true (compile-check
-// anchor for inv-hades-082).
+// anchor for invariant).
 // - PTY=false on every session (no interactive shells; sess.RequestPty
 // never called).
 

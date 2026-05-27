@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package mcp (internal/doctor/mcp) ships the `reviewed-MCP-availability`
-// doctor check (inv-hades-181 MCP risk tiers + reviewed catalog availability).
+// doctor check (invariant MCP risk tiers + reviewed catalog availability).
 //
 // Per Q7=D 4-tier reviewed MCP set, the check probes per-MCP availability
 // via the package-manager-specific seam (npm / pip / binary).
@@ -9,7 +9,7 @@
 // from internal/onboard/mcp.Entry to MCPSpec lives in production wiring,
 // shipped by CLI surface).
 //
-// Boundary (inv-hades-031): mcp doctor consumes ONLY internal/doctor/check;
+// Boundary (invariant): mcp doctor consumes ONLY internal/doctor/check;
 // MUST NOT import internal/store. The catalog dependency is
 // avoided here — the doctor's MCPSpec is a self-contained projection of
 // the catalog Entry fields needed for the availability probe.

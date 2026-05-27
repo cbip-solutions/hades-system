@@ -7,9 +7,9 @@
 // (or demoted to a test-only file) the compliance test fails.
 //
 // Three sentinels ship in C-1:
-// - budgetGateRequired (inv-hades-167)
-// - capaFirewallAugmentDisabled (inv-hades-170)
-// - aggregatorPrivacyFilterRequired (inv-hades-171)
+// - budgetGateRequired (invariant)
+// - capaFirewallAugmentDisabled (invariant)
+// - aggregatorPrivacyFilterRequired (invariant)
 //
 // All three are invoked from NewPipeline (production code path) to keep
 // them reachable. Removing the call would surface in code review +
@@ -18,9 +18,9 @@
 package augment
 
 // budgetGateRequired returns nil. Invoked from NewPipeline to keep the
-// inv-hades-167 anchor reachable.
+// invariant anchor reachable.
 //
-// inv-hades-167: every augmentation request MUST pass through BudgetGate.Check
+// invariant: every augmentation request MUST pass through BudgetGate.Check
 // before any LLM/MCP cost is incurred.
 func budgetGateRequired() error {
 	return nil
@@ -31,9 +31,9 @@ func capaFirewallAugmentDisabled() error {
 }
 
 // aggregatorPrivacyFilterRequired returns nil. Invoked from NewPipeline to
-// keep the inv-hades-171 anchor reachable.
+// keep the invariant anchor reachable.
 //
-// inv-hades-171: aggregator queries that cross project boundaries MUST be
+// invariant: aggregator queries that cross project boundaries MUST be
 // filtered through PrivacyFilter.
 func aggregatorPrivacyFilterRequired() error {
 	return nil

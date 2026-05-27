@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package nostore implements noStoreImportAnalyzer for hades-system release
-// (spec §1 Q4 B + Q16 D). Subsumes inv-hades-031 and generalizes to inv-hades-133.
+// (spec §1 Q4 B + Q16 D). Subsumes invariant and generalizes to invariant.
 //
 // Detects imports of github.com/cbip-solutions/hades-system/internal/store from
 // packages OUTSIDE the bridge-adapter allowlist. The bridge pattern requires

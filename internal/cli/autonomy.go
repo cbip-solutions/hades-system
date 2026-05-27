@@ -10,7 +10,7 @@
 // hades autonomy mode <manual|semi|full> — write override
 // hades autonomy mode --reset — clear override
 //
-// Capa-firewall doctrine (inv-hades-100) hard-blocks any non-manual
+// Capa-firewall doctrine (invariant) hard-blocks any non-manual
 // override at the daemon. The CLI surfaces the daemon's 403 response
 // as a human-readable "capa-firewall" error so the operator knows
 // exactly why the request was refused.

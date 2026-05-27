@@ -6,7 +6,7 @@
 // dispatcher.bound). RunSchedulerProbe is delegate-only; impl in
 // internal/scheduler/prober.go.
 //
-// inv-hades-080 + inv-hades-123 anchor: the dispatcher.bound aspect probes
+// invariant + invariant anchor: the dispatcher.bound aspect probes
 // that the scheduler can reach the release dispatcher at runtime — a
 // non-nil "scheduler.fire dispatched directly" path would surface here.
 package cli

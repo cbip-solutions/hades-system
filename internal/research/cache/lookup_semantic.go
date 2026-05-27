@@ -37,10 +37,10 @@
 // returned by the KNN MATCH query. This avoids a TEXT primary-key lookup
 // when we already have the rowid from the vec0 result set.
 //
-// inv-hades-148 enforced via shared ErrProjectIDRequired (defined in lookup_exact.go).
+// invariant enforced via shared ErrProjectIDRequired (defined in lookup_exact.go).
 // ErrEmbeddingDimension surfaces dimension mismatch before any DB I/O.
 //
-// inv-hades-031: this package MUST NOT import internal/store. Enforced
+// invariant: this package MUST NOT import internal/store. Enforced
 // by the post-implementation boundary check in the workflow and the
 // compliance test at tests/compliance/.
 package cache

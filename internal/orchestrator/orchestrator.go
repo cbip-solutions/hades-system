@@ -20,7 +20,7 @@
 // 1. validate BuildRequest, then check Initialized() (fail-fast)
 // 2. emit EvtOrchestratorStarted
 // 3. Idle → Initializing
-// 4. ResearchGate.Check (inv-hades-101 enforcement; failure unwinds
+// 4. ResearchGate.Check (invariant enforcement; failure unwinds
 // gracefully to Idle and returns ErrResearchGateNotPassed)
 // 5. DecideWidth + DecideDepth (depth.go scaffolding;
 // D-4/D-5 wholesale-replace with §5.3.2 formula)
@@ -34,9 +34,9 @@
 // Dispatcher.Shutdown, emit EvtOrchestratorStopped(dispatch_failed)
 //
 // Boundaries
-// - inv-hades-089: this package NEVER imports internal/store. Persistence
+// - invariant: this package NEVER imports internal/store. Persistence
 // flows through internal/daemon/orchestratoradapter.
-// - inv-hades-090: this package NEVER imports internal/workforce/queue
+// - invariant: this package NEVER imports internal/workforce/queue
 // directly. release workforce.Manager is wired via the Dispatcher
 // interface (D-3) so eventlog (durable) ⊥ queue (transient) stays
 // a clean separation.

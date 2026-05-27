@@ -4,7 +4,7 @@
 // dispatcheradapter, orchestratoradapter,
 // projectctxadapter.
 //
-// Boundary (inv-hades-031): the chain layer (internal/audit/chain) NEVER
+// Boundary (invariant): the chain layer (internal/audit/chain) NEVER
 // imports internal/store. Adapter satisfies chain.EventStore via
 // field-by-field copy between chain.* value types and store.* row
 // types — same shape, deliberate layer boundary.

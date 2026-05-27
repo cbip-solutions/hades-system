@@ -26,7 +26,7 @@ import (
 //
 // Every concrete Source MUST call internal/research/cache.Revalidator.Fetch
 // for HTTP egress; direct net/http imports are blocked by vet
-// analyzer no_web_in_ecosystem (inv-hades-191).
+// analyzer no_web_in_ecosystem (invariant).
 //
 // Concurrency implementations MUST be safe for concurrent calls from
 // multiple goroutines ( ingester fan-out N concurrent FetchPackageDoc

@@ -3,7 +3,7 @@
 //
 // CRUD wrappers for the release audit triple:
 // - bypass_audit (existing v1 table, extended in v4 with conversation_id)
-// - bypass_audit_bodies (v5, encrypted bodies, inv-hades-055)
+// - bypass_audit_bodies (v5, encrypted bodies, invariant)
 // - bypass_audit_pins (v6, retention-exempt registry, Q7 D)
 //
 // The bypass package never imports this file directly — it goes through

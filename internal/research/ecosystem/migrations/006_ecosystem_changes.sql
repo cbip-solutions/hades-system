@@ -1,13 +1,13 @@
 -- internal/research/ecosystem/migrations/006_ecosystem_changes.sql
 --
--- the release design release track Task A-9. Per spec §3.4.
+-- HADES design release track Task A-9. Per spec §3.4.
 --
 -- VersionRAG Change nodes (per spec §2.5 Q5=A). release track change_extractor
 -- writes one row per (package, version_from, version_to, symbol_path)
 -- tuple. source_extracted distinguishes explicit_changelog vs
 -- implicit_deepdiff per spec §3.3 ChangeNode field set.
 --
--- inv-hades-193: Change-node graph consistency — every row's
+-- invariant: Change-node graph consistency — every row's
 -- (version_from, version_to) MUST correspond to ecosystem_versions rows
 -- via FK chain (enforced by trigger; declared at release track E-7).
 --

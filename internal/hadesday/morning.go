@@ -19,7 +19,7 @@
 // 8. Emit MorningBriefReadyEvent (best-effort: emit-failure does NOT
 // void the brief; the file is on disk regardless).
 //
-// inv-hades-126 (7-cap) + inv-hades-127 (canonical sort) are enforced by
+// invariant (7-cap) + invariant (canonical sort) are enforced by
 // Render's defense-in-depth Layer 2 panics; the truncation step here is
 // Layer 1.
 package hadesday
@@ -71,7 +71,7 @@ type MorningDeps struct {
 // MorningBriefReadyPayload mirrors eventlog.MorningBriefReadyEvent's
 // wire shape locally so hadesday does not import eventlog (avoids the
 // circular-import concern when is composed before release lands;
-// keeps inv-hades-031 boundary discipline as hadesday → eventlog only via
+// keeps invariant boundary discipline as hadesday → eventlog only via
 // the EventEmitter interface).
 //
 // JSON tags MUST match eventlog.MorningBriefReadyEvent exactly so the

@@ -36,7 +36,7 @@
 // inherited; could be cherry-picked to a release.1
 // backport branch if needed.
 //
-// inv-hades-031: handler relies on AuditQueryCtx (interface), not the
+// invariant: handler relies on AuditQueryCtx (interface), not the
 // concrete store.
 
 package handlers

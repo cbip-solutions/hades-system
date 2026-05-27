@@ -1,6 +1,6 @@
 -- internal/research/ecosystem/migrations/003_ecosystem_chunks.sql
 --
--- the release design release track Task A-9. Per spec §3.4.
+-- HADES design release track Task A-9. Per spec §3.4.
 --
 -- The core chunk table. release track chunker emits these via indexer.WriteChunks;
 -- release track embedder fills embedding_binary_256d in the same write transaction.

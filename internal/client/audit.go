@@ -7,7 +7,7 @@
 // GET /v1/audit/events — ; recent events filtered by type/project
 // GET /v1/audit/types — ; distinct types catalog (last 30d)
 //
-// Family-disjoint reviewer pool (inv-hades-080) and criteria templates are
+// Family-disjoint reviewer pool (invariant) and criteria templates are
 // surfaced via doctrine state (audit.families, audit.criteria.*); the CLI
 // reads them through DoctrineState rather than dedicated audit endpoints.
 package client

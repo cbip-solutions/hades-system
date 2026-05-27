@@ -149,7 +149,7 @@ func buildSealPayload(partitionID, finalRecordHash string, eventCount int64, las
 // tessera-side adapter (chain stays stdlib-pure / no crypto/ecdsa
 // import per design); the SealAppender extension makes it accessible
 // without importing internal/audit/tessera here (preserves
-// inv-hades-031).
+// invariant).
 //
 // Returns
 // - ErrPartitionSealMissing when no seal row exists.

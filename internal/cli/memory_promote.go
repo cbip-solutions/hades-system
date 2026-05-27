@@ -5,7 +5,7 @@
 // index. promote is the release D canonical term; `hades memory pin` is the
 // CLI-ergonomic alias for the same daemon endpoint.
 //
-// inv-hades-146 gates (same as pin):
+// invariant gates (same as pin):
 // 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
 // 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 package cli

@@ -14,7 +14,7 @@
 // 2025). The dispatcher prefers BGE local but cascades to Cohere when BGE
 // returns no result or exceeds the per-query budget.
 //
-// # Egress path (inv-hades-191 forward-compat)
+// # Egress path (invariant forward-compat)
 //
 // This file does NOT import net/http directly. HTTP egress routes through
 // the narrow CohereForwarder interface, which the daemon orchestrator wires
@@ -42,7 +42,7 @@
 // KeychainAccessor narrow interface (defined in embedder.go) is reused —
 // production wires the real macOS Keychain; tests inject fakeKeychain.
 //
-// inv-hades-191 + privacy doctrine: ensureToken runs ONLY after the
+// invariant + privacy doctrine: ensureToken runs ONLY after the
 // EnableFallback gate; ErrFallbackDisabled (defined in embedder.go and
 // shared across the package) short-circuits at construction. Empty token
 // → ErrKeychainTokenMissing (defense-in-depth: never invoke Forwarder
@@ -113,7 +113,7 @@ func (e *CohereHTTPError) Error() string {
 // (which owns URL routing → api.cohere.ai/v2/rerank, bearer-token auth
 // header injection, HTTP transport, and per-release audit logging); tests
 // wire fakeCohereForwarder. This keeps the ecosystem package free of any
-// net/http import (inv-hades-191) and internal/providers import (inv-hades-031).
+// net/http import (invariant) and internal/providers import (invariant).
 //
 // Contract
 // - On HTTP 2xx: returns (body, nil) — the raw response body for the

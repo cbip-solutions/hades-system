@@ -52,7 +52,7 @@ import (
 // Post "" iff obj is nil or has no enclosing package; otherwise a dotted
 //
 // repo-relative id BYTE-EQUAL to qualifiedNodeID for the same
-// symbol, stable across runs (deterministic — feeds the inv-hades-232
+// symbol, stable across runs (deterministic — feeds the invariant
 // byte-stable structure downstream).
 func canonicalNodeID(obj types.Object, modulePrefix string) string {
 	if obj == nil {

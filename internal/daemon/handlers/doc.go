@@ -85,18 +85,18 @@
 //
 // # Invariants
 //
-// - inv-hades-001: All routes ride the Unix domain socket bound by
+// - invariant: All routes ride the Unix domain socket bound by
 // server.go. The TCP listener (when configured) is for the local
 // web UI only; production daemons under launchd leave HTTPAddr
 // empty.
-// - inv-hades-031: This package never imports internal/store. The
+// - invariant: This package never imports internal/store. The
 // Ctx interfaces (ResearchCacheCtx, AuditEmitCtx, BudgetCtx,
 // WorkforceCtx, OperatorGateCtx, DoctrineCtx, RateLimitCtx) are the
 // bridge: *daemon.Server satisfies them via methods that delegate
 // through internal/daemon/{bypass,workforce}adapter to *store.Store.
 // handlers.doctrine.go imports the doctrine.ErrDoctrineValidation
 // sentinel — pure value, no transitive store dependency.
-// - inv-hades-024: API surface is /v1/-versioned and stays stable across
+// - invariant: API surface is /v1/-versioned and stays stable across
 // plans; handlers for routes whose backing engine isn't wired yet
 // return shape-correct defaults (PHASE_G_DEFAULT) so contract
 // tests pass from day 1.

@@ -9,10 +9,10 @@
 // state).
 //
 // Boundary invariants:
-// - inv-hades-031: this package NEVER imports internal/store, internal/budget/,
+// - invariant: this package NEVER imports internal/store, internal/budget/,
 // or internal/daemon/. Only internal/mcp/client/ and stdlib.
-// - inv-hades-086: no HTTP server code in this package; go-sdk stdio canonical.
-// - inv-hades-085: the HTTP client enforces daemon-socket-only egress.
+// - invariant: no HTTP server code in this package; go-sdk stdio canonical.
+// - invariant: the HTTP client enforces daemon-socket-only egress.
 //
 // (internal/store/cost_ledger.go) is the single write-path for cost rows.
 // never inserts cost rows; the tag tool uses /v1/budget/record to

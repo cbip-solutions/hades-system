@@ -1,6 +1,6 @@
 -- internal/research/ecosystem/migrations/009_ecosystem_versions_indefinite_retain.sql
 --
--- the release design release track Task G-5. Per spec §2.9 Q9=A.
+-- HADES design release track Task G-5. Per spec §2.9 Q9=A.
 --
 -- Operator-confirmed retention: `hades docs pin --ecosystem X --version Y`
 -- sets indefinite_retain=true so the version is excluded from the

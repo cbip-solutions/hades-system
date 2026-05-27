@@ -4,7 +4,7 @@
 // the underlying SQLite tables introduced in migration 045 (workforce
 // durable queues, release ).
 //
-// # Boundary (inv-hades-031)
+// # Boundary (invariant)
 //
 // internal/workforce/queue MUST NOT import internal/store. This package
 // is the single bridge: workforceadapter imports both. The boundary is
@@ -15,7 +15,7 @@
 // enforcement mechanism. The lint wrappers run the analyzer in
 // CI; see project instructions "Boundary" rule.
 //
-// # Durability (inv-hades-073)
+// # Durability (invariant)
 //
 // Every constructor calls configureDurableConn on the *sql.DB to ensure
 // PRAGMA journal_mode=WAL, synchronous=NORMAL, busy_timeout=5000. The

@@ -6,9 +6,9 @@
 // Strict-prefix-match + forbidden-chars scan. Returns ValidationResult
 // (typed; never a bare bool). The exec layer's Run signature requires a
 // ValidationResult value with OK=true; a missing validation step is a
-// compile error (Task L-5 anchor for inv-hades-082).
+// compile error (Task L-5 anchor for invariant).
 //
-// Invariant inv-hades-082 — allowlist enforcement: forbidden chars +
+// Invariant invariant — allowlist enforcement: forbidden chars +
 // non-prefix-match commands MUST be rejected. Test corpus
 // tests/adversarial/payloads/cmd_injection.txt enforces ≥50 attack vectors.
 

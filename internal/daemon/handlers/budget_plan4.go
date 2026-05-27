@@ -15,7 +15,7 @@
 // remain in budget.go unchanged. release routes use sub-path keys (cap_status, record, etc.)
 // to avoid collision.
 //
-// inv-hades-031: never imports internal/budget directly; all access via BudgetCtx interface.
+// invariant: never imports internal/budget directly; all access via BudgetCtx interface.
 package handlers
 
 import (

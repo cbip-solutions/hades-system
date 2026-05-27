@@ -21,7 +21,7 @@
 // hydrates rows back into a domain-friendly form for rendering — keeping
 // the wire boundary at strings, the domain layer at typed enums.
 //
-// inv-hades-129 boundary: this file imports stdlib + context + encoding/json
+// invariant boundary: this file imports stdlib + context + encoding/json
 // only — never net/http directly (the *Client transport handles it).
 // `--remote` and `--audit-chain` are intercepted at the CLI BEFORE this
 // layer runs, so neither flag ever reaches a wire payload (per spec §1

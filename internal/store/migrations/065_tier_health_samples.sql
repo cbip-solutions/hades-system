@@ -1,6 +1,6 @@
 -- ==============================================================================
 -- Migration 065: tier_health_samples — per-provider health observability
--- (the release design release track; C9; inv-hades-214).
+-- (HADES design release track; C9; invariant).
 -- ==============================================================================
 --
 -- One row per backend outcome. Two write-paths land samples here:
@@ -11,7 +11,7 @@
 --      Suspect / post-cooldown-Open provider records a sample.
 --
 -- Born per-provider: the provider column is Backend.Name() (NOT just
--- providers.Tier). This is the per-provider counterpart to the the release design
+-- providers.Tier). This is the per-provider counterpart to the HADES design
 -- per-Name circuit breaker — a per-Tier health table would be an
 -- observability asymmetry the operator notices on the first failover
 -- between two backends of one tier (spec §3.8, D5 cross-check finding).
@@ -24,8 +24,8 @@
 --
 -- Append-only; no UNIQUE constraint (unlike cost_ledger — health samples
 -- are not idempotency-keyed; the same provider is sampled repeatedly).
--- An hourly maintenance prune (out of the release design scope — flagged for a
--- follow-up if the table grows unbounded) would cap retention; for the release design
+-- An hourly maintenance prune (out of HADES design scope — flagged for a
+-- follow-up if the table grows unbounded) would cap retention; for HADES design
 -- the table is unbounded-append and the operator-facing query windows it
 -- by ts.
 --

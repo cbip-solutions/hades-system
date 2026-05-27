@@ -7,10 +7,10 @@
 // - regression: per-commit substrate health metric (substrate_health table).
 // - drift: doctrine-lint over substrate's commits (severity hard|soft).
 //
-// inv-hades-031 boundary: this package NEVER imports internal/store directly.
+// invariant boundary: this package NEVER imports internal/store directly.
 // Persistence flows through SubstrateHealthWriter (regression.go); the
 // production adapter lives in internal/daemon/orchestratoradapter/.
 //
-// inv-hades-096: drift findings with severity=hard transition the orchestrator
+// invariant: drift findings with severity=hard transition the orchestrator
 // state machine to HARD_PAUSED — the load-bearing halt-the-build behaviour.
 package safetynet

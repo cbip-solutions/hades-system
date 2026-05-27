@@ -3,9 +3,9 @@
 //
 // 5 NEW operator-facing knowledge aggregator endpoints surfacing
 // substrate (federated query + opt-in promote per Q6 C) over
-// /v1/knowledge/*. inv-hades-150 + inv-hades-031: handlers consume the
+// /v1/knowledge/*. invariant + invariant: handlers consume the
 // KnowledgeAdapterP9 interface and never import internal/knowledge/*
-// directly. inv-hades-146: promote/unpromote require non-empty, non-whitespace
+// directly. invariant: promote/unpromote require non-empty, non-whitespace
 // --reason (auto-promote bypass structurally impossible from this surface).
 //
 // GET /v1/knowledge/query — federated/pinned/chain-anchored search
@@ -23,8 +23,8 @@
 //
 // Boundary invariants:
 //
-// inv-hades-031: handler never imports internal/store directly.
-// inv-hades-150: handler never imports internal/knowledge/{aggregator,embed}
+// invariant: handler never imports internal/store directly.
+// invariant: handler never imports internal/knowledge/{aggregator,embed}
 // directly; all calls go via KnowledgeAdapterP9.
 //
 // Wire KnowledgeQueryReqP9, KnowledgeResultP9, KnowledgeNoteP9,

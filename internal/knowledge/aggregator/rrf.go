@@ -13,7 +13,7 @@
 // TopK} ↔ rrf.{QueryResult, TopK} at the boundary; both types are
 // field-for-field identical so the conversion is essentially a copy.
 //
-// inv-hades-031 boundary: rrf imports stdlib only; no internal/store dep.
+// invariant boundary: rrf imports stdlib only; no internal/store dep.
 //
 // shim. FuseWeighted is the cross-source weighted RRF variant used by Plan
 // 14's ecosystem dispatcher (spec §4.2 step 6) to merge per-ecosystem

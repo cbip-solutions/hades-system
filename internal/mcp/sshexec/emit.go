@@ -7,7 +7,7 @@
 // and structured payload schema. Implements the AuditEmitter interface
 // consumed by exec.Run.
 //
-// inv-hades-083 (no-loss): every emit attempt has two paths inside the
+// invariant (no-loss): every emit attempt has two paths inside the
 // underlying EmitClient:
 //
 // 1. POST <daemon>/v1/audit/emit (3 retries built into client.Do)
@@ -18,14 +18,14 @@
 // fails — it falls back to the buffer file silently (so callers in the
 // MCP tool path never block). When BOTH paths fail, the EmitClient
 // writes a stderr log line and returns nil — events are NEVER silently
-// dropped (inv-hades-083 satisfied; the stderr line is the audit trail of
+// dropped (invariant satisfied; the stderr line is the audit trail of
 // the trail).
 //
 // Emitter is a thin typed wrapper: build the JSON payload for
 // each ssh_exec.* event type, hand it to EmitClient.Emit, surface
 // nothing else.
 //
-// Boundary (inv-hades-031): imports only stdlib + internal/mcp/client.
+// Boundary (invariant): imports only stdlib + internal/mcp/client.
 
 package sshexec
 

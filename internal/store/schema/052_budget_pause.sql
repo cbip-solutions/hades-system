@@ -1,5 +1,5 @@
 -- Migration 052: budget_pauses + budget_anomalies + budget_anomaly_samples
--- (the release design release track, Q6 C, inv-hades-078 + inv-hades-079).
+-- (HADES design release track, Q6 C, invariant + invariant).
 --
 -- budget_pauses: durable 4-scope state machine. (scope, scope_value)
 -- is the natural key; UPSERT replaces the row on Trigger if the same
@@ -44,7 +44,7 @@ CREATE INDEX IF NOT EXISTS idx_budget_anomalies_scope
 
 -- budget_anomaly_samples: per-scope rolling window of cost-delta samples.
 -- Engine queries this via QueryAnomalyWindow with LIMIT N to feed the
--- z-score computation. Bounded by housekeeping vacuum (the release design release track
+-- z-score computation. Bounded by housekeeping vacuum (HADES design release track
 -- handler prunes >24h after default 1440 samples = 24h-of-minutes).
 CREATE TABLE IF NOT EXISTS budget_anomaly_samples (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,

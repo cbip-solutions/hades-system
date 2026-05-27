@@ -5,8 +5,8 @@
 // knowledge aggregator (spec §6.1 Q6 C). Five leaves cover the full lifecycle:
 //
 // query <q> federated/pinned/chain-verified search
-// promote <note-id> operator-gated pin to global index (inv-hades-146)
-// unpromote <note-id> reverse a prior promote (inv-hades-146)
+// promote <note-id> operator-gated pin to global index (invariant)
+// unpromote <note-id> reverse a prior promote (invariant)
 // ls list notes (per-project or pinned-only)
 // rebuild re-embed + re-index one project
 //
@@ -18,11 +18,11 @@
 // on root as `knowledge-p9` to avoid shadowing the existing release group.
 // See root.go for the registration comment.
 //
-// inv-hades-146: promote and unpromote MUST require non-empty --reason; enforced
+// invariant: promote and unpromote MUST require non-empty --reason; enforced
 // via cobra MarkFlagRequired (presence gate) + TrimSpace check in RunE
 // (non-empty gate). Cross-cutting compliance test in reason_flag_test.go (I-12).
 //
-// inv-hades-129: aggregator NEVER queries the web — release territory. No
+// invariant: aggregator NEVER queries the web — release territory. No
 // --remote or --ecosystem flag is exposed here.
 package cli
 

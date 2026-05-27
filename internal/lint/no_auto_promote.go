@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_auto_promote.go
 //
-// Task J-8: custom go vet analyzer enforcing inv-hades-146
+// Task J-8: custom go vet analyzer enforcing invariant
 // (knowledge promote operator-gated; no auto-promote code path).
 //
 // Scans all packages for callsites of Promote() on receiver types named
 // Adapter (or aggregator package) lacking a non-empty reason string arg.
 //
-// Heuristics (per spec §7.3 + inv-hades-146):
+// Heuristics (per spec §7.3 + invariant):
 // 1. Empty string literal `""` as last arg → REJECT.
 // 2. Wrong arity (<3 args) → REJECT (signature violation).
 // 3. Non-string-literal reason → WARN (runtime panic Layer 2 active).

@@ -17,8 +17,8 @@
 // # Boundary
 //
 // - No CGO imports (compile-checked via the no-cgo test build tag).
-// - No imports of internal/store (inv-hades-031).
-// - No web calls (inv-hades-129).
+// - No imports of internal/store (invariant).
+// - No web calls (invariant).
 //
 // Algorithm (per Cormack et al. 2009 "Reciprocal Rank Fusion outperforms
 // Condorcet and individual Rank Learning Methods"):

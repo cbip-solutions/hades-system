@@ -22,4 +22,4 @@ You are starting the apply phase for `{{feature_name}}`. Per spec §3.2:
 The daemon owns subagent lifecycle. Closing this OpenCode session does
 NOT abort the swarm. Reopening this session re-attaches.
 
-the release design implements the wiring that makes this command functional.
+HADES design implements the wiring that makes this command functional.

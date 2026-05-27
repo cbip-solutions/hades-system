@@ -40,7 +40,7 @@
 // goroutine exits. A pre-cancelled ctx causes Run to return context.Canceled
 // before the first sweep iteration.
 //
-// # inv-hades-031
+// # invariant
 //
 // This package MUST NOT import internal/store. Sweeper touches only the
 // research_cache.db via *DB.SQL; the Revalidator interface is the sole

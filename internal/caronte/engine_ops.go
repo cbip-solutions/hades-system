@@ -96,7 +96,7 @@ func extToLanguageLabel(ext string) string {
 // walk from a clean empty pass.
 //
 // Returns IndexReport with totals, per-language file counts, duration, and
-// Completed=true on a clean walk. inv-hades-273.
+// Completed=true on a clean walk. invariant.
 func (e *Engine) IndexProject(ctx context.Context, projectID string) (IndexReport, error) {
 	started := time.Now()
 	rep := IndexReport{

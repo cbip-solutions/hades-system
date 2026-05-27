@@ -6,10 +6,10 @@
 // with PartitionSealStore for the cold-archive metadata write-back
 // path AND for the recovery package's read paths (verify-chain seal
 // walk + restore cold-archive meta lookup). Both types live in the
-// same package because they share the same inv-hades-031 bridge boundary
+// same package because they share the same invariant bridge boundary
 // (audit substrate ↔ internal/store).
 //
-// inv-hades-031 boundary check: this file imports BOTH database/sql AND
+// invariant boundary check: this file imports BOTH database/sql AND
 // the audit/recovery package. recovery does NOT import auditadapter
 // (recovery defines interface surfaces; auditadapter is one concrete
 // impl). The import direction is therefore one-way and cycle-free.

@@ -13,7 +13,7 @@
 // registration of the 8 tools.
 // - dispatch.go — fan-out parallel; aggregator URL-keyed dedup;
 // min-source threshold; citation-verification
-// gate; pre-check budget (inv-hades-076).
+// gate; pre-check budget (invariant).
 // - agentic.go — Q4 C agentic_deep wrapper; gap-detection +
 // saturation + budget terminate.
 // - web_search.go — DDG via daemon-routed search + Firecrawl
@@ -33,24 +33,24 @@
 // /v1/messages with X-HADES-Profile=
 // research-synthesize.
 // - cite.go — RawCitation + VerifiedCitation + HEAD-probe
-// verifier (inv-hades-075) + markdown formatter +
+// verifier (invariant) + markdown formatter +
 // OTel GenAI structured JSON.
 // - cache.go — wraps internal/mcp/client/cache.go;
 // cache hash sha256(query+sources+iter).
 //
 // Boundary
-// - inv-hades-031 — does NOT import internal/store; persistence reaches
+// - invariant — does NOT import internal/store; persistence reaches
 // the daemon via internal/mcp/client/.
-// - inv-hades-085 — outbound HTTP via internal/mcp/client/http.go's
+// - invariant — outbound HTTP via internal/mcp/client/http.go's
 // whitelist (arxiv.org, export.arxiv.org,
 // api.github.com, duckduckgo.com, daemon socket;
 // firecrawl.dev added via Config.AllowedHosts).
-// - inv-hades-086 — stdio canonical: server.go uses only
+// - invariant — stdio canonical: server.go uses only
 // mcp.NewStdioServer; no net.Listen anywhere.
-// - inv-hades-076 — every backend dispatch is wrapped in budget.PreCall;
+// - invariant — every backend dispatch is wrapped in budget.PreCall;
 // CI grep rule + tests/compliance/inv_hades_076_test.go
 // enforce.
-// - inv-hades-075 — VerifiedCitation type-distinct from RawCitation;
+// - invariant — VerifiedCitation type-distinct from RawCitation;
 // only VerifiedCitation flows to cite.Format and
 // downstream synthesizer.
 package research

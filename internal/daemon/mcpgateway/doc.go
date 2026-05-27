@@ -8,7 +8,7 @@
 //
 // Boundaries (lint + compliance enforced):
 //
-// inv-hades-165 Gateway aggregator dedupes tool registrations. If two
+// invariant Gateway aggregator dedupes tool registrations. If two
 // downstream MCPs register the same canonical tool name
 // (e.g. both budget + research export `cap_status`), the
 // ToolRegistry rejects with ErrToolNameCollision. Compile
@@ -16,13 +16,13 @@
 // TestGatewayDedupOnConflict. Compliance test:
 // tests/compliance/inv_hades_165_gateway_dedup_test.go.
 //
-// inv-hades-168 Gitnexus subprocess restart
+// invariant Gitnexus subprocess restart
 // rate-limited (3 in 5min). No longer applies: the gitnexus
 // subprocess is replaced by the in-process caronte engine
 // (no restart needed). The invariant check file is preserved
 // as historical record.
 //
-// inv-hades-031 internal/daemon/mcpgateway/* MUST NOT import
+// invariant internal/daemon/mcpgateway/* MUST NOT import
 // internal/store. State access is bridged through the
 // daemon storeadapter pattern ( requires no store
 // access; if future phases need it, the bridge is added
@@ -48,7 +48,7 @@
 // - downstream MCP not yet wired → 503 + Retry-After header
 //
 // The sentinel.go file carries compile-time anchors that, if accidentally
-// removed by a future contributor, cause the inv-hades-165 / inv-hades-031
+// removed by a future contributor, cause the invariant / invariant
 // compliance tests to FAIL — making structural drift loud rather than
 // silent.
 package mcpgateway
@@ -56,7 +56,7 @@ package mcpgateway
 // substrateSeparated is a compile-time marker that this package compiles
 // without importing internal/store. Removing the line MUST NOT cause a
 // missing import; if a future contributor accidentally imports
-// internal/store, the inv-hades-031 compliance test fails.
+// internal/store, the invariant compliance test fails.
 var _ = substrateSeparated()
 
 func substrateSeparated() bool { return true }

@@ -10,7 +10,7 @@
 // Cache hit/miss is the first stage: webSearchCacheKey(query, max)
 // → s.cache.Get; on hit, return; on miss, run the search + s.cache.Set.
 //
-// inv-hades-076: budget.PreCall is called BEFORE the cache lookup at the
+// invariant: budget.PreCall is called BEFORE the cache lookup at the
 // handler level (server.go handleWebSearch); the WebSearch backend
 // itself is invoked only after the gate passes.
 package research

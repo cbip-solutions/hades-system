@@ -151,7 +151,7 @@ func (p *Pipeline) Run(ctx context.Context, req AugmentRequest) (AugmentResponse
 		return AugmentResponse{}, fmt.Errorf("augment: doctrine_gate: %w", err)
 	}
 	if !allowed {
-		// propagate. inv-hades-088 "every augmentation event MUST anchor"
+		// propagate. invariant "every augmentation event MUST anchor"
 		// is breached if the skip emit silently fails — operators see a
 		// skipped outcome but no chain anchor row.
 		eventID, emitErr := p.auditAnchor.Emit(ctx, EventAugmentationSkipped,
@@ -331,7 +331,7 @@ func (p *Pipeline) Run(ctx context.Context, req AugmentRequest) (AugmentResponse
 //
 // auditAnchor.Emit error any lane goroutine produces (alongside the
 // usual lane TopK list). The orchestrator surfaces this error to the
-// caller — inv-hades-088 "every augmentation event MUST anchor" is
+// caller — invariant "every augmentation event MUST anchor" is
 // load-bearing; silently swallowing lane emit errors leaves the chain
 // with no record of gateway-call failures.
 func (p *Pipeline) runFiveLanes(ctx context.Context, req AugmentRequest, schema *DoctrineSchema) ([]TopK, error) {

@@ -22,7 +22,7 @@
 // dispatcher.Query query path
 // router → fan-out → RRF → rerank → verify → abstain → audit → emit
 //
-// # Boundaries (inv-hades-031 preserved)
+// # Boundaries (invariant preserved)
 //
 // this package MUST NOT import:
 // - internal/store (direct DB ops; use aggregator + indexer abstractions)
@@ -37,11 +37,11 @@
 // - internal/audit/chain
 // - internal/orchestrator/eventlog
 //
-// # 15 invariants (inv-hades-191..205)
+// # 15 invariants (invariant..205)
 //
 // See internal design record §5.
 // Compile-time enforced where applicable ( vet analyzer
-// `no_web_in_ecosystem` for inv-hades-191); runtime enforced via property
+// `no_web_in_ecosystem` for invariant); runtime enforced via property
 // tests; CI enforced via tests/property/ecosystem/ + tests/compliance/.
 //
 // # Phase status (frozen at write time)

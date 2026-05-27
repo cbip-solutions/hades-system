@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/telegram_citation.py
-"""Telegram Bot API renderer for citation envelopes (the release design release track Task A-4)."""
+"""Telegram Bot API renderer for citation envelopes (HADES design release track Task A-4)."""
 
 from __future__ import annotations
 

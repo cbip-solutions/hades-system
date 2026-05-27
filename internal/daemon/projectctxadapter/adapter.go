@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package projectctxadapter bridges *store.Store to projectctx.ProjectStore.
 //
-// This package exists outside internal/projectctx on purpose: inv-hades-031
+// This package exists outside internal/projectctx on purpose: invariant
 // forbids the projectctx package from importing internal/store. The
 // adapter must therefore live in a daemon-side package that pulls
 // together *store.Store and projectctx.ProjectStore.
@@ -40,7 +40,7 @@
 // mid-flight by this layer, but the contract holds for the
 // pre-execution gate.
 //
-// inv-hades-031 boundary enforcement: this file's import list contains
+// invariant boundary enforcement: this file's import list contains
 // both "github.com/cbip-solutions/hades-system/internal/projectctx" and
 // "github.com/cbip-solutions/hades-system/internal/store". This is the ONLY
 // permissible co-location of those two imports anywhere in the codebase.

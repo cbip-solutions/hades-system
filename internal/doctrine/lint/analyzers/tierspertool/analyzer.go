@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package tierspertool ships the release doctrine lint
 // analyzer validating [capa_firewall.tiers] per-tool granularity per
-// Q10=D + inv-hades-182.
+// Q10=D + invariant.
 //
 // Validation rules:
 //

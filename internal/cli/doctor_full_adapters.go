@@ -14,7 +14,7 @@
 // minimal check.Check impl that wraps an inline ProbeFunc returning
 // []ProbeResult and collapses to a composite DiagnosticResult by
 // selecting the worst Status. Semantics match cliadapter.CLIProbeAdapter;
-// the duplication is the cost of preserving inv-hades-031's package
+// the duplication is the cost of preserving invariant's package
 // boundaries without restructuring the whole adapter chain.
 //
 // Adapter wiring contract per plan F-tail F-imp:

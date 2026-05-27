@@ -17,16 +17,16 @@
 // nodes.
 //
 // Q15 A: `migrate` operator-explicit write-back; daemon never auto-writes
-// (inv-hades-137).
+// (invariant).
 //
 // Q12 C: `reinforce` previews template render output for operator inspection
 // of what worker subprocess will receive.
 //
 // Help text + error messages in español per project instructions operator language §6.6.
 //
-// inv-hades-133: this package imports zero internal/store; all stateful reads
+// invariant: this package imports zero internal/store; all stateful reads
 // route via internal/client (typed HTTP daemon client) which itself respects
-// inv-hades-031.
+// invariant.
 package cli
 
 import (

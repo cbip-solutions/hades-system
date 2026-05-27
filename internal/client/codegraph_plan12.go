@@ -18,8 +18,8 @@
 // Wire-shape decoupling: response Render*Text helpers stay flat-string;
 // no domain types leak across the boundary.
 //
-// inv-hades-088 single-egress preserved: all round-trips proxy through the
-// daemon. inv-hades-129 enforced: this file uses only c.getJSON / c.postJSON
+// invariant single-egress preserved: all round-trips proxy through the
+// daemon. invariant enforced: this file uses only c.getJSON / c.postJSON
 // / c.urlFor — never net/http directly.
 package client
 

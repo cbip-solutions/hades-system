@@ -2,7 +2,7 @@
 // Package main is the entrypoint for hades-ctld, the HADES system daemon.
 //
 // Lifecycle managed by launchd via configs/launchd.plist.tmpl.
-// HTTP API contract: /v1/* (versioned, inv-hades-024).
+// HTTP API contract: /v1/* (versioned, invariant).
 package main
 
 import (
@@ -82,7 +82,7 @@ func main() {
 	// singleton registry from the embedded built-in TOMLs. Without
 	// this, every doctrine-aware endpoint reads "" from
 	// sessionDoctrine (init-order fail-closed) and /v1/doctrine/active
-	// surfaces 404 "name not found in registry". inv-hades-134
+	// surfaces 404 "name not found in registry". invariant
 	// init-order contract.
 	//
 	// MUST run before any handler can reach active.Active() / For():
@@ -481,8 +481,8 @@ func main() {
 
 	// Plan v0.20.0 Task A-4: inject the projects_alias resolver
 	// so handleToolsCall can translate alias → canonical id_sha256
-	// (inv-hades-277) and accept project_id from EITHER X-HADES-Project-ID
-	// header OR body arguments.project_id (inv-hades-280). The adapter
+	// (invariant) and accept project_id from EITHER X-HADES-Project-ID
+	// header OR body arguments.project_id (invariant). The adapter
 	// wraps *store.Store (the daemon-shared SQLite) and caches resolved
 	// entries with a 60s TTL. Without this wiring the gateway falls
 	// back to legacy header pass-through — production daemons MUST

@@ -13,13 +13,13 @@
 // - exec(host, cmd, cwd, timeout, project) → streaming chunks + ExecResult
 // - list_allowed(project) → ListAllowedResult JSON
 //
-// inv-hades-086 (stdio canonical for MCP): server-level constructor uses
+// invariant (stdio canonical for MCP): server-level constructor uses
 // only mcp.StdioTransport; no HTTP listen. compliance test
 // asserts no `net.Listen` import in the binary main.go. The package
 // itself imports neither net.Listen nor http.ListenAndServe (compile-
 // check anchor).
 //
-// Boundary (inv-hades-031): no internal/store import.
+// Boundary (invariant): no internal/store import.
 
 package sshexec
 
@@ -34,7 +34,7 @@ import (
 	mcp "github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-// Coverage-tooling sentinels (inv-hades-031, inv-hades-086).
+// Coverage-tooling sentinels (invariant, invariant).
 //
 // The two AssertX functions below do NOT perform runtime checks — they
 // always return true. Their value is **structural**: they are exported
@@ -53,9 +53,9 @@ import (
 // an explicit "package authors thought about this" marker.
 //
 // Real enforcement of these invariants lives in:
-// - inv-hades-031: `compliance/inv_hades_031_test` (no internal/store
+// - invariant: `compliance/inv_hades_031_test` (no internal/store
 // import in this package).
-// - inv-hades-086: `compliance/inv_hades_086_test` (no http.ListenAndServe
+// - invariant: `compliance/inv_hades_086_test` (no http.ListenAndServe
 // in any sshexec source file) plus the var-block import sentinel
 // at the top of this file.
 var (

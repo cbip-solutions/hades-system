@@ -10,7 +10,7 @@
 // side BEFORE the round-trip so the daemon always receives the bare
 // id. Output formats: text (default; human-readable summary) or json.
 //
-// inv-hades-172: daemon validates event-id existence + auth + doctrine-
+// invariant: daemon validates event-id existence + auth + doctrine-
 // aware filtering. The CLI is a transparent surface — recoverable
 // vs unrecoverable error mapping mirrors knowledge/inbox patterns.
 //

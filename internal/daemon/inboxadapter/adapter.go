@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package inboxadapter is the inv-hades-031 boundary between the
+// Package inboxadapter is the invariant boundary between the
 // internal/inbox domain layer and internal/store SQL persistence (release
 // Task E-10).
 //
@@ -13,7 +13,7 @@
 // up the store at call time. The daemon-level inbox_aggregator_cache
 // always lives in the dedicated daemonStore, regardless of project.
 //
-// inv-hades-031 boundary: this is the ONLY package permitted to import
+// invariant boundary: this is the ONLY package permitted to import
 // both internal/inbox AND internal/store. Domain errors are surfaced
 // across the boundary verbatim (UNIQUE -> inbox.ErrDedupViolation, no
 // rows -> inbox.ErrNotFound), so callers that errors.Is against the

@@ -7,7 +7,7 @@
 // appends. The threshold map is loaded from doctrine TOML by
 //
 // Invariants
-// - inv-hades-093 (race-safety) is enforced in confirmation_handler.go;
+// - invariant (race-safety) is enforced in confirmation_handler.go;
 // this file's purity makes that enforcement straightforward.
 // - Unknown DecisionClass defaults to mandatory pause (defense-in-depth).
 package orchestrator

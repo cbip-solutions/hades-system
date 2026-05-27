@@ -15,7 +15,7 @@
 // matches against projects_alias.canonical_path (the same trick
 // `hades project doctor` uses for cwd-based resolution).
 //
-// inv-hades-277: the CLI does NOT pre-resolve aliases — the daemon-side
+// invariant: the CLI does NOT pre-resolve aliases — the daemon-side
 // handler is the single source of truth. This keeps the CLI thin (no
 // store dependency) and the alias-resolution rules co-located with the
 // projects_alias table.

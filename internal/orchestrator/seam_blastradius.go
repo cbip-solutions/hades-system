@@ -16,7 +16,7 @@
 // orchestrator.Verdict at wiring time. Mirrors the master C-2 single-egress
 // pattern exactly.
 //
-// inv-hades-031 family: the inv-hades-235 compliance scan asserts that
+// invariant family: the invariant compliance scan asserts that
 // internal/orchestrator has ZERO internal/caronte imports. This file's design
 // is the reason that invariant can be asserted — the interface here is the
 // narrow seam the scanner validates.

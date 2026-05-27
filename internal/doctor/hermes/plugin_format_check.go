@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package hermes — plugin_format_check.go ships the `hermes.plugin-format`
-// doctor check (inv-hades-176 + inv-hades-190). Validates plugin directory
+// doctor check (invariant + invariant). Validates plugin directory
 // shape matches canonical Hermes plugin format; rejects CC
 // remnants + OpenClaude (legacy) markers.
 //
-// Boundary (inv-hades-031): consumes ONLY internal/doctor/check + the
+// Boundary (invariant): consumes ONLY internal/doctor/check + the
 // PluginPathResolver injection seam; MUST NOT import internal/store.
 package hermes
 
@@ -73,7 +73,7 @@ var canonicalFiles = []string{
 
 // remnantMarkers signal CC (Claude-Code legacy) or OpenClaude scaffolds
 // that have NOT been migrated to Hermes plugin format. Their presence is
-// inv-hades-176 violation; the check returns StatusFail with hint to run
+// invariant violation; the check returns StatusFail with hint to run
 // `hades migrate claude-code` first.
 //
 // SECURITY this slice is the canonical taxonomy of legacy markers;
@@ -92,8 +92,8 @@ var remnantMarkers = []string{
 // 2. Resolver error → StatusSkip + scaffold hint
 // 3. Directory missing → StatusFail + config-init hint
 // 4. Path not directory → StatusFail
-// 5. Remnant marker present → StatusFail + migrate hint (inv-hades-176)
-// 6. Canonical file missing → StatusFail + scaffold hint (inv-hades-190)
+// 5. Remnant marker present → StatusFail + migrate hint (invariant)
+// 6. Canonical file missing → StatusFail + scaffold hint (invariant)
 // 7. All checks pass → StatusPass
 //
 // Context cancellation: per spec §3.3 + check.go:47-48 godoc contract,

@@ -42,7 +42,7 @@
 // │ fast-forward winner │
 // └─────────────────────────────┘
 //
-// # Invariant inv-hades-089 (transitive)
+// # Invariant invariant (transitive)
 //
 // This package imports stdlib only (no internal/store, no internal/queue,
 // no eventlog, no workforce). The canonical eventlog wire codes
@@ -52,7 +52,7 @@
 // the eventlog package directly — narrow surface for audit-trail
 // discipline.
 //
-// # Invariant inv-hades-097
+// # Invariant invariant
 //
 // MergeEngineFake (merge_fake.go) is gated by `//go:build test`. The
 // constructor invokes mustBeTestRun() so a misconfigured production

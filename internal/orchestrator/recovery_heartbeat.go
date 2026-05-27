@@ -127,7 +127,7 @@ func (m *HeartbeatMonitor) Run(ctx context.Context) {
 //
 // Probe error: swallowed (loop continues). The Append return is
 // ignored: a transient audit-store failure is observed elsewhere
-// (engine.OnCorruption / inv-hades-095), and we MUST still drive the
+// (engine.OnCorruption / invariant), and we MUST still drive the
 // recovery engine so the doctrine retry budget advances even when
 // the audit emit lost the row. The HandleWorkerDeath call's own
 // audit emission has the same discipline.

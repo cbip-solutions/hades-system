@@ -26,7 +26,7 @@
 // registry.InvalidateAll() after the atomic-swap so the next request observes the
 // new threshold (no stale capacity cached forever).
 //
-// inv-hades-001: Unix socket is the transport layer; rate limiter is an additional
+// invariant: Unix socket is the transport layer; rate limiter is an additional
 // per-endpoint guard (defense-in-depth).
 package handlers
 

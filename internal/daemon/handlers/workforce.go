@@ -12,7 +12,7 @@
 // All endpoints support limit/offset pagination and type-specific filter params.
 // These endpoints serve operator inspection (hades workforce status) and
 //
-// inv-hades-031: never imports internal/workforce directly; WorkforceCtx is the bridge.
+// invariant: never imports internal/workforce directly; WorkforceCtx is the bridge.
 package handlers
 
 import (

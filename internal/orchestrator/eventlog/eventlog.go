@@ -106,7 +106,7 @@ func New(emit RawEmitter, clk clock.Clock) *Log {
 // and any out-of-range values not yet wired into AllEventTypes()
 // (IMP-2 from Task A-2 fix pass; release J-2 promoted the
 // reserved-for- slots 40-42 to valid).
-// 4. sessionID + projectID non-empty (inv-hades tagging contract)
+// 4. sessionID + projectID non-empty (invariant tagging contract)
 // 5. payload encode
 // 6. emitter call
 //

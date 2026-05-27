@@ -7,7 +7,7 @@
 // 1. Decode JSON body into ForwardedRequest.
 // 2. Translate to providers.TierRequest (preserving SessionID, Profile,
 // Project, Model, IdempotencyKey, Body).
-// 3. Call dispatcher.Forward — single-egress chokepoint per inv-hades-088.
+// 3. Call dispatcher.Forward — single-egress chokepoint per invariant.
 // 4. On success: emit release Tessera audit anchor (best-effort; failure
 // does not block forwarding); encode response as ForwardedResponse;
 // write back to caller.

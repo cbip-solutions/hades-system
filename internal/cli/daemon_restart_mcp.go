@@ -4,7 +4,7 @@
 // manual restart of one MCP child managed by the daemon's mcpgateway.
 // Use this when a stuck child needs a manual nudge; daemon's normal
 // health-probe + rate-limited auto-restart governor handles the
-// majority of cases automatically (per inv-hades-168).
+// majority of cases automatically (per invariant).
 //
 // Closed set of valid MCP names:
 // - research (code_graph + research MCP)

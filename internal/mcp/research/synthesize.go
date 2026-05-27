@@ -14,7 +14,7 @@
 //
 // Citation extraction: best-effort scan of fenced JSON code block in
 // the response (`json {"citations":[...]}`) — captures synthesizer-
-// emitted citations for inv-hades-075 verification downstream. Found
+// emitted citations for invariant verification downstream. Found
 // citations are returned as RawCitation; the cite verifier (Task I-9)
 // converts them to VerifiedCitation.
 package research

@@ -13,7 +13,7 @@
 // Factory (NewEmbedder) auto-detects backend per Config.Backend:
 // "auto" → MPS on darwin if python3+script available, else CPU.
 //
-// inv-hades-129: NO net/http imports in this package — all embed operations
+// invariant: NO net/http imports in this package — all embed operations
 // are local-only. Compliance grep in tests/compliance enforces this.
 package embed
 

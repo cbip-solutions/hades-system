@@ -28,10 +28,10 @@
 // fusion input expectations.
 //
 // 4. isExtensionMissing + contains are kept in this file (no "strings" import)
-// to satisfy the inv-hades-129 grep test which checks for net/http absence.
+// to satisfy the invariant grep test which checks for net/http absence.
 // The contains helper avoids importing strings just for one callsite.
 //
-// inv-hades-129: this file makes NO web calls. All data comes from aggregator.db
+// invariant: this file makes NO web calls. All data comes from aggregator.db
 // (local sqlite-vec extension). No import of net/http, net/url, or any
 // network package.
 package aggregator

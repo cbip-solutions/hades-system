@@ -25,7 +25,7 @@
 //
 // - pin / promote: alias pair (pin is the operator-ergonomics term, promote
 // the release D term). Both call MemoryPromote (POST /v1/knowledge/aggregator/promote).
-// inv-hades-146: --reason MANDATORY (cobra MarkFlagRequired + RunE TrimSpace check).
+// invariant: --reason MANDATORY (cobra MarkFlagRequired + RunE TrimSpace check).
 //
 // - unpin: reverse promote (POST /v1/knowledge/aggregator/unpromote).
 //
@@ -35,7 +35,7 @@
 // factory threading because memory subcommands share one production constructor).
 //
 // Boundary this file imports internal/client + cobra + stdlib only. No
-// internal/research/ecosystem import (inv-hades-031). Cross-corpus calls go
+// internal/research/ecosystem import (invariant). Cross-corpus calls go
 // through the daemon via the client; CLI never talks to dispatcher directly.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract):

@@ -8,7 +8,7 @@
 // (operator-extensible Tier 4 slot), or the PauseBackend sentinel
 // (Tier 5, returns a descriptive error so the operator can act).
 //
-// # Compile-time interface guard (inv-hades-067)
+// # Compile-time interface guard (invariant)
 //
 // Every concrete backend in Phases B-D and MUST include a
 // compile-time guard at package scope:
@@ -21,7 +21,7 @@
 // this pattern across every file in internal/providers/ and the
 // bypass adapter.
 //
-// # Credential routing (inv-hades-068)
+// # Credential routing (invariant)
 //
 // TierRequest carries credentials in two shapes:
 //
@@ -34,7 +34,7 @@
 // intercepts every Format verb to emit "[REDACTED]" instead of
 // plaintext (see internal/redact/secret.go).
 //
-// # Provider extensibility (inv-hades-070)
+// # Provider extensibility (invariant)
 //
 // Operator-declared providers (providers.toml) flow through
 // Registry.RegisterFromConfig, which validates the schema (required
@@ -42,7 +42,7 @@
 // extends validation with endpoint reachability + rate card presence
 // checks at startup.
 //
-// # Boundary (inv-hades-031)
+// # Boundary (invariant)
 //
 // This package does NOT import internal/store. Cost ledger writes
 // flow via internal/daemon/dispatcheradapter. The package

@@ -56,7 +56,7 @@ type Pipeline struct {
 }
 
 // NewPipeline constructs a Pipeline. Validates Params at construction +
-// refuses a nil Workspace (the inv-hades-264 capa-firewall gate is
+// refuses a nil Workspace (the invariant capa-firewall gate is
 // load-bearing). The panics here are construction-time guards — the
 // daemon composition root MUST satisfy them; tests pass DefaultParams +
 // a non-nil Workspace.
@@ -91,7 +91,7 @@ func (p *Pipeline) Fan(ctx context.Context, kind store.APIEndpointKind, endpoint
 	if err != nil {
 		return nil, fmt.Errorf("detect (%s): %w", det.DetectorID(), err)
 	}
-	// inv-hades-272 production wiring (spec-review MAJOR fix, plan
+	// invariant production wiring (spec-review MAJOR fix, plan
 	// §G-7 line 904): for KindGraphQL endpoints with a wired NodeFallback,
 	// invoke MaybeRun under the BOTH-AND gate. Plan §G-7 line 904 specifies
 	// the precise contract: "Pipeline.Fan for an endpoint of kind
@@ -151,7 +151,7 @@ func (p *Pipeline) Fan(ctx context.Context, kind store.APIEndpointKind, endpoint
 		return nil, fmt.Errorf("link.ConsumersFor: %w", consErr)
 	}
 
-	// FIX-3 / inv-hades-264 capa-firewall gate: every breaking_changes write
+	// FIX-3 / invariant capa-firewall gate: every breaking_changes write
 	// (and every breaking_change_consumers write derived from it) MUST
 	// transit Workspace.AuthorizeProjects BEFORE any DB mutation. Collect
 	// every project that will appear in any row (endpoint repo + every

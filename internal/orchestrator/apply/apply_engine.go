@@ -2,7 +2,7 @@
 // internal/orchestrator/apply/apply_engine.go
 //
 // ApplyEngine — Q1 D live correction. See doc.go for the
-// package-level Q1 D split rationale + inv-hades-089/097 statements.
+// package-level Q1 D split rationale + invariant/097 statements.
 package apply
 
 import (
@@ -37,7 +37,7 @@ type Event struct {
 
 // Emitter is the apply-engine's collaborator ( eventlog.Log satisfies
 // it via the adapter that converts apply.Event → eventlog.Event).
-// Kept narrow to honour inv-hades-089 — apply has no direct dependency on
+// Kept narrow to honour invariant — apply has no direct dependency on
 // internal/store, AND no direct dependency on the eventlog package either.
 //
 // Implementations MUST be safe to call from a context.WithoutCancel-derived

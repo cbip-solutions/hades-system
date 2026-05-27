@@ -8,7 +8,7 @@
 // The daemon's coordination probe inspects:
 // - internal/knowledge/aggregator/aggregator.go (presence)
 //
-// RETIRED (v0.20.7, inv-hades-290): release-h-prime.executed (Hermes plugin
+// RETIRED (v0.20.7, invariant): release-h-prime.executed (Hermes plugin
 // format converted) was retired because the underlying landing test
 // (presence of plugin/hades-system/plugin.yaml + Hermes markers) is obsolete
 // per ADR-0080. release H' was the deferred Claude-Code-plugin conversion

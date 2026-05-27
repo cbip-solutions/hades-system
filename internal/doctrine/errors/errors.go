@@ -5,7 +5,7 @@
 // (ErrTightenViolation etc.) point HERE so errors.Is across packages
 // resolves to one canonical identity.
 //
-// Boundary discipline (inv-hades-133): this package imports stdlib only.
+// Boundary discipline (invariant): this package imports stdlib only.
 package errors
 
 import (

@@ -4,7 +4,7 @@
 // Extracted from aggregator.go (D-2) to give the interface a dedicated file
 // that mirrors the Embedder extraction pattern (D-7 → embedder_iface.go).
 //
-// Boundary (inv-hades-031): the shared types and interface are defined in
+// Boundary (invariant): the shared types and interface are defined in
 // internal/knowledge/knowledgetypes (a pure-Go, CGO-free package). This file
 // re-exports them as package-level type aliases so existing code inside the
 // aggregator package can reference them without the knowledgetypes import path.

@@ -28,7 +28,7 @@
 // History NewDocsPruneCmd previously took a factory + DryRun/Confirm
 // bools on a single POST; now uses preview + prompt + DELETE.
 //
-// Boundary (inv-hades-031): does NOT import internal/research/ecosystem.
+// Boundary (invariant): does NOT import internal/research/ecosystem.
 // Architecture CLI calls daemon HTTP; daemon owns the cascaded write.
 //
 // Exit codes (per spec §6.2):

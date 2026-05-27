@@ -21,7 +21,7 @@ import (
 // production passes time.Now().UTC().Format(time.RFC3339).
 //
 // Boundary Indexer lives in internal/adr/ and MUST NOT import internal/store
-// (inv-hades-031). It calls only the pure-functional walkers and the Validator
+// (invariant). It calls only the pure-functional walkers and the Validator
 // defined in this same package.
 type Indexer struct {
 	v     *Validator

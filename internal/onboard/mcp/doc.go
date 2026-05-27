@@ -17,13 +17,13 @@
 // doctrine eval (Q10=D); the field is populated NOW so has no
 // retrofit work to do.
 //
-// Per spec §8.6 inv-hades-179: smart-default Detected fns enforce a
+// Per spec §8.6 invariant: smart-default Detected fns enforce a
 // confidence ≥0.6 threshold; below that, even positive signals do not
 // enable the MCP. The threshold is centralized in
 // SmartDefaultConfidenceThreshold + confidenceGate() (defense-in-depth:
 // every Detected fn calls confidenceGate before signal extraction).
 //
-// Per inv-hades-181 (full invariant lands ; compile-check substrate
+// Per invariant (full invariant lands ; compile-check substrate
 // sits here): AssertAllTiered runs at package init and panics if any
 // catalog entry has Tier=0 or empty RiskTier — programmer errors caught
 // at compile-test rather than at first user call.
@@ -37,7 +37,7 @@
 //
 // # Boundary discipline
 //
-// Per inv-hades-031: this package NEVER imports internal/store. Catalog
+// Per invariant: this package NEVER imports internal/store. Catalog
 // entries and smart-default detection are pure value types + pure
 // functions; audit emit (if any) lives in the daemon layer downstream
 // via internal/audit/chain/.

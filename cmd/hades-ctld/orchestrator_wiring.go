@@ -23,10 +23,10 @@
 //
 // The cascade composition lives in *config.ProfileResolver (built-in
 // defaults ∪ profiles.toml ∪ projects.toml[orchestrator] ∪
-// .hades-system.toml — merge per inv-hades-066). The runtime registry
+// .hades-system.toml — merge per invariant). The runtime registry
 // (*providers.Registry) is built by providers_init.go from
 // ~/.config/hades-system/providers/providers.toml; the daemon-startup gate
-// inv-hades-211 (verifyCascadeCompleteness in main.go) refuses to start
+// invariant (verifyCascadeCompleteness in main.go) refuses to start
 // if any cascade names an unregistered provider.
 //
 // Master frozen contract C5: the bypass backend is registered
@@ -36,7 +36,7 @@
 // "bypass" entry. Every other backend is registered by providers_init
 // from providers.toml.
 //
-// Graceful-degradation contract preserved end-to-end (inv-hades-080-friendly):
+// Graceful-degradation contract preserved end-to-end (invariant-friendly):
 //
 // - bypass.Client unavailable (no creds, no config, Keychain locked) →
 // "bypass" backend is registered with a disabled stub that returns
@@ -48,7 +48,7 @@
 // ErrAllTiersUnavailable; the proxy maps it to 503 (same operator-
 // visible behaviour as release's "/v1/messages returns 503" contract).
 //
-// inv-hades-031: this file does the cross-package wiring (orchestrator +
+// invariant: this file does the cross-package wiring (orchestrator +
 // dispatcher + providers + dispatcheradapter + bypass.Client) that no
 // internal/* package is allowed to do itself.
 //
@@ -162,7 +162,7 @@ type buildOrchestratorDeps struct {
 // ErrTierUnavailable / ErrAllTiersUnavailable surfaced by Forward, mapped
 // by the proxy to 503.
 //
-// inv-hades-031 boundary: orchestrator + dispatcher + providers MUST NOT
+// invariant boundary: orchestrator + dispatcher + providers MUST NOT
 // import internal/store. dispatcheradapter is the bridge; PinStoreAdapter
 // (I-4) is its sibling for the PinStore path (Go method-name collision
 // forced a separate type — Adapter.Insert vs PinStoreAdapter.Insert have
@@ -192,7 +192,7 @@ func buildOrchestrator(deps buildOrchestratorDeps) Built {
 	// tier_health_samples row per probe so the operator dashboard +
 	// scheduler heuristics can observe provider health over time.
 	// dispatcheradapter.TierHealthSampleAdapter is the boundary bridge
-	// (orchestrator MUST NOT import internal/store per inv-hades-031).
+	// (orchestrator MUST NOT import internal/store per invariant).
 	scheduler.SetHealthSink(dispatcheradapter.NewTierHealthSampleAdapter(deps.Store))
 
 	disp := dispatcher.New(deps.Registry, deps.Resolver, emitter, breaker)

@@ -11,7 +11,7 @@ import (
 	"fmt"
 )
 
-// UpsertEdge inserts or updates a relation row. Enforces inv-hades-233:
+// UpsertEdge inserts or updates a relation row. Enforces invariant:
 // e.Confidence MUST be Valid() (one of the frozen C-3 tiers) — an invalid
 // confidence is rejected before any write, so no graph_edges row can carry
 // an unknown confidence. PK is (source_id,target_id,kind,site_line); a

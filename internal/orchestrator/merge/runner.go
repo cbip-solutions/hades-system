@@ -5,7 +5,7 @@
 // Config + sentinel + DefaultStragglerKillGracePeriod constant + the
 // NewRunner constructor. The goroutine fanout body lands in D-2 (per-
 // candidate goroutines + sibling isolation + all-fail aggregation) and
-// the straggler-kill supervisor lands in D-3 (inv-hades-108 SIGTERM →
+// the straggler-kill supervisor lands in D-3 (invariant SIGTERM →
 // 30s grace → SIGKILL escalation).
 //
 // This is an explicit multi-task TDD progression: D-1 ships the surface
@@ -111,7 +111,7 @@ func NewRunner(deps RunnerDeps, cfg RunnerConfig) (Runner, error) {
 // fire SIGKILL escalation against a goroutine that completed normally.
 // - On goroutine-level panic: outcomes[idx] is set to HardRejected with
 // Reason="runner_panic: <recovered>". The recover keeps siblings alive
-// (inv-hades-005 sibling isolation contract).
+// (invariant sibling isolation contract).
 // - On Candidate.Run returning err: outcomes[idx].HardRejected = true and
 // Reason = "runner_err: " + err.Error() (only if Reason was empty —
 // respect any reason the runner already populated for diagnostics).
@@ -132,7 +132,7 @@ func (r *runner) RunCandidates(ctx context.Context, candidates []MergeCandidate,
 		wg.Add(1)
 		go func(idx int, cand MergeCandidate) {
 			defer wg.Done()
-			// Sibling isolation (inv-hades-005 / Q8 D): a panic in this
+			// Sibling isolation (invariant / Q8 D): a panic in this
 			// goroutine MUST surface as a HardRejected outcome rather
 			// than crashing the runner or aborting siblings.
 			defer func() {

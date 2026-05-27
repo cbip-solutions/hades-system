@@ -21,7 +21,7 @@
 // owner); declare an alias here so the master C-9
 // ContractFixAutonomyOracle name + doc-comment + boundary semantics
 // remain owned by internal/orchestrator (the design layer per master
-// C-9 + inv-hades-270). Both identifiers refer to the SAME interface so
+// C-9 + invariant). Both identifiers refer to the SAME interface so
 // implementors of either satisfy the other via structural typing —
 // production adapter is constructed against
 // orchestrator.ContractFixAutonomyOracle (the master-named type);
@@ -50,12 +50,12 @@
 // buildContractFederation per master C-15) wires the production
 // impl into OrchestratorCoordinator.Autonomy.
 //
-// inv-hades-031 family + inv-hades-270:
-// - inv-hades-031 forbids bypass/providers/dispatcher/orchestrator
+// invariant family + invariant:
+// - invariant forbids bypass/providers/dispatcher/orchestrator
 // from importing internal/store directly; the C-9 seam keeps
 // caronte/coordinated free of any
 // internal/orchestrator/{hra,merge,confirmation_policy} import
-// (the inv-hades-270 AST scan asserts this — the F.7 anti-coupling
+// (the invariant AST scan asserts this — the F.7 anti-coupling
 // boundary that proves the Coordinator is independent of F.7
 // wiring).
 // - The sole orchestrator→caronte/coordinated reference is this

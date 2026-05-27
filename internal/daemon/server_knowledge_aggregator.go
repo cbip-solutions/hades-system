@@ -35,9 +35,9 @@
 // deferred until fsWatcher is available. Until then, AggEnqueueRebuild
 // returns ErrAggWorkerNotStarted and the handler degrades to HTTP 202.
 //
-// inv-hades-031: this file does NOT import internal/knowledge/aggregator.
+// invariant: this file does NOT import internal/knowledge/aggregator.
 //
-// The daemon package is inv-hades-031 compliant: it imports internal/store
+// The daemon package is invariant compliant: it imports internal/store
 // but NOT internal/knowledge/aggregator directly.
 package daemon
 

@@ -25,7 +25,7 @@
 // in this file via sqlite_vec.Auto(), mirroring pattern
 // exactly. No forward declaration; no cross-package symbol import.
 //
-// inv-hades-031: this package MUST NOT import internal/store. Enforced
+// invariant: this package MUST NOT import internal/store. Enforced
 // by the post-implementation boundary check in the workflow and the
 // compliance test at tests/compliance/.
 package cache

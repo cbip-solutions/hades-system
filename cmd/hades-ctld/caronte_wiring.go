@@ -8,14 +8,14 @@
 // internal/orchestrator, internal/orchestrator/merge, and
 // internal/research/ecosystem. The composition root is the ONLY layer that
 // imports concretes from all sides; the intermediate layers see only narrow
-// seam interfaces (inv-hades-031).
+// seam interfaces (invariant).
 //
 // Three public helpers exported to main.go (J-10):
 //
 // - buildCaronteEngine(caronteWiringDeps) (*caronte.Engine, error)
 // Assembles caronte.Deps from the daemon's real substrate and calls
 // caronte.NewEngine. main.go os.Exit(1)s on error (bootstrap-required,
-// generalises inv-hades-206).
+// generalises invariant).
 //
 // - caronteOrchVerdictAdapter — satisfies orchestrator.BlastRadiusProvider
 //

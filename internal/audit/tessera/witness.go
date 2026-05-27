@@ -16,7 +16,7 @@ import (
 // the macOS Keychain (kSecClassGenericPassword); on linux/non-darwin
 // it lives en a 0600 file under ~/.config/hades-system/.
 //
-// Per inv-hades-145, the only externally observable signing surface is
+// Per invariant, the only externally observable signing surface is
 // Sign(digest) → []byte; there is no unsigned pass-through. Per T2,
 // the private key is never returned from any method (only the public
 // key is); callers MUST go through Sign to use it.

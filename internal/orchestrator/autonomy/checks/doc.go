@@ -18,7 +18,7 @@
 // autonomy.AllCheckNames() order; the parent CheckEngine then sorts results
 // by canonical index regardless of registration order.
 //
-// Boundary (inv-hades-089): this package, like its parent, MUST NOT import
+// Boundary (invariant): this package, like its parent, MUST NOT import
 // internal/store, internal/queue, or workforce. All I/O is via the small
 // HTTPClient / FileStat / Execer / FileReader interfaces in env.go so unit
 // tests inject fakes.

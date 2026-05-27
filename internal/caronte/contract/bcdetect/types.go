@@ -4,10 +4,10 @@
 // Owns the Detector interface, Severity enum, DiffResult value type, and
 // BreakingEvent.
 // Per-kind detector implementations live in subpackages (openapi/, proto/,
-// graphql/) so the imports scan in inv-hades-267 can assert exactly one Go diff
+// graphql/) so the imports scan in invariant can assert exactly one Go diff
 // library per subpackage.
 //
-// Boundary inv-hades-271: this package MUST NOT import internal/store; it
+// Boundary invariant: this package MUST NOT import internal/store; it
 // bridges only via internal/caronte/store + internal/caronte/store/federation
 // .
 //
@@ -16,7 +16,7 @@
 // keyword). All public surface uses the `bcdetect.X` qualifier.
 //
 // References spec §7 (L9 breaking-change); master C-7 (Detector interface);
-// master C-11 (Tessera audit emission); inv-hades-267 (canonical tools); inv-
+// master C-11 (Tessera audit emission); invariant (canonical tools); inv-
 // hades-251 (Node fallback sovereignty extension).
 package bcdetect
 

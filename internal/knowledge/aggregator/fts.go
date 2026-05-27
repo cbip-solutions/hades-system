@@ -30,7 +30,7 @@
 // with aggregator.go's posture. The fts_test.go is tagged //go:build cgo
 // because it calls Open+Init which require the mattn driver.
 //
-// inv-hades-129: this file makes no web calls. All data comes from aggregator.db.
+// invariant: this file makes no web calls. All data comes from aggregator.db.
 package aggregator
 
 import (

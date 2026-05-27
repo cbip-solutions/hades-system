@@ -65,7 +65,7 @@ const (
 // Pre-v0.17.9 design (a 7-entry hardcoded allowlist) silently dropped
 // x-stainless-*, x-claude-code-session-id, and x-client-request-id —
 // Anthropic's stricter post-2026-05 validation rejected those requests
-// (429 even with a fresh OAuth token). inv-hades-242 enforces the new
+// (429 even with a fresh OAuth token). invariant enforces the new
 // denylist shape: any future fingerprint header CC starts shipping is
 // passed through automatically, no code change required here.
 var managedHeaders = map[string]bool{

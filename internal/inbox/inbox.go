@@ -25,8 +25,8 @@ import (
 // Invariants
 // - ProjectID MUST be a 64-char sha256 hex string (projectctx.ProjectID)
 // so cross-project leak is structurally blocked at the per-DB-file
-// boundary (inv-hades-113).
-// - Severity MUST be one of the 4 frozen tiers (inv-hades-124).
+// boundary (invariant).
+// - Severity MUST be one of the 4 frozen tiers (invariant).
 // - ContentHash MUST be a 64-char sha256 hex (computed via
 // ComputeContentHash); together with EventType + 5-min bucket
 // enforces dedup.

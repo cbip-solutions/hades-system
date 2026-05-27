@@ -6,9 +6,9 @@
 // per spec §6.7. Implementation delegates to KnowledgeProber interface;
 // fakes in tests, real adapter in internal/knowledge/prober.go.
 //
-// inv-hades-129: NEVER issues HTTP request; --remote handling is daemon-side
+// invariant: NEVER issues HTTP request; --remote handling is daemon-side
 // . RunKnowledgeProbe stays local.
-// inv-hades-130: probe surface includes a sanity check that extension hook
+// invariant: probe surface includes a sanity check that extension hook
 // columns are NULL by default in release.
 package cli
 

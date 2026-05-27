@@ -7,7 +7,7 @@
 // (e.g., new section "Capacity") bump to "1.1"; field rename or removal
 // bumps to "2.0" and adds a v2 sub-package.
 //
-// Boundary discipline (inv-hades-133): this package imports stdlib only.
+// Boundary discipline (invariant): this package imports stdlib only.
 package schema
 
 const CurrentSchemaVersion = "1.0"

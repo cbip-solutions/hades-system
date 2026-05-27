@@ -10,7 +10,7 @@ from typing import Any
 import httpx
 
 # Default UDS path. Borderline-stays per spec §Q3 (operator scripts
-# reference this path; rename deferred to the release design+N borderline migration).
+# reference this path; rename deferred to HADES design+N borderline migration).
 DEFAULT_UDS_PATH: str = "/tmp/hades-system.sock"
 
 # Per-endpoint timeout in seconds. 3s is conservative — each endpoint is
@@ -20,7 +20,7 @@ DEFAULT_UDS_PATH: str = "/tmp/hades-system.sock"
 ENDPOINT_TIMEOUT_S: float = 3.0
 
 # Endpoint paths per spec §Q5. Order matters: it drives the line
-# ordering in the rendered block (per inv-hades-221 stable schema).
+# ordering in the rendered block (per invariant stable schema).
 ENDPOINTS: tuple[str, ...] = (
     "/v1/health",
     "/v1/cascade/state",
@@ -105,7 +105,7 @@ async def query_daemon(
 def classify_field_state(response: dict[str, Any] | None) -> str:
     """Return 'ok' if response is non-None, 'degraded' otherwise.
 
-    Schema-v1 state classifier per spec §Q5 + inv-hades-221.
+    Schema-v1 state classifier per spec §Q5 + invariant.
     """
     return "ok" if response is not None else "degraded"
 

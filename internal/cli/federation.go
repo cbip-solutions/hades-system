@@ -5,8 +5,8 @@
 // federation health surface + the cross-repo API-impact analysis verb.
 // Mirrors release K's verb pattern (risk.go / why.go); each verb supports
 // `--format text|json` policy Routes via the daemon
-// /v1/mcpgateway/{federation/health,api-impact} sub-routes (inv-hades-088
-// single-egress, inv-hades-129 no direct net/http).
+// /v1/mcpgateway/{federation/health,api-impact} sub-routes (invariant
+// single-egress, invariant no direct net/http).
 package cli
 
 import (

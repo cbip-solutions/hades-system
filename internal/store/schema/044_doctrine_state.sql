@@ -1,5 +1,5 @@
--- the release design release track — singleton row holding the last-loaded doctrine
--- snapshot. Daemon reads on startup so the release design workers dispatched
+-- HADES design release track — singleton row holding the last-loaded doctrine
+-- snapshot. Daemon reads on startup so HADES design workers dispatched
 -- before a restart see consistent doctrine values across the restart
 -- boundary (no layer-flicker due to mid-flight ~/.config/ changes).
 --

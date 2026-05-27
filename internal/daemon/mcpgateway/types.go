@@ -41,7 +41,7 @@ var (
 // ProjectsAliasResolver maps a project identifier (either a 64-char
 // canonical id_sha256, OR a human alias of the form "<name>-<sha8>") to
 // its canonical id_sha256. The interface lives in mcpgateway (not
-// internal/store) because inv-hades-031 forbids this package from importing
+// internal/store) because invariant forbids this package from importing
 // internal/store directly — the concrete implementation
 // (internal/daemon/projectsaliasadapter) is the sanctioned bridge that
 // queries the daemon's projects_alias table.
@@ -58,7 +58,7 @@ var (
 // signature or semantics: (caronte reindex) and (CLI
 // router) consume this interface.
 //
-// inv-hades-277.
+// invariant.
 type ProjectsAliasResolver interface {
 	Resolve(ctx context.Context, idOrAlias string) (string, error)
 }

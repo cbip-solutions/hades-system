@@ -5,9 +5,9 @@
 // WizardKindGlobal, persists outputs (config.toml + doctrine clone + plugin
 // install), and emits evt.onboard.config_init.run via daemon HTTP audit endpoint.
 //
-// inv-hades-188: every TOML written here includes schema_version = "1.0".
-// inv-hades-190: plugin install path resolved by internal/onboard/plugin/.
-// inv-hades-031: this file NEVER imports internal/store.
+// invariant: every TOML written here includes schema_version = "1.0".
+// invariant: plugin install path resolved by internal/onboard/plugin/.
+// invariant: this file NEVER imports internal/store.
 
 package cli
 

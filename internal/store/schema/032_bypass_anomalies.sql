@@ -1,7 +1,7 @@
--- Migration v2 — bypass_anomalies (the release design release track, inv-hades-060)
+-- Migration v2 — bypass_anomalies (HADES design release track, invariant)
 --
 -- Records every unknown field path observed in Anthropic /v1/messages
--- responses (Layer 5 stratified validation per spec §22.2 + the release design
+-- responses (Layer 5 stratified validation per spec §22.2 + HADES design
 -- spec §2 Q6-C). One row per distinct field_path; count is the rolling
 -- count of observations; first_seen/last_seen bound the lifetime;
 -- total_responses_in_window + percentage are denormalised cache columns

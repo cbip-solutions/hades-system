@@ -27,7 +27,7 @@
 // (inbox.AggregatorCacheStore); it is NOT re-implemented here. This
 // function is the translation + emission entry point only.
 //
-// Invariant inv-hades-031 (hadesday never imports internal/store) is
+// Invariant invariant (hadesday never imports internal/store) is
 // preserved — this file depends only on inbox (domain types) and
 // orchestrator/eventlog (event-type string constants).
 package hadesday
@@ -109,7 +109,7 @@ func classifyEventSeverity(eventType string, payload []byte) inbox.Severity {
 
 	// ── URGENT ────────────────────────────────────────────────────────────────
 	// Security and chain-integrity failures that interrupt DND unconditionally
-	// (inv-hades-125) and require immediate operator response.
+	// (invariant) and require immediate operator response.
 	case eventlog.EvtAuditTamperDetected,
 		eventlog.EvtDaemonWitnessKeyCompromised,
 		eventlog.EvtAuditPartitionSealFailed:

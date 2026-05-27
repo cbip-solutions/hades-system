@@ -18,7 +18,7 @@
 // "ts": "RFC3339",
 // "payload": {...}}
 //
-// inv-hades-031 boundary: this handler imports internal/store solely for
+// invariant boundary: this handler imports internal/store solely for
 // the Notification value type passed to NotificationsInserter — it
 // never touches the concrete *store.Store. The daemon adapter that
 // satisfies NotificationsInserter is the single bridge.

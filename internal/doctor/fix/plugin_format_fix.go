@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package fix — plugin_format_fix.go ships the DESTRUCTIVE Fix impl for
-// the hermes.plugin-format check (inv-hades-176 + 190).
+// the hermes.plugin-format check (invariant + 190).
 //
 // Delegates to:
-// - internal/doctor/backup (F4) for backup-before-modify (inv-hades-177)
+// - internal/doctor/backup (F4) for backup-before-modify (invariant)
 // - internal/migrate/writer for fresh plugin scaffold
 //
-// inv-hades-178 enforcement: declared via interface guard
+// invariant enforcement: declared via interface guard
 // `_ Destructive = (*PluginFormatFix)(nil)` AND IsDestructive() returns true.
 // The GuardDestructive gate rejects FixModeAutoSafe/FixModeInteractive
 // without TTY; only FixModeYes (explicit) and FixModeInteractive in TTY

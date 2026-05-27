@@ -190,7 +190,7 @@ type StateProber interface {
 // §5 doctor surface example) is:
 //
 // ecosystem.{go,python,typescript,rust}.db_size per-ecosystem DB size on disk
-// ecosystem.budget inv-hades-199 4-state classification
+// ecosystem.budget invariant 4-state classification
 // ecosystem.cas_blobs_shared release F CAS dedup count + total size
 // ecosystem.last_upstream_poll last 6h cron upstream-poll timestamp
 // ecosystem.last_weekly_sweep last Sunday 03:00 integrity sweep

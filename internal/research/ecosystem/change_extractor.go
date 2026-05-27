@@ -6,7 +6,7 @@
 //
 // LLMJudgeEnabled-gated)
 //
-// Invariant inv-hades-193: every row written to ecosystem_changes
+// Invariant invariant: every row written to ecosystem_changes
 // has a matching ecosystem_versions row for version_from + version_to. Enforced by:
 //
 // (1) writeChangeNodes() always checks version existence before INSERT (E-6)
@@ -19,7 +19,7 @@
 // "implicit_deepdiff" — emitted by Task E-4 DeepDiff
 // "haiku_inferred" — emitted by Task E-5 Haiku enrichment
 //
-// Boundary inv-hades-031: this file MAY import only stdlib + types
+// Boundary invariant: this file MAY import only stdlib + types
 // (PackageRef, Changelog, ChangeNode, ChangeType, DoctrineProfile). It MUST
 // NOT import internal/store, internal/providers, or net/http directly.
 package ecosystem
@@ -402,21 +402,21 @@ func (ce *ChangeExtractor) extractSymbolPathFromText(text string) string {
 // enrichment is the Task E-5 EnrichWithHaiku path gated on
 // LLMJudgeEnabled+HaikuDescriber.
 //
-// Nil handling (defense-in-depth, inv-hades-031 boundary):
+// Nil handling (defense-in-depth, invariant boundary):
 // - Both nil → returns non-nil empty slice (caller may len-check).
 // - oldDoc nil only → every newDoc.Symbols entry → ChangeAdded with
 // VersionFrom="" and VersionTo=newDoc.Version.
 // - newDoc nil only → every oldDoc.Symbols entry → ChangeRemoved with
 // VersionFrom=oldDoc.Version and VersionTo="".
 //
-// Invariant inv-hades-192: DeepDiff is deterministic — same
+// Invariant invariant: DeepDiff is deterministic — same
 // inputs MUST produce the same SET of nodes. Map-iteration order in Go is
 // intentionally non-deterministic, so the slice order is NOT guaranteed
 // across calls; callers needing total order sort by SymbolPath.
 //
-// Invariant inv-hades-193: caller MUST ensure version rows
+// Invariant invariant: caller MUST ensure version rows
 // exist in ecosystem_versions before persisting nodes via the indexer.
-// DeepDiff itself does not touch SQL — boundary inv-hades-031 (no internal/store).
+// DeepDiff itself does not touch SQL — boundary invariant (no internal/store).
 //
 // ctx is accepted for future-proofing (E-5 EnrichWithHaiku will call out via
 // HaikuDescriber.Describe which honours context cancellation). E-4 itself
@@ -569,7 +569,7 @@ func isTemplateLikeDescription(desc string) bool {
 // - nil input → returns (nil, nil); no Haiku calls.
 // - empty [] → returns (non-nil empty []ChangeNode, nil); no Haiku calls.
 //
-// Invariant inv-hades-031 (boundary): no internal/store, no internal/providers,
+// Invariant invariant (boundary): no internal/store, no internal/providers,
 // no net/http — the HaikuChangeDescriber interface IS the boundary. Real
 // implementations live in the dispatcher layer.
 //
@@ -609,7 +609,7 @@ func (ce *ChangeExtractor) EnrichWithHaiku(ctx context.Context, nodes []ChangeNo
 }
 
 // WriteChangeNodes persists []ChangeNode rows to ecosystem_changes,
-// enforcing inv-hades-193 at write time: every unique (version_from,
+// enforcing invariant at write time: every unique (version_from,
 // version_to) pair in the batch MUST have matching ecosystem_versions
 // rows for the package. The write is rejected up-front (no partial
 // writes) if either side is missing.
@@ -631,7 +631,7 @@ func (ce *ChangeExtractor) EnrichWithHaiku(ctx context.Context, nodes []ChangeNo
 // callers SHOULD populate SymbolPath; the placeholder is a defensive
 // floor.
 //
-// inv-hades-193 write-side enforcement (3-layer doctrine: code +
+// invariant write-side enforcement (3-layer doctrine: code +
 // invariants.sql + CHECK constraints — this method is the code layer):
 //
 // Pre-check via assertVersionExists for every unique

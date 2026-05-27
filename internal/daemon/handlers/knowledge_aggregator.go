@@ -24,7 +24,7 @@
 // same binary. By using structural typing (AggregatorService interface rather
 // than a concrete *aggregator.Aggregator), the handlers package avoids
 // importing aggregator directly — the aggregator import lives only in
-// internal/daemon/knowledgeadapter (inv-hades-031 bridge) and in
+// internal/daemon/knowledgeadapter (invariant bridge) and in
 // cmd/hades-ctld (the binary, which tolerates the CGO dep).
 //
 // Route registration: RegisterKnowledgeAggregatorRoutes(mux, h) mounts all
@@ -38,8 +38,8 @@
 // 200 — success
 // 202 — rebuild enqueued (async; forward-compat seam D-12)
 //
-// inv-hades-031: this file does NOT import internal/store directly.
-// inv-hades-146: empty reason in promote/unpromote → ErrPromoteReasonRequired
+// invariant: this file does NOT import internal/store directly.
+// invariant: empty reason in promote/unpromote → ErrPromoteReasonRequired
 // → HTTP 400 (detected via error string; errors.Is not available without
 // importing aggregator, which we intentionally avoid here).
 package handlers

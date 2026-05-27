@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// inv-hades-084: removing or renaming Schema fields requires an ADR
+// invariant: removing or renaming Schema fields requires an ADR
 // reference matching architecture records in the
 // commit body. The Makefile target verify-doctrine-schema-additive-only
 // invokes ValidateRange against HEAD~1..HEAD by default; CI runs the

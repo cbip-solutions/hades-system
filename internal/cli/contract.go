@@ -6,7 +6,7 @@
 // hades contract why <change_id> — D7 Lore-attribution for a breaking_changes row.
 //
 // Routes via the daemon /v1/mcpgateway/contract* sub-routes → caronte engine.
-// Single-egress preserved (inv-hades-088). Tests inject ContractClient fakes.
+// Single-egress preserved (invariant). Tests inject ContractClient fakes.
 // Capa-firewall errors (store.ErrCrossProjectDenied / ErrUnauthorizedProject)
 // surface as actionable operator hints via classifyCapaFirewallError
 // .

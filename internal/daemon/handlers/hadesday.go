@@ -29,7 +29,7 @@
 // the rendering logic in ONE place — the hadesday package — and
 // the wire shape is the typed BriefDoc per spec §1 Q15 alias).
 //
-// inv-hades-031 boundary: this handler imports internal/hadesday value
+// invariant boundary: this handler imports internal/hadesday value
 // types only (BriefDoc / Generator / sentinel errors). No internal/store
 // imports — the Generator interface is structural and the daemon-side
 // accessor returns it as the same interface, keeping the boundary at

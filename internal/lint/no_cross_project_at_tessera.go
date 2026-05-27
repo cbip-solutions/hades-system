@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_cross_project_at_tessera.go
 //
-// Task J-9: custom go vet analyzer enforcing inv-hades-144
+// Task J-9: custom go vet analyzer enforcing invariant
 // (per-project Tessera tile-log isolation; *Adapter exported methods
 // MUST key tile reads by a.projectID).
 //

@@ -15,12 +15,12 @@
 // runs, keeping query latency O(log N) on the indexed prefix even when
 // the corpus grows to 5k+ docs (per spec §6.6 expected ceiling).
 //
-// inv-hades-129 (spec §7.2): aggregator NEVER queries web sources directly.
+// invariant (spec §7.2): aggregator NEVER queries web sources directly.
 // Query.Remote=true short-circuits to ErrRemoteNotShipped; the CLI layer
 // (G-12) translates the sentinel to the deferred-message UX. release
 // owns the eventual --remote ecosystem RAG implementation.
 //
-// inv-hades-130 (spec §7.2): the three extension-hook columns
+// invariant (spec §7.2): the three extension-hook columns
 // (audit_chain_anchor, ecosystem_join_keys, caronte_symbol_refs) ship
 // NULL by default in release. The --code-symbol path uses a JSON-LIKE
 // filter on caronte_symbol_refs; in the release baseline the column is
@@ -28,9 +28,9 @@
 // preserved so Caronte can populate rows post-release without
 // retrofit migration.
 //
-// Boundary (inv-hades-031 documented exception): this file imports only
+// Boundary (invariant documented exception): this file imports only
 // stdlib + database/sql + the package's own SQLite driver registered in
-// index.go. No net/http (no remote queries; inv-hades-129). No
+// index.go. No net/http (no remote queries; invariant). No
 // internal/store (separate-DB boundary documented in
 // docs/operations/knowledge-aggregator-boundary.md, ).
 package knowledge

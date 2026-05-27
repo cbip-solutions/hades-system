@@ -3,7 +3,7 @@
 //
 // `hades knowledge-p9 unpromote <note-id>` — reverse a prior promote.
 //
-// Mirror of promote with inverse semantics. inv-hades-146 applies equally:
+// Mirror of promote with inverse semantics. invariant applies equally:
 // 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
 // 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 //

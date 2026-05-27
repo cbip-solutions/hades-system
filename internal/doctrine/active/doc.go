@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package active is THE single public accessor for runtime doctrine reads
-// in hades-system release (inv-hades-134). It is the runtime read substrate
+// in hades-system release (invariant). It is the runtime read substrate
 // behind both the per-process default (Active) and the per-project
 // effective doctrine (For).
 //
@@ -14,13 +14,13 @@
 // # Concurrency model (per spec §4.5 + Q10 C)
 //
 // - Reads (Active() / For(projectID)) are the hot path: lock-free
-// atomic.Pointer.Load (~10ns per call). inv-hades-092 atomicity
+// atomic.Pointer.Load (~10ns per call). invariant atomicity
 // guarantee: in-flight workers see a stable *v1.Schema for their
 // goroutine lifetime even if a Store happens concurrently.
 //
 // - Writes (SetRegistry / SetUserDefault / SetForProject /
 // ClearForProject) use atomic.Pointer.Store. No half-loaded states
-// observable (inv-hades-138). sync.Map is used for the per-project
+// observable (invariant). sync.Map is used for the per-project
 // map so concurrent Insert/Delete avoids coarse-lock contention.
 //
 // # Resolution chain for For(projectID) (Q7 C hybrid override layout)
@@ -34,7 +34,7 @@
 // fallback (defense-in-depth so consumers never see nil even if the
 // daemon failed to populate userDefault).
 //
-// 4. Otherwise → panic with init-order diagnostic. inv-hades-134 init-
+// 4. Otherwise → panic with init-order diagnostic. invariant init-
 // order guard: daemon startup MUST call SetRegistry before any
 // consumer reads.
 //
@@ -58,7 +58,7 @@
 // - (HTTP) /v1/doctrine/active reads via active.Active() and
 // active.For() per request; no caching (reads are already ~10ns).
 //
-// # Package perimeter (inv-hades-031 generalized as inv-hades-133)
+// # Package perimeter (invariant generalized as invariant)
 //
 // internal/doctrine/active/ imports stdlib only +
 // github.com/cbip-solutions/hades-system/internal/doctrine/schema/v1 +

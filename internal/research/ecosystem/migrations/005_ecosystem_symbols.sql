@@ -1,6 +1,6 @@
 -- internal/research/ecosystem/migrations/005_ecosystem_symbols.sql
 --
--- the release design release track Task A-9. Per spec §3.4.
+-- HADES design release track Task A-9. Per spec §3.4.
 --
 -- Per-package symbol registry. release track symbol_index.Register populates
 -- this on every package ingest. release track verifier.go queries by symbol_path

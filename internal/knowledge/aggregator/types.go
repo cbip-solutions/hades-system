@@ -13,7 +13,7 @@
 // QueryRequest if audit-chain filters need additional fields; extend here,
 // never in the method files.
 //
-// inv-hades-152: ScopePinnedOnly is the widest scope this aggregator honours.
+// invariant: ScopePinnedOnly is the widest scope this aggregator honours.
 // Ecosystem-wide RAG (cross-project web + external-source search) is release
 // territory. Any call-site that passes Scope("ecosystem-rag") will receive an
 // explicit error message pointing at release — never a silent default.

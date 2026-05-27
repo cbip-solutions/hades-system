@@ -9,7 +9,7 @@
 //
 // These operate on the projects_alias / path_history substrate (release
 // migration 057) via projectctx.ProjectStore (the daemon-side adapter
-// is internal/daemon/projectctxadapter.Adapter — inv-hades-031: this
+// is internal/daemon/projectctxadapter.Adapter — invariant: this
 // package never imports internal/store directly).
 //
 // File name uses the `_p7` suffix to avoid colliding with the legacy
@@ -17,7 +17,7 @@
 // older /v1/projects/{id}, /v1/projects, agents-md, and sync routes
 // (those operate on the original `projects` table — distinct schema).
 //
-// inv-hades-031 boundary: the only projectctx-side import is the
+// invariant boundary: the only projectctx-side import is the
 // ProjectStore interface + value types (Alias, ProjectID, Project,
 // PathHistoryEntry, MvDetection, Activate, FindProjectRoot,
 // CanonicalPath). No internal/store, no projectctxadapter direct

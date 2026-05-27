@@ -29,7 +29,7 @@ type FireDeps struct {
 // Fire orchestrates one fire attempt for s. The orchestration pipeline
 // (spec §3.2 / Task D-12):
 //
-// 1. Resolve EffectiveMissPolicy(s, doctrine) — inv-hades-121.
+// 1. Resolve EffectiveMissPolicy(s, doctrine) — invariant.
 // 2. Compute MissedFire via ComputeMissed(s, now).
 // 3. Apply miss policy for any historical gap:
 // - MissPolicySkip → emit one EventRoutineSkipped per
@@ -53,7 +53,7 @@ type FireDeps struct {
 // - On failure: emit EventRoutineFailed, persist OutcomeFailed
 // history, return wrapped dispatcher error; do NOT advance.
 //
-// Boundary (inv-hades-080 / inv-hades-123): dispatch happens ONLY through
+// Boundary (invariant / invariant): dispatch happens ONLY through
 // deps.Dispatcher. This file imports stdlib + internal/doctrine only;
 // it MUST NOT import internal/providers or private-tier1-module.
 // Compile-checked by D-14 + boundary tests.
@@ -69,7 +69,7 @@ type FireDeps struct {
 // locked, network error from quota adapter). Callers MUST use
 // errors.Is on the sentinels.
 //
-// Inv-hades-080 / inv-hades-123 / inv-hades-121 contract.
+// Inv-hades-080 / invariant / invariant contract.
 func Fire(ctx context.Context, s *Schedule, deps FireDeps) error {
 
 	_ = jitterDeterministicSentinel

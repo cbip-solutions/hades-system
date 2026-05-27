@@ -4,13 +4,13 @@
 // the release surface-migration auto-detection per SOTA-2 "surface
 // migration when state detected" pattern (Q1=C rationale).
 //
-// Boundary (inv-hades-031): migrate doctor sub-package consumes ONLY
+// Boundary (invariant): migrate doctor sub-package consumes ONLY
 // internal/doctor/check; MUST NOT import internal/store. The check is
-// read-only (no recursion into ~/.claude/; only top-level marker probe).
+// read-only (no recursion into local agent memory/; only top-level marker probe).
 //
 // Adversarial-safety note (spec §6.1): the top-level scan avoids the
 // hostile-input recursion attack surface where an attacker plants a
-// fake "settings.json" deep in ~/.claude/ to trigger a false migration
+// fake "settings.json" deep in local agent memory/ to trigger a false migration
 // hint. Only top-level marker files / directories are probed.
 package migrate
 

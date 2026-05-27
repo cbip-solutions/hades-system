@@ -13,7 +13,7 @@
 // - adapters_clean (in-process atomic; service.HealthAdaptersClean)
 // - last_session_clean (read-only DB query; service.HealthLastSessionClean)
 //
-// inv-hades-224: none of these paths calls RunCheck or EmitRaw on each poll.
+// invariant: none of these paths calls RunCheck or EmitRaw on each poll.
 package main
 
 import (

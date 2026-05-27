@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package source reads a Claude Code installation (~/.claude/) and returns
+// Package source reads a Claude Code installation (local agent memory/) and returns
 // a typed Inventory of source files. Pure read; no mutations.
 //
 // Threat model (spec §6.1 + §8.1):

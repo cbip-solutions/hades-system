@@ -14,7 +14,7 @@
 // rejected/) for doctrine propose-list / show
 // - persisted autonomy mode (in-memory atomic; survives requests but
 // not daemon restart — release promotes to a persisted projects table
-// entry per inv-hades-100)
+// entry per invariant)
 //
 // Design ground rules:
 //

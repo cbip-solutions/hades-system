@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package orchestratoradapter is the inv-hades-089 boundary bridge between
+// Package orchestratoradapter is the invariant boundary bridge between
 // internal/orchestrator/* and internal/store. It is the ONLY package in
 // the daemon binary that imports BOTH internal/orchestrator/... AND
 // internal/store. The orchestrator subsystems consume small persistence-

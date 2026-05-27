@@ -15,7 +15,7 @@ var ErrUnknownPermissionStrict = errors.New("doctrine_toml: unmappable permissio
 
 // writeDoctrineTOML emits ~/.config/hades-system/doctrines/imported-from-claude-code.toml
 // per spec §2.10 doctrine TOML schema. 1:1 preservation of allow/deny per
-// inv-hades-183: every input permission entry MUST appear verbatim in the
+// invariant: every input permission entry MUST appear verbatim in the
 // output [capa_firewall] block.
 func writeDoctrineTOML(path string, e mapping.PlanEntry) error {
 	var src struct {

@@ -50,7 +50,7 @@
 // AbstentionThresholds as the override map. Override absent for a given
 // ecosystem → base λ from PerEcoLambda applied.
 //
-// # inv-hades-196
+// # invariant
 //
 // "Per-ecosystem λ tunable via providers config." Owned by this file:
 // the defaultPerEcoLambda table is the v0.14.0 baseline; the override
@@ -71,7 +71,7 @@
 // ships the calibration protocol in tests/adversarial/ecosystem/.
 //
 // Spec internal design record §2.7 Q7=A Layer 3.
-// Master invariant: inv-hades-196.
+// Master invariant: invariant.
 package ecosystem
 
 import (

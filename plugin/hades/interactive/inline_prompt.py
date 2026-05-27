@@ -188,7 +188,7 @@ def confirm(
         if confirm("Overwrite config.yaml?", default=False, ctx=ctx):
             config_path.write_text(new_content)
     """
-    # 1. Hermes gateway seam (hasattr-guarded — inv-hades-262).
+    # 1. Hermes gateway seam (hasattr-guarded — invariant).
     if ctx is not None and hasattr(ctx, "request_user_input"):
         hint = "[y/N]" if not default else "[Y/n]"
         answer: str = ctx.request_user_input(
@@ -229,7 +229,7 @@ def choose(
         if backend is not None:
             cfg["backend"] = backend
     """
-    # 1. Hermes gateway seam (hasattr-guarded — inv-hades-262).
+    # 1. Hermes gateway seam (hasattr-guarded — invariant).
     if ctx is not None and hasattr(ctx, "request_user_input"):
         answer = ctx.request_user_input(
             f"{prompt} ({'/'.join(options)}): ",

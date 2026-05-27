@@ -33,7 +33,7 @@ async def _emit(
     """POST an audit event to the daemon's chain endpoint.
 
     Raises ``RuntimeError`` on non-2xx — audit chain integrity is
-    load-bearing per inv-hades-051 (Tessera anchor chain unbroken).
+    load-bearing per invariant (Tessera anchor chain unbroken).
     Operators see the upstream error in the daemon log + the AFK
     module's caller logs the failed dispatch context.
     """
@@ -63,7 +63,7 @@ async def emit_mobile_expansion_requested(
     ts_unix_ms: int,
     project_id: str = "",
 ) -> None:
-    """Emit ``AUDIT_MOBILE_EXPANSION_REQUESTED`` to the the release design chain.
+    """Emit ``AUDIT_MOBILE_EXPANSION_REQUESTED`` to the HADES design chain.
 
     Invoked by ``mobile_summary.expand()`` after the operator's
     ``/expand <citation-id>`` slash command resolves the full envelope.
@@ -105,7 +105,7 @@ async def emit_voice_query_dispatched(
     notification_dispatched: bool,
     ts_unix_ms: int,
 ) -> None:
-    """Emit ``AUDIT_VOICE_QUERY_DISPATCHED`` to the the release design chain.
+    """Emit ``AUDIT_VOICE_QUERY_DISPATCHED`` to the HADES design chain.
 
     Invoked by ``voice_flow.dispatch_voice_query()`` on every voice
     query dispatch. Captures sync vs async decision + estimate +
@@ -140,7 +140,7 @@ async def emit_offline_cache_hit(
     cache_size: int,
     ts_unix_ms: int,
 ) -> None:
-    """Emit ``AUDIT_OFFLINE_CACHE_HIT`` to the the release design chain.
+    """Emit ``AUDIT_OFFLINE_CACHE_HIT`` to the HADES design chain.
 
     Invoked by ``KGOfflineCache.get()`` on every hit (post privacy
     filter — D-5 rejects cross-project hits silently to avoid leak via
@@ -172,11 +172,11 @@ async def post_inbox_notification(
     event_type: str,
     payload: dict[str, Any],
 ) -> dict[str, Any]:
-    """POST a the release design inbox notification (consumed by
+    """POST a HADES design inbox notification (consumed by
     ``voice_flow.dispatch_voice_query`` as the inbox_poster).
 
     Drift note: the daemon-side inbox-write path uses the audit-emit
-    endpoint plus the the release design ``inbox`` table is populated by the daemon
+    endpoint plus the HADES design ``inbox`` table is populated by the daemon
     itself when the corresponding audit event type matches the inbox
     routing config (spec §7.6). From Python's perspective the
     "post inbox notification" call is therefore a structured audit

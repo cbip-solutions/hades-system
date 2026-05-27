@@ -9,7 +9,7 @@
 //
 // 1. Reads the active doctrine's augmentation config (release doctrine
 // schema § [doctrine.augmentation]).
-// 2. When enable = false (capa-firewall default per inv-hades-170), returns
+// 2. When enable = false (capa-firewall default per invariant), returns
 // 204 No Content. Hermes treats this as "proceed unaugmented".
 // 3. When enabled, runs the 5-lane RRF retrieval pipeline and
 // returns an AugmentResponse envelope with static_context (system

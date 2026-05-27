@@ -225,7 +225,7 @@ func (t *TeamLead) buildPlannerPrompt(objective string) string {
 // malformed — fail-loud rather than silently picking either block.
 //
 // We do NOT use a streaming JSON tokenizer here because the doctrine
-// reinforcement block (inv-hades-070) explicitly forbids the LLM from
+// reinforcement block (invariant) explicitly forbids the LLM from
 // emitting embedded code-fence JSON or stray braces inside prose;
 // adding a tokenizer would mask doctrine drift instead of surfacing
 // it. The adversarial test locks this semantic so a future

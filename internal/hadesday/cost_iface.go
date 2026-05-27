@@ -4,7 +4,7 @@
 // The local CostStore interface is the boundary between the hadesday
 // package and release's dispatcheradapter.CostStore. Production wiring
 // adapts the dispatcher's concrete cost-ledger reader; tests substitute
-// in-memory fakes (per inv-hades-031, hadesday/ never imports
+// in-memory fakes (per invariant, hadesday/ never imports
 // internal/store).
 package hadesday
 

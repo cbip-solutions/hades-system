@@ -9,7 +9,7 @@ package scheduleradapter
 // D-2 lands the internal/scheduler package with its own Schedule +
 // HistoryEntry types and adds a thin translation layer on top.
 //
-// inv-hades-031 boundary: internal/scheduler MUST NEVER import
+// invariant boundary: internal/scheduler MUST NEVER import
 // internal/store. This adapter's import list is the single legitimate
 // co-location point — verified by the compliance test
 // inv_hades_122_inv_hades_031_plan7_packages_test.go.

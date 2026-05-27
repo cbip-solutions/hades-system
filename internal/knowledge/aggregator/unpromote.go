@@ -4,7 +4,7 @@
 // Unpromote is the symmetric reverse of Promote: it removes a note from the
 // cross-project knowledge_pin_index (and its satellite tables pin_fts, pin_vec,
 // pin_wikilinks). Like Promote, it:
-// - Requires a non-empty reason (inv-hades-146 — ErrPromoteReasonRequired is
+// - Requires a non-empty reason (invariant — ErrPromoteReasonRequired is
 // reused verbatim; the sentinel is declared in promote.go and must NOT be
 // redeclared here).
 // - Is idempotent on nonexistent pins: if the note is not in knowledge_pin_index
@@ -22,9 +22,9 @@
 // returns nothing, making the satellite-table deletes silent no-ops. The order
 // MUST therefore be pin_fts → pin_vec → pin_wikilinks → pin_index.
 //
-// Boundary (inv-hades-031): this file does NOT import internal/store.
-// inv-hades-129: no web calls.
-// inv-hades-146: ErrPromoteReasonRequired (from promote.go) is returned for
+// Boundary (invariant): this file does NOT import internal/store.
+// invariant: no web calls.
+// invariant: ErrPromoteReasonRequired (from promote.go) is returned for
 // empty reason — symmetric to Promote.
 package aggregator
 

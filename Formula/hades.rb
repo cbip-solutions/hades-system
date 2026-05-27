@@ -34,7 +34,7 @@ class Hades < Formula
       HADES uses Caronte (in-tree code-graph; Apache-2.0/MIT per project
       LICENSE) — no external code-graph dependency required.
 
-      Default LLM access: Anthropic API + Gemini + OpenRouter via the the release design
+      Default LLM access: Anthropic API + Gemini + OpenRouter via the HADES design
       provider cascade (paygo). Configure with:
         `hades providers add anthropic --key $ANTHROPIC_API_KEY`
         `hades providers add gemini --key $GEMINI_API_KEY`

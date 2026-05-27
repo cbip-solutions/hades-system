@@ -120,7 +120,7 @@ func (p *DriftPoller) Run(ctx context.Context) {
 // is a ListSessions failure (the whole walk cannot proceed), which Run()
 // then logs.
 //
-// inv-hades-118 guarantees scratch is never inspected: the poller iterates
+// invariant guarantees scratch is never inspected: the poller iterates
 // over DaemonOwnedWindows (which excludes WindowScratch). A defensive
 // guard inside the loop logs and skips if WindowScratch ever appears in
 // DaemonOwnedWindows (compile-time test TestDaemonOwnedExcludesScratch

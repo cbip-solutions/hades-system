@@ -45,7 +45,7 @@ import (
 //
 // Boundary inheritance: extractor concrete impls may import the smacker
 // tree-sitter binding (CGO) via the *parser.Tree alias — that is correct; they
-// MUST NOT import internal/store (boundary inv-hades-230 + inv-hades-271) and MUST
+// MUST NOT import internal/store (boundary invariant + invariant) and MUST
 // NOT import internal/caronte/store/federation ( is workspace-scoped;
 // extractors are per-repo).
 type RouteExtractor interface {

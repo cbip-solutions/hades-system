@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package loretrailer implements the Lore-enforcement go-vet analyzer for
-// hades-system release Caronte (spec §10; inv-hades-238). WHEN ENABLED
+// hades-system release Caronte (spec §10; invariant). WHEN ENABLED
 // (-loretrailer.enabled=true; default false, adoption-gated per spec §21), it
 // scans branch-local commit BODIES and flags any commit that touches a
 // high-risk file (the -loretrailer.high-risk-files glob set, supplied by the

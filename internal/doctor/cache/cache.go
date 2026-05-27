@@ -5,7 +5,7 @@
 // `~/.cache/hades-system/doctor/last-run.json`). Per-operator freshness ≤5min
 // TTL.
 //
-// Boundary (inv-hades-031): cache writes ONLY to XDG paths; no DB; no
+// Boundary (invariant): cache writes ONLY to XDG paths; no DB; no
 // internal/store import.
 //
 // Cross-platform: tests inject t.TempDir() + t.Setenv("HOME",...)

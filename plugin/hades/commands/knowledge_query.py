@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:knowledge-query — Cross-project knowledge query
 
-You are running a federated cross-project knowledge query in HADES. Wraps the release design D `aggregator.Query()` + the release design `/v1/augment` privacy filter (spec §9.1).
+You are running a federated cross-project knowledge query in HADES. Wraps HADES design D `aggregator.Query()` + HADES design `/v1/augment` privacy filter (spec §9.1).
 
 ## 1. Identify scope
 
@@ -16,7 +16,7 @@ PROJECT=$(curl --unix-socket /tmp/hades-system.sock -s http://unix/v1/project/ac
 ```
 
 Scope values:
-- `self` — only the current project (mandatory in capa-firewall doctrine per the release design §3.4)
+- `self` — only the current project (mandatory in capa-firewall doctrine per HADES design §3.4)
 - `max-scope` — only max-scope-doctrine projects
 - `default` — only default-doctrine projects
 - `all` — all visible projects per current doctrine ceiling
@@ -32,13 +32,13 @@ curl --unix-socket /tmp/hades-system.sock \\
      http://unix/v1/knowledge/query
 ```
 
-Daemon dispatches to the release design D `aggregator.Query()`:
-- `realtime=false` → consume cached aggregator.db (the release design D Litestream-replicated)
+Daemon dispatches to HADES design D `aggregator.Query()`:
+- `realtime=false` → consume cached aggregator.db (HADES design D Litestream-replicated)
 - `realtime=true` → live federation: query each in-scope project's aggregator live
 
 ## 3. Privacy filter at retrieval boundary
 
-Per the release design inv-hades-163 + the release design §3.4 doctrine.knowledge.cross_project:
+Per HADES design invariant + HADES design §3.4 doctrine.knowledge.cross_project:
 - capa-firewall projects: visible only to other capa-firewall sessions (self-only)
 - max-scope ↔ max-scope OR default ↔ default: bidirectional
 - max-scope ↔ default: bidirectional
@@ -61,7 +61,7 @@ Scope: <SCOPE> | Realtime: <true|false>
 ## Privacy filter
 - Filtered <privacy_filtered_count> results due to capa-firewall doctrine
 - Visible projects: <count> / <total>
-- Inv anchor: inv-hades-163
+- Inv anchor: invariant
 
 ## Audit chain anchor
 hades://audit/<aggregate_event_id>
@@ -84,10 +84,10 @@ Cache: lane1=hit | lane2=miss | lane3=hit | lane4=miss | lane5=hit
 
 ## Cross-references
 
-- spec §9.1 the release design D substrate consumption (aggregator.Query)
+- spec §9.1 HADES design D substrate consumption (aggregator.Query)
 - spec §3.4 doctrine.knowledge.cross_project schema
-- inv-hades-163 augmentation cross-project privacy boundary
-- inv-hades-167 augmentation budget gate
+- invariant augmentation cross-project privacy boundary
+- invariant augmentation budget gate
 - /knowledge-promote (companion command)
 """
 

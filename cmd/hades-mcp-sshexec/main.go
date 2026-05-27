@@ -4,7 +4,7 @@
 // hades-mcp-sshexec — ssh-exec MCP binary.
 //
 // Invoked by OpenCode plugin via stdio transport (Q9 B: stdio canonical;
-// inv-hades-086: no HTTP/TCP/Unix listen). SSH connections are OUTBOUND
+// invariant: no HTTP/TCP/Unix listen). SSH connections are OUTBOUND
 // (client role) — this binary never binds a server listen socket.
 //
 // The MCP server is implemented in internal/mcp/sshexec/; this file

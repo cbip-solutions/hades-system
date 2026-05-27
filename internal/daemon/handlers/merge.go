@@ -23,7 +23,7 @@
 // Wire-types decoupling: handlers serialize internal/orchestrator/merge
 // domain types into internal/cli wire-types via small mapping helpers
 // declared in this file (so neither package leaks its types to the
-// other and inv-hades-104 is preserved).
+// other and invariant is preserved).
 //
 // surfaces are intentionally THIN for inspect / replay /
 // score-explain / baseline / anomaly: full release capture

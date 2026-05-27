@@ -478,7 +478,7 @@ func (rv *Revalidator) writeFetchPOSTCache(requestBodyHashHex string, responseBo
 	// portable test infrastructure WITHOUT a test seam in production
 	// code. We do not add such a seam per project doctrine (no
 	// production code mutation for test access; see
-	// ~/.claude/skills/testing-anti-patterns/SKILL.md). Each branch is
+	// local agent memory/skills/testing-anti-patterns/SKILL.md). Each branch is
 	// kept as defense-in-depth because crash-safety of the atomic-write
 	// pattern (write→fsync→close→rename) requires every step to be
 	// honoured. The package total ≥90% coverage gate is met by the 24

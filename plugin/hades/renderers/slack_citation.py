@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/slack_citation.py
-"""Slack ``chat.postMessage`` renderer for citation envelopes (the release design release track Task A-5)."""
+"""Slack ``chat.postMessage`` renderer for citation envelopes (HADES design release track Task A-5)."""
 
 from __future__ import annotations
 

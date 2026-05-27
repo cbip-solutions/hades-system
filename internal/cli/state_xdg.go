@@ -2,7 +2,7 @@
 // Package cli — state_xdg.go.
 //
 // `hades state list` + `hades state cleanup` are the XDG state-retention
-// surface per Q12=D + inv-hades-187. The manifest leaves
+// surface per Q12=D + invariant. The manifest leaves
 // (show/regenerate/verify/pin/history) live in state.go + sibling
 // files; this file isolates the XDG-state retention leaves.
 //

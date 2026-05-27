@@ -13,7 +13,7 @@
 // project_id consistently regardless of which subdirectory the operator
 // is sitting in.
 //
-// Boundary discipline (inv-hades-031): pure stdlib (os, path/filepath,
+// Boundary discipline (invariant): pure stdlib (os, path/filepath,
 // errors, fmt). No internal/store imports; no projectctxadapter
 // dependency.
 package projectctx

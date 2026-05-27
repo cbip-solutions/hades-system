@@ -1,6 +1,6 @@
 -- internal/research/ecosystem/migrations/001_ecosystem_packages.sql
 --
--- the release design release track Task A-9. Per spec §3.4.
+-- HADES design release track Task A-9. Per spec §3.4.
 --
 -- One row per (ecosystem, name) tuple. Updated by release track ingester's
 -- last_indexed_at / last_upstream_check / latest_stable_version fields
@@ -15,7 +15,7 @@
 --   UNIQUE = (ecosystem, name). release track indexer-writer code reads from
 --   PackageRef.Ecosystem and writes here directly without translation.
 --
---   inv-hades-031 unaffected (this package does not import internal/store);
+--   invariant unaffected (this package does not import internal/store);
 --   spec §3.4 column-name drift is reconciled here at the SQL layer.
 
 CREATE TABLE IF NOT EXISTS ecosystem_packages (

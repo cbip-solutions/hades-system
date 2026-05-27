@@ -73,7 +73,7 @@
 // Save persists with mode 0600 (operator-private). Mirrors release +
 // hints or provider URLs leaking on a shared host.
 //
-// # Boundary discipline (inv-hades-031)
+// # Boundary discipline (invariant)
 //
 // This subpackage NEVER imports internal/store. The prefs shape is a
 // pure TOML round-trip; persistence beyond a single file is the

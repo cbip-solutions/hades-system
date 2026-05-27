@@ -12,7 +12,7 @@
 // ClassifierVersion is bumped on any classification-rule change. Cache
 // entries embed this version; classifier rejects stale-version entries
 // (forces re-classification when rules evolve). Referenced by
-// G-6 compliance tests (inv-hades-311 versioning semantics).
+// G-6 compliance tests (invariant versioning semantics).
 //
 // Coverage target ≥90% per project instructions security/correctness-critical list.
 package ci

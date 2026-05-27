@@ -26,9 +26,9 @@
 // refactor the lifecycle routes once the engine method bodies grow real
 // composite logic.
 //
-// inv-hades-031 boundary: this file imports stdlib only; the daemon package
+// invariant boundary: this file imports stdlib only; the daemon package
 // adapts concrete federation dependencies behind local interfaces.
-// inv-hades-088 single-egress: external callers still enter through the daemon;
+// invariant single-egress: external callers still enter through the daemon;
 // read routes proxy through the MCP gateway and lifecycle routes mutate the
 // daemon-owned federation store directly.
 

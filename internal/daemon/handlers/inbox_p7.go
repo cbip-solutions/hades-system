@@ -11,7 +11,7 @@
 // + adapter) via internal/inbox.AggregatorCacheStore +
 // internal/inbox.Store.Ack/Snooze. The InboxStore interface this
 // handler consumes is the read+write surface the daemon-level cache
-// adapter satisfies; per inv-hades-031 the handler never imports
+// adapter satisfies; per invariant the handler never imports
 // internal/store directly — the inboxadapter is the single bridge.
 //
 // Status-code mapping (mirrors the projects_p7 + schedule_p7 patterns):
@@ -26,7 +26,7 @@
 // 500 — opaque backend error (sql I/O, transactional failure).
 // 200 — success; bodies documented per route below.
 //
-// inv-hades-031 boundary: this handler imports internal/inbox value
+// invariant boundary: this handler imports internal/inbox value
 // types only (Severity / CacheRow / ListFilter / sentinel errors). No
 // internal/store imports — the InboxStore interface is structural and
 // the daemon-side accessor returns it as the same interface, keeping

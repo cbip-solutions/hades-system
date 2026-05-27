@@ -23,7 +23,7 @@
 // installation step; absence implies an incomplete checkout or
 // misconfigured HADES_SYSTEM_REPO_ROOT.
 //
-// RETIRED (v0.20.7, inv-hades-290): "release-h-prime-executed" probe was
+// RETIRED (v0.20.7, invariant): "release-h-prime-executed" probe was
 // retired because the underlying landing test (presence of
 // plugin/hades-system/plugin.yaml + Hermes markers) is obsolete per ADR-0080.
 // replaced that path with the Hermes plugin at plugin/hades/ (different

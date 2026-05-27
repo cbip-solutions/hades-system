@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package augment — DoctrineGate fast-path skip for forbidden doctrines.
 //
-// inv-hades-170: capa-firewall doctrine has [doctrine.augmentation] enable=false
+// invariant: capa-firewall doctrine has [doctrine.augmentation] enable=false
 // in the built-in TOML; DoctrineGate refuses augmentation for any session
 // whose doctrine matches.
 //

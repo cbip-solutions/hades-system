@@ -5,10 +5,10 @@
 //
 // # Invariant
 //
-// inv-hades-191: release ingester / ecosystem code NEVER imports net/http
+// invariant: release ingester / ecosystem code NEVER imports net/http
 // (or crypto/tls). ALL outbound egress goes via
 // internal/research/cache/Revalidator.Fetch (the sole legal HTTP callsite
-// per inv-hades-152 + ADR-0087 amendment). The boundary is enforced both
+// per invariant + ADR-0087 amendment). The boundary is enforced both
 // at the package level (no file under internal/research/ecosystem/...
 // may import net/http or crypto/tls) and at the callsite level
 // (defense-in-depth catch for aliased imports).
@@ -24,7 +24,7 @@
 //
 // # Why also crypto/tls
 //
-// inv-hades-191 prevents direct outbound HTTPS. crypto/tls is the layer
+// invariant prevents direct outbound HTTPS. crypto/tls is the layer
 // beneath net/http; if a future contributor reaches for tls.Dial or
 // tls.Client directly (a vector that bypasses net/http entirely) the
 // single-egress invariant is just as violated. Flagging crypto/tls is
@@ -58,8 +58,8 @@
 // arbitrary depths of selector nesting yields diminishing returns
 // versus false-positives on aliased struct fields). If a future
 // adversarial case slips through, the runtime egress also fails the
-// daemon's dispatcher routing (inv-hades-152) and the cron worker's
-// allowlist (inv-hades-191 runtime side).
+// daemon's dispatcher routing (invariant) and the cron worker's
+// allowlist (invariant runtime side).
 //
 // References
 // - Spec §7.3 release ingester invariants

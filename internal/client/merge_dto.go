@@ -14,7 +14,7 @@
 //
 // Wire-types decoupling vs internal/orchestrator/merge: these structs
 // are pure JSON-tagged value types with NO import of merge or any
-// other domain package — inv-hades-104 preserved end-to-end.
+// other domain package — invariant preserved end-to-end.
 //
 // Drift resolutions (carried over from F-2):
 //

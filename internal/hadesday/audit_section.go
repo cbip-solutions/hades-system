@@ -13,7 +13,7 @@
 // reuse of hadesday.BriefItem and hadesday.SortByLeverage unchanged.
 //
 // Thresholds are derived from AuditProjectStatus.DoctrineName so this package
-// does NOT import internal/doctrine — preserving the inv-hades-031 boundary
+// does NOT import internal/doctrine — preserving the invariant boundary
 // (hadesday accepts only interface parameters; no concrete store or doctrine
 // types cross the package boundary).
 package hadesday

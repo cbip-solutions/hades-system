@@ -13,7 +13,7 @@
 // priorState. Producer/consumers (Dispatcher.Ingest path, cron worker) gate on
 // BlockNewIngest / BlockAllWrites before issuing any write op.
 //
-// Boundary (inv-hades-031): this file does NOT import internal/store or net/http.
+// Boundary (invariant): this file does NOT import internal/store or net/http.
 // Sizer interface abstracts filesystem stat; AuditEmitter abstracts chain
 // emission. Production wiring injects DBSizer + a thin
 // adapter over RAGAuditChainEmitter.

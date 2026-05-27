@@ -12,16 +12,16 @@
 //
 // 1. Validator (validator.go) — strict-prefix-match + forbidden-chars
 // scan over ;&|$`<>(){}[]"' plus glob metachars *?~ (
-// hardening). inv-hades-082.
+// hardening). invariant.
 // 2. Exec (exec.go) — golang.org/x/crypto/ssh direct (no spawn ssh
 // binary); ForceCommand pattern; PTY=false; SSH credentials only via
 // SSH_AUTH_SOCK; host keys verified via known_hosts.
 // 3. Interactive detector (interactive.go) — first-1024-bytes pattern
 // detector + SIGKILL within 100ms on detect; security-grade audit
-// emit always notified. inv-hades-081.
+// emit always notified. invariant.
 // 4. Audit emit (emit.go) — outbound HTTP via internal/mcp/client/emit.go
 // to daemon /v1/audit/emit per attempt (started/completed/denied/
-// interactive_blocked). inv-hades-083 no-loss.
+// interactive_blocked). invariant no-loss.
 // 5. Allowlist (allowlist.go) — doctrine config + per-project
 // hadessystem.toml [ssh_exec] merge; ceiling enforced.
 //
@@ -32,7 +32,7 @@
 // SSH server. Even if the client validator is bypassed, the remote
 // refuses non-allowlist commands.
 //
-// # Boundary (inv-hades-031)
+// # Boundary (invariant)
 //
 // This package does NOT import internal/store. State persistence is
 // delegated to internal/daemon/handlers/audit_emit.go via outbound
@@ -41,13 +41,13 @@
 //
 // # Compile-check anchors for invariants
 //
-// - inv-hades-081: Detector type is sealed (no public constructor —
+// - invariant: Detector type is sealed (no public constructor —
 // newDetector is unexported and called only by Run). Callers
 // therefore CANNOT construct a Detector that bypasses Run's
 // trigger handling.
-// - inv-hades-082: Run signature requires a non-zero ValidationResult
+// - invariant: Run signature requires a non-zero ValidationResult
 // with OK=true; a missing validate step is a compile error.
-// - inv-hades-086: server.go uses mcp.StdioTransport only; absence of
+// - invariant: server.go uses mcp.StdioTransport only; absence of
 // net.Listen / http.ListenAndServe in this package is the static
 // guarantee.
 package sshexec

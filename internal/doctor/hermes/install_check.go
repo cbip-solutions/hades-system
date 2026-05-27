@@ -3,7 +3,7 @@
 // substrate verification: install + plugin-format. Each check satisfies
 // the internal/doctor/check.Check interface.
 //
-// Boundary (inv-hades-031): hermes package consumes ONLY internal/doctor/check
+// Boundary (invariant): hermes package consumes ONLY internal/doctor/check
 // + the OS exec/PATH facilities (via the Detector seam); MUST NOT import
 // internal/store.
 //

@@ -26,7 +26,7 @@
 // both surfaces (dispatched-without-checkpoint AND worker-died-with-
 // no-recovery) is redispatched once.
 //
-// inv-hades-095 corruption budget (N=5): if the replay scan encounters
+// invariant corruption budget (N=5): if the replay scan encounters
 // more than 5 records whose payload fails to Decode, the whole replay
 // fails closed with HardPause=true and the OrchestratorRestoreFromReplay
 // audit row records the breach. The bound is per-call (Option B from

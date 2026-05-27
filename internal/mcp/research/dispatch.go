@@ -19,9 +19,9 @@
 // - Aggregator deduplicates by canonicalized URL key and applies a
 // min-source threshold (doctrine-tunable; default 1).
 // - Raw hits become RawCitation seeds; CiteService.Verify converts
-// to VerifiedCitation, enforcing inv-hades-075 at the type level.
+// to VerifiedCitation, enforcing invariant at the type level.
 // - Every per-backend dispatch is preceded by BudgetClient.PreCall
-// (inv-hades-076 anchor; CI grep rule enforces presence).
+// (invariant anchor; CI grep rule enforces presence).
 //
 // Budget axis convention:
 // - PreCall axis is "stage" with value "research:<tool>". The four

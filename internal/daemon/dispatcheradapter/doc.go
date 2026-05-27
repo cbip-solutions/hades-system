@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package dispatcheradapter bridges the dispatcher's CostSink seam to
-// internal/store. Per inv-hades-031, the dispatcher / orchestrator /
+// internal/store. Per invariant, the dispatcher / orchestrator /
 // providers packages MUST NOT import internal/store; this package is
 // the boundary that absorbs the dependency.
 //

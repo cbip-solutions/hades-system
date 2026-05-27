@@ -4,15 +4,15 @@
 //
 // dispatches via the orchestrator → dispatcher → Tier 1 (bypass) /
 // Tier 2+ (OpenClaude) chain. release functionality preserved end-to-end:
-// Idempotency-Key auto-generation (inv-hades-058), X-HADES-Conversation-Id
+// Idempotency-Key auto-generation (invariant), X-HADES-Conversation-Id
 // extraction, multi-value header preservation (Anthropic-Beta etc).
 //
-// inv-hades-080 (single-egress-point): this file MUST NOT call
+// invariant (single-egress-point): this file MUST NOT call
 // bypass.Client.Forward directly. ALL LLM traffic flows through the
 // orchestrator. The dispatcher then chooses tier 1 vs tier 2+ and emits
 // CostEvents for the ledger.
 //
-// inv-hades-031 (boundary): this file imports daemon/orchestrator (for
+// invariant (boundary): this file imports daemon/orchestrator (for
 // the Call type) and providers (for TierResponse) but NOT internal/store
 // — persistence concerns sit on the dispatcher side via dispatcheradapter.
 package daemon
@@ -103,7 +103,7 @@ var hopByHopHeaders = map[string]struct{}{
 // credentials at emission. redact module (internal/redact)
 // confirms zero-secret leakage on this path.
 //
-// inv-hades-080: this handler is the single egress point for /v1/messages.
+// invariant: this handler is the single egress point for /v1/messages.
 // It MUST NOT call bypass.Client.Forward directly — all LLM traffic flows
 // via the orchestrator → dispatcher chain.
 func NewAnthropicProxy(forwarder OrchestratorForwarder) http.HandlerFunc {

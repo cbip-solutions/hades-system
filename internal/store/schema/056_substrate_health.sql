@@ -1,15 +1,15 @@
 -- schemaVersion: 23
--- the release design release track — Q2 C regression-by-self metric.
+-- HADES design release track — Q2 C regression-by-self metric.
 -- Persists per-commit substrate health (test pass rate + doctrine lint outcome)
 -- so the orchestrator can detect "substrate is regressing on its own commits"
 -- — the chicken-and-egg failure mode the Anthropic Apr 23 incident exposed.
 --
--- the release design extends this table (history queries, time-series, adversarial corpus)
+-- HADES design extends this table (history queries, time-series, adversarial corpus)
 -- ADDITIVELY — no schema rewrite. authored_by enumeration is intentionally
 -- narrow now to keep aggregation queries cheap; widening to per-agent labels
--- happens via a SEPARATE join table in the release design, not by relaxing this CHECK.
+-- happens via a SEPARATE join table in HADES design, not by relaxing this CHECK.
 --
--- Boundary (inv-hades-031): writes from internal/orchestrator/safetynet/regression.go
+-- Boundary (invariant): writes from internal/orchestrator/safetynet/regression.go
 -- go through the SubstrateHealthWriter interface (declared in safetynet); the
 -- store-side adapter lives in internal/daemon/orchestratoradapter/ (release track).
 

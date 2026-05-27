@@ -100,7 +100,7 @@ type BaselineFailedPayload struct {
 // - Test stdout malformed / unparseable
 // - Context cancellation mid-run
 //
-// inv-hades-106 atomicity: callers MUST NOT proceed to
+// invariant atomicity: callers MUST NOT proceed to
 // candidate execution after this method returns a wrapped ErrBaselineFailed;
 // the engine state-machine guard surfaces the constraint as a runtime panic
 // in development builds.

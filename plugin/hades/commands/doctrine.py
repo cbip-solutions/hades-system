@@ -61,8 +61,8 @@ Format the daemon response as operator-friendly summary:
 ## Cross-references
 
 - spec §3.4 Doctrine schema extensions
-- inv-hades-084 doctrine ceiling enforcement (the release design)
-- the release design audit chain (Tessera-anchored DoctrineOverridden event)
+- invariant doctrine ceiling enforcement (HADES design)
+- HADES design audit chain (Tessera-anchored DoctrineOverridden event)
 """
 
 _OVERRIDE_PROMPT = """# /hades:doctrine — Runtime doctrine override
@@ -88,7 +88,7 @@ Allowed values: `max-scope`, `default`, `capa-firewall`.
 ### POST to daemon /v1/doctrine/override
 
 ```bash
-# pending endpoint registration: doctrine runtime override per session (audit-anchored via inv-hades-072)
+# pending endpoint registration: doctrine runtime override per session (audit-anchored via invariant)
 curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      -H "Content-Type: application/json" \\
@@ -96,9 +96,9 @@ curl --unix-socket /tmp/hades-system.sock \\
      http://unix/v1/doctrine/override
 ```
 
-The override is **audit-logged via the release design chain** — Tessera-anchored event `DoctrineOverridden` with payload (project, session, prior-doctrine, new-doctrine, reason, operator-identity-from-keychain). Per inv-hades-072 (the release design amendment-anchored audit), every override appears in the Hermes Ink TUI F10 panel + `hades day` morning brief.
+The override is **audit-logged via HADES design chain** — Tessera-anchored event `DoctrineOverridden` with payload (project, session, prior-doctrine, new-doctrine, reason, operator-identity-from-keychain). Per invariant (HADES design amendment-anchored audit), every override appears in the Hermes Ink TUI F10 panel + `hades day` morning brief.
 
-Per the release design doctrine ceiling enforcement (inv-hades-084): override can ONLY tighten beyond project ceiling, not loosen. If `{name}` is more permissive than project ceiling → daemon refuses with 409 Conflict + actionable error.
+Per HADES design doctrine ceiling enforcement (invariant): override can ONLY tighten beyond project ceiling, not loosen. If `{name}` is more permissive than project ceiling → daemon refuses with 409 Conflict + actionable error.
 
 ## 3. Display result
 
@@ -116,8 +116,8 @@ Format the daemon response as operator-friendly summary:
 ## Cross-references
 
 - spec §3.4 Doctrine schema extensions
-- inv-hades-084 doctrine ceiling enforcement (the release design)
-- the release design audit chain (Tessera-anchored DoctrineOverridden event)
+- invariant doctrine ceiling enforcement (HADES design)
+- HADES design audit chain (Tessera-anchored DoctrineOverridden event)
 """
 
 _VALID_DOCTRINES = {"max-scope", "default", "capa-firewall"}

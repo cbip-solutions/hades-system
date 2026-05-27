@@ -9,7 +9,7 @@
 //
 // These operate on the priority_overrides table via
 // internal/quota.OverrideStore (concrete: internal/daemon/quotaadapter)
-// per inv-hades-031: this package never imports internal/quota types
+// per invariant: this package never imports internal/quota types
 // transitively from internal/store; the adapter does the field copy.
 //
 // Status-code mapping (mirrors the projects_p7 + budget_plan4 patterns):

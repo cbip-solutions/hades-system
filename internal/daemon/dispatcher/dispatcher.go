@@ -22,7 +22,7 @@
 // supplied BreakerState + CostEmitter are. The Dispatcher itself holds no
 // mutable state.
 //
-// Boundary (inv-hades-031): this package MUST NOT import internal/store. The
+// Boundary (invariant): this package MUST NOT import internal/store. The
 // dispatcheradapter package bridges Dispatcher to the store via the
 // CostEmitter interface so this package stays decoupled from persistence.
 
@@ -78,7 +78,7 @@ type CostEvent struct {
 // recorder. Emitter errors are intentionally swallowed by the dispatcher:
 // a downstream-ledger blip MUST NOT shadow a successful LLM response, and
 // runs a periodic audit (cost_ledger drift check) to catch any
-// gaps. inv-hades-031: the emitter itself talks to internal/store, never the
+// gaps. invariant: the emitter itself talks to internal/store, never the
 // dispatcher.
 type CostEmitter interface {
 	Emit(ctx context.Context, evt CostEvent) error
@@ -185,10 +185,10 @@ func New(registry BackendRegistry, resolver ProfileResolver, emitter CostEmitter
 // CostEvents for failed attempts are STILL recorded on cancel (
 // drift-audit fidelity); only the further upstream call is suppressed.
 //
-// inv-hades-088 single-egress: every LLM dispatch from a hades-system caller
+// invariant single-egress: every LLM dispatch from a hades-system caller
 // flows through this method. The TierRequest is forwarded to backends
 // unchanged; header injection / canonical body encoding / credential
-// unwrapping are concerns of headers.go and the backends. inv-hades-068:
+// unwrapping are concerns of headers.go and the backends. invariant:
 // the dispatcher never inspects credential values.
 func (d *Dispatcher) Forward(ctx context.Context, req providers.TierRequest) (*providers.TierResponse, error) {
 
@@ -335,7 +335,7 @@ func (d *Dispatcher) Wfq() *quota.WfqQueue {
 // PreFlight delegate inside the seam is also nil-checked for the same
 // reason.
 //
-// inv-hades-080 invariant: this method is decision-only. It MUST NOT
+// invariant invariant: this method is decision-only. It MUST NOT
 // invoke a provider backend (tier1 / tier2.Forward), MUST NOT enqueue
 // into the WFQ, MUST NOT emit a CostEvent. The accompanying tests
 // assert these post-conditions explicitly (TestPreFlightCheckNeverCallsProviders,

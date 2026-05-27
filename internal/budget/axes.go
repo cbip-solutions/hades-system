@@ -8,16 +8,16 @@
 // - anomaly: z-score sliding window per scope (Welford epsilon-stable)
 // - pause: 4-scope state machine + auto-resume scheduler
 //
-// The package never imports internal/store directly (inv-hades-031). All
+// The package never imports internal/store directly (invariant). All
 // storage access goes through the BudgetStore interface declared here;
 // internal/daemon/dispatcheradapter/budget_hooks.go satisfies it.
 //
 // Compile-time anchors for the four invariants:
 //
-// inv-hades-076: preCallEnforcedBeforeUpstream (enforce.go)
-// inv-hades-077: axisTagCompleteness (axes.go)
-// inv-hades-078: anomalyDeterministic (anomaly.go)
-// inv-hades-079: hierarchicalPrecedence (enforce.go)
+// invariant: preCallEnforcedBeforeUpstream (enforce.go)
+// invariant: axisTagCompleteness (axes.go)
+// invariant: anomalyDeterministic (anomaly.go)
+// invariant: hierarchicalPrecedence (enforce.go)
 package budget
 
 import (

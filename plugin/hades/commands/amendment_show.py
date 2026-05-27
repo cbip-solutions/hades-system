@@ -25,10 +25,10 @@ Expected response includes:
 - `from` / `to` — current value + proposed value
 - `reason` — natural-language rationale
 - `evidence` — list of supporting events / commits / metrics
-- `audit_event_id` — the release design Tessera-anchored event linking
+- `audit_event_id` — HADES design Tessera-anchored event linking
 - `status` — `pending` | `acknowledged` | `denied`
 - `dependent_on` — list of prior amendments this one depends on (if any)
-- `affects_invariants` — list of inv-hades-XXX impacted (if any)
+- `affects_invariants` — list of invariant-XXX impacted (if any)
 
 ## 2. Render full detail
 
@@ -55,7 +55,7 @@ By <proposed_by> at <proposed_at>
 hades://audit/<audit_event_id>
 
 ## Affects invariants
-<inv-hades-XXX list>
+<invariant-XXX list>
 
 ## Dependent on prior amendments
 <dependent_on list>
@@ -74,7 +74,7 @@ If status is `acknowledged` or `denied`:
 
 ## Cross-references
 
-- the release design + the release design doctrine-amendment lifecycle
+- HADES design + HADES design doctrine-amendment lifecycle
 - /amendment-list, /amendment-ack, /amendment-deny
 """
 

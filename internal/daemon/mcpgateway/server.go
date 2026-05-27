@@ -63,7 +63,7 @@ var ErrInvalidDoctrine = errors.New("mcpgateway: invalid X-HADES-Doctrine header
 // tools/call (defensive operator-recovery posture per spec §22.4
 // graceful degradation).
 //
-// inv-hades-280 (project_id dual-source), inv-hades-277 (alias resolution).
+// invariant (project_id dual-source), invariant (alias resolution).
 type Server struct {
 	d             *Dispatcher
 	aliasResolver ProjectsAliasResolver

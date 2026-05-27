@@ -4,7 +4,7 @@
 // `hades layout repaint <alias>` is the operator-invoked recovery primitive:
 // re-construct the 5 daemon-owned tmux windows (orch / leads / workers /
 // hra / logs) from logical state in daemon.db. Preserves the
-// operator-owned scratch window per inv-hades-118.
+// operator-owned scratch window per invariant.
 //
 // Use case: after `hades day` surfaces a TmuxLayoutDriftDetected event
 // (the drift poller's read-only forensic side-channel — Q6 D), the

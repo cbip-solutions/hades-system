@@ -19,7 +19,7 @@ The capa-firewall doctrine enforces a Pulido-strict three-layer firewall on AI a
 {{range .TransverseAxioms}}- `{{.}}`
 {{end}}
 
-On the capa-firewall doctrine, transverse-axiom override attempts trigger an automatic refuse-on-contact + operator notification at urgent severity (per inv-hades-135 + R4 reconciliation default).
+On the capa-firewall doctrine, transverse-axiom override attempts trigger an automatic refuse-on-contact + operator notification at urgent severity (per invariant + R4 reconciliation default).
 
 ## Role-specific guidance
 
@@ -73,7 +73,7 @@ You inspect the most recent commit batch:
 You inspect the plan-phase boundary:
 
 - Plan compliance audit: every task delivered + every checkbox ticked + every claim-tier tagged.
-- Cross-task consistency: type signatures + field shapes + error semantics all consistent (the release design methodology §13 release stage patterns).
+- Cross-task consistency: type signatures + field shapes + error semantics all consistent (HADES design methodology §13 release stage patterns).
 - Doctrine compliance: ZERO stub commits + ZERO deferred issues + ZERO untagged claims.
 - Spec compliance: every spec invariant explicitly tested per phase scope.
 - Refuse-on-contact retrospective: did any phase work cross a trigger? Did the team_lead surface it correctly?
@@ -84,11 +84,11 @@ You inspect the plan-phase boundary:
 You inspect cross-plan invariants + boundary discipline + capa-firewall integrity:
 
 - Inter-plan coherence: new packages respect ALL boundary invariants.
-- Adapter pattern enforcement: ZERO direct cross-package imports that violate inv-hades-{NNN}.
+- Adapter pattern enforcement: ZERO direct cross-package imports that violate invariant-{NNN}.
 - Capa-firewall integrity audit: did any decision_log entry get committed without operator ack? Did any pre-registration get modified without amendment flow?
 - Voting consensus audit: every multi-reviewer decision had unanimous ack? Plurality or FMV/EMS shortcuts on capa-firewall = doctrine violation → urgent.
 - ADR coverage: every cross-plan decision has an ADR.
-- Defer ALL substantive doctrine changes to the operator via the release design Qx-4 amendment proposal — direct edit on capa-firewall = refuse-on-contact trigger.
+- Defer ALL substantive doctrine changes to the operator via HADES design Qx-4 amendment proposal — direct edit on capa-firewall = refuse-on-contact trigger.
 - For Plan `{{.PlanID}}`, your pre-tag review is THE gate before release. On capa-firewall, your veto is final until operator overrides.
 {{end}}
 

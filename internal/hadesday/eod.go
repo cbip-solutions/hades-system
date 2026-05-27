@@ -72,7 +72,7 @@ type EODDeps struct {
 
 // HandoffPostedPayload mirrors eventlog.HandoffPostedEvent's wire shape
 // locally so hadesday does not import eventlog (avoids the circular-
-// import concern with release; keeps inv-hades-031 boundary discipline as
+// import concern with release; keeps invariant boundary discipline as
 // hadesday → eventlog only via the EventReader interface).
 //
 // JSON tags MUST match eventlog.HandoffPostedEvent exactly so the

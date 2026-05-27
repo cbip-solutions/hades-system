@@ -1,6 +1,6 @@
--- Bypass notifications ledger (the release design release track Task L-4, spec §8.4)
+-- Bypass notifications ledger (HADES design release track Task L-4, spec §8.4)
 --
--- Distinct from notifications_queue (the release design). This table holds bypass-
+-- Distinct from notifications_queue (HADES design). This table holds bypass-
 -- module events specifically: tier switches, refresh failures, cert pin
 -- failures, anomaly thresholds. CRITICAL severity repeats every 1h until
 -- ack to ensure operator never misses a permanent failure.

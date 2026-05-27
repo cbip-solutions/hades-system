@@ -54,7 +54,7 @@ type TaskParams struct {
 // CreatedAt zero, MissPolicy unknown, etc. — should never trip
 // since this constructor sets all required fields).
 //
-// Boundary (inv-hades-031): stdlib + the in-package ComputeJitter
+// Boundary (invariant): stdlib + the in-package ComputeJitter
 // function only. No internal/store, internal/providers, or
 // private-tier1-module imports.
 func NewTask(p TaskParams, now time.Time) (*Schedule, error) {

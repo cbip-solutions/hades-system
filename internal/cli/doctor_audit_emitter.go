@@ -18,7 +18,7 @@
 // (`hades doctor full`, `hades state cleanup`, `hades doctor restore`, and
 // the daemon-side eval boundary via cmd/hades-ctld) all want the
 // same daemon round-trip behaviour: marshal once, POST to /v1/audit/emit,
-// return the resulting audit hash. The boundary (inv-hades-031) is
+// return the resulting audit hash. The boundary (invariant) is
 // preserved: this is a CLI-layer adapter that consumes the daemon
 // client — it does NOT touch internal/store.
 package cli

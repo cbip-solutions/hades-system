@@ -79,7 +79,7 @@ JOB_ID=$(curl --unix-socket /tmp/hades-system.sock \\
               | jq -r '.job_id')
 ```
 
-Result will be in the release design inbox + push notification per Hermes routing.
+Result will be in HADES design inbox + push notification per Hermes routing.
 
 When operator returns:
 ```
@@ -101,7 +101,7 @@ Cache holds last 50 queries + community summaries (doctrine-tunable size per spe
 
 ## 8. Privacy filter
 
-Per inv-hades-163, voice TTS NEVER reads aloud capa-firewall sensitive content per spec §6.4 (privacy filter never leaks).
+Per invariant, voice TTS NEVER reads aloud capa-firewall sensitive content per spec §6.4 (privacy filter never leaks).
 
 ## Cross-references
 

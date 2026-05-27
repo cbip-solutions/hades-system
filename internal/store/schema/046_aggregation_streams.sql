@@ -1,4 +1,4 @@
--- aggregation_windows + aggregation_events — the release design release track.
+-- aggregation_windows + aggregation_events — HADES design release track.
 --
 -- AggregationStream uses these tables to survive daemon restart:
 --   1. On window open:  INSERT INTO aggregation_windows (status='open').
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS aggregation_windows (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     layer       INTEGER NOT NULL,   -- 2=L2, 3=L3, 4=L4 (Layer enum)
     status      TEXT    NOT NULL CHECK(status IN ('open','closed')),
-    opened_at   INTEGER NOT NULL,   -- UTC unix seconds (inv-hades-005)
+    opened_at   INTEGER NOT NULL,   -- UTC unix seconds (invariant)
     closed_at   INTEGER,            -- NULL while open
     event_count INTEGER NOT NULL DEFAULT 0
 );

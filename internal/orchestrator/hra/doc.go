@@ -41,7 +41,7 @@
 // cancelled; the Done() channel is the canonical termination signal
 // per the eventlog package contract.
 //
-// # Boundary discipline (inv-hades-089, inv-hades-090)
+// # Boundary discipline (invariant, invariant)
 //
 // imports only internal/orchestrator/clock and
 // internal/orchestrator/eventlog. It never imports

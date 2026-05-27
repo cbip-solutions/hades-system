@@ -21,17 +21,17 @@
 //
 // Doctrine invariants:
 //
-// - inv-hades-197 APPEND-ONLY audit chain: EventType
+// - invariant APPEND-ONLY audit chain: EventType
 // slots 92-99 are reserved + their numeric values immutable. Payload
 // schemas added here are forward-compatible (additive fields only;
 // existing fields never renamed/retyped without an explicit ADR).
 //
-// - inv-hades-205 doctrine-emission strictness: the
+// - invariant doctrine-emission strictness: the
 // 8 payloads are emitted via RAGAuditEmitter.Emit which gates per
 // DoctrineProfile.AuditEmissionLevel. audit_emitter.go owns
 // the gate; D-12 ONLY supplies the payload schemas.
 //
-// - inv-hades-031 boundary: this file imports internal/orchestrator/eventlog
+// - invariant boundary: this file imports internal/orchestrator/eventlog
 // for the EventType alias + slot constants. It does NOT import release
 // budget primitives (the RAGAuditChainEmitter interface in
 // audit_emitter.go is the boundary-respecting indirection).

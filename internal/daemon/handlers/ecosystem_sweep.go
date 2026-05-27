@@ -3,7 +3,7 @@
 //
 // Four weekly-sweep handlers backing the cron worker's WeeklySweep
 // (cmd/hades-docs-cron Sunday 03:00 local; see also master plan §5 G-6).
-// Each handler is idempotent per inv-hades-204 (re-running produces zero
+// Each handler is idempotent per invariant (re-running produces zero
 // schema diff). Operator-initiated invocations from `hades doctor` and
 // the cron worker share the same code path.
 //

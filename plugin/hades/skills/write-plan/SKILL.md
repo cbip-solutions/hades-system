@@ -54,7 +54,7 @@ Background subagents have 600s stream watchdog. Use incremental Write+Edit per
 
 ### 5. Two-stage self-review (mandatory for ≥4 parallel writers)
 
-release stage — Mechanical greps (placeholder/attribution/uniqueness/module-path/inv-hades coverage).
+release stage — Mechanical greps (placeholder/attribution/uniqueness/module-path/invariant coverage).
 release stage — Code-reviewer subagent dispatch (MANDATORY; catches cross-phase signature drift).
 
 ## Cross-references

@@ -10,7 +10,7 @@
 // - verify-chain: walk the tile-log Merkle + record_hash + witness sig [I-2]
 // - history: query release eventlog with chain proofs [I-2]
 // - recover: interactive recovery (Litestream + cold archive + verify) [I-2]
-// - checkpoint: capa-firewall manual checkpoint (inv-hades-145 §1 Q4 B) [I-3]
+// - checkpoint: capa-firewall manual checkpoint (invariant §1 Q4 B) [I-3]
 // - cold-archive: nested group → ls | restore [I-3]
 // - configure-s3: interactive Keychain-integrated S3 credential setup [I-4]
 // - witness: nested group → rotate | pubkey [I-4]
@@ -27,7 +27,7 @@
 // hades audit-chain witness rotate --reason "<X>"
 // hades audit-chain witness pubkey
 //
-// inv-hades-146 (--reason mandatory) is enforced per leaf inside the individual
+// invariant (--reason mandatory) is enforced per leaf inside the individual
 // constructors (checkpoint, witness rotate); see Tasks I-3, I-4.
 // Cross-cutting reason-flag enforcement test lives in reason_flag_test.go (I-12).
 //

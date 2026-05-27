@@ -9,7 +9,7 @@
 // ContractFederationForDaemon + ContractCoordinatorForDaemon
 // interfaces) AND the concrete internal/caronte/store/federation +
 // internal/caronte/coordinated packages. The intermediate layers see
-// only the narrow seam interfaces (inv-hades-031 boundary; mirrors the
+// only the narrow seam interfaces (invariant boundary; mirrors the
 //
 // Three public helpers exported to main.go (J-8):
 //
@@ -29,7 +29,7 @@
 // ContractFederationForDaemon
 // Thin adapter that translates federation.* row types into the
 // daemon-package mirror types so the daemon sees only its own
-// value types (inv-hades-031). Pure mapping; no behaviour change.
+// value types (invariant). Pure mapping; no behaviour change.
 //
 // - newCoordinatorDaemonAdapter(*coordinated.OrchestratorCoordinator)
 // ContractCoordinatorForDaemon
@@ -554,7 +554,7 @@ type wireContractFederationOpts struct {
 //
 // Errors surface as bootstrap-required (main.go os.Exit(1)s):
 // - nil srv → defense-in-depth refusal (would NPE in SetContract*)
-// - nil tesseraMgr → cannot resolve audit adapter (inv-hades-269)
+// - nil tesseraMgr → cannot resolve audit adapter (invariant)
 // - federation.WorkspaceDBPath fail → no XDG anchor in env
 // - tesseraMgr.ProjectAdapter fail → audit subsystem misconfigured
 // - buildContractFederation fail → federation DB or coordinator wire-up failed

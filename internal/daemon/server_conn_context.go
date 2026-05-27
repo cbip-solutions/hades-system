@@ -10,7 +10,7 @@
 // context so every HTTP request served over that connection sees the
 // cred via auth.PeerCredFromContext(r.Context()).
 //
-// # Contract (inv-hades-131)
+// # Contract (invariant)
 //
 // - UDS connection (*net.UnixConn) → ExtractPeerCred + WithPeerCred.
 // On extraction failure, the context proceeds untouched so

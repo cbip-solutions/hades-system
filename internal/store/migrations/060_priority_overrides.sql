@@ -1,4 +1,4 @@
--- Migration 060: priority_overrides + tmux_session_state (the release design release track+C joint).
+-- Migration 060: priority_overrides + tmux_session_state (HADES design release track+C joint).
 --
 -- Reservation: per master plan §"Migration numbering coordination", 060 is the
 -- joint migration shared by release track (priority_overrides) and release track
@@ -7,7 +7,7 @@
 -- subsequent migration (e.g., 060a or a new number) — release track leaving room
 -- here would invite a half-empty migration; release track owns its own DDL.
 --
--- inv-hades-115 (audit chain integrity): every priority_overrides mutation MUST
+-- invariant (audit chain integrity): every priority_overrides mutation MUST
 -- emit a row in the events table inside the same transaction. The Go-layer
 -- helpers (UpsertPriorityOverrideTx + InsertEventTx in
 -- internal/store/priority_overrides.go) compose the multi-statement atomic
@@ -39,7 +39,7 @@
 --   The priority_overrides table tracks aliases by string; an FK would either
 --   require ON DELETE CASCADE (silently lose audit-relevant overrides when a
 --   project is archived) or block project deletion. Both are wrong:
---   - silent loss violates inv-hades-115 (audit chain integrity).
+--   - silent loss violates invariant (audit chain integrity).
 --   - blocking deletion couples lifecycle. Operator-driven `hades project rm`
 --     should also Reset the override; if the override survives, ListPriorityOverrides
 --     returns it as a dangling row that the next `hades project priority --ls`

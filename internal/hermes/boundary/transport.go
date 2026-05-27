@@ -12,12 +12,12 @@ import (
 
 // NewHermesCliFromHadesSystemTransport adapts an existing daemon-side
 // HadesSystemTransport (internal/daemon/transport/hadessystem_transport.go) into
-// the boundary.HermesCli interface. Constructor preserves the inv-hades-164
+// the boundary.HermesCli interface. Constructor preserves the invariant
 // compile-anchor (the underlying transport.HadesSystemTransport file stays at
 // its canonical path); the boundary package consumes it via this adapter.
 //
 // Per release / policy: the HadesSystemTransport is NOT moved
-// (would shatter the inv-hades-164 grep). Instead, the boundary package
+// (would shatter the invariant grep). Instead, the boundary package
 // wraps it so the consolidation surface (Surface interface) covers the
 // existing single-egress completion path AND adds capability-feature
 // detection + lifecycle hooks for future Hermes API growth.
@@ -29,7 +29,7 @@ import (
 //
 // Returned HermesCli:
 // - SendCompletion routes via the existing HadesSystemTransport.Forward
-// (single-egress preserved per inv-hades-164 + inv-hades-088).
+// (single-egress preserved per invariant + invariant).
 // - RegisterStatusProvider / OnSessionStart / RenderInlinePrompt all
 // return ErrCapabilityUnavailable in v0.13.x (G2/G3/G5 absent).
 // - OnPreToolCall accepts handlers and stores them; production wiring
@@ -37,7 +37,7 @@ import (
 // - WrapMCPEnvelope delegates to the canonical WrapMCPEnvelope helper.
 //
 // Behaviour preservation: callers of the underlying HadesSystemTransport
-// (compliance test inv-hades-164, integration tests, daemon dispatcher
+// (compliance test invariant, integration tests, daemon dispatcher
 // wiring) see no behaviour change. The boundary wrapping is additive — it
 // gives consolidation a home without removing the existing surface.
 func NewHermesCliFromHadesSystemTransport(zt *transport.HadesSystemTransport, version HermesVersion) HermesCli {

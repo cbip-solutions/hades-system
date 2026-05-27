@@ -5,12 +5,12 @@
 // spec §6.7 (aggregator.cache.consistent, outbox.queue.depth,
 // dedup.window.health, severity.distribution).
 //
-// inv-hades-113 anchor: aggregator.cache.consistent reconciles per-project
+// invariant anchor: aggregator.cache.consistent reconciles per-project
 // authoritative inbox row counts vs the daemon-level
 // inbox_aggregator_cache. Drift > tolerance signals write-fanout failure
 // or outbox replay missed.
 //
-// inv-hades-124 anchor: severity.distribution exposes the 4-tier enum
+// invariant anchor: severity.distribution exposes the 4-tier enum
 // (urgent / action-needed / info-immediate / info-digest). Detail
 // rendering uses the canonical order so operator output is stable.
 package cli

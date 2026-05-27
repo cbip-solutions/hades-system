@@ -3,10 +3,10 @@
 //
 // O(1) cap checks. WindowCounter is the rolling-window primitive;
 // CostCounters owns per-(project, profile, tier) × (24h, 30d) counters
-// plus a flat session map. RebuildFromLedger closes inv-hades-065 at
+// plus a flat session map. RebuildFromLedger closes invariant at
 // startup; StartHourlyMaintenance prunes >30d samples to bound memory.
 //
-// Boundary (inv-hades-031): this file imports only stdlib. The orchestrator
+// Boundary (invariant): this file imports only stdlib. The orchestrator
 // package MUST NOT import internal/store (master plan v2.0 §92 +
 // system-design umbrella §879 + B-7 commit body). Cost-row types and the
 // ErrDuplicateIdempotency sentinel are mirrored locally; F-6 dispatcheradapter
@@ -109,7 +109,7 @@ func (w *WindowCounter) pruneLocked(cutoff time.Time) {
 // CostLedgerRow orchestrator-side cost row shape. Mirror of
 // store.CostLedgerRow (intentionally identical) so dispatcheradapter
 // performs 1:1 field-by-field forwarding. Keeping the type local
-// maintains inv-hades-031 boundary (orchestrator MUST NOT import
+// maintains invariant boundary (orchestrator MUST NOT import
 // internal/store; bridge via dispatcheradapter).
 //
 // Why mirror not import: master plan v2.0 §92 + system-design umbrella
@@ -191,7 +191,7 @@ func (c *CostCounters) Record(row CostLedgerRow) error {
 	_, err := c.store.InsertCostLedger(row)
 	if err != nil {
 		if errors.Is(err, ErrDuplicateIdempotency) {
-			// inv-hades-062 honored: row already persisted; do not
+			// invariant honored: row already persisted; do not
 			// double-charge in-memory counters.
 			return nil
 		}
@@ -292,7 +292,7 @@ type ProjectProfileTier struct {
 // Boundary returns []ProjectProfileTier (orchestrator-local). The store
 // package and the dispatcher package both consume this iterator without
 // reaching into c.projectProfileTierCounters directly — preserving
-// inv-hades-031.
+// invariant.
 func (c *CostCounters) AllKeys() []ProjectProfileTier {
 	if c == nil {
 		return []ProjectProfileTier{}
@@ -346,7 +346,7 @@ var defaultMaintenanceTickInterval = 1 * time.Hour
 // accepts requests, else cap-checks could pass that ought to fail (an
 // empty CostCounters would make every WouldExceedCap call return false
 // regardless of historical spend). The verifyRebuild step closes
-// inv-hades-065: for up to 8 (project, profile, tier) keys, the in-memory
+// invariant: for up to 8 (project, profile, tier) keys, the in-memory
 // 30d total must equal the ledger SUM within 1e-9; mismatch is a fatal
 // error returned to the caller (the daemon refuses to start).
 //
@@ -395,7 +395,7 @@ func (c *CostCounters) RebuildFromLedger(since time.Time) error {
 //
 // Boundary rows is `[]CostLedgerRow` (orchestrator-local mirror), NOT
 // `[]store.CostLedgerRow`. F-5/F-6 boundary pivot — orchestrator MUST
-// NOT import internal/store (inv-hades-031).
+// NOT import internal/store (invariant).
 func (c *CostCounters) verifyRebuild(rows []CostLedgerRow, since time.Time) error {
 	type key struct{ project, profile, tier string }
 	expected := map[key]float64{}

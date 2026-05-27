@@ -36,7 +36,7 @@ func DefaultSchemaParser() SchemaParser {
 }
 
 // ApplyWithValidation is tighten-validating entry point that
-// wraps release's existing Apply per inv-hades-140. Sequence:
+// wraps release's existing Apply per invariant. Sequence:
 //
 // 1. Locate proposed ADR + extract toml diff (delegated via
 // extractTOMLDiff helper that release ships).
@@ -54,11 +54,11 @@ func DefaultSchemaParser() SchemaParser {
 // Reverter is wired) for the atomic git commit + file write +
 // reload signal.
 //
-// inv-hades-140: ValidateTighten BEFORE write — the file write only
+// invariant: ValidateTighten BEFORE write — the file write only
 // happens inside the inner Apply call (ownership lives there), so the
 // tighten-rejection branch never reaches the filesystem.
 //
-// inv-hades-094: file rollback on post-commit failure is preserved by
+// invariant: file rollback on post-commit failure is preserved by
 // the inner ApplyTransacted (when wired); ApplyWithValidation does
 // not alter that contract.
 //
@@ -74,7 +74,7 @@ func DefaultSchemaParser() SchemaParser {
 // DoctrineReloaded event. On stall (timeout / nil-watcher / channel
 // closed), emits eventlog.EvtDoctrineWatcherStalled (event 67) so the
 // operator-readable telemetry surfaces the reload-wait failure as
-// DISTINCT FROM the apply success. Per inv-hades-094 atomicity, the
+// DISTINCT FROM the apply success. Per invariant atomicity, the
 // apply itself succeeded — the new schema IS on disk + committed; the
 // reload-wait is an operator-visibility upgrade, NOT a correctness
 // fix. ApplyWithValidation therefore returns nil on stall (the inner
@@ -86,7 +86,7 @@ func DefaultSchemaParser() SchemaParser {
 // inner Apply ( semantics preserved; release's existing contract
 // untouched).
 //
-// Cross-reference: inv-hades-138 (atomic reload via reload.Watcher
+// Cross-reference: invariant (atomic reload via reload.Watcher
 // singleton) + release §3.4 / §4.1 F13 reload-wait flow + release Phase
 // J pre-flight PF-1..PF-5.
 func (a *AmendmentApplier) ApplyWithValidation(ctx context.Context, adrID int, operator string, baselineFn BaselineLoader, schemaParser SchemaParser) error {

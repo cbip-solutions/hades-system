@@ -5,11 +5,11 @@
 // substrate (docs/system-state.toml auto-derived + manual per Q9 E)
 // over /v1/state/*. Boundary constraints:
 //
-// - inv-hades-031: handler never imports internal/state/manifest directly.
+// - invariant: handler never imports internal/state/manifest directly.
 // All access goes through the StateService interface; H-10 wires
 // *daemon.Server to satisfy StateService via the production
 // state/manifest.Walker + Pinner.
-// - inv-hades-146: pin endpoint validates non-empty reason → 400 otherwise
+// - invariant: pin endpoint validates non-empty reason → 400 otherwise
 // ("auto-pin bypass structurally impossible from this surface").
 //
 // Graceful degradation: any nil StateService passed to a
@@ -69,7 +69,7 @@ type StateService interface {
 	Verify(ctx context.Context) (StateDiffP9, error)
 
 	// Pin sets a manual field value and emits state.manual_field_changed into
-	// the release chain. reason MUST be non-empty (inv-hades-146); callers
+	// the release chain. reason MUST be non-empty (invariant); callers
 	// validate before calling Pin.
 	// Returns error when the field is not flagged x-manual-field=true in the
 	// schema (rejected fields must not be silently accepted).

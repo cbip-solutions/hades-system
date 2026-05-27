@@ -1,7 +1,7 @@
--- Idempotency keys cache — TTL 24h (the release design release track).
+-- Idempotency keys cache — TTL 24h (HADES design release track).
 --
 -- Lifecycle:
---   MarkPending    — written BEFORE upstream call (inv-hades-056).
+--   MarkPending    — written BEFORE upstream call (invariant).
 --   MarkCompleted  — written AFTER validator+audit; persists full
 --                    response (status_code + headers + body) so a
 --                    restart in the gap upstream-response → orchestrator

@@ -19,7 +19,7 @@
 // the aggregator package — it decodes into its own local types (AggXxxReq /
 // AggXxxResp) to keep the client package free of CGO dependencies.
 //
-// inv-hades-129: this file imports stdlib only (context + time); the *Client
+// invariant: this file imports stdlib only (context + time); the *Client
 // transport handles net/http. No aggregator or internal/store imports.
 package client
 

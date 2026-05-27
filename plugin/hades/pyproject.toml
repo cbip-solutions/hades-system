@@ -1,4 +1,4 @@
-# plugin/hades/pyproject.toml — the release design release track coverage + lint anchor.
+# plugin/hades/pyproject.toml — HADES design release track coverage + lint anchor.
 #
 # This file does NOT replace the parent ``plugin/pyproject.toml``
 # (which sets pytest rootdir for the entire plugin tree). It is a
@@ -50,10 +50,10 @@ exclude_lines = [
 [tool.ruff]
 line-length = 90
 target-version = "py311"
-# the release design release track I-3 scope expansion: hooks/ + commands/ are now lint
+# HADES design release track I-3 scope expansion: hooks/ + commands/ are now lint
 # targets alongside renderers/ + afk/. providers/ + transports/ remain
-# excluded (pre-the release design typing/lint debt that the legacy modules
-# carry; the release design 'hades migrate' owns the rewrite + lint widening).
+# excluded (pre-HADES design typing/lint debt that the legacy modules
+# carry; HADES design 'hades migrate' owns the rewrite + lint widening).
 extend-exclude = [
   "providers/",
   "transports/",
@@ -65,7 +65,7 @@ select = ["E", "F", "W", "I", "N", "B", "UP", "C4", "RET", "SIM"]
 ignore = [
   "B008",  # function-call-in-default-argument: idiomatic for httpx.Client
   "N999",  # hyphenated module name `hades` is Hermes plugin convention
-  "UP042", # `str + Enum` inheritance is the the release design substrate parity idiom
+  "UP042", # `str + Enum` inheritance is the HADES design substrate parity idiom
   "UP017", # `timezone.utc` retained for Python 3.11 compat (datetime.UTC is 3.12+)
   "E501",  # long lines in HTML template literals (email/web renderers) accepted
 ]

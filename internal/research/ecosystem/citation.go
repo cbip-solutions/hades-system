@@ -2,7 +2,7 @@
 // Package ecosystem — citation.go
 //
 // Grammar-constrained citation enforcement per spec §2.7 Q7=A Layer 1 +
-// §4.2 step 10 + inv-hades-194 (citation grammar tokens validated before
+// §4.2 step 10 + invariant (citation grammar tokens validated before
 // answer emission).
 //
 // # Citation grammar
@@ -50,7 +50,7 @@
 // ValidateWithRetry are safe under concurrent use (the only mutation is
 // to the AnswerGenerator, whose concurrency is the caller's problem).
 //
-// # inv-hades-194
+// # invariant
 //
 // "Citation grammar tokens [doc_id:N] validated before answer emission"
 // — this file is the validator. Any code path emitting QueryResult must

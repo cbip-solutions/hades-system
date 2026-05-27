@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package auth — sentinel.go.
 //
-// Compile-time + runtime anchors for inv-hades-131 (HTTP auth boundary)
-// and inv-hades-132 (per-routine bearer constant-time + audit).
+// Compile-time + runtime anchors for invariant (HTTP auth boundary)
+// and invariant (per-routine bearer constant-time + audit).
 //
 // Compliance tests grep for these symbols + invoke them to assert the
 // auth pipeline is reachable from production code (not dead code).

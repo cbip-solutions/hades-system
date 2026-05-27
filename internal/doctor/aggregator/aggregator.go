@@ -7,7 +7,7 @@
 // Task F1 baseline; F3-F4-F5 extend with Fix() loop + backup +
 // CLI surface.
 //
-// Boundary (inv-hades-031): aggregator consumes only check.Check (interface)
+// Boundary (invariant): aggregator consumes only check.Check (interface)
 // + Emitter (interface; satisfied by internal/audit/chain in production);
 // MUST NOT import internal/store.
 //

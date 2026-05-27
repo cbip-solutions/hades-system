@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package daemon is the hades-ctld HTTP server.
 //
-// The API contract is versioned at /v1/ (inv-hades-024) and stays stable
+// The API contract is versioned at /v1/ (invariant) and stays stable
 // across plans 1-15. Handlers for endpoints whose behaviour is filled in
 // by later plans return 501 Not Implemented with an X-HADES-Plan header
 // indicating which plan implements them. Every endpoint that exists in
@@ -68,7 +68,7 @@ type Server struct {
 	// bypassFwd is the bypass-tier admin handle used ONLY by the
 	// /v1/bypass/* admin endpoints (status / probe / certs / pin /
 	// purge / etc.). It MUST NOT be consulted by /v1/messages — that
-	// route uses orchestratorFwd above per inv-hades-080. The handlers
+	// route uses orchestratorFwd above per invariant. The handlers
 	// package (handlers/bypass.go) consumes this via the Bypass()
 	// accessor + a structurally-typed local interface.
 	bypassFwd BypassAdmin
@@ -166,7 +166,7 @@ type Server struct {
 	// a Server can run without setting up the auth pipeline. Production
 	// MUST call SetDaemonBearer before Start() — the daemon main.go
 	// enforces this ordering and refuses to bind listeners otherwise
-	// (inv-hades-131).
+	// (invariant).
 	daemonBearer       *auth.DaemonBearer
 	bearerAuditEmitter auth.AuditEmitter
 
@@ -421,7 +421,7 @@ func (s *Server) registerRoutes() {
 	// POST /v1/events/handoff_posted — plugin-emitted HandoffPostedEvent
 	// consumed by EOD digest.
 	// Wrapped under requireDaemonBearer so the bearer middleware
-	// (Task I-1) gates the route at the inv-hades-131 boundary; when
+	// (Task I-1) gates the route at the invariant boundary; when
 	// daemonBearer is unset (test bring-up path) the helper falls
 	// open with a logged warning (production main.go enforces ordering).
 	//
@@ -622,7 +622,7 @@ func (s *Server) Bypass() any {
 // before the daemon process exits. Nil is acceptable for tests that do
 // not exercise the cost-counters path.
 //
-// inv-hades-065 contract: this MUST be called BEFORE the dispatcher
+// invariant contract: this MUST be called BEFORE the dispatcher
 // accepts requests. If the daemon ever serves /v1/messages with a nil
 // costCounters, every WouldExceedCap call returns false regardless of
 // historical spend — caps would silently leak. Main.go enforces the
@@ -872,7 +872,7 @@ type CaronteEngineForDaemon interface {
 	// projectID MUST be canonical id_sha256 (alias→canonical resolution
 	// happens upstream — at the HTTP layer in handlers/caronte.go).
 	// Returns the handler-facing CaronteReindexReport for direct JSON
-	// round-trip. inv-hades-273.
+	// round-trip. invariant.
 	IndexProject(ctx context.Context, projectID string) (handlers.CaronteReindexReport, error)
 
 	Close() error
@@ -1306,7 +1306,7 @@ func (s *Server) EcosystemHandler() handlers.EcosystemHandler {
 // warning. This deterministic "boot race" posture matters for
 // integration tests + handler-level unit tests that don't want to
 // drag in the release audit pipeline. Production main.go MUST call
-// SetDaemonBearer BEFORE Start() per inv-hades-131; production paths
+// SetDaemonBearer BEFORE Start() per invariant; production paths
 // fail-closed at daemon-startup (see cmd/hades-ctld/main.go).
 //
 // The DaemonBearer hashes the cleartext once at construction
@@ -1328,7 +1328,7 @@ func (s *Server) SetDaemonBearer(b *auth.DaemonBearer, emitter auth.AuditEmitter
 // ordering tricks (mirrors the per-handler accessor gate pattern used
 // by ProjectStore / InboxStore / etc.).
 //
-// inv-hades-131 contract: production main.go MUST call SetDaemonBearer
+// invariant contract: production main.go MUST call SetDaemonBearer
 // BEFORE Start. The fall-open path exists ONLY for the test fixture
 // shape (httptest harnesses that don't want to construct a release
 // audit pipeline) and emits a single-line stderr warning so accidental
@@ -1411,7 +1411,7 @@ func (s *Server) Start() error {
 		// - internal/daemon/auth/unix_peer.go:78-79 (the contract)
 		// - internal/daemon/server_session_doctrine.go:122-126
 		// (the consumer)
-		// - inv-hades-131 (peer-cred OR loopback gating)
+		// - invariant (peer-cred OR loopback gating)
 		ConnContext: connContextWithPeerCred,
 	}
 	s.mu.Unlock()

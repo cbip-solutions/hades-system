@@ -105,7 +105,7 @@ func AllEventTypes() []EventType {
 
 // AnomalyType is the closed enum of anomaly subtypes carried in a
 // MergeAnomalyDetected event payload (spec §2.6, Q11 D). MUST be a Go
-// enum (int kind) — inv-hades-110 forbids string-typed anomaly fields so
+// enum (int kind) — invariant forbids string-typed anomaly fields so
 // that release amendment.proposer's per-type template dispatch is a
 // compile-time switch, not a runtime string lookup.
 type AnomalyType int

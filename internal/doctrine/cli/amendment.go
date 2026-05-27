@@ -6,7 +6,7 @@
 // Per release spec Q11 D, all amendment business logic lives in the release
 // amendment package (internal/orchestrator/amendment/); the CLI is a pure
 // HTTP client to the daemon's /v1/doctrine/{propose-list,ack,deny,revert,
-// propose} routes. Boundary inv-hades-133: zero internal/orchestrator/* or
+// propose} routes. Boundary invariant: zero internal/orchestrator/* or
 // internal/store imports — the CLI talks JSON-only to the daemon.
 //
 // Per spec Q14 C, commands are flat-invocation (hades doctrine ack ADR-0050,

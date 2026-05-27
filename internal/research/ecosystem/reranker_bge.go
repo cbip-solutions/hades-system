@@ -2,7 +2,7 @@
 // Package ecosystem — reranker_bge.go
 //
 // BGE-reranker-v2-m3 cross-encoder reranker (release Task D-3 per
-// spec §2.6 Q6=A + inv-hades-198).
+// spec §2.6 Q6=A + invariant).
 //
 // # Model
 //
@@ -31,7 +31,7 @@
 //
 // # Latency invariants
 //
-// inv-hades-198: p95 ≤300ms for 100 candidates on M4 MPS. Enforced via
+// invariant: p95 ≤300ms for 100 candidates on M4 MPS. Enforced via
 // reranker_bge_bench_integration_test.go (build tag `integration`).
 //
 // # Goroutine safety

@@ -43,7 +43,7 @@ func (a *Accessor) SetRegistry(registry map[string]*v1.Schema) {
 // 2. registry["max-scope"] hardcoded last-resort fallback → return it.
 //
 // 3. If both unset → panic with init-order diagnostic. This is the
-// inv-hades-134 init-order guard: daemon startup MUST call
+// invariant init-order guard: daemon startup MUST call
 // SetRegistry before any consumer reads. The panic surfaces a
 // build-bug (likely circular import or missed init) immediately.
 //
@@ -102,7 +102,7 @@ func SetUserDefault(name string) error {
 // entries are replaced via atomic.Pointer.Store on the wrapping
 // *atomic.Pointer (ONE indirection layer). In-flight For() callers
 // observing the prior schema continue to see their pointer's data
-// intact (Go atomic guarantee, inv-hades-092 contract).
+// intact (Go atomic guarantee, invariant contract).
 //
 // Programmer errors panic immediately (nil schema, empty projectID) so
 // bugs surface at the SetForProject call site rather than downstream
@@ -200,7 +200,7 @@ func ClearForProject(projectID string) {
 //
 // - Active() / For(projectID) — Q7 C hybrid resolution: per-project
 // override → userDefault → registry["max-scope"] fallback. PANICS
-// on init-order violation (inv-hades-134 guard).
+// on init-order violation (invariant guard).
 //
 // - SetUserDefault(name) — installs a doctrine by name as the
 // userDefault. Returns ErrDoctrineNotFound on miss.

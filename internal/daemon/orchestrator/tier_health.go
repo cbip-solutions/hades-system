@@ -5,7 +5,7 @@
 // Used by CircuitBreaker to decide state transitions:
 // closed → suspect → open.
 //
-// Boundary (inv-hades-031): this file imports only stdlib (sync + time).
+// Boundary (invariant): this file imports only stdlib (sync + time).
 // The orchestrator package MUST NOT import internal/store.
 //
 // Design notes:

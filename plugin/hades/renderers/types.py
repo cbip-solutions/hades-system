@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/types.py
-"""Python type stubs mirroring the release design release track Go envelope substrate."""
+"""Python type stubs mirroring HADES design release track Go envelope substrate."""
 
 from __future__ import annotations
 
@@ -12,19 +12,19 @@ from typing import Any, ClassVar
 
 # Opaque ID type aliases — runtime form is ``str`` but type-checked
 # distinctively at API boundaries.
-CitationID = str  # opaque ID assigned by the release design release track augment/pipeline.go
+CitationID = str  # opaque ID assigned by HADES design release track augment/pipeline.go
 SessionID = str  # Hermes session ID (opaque)
 RequestID = str  # daemon request ID (opaque)
-AuditEventID = str  # the release design Tessera event ID (opaque, format "evt-<hex>")
+AuditEventID = str  # HADES design Tessera event ID (opaque, format "evt-<hex>")
 
-# Doctrine values per the release design doctrine.toml schema (max-scope/default/capa-firewall).
+# Doctrine values per HADES design doctrine.toml schema (max-scope/default/capa-firewall).
 ALLOWED_DOCTRINES: frozenset[str] = frozenset({"max-scope", "default", "capa-firewall"})
 
 
 class CitationType(str, Enum):
     """Citation type discriminating payload semantics.
 
-    Mirrors the release design release track ``internal/citation/types.go`` ``CitationType`` Go
+    Mirrors HADES design release track ``internal/citation/types.go`` ``CitationType`` Go
     enum. Adding a value here REQUIRES adding to Go source first
     (cross-language source-of-truth: Go).
     """
@@ -41,9 +41,9 @@ class CitationType(str, Enum):
 class CitationSource(str, Enum):
     """Originating retrieval surface for a citation.
 
-    Mirrors the release design release track ``internal/citation/types.go`` ``CitationSource``.
-    the release design release track renamed the code-graph sources gitnexus_* → caronte_*;
-    the old values are kept as backward-compat aliases so pre-the release design audit
+    Mirrors HADES design release track ``internal/citation/types.go`` ``CitationSource``.
+    HADES design release track renamed the code-graph sources gitnexus_* → caronte_*;
+    the old values are kept as backward-compat aliases so pre-HADES design audit
     rows (wire value ``gitnexus_query`` / ``gitnexus_context``) still round-trip
     without error — mirrors Go ``ParseCitationSource`` alias table.
     """
@@ -57,7 +57,7 @@ class CitationSource(str, Enum):
     TEMPORAL = "temporal"
     MANUAL_OVERRIDE = "manual_override"
 
-    # Backward-compat aliases for pre-the release design audit rows (wire value preserved).
+    # Backward-compat aliases for pre-HADES design audit rows (wire value preserved).
     GITNEXUS_QUERY = "gitnexus_query"
     GITNEXUS_CONTEXT = "gitnexus_context"
 
@@ -65,7 +65,7 @@ class CitationSource(str, Enum):
 class RetrievalLane(str, Enum):
     """RRF lane that surfaced a citation.
 
-    Mirrors the release design release track ``internal/citation/types.go`` ``RetrievalLane``.
+    Mirrors HADES design release track ``internal/citation/types.go`` ``RetrievalLane``.
     """
 
     SEMANTIC = "semantic"
@@ -78,7 +78,7 @@ class RetrievalLane(str, Enum):
 class Platform(str, Enum):
     """Render target.
 
-    6 platform-specific renderers (the release design release track) + 1 fallback (the release design
+    6 platform-specific renderers (HADES design release track) + 1 fallback (HADES design
     substrate ``internal/citation/markdown_fallback.go``).
     """
 
@@ -95,10 +95,10 @@ class Platform(str, Enum):
 class Envelope:
     """Per-citation structured envelope.
 
-    Round-trips with the release design Go ``internal/citation/types.go`` ``Envelope``
+    Round-trips with HADES design Go ``internal/citation/types.go`` ``Envelope``
     struct byte-exact via JSON tags. Field order + names MUST match Go json
     tags; validation enforces invariants (confidence in [0.0, 1.0]; id
-    non-empty) — these are inv-hades-166 anchors.
+    non-empty) — these are invariant anchors.
 
     The Go ``Lane`` field has JSON tag ``retrieval_lane``; Python uses the
     same JSON name (``retrieval_lane`` field on the dataclass).
@@ -227,16 +227,16 @@ class Envelope:
 
 @dataclass(frozen=True, slots=True)
 class AugmentationResult:
-    """Wrapper type for the release design release track augmentation pipeline output.
+    """Wrapper type for HADES design release track augmentation pipeline output.
 
-    Round-trips with the release design Go ``internal/augment/types.go``
+    Round-trips with HADES design Go ``internal/augment/types.go``
     ``AugmentationResult`` struct byte-exact via JSON tags.
 
     Top-level container for an augmentation pipeline run; doctrine field is
     load-bearing for downstream filtering (e.g., capa-firewall hides
     cross-project citations entirely at render time).
 
-    inv-hades-166: structured serialization preserves to Tessera audit chain
+    invariant: structured serialization preserves to Tessera audit chain
     via the per-citation envelopes.
     """
 

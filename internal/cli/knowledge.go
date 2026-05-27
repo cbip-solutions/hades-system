@@ -13,13 +13,13 @@
 // hades knowledge reindex [--full] [--project alias]
 // hades knowledge stats [--schema]
 //
-// inv-hades-129 boundary: --remote SHORT-CIRCUITS at this CLI layer
+// invariant boundary: --remote SHORT-CIRCUITS at this CLI layer
 // BEFORE the daemon round-trip. The deferred-message text + roadmap
 // pointer is rendered locally; the daemon never sees the flag. The
 // knowledge.NoRemoteSentinel() anchor is invoked from the production
 // path so the G-16 compliance test asserts production-reachability.
 //
-// inv-hades-129 boundary (symmetric): --audit-chain SHORT-CIRCUITS at
+// invariant boundary (symmetric): --audit-chain SHORT-CIRCUITS at
 // this CLI layer with a release deferred-message pointer. Same anchor
 // pattern via knowledge.NoAuditChainSentinel().
 //

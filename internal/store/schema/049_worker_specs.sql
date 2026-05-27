@@ -1,18 +1,18 @@
 --
--- Migration 049: worker specs persistence (the release design release track Task D-8).
+-- Migration 049: worker specs persistence (HADES design release track Task D-8).
 -- schemaVersion bumps 12 → 13.
 --
 -- Three tables for the three workforce variants. Separate tables (vs
 -- a single worker_specs table with a variant column) keep the schema
--- explicit and let the release design + the release design add variant-specific columns
+-- explicit and let HADES design + HADES design add variant-specific columns
 -- without conditional checks at the call site.
 --
 -- All three carry project_id (spec §7.1 logical isolation; release track
 -- queues already enforce this on every row).
 --
--- inv-hades-031 boundary preserved: internal/workforce/worker MUST NOT
+-- invariant boundary preserved: internal/workforce/worker MUST NOT
 -- import internal/store. The daemon adapter (release track) will wire the
--- read/write surface; release track ships only the schema so the release design
+-- read/write surface; release track ships only the schema so HADES design
 -- orchestrator persistence is unblocked.
 --
 -- IF NOT EXISTS aligns with prior migrations (032..048) and lets the
@@ -43,7 +43,7 @@ CREATE INDEX IF NOT EXISTS idx_worker_specs_doctrine ON worker_specs(doctrine_na
 -- The TeamLead's persistent subprocess registry lives in
 -- subprocess_sessions (migration 048); this table is the spec snapshot
 -- (matches the worker_specs shape but kept separate for variant-clarity
--- and the release design future-extension).
+-- and HADES design future-extension).
 CREATE TABLE IF NOT EXISTS team_lead_specs (
     id              TEXT NOT NULL,
     project_id      TEXT NOT NULL,

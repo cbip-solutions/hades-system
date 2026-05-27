@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
 """
-hades_jina_embed.py — the release design release track JinaCodeEmbeddings subprocess.
+hades_jina_embed.py — HADES design release track JinaCodeEmbeddings subprocess.
 
 Hosts jinaai/jina-code-embeddings-1.5b via sentence-transformers on M4 MPS
 (falls back to CPU on non-Apple platforms). Reads JSON-line requests from
-stdin, writes JSON-line responses to stdout. Mirrors the the release design G
+stdin, writes JSON-line responses to stdout. Mirrors the HADES design G
 hades_embed.py protocol used by internal/knowledge/embed/mps.go.
 
 Protocol:
@@ -27,8 +27,8 @@ The cross-shape invariant matters: EmbedBoth must produce a binary that
 matches the binary derived from quantizing the first 256 dims of fp32.
 Shim mode enforces this so embedder_test.go can assert the contract.
 
-inv-hades-031: this script never imports network libraries. Reads stdin /
-writes stdout only. Operator's daemon owns network egress per the release design F.
+invariant: this script never imports network libraries. Reads stdin /
+writes stdout only. Operator's daemon owns network egress per HADES design F.
 """
 
 import sys

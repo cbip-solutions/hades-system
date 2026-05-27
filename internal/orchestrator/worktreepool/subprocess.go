@@ -7,7 +7,7 @@
 //
 // Why a single os/exec entry-point?
 //
-// - **Audit (inv-hades-089/090 ⊥)**: subprocess.go has no awareness of
+// - **Audit (invariant/090 ⊥)**: subprocess.go has no awareness of
 // internal/store, internal/workforce/queue, internal/eventlog. Any
 // attempt to import them is a hard compile failure visible in CR.
 // - **Privacy**: stderr from git subprocesses can contain

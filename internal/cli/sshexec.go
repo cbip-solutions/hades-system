@@ -430,7 +430,7 @@ func sshExecAuditLogCmd() *cobra.Command {
 			}
 			ctx, cancel := context.WithTimeout(cmd.Context(), 5*time.Second)
 			defer cancel()
-			// inv-hades-082 (review F-5): MUST filter on the canonical
+			// invariant (review F-5): MUST filter on the canonical
 			// `ssh_exec.` prefix (underscore) — this matches what the
 			// MCP Emitter at internal/mcp/sshexec/emit.go::EmitStarted/
 			// Completed/Denied/InteractiveBlocked actually writes
@@ -518,7 +518,7 @@ func sshExecExecCmd() *cobra.Command {
 			ctx, cancel := context.WithTimeout(cmd.Context(), req.Timeout+30*time.Second)
 			defer cancel()
 			sink := &cliStreamSink{out: cmd.OutOrStdout(), errw: cmd.ErrOrStderr()}
-			// inv-hades-082 (review F-1): wire a real audit emitter that
+			// invariant (review F-1): wire a real audit emitter that
 			// POSTs ssh_exec.{started,completed,denied,interactive_blocked}
 			// events to the daemon /v1/audit/emit endpoint. Pre-fix the
 			// CLI passed &sshexec.NopAuditEmitter{} which silently
@@ -571,7 +571,7 @@ func (s *cliStreamSink) Emit(chunk sshexec.StreamChunk) error {
 // dispatcherAuditEmitter implements sshexec.AuditEmitter by POSTing
 // each event to the daemon's /v1/audit/emit endpoint via *client.Client.
 //
-// inv-hades-082 (review F-1): every Run call MUST emit
+// invariant (review F-1): every Run call MUST emit
 // ssh_exec.{started,completed,denied,interactive_blocked} so operators
 // can reconstruct security-grade SSH sessions after the fact. The
 // pre-fix CLI used &sshexec.NopAuditEmitter{} which silently dropped
@@ -589,7 +589,7 @@ func (s *cliStreamSink) Emit(chunk sshexec.StreamChunk) error {
 // - Errors are returned to sshexec.Run which treats them as
 // best-effort and never fails the parent command. A daemon-down
 // state should not block a successful command. The daemon's
-// EmitClient at internal/mcp/client/emit.go provides inv-hades-083
+// EmitClient at internal/mcp/client/emit.go provides invariant
 // no-loss buffering for the MCP path; the CLI path is used by
 // direct operators and a daemon-down state surfaces via
 // `hades doctor sshexec` rather than command failure.
@@ -609,7 +609,7 @@ type dispatcherAuditEmitter struct {
 //
 // Each emit call uses a fresh 5s deadline derived from
 // context.Background() (NOT the caller's ctx) so audit emission survives
-// parent ctx cancellation — this is intentional per inv-hades-082: the
+// parent ctx cancellation — this is intentional per invariant: the
 // security trail must always be produced even if the operator cancels
 // the surrounding command.
 func newDispatcherAuditEmitter(c *client.Client, projectID string) *dispatcherAuditEmitter {

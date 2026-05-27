@@ -97,12 +97,14 @@ users can inspect and build the source tree directly.
 - [Threat model](THREAT_MODEL.md)
 - [Configuration reference](CONFIGURATION.md)
 - [End-to-end examples](EXAMPLES.md)
+- [Subsystem handbook](docs/README.md)
 - [Release notes](CHANGELOG.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 
-Use these guides as the v1.0 handbook for installing, configuring, operating,
-and contributing to HADES.
+Use the root guides for first contact and the handbook for deeper subsystem
+operation, including Caronte, HRA, orchestration, Contract Federation, daemon
+operations, Hermes, MCP, CLI, and HTTP API surfaces.
 
 ## License
 

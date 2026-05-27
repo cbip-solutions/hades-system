@@ -1,9 +1,9 @@
 -- internal/research/ecosystem/migrations/002_ecosystem_versions.sql
 --
--- the release design release track Task A-9. Per spec §3.4.
+-- HADES design release track Task A-9. Per spec §3.4.
 --
 -- One row per (package_id, version) tuple. source_blob_sha256 is the
--- pointer to the release design F CAS (set when ingester writes the doc body).
+-- pointer to HADES design F CAS (set when ingester writes the doc body).
 
 CREATE TABLE IF NOT EXISTS ecosystem_versions (
     id                  INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -7,7 +7,7 @@
 // operations (release tag, doctrine amendment, large migration). The reason
 // string is stored in the chain anchor for forensic traceability.
 //
-// inv-hades-146: --reason is MANDATORY. cobra MarkFlagRequired checks that
+// invariant: --reason is MANDATORY. cobra MarkFlagRequired checks that
 // the flag is present but does NOT enforce non-empty; RunE performs the
 // second guard (strings.TrimSpace) so an explicit --reason "" is also
 // rejected before the HTTP call.

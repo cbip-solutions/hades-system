@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package store wraps SQLite for hades-ctld.
 //
-// Uses ncruces/go-sqlite3 (pure-Go via wasm, no CGO) per inv-hades-031
+// Uses ncruces/go-sqlite3 (pure-Go via wasm, no CGO) per invariant
 // (auditable; zero supply chain via CGO toolchain) and verified by
 // design v1.2 R3.
 //

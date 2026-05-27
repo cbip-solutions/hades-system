@@ -26,7 +26,7 @@ PROVIDER_PLUGIN_SRC = Path(__file__).resolve().parent.parent / "providers"
 # Hermes config keys we manage. Listed for verifiability + auditability.
 # PROVIDER_NAME stays as "hades-system" per spec §Q3 BORDERLINE — keychain
 # service prefix + provider-registration name preserved for operator
-# re-provisioning friction; full borderline migration deferred to the release design+N.
+# re-provisioning friction; full borderline migration deferred to HADES design+N.
 PROVIDER_NAME = "hades-system"
 # Re-exported for backward compatibility with callers / tests; canonical
 # definition lives in ``plugin/hades/_constants.py`` (reviewer M1).
@@ -366,7 +366,7 @@ def handle_install_mcps(raw_args: str) -> str | None:
 
     # release track extension (2026-05-15): wire the ProviderProfile end-to-end.
     # This makes Hermes' anthropic.Anthropic SDK POST native Anthropic JSON
-    # to hades-ctld's /v1/messages on next start. Closes inv-hades-164.
+    # to hades-ctld's /v1/messages on next start. Closes invariant.
     hermes_home = _resolve_hermes_home()
     base_url = os.environ.get("HADES_SYSTEM_BASE_URL", DEFAULT_BASE_URL)
     out.append("### Provider plugin wiring")

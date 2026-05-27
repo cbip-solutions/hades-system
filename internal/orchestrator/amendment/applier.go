@@ -56,7 +56,7 @@ func (execGitRunner) Run(ctx context.Context, dir string, args ...string) error 
 // after the inner Apply commit lands and synchronously awaits the
 // matching DoctrineReloaded event. On timeout, emits
 // DoctrineWatcherStalled and returns nil (the apply itself succeeded;
-// reload-wait is operator-visibility per inv-hades-094 atomicity).
+// reload-wait is operator-visibility per invariant atomicity).
 //
 // When nil, ApplyWithValidation falls through to the existing
 // fire-and-forget ReloadSignal.Reload(ctx) path ( semantics

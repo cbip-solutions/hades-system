@@ -18,7 +18,7 @@
 // - ecosystem-embedder.toml — Embedding model
 // (jina-code-embeddings-1.5b / MPS primary; voyage-code-3 fallback)
 // - ecosystem-reranker.toml — Reranker + per-ecosystem λ map
-// (BGE-reranker-v2-m3; inv-hades-198 ≤300ms; inv-hades-196 λ tunable)
+// (BGE-reranker-v2-m3; invariant ≤300ms; invariant λ tunable)
 // - ecosystem-router.toml — Local classifier + heuristic
 // pre-filter (no LLM; single-egress doctrine preserved)
 // - ecosystem-version-detect.toml — 5-layer cascade

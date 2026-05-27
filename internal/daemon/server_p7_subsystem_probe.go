@@ -15,7 +15,7 @@
 // and the snapshot logger emits "subsystem unwired" with status counts
 // all zero — operationally inert but observable.
 //
-// inv-hades-031 boundary: this file lives in internal/daemon (which already
+// invariant boundary: this file lives in internal/daemon (which already
 // imports internal/store + every release subsystem package indirectly via
 // the adapters). The per-subsystem prober concrete types do not violate
 // the boundary because they are dependency-injected (SetXxxProber); the

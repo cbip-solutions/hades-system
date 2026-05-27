@@ -15,7 +15,7 @@
 // HaikuLLMJudge.Judge itself imposes no doctrine check — it is a pure
 // "given inputs, return judgement" function. This separation keeps the
 // judge unit-testable without doctrine plumbing while preserving the
-// invariant (inv-hades-205) that default-doctrine queries never incur
+// invariant (invariant) that default-doctrine queries never incur
 // Haiku latency / cost.
 //
 // # Backend routing
@@ -73,14 +73,14 @@
 //
 // # Invariants
 //
-// - inv-hades-031: this file MUST NOT import internal/store directly.
+// - invariant: this file MUST NOT import internal/store directly.
 // The JudgeBackend interface is the only seam to the daemon — no
 // access to canonical store or audit chain from here.
-// - inv-hades-004: no Claude attribution in source.
-// - inv-hades-205: default-doctrine queries
+// - invariant: no Claude attribution in source.
+// - invariant: default-doctrine queries
 // MUST NOT incur judge cost — enforced at the dispatcher D-9 call
 // site, not here.
-// - inv-hades-021 (audit row size budget ≤8 KiB): Judgement.Reason is
+// - invariant (audit row size budget ≤8 KiB): Judgement.Reason is
 // clamped to ≤120 bytes post-parse so EvtRAGAbstain payloads cannot
 // blow the row budget on a verbose model response.
 package ecosystem

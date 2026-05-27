@@ -195,7 +195,7 @@ func isYAMLNumericLike(s string) bool {
 }
 
 // RenderMCPServersBlockForCompliance is an EXPORTED test-only accessor to
-// renderMCPServersBlock so the inv-hades-217 compliance test (in
+// renderMCPServersBlock so the invariant compliance test (in
 // tests/compliance/) can verify the runtime output without owning the
 // hermesMCPServerEntry type internals. The compliance test passes nil
 // (no operator overrides) to exercise the gateway-default emission path.

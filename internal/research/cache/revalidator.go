@@ -9,7 +9,7 @@
 // The noWebInCache AST analyzer enforces this
 // boundary via an allowlist that names this file specifically. All other
 // files in this package MUST NOT import net/http; the analyzer treats any
-// other file-level net/http import as a violation of inv-hades-152.
+// other file-level net/http import as a violation of invariant.
 //
 // # Revalidator
 //
@@ -37,7 +37,7 @@
 // (ValidateOpts.Timeout, default 5 s). The tighter of the two wins per
 // context.WithTimeout semantics.
 //
-// inv-hades-152: SourceURL must be non-empty. Validate returns
+// invariant: SourceURL must be non-empty. Validate returns
 // ErrSourceURLRequired when finding.URL is empty.
 package cache
 

@@ -8,7 +8,7 @@
 // Pre-H-12, the Hermes-touching surface was spread across three places:
 // - `internal/daemon/transport/hadessystem_transport.go` — Go-side
 // HadesSystemTransport (providers.TierBackend adapter; preserved in place
-// per inv-hades-164 compile-anchor grep).
+// per invariant compile-anchor grep).
 // - `plugin/hades/__init__.py` + `plugin/hades/hooks/` — Python-side
 // plugin registrations + PreCompletion hooks + skin + status helpers.
 // - `internal/daemon/mcpgateway/server.go` — ad-hoc MCP CallToolResult
@@ -41,12 +41,12 @@
 // # Why HadesSystemTransport stays in internal/daemon/transport/
 //
 // The existing `internal/daemon/transport/hadessystem_transport.go` is
-// preserved in place because the inv-hades-164 compile-anchor grep checks
+// preserved in place because the invariant compile-anchor grep checks
 // that literal file path (see
 // tests/compliance/inv_hades_164_hadessystem_transport_single_egress_test.go:73).
 // Moving it would break the compliance test grep. The boundary package
 // provides a constructor (NewTransportFromHadesSystem) that wraps the
-// existing transport behind the Surface interface — preserving inv-hades-164
+// existing transport behind the Surface interface — preserving invariant
 // while still delivering policy consolidation for NEW code.
 //
 // # Boundary lint scope
@@ -68,5 +68,5 @@
 // - `docs/operations/hermes-compat.md` — G2/G3/G4/G5 divergence catalog +
 // fast-follow commitment.
 // - `internal/daemon/transport/` — preserved HadesSystemTransport
-// (inv-hades-164 compile-anchor); the boundary wraps but does not move.
+// (invariant compile-anchor); the boundary wraps but does not move.
 package boundary

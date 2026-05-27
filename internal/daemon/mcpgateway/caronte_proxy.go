@@ -8,7 +8,7 @@
 //
 // 1. Wraps a narrow CaronteEngine interface (declared here) so the daemon
 // composition root wires the concrete *caronte.Engine without this package
-// importing internal/caronte's constructor (inv-hades-031; the package does
+// importing internal/caronte's constructor (invariant; the package does
 // import caronte's result/return VALUE types — a one-way lower-layer
 // import, fine). The engine satisfies CaronteEngine + research.GitnexusClient
 // (the research interface name is the stable drop-in contract — DECISION L-3).

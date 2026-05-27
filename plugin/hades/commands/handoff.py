@@ -126,7 +126,7 @@ interactively to enable /v1/messages').>
 
 - `design records`
 - `docs/METHODOLOGY.md`
-- `~/.claude/projects/-path-to-projects-hades-system/memory/MEMORY.md`
+- `local agent memory`
 """
 
 
@@ -200,7 +200,7 @@ def handle_handoff(raw_args: str) -> str | None:
     out.append("")
     out.append(
         "Doctrine: conventional commit subject, NO AI-attribution "
-        "(inv-hades-004 gated by pre_tool_call callback)."
+        "(invariant gated by pre_tool_call callback)."
     )
 
     return "\n".join(out)

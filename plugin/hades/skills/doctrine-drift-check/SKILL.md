@@ -2,7 +2,7 @@
 name: doctrine-drift-check
 description: |
   HADES doctrine drift detection: query caronte code-graph for all code/spec/doc
-  references to doctrine keys; compare against current the release design config; report
+  references to doctrine keys; compare against current HADES design config; report
   mismatches by severity. Use when operator invokes /hades:doctrine-drift-check.
 license: Proprietary
 agentskills_version: 1.0
@@ -10,7 +10,7 @@ keywords:
   - doctrine-drift
   - caronte
   - drift-detection
-  - the release design
+  - HADES design
   - cross-reference
   - hades
 ---
@@ -18,7 +18,7 @@ keywords:
 # HADES — doctrine-drift-check skill (doctrine drift detection)
 
 This skill detects doctrine drift by querying caronte code-graph for all references to
-doctrine keys and cross-referencing with the current the release design doctrine config.
+doctrine keys and cross-referencing with the current HADES design doctrine config.
 Triggered by `/hades:doctrine-drift-check [project]`.
 
 ## When to use
@@ -59,10 +59,10 @@ daemon config. Mismatch → drift detected.
 
 ### 5. Audit anchor
 
-Emits `DoctrineDriftCheckCompleted` event anchored in the release design audit chain.
+Emits `DoctrineDriftCheckCompleted` event anchored in HADES design audit chain.
 
 ## Cross-references
 
-- the release design doctrine schema (canonical source of truth)
-- the release design §3.1 mcpgateway (caronte in-process; tool name mcp_hades-system_caronte_query)
+- HADES design doctrine schema (canonical source of truth)
+- HADES design §3.1 mcpgateway (caronte in-process; tool name mcp_hades-system_caronte_query)
 - /hades:doctrine-drift-check slash command handler

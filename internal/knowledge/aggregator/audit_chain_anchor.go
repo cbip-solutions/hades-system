@@ -12,7 +12,7 @@
 // - FillAuditChainAnchor explicitly allows anchor="" (clear semantics) so
 // unpromote and pre-release backfill can clear the column without producing
 // a parse error on the empty string.
-// - The boundary (inv-hades-031) is respected: no internal/store import.
+// - The boundary (invariant) is respected: no internal/store import.
 // All DB access goes through the PerProjectKnowledgeStore interface.
 //
 // Phase ownership: D-11. will wire a real ChainAnchorComputer at

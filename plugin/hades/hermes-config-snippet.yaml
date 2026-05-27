@@ -5,7 +5,7 @@ mcp_servers:
     args: []
     description: |
       HADES research MCP: fan-out parallel search + agentic_deep_research
-      + caronte engine code-graph (in-process; the release design sovereignty).
+      + caronte engine code-graph (in-process; HADES design sovereignty).
     env:
       HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"
 
@@ -15,7 +15,7 @@ mcp_servers:
     description: |
       HADES budget MCP: 4-axis attribution (caller/project/agent/
       augmentation) + z-score anomaly + hierarchical hard-pause cascade
-      (per the release design Q6=C).
+      (per HADES design Q6=C).
     env:
       HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"
 
@@ -25,7 +25,7 @@ mcp_servers:
     description: |
       HADES audit MCP: audit_review with cross-provider family-disjoint
       reviewer enforcement + Tessera-anchored audit chain integration
-      (per the release design Q7=D, the release design).
+      (per HADES design Q7=D, HADES design).
     env:
       HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"
 
@@ -35,6 +35,6 @@ mcp_servers:
     description: |
       HADES ssh-exec MCP: production-grade remote execution with
       per-project allowlist + streaming logs + idempotency token registry
-      (per the release design Q8=C).
+      (per HADES design Q8=C).
     env:
       HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"

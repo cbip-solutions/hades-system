@@ -1,6 +1,6 @@
 -- internal/research/ecosystem/migrations/004_ecosystem_chunks_fp32.sql
 --
--- the release design release track Task A-9. Per spec §3.4.
+-- HADES design release track Task A-9. Per spec §3.4.
 --
 -- Sidecar table for FP32 1536-d embeddings (rerank stage). 1 row per
 -- chunks row; PK = chunk_id (FK to ecosystem_chunks). 6144 bytes per

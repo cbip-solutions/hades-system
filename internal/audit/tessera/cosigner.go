@@ -14,7 +14,7 @@ const pubkeyFingerprintHexLen = 16
 // signature over STH.Digest() and a short opaque correlation token
 // derived from the witness public key.
 //
-// Per inv-hades-145 every entry in the daemon-global checkpoint log
+// Per invariant every entry in the daemon-global checkpoint log
 // (A-7) MUST be a SignedSTH; there is NO unsigned variant in the
 // public type system. The only public path to construct one is via
 // CoSigner.Sign, so a caller cannot bypass the witness signing path

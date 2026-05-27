@@ -2,7 +2,7 @@
 // Package cli — adr_accept.go.
 //
 // `hades adr accept <id> --reason <X>` calls POST /v1/adr/accept.
-// --reason is mandatory per inv-hades-146; cobra MarkFlagRequired enforces
+// --reason is mandatory per invariant; cobra MarkFlagRequired enforces
 // presence; RunE enforces non-empty (whitespace-only is also rejected).
 package cli
 

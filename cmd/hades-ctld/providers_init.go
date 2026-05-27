@@ -16,7 +16,7 @@
 // `hades providers verify` surfaces it) rather than failing the
 // whole daemon.
 //
-// inv-hades-211 cascade-completeness is intentionally NOT enforced here:
+// invariant cascade-completeness is intentionally NOT enforced here:
 // the "bypass" backend is registered by buildOrchestrator (master C5)
 // AFTER BuildProviderRegistry returns, so a gate that runs at registry
 // construction time would always reject any profile that names "bypass"
@@ -25,7 +25,7 @@
 // verifyCascadeCompleteness (orchestrator_wiring.go), invoked from
 // main.go after buildOrchestrator wires bypass.
 //
-// inv-hades-031: cross-package wiring lives here, in package main — no
+// invariant: cross-package wiring lives here, in package main — no
 // internal/* package wires providers + config + keychain together.
 package main
 

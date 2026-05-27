@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package backup ships the release backup-before-modify
-// substrate per spec §2.5 + §2.12 + §5.1 + inv-hades-177.
+// substrate per spec §2.5 + §2.12 + §5.1 + invariant.
 //
 // Backups land at $XDG_STATE_HOME/hades-system/doctor-backups/<ISO8601>/<check>/
 // with manifest.json (mode 0600) + content.tar.gz tarball. Manifest
 // carries: BackupID (ISO8601 UTC) + CheckName + SourcePath + TarballPath +
 // AuditEventHash + Files (list of paths relative to SourcePath).
 //
-// Boundary (inv-hades-031): backup package consumes ONLY stdlib (os, io,
+// Boundary (invariant): backup package consumes ONLY stdlib (os, io,
 // archive/tar, compress/gzip, encoding/json, path/filepath, time); MUST
 // NOT import internal/store.
 //

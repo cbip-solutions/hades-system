@@ -6,7 +6,7 @@
 // server_audit_query.go + server_research_cache_admin.go pattern: keep
 // server.go small + group doctrine wiring in one file.
 //
-// Boundary discipline (inv-hades-031 generalized as inv-hades-133): this file
+// Boundary discipline (invariant generalized as invariant): this file
 // imports internal/doctrine/{active,builtin,parser,reinforcement,reload,
 // schema/v1,errors} which is allowed because daemon is the orchestrator
 // that wires doctrine → handlers; doctrine itself never imports daemon
@@ -242,13 +242,13 @@ func sliceSection(body, section, format string) string {
 // (CLI's `hades doctrine-v2 validate --against-baseline` populates the
 // flag for forward-compat).
 //
-// inv-hades-135 contract reconciliation: user TOMLs MUST
+// invariant contract reconciliation: user TOMLs MUST
 // NOT declare [doctrine_transverse] (parser's ParseOpts{} default rejects
 // the section), but the in-memory Validate() requires Transverse fields
 // to equal TransverseExpected() (all-true). The accessor reconciles by
 // populating the four transverse axioms BEFORE Validate so a user TOML
 // without the section parses → fills → validates cleanly. This preserves
-// inv-hades-135 source-level enforcement (user TOMLs literally cannot
+// invariant source-level enforcement (user TOMLs literally cannot
 // override transverse via TOML) while letting the user-side validate
 // pipeline succeed.
 func (s *Server) DoctrineValidate(tomlContent, againstBaseline string) error {

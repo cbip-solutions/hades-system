@@ -4,7 +4,7 @@
 // Surface greenfield scaffold from embedded or pluggable template. Consumes
 // onboard.Wizard with WizardKindGreenfield discriminator +
 // preflight + release audit emit (via daemon HTTP audit client per
-// inv-hades-031 — internal/cli MUST NOT import internal/store) +
+// invariant — internal/cli MUST NOT import internal/store) +
 // D1/D2/D3 templates+hooks.
 //
 // drift adjustments vs the master plan §"Tech Stack" assumption:

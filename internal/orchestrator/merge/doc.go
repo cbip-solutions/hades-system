@@ -25,14 +25,14 @@
 //
 // # Boundaries (lint-enforced)
 //
-// inv-hades-104 internal/orchestrator/merge/* MUST NOT import
+// invariant internal/orchestrator/merge/* MUST NOT import
 // internal/store. Bridge via internal/daemon/
 // orchestratoradapter/. Compliance test
 // tests/compliance/inv_hades_104_merge_no_store_test.go
 // scans go list -deps for internal/store occurrences and
 // fails the build if found.
 //
-// inv-hades-110 Anomaly events MUST be typed via the Go enum
+// invariant Anomaly events MUST be typed via the Go enum
 // AnomalyType (int). NO string-typed Type field. The
 // AnomalyType so a typo or string concat is a compile
 // error, not a runtime ADR misroute. Compliance test
@@ -57,9 +57,9 @@
 // # Compile-time substrate-separation marker
 //
 // The line `var _ = substrateSeparated()` below ensures that this
-// package compiles without importing internal/store (inv-hades-104).
+// package compiles without importing internal/store (invariant).
 // Removing it MUST NOT cause a missing-import error; if a future
-// contributor accidentally adds a forbidden import, the inv-hades-104
+// contributor accidentally adds a forbidden import, the invariant
 // compliance test fails with a precise message.
 package merge
 

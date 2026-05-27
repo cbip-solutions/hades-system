@@ -26,11 +26,11 @@
 // 1-hour wait. Default is defaultWindowResetTickInterval (1h);
 // test-only callers override before invoking WindowResetScheduler.
 //
-// Boundary (inv-hades-031): this file imports stdlib only (context, errors,
+// Boundary (invariant): this file imports stdlib only (context, errors,
 // fmt, sync, time). The orchestrator package MUST NOT import internal/store.
 // Pin pattern matches F-5 / F-7 / I-2 precedent.
 //
-// inv-hades-063 anchor: capOverridesPin lives here. Removing PaygSafety,
+// invariant anchor: capOverridesPin lives here. Removing PaygSafety,
 // CheckCap, HandleCapReached, ErrCapWillExceed, OR the file-scope
 // `var _ = capOverridesPin` reference breaks the build. The runtime
 // ordering invariant — "pin is resolved FIRST, cap is checked SECOND, cap

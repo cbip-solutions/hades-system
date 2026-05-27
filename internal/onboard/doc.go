@@ -10,7 +10,7 @@
 // (internal/onboard/mcp/) + Hermes plugin location resolver
 // (internal/onboard/plugin/).
 //
-// Per spec §3.4 + inv-hades-031: this package and its subpackages NEVER
+// Per spec §3.4 + invariant: this package and its subpackages NEVER
 // import internal/store. Audit emits via internal/audit/chain/ (no
 // store dep) or daemon HTTP POST /v1/events.
 //
@@ -21,11 +21,11 @@
 //
 // # Invariants enforced by this package + subpackages
 //
-// - inv-hades-031 — boundary discipline: NEVER import internal/store.
-// - inv-hades-175 — Hermes Agent ≥0.13.0 (preflight/hermes.go).
-// - inv-hades-176 — plugin format remnants halt (preflight/plugin_format.go).
-// - inv-hades-179 — smart-default confidence ≥0.6 (mcp/smart_default.go).
-// - inv-hades-186 — XDG-canonical path convention (plugin/xdg.go).
-// - inv-hades-189 — cross-platform path tests gate (test infra).
-// - inv-hades-190 — plugin location resolved at install (plugin/location.go).
+// - invariant — boundary discipline: NEVER import internal/store.
+// - invariant — Hermes Agent ≥0.13.0 (preflight/hermes.go).
+// - invariant — plugin format remnants halt (preflight/plugin_format.go).
+// - invariant — smart-default confidence ≥0.6 (mcp/smart_default.go).
+// - invariant — XDG-canonical path convention (plugin/xdg.go).
+// - invariant — cross-platform path tests gate (test infra).
+// - invariant — plugin location resolved at install (plugin/location.go).
 package onboard

@@ -12,7 +12,7 @@
 //
 // # Flow
 //
-// 1. Validate projectID (inv-hades-148): empty → ErrProjectIDRequired.
+// 1. Validate projectID (invariant): empty → ErrProjectIDRequired.
 // 2. Emit EventResearchDispatchInitiated.
 // 3. If !SkipCache:
 // a. LookupExact → on hit, revalidate (unless SkipRevalidate), emit
@@ -24,7 +24,7 @@
 // (StoreBody per finding) + INSERT research_query_vec (if embedding != nil).
 // 6. Emit findings_returned, return LookupResult{HitReason: CacheHitFresh}.
 //
-// # MCPClient boundary (inv-hades-088 single-egress)
+// # MCPClient boundary (invariant single-egress)
 //
 // All MCP calls go through the MCPClient interface; in production this is
 // wired to internal/daemon/dispatcheradapter. The cache package
@@ -45,7 +45,7 @@
 // handles removal; the dispatcher returns the stale result with the
 // freshness status as-is so the caller sees the full picture.
 //
-// # inv-hades-031
+// # invariant
 //
 // This package MUST NOT import internal/store. The MCPClient + Embedder
 // interfaces and the Sink interface decouple the cache package from the daemon

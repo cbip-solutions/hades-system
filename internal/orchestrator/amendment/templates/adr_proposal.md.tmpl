@@ -1,5 +1,5 @@
 {{/* Go text/template ADR proposal template. Canonical 10 sections per
-   the release design spec §1 Q10 C + §6.3 inv-hades-094. Fields available:
+   HADES design spec §1 Q10 C + §6.3 invariant. Fields available:
      .ADRID, .Date, .Title, .Doctrine, .TriggerClass, .Pattern,
      .WindowHours, .Count, .Threshold, .ProjectID,
      .ContextNarrative, .DecisionStatement, .Alternatives, .SOTARefs,
@@ -56,16 +56,16 @@ doctrine's `proposal_cooldown_hours`.
 
 ## Plan impact
 
-Affects the release design doctrine TOML schema (no code change required if the
+Affects HADES design doctrine TOML schema (no code change required if the
 amendment only re-tunes thresholds). If the amendment introduces new
-TOML fields, the release design release track schema must be amended in coordination
+TOML fields, HADES design release track schema must be amended in coordination
 (per `docs/operations/parallel-execution-coordination.md`).
 
 ## Related ADRs
 
 - ADR-0001 (substrate-pivot-to-openclaude)
 - ADR-0006 (research-sota-always-integrated)
-- the release design reserved range: ADR-0020..ADR-0029 (inv-hades-103)
+- HADES design reserved range: ADR-0020..ADR-0029 (invariant)
 
 ## Evidence
 

@@ -88,7 +88,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
 
    - `design records`
    - `docs/METHODOLOGY.md`
-   - `~/.claude/projects/-path-to-projects-hades-system/memory/MEMORY.md`
+   - `local agent memory`
    ```
 
 4. **Propose commit message**:
@@ -97,7 +97,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
    docs(handoff): refresh post <brief-context>
    ```
 
-   Conventional commit, NO AI attribution. inv-hades-004 gate enforces
+   Conventional commit, NO AI attribution. invariant gate enforces
    automatically (pre_tool_call callback blocks if violated).
 
 5. **Operator decides**:

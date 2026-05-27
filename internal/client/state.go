@@ -12,7 +12,7 @@
 // POST /v1/state/pin — StatePin
 // GET /v1/state/history — StateHistory
 //
-// inv-hades-031: this file imports stdlib only (context, net/url).
+// invariant: this file imports stdlib only (context, net/url).
 // No internal/daemon, internal/store, or internal/state imports.
 //
 // Type-name note: handler types use the P9 suffix (StateManifestP9,
@@ -50,7 +50,7 @@ type StateDiff struct {
 }
 
 // StatePinReq is the body of POST /v1/state/pin.
-// Field and Value are both required. Reason MUST be non-empty (inv-hades-146).
+// Field and Value are both required. Reason MUST be non-empty (invariant).
 // OperatorID is optional and overridden by peer-cred in production.
 type StatePinReq struct {
 	Field      string `json:"field"`

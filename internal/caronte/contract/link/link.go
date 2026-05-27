@@ -373,7 +373,7 @@ func sameHTTPMethod(a, b string) bool {
 // sees both the partial set and the failure
 // context — never silently drop a consumer.
 //
-// Boundary (inv-hades-031 + inv-hades-271 + FIX-1 sister-test): this method's
+// Boundary (invariant + invariant + FIX-1 sister-test): this method's
 // import set is limited to `internal/caronte/coordinated` (for the value
 // type), `internal/caronte/store` (for the per-repo handle the deps
 // accessor returns), and `internal/caronte/store/federation` (for the

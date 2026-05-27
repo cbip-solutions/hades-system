@@ -19,8 +19,8 @@
 // stores integers (operator ergonomics) and the converter keeps the
 // duration math out of every consumer.
 //
-// inv-hades-111: TIGHTEN-only doctrine override on per-project overrides.
-// inv-hades-112: ADR range — see architecture records for the substantive
+// invariant: TIGHTEN-only doctrine override on per-project overrides.
+// invariant: ADR range — see architecture records for the substantive
 // + reservation ADRs covering release doctrine-tunable surfaces.
 package config
 

@@ -204,7 +204,7 @@ func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
 	if err := w.Apply(plan); err != nil {
 		return err
 	}
-	// evt.migrate.claude_code.permission.unmapped per spec §3.7 +
+	// evt.migratelocal agent config_code.permission.unmapped per spec §3.7 +
 	// §5979-5982 + CHANGELOG.md:38. Best-effort: daemon-down does not block
 	// the apply itself (the writer already succeeded). Surface warning so
 	// operators know forensic trace failed.
@@ -390,8 +390,8 @@ func parseCSV(s string) map[string]bool {
 
 // emitMigrateClaudeCodeAudit fires the canonical release audit events for
 // a successful `hades migrate claude-code` apply: one
-// evt.migrate.claude_code.run summarising the migration + one
-// evt.migrate.claude_code.permission.unmapped per unrecognised permission
+// evt.migratelocal agent config_code.run summarising the migration + one
+// evt.migratelocal agent config_code.permission.unmapped per unrecognised permission
 // under lenient preset (none under strict — strict halts Apply before this
 // point via writer.ImportDoctrineStrict).
 //

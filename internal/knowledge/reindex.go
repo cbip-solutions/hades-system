@@ -31,7 +31,7 @@
 // the watcher glue can classify and act.
 //
 // Boundary stdlib + database/sql only — no internal/store import,
-// no net/http (inv-hades-129 no remote queries). Reuses package-internal
+// no net/http (invariant no remote queries). Reuses package-internal
 // `Scanner`, `Parse`, and `IndexDoc`; does NOT introduce new dependencies.
 package knowledge
 
@@ -74,9 +74,9 @@ func (re ReindexError) Unwrap() error { return re.Err }
 // loop checks ctx.Err() before each Parse so the operator-configured
 // 30 min cap is respected with at most one file's worth of overrun.
 //
-// Per inv-hades-130: ColdRebuild does not directly touch
+// Per invariant: ColdRebuild does not directly touch
 // audit_chain_anchor / ecosystem_join_keys / caronte_symbol_refs —
-// it delegates to IndexDoc, which is already inv-hades-130-compliant
+// it delegates to IndexDoc, which is already invariant-compliant
 // (G-5 enforces). Future release / release / Caronte writers fill those
 // columns at materialization time without rebuild churn.
 //

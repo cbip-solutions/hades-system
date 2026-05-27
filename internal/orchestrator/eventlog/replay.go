@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-// ReplayCorruptionBudget is the inv-hades-095 cap: at most this many
+// ReplayCorruptionBudget is the invariant cap: at most this many
 // corrupted events tolerated per session replay before the orchestrator
 // MUST transition to HARD_PAUSED. Surfaced as an exported constant so
 // callers ( HARD_PAUSED handler, recovery,

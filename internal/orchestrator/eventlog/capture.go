@@ -16,7 +16,7 @@
 // and rejects fixtures with mismatching signatures (ErrCorruptedFixture).
 //
 // Invariant flow:
-// - inv-hades-095 (corruption bounded): replay tolerates ≤5 corrupted
+// - invariant (corruption bounded): replay tolerates ≤5 corrupted
 // events before transitioning HARD_PAUSED. Capture writes the footer
 // LAST so a mid-stream daemon kill produces a fixture that fails sha
 // verification fast (rather than silently truncated).

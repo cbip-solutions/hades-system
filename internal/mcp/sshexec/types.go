@@ -4,7 +4,7 @@
 // Task L-3 — package-level value types. Pure values; no I/O,
 // no mutation of global state, no goroutines.
 //
-// Boundary anchor (inv-hades-031): this file imports only stdlib.
+// Boundary anchor (invariant): this file imports only stdlib.
 
 package sshexec
 

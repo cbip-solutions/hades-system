@@ -3,7 +3,7 @@
 //
 // Task J-3 adapter: exposes a slim Prober implementation that the
 // cli/doctor_knowledge.go layer consumes (cli.KnowledgeProber). The split
-// keeps inv-hades-031 clean (internal/cli imports internal/knowledge; this
+// keeps invariant clean (internal/cli imports internal/knowledge; this
 // package does NOT import internal/store; the daemon assembles the
 // runtime via the projectctxadapter pattern).
 //

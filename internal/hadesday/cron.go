@@ -15,7 +15,7 @@
 // dispatch token (`morning-brief` or `eod-digest`) `scheduler.Fire`
 // routes to the hadesday composer.
 //
-// inv-hades-031 boundary: this file declares its only persistence
+// invariant boundary: this file declares its only persistence
 // dependency as the package-local view of `scheduler.Store` — the same
 // 9-method interface scheduler/ uses internally and that the daemon
 // satisfies via `internal/daemon/scheduleradapter.Adapter`. hadesday

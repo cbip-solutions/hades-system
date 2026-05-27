@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package graphql — Node fallback for the inv-hades-272 opt-in path.
+// Package graphql — Node fallback for the invariant opt-in path.
 //
 // This file is THE SINGLE SANCTIONED os/exec spawn site in release. The
-// inv-hades-272 compliance test (tests/compliance/inv_hades_272_*) AST-scans
+// invariant compliance test (tests/compliance/inv_hades_272_*) AST-scans
 // internal/caronte/contract/bcdetect/ for os/exec imports and asserts
 // EXACTLY this file appears. Any new os/exec import under bcdetect/ is a
 // sovereignty regression that the compliance gate refuses.
@@ -27,7 +27,7 @@
 //
 // AS-BUILT note: the plan named federation.EvtGraphQLNodeFallbackSpawn
 // as the EventType — shipped additively in Task G-7 (event_types.go
-// extension to 6 EventTypes; valid + AllEventTypes updated; inv-hades-269
+// extension to 6 EventTypes; valid + AllEventTypes updated; invariant
 // compliance still green).
 package graphql
 

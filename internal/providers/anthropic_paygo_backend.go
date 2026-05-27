@@ -11,10 +11,10 @@
 // anthropic-version headers (the pay-as-you-go API contract) and the
 // key resolves from the shared internal/keychain package at construction.
 //
-// inv-hades-031: this file imports internal/keychain (boundary-neutral)
+// invariant: this file imports internal/keychain (boundary-neutral)
 // but NOT internal/store or private-tier1-module.
-// inv-hades-067 compile guard sits below the struct.
-// inv-hades-068: the API key is a redact.Secret, revealed only at the
+// invariant compile guard sits below the struct.
+// invariant: the API key is a redact.Secret, revealed only at the
 // moment of header injection.
 package providers
 

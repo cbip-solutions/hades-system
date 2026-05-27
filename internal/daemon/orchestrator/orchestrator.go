@@ -8,7 +8,7 @@
 // X-HADES-Project / X-HADES-Session / X-HADES-Profile headers, and forwards to the
 // dispatcher.
 //
-// Boundary (inv-hades-031): this package MUST NOT import internal/store. The
+// Boundary (invariant): this package MUST NOT import internal/store. The
 // orchestrator talks to a Forwarder interface (satisfied by *dispatcher.Dispatcher
 // in production wiring); the dispatcher itself bridges to the store via
 // dispatcheradapter. Keeping the orchestrator persistence-agnostic

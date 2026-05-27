@@ -21,7 +21,7 @@
 // per J-1 pattern.
 // Production wiring in cmd/hades-ctld/main.go.
 //
-// Boundary (inv-hades-031):
+// Boundary (invariant):
 //
 // This file imports only cli-internal types + cobra + context + stdlib.
 // Does NOT import internal/research/cache concrete types.

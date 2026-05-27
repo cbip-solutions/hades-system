@@ -30,9 +30,9 @@
 // (declared in merge.go via type alias of internal/client.MergeClient).
 //
 // Boundary note: this file imports internal/orchestrator/merge for
-// VersionCheck + NewRealGit. inv-hades-104 forbids merge⊥store
+// VersionCheck + NewRealGit. invariant forbids merge⊥store
 // (compliance test pins./internal/orchestrator/merge/... → no store);
-// it does NOT forbid CLI ↔ merge. Per inv-hades-104 compliance test
+// it does NOT forbid CLI ↔ merge. Per invariant compliance test
 // (tests/compliance/inv_hades_104_merge_no_store_test.go) the boundary
 // is one-directional and unaffected by this import.
 package cli

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_web_in_aggregator.go
 //
-// Task J-7: custom go vet analyzer enforcing inv-hades-129 +
-// inv-hades-152 at compile time.
+// Task J-7: custom go vet analyzer enforcing invariant +
+// invariant at compile time.
 //
-// inv-hades-129: aggregator NEVER queries web.
-// inv-hades-152: research cache stores findings;
+// invariant: aggregator NEVER queries web.
+// invariant: research cache stores findings;
 //
 // never dispatches against ecosystem corpus.
 //

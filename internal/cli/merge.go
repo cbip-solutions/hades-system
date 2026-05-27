@@ -32,7 +32,7 @@
 // (no separate EvtMergeCacheRebuildFailed).
 // - Drift F — Event/Payload shape consumed verbatim via json.Unmarshal.
 //
-// inv-hades-104 preserved: this CLI never imports internal/orchestrator/merge/
+// invariant preserved: this CLI never imports internal/orchestrator/merge/
 // — wire DTOs are pure JSON-tagged value types, decoupled from domain types.
 package cli
 

@@ -5,7 +5,7 @@
 //
 // - lore-missing-constraint : commit touches a high-risk node (per the
 // -loretrailer.high-risk-files glob set) but carries no Lore-Constraint:
-// git-trailer (inv-hades-238; spec §10). Only emitted when
+// git-trailer (invariant; spec §10). Only emitted when
 // -loretrailer.enabled=true (default false — adoption-gated, spec §21).
 //
 // (internal design record)

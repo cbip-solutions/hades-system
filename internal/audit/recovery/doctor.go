@@ -17,7 +17,7 @@
 // and delegates to RunDoctorAuditBackup / RunDoctorAuditChainIntegrity
 // via a daemon HTTP round-trip.
 //
-// inv-hades-031: this file does NOT import internal/store. Backup status
+// invariant: this file does NOT import internal/store. Backup status
 // fields are read through a small extension on Manager / RsyncScheduler
 // and ChainStatus reads from the in-memory cache
 // populated by tamper.scheduler. The doctor returns CheckResult

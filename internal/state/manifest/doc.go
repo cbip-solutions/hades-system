@@ -16,13 +16,13 @@
 //
 // Invariants enforced by this package:
 //
-// - inv-hades-031: never imports internal/store; chain integration flows
+// - invariant: never imports internal/store; chain integration flows
 // via internal/audit/chain + internal/daemon/auditadapter
-// - inv-hades-149: docs/system-state.toml freshness < 7d (manifest.Differ
+// - invariant: docs/system-state.toml freshness < 7d (manifest.Differ
 // reports stale; CI gate `hades state verify` fails) UNLESS recent
 // state.manual_field_changed events compensate (operator-pinned
 // freshness via the chain anchor)
-// - inv-hades-151: regenerate-and-diff CI gate via `make verify-system-state`
+// - invariant: regenerate-and-diff CI gate via `make verify-system-state`
 // integrated into `make verify-invariants`
 //
 // Threat model coverage (§7.1 T10): system-state.toml manual field silent

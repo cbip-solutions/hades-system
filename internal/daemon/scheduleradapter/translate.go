@@ -5,7 +5,7 @@
 // type with typed enums) and store.ScheduleRow (SQLite-flat
 // representation with int enums + JSON-encoded TriggerConfig).
 //
-// inv-hades-031 boundary: this is the SINGLE bridge point between the
+// invariant boundary: this is the SINGLE bridge point between the
 // scheduler domain and SQLite persistence. internal/scheduler/* never
 // imports internal/store; the daemon-side handler stack consumes
 // scheduler.Schedule through the *Adapter satisfying the

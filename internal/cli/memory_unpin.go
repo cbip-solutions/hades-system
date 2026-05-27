@@ -4,7 +4,7 @@
 // `hades memory unpin <note-id>` reverses a prior pin/promote by calling
 // MemoryUnpin (aggregator unpromote endpoint).
 //
-// inv-hades-146 historically applies; the daemon-side handler enforces a
+// invariant historically applies; the daemon-side handler enforces a
 // non-empty --reason. The CLI passes the operator's reason through so
 // the audit chain captures the cause of removal.
 package cli

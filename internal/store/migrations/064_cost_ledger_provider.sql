@@ -1,9 +1,9 @@
 -- ==============================================================================
--- Migration 064: cost_ledger per-provider attribution (the release design release track; C9;
--- inv-hades-214).
+-- Migration 064: cost_ledger per-provider attribution (HADES design release track; C9;
+-- invariant).
 -- ==============================================================================
 --
--- The the release design dispatcher cascade iterates NAMED provider backends and the
+-- The HADES design dispatcher cascade iterates NAMED provider backends and the
 -- circuit breaker decides at Backend.Name() granularity. Cost was previously
 -- persisted only per providers.Tier — which cannot distinguish two backends
 -- of one tier (e.g. deepseek-direct vs siliconflow-deepseek, both
@@ -11,7 +11,7 @@
 -- cost ledger attributes spend at the same granularity the breaker decides.
 --
 -- provider holds dispatcher.CostEvent.Provider (== Backend.Name()).
--- DEFAULT '' so pre-the release design rows decode cleanly: a provider-less historical
+-- DEFAULT '' so pre-HADES design rows decode cleanly: a provider-less historical
 -- row reads as '' ("unattributed at provider granularity"). NOT NULL keeps
 -- the Go-side scan free of sql.NullString handling.
 --

@@ -20,10 +20,10 @@
 // - Token usage parsed from the response "usage" field; non-fatal on
 // absence.
 // - Probe issues GET {endpoint}/api/tags (Ollama's model-list endpoint —
-// content-free, inv-hades-071) to confirm the server is reachable.
+// content-free, invariant) to confirm the server is reachable.
 //
-// inv-hades-067 compile guard sits below the struct.
-// inv-hades-031 boundary: this file MUST NOT import internal/store.
+// invariant compile guard sits below the struct.
+// invariant boundary: this file MUST NOT import internal/store.
 package providers
 
 import (

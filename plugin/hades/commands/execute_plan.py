@@ -74,7 +74,7 @@ go test -race ./... -count=2
 GOOS=linux go build ./...
 ```
 
-For the release design release track Python plugin code:
+For HADES design release track Python plugin code:
 ```bash
 ruff check plugin/hades/
 mypy plugin/hades/
@@ -83,7 +83,7 @@ pytest plugin/hades/tests/ -v --cov=plugin/hades --cov-report=term --cov-fail-un
 
 Coverage targets: ≥85% new code; ≥90% security/correctness-critical (per project project instructions "Hard rules" #5).
 
-## 6. NO Claude attribution (inv-hades-004)
+## 6. NO Claude attribution (invariant)
 
 Every commit message: `feat(scope): subject` (imperative, lowercase, no trailing period). NO `Co-Authored-By: prohibited assistant`. NO `Generated with prohibited assistant`. Plugin hook regex-rejects.
 

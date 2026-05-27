@@ -13,7 +13,7 @@
 // versions with 409 Conflict.
 //
 // Architecture CLI calls daemon HTTP; daemon owns the write transaction.
-// Boundary (inv-hades-031): does NOT import internal/research/ecosystem.
+// Boundary (invariant): does NOT import internal/research/ecosystem.
 //
 // Operator gate: requires explicit --ecosystem + --version flags (no
 // positional arg, reducing typo-driven misuse). A promptYN confirmation

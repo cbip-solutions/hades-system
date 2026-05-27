@@ -17,7 +17,7 @@
 // Lanes 1 + 3 (caronte.query / caronte.context) are NOT served by this
 // consumer — they go through Pipeline's McpGateway.CallTool.
 //
-// inv-hades-031: this file imports github.com/cbip-solutions/hades-system/internal/knowledge/rrf
+// invariant: this file imports github.com/cbip-solutions/hades-system/internal/knowledge/rrf
 //
 // but NOT internal/knowledge/aggregator (which transitively pulls CGO sqlite3)
 // and NOT internal/store.

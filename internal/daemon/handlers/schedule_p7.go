@@ -13,7 +13,7 @@
 // These operate on the schedules + schedule_history substrate
 // (migration 063) via internal/scheduler.Store + a typed
 // ScheduleHandler that bridges scheduler.Schedule ↔ store.ScheduleRow
-// per inv-hades-031: this handler package never imports internal/store
+// per invariant: this handler package never imports internal/store
 // directly for scheduler-side lifecycle; the scheduleradapter is the
 // single bridge.
 //
@@ -35,7 +35,7 @@
 // the operator surface is final-shape day 1 (`hades schedule routine run`
 // reaches a real route) but the dispatch substrate ships in
 //
-// inv-hades-031 boundary: the only scheduler-side imports are the
+// invariant boundary: the only scheduler-side imports are the
 // scheduler.Schedule + scheduler.HistoryEntry value types and the
 // scheduler.Tier / scheduler.MissPolicy / scheduler.TriggerType /
 // scheduler.Status / scheduler.Outcome enums. No internal/store, no

@@ -16,9 +16,9 @@ from .types import VoiceFlow, VoiceFlowMode
 SYNC_THRESHOLD_MS = 10_000
 
 # Estimator rule constants — sourced from spec §1 Q8 aggressive
-# performance budgets. Empirical calibration (release track spike + the release design D
+# performance budgets. Empirical calibration (release track spike + HADES design D
 # production) tunes these post-ship via doctrine amendment lifecycle
-# (the release design + the release design) per §1 Q8 footnote.
+# (HADES design + HADES design) per §1 Q8 footnote.
 _BASE_RRF_MS = 2_000
 _CROSS_PROJECT_BASELINE_MS = 8_000
 _PER_EXTRA_PROJECT_MS = 1_500
@@ -98,7 +98,7 @@ async def dispatch_voice_query(
     Args:
         query: The voice query text.
         operator_id: Session operator id (audit + inbox attribution).
-        project_id: Active project's sha256 hex (the release design inbox project_id).
+        project_id: Active project's sha256 hex (HADES design inbox project_id).
         explicit_override: If not None, forces the dispatch mode
             regardless of estimate. Honours the operator's ``--sync`` /
             ``--async`` flag.
@@ -108,9 +108,9 @@ async def dispatch_voice_query(
         client: ``httpx.AsyncClient`` (test injects mock; production
             constructs via
             ``plugin/hades-system/transports/hades_system_transport.py``).
-        audit_emitter: Emits ``AUDIT_VOICE_QUERY_DISPATCHED`` to the release design
+        audit_emitter: Emits ``AUDIT_VOICE_QUERY_DISPATCHED`` to HADES design
             chain.
-        inbox_poster: Posts to the release design inbox via daemon
+        inbox_poster: Posts to HADES design inbox via daemon
             ``/v1/notifications/inbox``.
 
     Returns:
@@ -135,9 +135,9 @@ async def dispatch_voice_query(
 
     notification_dispatched = False
     if mode == VoiceFlowMode.ASYNC:
-        # Post the release design inbox notification ("results ready in inbox") with
+        # Post HADES design inbox notification ("results ready in inbox") with
         # severity=info-immediate. The daemon-side query continuation
-        # will post the completion notification (the release design amendment);
+        # will post the completion notification (HADES design amendment);
         # Python's responsibility ends at dispatch + initial notification.
         # The inbox_poster is dependency-injected so D-6 / production
         # wires through to httpx; the daemon_url is forwarded for the
@@ -156,7 +156,7 @@ async def dispatch_voice_query(
         )
         notification_dispatched = True
 
-    # Audit event emission per the release design chain anchor convention.
+    # Audit event emission per HADES design chain anchor convention.
     await audit_emitter(
         daemon_url=daemon_url,
         client=client,

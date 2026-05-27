@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package cleanup ships the release state-retention policy
-// enforcement per Q12=D + spec §2.12 + §4.6 + inv-hades-187.
+// enforcement per Q12=D + spec §2.12 + §4.6 + invariant.
 //
 // Default retention per spec §2.12 table:
 //
@@ -13,7 +13,7 @@
 // F7 extends the release schema with the override section
 // shape). The override merges field-by-field via Policy.MergeOverride.
 //
-// Boundary (inv-hades-031): cleanup consumes ONLY stdlib + caller-injected
+// Boundary (invariant): cleanup consumes ONLY stdlib + caller-injected
 // Emitter; MUST NOT import internal/store. State enumeration uses
 // os.ReadDir on the XDG state root (no daemon HTTP round-trip).
 package cleanup

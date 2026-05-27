@@ -10,11 +10,11 @@
 // the loaded Sidecars value and registers a SidecarBackend by name into
 // providers.Registry when the sidecar's /health probe succeeds. A missing
 // sidecars.toml is a NORMAL state — the daemon falls through to the
-// providers.toml cascade. inv-hades-280 graceful degradation is preserved by
+// providers.toml cascade. invariant graceful degradation is preserved by
 // the dispatcher: a SidecarBackend that returns ErrSidecarUnavailable causes
 // the cascade to proceed to the next named provider.
 //
-// inv-hades-031 boundary: this file does NOT import internal/store; it is a
+// invariant boundary: this file does NOT import internal/store; it is a
 // pure configuration loader. The companion XDGConfigDir helper lives in
 // internal/onboard/plugin/ — reused here to keep the XDG-resolution rule
 // in one place.

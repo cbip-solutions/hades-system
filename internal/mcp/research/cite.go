@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// cite.go — citation verification + formatter (inv-hades-075).
+// cite.go — citation verification + formatter (invariant).
 //
 // Type system:
 // - RawCitation: producer-side type (synthesizer LLM output, raw
@@ -9,7 +9,7 @@
 // produce a VerifiedCitation, and only after a HEAD probe + DNS
 // check passes.
 //
-// Verification (inv-hades-075):
+// Verification (invariant):
 // - HEAD probe: outbound HTTP HEAD; must return 2xx or 3xx (4xx/5xx
 // drops the citation).
 // - DNS NXDOMAIN: any net.*Error with "no such host" drops the

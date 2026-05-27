@@ -31,7 +31,7 @@ class VoiceFlowMode(str, Enum):
 
     SYNC: estimated latency < 10s; operator hears response inline.
     ASYNC: estimated latency >= 10s; operator hears "results ready in
-    inbox" notification + the release design inbox notification with
+    inbox" notification + HADES design inbox notification with
     ``severity=info-immediate``.
     """
 
@@ -61,7 +61,7 @@ class MobileSummaryCard:
       consequences drop extras silently in source citation envelope;
       this guard catches programming errors at construction time.
     - ``cache_state`` is one of ``{"fresh", "stale", "offline"}``. In the
-      canonical the release design release track ``citation.Envelope`` schema this
+      canonical HADES design release track ``citation.Envelope`` schema this
       surfaces via ``platform_renders["mobile"]["cache_state"]`` (no
       top-level field on the envelope itself). The ``MobileSummaryCard``
       projects that hint into this typed field for downstream renderers.
@@ -126,7 +126,7 @@ class VoiceFlow:
     """Metadata for a voice query in flight (sync vs async dispatch).
 
     Per spec §1 Q6=B: ``estimated_latency_ms < 10000`` → ``SYNC``;
-    otherwise ``ASYNC`` + the release design inbox notification. Operator may force
+    otherwise ``ASYNC`` + HADES design inbox notification. Operator may force
     per-query via ``explicit_override`` (D-3 honours the request mode
     regardless of estimate when the flag is set).
 
@@ -167,7 +167,7 @@ class VoiceFlow:
 
 @dataclasses.dataclass(frozen=True, slots=True)
 class OfflineCacheEntry:
-    """Per-row payload hydrated from the release design D ``aggregator.Query()`` results.
+    """Per-row payload hydrated from HADES design D ``aggregator.Query()`` results.
 
     The KG offline cache stores the last N (doctrine-sized) entries
     indexed by ``query_hash``; on cache hit, the entry's
@@ -176,7 +176,7 @@ class OfflineCacheEntry:
 
     Invariants:
 
-    - ``project_id`` is the canonical the release design sha256 hex — privacy filter compares this field exactly against the active operator
+    - ``project_id`` is the canonical HADES design sha256 hex — privacy filter compares this field exactly against the active operator
       session's project_id under capa-firewall.
     - ``ingested_at_unix_ms`` is the daemon-side ingestion timestamp
       (UTC unix milliseconds) — used for LRU eviction tiebreaks when
@@ -292,7 +292,7 @@ class KGOfflineCache:
         emission with a permissive baseline filter.
 
         Args:
-            query_hash: Stable hash of the query (canonical the release design D shape).
+            query_hash: Stable hash of the query (canonical HADES design D shape).
             project_id: Active operator session's project_id (privacy
                 filter input; D-5 rejects when
                 ``entry.project_id != project_id`` under capa-firewall).

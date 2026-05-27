@@ -12,7 +12,7 @@
 // stderr. If an error message from the daemon inadvertently contains the
 // secret, it is redacted before printing.
 //
-// inv-hades-031 boundary: the CLI calls the daemon endpoint
+// invariant boundary: the CLI calls the daemon endpoint
 // POST /v1/audit-chain/configure-s3 (client.AuditConfigureS3); the CLI
 // NEVER touches Keychain directly.
 //

@@ -26,7 +26,7 @@ import (
 // fail-closed — better to reject than to silently expose a wrong
 // doctrine).
 //
-// inv-hades-172 corollary: doctrine MUST NOT be derived from a
+// invariant corollary: doctrine MUST NOT be derived from a
 // client-controlled signal. The prior implementation read
 // X-HADES-Doctrine header; this is removed entirely from the security
 // path. Tests inject doctrine via the active.Accessor (via
@@ -61,7 +61,7 @@ func (s *Server) sessionDoctrine(r *http.Request) string {
 //
 // Non-loopback TCP MUST be rejected regardless of any HTTP-layer
 // headers — exposing UDS-mode endpoints over a public interface is
-// always wrong (inv-hades-131).
+// always wrong (invariant).
 func (s *Server) sessionAuthenticated(r *http.Request) bool {
 	if r.RemoteAddr != "" && r.RemoteAddr != "@" {
 

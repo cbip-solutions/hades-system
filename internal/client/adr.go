@@ -16,7 +16,7 @@
 // POST /v1/adr/supersede — ADRSupersede
 // POST /v1/adr/index — ADRIndex
 //
-// inv-hades-031: this file imports stdlib only (context, net/url, strconv).
+// invariant: this file imports stdlib only (context, net/url, strconv).
 // No internal/daemon, internal/store, or internal/adr imports.
 package client
 

@@ -39,8 +39,8 @@ class CompletedResponse:
             ``internal/daemon/transport/messages_handler.go``). Common
             useful keys: ``anthropic-ratelimit-requests-remaining``,
             ``request-id``, ``anthropic-organization-id``.
-        audit_event_id: the release design Tessera-anchored audit event ID the
-            daemon assigned to this dispatch. the release design citation renderers
+        audit_event_id: HADES design Tessera-anchored audit event ID the
+            daemon assigned to this dispatch. HADES design citation renderers
             deep-link operator-facing UIs via ``hades://audit/<id>`` URIs;
             losing this metadata at the transport boundary breaks the
             audit-anchor surface. Empty string when the daemon's anchor
@@ -144,10 +144,10 @@ class HadesSystemTransport:
         Returns a :class:`CompletedResponse` exposing the upstream
         provider's parsed JSON body, the upstream HTTP status, the
         upstream response headers (with secret-shaped keys stripped by
-        the daemon), and the the release design Tessera ``audit_event_id`` the daemon
+        the daemon), and the HADES design Tessera ``audit_event_id`` the daemon
         assigned. release track reviewer I2: the prior return type was just
         the inner body dict, which silently discarded ``status``,
-        ``headers``, and ``audit_event_id`` — the release design citation renderers
+        ``headers``, and ``audit_event_id`` — HADES design citation renderers
         consume ``audit_event_id`` for ``hades://audit/<id>`` deep links.
 
         Raises:
@@ -198,7 +198,7 @@ class HadesSystemTransport:
         # the daemon emits status=200 envelope-wraps every dispatcher
         # success; missing ``headers`` becomes an empty dict to keep
         # caller code path uniform; missing ``audit_event_id`` becomes
-        # an empty string (graceful degradation when the release design anchor offline).
+        # an empty string (graceful degradation when HADES design anchor offline).
         upstream_status = forwarded.get("status")
         if not isinstance(upstream_status, int):
             upstream_status = 200

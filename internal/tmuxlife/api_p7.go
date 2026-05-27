@@ -16,7 +16,7 @@
 // remain authoritative implementations; this file is the consumption-
 // side facade.
 //
-// Boundary (inv-hades-031, inv-hades-122): this file imports only
+// Boundary (invariant, invariant): this file imports only
 // internal/doctrine + standard library. NO internal/store import; the
 // in-memory SessionStore implementation here is for chaos tests +
 // daemon-bootstrap fallback when the persistence-backed store is not

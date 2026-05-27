@@ -22,7 +22,7 @@
 // 500 — opaque backend error.
 // 200 — success; bodies documented per route below.
 //
-// inv-hades-031 boundary: this handler imports internal/inbox value types
+// invariant boundary: this handler imports internal/inbox value types
 // only (QuietConfig / QuietHours). No internal/store imports — the
 // QuietStore interface is structural and the daemon-side accessor
 // returns it as the same interface, keeping the boundary at the

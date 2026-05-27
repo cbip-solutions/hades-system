@@ -211,7 +211,7 @@ type CatalogEntry struct {
 // the package is impossible
 // - In-package additions go through new struct literals in this map
 // declaration; runtime mutation is forbidden
-// - inv-hades-220 compliance test asserts no production
+// - invariant compliance test asserts no production
 // code path mutates this map at runtime
 var catalog = map[Code]*CatalogEntry{
 

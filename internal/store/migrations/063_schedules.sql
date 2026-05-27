@@ -1,4 +1,4 @@
--- Migration 063: schedules + schedule_history (the release design release track Task D-1).
+-- Migration 063: schedules + schedule_history (HADES design release track Task D-1).
 --
 -- Hosts the durable scheduler substrate: Routine + Task + Loop schedules
 -- (3-tier per spec §1 Q8 D) plus the per-fire outcome ledger driving
@@ -7,7 +7,7 @@
 -- internal/scheduler/ package and its scheduleradapter bridge land in
 -- D-2..D-12.
 --
--- Drift note (the release design release track):
+-- Drift note (HADES design release track):
 --   The original master plan §"Migration numbering coordination"
 --   reserved slot 059 for release track schedules table under an
 --   execution-order sequence A→C→B→D→E. Reality at HEAD on 2026-05-07:
@@ -21,15 +21,15 @@
 --   (separate SQLite file, no daemon.db schemaVersion bump).
 --   schemaVersion bump path: 26 (release track) → 27 (this migration).
 --
--- Boundary (inv-hades-031 release track slice):
+-- Boundary (invariant release track slice):
 --   internal/scheduler/* MUST NEVER import internal/store; the daemon
 --   adapter (internal/daemon/scheduleradapter/) is the ONLY package
 --   permitted to bridge scheduler value types to *store.Store via the
 --   CRUD primitives in internal/store/schedules.go. release track
---   inv_hades_122 compliance test extends to enforce this on the release design
+--   inv_hades_122 compliance test extends to enforce this on HADES design
 --   packages.
 --
--- Boundary (inv-hades-080 / inv-hades-123 release track slice):
+-- Boundary (invariant / invariant release track slice):
 --   The schedules table itself stores no LLM-call surface; it is the
 --   trigger substrate. scheduler.Fire orchestrates dispatch via the
 --   dispatcher.Client interface so this table is single-egress-aligned
@@ -37,10 +37,10 @@
 --   never internal/providers/ direct).
 --
 -- Compile-time invariants surfaced:
---   - inv-hades-120 (jitter deterministic) — enforced in app code via
+--   - invariant (jitter deterministic) — enforced in app code via
 --     scheduler.ComputeJitter(routineID, period); the schedules.id
 --     column is the canonical hash input.
---   - inv-hades-121 (per-doctrine miss policy + rate-limit) — enforced
+--   - invariant (per-doctrine miss policy + rate-limit) — enforced
 --     in app code via scheduler.DoctrineMissPolicy(d) matrix and
 --     scheduler.RateLimiter; the miss_policy column is CHECK-
 --     constrained so a corrupted INSERT fails fast.
@@ -51,7 +51,7 @@
 --
 -- One row per Routine, Task, or Loop schedule. UUIDv7-keyed (TEXT PK
 -- so the canonical id is content-addressable on the wire and across
--- backups). All time columns store UTC unix seconds (per inv-hades-005);
+-- backups). All time columns store UTC unix seconds (per invariant);
 -- the Go layer translates to time.Time, mapping NULL to zero-value.
 --
 -- Constraints:
@@ -83,9 +83,9 @@
 --                          tmux_session_state (migration 062).
 --
 --   - action TEXT NOT NULL: semantic action key (e.g. `morning-brief`,
---                          `cost-sweep`, `hra-l2-tick`); the the release design
+--                          `cost-sweep`, `hra-l2-tick`); the HADES design
 --                          dispatcher resolves this to a TaskInput via
---                          routing rules (the release design+ extends).
+--                          routing rules (HADES design+ extends).
 --
 --   - trigger_type INTEGER NOT NULL CHECK (trigger_type IN (0,1,2)):
 --                          0=Cron, 1=HTTP, 2=GitPoll. Three trigger
@@ -106,7 +106,7 @@
 --                          0=Skip, 1=CatchUpBounded, 2=Coalesce,
 --                          3=NotifyOnly. Per-doctrine miss-policy
 --                          matrix lives in scheduler.DoctrineMissPolicy
---                          (inv-hades-121); CHECK is the floor.
+--                          (invariant); CHECK is the floor.
 --
 --   - miss_lookback_seconds INTEGER NOT NULL DEFAULT 604800:
 --                          7 days; configurable per routine via
@@ -197,7 +197,7 @@ CREATE INDEX IF NOT EXISTS idx_schedules_project_alias
 -- supports both predicates with one composite index.
 --
 -- Retention: release track ships unbounded growth; the per-spec retention
--- policy is deferred to the release design quality (operator-driven vacuum). No FK
+-- policy is deferred to HADES design quality (operator-driven vacuum). No FK
 -- back to schedules.id (history outlives the schedule — `hades day`
 -- digest must surface fires for since-deleted routines).
 --
@@ -216,7 +216,7 @@ CREATE INDEX IF NOT EXISTS idx_schedules_project_alias
 --   - reason TEXT NOT NULL DEFAULT '': human-readable failure / skip
 --                          reason; empty for Success.
 --   - cost_usd REAL NOT NULL DEFAULT 0: cost emitted from cost_ledger
---                          post-call (the release design inv-hades-062 integration).
+--                          post-call (HADES design invariant integration).
 --                          The Go-side rejects negative values.
 --   - duration_ms INTEGER NOT NULL DEFAULT 0: end-to-end fire latency.
 --                          The Go-side rejects negative values.

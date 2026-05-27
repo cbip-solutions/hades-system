@@ -99,7 +99,7 @@ func (w *Watcher) runReloadAction(ctx context.Context, path string) {
 
 	candidate := &v1.Schema{}
 	if err := w.parser.ParseStrict(data, path, candidate, parser.ParseOpts{
-		AllowTransverseDeclaration: false, // user-files MUST NOT declare transverse axioms (inv-hades-135).
+		AllowTransverseDeclaration: false, // user-files MUST NOT declare transverse axioms (invariant).
 	}); err != nil {
 		w.emitReloadFailed(ctx, DoctrineReloadFailed{
 			Path:      path,

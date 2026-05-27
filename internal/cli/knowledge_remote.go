@@ -5,10 +5,10 @@
 // from RunKnowledgeQuery when flags.Remote=true. Dispatches to the daemon's
 // POST /v1/knowledge/ecosystem/query endpoint, which routes through the
 //
-// inv-hades-129 amendment: --remote is NOW OPERATIONAL.
+// invariant amendment: --remote is NOW OPERATIONAL.
 // The sentinel short-circuit previously rendered a deferred-message
 // pointer; it is replaced by a live round-trip to the daemon. The
-// inv-hades-129 boundary is preserved by routing distinction:
+// invariant boundary is preserved by routing distinction:
 // - --remote=true → ecosystem RAG over ingested corpus
 // (daemon-side Dispatcher; no open-web queries from the daemon).
 // - --remote=false → release aggregator (FTS5 over local docs;

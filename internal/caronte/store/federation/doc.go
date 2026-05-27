@@ -12,11 +12,11 @@
 // $HOME/Library/Application Support/hades-system/workspace.db (macOS), else
 // $HOME/.local/state/hades-system/workspace.db (POSIX fallback). One DB per
 // daemon process (workspace federation is workspace-scoped, not
-// project-scoped — inv-hades-163 separation: per-project caronte.db lives at
+// project-scoped — invariant separation: per-project caronte.db lives at
 // <canonical>/.hades/caronte.db, this is the orthogonal cross-project
 // federation tier).
 //
-// Boundary (inv-hades-271): this package and ALL its callers under
+// Boundary (invariant): this package and ALL its callers under
 // internal/caronte/contract/{extract,link,break} + internal/caronte/coordinated
 // NEVER import internal/store. The ONLY internal/caronte/... import this
 // package itself makes is internal/caronte/store (for the FROZEN value types
@@ -25,7 +25,7 @@
 // tests/compliance/inv_hades_271_boundary_no_internal_store_test.go enforces
 // the prohibition; federationBoundarySentinel (db.go) is the runtime witness.
 //
-// Audit (inv-hades-269, ADR-0116 / D10): every workspace-level write
+// Audit (invariant, ADR-0116 / D10): every workspace-level write
 // (contract_links INSERT, breaking_changes INSERT, coordinated-fix dispatch,
 // federated-query denied-access, workspace-policy mutation) emits a release
 // Tessera audit row via the single C-11 chokepoint EmitAudit(ctx,
@@ -36,7 +36,7 @@
 // interface + NewAuditEmitter(adapter, workspaceID) constructor provide
 // the per-workspace adapter + wire into the consumers.
 //
-// Capa-firewall extension (inv-hades-264): every persistent contract_links /
+// Capa-firewall extension (invariant): every persistent contract_links /
 // breaking_changes write transits store.Workspace.authorize() (release M's
 // chokepoint at workspace.go:117). The seam swap in
 // internal/caronte/store/workspace.go (Task A-12) routes through this
@@ -50,6 +50,6 @@
 // cross-compiles (GOOS=linux CGO_ENABLED=0 go build./...) and degrades
 // gracefully (no workspace federation; the engine surfaces degraded_mode).
 //
-// inv-hades-129: this package makes NO web calls; all SQLite + Tessera I/O is
+// invariant: this package makes NO web calls; all SQLite + Tessera I/O is
 // local.
 package federation

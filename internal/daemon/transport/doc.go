@@ -37,7 +37,7 @@
 //
 // # Why three paths
 //
-// The three paths are NOT redundant — they enforce inv-hades-088 single-egress
+// The three paths are NOT redundant — they enforce invariant single-egress
 // from three angles:
 //
 // 1. Python class: covers direct callers (CLI Python wrappers, MCPs, tests)
@@ -53,10 +53,10 @@
 //
 // 3. Hermes ProviderProfile + NewAnthropicProxy: Hermes' main agent's LLM
 // loop selects the hades-system provider and dispatches via the Anthropic
-// SDK against the daemon socket. inv-hades-164 compliance scans verify
+// SDK against the daemon socket. invariant compliance scans verify
 // no second LLM path exists in plugin Python source.
 //
-// # Compile-time invariant (inv-hades-164)
+// # Compile-time invariant (invariant)
 //
 // The HadesSystemTransport type satisfies providers.TierBackend at the Go
 // surface. This is enforced by the compile-time guard at package scope:
@@ -67,7 +67,7 @@
 // will fail at compile-time, not at first dispatch. The compliance test in
 // tests/compliance/inv_hades_164_*_test.go scans for this guard line.
 //
-// # Boundary (inv-hades-031)
+// # Boundary (invariant)
 //
 // This package imports providers + redact
 // only. It does NOT import internal/store. The audit-anchor and dispatcher

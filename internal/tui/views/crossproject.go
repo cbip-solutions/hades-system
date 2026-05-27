@@ -7,7 +7,7 @@
 // similar) was chosen to distinguish the F11 panel from the
 // `client.Project` DTO it consumes; the name also documents the
 // federated cross-project intent the panel represents — capa-firewall
-// projects are filtered server-side per inv-hades-163, F11 renders
+// projects are filtered server-side per invariant, F11 renders
 // whatever the daemon returns.
 package views
 

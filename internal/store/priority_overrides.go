@@ -8,13 +8,13 @@ package store
 // joint pair, with adding tmux_session_state in a follow-up
 // migration). uses these tables; extends.
 //
-// inv-hades-031 boundary: internal/quota MUST NOT import internal/store. The
+// invariant boundary: internal/quota MUST NOT import internal/store. The
 // only consumer of these helpers is internal/daemon/quotaadapter — that
 // package's import list is the single legitimate co-location of
 // internal/quota and internal/store anywhere in the codebase, enforced
-// by the inv-hades-122 compliance test.
+// by the invariant compliance test.
 //
-// inv-hades-115 audit hook: every priority_overrides mutation MUST emit a
+// invariant audit hook: every priority_overrides mutation MUST emit a
 // row in the events table inside the SAME transaction. The helpers below
 // expose tx-scoped variants (UpsertPriorityOverrideTx /
 // DeletePriorityOverrideTx / InsertEventTx) so the adapter can compose

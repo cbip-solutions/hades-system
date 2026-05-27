@@ -23,8 +23,8 @@
 // cmd/hades-ctld → aggregator (mattn) + daemon (ncruces)
 // mattn wins init() race; ncruces skips
 //
-// inv-hades-031: this package does NOT import internal/store.
-// inv-hades-129: this package does NOT import net/http.
+// invariant: this package does NOT import internal/store.
+// invariant: this package does NOT import net/http.
 package knowledgetypes
 
 import "context"

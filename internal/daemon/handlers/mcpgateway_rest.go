@@ -42,7 +42,7 @@
 // callGatewayRaw (which returns the raw content-text bytes) rather than
 // callGateway (which parses the {hits} shape).
 //
-// inv-hades-031 boundary: this file imports only stdlib. It does NOT import
+// invariant boundary: this file imports only stdlib. It does NOT import
 // internal/caronte or internal/daemon/mcpgateway — the payload structs are
 // local anonymous types parsed from the JSON the gateway returns. The gateway
 // is consumed via the http.Handler interface threaded through

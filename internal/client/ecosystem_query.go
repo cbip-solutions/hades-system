@@ -3,7 +3,7 @@
 //
 // Typed client method for POST /v1/knowledge/ecosystem/query (daemon-side
 // handler wired by or daemon integration). Wire types mirror the
-// daemon handler; no internal/research/ecosystem import (boundary per inv-hades-031).
+// daemon handler; no internal/research/ecosystem import (boundary per invariant).
 //
 // Endpoint POST /v1/knowledge/ecosystem/query
 // Auth same UDS transport as other client methods.

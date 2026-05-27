@@ -27,17 +27,17 @@
 // error count > threshold, etc).
 // 200 — success; bodies documented per route below.
 //
-// inv-hades-031 boundary: this handler imports internal/knowledge value
+// invariant boundary: this handler imports internal/knowledge value
 // types only (Query / Result / Doc / FileType / sentinel errors). No
 // internal/store imports — the KnowledgeIndex interface is structural
 // and the daemon-side accessor returns it as the same interface, keeping
 // the boundary at the interface layer (mirrors handlers.InboxStore +
 // handlers.ScheduleStore + handlers.DayGenerator gate patterns). The
 // knowledge package owns its own DB at
-// `~/.cache/hades-system/knowledge-index/index.db` (per the inv-hades-031
+// `~/.cache/hades-system/knowledge-index/index.db` (per the invariant
 // documented exception in docs/operations/knowledge-aggregator-boundary.md).
 //
-// inv-hades-129 boundary: the handler does NOT process q.Remote=true /
+// invariant boundary: the handler does NOT process q.Remote=true /
 // q.AuditChain=true even though the underlying knowledge.Execute returns
 // distinct sentinel errors for both. The CLI layer intercepts both flags
 // BEFORE the round-trip per spec §1 Q17 + the G-12/G-13 sentinel-anchor

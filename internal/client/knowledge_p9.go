@@ -15,7 +15,7 @@
 // endpoints — the HTTP method alone would not resolve the Go method name
 // collision, hence the explicit P9 suffix.
 //
-// inv-hades-031 boundary: this file imports stdlib only (context, net/url,
+// invariant boundary: this file imports stdlib only (context, net/url,
 // strconv). No internal/daemon, internal/store, or internal/knowledge
 // imports. The *Client transport handles net/http.
 package client

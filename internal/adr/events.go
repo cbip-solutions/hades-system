@@ -34,7 +34,7 @@ type EventPayload struct {
 	// Timestamp is the wall-clock time at which the transition was
 	// recorded. Callers MUST set this to time.Now().UTC() at emit time;
 	// zero-value is rejected by the audit-chain adapter as a schema
-	// violation (audit integrity requirement per inv-hades-031).
+	// violation (audit integrity requirement per invariant).
 	Timestamp time.Time `json:"timestamp"`
 }
 

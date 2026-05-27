@@ -36,7 +36,7 @@
 // - All other methods (Permit, RecordSuccess, RecordFailure, State)
 // are simple Lock/defer-Unlock — fast, no I/O.
 //
-// Boundary (inv-hades-031): this file imports stdlib + internal/providers
+// Boundary (invariant): this file imports stdlib + internal/providers
 // only. The orchestrator package MUST NOT import internal/store directly;
 // boundary crossings flow through internal/daemon/dispatcheradapter.
 

@@ -30,10 +30,10 @@
 // (sub-μs); LRU absorbs repeated cold-misses; live cmd is the cold-start
 // path with strict 24h TTL.
 //
-// inv-hades-195 partial: Verify(symbols) hot path on stage-A is O(1) per
+// invariant partial: Verify(symbols) hot path on stage-A is O(1) per
 // ref; goroutine-safe; bench in covers the symbol_index leaf.
 //
-// inv-hades-205 (D-13): doctrine-knob can downgrade verify (default
+// invariant (D-13): doctrine-knob can downgrade verify (default
 // doctrine skips stage C on cold misses) — see VerifierConfig.SkipStageC.
 //
 // Concurrency Verifier.Verify is goroutine-safe. A single mutex

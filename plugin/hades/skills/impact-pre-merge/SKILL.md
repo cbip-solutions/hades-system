@@ -1,7 +1,7 @@
 ---
 name: impact-pre-merge
 description: |
-  HADES pre-merge blast radius analysis: wraps the release design augmentation
+  HADES pre-merge blast radius analysis: wraps HADES design augmentation
   pipeline (preflight mode) + caronte community detection (gonum k-core/SCC). Use when
   operator invokes /hades:impact-pre-merge <branch> or before merging large PRs.
 license: Proprietary
@@ -11,20 +11,20 @@ keywords:
   - blast-radius
   - augmentation
   - caronte
-  - the release design
+  - HADES design
   - hades
 ---
 
 # HADES — impact-pre-merge skill (pre-merge impact analysis)
 
-This skill wraps the release design augmentation pipeline in preflight mode to analyze
+This skill wraps HADES design augmentation pipeline in preflight mode to analyze
 the blast radius of a pending merge. Triggered by `/hades:impact-pre-merge <branch>`.
 
 ## When to use
 
 - Operator invokes `/hades:impact-pre-merge <branch>`
 - Before merging a feature branch with broad file changes
-- As part of the release design MergeEngine winner selection flow
+- As part of HADES design MergeEngine winner selection flow
 
 ## Workflow
 
@@ -59,7 +59,7 @@ On timeout → warn-proceed (constant).
 
 ## Cross-references
 
-- spec §4.3 the release design orchestrator pre-flight extension
-- spec §4.4 the release design MergeEngine winner extension
-- inv-hades-167 augmentation budget gate
+- spec §4.3 HADES design orchestrator pre-flight extension
+- spec §4.4 HADES design MergeEngine winner extension
+- invariant augmentation budget gate
 - /hades:impact-pre-merge slash command handler

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/config/resolver.go
 //
-// ProfileResolver materializes inv-hades-066: it merges the four config
+// ProfileResolver materializes invariant: it merges the four config
 // layers of release's routing model into a single ordered provider
 // cascade, deterministically.
 //
@@ -9,7 +9,7 @@
 //
 // Merge is per-field replacement: a later layer that sets a cascade
 // wholly replaces the earlier one (it does not append or splice).
-// inv-hades-066 is the guarantee that the merge result depends only on
+// invariant is the guarantee that the merge result depends only on
 // the layer *contents*, never on map-iteration order — a dedicated test
 // (resolver_test.go) asserts determinism across layer permutations.
 //

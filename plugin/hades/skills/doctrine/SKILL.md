@@ -2,7 +2,7 @@
 name: doctrine
 description: |
   HADES doctrine control: show active doctrine or apply runtime override
-  (audit-logged via the release design Tessera chain). Use when operator invokes /hades:doctrine
+  (audit-logged via HADES design Tessera chain). Use when operator invokes /hades:doctrine
   or when needing to understand/change the active doctrine for a session.
 license: Proprietary
 agentskills_version: 1.0
@@ -51,8 +51,8 @@ curl --unix-socket /tmp/hades-system.sock \
      http://unix/v1/doctrine/override
 ```
 
-Override is **audit-logged via the release design chain** (Tessera-anchored `DoctrineOverridden` event).
-Per inv-hades-084: can only TIGHTEN beyond project ceiling, never loosen.
+Override is **audit-logged via HADES design chain** (Tessera-anchored `DoctrineOverridden` event).
+Per invariant: can only TIGHTEN beyond project ceiling, never loosen.
 
 ## Doctrine values
 
@@ -65,6 +65,6 @@ Per inv-hades-084: can only TIGHTEN beyond project ceiling, never loosen.
 ## Cross-references
 
 - spec §3.4 Doctrine schema extensions
-- inv-hades-084 doctrine ceiling enforcement (the release design)
-- inv-hades-072 amendment audit chain anchor
+- invariant doctrine ceiling enforcement (HADES design)
+- invariant amendment audit chain anchor
 - /hades:doctrine slash command handler

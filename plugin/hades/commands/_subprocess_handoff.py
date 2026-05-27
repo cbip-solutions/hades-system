@@ -24,7 +24,7 @@ def render_hades_block(title: str, body: str, recovery: str) -> str:
     roundtrip; render locally using release track catalog text). Mirrors the
     three-line format of release track Go-side Render().
 
-    Per inv-hades-219 (visible-strings-HADES preserved): all strings returned by
+    Per invariant (visible-strings-HADES preserved): all strings returned by
     this function contain the HADES brand by construction.
     """
     return f"HADES: {title}\n  {body}\n  → {recovery}\n"
@@ -62,7 +62,7 @@ def run_hades_subprocess(extra_args: list[str]) -> str | None:
     Per spec §Q8 D-pattern: lazygit-style subprocess handoff. Terminal mode
     is captured before spawn and restored in finally block.
 
-    Per inv-hades-220 prep (release track): this function NEVER raises at the
+    Per invariant prep (release track): this function NEVER raises at the
     slash-command boundary; all paths return either a rendered string or
     None.
     """

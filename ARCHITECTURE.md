@@ -91,5 +91,14 @@ HADES treats partial failure as a normal operating condition:
 ## Source Verification
 
 The source tree is expected to build and test from a clean checkout with the
-public `Makefile`. Published artifacts should be verified against the checksums,
+repository `Makefile`. Published artifacts should be verified against the checksums,
 attestations, and signatures attached to the release.
+
+## Deeper Guides
+
+- [Caronte code graph](docs/architecture/caronte.md)
+- [Hierarchical Review Architecture](docs/architecture/hra.md)
+- [Autonomous orchestration](docs/architecture/orchestration.md)
+- [Contract Federation](docs/architecture/contract-federation.md)
+- [Daemon operations](docs/operations/daemon.md)
+- [Hermes and MCP integration](docs/integrations/hermes-and-mcp.md)

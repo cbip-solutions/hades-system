@@ -11,7 +11,7 @@
 // daemon-side HTTP probe endpoints; J-7 ships the CLI seam with
 // nil probers, RunFullProbe gracefully emits Warn rows for nil sections).
 //
-// inv-hades-031 boundary: NewDoctorKnowledgeCmd etc. live in internal/cli;
+// invariant boundary: NewDoctorKnowledgeCmd etc. live in internal/cli;
 // they instantiate KnowledgeProber implementations through the daemon's
 // HTTP layer (or, in pre-wiring, leave the prober nil and the
 // helper emits a Warn no-op probe). Tests substitute a fake DoctorDeps

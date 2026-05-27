@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // engine. Gate.Check is the function the release dispatcher MUST call
-// before any backend.Forward(...) — that is inv-hades-076's call-site
+// before any backend.Forward(...) — that is invariant's call-site
 // contract. The Decision struct returned by Check carries:
 //
 // - Allowed: true iff no scope is blocked (cap or pause)
 // - BlockedScopes: scopes that blocked the call, sorted MOST
-// restrictive first (inv-hades-079; worker_id <
+// restrictive first (invariant; worker_id <
 // stage < doctrine < project)
 // - RemainingPerScope: USD remaining per scope (positive when allowed,
 // negative when over-cap; useful for telemetry)

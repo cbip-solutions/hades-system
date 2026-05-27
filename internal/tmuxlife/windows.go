@@ -26,7 +26,7 @@ const (
 // creates and maintains. Order matches tmux index assignment after
 // CreateWindows 0=orch, 1=leads, 2=workers, 3=hra, 4=logs.
 //
-// inv-hades-118 invariant: WindowScratch MUST NOT appear in this list.
+// invariant invariant: WindowScratch MUST NOT appear in this list.
 // Test TestDaemonOwnedExcludesScratch enforces.
 var DaemonOwnedWindows = []WindowName{
 	WindowOrch,
@@ -66,7 +66,7 @@ func (m *Manager) CreateWindows(ctx context.Context, sessionName string) error {
 
 	// Step 2: create the remaining 5 windows in canonical order. scratch
 	// MUST come last so it lands at the highest tmux index, simplifying
-	// tmux-resurrect's exclusion script (Q6 D + inv-hades-118).
+	// tmux-resurrect's exclusion script (Q6 D + invariant).
 	rest := []WindowName{
 		WindowLeads, WindowWorkers, WindowHRA, WindowLogs, WindowScratch,
 	}

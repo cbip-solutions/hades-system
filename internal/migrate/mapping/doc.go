@@ -6,11 +6,11 @@
 //
 // Preset semantics (spec §2.1):
 // - PresetStrict: halts (ErrUnmappedSurface) on any source kind without a
-// mapping rule. Operator must add a rule before retry. inv-hades-183 demands
+// mapping rule. Operator must add a rule before retry. invariant demands
 // 1:1 preservation for CC permissions; strict mode enforces.
 // - PresetLenient: skips unmapped surfaces + records them in Plan.Warnings.
 // Default for `hades migrate claude-code`.
 //
-// Boundary (inv-hades-031): this package NEVER imports internal/store. It does
+// Boundary (invariant): this package NEVER imports internal/store. It does
 // import internal/migrate/source as a typed-input dependency only.
 package mapping

@@ -1,4 +1,4 @@
--- Subprocess lifecycle persistence (the release design release track Task C-5, spec §11
+-- Subprocess lifecycle persistence (HADES design release track Task C-5, spec §11
 -- migration 048 -> schemaVersion bump).
 --
 -- subprocess_sessions records LIVE persistent TeamLead + Reviewer L3/L4
@@ -11,7 +11,7 @@
 -- because TTL semantics diverge per doctrine (max-scope 8h sliding,
 -- default 4h, capa-firewall per-Pulido).
 --
--- inv-hades-074 (TTL eviction) reads ttl_seconds + last_use_at to decide
+-- invariant (TTL eviction) reads ttl_seconds + last_use_at to decide
 -- which rows to send SIGTERM-then-SIGKILL.
 --
 -- IF NOT EXISTS aligns with migrations 032-039/044/045 and lets the DDL

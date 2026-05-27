@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades-system/hooks/llm_handlers.py
-"""Hermes pre_llm_call callback for hades-system (release track' baseline + the release design"""
+"""Hermes pre_llm_call callback for hades-system (release track' baseline + HADES design"""
 
 from __future__ import annotations
 
@@ -122,7 +122,7 @@ def pre_llm_call(
         return None
 
     if response.status_code == 204:
-        # inv-hades-170: doctrine veto. Operator-visible: Hermes chats normally.
+        # invariant: doctrine veto. Operator-visible: Hermes chats normally.
         return None
     if response.status_code != 200:
         _log.debug(

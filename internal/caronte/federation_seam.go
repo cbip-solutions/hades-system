@@ -10,7 +10,7 @@
 // via a narrow interface — wires the concrete *WorkspaceFederationDB
 // through Deps.FederationDB at the composition root in ).
 //
-// inv-hades-031 / inv-hades-230 / inv-hades-271 preserved: federation is a sibling
+// invariant / invariant / invariant preserved: federation is a sibling
 // subpackage of caronte/store; the engine sees only the read methods, not the
 // constructor or the open boundary.
 package caronte

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""HADES skin module — the release design release track."""
+"""HADES skin module — HADES design release track."""
 
 from __future__ import annotations
 

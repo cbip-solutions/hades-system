@@ -3,7 +3,7 @@
 //
 // The pin_overrides table stores operator-set tier pins at three scope levels:
 // session, project, and global. At most one active pin exists per (scope, scope_id)
-// pair — the UNIQUE constraint is enforced at the SQL layer (inv-hades-063).
+// pair — the UNIQUE constraint is enforced at the SQL layer (invariant).
 //
 // Scope vocabulary (CHECK-constrained at SQL):
 // - "session" — pin applies to a single Claude Code session
@@ -18,7 +18,7 @@
 // Non-nil ExpiresAt is stored as INTEGER unix epoch seconds; the orchestrator's
 // 5-min sweep calls PurgeExpiredPins to remove stale rows.
 //
-// inv-hades-063: this table stores PIN INTENT only. The cap check in
+// invariant: this table stores PIN INTENT only. The cap check in
 // tier_resolver.Select overrides a pin when the pinned tier has
 // reached its budget cap. There is no SQL coupling to cost_ledger; the
 // invariant is enforced by the capOverridesPin sentinel + integration tests.

@@ -11,7 +11,7 @@
 // 1. orchestrator.daemon_up — daemon process responding on UDS
 // 2. orchestrator.event_log_writable — audit_events_raw writable + corruption < 5
 // 3. orchestrator.worktree_pool_healthy — pool floor reached + 0 leaked + GC ran (Q3+Q4)
-// 4. orchestrator.research_mcp_up — research MCP reachable (inv-hades-101 hard tier)
+// 4. orchestrator.research_mcp_up — research MCP reachable (invariant hard tier)
 // 5. orchestrator.caronte_up — caronte engine up + index currency ≤ 24h (Q13 D)
 // 6. orchestrator.adapters_clean — orchestratoradapter Close() succeeded last shutdown
 // 7. orchestrator.background_goroutines — exactly 11 expected (spec §3.3)

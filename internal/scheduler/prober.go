@@ -3,7 +3,7 @@
 //
 // Task J-4 adapter: exposes a slim Prober implementation that
 // the cli/doctor_scheduler.go layer consumes (cli.SchedulerProber). The
-// split keeps inv-hades-031 clean (internal/cli imports internal/scheduler;
+// split keeps invariant clean (internal/cli imports internal/scheduler;
 // internal/scheduler does NOT import internal/store).
 //
 // prefers closure injection over Store interface accretion.

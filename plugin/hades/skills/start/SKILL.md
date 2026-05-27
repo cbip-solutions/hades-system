@@ -45,7 +45,7 @@ None — this skill reads project files autonomously.
    - `## Suggested first-message` — primer for operator response
 
 2. **Read project memory** at:
-   `~/.claude/projects/-path-to-projects-hades-system/memory/MEMORY.md`.
+   `local agent memory`.
    Confirm methodology + doctrine memory entries present.
 
 3. **Check git state**:
@@ -79,7 +79,7 @@ None — this skill reads project files autonomously.
 - **Build the final product, not the stages** — refactor toward final shape
 - **No stubs** — production code complete day 1
 - **No defer, no tech debt** — fix coverage gaps + missing tests before next task
-- **No Claude attribution in commits** (inv-hades-004; gated by pre_tool_call callback)
+- **No Claude attribution in commits** (invariant; gated by pre_tool_call callback)
 - **Tag safety gate**: NEVER push tags without operator approval
 
 ## Edge cases
@@ -94,6 +94,6 @@ None — this skill reads project files autonomously.
 ## See also
 
 - `/hades:handoff` — sister skill: snapshot state to .hades/session.md + commit
-- `~/.claude/projects/-path-to-projects-hades-system/memory/reference_session_continuity.md`
+- `local agent memory`
 - Project project instructions (this skill replaces the CC-specific
-  `.claude/commands/start.md` under Hermes substrate)
+  `local agent config` under Hermes substrate)

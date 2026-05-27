@@ -1,4 +1,4 @@
--- operator_gate_state — the release design release track.
+-- operator_gate_state — HADES design release track.
 --
 -- Singleton row (id=1) records the OperatorGate state across daemon
 -- restarts.  On first boot the row does not exist; GateAdapter.LoadState
@@ -16,5 +16,5 @@ CREATE TABLE IF NOT EXISTS operator_gate_state (
     state      TEXT    NOT NULL
                    CHECK(state IN ('running','paused_descriptive','paused_quiet','paused_after_apply')),
     reason     TEXT    NOT NULL DEFAULT '',
-    updated_at INTEGER NOT NULL    -- UTC unix seconds (inv-hades-005)
+    updated_at INTEGER NOT NULL    -- UTC unix seconds (invariant)
 );

@@ -3,7 +3,7 @@
 //
 // `hades audit-chain witness` exposes daemon witness key management:
 //
-// rotate Rotate daemon ECDSA P-256 keypair; --reason MANDATORY (inv-hades-146).
+// rotate Rotate daemon ECDSA P-256 keypair; --reason MANDATORY (invariant).
 // Old key kept for overlap window; rotation event anchored on chain.
 // pubkey Print the current daemon witness pubkey + fingerprint.
 // Read-only; used by external auditors verifying daemon-global

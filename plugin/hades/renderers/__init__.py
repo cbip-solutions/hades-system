@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/__init__.py
-"""HADES citation renderers — 6 platform-specific (the release design release track) +"""
+"""HADES citation renderers — 6 platform-specific (HADES design release track) +"""
 
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ _log = logging.getLogger(__name__)
 # ``AuditEventIn{ProjectID, Type, Payload}`` wire shape. The release track
 # AFK module (``plugin/hades/afk/audit.py``) already conforms; the
 # C-1 fix-cycle ports the renderers' ``audit_anchor`` to the same
-# canonical contract so inv-hades-051 (Tessera anchor chain unbroken) is
+# canonical contract so invariant (Tessera anchor chain unbroken) is
 # preserved for every Python-rendered citation.
 #
 # Non-default operator-configured URLs flow through
@@ -81,20 +81,20 @@ def _derive_audit_endpoint(daemon_url: str | None) -> str:
 
 # Doctrine-aware enable/disable matrix per spec §3.4 doctrine schema extension.
 #
-# Source-of-truth (the release design release track M-5 fix): the canonical matrix now lives
+# Source-of-truth (HADES design release track M-5 fix): the canonical matrix now lives
 # in the Go doctrine schema ``RenderersConfig`` (
 # ``internal/doctrine/schema/v1/schema.go``) and is populated from the
 # ``[renderers]`` block in each builtin TOML
 # (``internal/doctrine/builtin/{max-scope,default,capa-firewall}.toml``).
 # The migration test ``internal/doctrine/builtin/renderers_matrix_test.go``
-# pins the matrix shape (inv-hades-084 additive-only contract).
+# pins the matrix shape (invariant additive-only contract).
 #
 # This Python dict is the runtime fallback the renderers consult when the
 # daemon is unreachable (e.g., during plugin load before the daemon binds,
 # or during chaos rotation). It MUST stay in lockstep with the TOML
 # matrix; the Go-side migration test fails loud if the doctrine config
 # drifts. Operator may override per-project via hadessystem.toml tighten-only
-# (per the release design inv-hades-084).
+# (per HADES design invariant).
 #
 # Layout: {doctrine_name -> frozenset[Platform]} → enabled platforms.
 # Voice intentionally disabled in capa-firewall: TTS surfaces sensitive
@@ -310,12 +310,12 @@ class Renderer(ABC):
 
         Failure mode: log a warning and return an empty string. Audit
         anchoring is a side channel; rendering is non-fatal under audit
-        failure to preserve operator-visible output (inv-hades-166).
+        failure to preserve operator-visible output (invariant).
 
         Subclasses may override to add platform-specific payload fields
         (e.g., voice may attach ``duration_ms``); the canonical contract
         keys must remain present so the daemon's hash-chain stays
-        well-formed (inv-hades-051).
+        well-formed (invariant).
         """
         endpoint = audit_endpoint if audit_endpoint is not None else self._audit_endpoint
         # Lazy httpx import to keep types module lightweight; httpx is in
@@ -419,11 +419,11 @@ class RendererRegistry:
             return self._emit_markdown_fallback(result)
 
     def _emit_markdown_fallback(self, result: AugmentationResult) -> RenderResult:
-        """Emit markdown fallback rendering (byte-exact parity with the release design
+        """Emit markdown fallback rendering (byte-exact parity with HADES design
         substrate ``internal/citation/markdown_fallback.go::renderFootnote``).
 
         This is a TRUE fallback — the operator never sees an unhandled
-        error. Output matches what the the release design Go substrate would emit if
+        error. Output matches what the HADES design Go substrate would emit if
         no plugin renderers were registered at all (universal degradation).
 
         Per-citation footnote (matches Go renderFootnote byte-for-byte):
@@ -520,7 +520,7 @@ def register_default_renderers(
     *,
     daemon_url: str | None = None,
 ) -> None:
-    """Register the 6 platform-specific renderers shipped en the release design release track.
+    """Register the 6 platform-specific renderers shipped en HADES design release track.
 
     Called from the plugin's ``__init__.py register(ctx)`` function on
     plugin load. Imports are deferred to avoid circular dependencies

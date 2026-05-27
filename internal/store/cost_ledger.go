@@ -6,9 +6,9 @@
 // bypass_audit). The in-memory CostCounters in
 // internal/daemon/orchestrator/cost_counters.go (Task F-4) materialise
 // rolling 30d / 24h / session-lifetime windows on top of this table and
-// are rebuilt on daemon restart via QueryAllRecentCosts (inv-hades-065).
+// are rebuilt on daemon restart via QueryAllRecentCosts (invariant).
 //
-// Invariant inv-hades-062 (no double-charge) is anchored two ways:
+// Invariant invariant (no double-charge) is anchored two ways:
 //
 // - SQL-side: idempotency_key UNIQUE in migration 040. SQLite refuses
 // a second insert with the same key under any contention regime

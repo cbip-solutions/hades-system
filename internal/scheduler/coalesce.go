@@ -49,7 +49,7 @@ import (
 // cron that was accepted by the row's original parse (max-scope is
 // the loosest of the three doctrines for granularity).
 //
-// Boundary (inv-hades-031): stdlib + internal/doctrine only. No
+// Boundary (invariant): stdlib + internal/doctrine only. No
 // internal/store, internal/providers, or private-tier1-module.
 //
 // Inv-hades-121 contract.
@@ -136,7 +136,7 @@ func ComputeMissed(s *Schedule, now time.Time) MissedFire {
 // whether to emit a single Fire(BackfillWindow) call or a loop of
 // Fire() calls clamped by the rate-limiter.
 //
-// Boundary (inv-hades-031): stdlib only at this site (Schedule and
+// Boundary (invariant): stdlib only at this site (Schedule and
 // MissedFire are in-package types).
 //
 // Inv-hades-121 contract.

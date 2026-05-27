@@ -208,7 +208,7 @@ func (r *Registry) RegisterFromConfig(cfg ProviderConfig) error {
 // adapter) are absent from the map; callers treat an absent name as
 // "family unknown".
 //
-// inv-hades-213: the audit MCP's family-disjoint reviewer pool is built from
+// invariant: the audit MCP's family-disjoint reviewer pool is built from
 // this live map (was a static doctrine TOML list). A reviewer<->worker
 // pair sharing a family is rejected at pair-selection.
 //

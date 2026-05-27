@@ -22,7 +22,7 @@
 // - `hades doctor` child commands from other Plans
 // The cobra Use field is "state-system"; file is doctor_state.go.
 //
-// Boundary (inv-hades-031):
+// Boundary (invariant):
 //
 // This file imports only cli-internal types + cobra + context + stdlib.
 // Does NOT import internal/state/manifest concrete types.
@@ -50,7 +50,7 @@ import (
 // Typical result count: 3 (last_regenerate_age + manual_field_count +
 // missing_source_count). Callers MUST NOT branch on len(results) == 3.
 //
-// Doctrine reference: last_regenerate_age thresholds per inv-hades-149:
+// Doctrine reference: last_regenerate_age thresholds per invariant:
 //
 // max-scope doctrine: 24h; default doctrine: 168h; capa-firewall: 24h.
 // WARN at 1×-2× threshold; FAIL at >2× threshold (stale TOML).

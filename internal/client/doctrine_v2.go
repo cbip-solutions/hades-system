@@ -15,7 +15,7 @@
 // POST /v1/doctrine/reinforce → DoctrineV2ReinforceResp
 //
 // JSON tags follow daemon-handler convention (lower_snake_case).
-// inv-hades-031 boundary preserved: this file imports zero non-stdlib (only
+// invariant boundary preserved: this file imports zero non-stdlib (only
 // "context" — pure DTOs + 4 thin Client wrappers added in for
 // the doctor.doctrine 11-check matrix).
 package client

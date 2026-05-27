@@ -8,7 +8,7 @@
 // - caronte.language.coverage — which of Go/TS/Py/Rust parsers loaded
 // - caronte.project-db.status — per-project.hades/caronte.db reachable
 // - caronte.rerank.available — BGE reranker model installed (;
-// inv-hades-278; missing → KNN-distance order)
+// invariant; missing → KNN-distance order)
 //
 // invokes the `mcp_hades-system_caronte_get_health` MCP tool via
 // /v1/mcpgateway JSON-RPC tools/call and synthesizes the probe rows

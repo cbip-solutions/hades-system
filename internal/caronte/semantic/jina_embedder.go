@@ -144,7 +144,7 @@ func (j *JinaEmbedder) Close() error {
 	return firstErr
 }
 
-// inv-hades-274 compile anchor — *JinaEmbedder MUST satisfy intent.CodeEmbedder.
+// invariant compile anchor — *JinaEmbedder MUST satisfy intent.CodeEmbedder.
 // If this stops compiling, the selector cannot wire it into NewSemanticIndexer
 // and the engine will surface "wiring bug" at boot. The test file
 // (jina_embedder_test.go) hosts the runtime double-check.
@@ -179,7 +179,7 @@ func (bm25OnlyEmbedder) Embed(_ context.Context, _ string) ([]float32, error) {
 
 func (bm25OnlyEmbedder) Dimensions() int { return 1536 }
 
-// inv-hades-274 compile anchor — the BM25-only sentinel MUST satisfy
+// invariant compile anchor — the BM25-only sentinel MUST satisfy
 // intent.CodeEmbedder so the selector can return it from Select without an
 // extra adapter layer.
 var _ intent.CodeEmbedder = bm25OnlyEmbedder{}

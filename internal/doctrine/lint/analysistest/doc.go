@@ -14,7 +14,7 @@
 // inv_hades_031_test.go # Q16 D: replaces tests/compliance/inv_hades_031_workforce_test.go
 // shared_test.go # cross-analyzer integration test (Task L-5)
 //
-// Q16 D contract: the inv-hades-031 invariant is enforced by nostore.Analyzer
+// Q16 D contract: the invariant invariant is enforced by nostore.Analyzer
 // at compile time; this package's inv_hades_031_test.go uses analysistest.Run
 // over fixture packages to verify the analyzer's enforcement mechanism.
 // Two-step verification model:

@@ -10,7 +10,7 @@
 // existing providers.RateCardRegistry.LoadFromConfig — this loader does
 // not duplicate it.
 //
-// inv-hades-070: every entry is Validate()-checked before the slice is
+// invariant: every entry is Validate()-checked before the slice is
 // returned. A single malformed entry fails the whole load — a partial
 // slice would leak an operator typo into the registry build.
 package config

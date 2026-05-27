@@ -5,7 +5,7 @@
 // repo on the workspace roster, so the linker can resolve an api_calls.
 // base_url_ref to a target_repo without executing client code.
 //
-// Validation refusals (every rule has a unit test + an inv-hades-268
+// Validation refusals (every rule has a unit test + an invariant
 // compliance test):
 //
 // ErrMissingSchemaVersion — schema_version REQUIRED (forward-compat)

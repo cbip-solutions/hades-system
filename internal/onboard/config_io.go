@@ -18,7 +18,7 @@ import (
 // ADR-0050). All non-mandatory fields are `omitempty` so unselected
 // answers do not pollute the file.
 //
-// Per inv-hades-188 (schema_version required), task C-2 always
+// Per invariant (schema_version required), task C-2 always
 // populates SchemaVersion = CurrentConfigSchemaVersion before calling
 // WriteGlobalConfig.
 type GlobalConfig struct {
@@ -147,7 +147,7 @@ func DefaultsFromFlagsAndPrefs(flags map[string]string, p *prefs.Prefs) WizardDe
 // 4. os.Rename to final path (atomic on POSIX + NTFS).
 // 5. On any failure: remove the.tmp and return wrapped error.
 //
-// Per inv-hades-031: callers do not pass arbitrary writer fns — the
+// Per invariant: callers do not pass arbitrary writer fns — the
 // signature is `(path, v)` so the call site cannot accidentally smuggle
 // a non-TOML encoder in.
 func writeAtomicTOML(path string, v any) error {

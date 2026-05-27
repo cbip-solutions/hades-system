@@ -13,7 +13,7 @@
 # corpus).
 #
 # Edits to this file MUST be accompanied by an updated
-# tests/doctrine/reconciliation_test.go entry AND an ADR per the release design Q10 C
+# tests/doctrine/reconciliation_test.go entry AND an ADR per HADES design Q10 C
 # amendment proposal flow. Do NOT bypass the golden corpus + ADR workflow.
 
 schema_version = "1.0"
@@ -21,7 +21,7 @@ doctrine_version = "1.0.0"
 auto_upgrade = "patch"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Doctrine transverse axioms — Q3 C Tier 1 + inv-hades-135
+# Doctrine transverse axioms — Q3 C Tier 1 + invariant
 # Hardcoded operator-only. User TOML attempting override REJECTED at parse.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -44,7 +44,7 @@ max_depth = 4
 max_width_per_layer = 8
 
 [workforce.recovery]
-# the release design Q7 D failure-class taxonomy + retry budget.
+# HADES design Q7 D failure-class taxonomy + retry budget.
 transient_retry_budget = 5
 permanent_infra_escalate = "operator-notify"
 doctrine_retry_budget = 3
@@ -62,7 +62,7 @@ cadence_architectural_min = 240
 reviewer_to_worker_ratio = 1
 
 # ──────────────────────────────────────────────────────────────────────────
-# Research — the release design RAG hybrid + ADR-0006 SOTA orchestrator-enforced
+# Research — HADES design RAG hybrid + ADR-0006 SOTA orchestrator-enforced
 # max-scope: enabled with generous budget; SOTA enforcement on.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -95,7 +95,7 @@ rotate_reviewer_every_pr = 1
 require_dual_review = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Autonomy — the release design Q6 D + Q8 B + Q9 D + Q11 C + Q13 D
+# Autonomy — HADES design Q6 D + Q8 B + Q9 D + Q11 C + Q13 D
 # max-scope: agent mode (operator-confirmed gates only; remaining
 # decisions autonomous); strict --check.
 # ──────────────────────────────────────────────────────────────────────────
@@ -106,7 +106,7 @@ check_mode = "strict"
 amendment_cooldown_hours = 24
 
 [autonomy.confirmation_policy]
-# release track R1 ack — max-scope: all "high" (the release design Q6 D pre-acked).
+# release track R1 ack — max-scope: all "high" (HADES design Q6 D pre-acked).
 budget_breach_threshold = "high"
 spec_amendment_proposal = "high"
 invariant_violation = "high"
@@ -119,14 +119,14 @@ fmv_enable = true
 ems_enable = true
 
 [autonomy.cost_degradation]
-# the release design Q9 D — sliding cost thresholds. max-scope: generous bounds;
+# HADES design Q9 D — sliding cost thresholds. max-scope: generous bounds;
 # downshift-tier rather than abort to keep work flowing.
 soft_check_usd = 20
 hard_stop_usd = 100
 degrade_strategy = "downshift-tier"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Merge — the release design Q4 B + Q13 D scoring + Q7 B Mode enum + §2.5 doctrine
+# Merge — HADES design Q4 B + Q13 D scoring + Q7 B Mode enum + §2.5 doctrine
 # max-scope: balanced mode; broad candidate fan-out (5).
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -137,7 +137,7 @@ anomaly_window_min = 60
 max_candidates = 5
 
 [merge.scoring_weights]
-# the release design Q4 B per-axis weights — sum MUST equal 100 (CFI invariant).
+# HADES design Q4 B per-axis weights — sum MUST equal 100 (CFI invariant).
 test_pass = 40
 lint_pass = 15
 coverage = 25
@@ -145,7 +145,7 @@ diff_size = 10
 duration = 10
 
 # ──────────────────────────────────────────────────────────────────────────
-# Caronte — the release design in-daemon code-graph engine; balanced branch policy;
+# Caronte — HADES design in-daemon code-graph engine; balanced branch policy;
 # HRA review on.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -154,7 +154,7 @@ branch_policy = "balanced"
 hra_review_enabled = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Notifications — the release design Q12 B severity per-doctrine variation (R4)
+# Notifications — HADES design Q12 B severity per-doctrine variation (R4)
 # max-scope: strict tier (urgent always interrupts; action-needed respects
 # quiet hours; info-immediate queues during quiet).
 # ──────────────────────────────────────────────────────────────────────────
@@ -170,7 +170,7 @@ urgent_bypasses_quiet_hours = true
 info_immediate_during_quiet = "queue"
 
 # ──────────────────────────────────────────────────────────────────────────
-# hades day cadence — the release design Q13 C (R5 per-doctrine variation)
+# hades day cadence — HADES design Q13 C (R5 per-doctrine variation)
 # max-scope: twice-daily Mon-Fri 08/18 with 2h catch-up window (narrow).
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -182,7 +182,7 @@ eod_digest_cron = "0 18 * * 1-5"
 eod_digest_if_within_hours = 2
 
 # ──────────────────────────────────────────────────────────────────────────
-# Quota — the release design Q4 C per-project quota
+# Quota — HADES design Q4 C per-project quota
 # max-scope: open-ended within Workforce capacity (4*8=32 max concurrent).
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -192,7 +192,7 @@ max_daily_budget_usd = 200
 max_storage_gb = 100
 
 # ──────────────────────────────────────────────────────────────────────────
-# Tmux — the release design Q7 D tmux idle TTL
+# Tmux — HADES design Q7 D tmux idle TTL
 # max-scope: long-lived sessions (24h idle TTL); auto-reap on.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -201,7 +201,7 @@ idle_ttl_min = 1440
 auto_reap = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Scheduling — the release design Q9 C miss-policy
+# Scheduling — HADES design Q9 C miss-policy
 # max-scope: catchup-bounded; recover up to 24 missed jobs.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -210,7 +210,7 @@ miss_policy = "catchup-bounded"
 miss_catchup_max_jobs = 24
 
 # ──────────────────────────────────────────────────────────────────────────
-# WFQ (Weighted Fair Queueing) — the release design Q10 D
+# WFQ (Weighted Fair Queueing) — HADES design Q10 D
 # max-scope: project weight 100 (above default 50); long starvation guard;
 # overcommit policy = degrade.
 # ──────────────────────────────────────────────────────────────────────────
@@ -231,7 +231,7 @@ obsidian_vault_path = "~/Obsidian/hades-system-max-scope"
 cross_project_aggregator_enabled = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + inv-hades-084)
+# Gateway — HADES design release track mcpgateway RBAC deny list (Q1=B + invariant)
 # max-scope: no tools disabled — agentic deep research + caronte permitted
 # (max-scope doctrine intentionally allows the widest tool surface).
 # ──────────────────────────────────────────────────────────────────────────
@@ -240,7 +240,7 @@ cross_project_aggregator_enabled = true
 disabled_tools = []
 
 # ──────────────────────────────────────────────────────────────────────────
-# Augmentation — the release design release track 5-lane RRF knobs (Q2=C + Q3=C + Q8=C)
+# Augmentation — HADES design release track 5-lane RRF knobs (Q2=C + Q3=C + Q8=C)
 # max-scope: full enable + aggressive 25k tokens + 2s timeout + opt-in
 # cross-project scope.
 # ──────────────────────────────────────────────────────────────────────────
@@ -253,7 +253,7 @@ on_timeout = "graceful_truncate"
 cross_project_scope = "opt-in"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Renderers — the release design release track M-5 platform-renderer enable matrix.
+# Renderers — HADES design release track M-5 platform-renderer enable matrix.
 # max-scope: all 7 platforms enabled. Replaces hardcoded
 # _DOCTRINE_ENABLED matrix in plugin/hades-system/renderers/__init__.py.
 # ──────────────────────────────────────────────────────────────────────────

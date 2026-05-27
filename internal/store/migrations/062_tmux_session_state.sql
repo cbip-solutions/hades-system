@@ -1,4 +1,4 @@
--- Migration 062: tmux_session_state (the release design release track, inv-hades-117 + inv-hades-118 + inv-hades-119).
+-- Migration 062: tmux_session_state (HADES design release track, invariant + invariant + invariant).
 --
 -- One row per spawned hades-system tmux session, keyed by canonical name.
 -- The internal/tmuxlife.Manager + DriftPoller + IdleReaper read/write here
@@ -6,7 +6,7 @@
 -- internal/daemon/handlers/sessions.go (release track) is the only package permitted
 -- to bridge tmuxlife.SessionStore to *store.Store.
 --
--- Drift note (the release design release track):
+-- Drift note (HADES design release track):
 --   The master plan §"Migration numbering coordination" reserved slot 060
 --   for a JOINT migration shipping priority_overrides + tmux_session_state.
 --   release track (Quota Layer 3) shipped 060_priority_overrides.sql alone — the
@@ -54,7 +54,7 @@
 --                            JSON-encoded map[WindowName][]string of
 --                            daemon-recorded pane ids per daemon-owned
 --                            window. EXCLUDES WindowScratch
---                            (inv-hades-118): the JSON encoder in
+--                            (invariant): the JSON encoder in
 --                            tmuxlife.encodeExpectedPanes filters
 --                            scratch out before serialisation; the
 --                            store layer is content-blind. Empty
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS tmux_session_state (
                    CHECK (status >= 0 AND status <= 3),              -- 0=Active, 1=Idle, 2=Orphaned, 3=Archived
     created_at     INTEGER NOT NULL,                                 -- UTC unix seconds
     last_attach_at INTEGER NOT NULL DEFAULT 0,                       -- UTC unix seconds; 0 = never attached
-    expected_panes TEXT NOT NULL DEFAULT '{}'                        -- JSON: map[WindowName][]string; excludes scratch (inv-hades-118)
+    expected_panes TEXT NOT NULL DEFAULT '{}'                        -- JSON: map[WindowName][]string; excludes scratch (invariant)
 );
 
 CREATE INDEX IF NOT EXISTS idx_tmux_session_state_alias

@@ -17,7 +17,7 @@
 // - "/legacy" → ("", "/legacy") (catch-all)
 // - "/{$}" → ("", "/{$}")
 //
-// Boundary (inv-hades-230 + inv-hades-271): no internal/store import; no
+// Boundary (invariant + invariant): no internal/store import; no
 // golang.org/x/tools/go/packages.
 package stdlib
 

@@ -3,7 +3,7 @@
 //
 // Task J-5 adapter: exposes a slim Prober implementation that
 // the cli/doctor_inbox.go layer consumes (cli.InboxProber). The split
-// keeps inv-hades-031 clean (internal/cli imports internal/inbox; this
+// keeps invariant clean (internal/cli imports internal/inbox; this
 // package does NOT import internal/store).
 //
 // The Prober is read-only: it queries the daemon-level
@@ -14,11 +14,11 @@
 // probe sums per-project COUNT(*) and compares to cache COUNT(*) per
 // project_alias.
 //
-// inv-hades-113 anchor: drift > tolerance signals write-fanout failure
+// invariant anchor: drift > tolerance signals write-fanout failure
 // (outbox replay missed; per spec §3.3 the aggregator is rebuildable
 // from per-project sources via Aggregator.Rebuild).
 //
-// inv-hades-124 anchor: severity column is enforced at SQL CHECK level on
+// invariant anchor: severity column is enforced at SQL CHECK level on
 // both per-project inbox + daemon-level cache; the prober reads the
 // distribution but does not validate the enum (the schema is the
 // authoritative validator).

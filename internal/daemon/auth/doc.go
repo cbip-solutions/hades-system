@@ -22,8 +22,8 @@
 // event (action-needed if 5+ in 1h per spec §4.3).
 //
 // All three classes use crypto/subtle.ConstantTimeCompare for token
-// comparison (inv-hades-132). The package never imports internal/store
-// (inv-hades-031); the per-routine token store is reached via the
+// comparison (invariant). The package never imports internal/store
+// (invariant); the per-routine token store is reached via the
 // HTTPTokenStore interface defined locally and satisfied by
 // scheduler-side adapter.
 //
@@ -32,9 +32,9 @@
 // - unix_peer_linux.go (SO_PEERCRED via golang.org/x/sys/unix)
 // - unix_peer_other.go (returns ErrPeerCredUnsupported; daemon refuses Start)
 //
-// inv-hades-131: every /v1/* route (except the two bearer endpoints) MUST
+// invariant: every /v1/* route (except the two bearer endpoints) MUST
 // be wrapped by PeerCredOnly. Compliance test enforces.
 //
-// inv-hades-132: per-routine bearer MUST use ConstantTimeCompare AND emit
+// invariant: per-routine bearer MUST use ConstantTimeCompare AND emit
 // ScheduleHttpTriggerAuthFailed on mismatch. Compliance test enforces.
 package auth

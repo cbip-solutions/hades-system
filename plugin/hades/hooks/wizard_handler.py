@@ -13,8 +13,8 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-# The subprocess command target — the release design A wrapper subcommand that
-# dispatches to the release design `hades config init`. Operator may override binary
+# The subprocess command target — HADES design A wrapper subcommand that
+# dispatches to HADES design `hades config init`. Operator may override binary
 # lookup via HADES_BIN env (test fixtures + custom installs). Default:
 # shutil.which("hades") then shutil.which("hades") fallback.
 _HADES_BIN_ENV = "HADES_BIN"
@@ -23,10 +23,10 @@ _HERMES_SKIN_ENV = "HERMES_SKIN"
 _XDG_CONFIG_ENV = "XDG_CONFIG_HOME"
 _HADES_SKIN_NAME = "hades"
 
-# The 3 wizard.* catalog codes from the release design release track
+# The 3 wizard.* catalog codes from HADES design release track
 # (internal/errors/codes.go). The hook does NOT directly route through
 # Render (the Go wrapper at the subprocess boundary owns rendering); it
-# logs these code names for operator traceability + release track inv-hades-220
+# logs these code names for operator traceability + release track invariant
 # compliance grep.
 _WIZARD_CATALOG_CODES = (
     "wizard.config-corrupt",
@@ -34,7 +34,7 @@ _WIZARD_CATALOG_CODES = (
     "wizard.mcp-spawn-fail",
 )
 
-# The reserved defense-in-depth fallback code from the release design release track
+# The reserved defense-in-depth fallback code from HADES design release track
 # A-6 (catalog row "internal-uncaught"). Used when the subprocess
 # machinery itself fails before the wizard could emit its own error.
 _INTERNAL_UNCAUGHT_CODE = "internal-uncaught"
@@ -115,7 +115,7 @@ def _resolve_hades_bin() -> str | None:
 def _is_interactive_stdin() -> bool:
     """Return True iff stdin is a TTY.
 
-    the release design bubbletea wizard requires a TTY for prompt rendering;
+    HADES design bubbletea wizard requires a TTY for prompt rendering;
     spawning the subprocess in a non-TTY session would emit a wizard-side
     error after the subprocess-start cost. This helper detects the
     condition early so the hook can no-op silently.
@@ -146,7 +146,7 @@ def _maybe_launch_wizard(
     - HADES_NO_WIZARD=1 (operator escape hatch via `hades --no-wizard`)
     - config.toml present (subsequent session, not first run)
 
-    On trigger: spawns `hades config init` subprocess (the release design wizard
+    On trigger: spawns `hades config init` subprocess (HADES design wizard
     surface). Hands off stdin/stdout/stderr so the operator drives the
     interactive bubbletea TUI in their terminal. The subprocess writes
     config.toml on success; subsequent session-start invocations of this
@@ -179,7 +179,7 @@ def _maybe_launch_wizard(
         )
         return
 
-    # Defensive guard: non-TTY stdin (CI / piped invocation). the release design wizard
+    # Defensive guard: non-TTY stdin (CI / piped invocation). HADES design wizard
     # is bubbletea-based; spawning it without a TTY would emit a wizard-side
     # error AFTER the subprocess start cost. Detect early + no-op.
     if not _is_interactive_stdin():
@@ -197,7 +197,7 @@ def _maybe_launch_wizard(
         )
         return
 
-    # Subprocess args: `hades config init` (the release design release track global wizard).
+    # Subprocess args: `hades config init` (HADES design release track global wizard).
     # Stdio handoff: inherit from this process so the bubbletea TUI drives
     # the operator's terminal directly. Lazygit-pattern terminal handoff —
     # bubbletea handles its own alt-screen so the post-subprocess return
@@ -244,10 +244,10 @@ def _maybe_launch_wizard(
     else:
         # Non-cancel non-zero exit = wizard-internal error. The Go
         # wrapper has ALREADY routed through Render at its own RunE
-        # boundary (the release design release track contract); the operator-visible
+        # boundary (HADES design release track contract); the operator-visible
         # HADES error block is already on stderr. The hook logs a
         # structured trace entry referencing the candidate wizard.*
-        # catalog codes for operator traceability + inv-hades-220
+        # catalog codes for operator traceability + invariant
         # compliance grep.
         logger.warning(
             "HADES wizard exited with error (rc=%d). The wrapper has "

@@ -418,10 +418,10 @@ func quantizeBinary256(fp32 []float32) []byte {
 // repeated unlock prompts on high-throughput batches.
 //
 // Boundary doctrine:
-// - inv-hades-191 forward-compat: this type does NOT import net/http
+// - invariant forward-compat: this type does NOT import net/http
 // directly; HTTP egress flows through Forwarder which the daemon
 // orchestrator wires to a concrete *providers.Dispatcher at runtime.
-// - inv-hades-031: no internal/providers import here — the narrow Forwarder
+// - invariant: no internal/providers import here — the narrow Forwarder
 // interface keeps the boundary clean (mirrors the bypassadapter +
 // dispatcheradapter split in internal/daemon/).
 //

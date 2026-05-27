@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package graphql — release GraphQL breaking-change detector wrapping
 // vektah/gqlparser/v2 (MIT). The sole Go SDL diff library used here per
-// inv-hades-267; the imports scan asserts no other diff library is imported
+// invariant; the imports scan asserts no other diff library is imported
 // in this file (except the gated Node fallback in nodefallback.go).
 //
 // Rule set: the six canonical SDL diff rules from the graphql-inspector
 // well-known catalog ( divergence #3 — the spec §7 explicit
 // enumeration). Anything outside this set yields SevInsufficient with
 // Kind = "INSUFFICIENT_<reason>" so the Node fallback (nodefallback.go)
-// can take over under the inv-hades-272 opt-in gate.
+// can take over under the invariant opt-in gate.
 //
 // Severity mapping:
 //

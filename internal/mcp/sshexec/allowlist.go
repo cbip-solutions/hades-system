@@ -8,11 +8,11 @@
 //
 // doctrine is ceiling; project can ONLY narrow, never widen.
 //
-// inv-hades-082 reinforced at this layer: any pattern produced here is
+// invariant reinforced at this layer: any pattern produced here is
 // guaranteed to be a non-empty string with no lone '*'; loader-level
 // invalid patterns are rejected with an error.
 //
-// Boundary (inv-hades-031): imports only stdlib + BurntSushi/toml +
+// Boundary (invariant): imports only stdlib + BurntSushi/toml +
 // internal/doctrine (pure value type).
 
 package sshexec

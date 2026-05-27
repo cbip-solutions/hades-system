@@ -5,7 +5,7 @@
 //
 // Severity, dedup, batch window, cross-project collapse, and quiet-hours
 // gating all live here. The package NEVER imports internal/store
-// (inv-hades-031); the inboxadapter package in internal/daemon is the only
+// (invariant); the inboxadapter package in internal/daemon is the only
 // crossing point between this domain layer and the SQL layer.
 package inbox
 

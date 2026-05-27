@@ -5,7 +5,7 @@
 // (`config.Sidecars`), probes the declared sidecar's /health endpoint, and
 // registers the SidecarBackend by name into the providers.Registry.
 //
-// Architectural choice — name-based registration (per inv-hades-066 frozen
+// Architectural choice — name-based registration (per invariant frozen
 // contract C8): the release → release cascade refactor moved from a
 // 2-tier hard-wire ("tier1 + tier2") to a name-based ProfileResolver
 // model. RegisterSidecars MUST register backends by name into
@@ -14,7 +14,7 @@
 // position. There is NO "RegisterTier1" method anywhere in the codebase
 // (an earlier plan version cited one — that is plan-template drift).
 //
-// Graceful-degradation discipline (inv-hades-280):
+// Graceful-degradation discipline (invariant):
 // - cfg == nil OR cfg.Tier1Bypass == nil → no-op; the release cascade
 // handles the path. Operators without sidecars.toml are the common
 // case.
@@ -27,7 +27,7 @@
 // instance (mirrors the bypass-backend idempotency precedent at
 // cmd/hades-ctld/orchestrator_wiring.go:438).
 //
-// inv-hades-031 boundary: this file imports internal/config + internal/providers +
+// invariant boundary: this file imports internal/config + internal/providers +
 // stdlib. It does NOT import internal/store.
 //
 // Concurrency RegisterSidecars is invoked once at daemon boot from

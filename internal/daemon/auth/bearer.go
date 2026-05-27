@@ -3,7 +3,7 @@
 //
 // Daemon-bearer + per-routine bearer validators using
 // crypto/subtle.ConstantTimeCompare for timing-safe comparison
-// (inv-hades-132). Per-routine mismatch emits a
+// (invariant). Per-routine mismatch emits a
 // ScheduleHttpTriggerAuthFailed audit event for the release audit
 // pipeline to escalate to action-needed (5+ in 1h per spec §4.3).
 package auth

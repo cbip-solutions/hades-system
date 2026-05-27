@@ -1,4 +1,4 @@
--- Migration 034: extend bypass_audit with conversation_id (the release design release track).
+-- Migration 034: extend bypass_audit with conversation_id (HADES design release track).
 -- Additive only; no data loss. Column is nullable because pre-release track rows
 -- didn't carry a conversation grouping.
 ALTER TABLE bypass_audit ADD COLUMN conversation_id TEXT;

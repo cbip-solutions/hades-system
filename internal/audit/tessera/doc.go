@@ -22,15 +22,15 @@
 //
 // # Invariants enforced by this package
 //
-// - inv-hades-031 — this package MUST NOT import internal/store.
+// - invariant — this package MUST NOT import internal/store.
 // Bridge internal/daemon/auditadapter/ + the chain layer
 // in internal/audit/chain/.
-// - inv-hades-144 — per-project Tessera tile-log isolation: cross-project
+// - invariant — per-project Tessera tile-log isolation: cross-project
 // reads MUST fail. Compile-checked: NewProjectAdapter requires a
 // non-empty project_id; runtime-checked: Adapter API rejects
 // cross-project leaf lookups by reference; analyzer-checked:
 // internal/lint/noCrossProjectAtTessera.
-// - inv-hades-145 — daemon witness signature mandatory en daemon_global_
+// - invariant — daemon witness signature mandatory en daemon_global_
 // checkpoint_log. CoSigner.Sign returns SignedSTH only; never
 // publishes unsigned to the daemon-global tile-log.
 // - T1 (audit chain tampering) defense — per-record hash chain is

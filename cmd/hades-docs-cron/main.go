@@ -16,7 +16,7 @@
 //
 // Launchd lifecycle: managed by com.hades-system.docs-cron.plist LaunchAgent
 // (G-3 ships the plist). KeepAlive=true means launchd auto-restarts on
-// crash — worker MUST be idempotent on restart (inv-hades-204). All sweep
+// crash — worker MUST be idempotent on restart (invariant). All sweep
 // operations are re-entrant; partial runs that crash mid-sweep resume
 // cleanly on next invocation.
 //
@@ -24,14 +24,14 @@
 // as injected interfaces. The default production wiring (daemonCronClient)
 // routes every operation through the hades-ctld daemon over a Unix
 // socket, NOT a direct ecosystem-database import. This preserves boundary
-// inv-hades-031 (only internal/daemon/ talks to internal/store and
+// invariant (only internal/daemon/ talks to internal/store and
 // internal/research/ecosystem; this binary lives in cmd/).
 //
-// Boundary (inv-hades-031): does NOT import internal/store, does NOT import
+// Boundary (invariant): does NOT import internal/store, does NOT import
 // internal/research/ecosystem, does NOT import internal/cli. Daemon
 // coordination over UDS is the canonical surface; this binary uses
 // net/http with a custom UDS dialer (local IPC, not network egress, so
-// inv-hades-191 "no third-party HTTPS calls in credential path" is not
+// invariant "no third-party HTTPS calls in credential path" is not
 // engaged — see §4.4 daemon-side coordination contract).
 package main
 

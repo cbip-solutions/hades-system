@@ -69,7 +69,7 @@ def register(ctx: Any) -> None:
       /hades:audit-impact, /hades:doctrine-drift-check,
       /hades:knowledge-{query,promote}, /hades:full, /hades:voice,
       /hades:openspec-{apply,archive,propose,resume},
-      /hades:status (the release design C), /hades:dashboard + /hades:panel (the release design D)
+      /hades:status (HADES design C), /hades:dashboard + /hades:panel (HADES design D)
     """
     # --- Hooks ---------------------------------------------------------------
     ctx.register_hook("on_session_start", on_session_start)
@@ -78,12 +78,12 @@ def register(ctx: Any) -> None:
     ctx.register_hook("post_tool_call", post_tool_call)
     ctx.register_hook("pre_llm_call", pre_llm_call)
 
-    # --- HADES skin (the release design release track) ---------------------------------------
+    # --- HADES skin (HADES design release track) ---------------------------------------
     # Deploy hades.yaml to ~/.hermes/skins/ at register-time so Hermes can
     # discover the skin via its standard user-skin loader. Activation is
     # gated by HERMES_SKIN=hades env (set by the release track `hades` wrapper)
     # and handled in the _maybe_activate_hades on_session_start hook below.
-    # Per the release design release track B-1 amendment: Hermes v0.13.0 does not expose a
+    # Per HADES design release track B-1 amendment: Hermes v0.13.0 does not expose a
     # register_skin() Python API; YAML deployment + env-driven activation
     # is the supported plugin-contributed-skin extension path.
     try:
@@ -98,11 +98,11 @@ def register(ctx: Any) -> None:
         )
     ctx.register_hook("on_session_start", _maybe_activate_hades)
 
-    # --- the release design release track: wizard auto-launch hook ---------------------------
+    # --- HADES design release track: wizard auto-launch hook ---------------------------
     # Third on_session_start hook. Detects first-run condition by checking
     # ~/.config/hades-system/config.toml presence + HADES_NO_WIZARD=1 escape.
-    # Spawns `hades config init` subprocess (the release design wizard surface) on trigger.
-    # No-op on subsequent sessions (config present). inv-hades-088 preserved:
+    # Spawns `hades config init` subprocess (HADES design wizard surface) on trigger.
+    # No-op on subsequent sessions (config present). invariant preserved:
     # wizard is subprocess to local Go binary, not LLM-mediated HTTP call.
     ctx.register_hook("on_session_start", _maybe_launch_wizard)
 
@@ -123,7 +123,7 @@ def register(ctx: Any) -> None:
         description="Snapshot hades session state to .hades/session.md, commit, optionally push.",
     )
 
-    # --- the release design release track Task B-9: 10 NEW skills -----------------------------
+    # --- HADES design release track Task B-9: 10 NEW skills -----------------------------
     ctx.register_skill(
         "brainstorm",
         _SKILLS_DIR / "brainstorm" / "SKILL.md",
@@ -147,12 +147,12 @@ def register(ctx: Any) -> None:
     ctx.register_skill(
         "amendment",
         _SKILLS_DIR / "amendment" / "SKILL.md",
-        description="hades doctrine-amendment lifecycle: list, show, acknowledge, or deny proposals (the release design)",
+        description="hades doctrine-amendment lifecycle: list, show, acknowledge, or deny proposals (HADES design)",
     )
     ctx.register_skill(
         "impact-pre-merge",
         _SKILLS_DIR / "impact-pre-merge" / "SKILL.md",
-        description="hades pre-merge blast radius analysis via the release design augmentation pipeline + caronte code-graph",
+        description="hades pre-merge blast radius analysis via HADES design augmentation pipeline + caronte code-graph",
     )
     ctx.register_skill(
         "audit-impact",
@@ -162,24 +162,24 @@ def register(ctx: Any) -> None:
     ctx.register_skill(
         "doctrine-drift-check",
         _SKILLS_DIR / "doctrine-drift-check" / "SKILL.md",
-        description="hades doctrine drift detection via caronte code-graph query vs the release design config",
+        description="hades doctrine drift detection via caronte code-graph query vs HADES design config",
     )
     ctx.register_skill(
         "knowledge-query",
         _SKILLS_DIR / "knowledge-query" / "SKILL.md",
-        description="hades cross-project federated knowledge query (the release design D aggregator + the release design privacy filter)",
+        description="hades cross-project federated knowledge query (HADES design D aggregator + HADES design privacy filter)",
     )
     ctx.register_skill(
         "knowledge-promote",
         _SKILLS_DIR / "knowledge-promote" / "SKILL.md",
-        description="hades knowledge promotion to global cross-project memory (the release design D, audit-logged)",
+        description="hades knowledge promotion to global cross-project memory (HADES design D, audit-logged)",
     )
 
     # --- Slash commands ------------------------------------------------------
     # Note: Hermes lowercases + strips leading slash; the registered name
     # becomes ``hades:start`` after normalization (we pass the full
     # qualified form so the slash command surfaces as ``/hades:start``).
-    # release track (the release design) completed the rebrand from the legacy namespace.
+    # release track (HADES design) completed the rebrand from the legacy namespace.
     ctx.register_command(
         "hades:start",
         handler=handle_start,
@@ -202,7 +202,7 @@ def register(ctx: Any) -> None:
         args_hint="[--json]",
     )
 
-    # --- the release design release track Task B-3: Workflow commands -------------------------
+    # --- HADES design release track Task B-3: Workflow commands -------------------------
     from .commands.brainstorm import brainstorm_handler
     from .commands.write_plan import write_plan_handler
     from .commands.execute_plan import execute_plan_handler
@@ -226,7 +226,7 @@ def register(ctx: Any) -> None:
         args_hint="<plan-path>",
     )
 
-    # --- the release design release track Task B-4: Doctrine + amendment commands -------------
+    # --- HADES design release track Task B-4: Doctrine + amendment commands -------------
     from .commands.doctrine import doctrine_handler
     from .commands.amendment_list import amendment_list_handler
     from .commands.amendment_show import amendment_show_handler
@@ -236,13 +236,13 @@ def register(ctx: Any) -> None:
     ctx.register_command(
         "hades:doctrine",
         handler=doctrine_handler,
-        description="Show active doctrine OR override at runtime (audit-logged via the release design)",
+        description="Show active doctrine OR override at runtime (audit-logged via HADES design)",
         args_hint="[doctrine-name]",
     )
     ctx.register_command(
         "hades:amendment-list",
         handler=amendment_list_handler,
-        description="List pending doctrine-amendment proposals (the release design + the release design lifecycle)",
+        description="List pending doctrine-amendment proposals (HADES design + HADES design lifecycle)",
         args_hint="[project]",
     )
     ctx.register_command(
@@ -264,7 +264,7 @@ def register(ctx: Any) -> None:
         args_hint="<amendment-id> <reason>",
     )
 
-    # --- the release design release track Task B-5: hades-specific KG commands ------------------
+    # --- HADES design release track Task B-5: hades-specific KG commands ------------------
     from .commands.impact_pre_merge import impact_pre_merge_handler
     from .commands.audit_impact import audit_impact_handler
     from .commands.doctrine_drift_check import doctrine_drift_check_handler
@@ -288,24 +288,24 @@ def register(ctx: Any) -> None:
         args_hint="[project]",
     )
 
-    # --- the release design release track Task B-6: Knowledge commands ------------------------
+    # --- HADES design release track Task B-6: Knowledge commands ------------------------
     from .commands.knowledge_query import knowledge_query_handler
     from .commands.knowledge_promote import knowledge_promote_handler
 
     ctx.register_command(
         "hades:knowledge-query",
         handler=knowledge_query_handler,
-        description="Cross-project federated knowledge query (the release design D aggregator + the release design privacy filter)",
+        description="Cross-project federated knowledge query (HADES design D aggregator + HADES design privacy filter)",
         args_hint="<pattern> [scope]",
     )
     ctx.register_command(
         "hades:knowledge-promote",
         handler=knowledge_promote_handler,
-        description="Promote a knowledge item to global (the release design D promote with audit chain anchor)",
+        description="Promote a knowledge item to global (HADES design D promote with audit chain anchor)",
         args_hint="<item-id> <reason>",
     )
 
-    # --- the release design release track Task B-7: AFK commands ------------------------------
+    # --- HADES design release track Task B-7: AFK commands ------------------------------
     from .commands.full import full_handler
     from .commands.voice import voice_handler
 
@@ -322,7 +322,7 @@ def register(ctx: Any) -> None:
         args_hint="[query]",
     )
 
-    # --- the release design release track Task B-8: OpenSpec commands -------------------------
+    # --- HADES design release track Task B-8: OpenSpec commands -------------------------
     from .commands.openspec_apply import openspec_apply_handler
     from .commands.openspec_archive import openspec_archive_handler
     from .commands.openspec_propose import openspec_propose_handler
@@ -353,13 +353,13 @@ def register(ctx: Any) -> None:
         args_hint="<feature-name>",
     )
 
-    # --- the release design release track: TUI dashboard + panel slash commands ---------------
+    # --- HADES design release track: TUI dashboard + panel slash commands ---------------
     # /hades:dashboard — subprocess handoff to TUI dashboard (no panel arg).
     # /hades:panel <name> — subprocess handoff to TUI dashboard with specific
     # panel; validates name against the 12-panel enum; invalid names render the
     # release track catalog cli.arg-validation-fail block LOCALLY (release stage C-5 operator
     # policy: no daemon /v1/errors/render roundtrip). Per spec §Q8
-    # D-pattern + the release design A A-7 wrapper alias. Extends the release design B's 22 commands
+    # D-pattern + HADES design A A-7 wrapper alias. Extends HADES design B's 22 commands
     # to 24.
     from .commands.dashboard import dashboard_handler
     from .commands.panel import panel_handler
@@ -394,12 +394,12 @@ def register(ctx: Any) -> None:
 
         ctx.register_status_provider(status_segments)
 
-    # --- Citation renderers (the release design release track) --------------------------------
+    # --- Citation renderers (HADES design release track) --------------------------------
     # Populates the module-global RendererRegistry with the 6 default
     # platform renderers (Ink/Telegram/Slack/Email/Voice/Web). hades-side
     # callbacks consume the registry via ``get_renderer_registry()`` when
     # dispatching citation envelopes for platform-specific output. The
-    # universal markdown fallback is registry-internal (mirrors the release design
+    # universal markdown fallback is registry-internal (mirrors HADES design
     # ``internal/citation/markdown_fallback.go``) and applies on doctrine
     # disable or renderer failure.
     register_default_renderers(_RENDERER_REGISTRY)

@@ -2,7 +2,7 @@
 // Package cli — adr_reject.go.
 //
 // `hades adr reject <id> --reason <X>` calls POST /v1/adr/reject.
-// --reason is mandatory per inv-hades-146 (mirrors adr_accept.go pattern).
+// --reason is mandatory per invariant (mirrors adr_accept.go pattern).
 package cli
 
 import (

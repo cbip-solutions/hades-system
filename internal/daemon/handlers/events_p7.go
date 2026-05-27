@@ -43,7 +43,7 @@
 // via SetHandoffEmitter yet). Plugin surfaces "feature not
 // configured" rather than retrying indefinitely.
 //
-// inv-hades-031 boundary: this handler imports
+// invariant boundary: this handler imports
 // internal/orchestrator/eventlog value types only (HandoffPostedEvent
 // type alias). It NEVER imports internal/store directly — the daemon
 // adapter that satisfies HandoffEmitter is the single bridge to the

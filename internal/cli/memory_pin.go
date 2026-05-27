@@ -4,7 +4,7 @@
 // `hades memory pin` is the operator-ergonomics alias for `hades memory promote`
 // at the CLI surface. Both call MemoryPromote (aggregator promote endpoint).
 //
-// inv-hades-146 gates apply identically:
+// invariant gates apply identically:
 // 1. cobra MarkFlagRequired("reason") — rejects absence at parse time.
 // 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 package cli

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package conventional_commit implements conventionalCommitAnalyzer for
 // hades-system release (spec §1 Q4 B). Enforces project instructions hard rule 2 +
-// inv-hades-004.
+// invariant.
 //
 // Mechanism shell out to `git log --pretty=%H %s` in the cwd OR a
 // configured git directory; validate each subject against the

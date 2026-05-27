@@ -25,7 +25,7 @@
 // pruning pinned versions (409 Conflict); CLI surfaces unpin guidance.
 //
 // Boundary stdlib + spf13/cobra + internal/client only. No
-// internal/research/ecosystem import (inv-hades-031); the orchestrator
+// internal/research/ecosystem import (invariant); the orchestrator
 // owns ecosystem operations and the daemon mediates.
 //
 // History pre-F-6, `hades docs` registered six `notImplementedSubcommand`

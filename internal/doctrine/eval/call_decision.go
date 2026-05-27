@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package eval ships the release dynamic per-call MCP-boundary
-// doctrine evaluator per Q10=D + spec §3.3 + §3.7 + §8.6 inv-hades-184.
+// doctrine evaluator per Q10=D + spec §3.3 + §3.7 + §8.6 invariant.
 //
 // The evaluator consumes the active doctrine bundle (release
 // doctrine.Active accessor) + the per-MCP risk-tier classification
 // (Q10=D) + parameters of an outbound MCP call; produces (CallDecision,
 // evidence). release dispatcher consumes at the MCP-call boundary; the
-// single-egress invariant inv-hades-088 stays intact (eval runs at the
+// single-egress invariant invariant stays intact (eval runs at the
 // existing dispatcher seam, no new egress).
 //
-// Boundary (inv-hades-031): eval package consumes ONLY internal/doctrine
+// Boundary (invariant): eval package consumes ONLY internal/doctrine
 // (active doctrine accessor; for now via the TierPolicy injection seam,
 // so this package's static imports are stdlib-only) + a caller-injected
 // Emitter; MUST NOT import internal/store.

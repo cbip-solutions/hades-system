@@ -17,7 +17,7 @@
 // placeholder; CircuitBreaker doesn't track transition history yet —
 // see K-3 self-review concern).
 //
-// Boundary (inv-hades-031): handlers consume the Server pointer as `any` and
+// Boundary (invariant): handlers consume the Server pointer as `any` and
 // type-assert against locally-defined interfaces (mirrors handlers/bypass.go
 // pattern) so this package never imports the daemon back. The orchestrator
 // package types (CircuitBreaker, PinOverrides, CostCounters) are imported

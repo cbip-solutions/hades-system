@@ -15,18 +15,18 @@
 // TmuxLayoutDriftDetected events but never auto-reverts. Recovery is
 // operator-invoked via `hades layout repaint <alias>`.
 //
-// Boundary (inv-hades-031): tmuxlife does NOT import internal/store. Storage
+// Boundary (invariant): tmuxlife does NOT import internal/store. Storage
 // access flows through the SessionStore interface (declared in session.go,
 // added in C-2..C-4) implemented by internal/daemon/handlers/sessions.go
 // . The package depends only on the Go standard library.
 //
 // Invariants enforced:
-// - inv-hades-117: every tmux invocation includes -S /tmp/hades-system.sock.
+// - invariant: every tmux invocation includes -S /tmp/hades-system.sock.
 // ExecTmux panics on -S absence; SocketPath const is the single source.
-// - inv-hades-118: scratch window contents NEVER serialized to snapshot.
+// - invariant: scratch window contents NEVER serialized to snapshot.
 // Save() writes tmux-resurrect config excluding :scratch and validates
 // post-tar that no scratch sentinel surfaced (added in C-9).
-// - inv-hades-119: idle TTL applied per doctrine. DoctrineIdleTTL maps the
+// - invariant: idle TTL applied per doctrine. DoctrineIdleTTL maps the
 // three standard doctrines; per-project override via hadessystem.toml is
 // read at activation time and threaded through
 // the IdleReaper.doctrineFor callback (added in C-10).
@@ -36,7 +36,7 @@ import "errors"
 
 // SocketPath is the canonical hades-system tmux socket path.
 //
-// inv-hades-117: every tmux invocation MUST include -S SocketPath; the default
+// invariant: every tmux invocation MUST include -S SocketPath; the default
 // tmux socket /tmp/tmux-<uid> is forbidden because it would contaminate the
 // operator's regular tmux namespace with hades-spawned sessions.
 //

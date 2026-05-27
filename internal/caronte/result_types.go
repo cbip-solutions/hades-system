@@ -7,7 +7,7 @@ import (
 )
 
 // IndexReport summarises a full per-project reindex pass (Plan v0.20.0
-// inv-hades-273). Surfaced by Engine.IndexProject + the daemon
+// invariant). Surfaced by Engine.IndexProject + the daemon
 // POST /v1/caronte/reindex endpoint + the `hades caronte reindex` CLI.
 //
 // Field-completeness contract (sister-tested at compliance level — the

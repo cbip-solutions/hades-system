@@ -21,8 +21,8 @@
 // cadence (default 5 min).
 //
 // Boundaries (lint-enforced):
-// - inv-hades-089: NEVER imports internal/store directly
-// - inv-hades-090: NEVER imports internal/workforce/queue directly
+// - invariant: NEVER imports internal/store directly
+// - invariant: NEVER imports internal/workforce/queue directly
 // - eventlog dependency is read-write via injected EventEmitter
 // (an alias for eventlog.Appender's contract)
 //

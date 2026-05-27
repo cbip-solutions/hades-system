@@ -7,7 +7,7 @@
 //
 // The reindex endpoint reads its project id from the X-HADES-Project-ID
 // HTTP header (the same protocol the mcpgateway uses for the
-// inv-hades-277 alias→canonical resolution). Operators pass an alias OR
+// invariant alias→canonical resolution). Operators pass an alias OR
 // a canonical id_sha256; the daemon-side resolver translates.
 package client
 

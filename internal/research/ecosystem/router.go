@@ -19,7 +19,7 @@
 // graceful degradation: when confident, target one ecosystem; when
 // uncertain, broadcast across all four with RRF weighted by confidence.
 //
-// inv-hades-200: deterministic ordering — given identical (query, embedding,
+// invariant: deterministic ordering — given identical (query, embedding,
 // classifier checkpoint, RouterConfig), Classify returns byte-identical
 // RoutingDecision. This is load-bearing for cache hits + reproducible audit.
 // The router itself enforces ordering determinism via stable-sort +
@@ -79,7 +79,7 @@ type HeuristicRule struct {
 // Test impl: fixed-score or uniform classifier injected via newTest*.
 //
 // Implementations MUST be safe for concurrent ScoreSoftmax calls (Router is
-// goroutine-safe per inv-hades-200; classifier is a hot-path member).
+// goroutine-safe per invariant; classifier is a hot-path member).
 type QueryClassifier interface {
 	// ScoreSoftmax returns a softmax distribution over the 4 ecosystems given
 	// a 1536-d FP32 query embedding (from jina-code-embeddings-1.5B per Q4=A).
@@ -322,7 +322,7 @@ func validateSoftmax(s map[Ecosystem]float64) error {
 // operators need recall over precision, the classifier handles it.
 //
 // Slice order is load-bearing: it determines `HeuristicMatched` field for
-// audit (first-match-wins) and contributes to inv-hades-200 determinism.
+// audit (first-match-wins) and contributes to invariant determinism.
 func defaultHeuristics() []HeuristicRule {
 	eco := func(s string, e Ecosystem) HeuristicRule {
 		return HeuristicRule{Substring: s, Implies: e, weight: 1.0}
@@ -387,7 +387,7 @@ func defaultHeuristics() []HeuristicRule {
 //
 // The hash is included for two reasons:
 // 1. Authenticate the on-disk checkpoint against tampering / partial writes.
-// 2. Provide a stable CheckpointHash() string for inv-hades-200 audit identity
+// 2. Provide a stable CheckpointHash() string for invariant audit identity
 // (RoutingDecision determinism contract; EvtRAGQuery audit payload).
 //
 // # Concurrency

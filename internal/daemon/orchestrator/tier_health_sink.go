@@ -8,7 +8,7 @@
 // which translates to store.TierHealthSampleRow and forwards to
 // store.InsertTierHealthSample.
 //
-// Boundary (inv-hades-031): the orchestrator package MUST NOT import
+// Boundary (invariant): the orchestrator package MUST NOT import
 // internal/store. TierHealthSampleRow is an orchestrator-local mirror of
 // store.TierHealthSampleRow (intentionally identical in shape) — the same
 // "two type sets" discipline used for CostLedgerRow. The dispatcheradapter

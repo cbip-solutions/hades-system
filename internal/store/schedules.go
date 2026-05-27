@@ -13,16 +13,16 @@ package store
 // schemaVersion bump). schemaVersion bump path: 26 →
 // 27 (this migration).
 //
-// inv-hades-031 boundary: internal/scheduler MUST NEVER import
+// invariant boundary: internal/scheduler MUST NEVER import
 // internal/store. The interface scheduler.Store + scheduler.HistoryStore
 // (declared in D-2..D-12) are bridged to *store.Store by
 // internal/daemon/scheduleradapter — that package's import list is
 // the single legitimate co-location of internal/scheduler and
-// internal/store anywhere in the codebase, enforced by the inv-hades-122
+// internal/store anywhere in the codebase, enforced by the invariant
 // compliance test.
 //
 // Time handling:
-// - INTEGER columns store UTC unix seconds (per inv-hades-005).
+// - INTEGER columns store UTC unix seconds (per invariant).
 // - The Go-side ScheduleRow / ScheduleHistoryRow use time.Time.
 // - last_run_at_unix / next_run_at_unix accept NULL: the Go layer
 // translates 0 unix-seconds → time.Time{} so callers can use

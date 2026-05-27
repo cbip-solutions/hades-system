@@ -4,7 +4,7 @@
 // All non-hadesday source dependencies live behind thin local interfaces.
 // Production wiring adapts the canonical concrete types from
 // internal/{inbox,scheduler,eventlog} + release dispatcheradapter; tests
-// substitute fakes (per inv-hades-031, hadesday/ never imports
+// substitute fakes (per invariant, hadesday/ never imports
 // internal/store).
 package hadesday
 
@@ -48,11 +48,11 @@ type EventRecord struct {
 // the eventlog.Querier interface; tests substitute fakes.
 //
 // Implementations MUST scope to the operator's set of projects
-// (cross-project leak is rejected by inv-hades-113).
+// (cross-project leak is rejected by invariant).
 type EventReader interface {
 	// QueryByType returns records of the given event-type Kind in
 	// [from, to). Implementations MUST scope to the operator's set of
-	// projects (cross-project leak is rejected by inv-hades-113).
+	// projects (cross-project leak is rejected by invariant).
 	QueryByType(ctx context.Context, kind string, from, to time.Time) ([]EventRecord, error)
 }
 

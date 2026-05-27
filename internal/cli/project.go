@@ -4,7 +4,7 @@
 // `hades project {doctor,archive,rm}` is the operator-facing project
 // lifecycle surface. Each subcommand sends a JSON-over-UDS
 // request to the daemon (the daemon is the only process that holds
-// *store.Store; the CLI never touches storage directly — inv-hades-031).
+// *store.Store; the CLI never touches storage directly — invariant).
 //
 // Cobra layout:
 //

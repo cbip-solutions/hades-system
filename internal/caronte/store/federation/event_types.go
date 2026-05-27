@@ -3,7 +3,7 @@ package federation
 
 // EventType is the C-11 closed-enum audit event vocabulary. Every release
 // federation write emits exactly ONE EventType through EmitAudit (audit.go)
-// → tessera.Adapter.AppendLeaf — the single chokepoint inv-hades-269 asserts.
+// → tessera.Adapter.AppendLeaf — the single chokepoint invariant asserts.
 // Strings are a STORED CONTRACT — they persist into the Tessera chain on
 // disk; do NOT change without a chain-migration plan.
 type EventType string

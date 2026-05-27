@@ -20,11 +20,11 @@
 // to include pid, uds_path, active_model)
 // - GET /v1/bypass/status — handlers/bypass.go
 //
-// Boundary (inv-hades-031): handlers consume the server as `any` and
+// Boundary (invariant): handlers consume the server as `any` and
 // type-assert against locally-defined interfaces so this package never
 // imports the daemon back.
 //
-// inv-hades-088 (single egress preserved): these endpoints ONLY surface
+// invariant (single egress preserved): these endpoints ONLY surface
 // pre-computed state from the daemon's in-memory counters and OS calls.
 // They do NOT trigger external network calls, provider requests, or
 // keychain access.

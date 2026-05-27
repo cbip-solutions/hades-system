@@ -7,7 +7,7 @@
 // before/equal-to now) are filtered on read AND swept periodically — so
 // the caller never honours a stale pin between sweep ticks.
 //
-// Boundary (inv-hades-031): this file imports stdlib only (context, errors,
+// Boundary (invariant): this file imports stdlib only (context, errors,
 // fmt, log/slog, sync, time). The orchestrator package MUST NOT import
 // internal/store (master plan v2.0 §92 + system-design umbrella §879 +
 // B-7 commit body). Pin row type is mirrored locally; the F-6-style
@@ -46,7 +46,7 @@ import (
 
 // PinRow orchestrator-side pin row shape. Mirror of store.PinRow
 // (intentionally identical) so dispatcheradapter performs 1:1 field-by-field
-// forwarding. Keeping the type local maintains inv-hades-031 boundary
+// forwarding. Keeping the type local maintains invariant boundary
 // (orchestrator MUST NOT import internal/store; bridge via dispatcheradapter).
 //
 // Why mirror not import: master plan v2.0 §92 + system-design §879

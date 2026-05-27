@@ -41,7 +41,7 @@ func DefaultRollingWindow() RollingWindow {
 // list. Returns (pass, reason). Empty reason on pass; populated with
 // operator-actionable detail when fail.
 //
-// Gate ordering (per inv-hades-275 contract):
+// Gate ordering (per invariant contract):
 // 1. Sample size (denom ≥ MinSampleSize)
 // 2. Real-fail cap (real_fail ≤ MaxRealFails)
 // 3. Success ratio (success / denom ≥ MinSuccess / WindowSize)

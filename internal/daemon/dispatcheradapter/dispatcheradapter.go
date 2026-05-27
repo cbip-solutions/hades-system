@@ -14,11 +14,11 @@
 //
 // 2. orchestrator.CostStore path: receives an
 // orchestrator.CostLedgerRow (canonical cost ledger persistence with
-// IdempotencyKey UNIQUE-enforced at the SQL layer for inv-hades-062 no-
+// IdempotencyKey UNIQUE-enforced at the SQL layer for invariant no-
 // double-charge) and forwards it to the concrete *store.Store via
 // 1:1 field translation. Returning orchestrator.CostLedgerRow rather
 // than store.CostLedgerRow is load-bearing: the orchestrator package
-// never sees store types, preserving inv-hades-031.
+// never sees store types, preserving invariant.
 //
 // Both paths live on the same Adapter struct because the daemon
 // constructs one adapter at boot and shares it across the dispatcher
@@ -27,7 +27,7 @@
 // require synchronised lifecycle of two adapter instances over the same
 // underlying *store.Store — pointless duplication.
 //
-// Boundary (inv-hades-031): this file imports internal/store. That is the
+// Boundary (invariant): this file imports internal/store. That is the
 // architectural intent: dispatcheradapter IS the boundary that absorbs
 // the dependency. orchestrator / providers / dispatcher / bypass MUST
 // NOT import internal/store; verified by static-invariant checks.

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_ecosystem.go
 //
-// Reports per-ecosystem DB size, package/version/chunk counts, inv-hades-199
+// Reports per-ecosystem DB size, package/version/chunk counts, invariant
 // 4-state budget classification, release F CAS blobs shared, cron worker
 // PID, last upstream-poll + weekly-sweep timestamps, symbol-index health,
 // and verifier live-cmd health (go doc / pip show / npm view / cargo doc).
@@ -16,9 +16,9 @@
 // error so mis-wired daemon compositions fail loudly at first call
 // rather than emitting an empty report
 // - Tests inject fakeEcosystemProberG4 (zero internal/research/ecosystem
-// import; inv-hades-031 clean)
+// import; invariant clean)
 //
-// Boundary (inv-hades-031): this file imports only cli-internal types + cobra +
+// Boundary (invariant): this file imports only cli-internal types + cobra +
 // context + stdlib. Does NOT import internal/research/ecosystem concrete types.
 package cli
 

@@ -12,8 +12,8 @@
 // GET /v1/research/cache/stats — aggregate size + age stats
 // GET /v1/research/cache/show?hash=<sha> — raw row including JSON body
 //
-// inv-hades-001: Unix socket only.
-// inv-hades-031: never imports internal/store directly; ResearchCacheAdminCtx
+// invariant: Unix socket only.
+// invariant: never imports internal/store directly; ResearchCacheAdminCtx
 // is the bridge.
 package handlers
 
