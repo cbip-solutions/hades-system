@@ -129,7 +129,7 @@ func TestRunWorkspaceInitHappyPathJSON(t *testing.T) {
 func TestRunWorkspaceListHappyPathText(t *testing.T) {
 	c := &fakeWorkspaceClient{listResp: &client.WorkspaceListResponse{
 		Workspaces: []client.WorkspaceListEntry{
-			{WorkspaceID: "ws-1", OwningProject: "proj-a", PolicyLocked: true, CreatedAt: 1700000000},
+			{WorkspaceID: "ws-1", OwningProject: "proj-a", PolicyLocked: true, CreatedAt: 1700000000, SchemaVersion: 1},
 		},
 	}}
 	var buf bytes.Buffer
@@ -139,6 +139,9 @@ func TestRunWorkspaceListHappyPathText(t *testing.T) {
 	}
 	if !strings.Contains(buf.String(), "ws-1") || !strings.Contains(buf.String(), "yes") {
 		t.Errorf("output = %q; want ws-1 + yes (locked)", buf.String())
+	}
+	if !strings.Contains(buf.String(), "SCHEMA") || !strings.Contains(buf.String(), "1") {
+		t.Errorf("output = %q; want schema-version column", buf.String())
 	}
 }
 

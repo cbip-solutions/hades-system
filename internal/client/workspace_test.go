@@ -47,7 +47,7 @@ func TestWorkspaceListHappyPath(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(WorkspaceListResponse{
 			Workspaces: []WorkspaceListEntry{
-				{WorkspaceID: "ws-1", OwningProject: "proj-a", PolicyLocked: false, CreatedAt: 1700000000},
+				{WorkspaceID: "ws-1", OwningProject: "proj-a", PolicyLocked: false, CreatedAt: 1700000000, SchemaVersion: 1},
 			},
 		})
 	}))
@@ -59,6 +59,9 @@ func TestWorkspaceListHappyPath(t *testing.T) {
 	}
 	if len(resp.Workspaces) != 1 || resp.Workspaces[0].WorkspaceID != "ws-1" {
 		t.Errorf("resp = %+v", resp)
+	}
+	if resp.Workspaces[0].SchemaVersion != 1 {
+		t.Errorf("SchemaVersion = %d; want 1", resp.Workspaces[0].SchemaVersion)
 	}
 }
 

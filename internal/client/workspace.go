@@ -40,6 +40,7 @@ type WorkspaceListEntry struct {
 	OwningProject string `json:"owning_project"`
 	PolicyLocked  bool   `json:"policy_locked"`
 	CreatedAt     int64  `json:"created_at"`
+	SchemaVersion int    `json:"schema_version"`
 }
 
 type WorkspaceListResponse struct {

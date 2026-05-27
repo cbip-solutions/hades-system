@@ -218,13 +218,13 @@ func RunWorkspaceList(ctx context.Context, c WorkspaceClient, flags WorkspaceLis
 		fmt.Fprintln(w, "(no workspaces registered)")
 		return nil
 	}
-	fmt.Fprintf(w, "%-32s %-24s %-8s %s\n", "WORKSPACE", "OWNER", "LOCKED", "CREATED")
+	fmt.Fprintf(w, "%-32s %-24s %-8s %-6s %s\n", "WORKSPACE", "OWNER", "LOCKED", "SCHEMA", "CREATED")
 	for _, ws := range resp.Workspaces {
 		locked := "no"
 		if ws.PolicyLocked {
 			locked = "yes"
 		}
-		fmt.Fprintf(w, "%-32s %-24s %-8s %d\n", ws.WorkspaceID, ws.OwningProject, locked, ws.CreatedAt)
+		fmt.Fprintf(w, "%-32s %-24s %-8s %-6d %d\n", ws.WorkspaceID, ws.OwningProject, locked, ws.SchemaVersion, ws.CreatedAt)
 	}
 	return nil
 }

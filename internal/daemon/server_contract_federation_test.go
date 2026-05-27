@@ -1,9 +1,15 @@
 package daemon
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
 	"reflect"
 	"testing"
+
+	"github.com/cbip-solutions/hades-system/internal/daemon/handlers"
 )
 
 type fakeContractFederation struct{}
@@ -42,6 +48,77 @@ func (f *fakeContractFederation) GetBreakingChangeWithConsumers(_ context.Contex
 	return BreakingChange{}, nil, nil
 }
 func (f *fakeContractFederation) Close() error { return nil }
+
+type plan20RESTFederation struct {
+	fakeContractFederation
+	validateRepo      string
+	validateWorkspace string
+	workspaces        map[string]Workspace
+	members           map[string][]Member
+	policies          map[string]string
+}
+
+func newPlan20RESTFederation() *plan20RESTFederation {
+	return &plan20RESTFederation{
+		workspaces: map[string]Workspace{},
+		members:    map[string][]Member{},
+		policies:   map[string]string{},
+	}
+}
+
+func (f *plan20RESTFederation) ValidateContractManifest(_ context.Context, repo, workspaceID string) (ContractManifestValidation, error) {
+	f.validateRepo = repo
+	f.validateWorkspace = workspaceID
+	return ContractManifestValidation{
+		Valid:         true,
+		SchemaVersion: 1,
+		Services: []ContractManifestService{
+			{BaseURLRef: "${BACKEND_URL}", TargetRepo: "backend"},
+		},
+	}, nil
+}
+
+func (f *plan20RESTFederation) RegisterWorkspace(_ context.Context, row Workspace) error {
+	f.workspaces[row.WorkspaceID] = row
+	return nil
+}
+
+func (f *plan20RESTFederation) ListWorkspaces(_ context.Context) ([]Workspace, error) {
+	rows := make([]Workspace, 0, len(f.workspaces))
+	for _, row := range f.workspaces {
+		rows = append(rows, row)
+	}
+	return rows, nil
+}
+
+func (f *plan20RESTFederation) ListWorkspaceMembers(_ context.Context, workspaceID string) ([]Member, error) {
+	return append([]Member(nil), f.members[workspaceID]...), nil
+}
+
+func (f *plan20RESTFederation) AddWorkspaceMember(_ context.Context, row Member) error {
+	f.members[row.WorkspaceID] = append(f.members[row.WorkspaceID], row)
+	return nil
+}
+
+func (f *plan20RESTFederation) RemoveWorkspace(_ context.Context, workspaceID string) (int64, error) {
+	_, existed := f.workspaces[workspaceID]
+	delete(f.workspaces, workspaceID)
+	delete(f.members, workspaceID)
+	delete(f.policies, workspaceID)
+	if !existed {
+		return 0, nil
+	}
+	return 1, nil
+}
+
+func (f *plan20RESTFederation) GetWorkspacePolicy(_ context.Context, workspaceID string) (string, error) {
+	return f.policies[workspaceID], nil
+}
+
+func (f *plan20RESTFederation) SetWorkspacePolicy(_ context.Context, workspaceID, policy string) error {
+	f.policies[workspaceID] = policy
+	return nil
+}
 
 type fakeContractCoordinator struct{}
 
@@ -94,6 +171,105 @@ func TestContractFederationRESTAdapterNilSafe(t *testing.T) {
 	s.SetContractFederation(nil)
 	if s.ContractFederationREST() != nil {
 		t.Error("ContractFederationREST() non-nil after SetContractFederation(nil)")
+	}
+}
+
+func TestPlan20RESTRoutesUseServerFederationSeam(t *testing.T) {
+	s := newTestServer(t)
+	fed := newPlan20RESTFederation()
+	s.SetContractFederation(fed)
+
+	post := func(path string, body any) []byte {
+		t.Helper()
+		raw, err := json.Marshal(body)
+		if err != nil {
+			t.Fatalf("marshal %s: %v", path, err)
+		}
+		req := httptest.NewRequest(http.MethodPost, path, bytes.NewReader(raw))
+		rec := httptest.NewRecorder()
+		s.Handler().ServeHTTP(rec, req)
+		if rec.Code != http.StatusOK {
+			t.Fatalf("%s status = %d; want 200; body=%s", path, rec.Code, rec.Body.String())
+		}
+		return rec.Body.Bytes()
+	}
+
+	var validate handlers.ContractValidateRESTResponse
+	if err := json.Unmarshal(post("/v1/mcpgateway/contract/validate", handlers.ContractValidateRESTRequest{
+		Repo: "/tmp/client", WorkspaceID: "ws-1",
+	}), &validate); err != nil {
+		t.Fatalf("decode validate: %v", err)
+	}
+	if !validate.Valid || fed.validateRepo != "/tmp/client" || fed.validateWorkspace != "ws-1" {
+		t.Fatalf("validate = %+v repo=%q workspace=%q; want real federation seam call", validate, fed.validateRepo, fed.validateWorkspace)
+	}
+
+	var initResp handlers.WorkspaceInitRESTResponse
+	if err := json.Unmarshal(post("/v1/mcpgateway/workspace/init", handlers.WorkspaceInitRESTRequest{
+		WorkspaceID: "ws-1", OwningProject: "client", Members: []string{"backend"}, PolicyLocked: true,
+	}), &initResp); err != nil {
+		t.Fatalf("decode init: %v", err)
+	}
+	if initResp.WorkspaceID != "ws-1" || initResp.SchemaVersion != 1 {
+		t.Fatalf("initResp = %+v; want workspace ws-1 schema v1", initResp)
+	}
+
+	var listResp handlers.WorkspaceListRESTResponse
+	if err := json.Unmarshal(post("/v1/mcpgateway/workspace/list", handlers.WorkspaceListRESTRequest{}), &listResp); err != nil {
+		t.Fatalf("decode list: %v", err)
+	}
+	if len(listResp.Workspaces) != 1 || listResp.Workspaces[0].SchemaVersion != 1 {
+		t.Fatalf("listResp = %+v; want one schema-versioned workspace", listResp)
+	}
+
+	var membersResp handlers.WorkspaceMembersRESTResponse
+	if err := json.Unmarshal(post("/v1/mcpgateway/workspace/members", handlers.WorkspaceMembersRESTRequest{
+		WorkspaceID: "ws-1",
+	}), &membersResp); err != nil {
+		t.Fatalf("decode members: %v", err)
+	}
+	if len(membersResp.Members) != 2 {
+		t.Fatalf("members = %+v; want owner + explicit member", membersResp.Members)
+	}
+
+	var linkResp handlers.WorkspaceLinkRESTResponse
+	if err := json.Unmarshal(post("/v1/mcpgateway/workspace/link", handlers.WorkspaceLinkRESTRequest{
+		WorkspaceID: "ws-1", ProjectID: "cli",
+	}), &linkResp); err != nil {
+		t.Fatalf("decode link: %v", err)
+	}
+	if linkResp.ProjectID != "cli" {
+		t.Fatalf("linkResp = %+v; want cli linked", linkResp)
+	}
+
+	var policySetResp handlers.WorkspacePolicySetRESTResponse
+	if err := json.Unmarshal(post("/v1/mcpgateway/workspace/policy/set", handlers.WorkspacePolicySetRESTRequest{
+		WorkspaceID: "ws-1", NewPolicy: "permissive",
+	}), &policySetResp); err != nil {
+		t.Fatalf("decode policy set: %v", err)
+	}
+	if policySetResp.NewPolicy != "permissive" {
+		t.Fatalf("policySetResp = %+v; want permissive", policySetResp)
+	}
+
+	var policyGetResp handlers.WorkspacePolicyGetRESTResponse
+	if err := json.Unmarshal(post("/v1/mcpgateway/workspace/policy/get", handlers.WorkspacePolicyGetRESTRequest{
+		WorkspaceID: "ws-1",
+	}), &policyGetResp); err != nil {
+		t.Fatalf("decode policy get: %v", err)
+	}
+	if policyGetResp.Policy != "permissive" {
+		t.Fatalf("policyGetResp = %+v; want permissive", policyGetResp)
+	}
+
+	var removeResp handlers.WorkspaceRemoveRESTResponse
+	if err := json.Unmarshal(post("/v1/mcpgateway/workspace/remove", handlers.WorkspaceRemoveRESTRequest{
+		WorkspaceID: "ws-1",
+	}), &removeResp); err != nil {
+		t.Fatalf("decode remove: %v", err)
+	}
+	if removeResp.RowsAffected != 1 || len(fed.workspaces) != 0 || len(fed.members["ws-1"]) != 0 {
+		t.Fatalf("removeResp = %+v workspaces=%+v members=%+v; want cascade through seam", removeResp, fed.workspaces, fed.members)
 	}
 }
 

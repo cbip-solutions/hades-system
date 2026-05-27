@@ -17,12 +17,10 @@
 // POST /v1/mcpgateway/api-impact → caronte get_breaking_changes + consumers fan-out
 //
 // The contract read routes + federation-health + api-impact routes dispatch
-// to the caronte engine tools via callGatewayRaw. The 7
-// workspace routes are write/lifecycle paths that the daemon's federation
-// substrate handles; for the engine read paths (workspace list/members),
-// the daemon would dispatch through caronte tools — but the lifecycle
-// surfaces (init/link/remove/policy/set) are direct federation-store calls
-// + audit emission.
+// to the caronte engine tools via callGatewayRaw. Contract validation and
+// all 7 workspace lifecycle routes are direct daemon-federation calls so
+// workspace register/list/members/link/remove/policy state is read from the
+// same substrate that persists the mutations and emits audit leaves.
 //
 // wiring registers each route on the daemon mux. may
 // refactor the lifecycle routes once the engine method bodies grow real
