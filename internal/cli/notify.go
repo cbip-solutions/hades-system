@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — notify.go.
 //
-// notification ledger. will widen this surface to multi-channel
+// notification ledger. release will widen this surface to multi-channel
 // routing (mute, rules, history per-channel).
 package cli
 

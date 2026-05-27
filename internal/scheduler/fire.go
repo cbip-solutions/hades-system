@@ -58,7 +58,7 @@ type FireDeps struct {
 // it MUST NOT import internal/providers or private-tier1-module.
 // Compile-checked by D-14 + boundary tests.
 //
-// Returns
+// # Returns
 //
 // - nil on success or a pure-skip case (skip is not an error).
 // - errors.Is(ErrInvalidSchedule) when s is nil or fails Validate.

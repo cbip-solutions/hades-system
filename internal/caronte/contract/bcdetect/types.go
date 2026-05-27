@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package bcdetect — breaking-change detection (master C-7).
+// Package bcdetect — release breaking-change detection (master C-7).
 //
 // Owns the Detector interface, Severity enum, DiffResult value type, and
 // BreakingEvent.

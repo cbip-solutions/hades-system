@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package spikes provides the Phase 0 spike registry + execution substrate
+// Package spikes provides the spike registry + execution substrate
 // A-4 (release-gate spike re-execution).
 //
-// Per amendment §2.4 D-4: 8 Phase 0 spikes verify Hermes substrate ABCs +
+// Per amendment §2.4 D-4: 8 spikes verify Hermes substrate ABCs +
 // hook contracts + MCP envelope shapes + renderer feasibility. Spike
 // vigencia ≤14d (Q10=B Hermes evolution velocity); CATASTROPHIC severity
 // blocks releases unconditionally.

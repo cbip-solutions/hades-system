@@ -2,7 +2,7 @@
 // Package errors centralises sentinel error values and the typed
 // error-code catalog used across zen-swarm.
 //
-// This file (codes.go) ships the error catalog: a
+// This file (codes.go) ships the releasec error catalog: a
 // typed table of 31 user-visible error codes per spec §Q6, each with
 // a stable identifier (Code), a short title, a body template, a
 // recovery hint (concrete shell command or doc link — NEVER
@@ -29,7 +29,7 @@
 // # → contract
 //
 // exports the following types + functions which are FROZEN
-// once ships (per master plan §"Cross-phase type
+// once ships (per releasec master plan §"Cross-phase type
 // discipline"):
 //
 // - Code (string type alias) — stable identifier; never renamed
@@ -73,8 +73,8 @@
 //
 // # Companion file
 //
-// errors.go preserves the legacy NotImplementedError family + Plan2..
-// Plan15 sentinels (additive composition — does NOT modify
+// errors.go preserves the legacy NotImplementedError family + release..
+// release sentinels (additive composition — does NOT modify
 // errors.go).
 //
 // # Spec references

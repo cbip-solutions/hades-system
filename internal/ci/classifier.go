@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // ClassifierVersion constant + LoadFlakeQuarantine quarantine loader.
 //
-// Classification rules (spec §7.3; HANDOFF.md "permanent-red trap"
+// Classification rules (spec §7.3; .hades/session.md "permanent-red trap"
 // context):
 //
 // - success → bucket "success"
@@ -14,7 +14,7 @@
 // (forces re-classification when rules evolve). Referenced by
 // G-6 compliance tests.
 //
-// Coverage target ≥90% per CLAUDE.md security/correctness-critical list.
+// Coverage target ≥90% per project instructions security/correctness-critical list.
 package ci
 
 import (

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package nostore implements noStoreImportAnalyzer for zen-swarm
+// Package nostore implements noStoreImportAnalyzer for zen-swarm release
 // (spec §1 Q4 B + Q16 D). Subsumes invariant and generalizes to invariant.
 //
 // Detects imports of github.com/cbip-solutions/hades-system/internal/store from

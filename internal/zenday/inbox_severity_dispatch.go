@@ -3,7 +3,7 @@
 //
 // translation (spec §6.4).
 //
-// DispatchInboxSeverity maps a event-type string to the canonical
+// DispatchInboxSeverity maps a release event-type string to the canonical
 // via the caller-supplied InboxNotifier.
 //
 // Severity routing per spec §6.4:

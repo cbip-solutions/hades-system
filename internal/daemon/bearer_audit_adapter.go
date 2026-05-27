@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// bearer_audit_adapter.go — Task I-9 production
+// bearer_audit_adapter.go — release Task I-9 production
 // auth.AuditEmitter adapter. The auth package's middleware emits
 // authentication-failure events through the abstract auth.AuditEmitter
 // interface (Emit(ctx, map[string]any) error); production wires a real

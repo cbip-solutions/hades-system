@@ -7,12 +7,12 @@
 # work. The default doctrine is the recommended starting point for projects
 # that have not opted into max-scope's full-coverage discipline.
 #
-# Phase 0 R1-R5 ack values for default come from
-# docs/superpowers/plans/2026-05-03-plan-8-phase-0-acks.md (operator-acked
+# release track R1-R5 ack values for default come from
+# design records release design (operator-acked
 # 2026-05-08, locked into tests/doctrine/reconciliation_test.go).
 #
 # Edits to this file MUST be accompanied by an updated
-# tests/doctrine/reconciliation_test.go entry AND an ADR per Plan 5 Q10 C
+# tests/doctrine/reconciliation_test.go entry AND an ADR per the release design Q10 C
 # amendment proposal flow.
 
 schema_version = "1.0"
@@ -20,7 +20,7 @@ doctrine_version = "1.0.0"
 auto_upgrade = "patch"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Doctrine transverse axioms — Q3 C Tier 1 + inv-zen-135
+# Doctrine transverse axioms — Q3 C Tier 1 + invariant
 # Hardcoded operator-only.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -67,7 +67,7 @@ sota_orchestrator_enforced = true
 
 # ──────────────────────────────────────────────────────────────────────────
 # Gates — minimum-viable test coverage
-# Phase 0 R3 ack — default: 4-tier minimum (unit + integration + compliance
+# release track R3 ack — default: 4-tier minimum (unit + integration + compliance
 # + analysistest).
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -87,7 +87,7 @@ rotate_reviewer_every_pr = 3
 require_dual_review = false
 
 # ──────────────────────────────────────────────────────────────────────────
-# Autonomy — Plan 5 Q11 C: default=assisted (operator gates many decisions)
+# Autonomy — the release design Q11 C: default=assisted (operator gates many decisions)
 # ──────────────────────────────────────────────────────────────────────────
 
 [autonomy]
@@ -96,14 +96,14 @@ check_mode = "permissive"
 amendment_cooldown_hours = 72
 
 [autonomy.confirmation_policy]
-# Phase 0 R1 ack — default: balanced (medium × 4).
+# release track R1 ack — default: balanced (medium × 4).
 budget_breach_threshold = "medium"
 spec_amendment_proposal = "medium"
 invariant_violation = "medium"
 architectural_review_escalation = "medium"
 
 [autonomy.voting]
-# Phase 0 R2 ack — default: plurality only (FMV disabled to save cost).
+# release track R2 ack — default: plurality only (FMV disabled to save cost).
 plurality_threshold_pct = 50
 fmv_enable = false
 ems_enable = true
@@ -133,7 +133,7 @@ diff_size = 10
 duration = 10
 
 # ──────────────────────────────────────────────────────────────────────────
-# Caronte — Plan 19 in-daemon code-graph engine; balanced branch policy
+# Caronte — the release design in-daemon code-graph engine; balanced branch policy
 # ──────────────────────────────────────────────────────────────────────────
 
 [caronte]
@@ -141,7 +141,7 @@ branch_policy = "balanced"
 hra_review_enabled = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Notifications — Plan 7 Q12 B (R4)
+# Notifications — the release design Q12 B (R4)
 # default: standard quiet hours (Slack-DND pattern).
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -150,25 +150,25 @@ quiet_hours_start = "22:00"
 quiet_hours_end = "07:00"
 
 [notifications.severity_per_doctrine]
-# Phase 0 R4 ack — default: standard quiet hours respected.
+# release track R4 ack — default: standard quiet hours respected.
 action_needed_promotes_to_urgent = false
 urgent_bypasses_quiet_hours = true
 info_immediate_during_quiet = "queue"
 
 # ──────────────────────────────────────────────────────────────────────────
-# zen day cadence — Plan 7 Q13 C verbatim (R5)
+# zen day cadence — the release design Q13 C verbatim (R5)
 # default: 0 8/18 * * 1-5 + if_within_hours 2/4 (asymmetric morning/EOD).
 # ──────────────────────────────────────────────────────────────────────────
 
 [zen_day_cadence]
-# Phase 0 R5 ack — default: Plan 7 Q13 C verbatim.
+# release track R5 ack — default: the release design Q13 C verbatim.
 morning_brief_cron = "0 8 * * 1-5"
 morning_brief_if_within_hours = 2
 eod_digest_cron = "0 18 * * 1-5"
 eod_digest_if_within_hours = 4
 
 # ──────────────────────────────────────────────────────────────────────────
-# Quota — Plan 7 Q4 C: tighter than max-scope; 8 max concurrent (within
+# Quota — the release design Q4 C: tighter than max-scope; 8 max concurrent (within
 # 2*4=8 Workforce capacity ceiling).
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -178,7 +178,7 @@ max_daily_budget_usd = 50
 max_storage_gb = 25
 
 # ──────────────────────────────────────────────────────────────────────────
-# Tmux — Plan 7 Q7 D: default = 8h idle TTL.
+# Tmux — the release design Q7 D: default = 8h idle TTL.
 # ──────────────────────────────────────────────────────────────────────────
 
 [tmux]
@@ -186,7 +186,7 @@ idle_ttl_min = 480
 auto_reap = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Scheduling — Plan 7 Q9 C: default = skip missed runs.
+# Scheduling — the release design Q9 C: default = skip missed runs.
 # ──────────────────────────────────────────────────────────────────────────
 
 [scheduling]
@@ -194,7 +194,7 @@ miss_policy = "skip"
 miss_catchup_max_jobs = 0
 
 # ──────────────────────────────────────────────────────────────────────────
-# WFQ — Plan 7 Q10 D: default project weight 50 (baseline).
+# WFQ — the release design Q10 D: default project weight 50 (baseline).
 # ──────────────────────────────────────────────────────────────────────────
 
 [wfq]
@@ -212,7 +212,7 @@ obsidian_vault_path = "~/Obsidian/zen-swarm-default"
 cross_project_aggregator_enabled = false
 
 # ──────────────────────────────────────────────────────────────────────────
-# Gateway — Plan 11 Phase A mcpgateway RBAC deny list (Q1=B + inv-zen-084)
+# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + invariant)
 # default: no tools disabled — balanced posture allows full surface.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -220,7 +220,7 @@ cross_project_aggregator_enabled = false
 disabled_tools = []
 
 # ──────────────────────────────────────────────────────────────────────────
-# Augmentation — Plan 11 Phase C 5-lane RRF knobs (Q2=C + Q3=C + Q8=C)
+# Augmentation — the release design release track 5-lane RRF knobs (Q2=C + Q3=C + Q8=C)
 # default: enable + moderate 10k tokens + 1s timeout + opt-in cross-project.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -232,7 +232,7 @@ on_timeout = "graceful_truncate"
 cross_project_scope = "opt-in"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Renderers — Plan 12 Phase E M-5 platform-renderer enable matrix.
+# Renderers — the release design release track M-5 platform-renderer enable matrix.
 # default: all 7 platforms enabled (mirror of max-scope; balanced doctrine
 # does not restrict surface). Replaces hardcoded _DOCTRINE_ENABLED matrix
 # in plugin/zen-swarm/renderers/__init__.py.

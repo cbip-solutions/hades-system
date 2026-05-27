@@ -3,7 +3,7 @@
 //
 // `zen knowledge-p9 rebuild` — re-embed + re-index one project's promoted pins.
 //
-// The daemon refreshes the global pin index synchronously and returns
+// The daemon refreshes the release global pin index synchronously and returns
 // 202 Accepted with a receipt for wire compatibility. --project is required;
 // the daemon returns 400 when omitted.
 //
@@ -16,9 +16,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 func knowledge9RebuildCmd() *cobra.Command {

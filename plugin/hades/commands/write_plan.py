@@ -25,8 +25,8 @@ Read `{spec_path}`. Verify it is frozen (per memoria `feedback_spec_hierarchy_an
 Per `feedback_methodology_and_conventions.md` §3:
 
 ### Master + phase files pattern (REQUIRED)
-- Master file: `internal design record` (~150-200 lines)
-- Phase files: `internal design record` (~700-3000 lines each)
+- Master file: `design records` (~150-200 lines)
+- Phase files: `design records` (~700-3000 lines each)
 - Phase letters: A through K/L/N depending on plan size
 
 ### Master plan structure
@@ -60,17 +60,17 @@ If background writer fails 2+ times → dispatch foreground (NOT `run_in_backgro
 
 Per `feedback_methodology_and_conventions.md` §13:
 
-###  — Mechanical greps
+### release stage — Mechanical greps
 - Placeholder scan (TBD/FIXME/XXX/implement-later)
 - Claude attribution scan
 - Type-name uniqueness across phases
 - Module path consistency
 - inv-zen-XXX coverage
 
-###  — Code-reviewer subagent dispatch (MANDATORY)
+### release stage — Code-reviewer subagent dispatch (MANDATORY)
 - Dispatch `superpowers:code-reviewer` foreground
 - Cross-phase signature/field-set drift
-- Skipping  = compile errors guaranteed during execution
+- Skipping release stage = compile errors guaranteed during execution
 
 ### When findings ≥1 CRITICAL
 Doctrine "no defer" + "no tech debt" prohibit pushing with known CRITICAL findings. Fix inline before commit.

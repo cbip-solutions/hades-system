@@ -1,7 +1,7 @@
--- Idempotency keys cache — TTL 24h (Plan 2 Phase H).
+-- Idempotency keys cache — TTL 24h (the release design release track).
 --
 -- Lifecycle:
---   MarkPending    — written BEFORE upstream call (inv-zen-056).
+--   MarkPending    — written BEFORE upstream call (invariant).
 --   MarkCompleted  — written AFTER validator+audit; persists full
 --                    response (status_code + headers + body) so a
 --                    restart in the gap upstream-response → orchestrator
@@ -11,7 +11,7 @@
 --
 -- Expired rows surface as "unknown" via the bypass-side wrapper so the
 -- caller falls through to a fresh upstream call. PurgeExpired runs on
--- a 1h ticker (StartPurgeScheduler) launched by the daemon (Phase E).
+-- a 1h ticker (StartPurgeScheduler) launched by the daemon (release track).
 --
 -- error_message captures the human-readable cause when MarkFailed is
 -- invoked, mirroring conversation_wal.error_message (FailTurn). Symmetry

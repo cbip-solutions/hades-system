@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — providers.go
 //
-// `zen providers` subcommands manage the LLM provider roster.
-// replaces the notImplementedSubcommand stubs with real
+// `zen providers` subcommands manage the LLM provider roster. release
+// replaces the release notImplementedSubcommand stubs with real
 // commands. `list` + `init` (this file) read/write the config files
 // directly; `verify` / `rotate` / `add` / `setup` (providers_extra.go,
 // Task 17) touch the Keychain.

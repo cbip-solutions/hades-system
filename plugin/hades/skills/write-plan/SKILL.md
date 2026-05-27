@@ -41,8 +41,8 @@ Verify at least 6 design sections approved + Q&A complete per
 
 ### 3. Master + phase files pattern
 
-- Master: `docs/superpowers/plans/YYYY-MM-DD-plan-N-<topic>-master.md` (~150-200 lines)
-- Phase files: `docs/superpowers/plans/YYYY-MM-DD-plan-N-phase-X-<scope>.md` (~700-3000 lines each)
+- Master: `design records` (~150-200 lines)
+- Phase files: `design records` (~700-3000 lines each)
 
 ### 4. Watchdog mitigation (CRITICAL)
 
@@ -54,8 +54,8 @@ Background subagents have 600s stream watchdog. Use incremental Write+Edit per
 
 ### 5. Two-stage self-review (mandatory for ≥4 parallel writers)
 
-Stage 1 — Mechanical greps (placeholder/attribution/uniqueness/module-path/inv-zen coverage).
-Stage 2 — Code-reviewer subagent dispatch (MANDATORY; catches cross-phase signature drift).
+release stage — Mechanical greps (placeholder/attribution/uniqueness/module-path/inv-zen coverage).
+release stage — Code-reviewer subagent dispatch (MANDATORY; catches cross-phase signature drift).
 
 ## Cross-references
 

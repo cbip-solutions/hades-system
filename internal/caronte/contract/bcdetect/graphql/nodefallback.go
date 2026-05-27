@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package graphql — Node fallback for the invariant opt-in path.
 //
-// This file is THE SINGLE SANCTIONED os/exec spawn site in The
+// This file is THE SINGLE SANCTIONED os/exec spawn site in release. The
 // invariant compliance test (tests/compliance/inv_zen_272_*) AST-scans
 // internal/caronte/contract/bcdetect/ for os/exec imports and asserts
 // EXACTLY this file appears. Any new os/exec import under bcdetect/ is a
@@ -19,7 +19,7 @@
 // When closed: returns goResult unchanged + no spawn + no audit.
 // When open : shells `node graphql-inspector diff <old> <new>` (or the
 // Params.NodeBinaryPath override) with Params.NodeSpawnTimeout,
-// emits a Tessera audit row per spawn (success OR
+// emits a release Tessera audit row per spawn (success OR
 // failure) via the AuditEmitter seam (production:
 // federation.AuditEmitter), and replaces the SevInsufficient
 // entries with the Node output while preserving canonical

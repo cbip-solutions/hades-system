@@ -2,7 +2,7 @@
 // Package cli — doctrine.go.
 //
 // `zen doctrine` (registered as `zen doctrine-v2` during + K parity
-// window; polish promotes to `zen doctrine`) exposes 15 subcommands
+// window; quality promotes to `zen doctrine`) exposes 15 subcommands
 // organized via cobra.Group annotations:
 //
 // Read group → list, show, status, history, diff, validate
@@ -22,7 +22,7 @@
 // Q12 C: `reinforce` previews template render output for operator inspection
 // of what worker subprocess will receive.
 //
-// Help text + error messages in español per CLAUDE.md operator language §6.6.
+// Help text + error messages in español per project instructions operator language §6.6.
 //
 // invariant: this package imports zero internal/store; all stateful reads
 // route via internal/client (typed HTTP daemon client) which itself respects

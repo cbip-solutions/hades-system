@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package openapi — OpenAPI breaking-change detector wrapping
+// Package openapi — release OpenAPI breaking-change detector wrapping
 // oasdiff/oasdiff (Go SDK; Apache-2.0). The sole library used here per
 // invariant; the imports scan asserts no other diff library is imported
 // in this file.

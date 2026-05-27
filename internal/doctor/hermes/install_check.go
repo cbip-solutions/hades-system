@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package hermes ships doctor checks for Hermes
+// Package hermes ships release doctor checks for Hermes
 // substrate verification: install + plugin-format. Each check satisfies
 // the internal/doctor/check.Check interface.
 //

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — mcpgateway_rest.go ( MAJOR-2 fix;
+// Package handlers — mcpgateway_rest.go (release MAJOR-2 fix; release
 // Task J-11 distinct-ops repoint).
 //
 // REST sub-route adapters for /v1/mcpgateway/{codegraph,impact,context,wiki}.
 //
-// Background — substrate gap closure:
+// Background — release substrate gap closure:
 //
-// (Q1=B "single HTTP MCP endpoint"). Task E-3 then shipped
+// (Q1=B "single HTTP MCP endpoint"). release Task E-3 then shipped
 // the client wrappers (internal/client/codegraph.go::CodegraphQuery / Impact /
 // Context360 / Wiki) which call REST sub-routes — /v1/mcpgateway/codegraph,
 // /v1/mcpgateway/impact, /v1/mcpgateway/context, /v1/mcpgateway/wiki — that
-// the daemon never registered. built the TUI F7 panel on
+// the daemon never registered. release built the TUI F7 panel on
 // top of those client wrappers (CodegraphFile composes three of the four
 // sub-routes into one round-trip). In production every F7 [Q]/[I]/[W]/[C]
 // subpanel returned 404; the gap was masked because the client tests use
@@ -24,11 +24,11 @@
 // audit emission, doctrine + mode header propagation, panic recovery, and
 // caronte per-mode escalation all flow through unchanged.
 //
-// Cherry-pick narrative: this file completes the substrate gap
+// Cherry-pick narrative: this file completes the release substrate gap
 // inherited; if a backport branch is ever needed, the
-// commit can be cherry-picked to a follow-up release.
+// commit can be cherry-picked to a release.1 follow-up release.
 //
-// With the CaronteProxy registered under the "caronte" slot (
+// With the CaronteProxy registered under the "caronte" slot (release
 // renamed the segment gitnexus->caronte), the `context`, `impact`, and `wiki`
 // tools return GENUINELY DISTINCT payload shapes (DECISION 6) — no longer the
 // collapsed {hits} alias.
@@ -46,7 +46,7 @@
 // internal/caronte or internal/daemon/mcpgateway — the payload structs are
 // local anonymous types parsed from the JSON the gateway returns. The gateway
 // is consumed via the http.Handler interface threaded through
-// MCPGatewayCtx.MCPGateway() — same pattern used N +
+// MCPGatewayCtx.MCPGateway() — same pattern used N + release
 // merge gates.
 package handlers
 

@@ -1,20 +1,20 @@
--- Migration 062: tmux_session_state (Plan 7 Phase C, inv-zen-117 + inv-zen-118 + inv-zen-119).
+-- Migration 062: tmux_session_state (the release design release track, invariant + invariant + invariant).
 --
 -- One row per spawned zen-swarm tmux session, keyed by canonical name.
 -- The internal/tmuxlife.Manager + DriftPoller + IdleReaper read/write here
 -- through the SessionStore interface declared in internal/tmuxlife/session.go;
--- internal/daemon/handlers/sessions.go (Phase I) is the only package permitted
+-- internal/daemon/handlers/sessions.go (release track) is the only package permitted
 -- to bridge tmuxlife.SessionStore to *store.Store.
 --
--- Drift note (Plan 7 Phase C-11):
+-- Drift note (the release design release track):
 --   The master plan §"Migration numbering coordination" reserved slot 060
 --   for a JOINT migration shipping priority_overrides + tmux_session_state.
---   Phase B-6 (Quota Layer 3) shipped 060_priority_overrides.sql alone — the
---   joint payload was split because Phase C owns its own DDL and Phase B
---   needed unblocked storage. Slot 061 is reserved for Phase G knowledge
---   index (separate database file, structural-only). Phase C-11 therefore
+--   release track (Quota Layer 3) shipped 060_priority_overrides.sql alone — the
+--   joint payload was split because release track owns its own DDL and release track
+--   needed unblocked storage. Slot 061 is reserved for release track knowledge
+--   index (separate database file, structural-only). release track therefore
 --   ships 062 as the next free number on the daemon.db schema chain.
---   schemaVersion bump path: 25 (Phase B-6) → 26 (this migration).
+--   schemaVersion bump path: 25 (release track) → 26 (this migration).
 --
 -- Constraints:
 --
@@ -26,7 +26,7 @@
 --                            ErrDuplicateTmuxSessionName so the seam can
 --                            distinguish "operator created twice" vs.
 --                            "race window" semantics.
---   - alias TEXT NOT NULL:   Phase A projectctx alias. Plain text — NOT a
+--   - alias TEXT NOT NULL:   release track projectctx alias. Plain text — NOT a
 --                            FK to projects_alias.alias. Tmux state is
 --                            forensic-relevant after archive (`zen day`
 --                            digest); coupling lifecycle to projects_alias
@@ -54,7 +54,7 @@
 --                            JSON-encoded map[WindowName][]string of
 --                            daemon-recorded pane ids per daemon-owned
 --                            window. EXCLUDES WindowScratch
---                            (inv-zen-118): the JSON encoder in
+--                            (invariant): the JSON encoder in
 --                            tmuxlife.encodeExpectedPanes filters
 --                            scratch out before serialisation; the
 --                            store layer is content-blind. Empty
@@ -68,7 +68,7 @@
 --   - PRIMARY KEY(name) is implicitly indexed; GetTmuxSessionState fast
 --     path bypasses any other lookup.
 --
---   - idx_tmux_session_state_alias accelerates Phase F's
+--   - idx_tmux_session_state_alias accelerates release track
 --     `zen sessions ls` and the IdleReaper's resolveAlias scan when
 --     ListSessions filters by alias (1-2 active sessions per project on
 --     the typical workstation, but the index keeps the lookup O(log n)
@@ -90,13 +90,13 @@
 
 CREATE TABLE IF NOT EXISTS tmux_session_state (
     name           TEXT PRIMARY KEY,                                 -- "zen-<alias>-<sha8>"
-    alias          TEXT NOT NULL,                                    -- Phase A projectctx alias
+    alias          TEXT NOT NULL,                                    -- release track projectctx alias
     sha8           TEXT NOT NULL,                                    -- First 8 lowercase-hex chars of project sha256
     status         INTEGER NOT NULL DEFAULT 0
                    CHECK (status >= 0 AND status <= 3),              -- 0=Active, 1=Idle, 2=Orphaned, 3=Archived
     created_at     INTEGER NOT NULL,                                 -- UTC unix seconds
     last_attach_at INTEGER NOT NULL DEFAULT 0,                       -- UTC unix seconds; 0 = never attached
-    expected_panes TEXT NOT NULL DEFAULT '{}'                        -- JSON: map[WindowName][]string; excludes scratch (inv-zen-118)
+    expected_panes TEXT NOT NULL DEFAULT '{}'                        -- JSON: map[WindowName][]string; excludes scratch (invariant)
 );
 
 CREATE INDEX IF NOT EXISTS idx_tmux_session_state_alias

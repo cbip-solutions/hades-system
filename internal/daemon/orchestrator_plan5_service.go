@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package daemon — orchestrator_plan5_service.go.
 //
-// Plan5OrchestratorService is the daemon-side composition that satisfies
-// handlers.Plan5OrchestratorService. It is the wiring point between:
+// releaseOrchestratorService is the daemon-side composition that satisfies
+// handlers.releaseOrchestratorService. It is the wiring point between:
 //
 // - the SQL adapter (audit_events_raw + substrate_health) at
 // internal/daemon/orchestratoradapter
@@ -13,7 +13,7 @@
 // - filesystem-backed ADR scan (architecture records applied/,
 // rejected/) for doctrine propose-list / show
 // - persisted autonomy mode (in-memory atomic; survives requests but
-// not daemon restart — promotes to a persisted projects table
+// not daemon restart — release promotes to a persisted projects table
 // entry per invariant)
 //
 // Design ground rules:

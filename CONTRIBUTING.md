@@ -18,28 +18,13 @@ autonomous development work across real repositories.
 
 ## Local Checks
 
-Run the focused checks for your change, then run the release gates before
-opening a substantial pull request:
+Run the focused checks for your change before opening a pull request:
 
 ```bash
 make build
 make lint
 make test
-make verify-license-compliance
-make verify-no-personal-references
-make verify-no-task-context-comments
-```
-
-For documentation-only changes, also run:
-
-```bash
-make verify-no-personal-references
-```
-
-For code-comment or exported API changes, also run:
-
-```bash
-make verify-no-task-context-comments
+git diff --check
 ```
 
 ## Pull Requests

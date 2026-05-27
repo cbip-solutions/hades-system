@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package client — audit_p9.go.
 //
-// Typed wrappers for the 10 audit-chain endpoints declared in
+// Typed wrappers for the 10 release audit-chain endpoints declared in
 // internal/daemon/handlers/audit_p9.go. Wire types mirror the handler
 // declarations; duplication is intentional (client compiles standalone
-// without importing internal/daemon — N convention).
+// without importing internal/daemon — release N convention).
 //
 // POST /v1/audit-chain/verify-chain AuditVerifyChain
 // GET /v1/audit-chain/history AuditHistory

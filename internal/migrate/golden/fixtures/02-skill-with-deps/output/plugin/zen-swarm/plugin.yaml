@@ -1,6 +1,6 @@
 name: zen-swarm
 version: 0.0.1
-description: Imported from a Claude Code installation via `zen migrate claude-code`.
+description: Imported from a legacy coding assistant installation via `zen migrate claude-code`.
 license: imported
 metadata:
   zen-swarm:

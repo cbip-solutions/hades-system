@@ -34,9 +34,9 @@ curl --unix-socket /tmp/zen-swarm.sock \\
      "http://unix/v1/knowledge/{item_id}/promote"
 ```
 
-Daemon dispatches  D `aggregator.Promote()`:
-- Adds item to `global_pins` table
-- Anchors event in  audit chain (Tessera leaf with operator identity from keychain)
+Daemon dispatches the release design D `aggregator.Promote()`:
+- Adds item to `global_pins` table (the release design D)
+- Anchors event in the release design audit chain (Tessera leaf with operator identity from keychain)
 - Item now visible in cross-project queries from all in-scope projects per current doctrine
 
 Expected response:
@@ -65,11 +65,11 @@ CLI subcommand (no slash equivalent; demoting is rarer + less time-critical). An
 
 ## 6. NEVER add Claude attribution to audit log entry
 
-The reason text becomes part of audit chain. Operator's reason MUST NOT contain Claude/Anthropic/AI attribution. Daemon's audit handler regex-rejects.
+The reason text becomes part of audit chain. Operator's reason MUST NOT contain Claude/Anthropic/AI attribution. Daemon's audit handler regex-rejects (the release design substrate hook).
 
 ## Cross-references
 
-- spec §9.1  D aggregator.Promote
+- spec §9.1 the release design D aggregator.Promote
 - spec §4.6 audit chain integration (event types)
 - invariant privacy boundary (promotion crosses boundary; explicit operator action required)
 - /knowledge-query (companion command)

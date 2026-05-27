@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — orchestrator.go.
 //
-// Replaces the thin pin/unpin/status surface (which used
+// Replaces the release thin pin/unpin/status surface (which used
 // package-level globals) with a six-endpoint real surface backed by the
 // +C+D+E components:
 //

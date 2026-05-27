@@ -14,7 +14,7 @@
 //
 // invariant audit hook: every Set / Reset emits an event row in the
 // shared events table inside the SAME transaction as the
-// priority_overrides change. Atomicity is load-bearing — hash-
+// priority_overrides change. Atomicity is load-bearing — release hash-
 // chain integrity depends on event-row presence whenever the
 // priority_overrides row mutates. The transaction commits only after
 // BOTH the row write AND the audit event row write succeed; a failure

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-                                             
-"""Telegram Bot API renderer for citation envelopes."""
+# plugin/hades/renderers/telegram_citation.py
+"""Telegram Bot API renderer for citation envelopes (the release design release track Task A-4)."""
 
 from __future__ import annotations
 
@@ -17,12 +17,12 @@ from hermes_plugins.hades.renderers.types import (
 
 TELEGRAM_MAX_MESSAGE_CHARS = 4096
 
-                                                                        
-                                                                           
-                                                     
+# MarkdownV2 reserved chars per Telegram Bot API spec. Backslash escapes
+# everything in the class — backslash itself is also escaped (otherwise the
+# escaped output would contain unbalanced sequences).
 _MARKDOWN_V2_SPECIAL_RE = re.compile(r"([_*\[\]()~`>#+\-=|{}.!\\])")
-                                                                       
-                              
+# Cap excerpt portion per citation so a single citation cannot blow the
+# 4096-char budget on its own.
 _PER_CITATION_PAYLOAD_CAP = 240
 
 
@@ -83,8 +83,8 @@ class TelegramCitationRenderer(Renderer):
             footnote = self._build_footnote(citation, idx)
             row = self._build_keyboard_row(citation, idx)
             footnote_chars = len(footnote)
-                                                                       
-                           
+            # +2 for the "\n\n" separator between citations in the same
+            # message body.
             if (
                 current_chars + footnote_chars + 2 > TELEGRAM_MAX_MESSAGE_CHARS
                 and current_text_parts

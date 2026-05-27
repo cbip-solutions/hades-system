@@ -18,7 +18,7 @@
 // ripple into the projectctx package — the adapter absorbs them.
 //
 // Time precision: the projects_alias / path_history schema (migration
-// 057) stores INTEGER unix-MILLISECONDS (UnixMilli), matching the
+// 057) stores INTEGER unix-MILLISECONDS (UnixMilli), matching the release
 // cost_ledger pattern. The adapter translates time.Time ↔ int64 ms via
 // time.UnixMilli / t.UnixMilli(). Sub-millisecond precision is not
 // preserved on the wire (operator-facing project lifecycle does not need
@@ -32,7 +32,7 @@
 // HTTP handlers consume this shape). nil = active; non-nil = archived.
 //
 // Context cancellation: store-package functions take *sql.DB rather
-// than (ctx, *sql.DB) — they predate ctx-aware refactor. To
+// than (ctx, *sql.DB) — they predate release ctx-aware refactor. To
 // honor the projectctx.ProjectStore contract that every method respect
 // ctx.Done(), each adapter method does a defensive ctx.Err() check at
 // entry and returns early with the cancellation error before touching

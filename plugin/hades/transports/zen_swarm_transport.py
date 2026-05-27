@@ -30,7 +30,7 @@ class CompletedResponse:
             status verbatim.
         body: Parsed JSON body the upstream provider returned (the
             Anthropic ``Message`` shape for the canonical path, or
-            ``{"type": "error",...}`` for provider errors). Equivalent
+            ``{"type": "error", ...}`` for provider errors). Equivalent
             to the previous ``complete()`` return type — wrapping it in
             this dataclass adds metadata, doesn't change content.
         headers: Upstream-response headers, with secret-shaped header
@@ -39,8 +39,8 @@ class CompletedResponse:
             ``internal/daemon/transport/messages_handler.go``). Common
             useful keys: ``anthropic-ratelimit-requests-remaining``,
             ``request-id``, ``anthropic-organization-id``.
-        audit_event_id:  Tessera-anchored audit event ID the
-            daemon assigned to this dispatch.  citation renderers
+        audit_event_id: the release design Tessera-anchored audit event ID the
+            daemon assigned to this dispatch. the release design citation renderers
             deep-link operator-facing UIs via ``zen://audit/<id>`` URIs;
             losing this metadata at the transport boundary breaks the
             audit-anchor surface. Empty string when the daemon's anchor
@@ -61,10 +61,10 @@ HEADER_TRANSPORT_SOURCE = "X-Zen-Transport"
 TRANSPORT_LABEL = "zenswarm"
 
 # Headers that MUST NEVER cross the Python ↔ Go boundary. Anything that
-                                                                           
-                                                                        
-                                                                       
-                                                                     
+# smells like an authorisation header is dropped at the transport boundary.
+# Defence in depth: even if the caller had a bug that included a secret,
+# the Go-side handler ALSO strips these (cf. internal/daemon/transport/
+# messages_handler.go isSecretHeader), but we drop client-side first.
 _FORBIDDEN_HEADERS = frozenset(
     {
         "authorization",
@@ -75,8 +75,8 @@ _FORBIDDEN_HEADERS = frozenset(
     }
 )
 
-                                                                            
-                                                              
+# Kwargs that ZenSwarmTransport.complete handles itself (envelope metadata);
+# they are NOT forwarded into the Anthropic-format inner body.
 _ENVELOPE_KWARGS = frozenset(
     {
         "session_id",
@@ -121,9 +121,9 @@ class ZenSwarmTransport:
         self._client = self._build_default_client()
         self._closed = False
 
-                                                                        
-                
-                                                                        
+    # ------------------------------------------------------------------
+    # Public API
+    # ------------------------------------------------------------------
 
     def complete(
         self,
@@ -144,10 +144,10 @@ class ZenSwarmTransport:
         Returns a :class:`CompletedResponse` exposing the upstream
         provider's parsed JSON body, the upstream HTTP status, the
         upstream response headers (with secret-shaped keys stripped by
-        the daemon), and the  Tessera ``audit_event_id`` the daemon
-        assigned.  reviewer I2: the prior return type was just
+        the daemon), and the the release design Tessera ``audit_event_id`` the daemon
+        assigned. release track reviewer I2: the prior return type was just
         the inner body dict, which silently discarded ``status``,
-        ``headers``, and ``audit_event_id`` —  citation renderers
+        ``headers``, and ``audit_event_id`` — the release design citation renderers
         consume ``audit_event_id`` for ``zen://audit/<id>`` deep links.
 
         Raises:
@@ -194,11 +194,11 @@ class ZenSwarmTransport:
             raise RuntimeError(
                 f"daemon returned non-JSON upstream body: {exc}"
             ) from exc
-                                                                         
-                                                                     
-                                                                    
-                                                                      
-                                                                            
+        # Normalise upstream metadata. ``status`` defaults to 200 because
+        # the daemon emits status=200 envelope-wraps every dispatcher
+        # success; missing ``headers`` becomes an empty dict to keep
+        # caller code path uniform; missing ``audit_event_id`` becomes
+        # an empty string (graceful degradation when the release design anchor offline).
         upstream_status = forwarded.get("status")
         if not isinstance(upstream_status, int):
             upstream_status = 200
@@ -223,15 +223,16 @@ class ZenSwarmTransport:
     ) -> Iterator[CompletedResponse]:
         """Stream a completion.
 
-         yields a single :class:`CompletedResponse` wrapping the
+        release track yields a single :class:`CompletedResponse` wrapping the
         full response (semantically equivalent to non-streaming for
-        callers);  extends to true incremental SSE relay where
+        callers); release track extends to true incremental SSE relay where
         each chunk yields a partial-body CompletedResponse.
 
         Consumers that expect a generator handle single-chunk yields
         gracefully — the on-screen rendering happens after the first chunk
         arrives, which is what ``complete`` provides anyway. SSE incremental
-        relay is a UX optimization that lands when the augmentation pipeline ships SSE-aware response forwarding.
+        relay is a UX optimization that lands when the augmentation pipeline
+        (release track) ships SSE-aware response forwarding.
         """
         yield self.complete(messages=messages, model=model, **kwargs)
 
@@ -244,9 +245,9 @@ class ZenSwarmTransport:
         finally:
             self._closed = True
 
-                                                                        
-               
-                                                                        
+    # ------------------------------------------------------------------
+    # Test seam
+    # ------------------------------------------------------------------
 
     def _set_client_for_test(self, client: httpx.Client) -> None:
         """Test-only seam: replace the underlying httpx.Client.
@@ -264,9 +265,9 @@ class ZenSwarmTransport:
         self._client = client
         self._closed = False
 
-                                                                        
-               
-                                                                        
+    # ------------------------------------------------------------------
+    # Internals
+    # ------------------------------------------------------------------
 
     def _build_default_client(self) -> httpx.Client:
         """Build the production Unix-socket httpx.Client."""

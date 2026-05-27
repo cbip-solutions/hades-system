@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — schedule_p7.go.
 //
-// Six routes for the scheduler operator surface:
+// Six routes for the release scheduler operator surface:
 //
 // POST /v1/schedules — create routine | task | loop
 // GET /v1/schedules — list (filter via ?alias=)
@@ -51,9 +51,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/cbip-solutions/hades-system/internal/doctrine"
 	"github.com/cbip-solutions/hades-system/internal/scheduler"
+	"github.com/google/uuid"
 )
 
 type ScheduleStore interface {

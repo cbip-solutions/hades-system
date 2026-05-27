@@ -1,12 +1,12 @@
 --
--- Migration 045: workforce durable queues (Plan 4 Phase B).
+-- Migration 045: workforce durable queues (the release design release track).
 -- Introduces three independent tables: workforce_tasks (SharedTaskList),
 -- workforce_checkpoints (CheckpointQueue), workforce_fix_prompts (FixPromptQueue).
 -- No foreign keys between tables (independent failure domains per spec §2.2).
 -- project_id on every row for logical isolation (spec §7.1).
 -- schemaVersion bumped to 11 by internal/store/schema.go.
 --
--- PRAGMA WAL + busy_timeout MUST be set by the adapter constructor (inv-zen-073).
+-- PRAGMA WAL + busy_timeout MUST be set by the adapter constructor (invariant).
 
 -- SharedTaskList: Kanban board.
 -- UNIQUE on (project_id, task_id) enforces idempotent Enqueue per spec §7.1.
@@ -35,8 +35,8 @@ CREATE INDEX IF NOT EXISTS idx_workforce_tasks_priority
 
 -- CheckpointQueue: async durable channel Worker → L2 Reviewer.
 -- thread_id is the LangGraph-style stable key (Q3 C).
--- deadline_at is Unix seconds for inv-zen-050 hook (Plan 5 measures).
--- consumed = 0 (unconsumed) | 1 (consumed by Plan 5 orchestrator).
+-- deadline_at is Unix seconds for invariant hook (the release design measures).
+-- consumed = 0 (unconsumed) | 1 (consumed by the release design orchestrator).
 CREATE TABLE IF NOT EXISTS workforce_checkpoints (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     task_id       TEXT    NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS workforce_checkpoints (
 CREATE INDEX IF NOT EXISTS idx_workforce_checkpoints_task
     ON workforce_checkpoints(project_id, task_id, consumed);
 -- ByThread() queries filter only by thread_id (no consumed predicate),
--- so a single-column index is the right shape (N-5). Drain/Peek queries
+-- so a single-column index is the right shape. Drain/Peek queries
 -- use the (project_id, task_id, consumed) covering index above.
 CREATE INDEX IF NOT EXISTS idx_workforce_checkpoints_thread
     ON workforce_checkpoints(thread_id);

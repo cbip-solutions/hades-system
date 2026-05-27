@@ -26,11 +26,11 @@ def render_short(envelope: dict[str, Any]) -> MobileSummaryCard:
 
     Drops ``top_fields`` beyond the first 3 (``MobileSummaryCard``'s
     invariant). Preserves ``cache_state`` + ``audit_event_id`` +
-    ``project_id`` verbatim — these fields drive  renderer
-    dispatch and  audit chain anchor.
+    ``project_id`` verbatim — these fields drive release track renderer
+    dispatch and the release design audit chain anchor.
 
     Args:
-        envelope: The citation envelope JSON —
+        envelope: The citation envelope JSON (the release design substrate shape) —
             see ``internal/citation/envelope.go`` for the canonical Go
             type. Python consumes via daemon HTTP round-trip.
 
@@ -46,7 +46,7 @@ def render_short(envelope: dict[str, Any]) -> MobileSummaryCard:
     missing = [k for k in _REQUIRED_ENVELOPE_KEYS if k not in envelope]
     if missing:
         raise ValueError(f"envelope missing required keys: {missing}")
-    top_fields = envelope["top_fields"][:3]                              
+    top_fields = envelope["top_fields"][:3]  # drop fields beyond first 3
     return MobileSummaryCard(
         citation_id=envelope["citation_id"],
         title=envelope["title"],
@@ -88,14 +88,16 @@ async def expand(
 
     Implements the ``/expand <citation-id>`` slash command flow per spec
     §1 Q6=B. Operator on AFK platform issues ``/expand evt-1234abcd``;
-    Hermes' slash command parser invokes this coroutine. The daemon's
-    ``GET /v1/audit/event/<id>`` endpoint returns the full
+    Hermes' slash command parser (release track registers the command; this
+    function executes it) invokes this coroutine. The daemon's
+    ``GET /v1/audit/event/<id>`` endpoint (the release design substrate shipped per
+    ``internal/daemon/handlers/audit_event.go``) returns the full
     envelope JSON; the AFK module emits an
-    ``AUDIT_MOBILE_EXPANSION_REQUESTED`` audit event chain
+    ``AUDIT_MOBILE_EXPANSION_REQUESTED`` audit event for the release design chain
     anchoring before returning to the platform renderer.
 
     Args:
-        citation_id: The  citation envelope ID (e.g.
+        citation_id: The the release design citation envelope ID (e.g.
             ``"evt-1234abcd"``).
         operator_id: The session operator's id (audit chain attribution).
         platform: The active AFK platform (audit event payload).
@@ -130,10 +132,10 @@ async def expand(
     response.raise_for_status()
     body = response.json()
     envelope: dict[str, Any] = body["envelope"]
-                                                                        
-                                                                      
-                                                                   
-                
+    # Emit audit event AFTER successful resolve — D-6 audit.py wires the
+    # canonical implementation. Timestamp emitted as unix milliseconds
+    # (UTC); matches the release design chain convention for cross-platform AFK
+    # telemetry.
     await audit_emitter(
         citation_id=citation_id,
         operator_id=operator_id,

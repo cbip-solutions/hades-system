@@ -3,13 +3,13 @@
 //
 // Posts an Anthropic-shaped messages request to the daemon's
 // /v1/messages endpoint with X-Zen-Profile=research-synthesize.
-// Today /v1/messages is served by the
+// Today /v1/messages is served by the release
 // anthropic-bypass route — the X-Zen-Profile header is recorded for
-// audit but does NOT route requests differently per profile.
+// audit but does NOT route requests differently per profile. release
 // (orchestrator) is the future extension point that will introduce
 // per-profile multi-backend routing; this file's request shape is
 // already compatible with that future change. Doc updated post-review
-// I-2 to reflect actual current behaviour ( not yet merged on
+// I-2 to reflect actual current behaviour (release not yet merged on
 // main).
 //
 // Citation extraction: best-effort scan of fenced JSON code block in

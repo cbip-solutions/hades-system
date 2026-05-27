@@ -25,7 +25,7 @@
 // comparison against pre-release snapshots).
 // - ParseSemverLax: PERMISSIVE — parses up to 3 components, each via
 // digit-until-first-non-digit (matches the legacy mcp.atoi semantic
-// used for curated MCP catalog version-pin comparison; tolerates
+// used for reviewed MCP catalog version-pin comparison; tolerates
 // trailing `-pre` tags on pinned packages).
 // - CompareVersions: -1/0/1 canonical comparison; lex order over
 // (Major, Minor, Patch).

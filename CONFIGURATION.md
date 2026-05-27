@@ -85,7 +85,7 @@ in the operating-system credential store.
 ## Profile Roster
 
 Profiles map roles to ordered provider cascades. The dispatcher tries providers
-in order, subject to health, cost, and policy gates.
+in order, subject to health, cost, and policy controls.
 
 ```toml
 [profiles.worker-code]
@@ -180,5 +180,5 @@ bin/zen doctor sidecars
 bin/zen doctor caronte
 ```
 
-For release or distribution work, also run the release gates documented in
+For release or distribution work, also run the clean-build checks documented in
 [INSTALL.md](INSTALL.md).

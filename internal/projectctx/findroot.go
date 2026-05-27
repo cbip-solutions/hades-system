@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// findroot.go — Task A-8 helper.
+// findroot.go — release Task A-8 helper.
 //
 // FindProjectRoot walks up the filesystem from `start` looking for an
 // ancestor directory that contains EITHER `zenswarm.toml` OR a `.git`

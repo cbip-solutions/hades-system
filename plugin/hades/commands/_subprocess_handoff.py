@@ -19,8 +19,10 @@ def render_hades_block(title: str, body: str, recovery: str) -> str:
           <body>
           → <recovery>
 
-    Used by both dashboard.py and panel.py to render error blocks LOCALLY. Mirrors the
-    three-line format of  Go-side Render().
+    Used by both dashboard.py and panel.py to render error blocks LOCALLY
+    (release stage C-5 operator policy: no daemon error-render
+    roundtrip; render locally using release track catalog text). Mirrors the
+    three-line format of release track Go-side Render().
 
     Per invariant (visible-strings-HADES preserved): all strings returned by
     this function contain the HADES brand by construction.
@@ -28,8 +30,8 @@ def render_hades_block(title: str, body: str, recovery: str) -> str:
     return f"HADES: {title}\n  {body}\n  → {recovery}\n"
 
 
-                                                                          
-                              
+# POSIX convention: subprocess killed by signal N exits with code 128 + N.
+# SIGINT = 2 → returncode 130.
 _SIGINT_RETURNCODE: Final[int] = 130
 
 
@@ -60,11 +62,11 @@ def run_hades_subprocess(extra_args: list[str]) -> str | None:
     Per spec §Q8 D-pattern: lazygit-style subprocess handoff. Terminal mode
     is captured before spawn and restored in finally block.
 
-    Per invariant prep: this function NEVER raises at the
+    Per invariant prep (release track): this function NEVER raises at the
     slash-command boundary; all paths return either a rendered string or
     None.
     """
-                             
+    # 1. Locate hades binary.
     hades_bin = shutil.which("hades")
     if hades_bin is None:
         return render_hades_block(
@@ -80,7 +82,7 @@ def run_hades_subprocess(extra_args: list[str]) -> str | None:
             ),
         )
 
-                               
+    # 2. Capture terminal mode.
     stdin_fd = sys.stdin.fileno()
     try:
         original_attrs = termios.tcgetattr(stdin_fd)
@@ -98,7 +100,7 @@ def run_hades_subprocess(extra_args: list[str]) -> str | None:
             ),
         )
 
-                                                                                  
+    # 3. Run the subprocess in try/finally — restore terminal mode no matter what.
     argv = [hades_bin, "dashboard", *extra_args]
     returncode: int | None = None
     error_path: str | None = None
@@ -113,24 +115,24 @@ def run_hades_subprocess(extra_args: list[str]) -> str | None:
             )
             returncode = completed.returncode
         except KeyboardInterrupt:
-                                                                                 
-                                                                               
-                                 
+            # SIGINT arrived mid-subprocess (operator hit Ctrl+C). The subprocess
+            # may have exited cleanly via its own signal handler; we treat this
+            # as a SIGINT cancel.
             returncode = _SIGINT_RETURNCODE
             error_path = "sigint"
         except (OSError, subprocess.SubprocessError) as exc:
             error_path = f"subprocess_error:{type(exc).__name__}:{exc}"
     finally:
-                                                                               
-                                                                   
-                                             
-                                                                          
-                                                                        
-                                     
+        # Restore terminal mode EXACTLY ONCE. The finally block guarantees this
+        # runs whether subprocess.run returned normally, raised, or
+        # KeyboardInterrupt was caught above.
+        # tcsetattr can fail if fd was closed mid-flight; silently absorb.
+        # A failed restore is logged separately; the user-visible result
+        # is already collected above.
         with contextlib.suppress(termios.error):
             termios.tcsetattr(stdin_fd, termios.TCSADRAIN, original_attrs)
 
-                                                
+    # 4. Map subprocess outcome to return value.
     if error_path == "sigint":
         return render_hades_block(
             title="HADES dashboard cancelled by operator.",
@@ -157,7 +159,7 @@ def run_hades_subprocess(extra_args: list[str]) -> str | None:
             ),
         )
     if returncode == 0:
-        return None               
+        return None  # Clean exit.
     if returncode == _SIGINT_RETURNCODE:
         return render_hades_block(
             title="HADES dashboard cancelled by operator.",
@@ -167,7 +169,7 @@ def run_hades_subprocess(extra_args: list[str]) -> str | None:
             ),
             recovery=("to re-launch: /hades:dashboard or /hades:panel <name>"),
         )
-                                    
+    # Any other non-zero returncode.
     return render_hades_block(
         title=f"HADES dashboard exited with code {returncode}.",
         body=(

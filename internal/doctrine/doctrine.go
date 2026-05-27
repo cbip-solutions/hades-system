@@ -16,7 +16,7 @@
 // (additive-only Schema evolution unless a doctrine-schema ADR
 // is referenced).
 // - Doctrine + Get / MaxScope / Default / CapaFirewall: the
-// minimal interface contract; wires substantive
+// release minimal interface contract; release wires substantive
 // bodies.
 //
 // # Concurrency
@@ -37,9 +37,9 @@
 // can rely on Loaded values remaining stable across the call
 // boundary.
 //
-// # backfill
+// # release backfill
 //
-// the interface contract; delivers the configuration
+// the interface contract; release delivers the configuration
 // substrate (Schema, loader, resolver, validator, builtin defaults).
 package doctrine
 

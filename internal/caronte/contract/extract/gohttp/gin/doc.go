@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package gin is the Go gin-gonic/gin router extractor namespace
+// Package gin is the release Go gin-gonic/gin router extractor namespace
 // (Language: LangGo, framework: "gin"). Concrete RouteExtractor lands in
 // (master row D, wave W3) as gin.go. The (LangGo, "gin") tuple is
 // reserved for this package by daemon-time Register() call.

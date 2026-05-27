@@ -1,7 +1,7 @@
 ; Caronte TypeScript tags query (Aider pattern). Captures definitions of
 ; functions, classes, class methods, interfaces, and interface members. Each
 ; definition node is captured as @definition.<kind>; its identifier as
-; @name.<kind>. Reference edges (calls / imports) are a Phase E resolve concern
+; @name.<kind>. Reference edges (calls / imports) are a release track resolve concern
 ; (SCIP / heuristic), NOT in this defs-only query.
 ;
 ; Node types verified against the smacker/go-tree-sitter typescript grammar

@@ -28,11 +28,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/cli/format"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	"github.com/cbip-solutions/hades-system/internal/doctrine"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 func NewResearchCmd() *cobra.Command {

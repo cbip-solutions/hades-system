@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package cli — knowledge_p9_ls.go.
 //
-// `zen knowledge-p9 ls` — list notes from the aggregator.
+// `zen knowledge-p9 ls` — list notes from the release aggregator.
 //
 // Wire method: KnowledgeListP9(ctx, projectID, pinnedOnly) → ([]KnowledgeNote, error).
 // KnowledgeNote fields: NoteID, ProjectID, Path, Pinned, UpdatedAt (no Title).
 //
-// Flags
+// # Flags
 //
 // --project <id> Scope to one project (empty = all).
 // --pinned-only Only list pinned notes.

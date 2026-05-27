@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cleanup ships the state-retention policy
+// Package cleanup ships the release state-retention policy
 // enforcement per Q12=D + spec §2.12 + §4.6 + invariant.
 //
 // Default retention per spec §2.12 table:
@@ -9,8 +9,8 @@
 // spike-artifacts indefinite
 // cache 7d LRU
 //
-// Override doctrine TOML `[state.backup_retention]` (
-// F7 extends the schema with the override section
+// Override doctrine TOML `[state.backup_retention]` (release
+// F7 extends the release schema with the override section
 // shape). The override merges field-by-field via Policy.MergeOverride.
 //
 // Boundary: cleanup consumes ONLY stdlib + caller-injected

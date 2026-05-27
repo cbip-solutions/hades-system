@@ -8,9 +8,9 @@ package templates
 
 import _ "embed"
 
-// ADRProposal is the doctrine-amendment ADR markdown template
+// ADRProposal is the release doctrine-amendment ADR markdown template
 // (Go text/template). Loaded once at init via //go:embed; consumed by
 // amendment.TemplateDrafter (K-2).
 //
-// go:embed adr_proposal.md.tmpl
+//go:embed adr_proposal.md.tmpl
 var ADRProposal string

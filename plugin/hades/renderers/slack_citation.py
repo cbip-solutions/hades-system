@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-                                          
-"""Slack ``chat.postMessage`` renderer for citation envelopes."""
+# plugin/hades/renderers/slack_citation.py
+"""Slack ``chat.postMessage`` renderer for citation envelopes (the release design release track Task A-5)."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ from hermes_plugins.hades.renderers.types import (
 SLACK_MAX_BLOCKS = 50
 _HEADER_BLOCKS_RESERVED = 1
 _OVERFLOW_BLOCK_RESERVED = 1
-_BLOCKS_PER_CITATION = 2                         
+_BLOCKS_PER_CITATION = 2  # 1 section + 1 actions
 _PER_CITATION_PAYLOAD_CAP = 240
 
 
@@ -73,7 +73,7 @@ class SlackCitationRenderer(Renderer):
                 audit_event_ids=[],
             )
 
-                                                        
+        # Compute capacity available for citation blocks
         max_citations = (
             SLACK_MAX_BLOCKS - _HEADER_BLOCKS_RESERVED - _OVERFLOW_BLOCK_RESERVED
         ) // _BLOCKS_PER_CITATION
@@ -97,11 +97,11 @@ class SlackCitationRenderer(Renderer):
             overflow_count = len(result.citations) - max_citations
             blocks.append(self._build_overflow_note(overflow_count))
 
-                                                                       
-                                                                   
-                                                                      
-                                                                     
-                                                                     
+        # Legacy attachments fallback for older Slack clients. Although
+        # Slack renders attachments.fallback as plain text (no HTML
+        # interpretation), defense-in-depth: escape mrkdwn here too so
+        # the same content is safe under any future rendering surface
+        # that re-emits the fallback through HTML / mrkdwn pipelines.
         fallback_lines = [
             f"[{i}] {escape_mrkdwn(c.payload[:120])} (confidence {c.confidence:.2f})"
             for i, c in enumerate(included, start=1)

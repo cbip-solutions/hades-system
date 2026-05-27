@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package budget provides the daemon-side budget engine.
 //
-// rows. layers four engines on top:
+// rows. release layers four engines on top:
 //
 // - axes: multi-axis attribution (project x doctrine x stage x task + operation + worker_id) via cost_axis_tags
 // - enforce: hierarchical hard-pause cap check across 4 scopes (project / doctrine / stage / worker_id), most-restrictive wins

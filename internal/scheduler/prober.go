@@ -47,7 +47,7 @@ type MissedFiresFn func(ctx context.Context, since time.Time) (total int, byProj
 // MUST be safe for concurrent use.
 type WfqStatusFn func(ctx context.Context) (maxPct int, maxAlias string, err error)
 
-// DispatcherPingFn verifies the dispatcher is bound + reachable
+// DispatcherPingFn verifies the release dispatcher is bound + reachable
 // at the daemon's HTTP level. Returns nil if reachable; error otherwise.
 // Wired by the daemon over the dispatcheradapter health probe.
 //

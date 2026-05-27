@@ -20,11 +20,11 @@
 // path so the G-16 compliance test asserts production-reachability.
 //
 // invariant boundary (symmetric): --audit-chain SHORT-CIRCUITS at
-// this CLI layer with a deferred-message pointer. Same anchor
+// this CLI layer with a release deferred-message pointer. Same anchor
 // pattern via knowledge.NoAuditChainSentinel().
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
-// newClientFromCmd (mirrors the C-12 attach/sessions/layout +
+// newClientFromCmd (mirrors the release C-12 attach/sessions/layout +
 // D-13 schedule + E-12 inbox + F-10 zen-day patterns). Tests inject a
 // fake client via the KnowledgeClientFactory parameter to NewKnowledgeCmd;
 // production wires through NewKnowledgeCmdProd which adapts *client.Client

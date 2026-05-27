@@ -402,8 +402,8 @@ func quantizeBinary256(fp32 []float32) []byte {
 // VoyageCode3 — operator-opt-in API fallback embedder (Task C-2).
 //
 // Spec §2.4 Q4=A alternative path: voyage-code-3 hosted API (Anthropic-blessed
-// per docs.voyageai.com). Routes ALL HTTP egress through dispatcher via
-// the narrow Forwarder interface declared below ( B-6 narrow-interface
+// per docs.voyageai.com). Routes ALL HTTP egress through release dispatcher via
+// the narrow Forwarder interface declared below (release B-6 narrow-interface
 // pattern). Tokens come from macOS Keychain at (service="voyage-api-token",
 // account="zen-swarm") by default — never accept tokens via struct field or
 // env var (defense-in-depth: prevents accidental token leakage through logs
@@ -443,7 +443,7 @@ type Forwarder interface {
 	// Forward sends the marshalled Voyage request body and returns the
 	// raw response body. The Forwarder is responsible for: URL routing
 	// (api.voyageai.com/v1/embeddings), bearer-token auth header
-	// injection, HTTP transport, and per- single-egress audit
+	// injection, HTTP transport, and per-release single-egress audit
 	// logging. Returns either:
 	// - (body, nil) on 2xx
 	// - (nil, *VoyageHTTPError) on a Voyage HTTP non-2xx response, so
@@ -546,7 +546,7 @@ type voyageResponse struct {
 // - 429 (rate-limit) + 5xx: retried with exponential backoff
 // - 401 (auth) + other 4xx: NOT retried (permanent until creds change)
 //
-// EXPORTED so the real dispatcher (in internal/providers, a
+// EXPORTED so the real release dispatcher (in internal/providers, a
 // separate package wired by the daemon orchestrator) can construct this
 // type when an upstream HTTP error reaches it. The narrow Forwarder
 // interface contract is: "non-2xx HTTP responses MUST be returned as

@@ -3,7 +3,7 @@
 //
 // HandoffPosted endpoint — POST /v1/events/handoff_posted.
 //
-// The plugin `/handoff` slash command writes HANDOFF.md and
+// The plugin `/handoff` slash command writes .hades/session.md and
 // then emits a structured HandoffPostedEvent via this endpoint so
 // `zen day --eod` digest can render a ProjectStatusSection
 // per project. The endpoint:

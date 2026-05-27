@@ -45,7 +45,7 @@ import (
 // - v15: worker_specs / team_lead_specs / reviewer_specs — three tables
 // holding the immutable WorkerSpec snapshots persisted by the daemon
 // adapter. ships the
-// schema so orchestrator persistence is unblocked.
+// schema so release orchestrator persistence is unblocked.
 //
 // - v16: aggregation_windows + aggregation_events — AggregationStream
 // SQLite-durability layer. Window open/close/event records survive
@@ -59,7 +59,7 @@ import (
 // - v18: cost_axis_tags + axis_tag_loss_events — 4-axis attribution
 // store (project × doctrine × stage × task; +operation +worker_id
 // optional). UNIQUE (cost_id, axis_name) + INSERT OR IGNORE for
-// PostCall idempotency. cost_ledger now exists on main (
+// PostCall idempotency. cost_ledger now exists on main (release
 // F-1 merged), so a future migration may add the FK; current
 // migration ships without FK to keep the diff minimal.
 //
@@ -81,13 +81,13 @@ import (
 // . TTL enforced by handler; background eviction goroutine 1h.
 //
 // - v22: audit_events_raw — daemon-owned audit event ledger. All MCPs and
-// handlers emit here via POST /v1/audit/emit. wraps with hash-chain
+// handlers emit here via POST /v1/audit/emit. release wraps with hash-chain
 // OTel export WITHOUT schema migration (additive ALTER TABLE only).
 //
 // - v23: substrate_health — per-commit test pass-rate + doctrine-lint
 // outcome. The regression-by-self detector queries this table to spot
 // "substrate is regressing on its own commits" (Apr 23 chicken-and-egg
-// failure mode). extends additively (history queries, time-series,
+// failure mode). release extends additively (history queries, time-series,
 // adversarial corpus). invariant boundary: writes go through the
 // SubstrateHealthWriter interface declared in safetynet/regression.go;
 // adapter wired in (internal/daemon/orchestratoradapter/).
@@ -158,7 +158,7 @@ import (
 // internal/daemon/inboxadapter is the only legitimate
 // bridge. invariant: aggregator cache rows carry source-DB
 // project_id (no cross-project leak).
-// Drift note: spec-frozen plan-7-phase-E projected migrationV27
+// Drift note: spec-frozen release-phase-E projected migrationV27
 // under the original A→C→B→D→E execution sequence (
 // would land 059 instead of 063). Reality at HEAD on 2026-05-07
 // has already at v27, so picks v28 — the next
@@ -176,20 +176,20 @@ import (
 // path: 28 → 29 (this migration).
 const schemaVersion = 31
 
-// migrationV21 adds research_cache — Task G-1, Q9 B.
+// migrationV21 adds research_cache — release Task G-1, Q9 B.
 //
-// go:embed schema/054_research_cache.sql
+//go:embed schema/054_research_cache.sql
 var migrationV21 string
 
-// migrationV22 adds audit_events_raw — Task G-2, Q9 B.
+// migrationV22 adds audit_events_raw — release Task G-2, Q9 B.
 //
-// go:embed schema/055_audit_events_raw.sql
+//go:embed schema/055_audit_events_raw.sql
 var migrationV22 string
 
 // migrationV2 is the bypass_anomalies migration. Lives in a sibling file
 // rather than inline so the SQL is editable without rebuilding Go strings.
 //
-// go:embed schema/032_bypass_anomalies.sql
+//go:embed schema/032_bypass_anomalies.sql
 var migrationV2 string
 
 // migrationV3 introduces bypass_anomaly_observations — a per-event
@@ -198,25 +198,25 @@ var migrationV2 string
 // at steady state). v3 keeps the v2 lifetime aggregate AND adds the
 // observations table; QueryAnomalyCount now counts from observations.
 //
-// go:embed schema/033_bypass_anomaly_observations.sql
+//go:embed schema/033_bypass_anomaly_observations.sql
 var migrationV3 string
 
 // migrationV4 adds conversation_id to bypass_audit so can group
 // audit rows by upstream conversation.
 //
-// go:embed schema/034_bypass_audit.sql
+//go:embed schema/034_bypass_audit.sql
 var migrationV4 string
 
 // migrationV5 adds bypass_audit_bodies — the AES-256-GCM-encrypted body
 // table populated only when tier=in-house.
 //
-// go:embed schema/035_bypass_audit_bodies.sql
+//go:embed schema/035_bypass_audit_bodies.sql
 var migrationV5 string
 
 // migrationV6 adds bypass_audit_pins — the operator pin registry that
 // exempts marked conversations from the nightly retention purge (Q7 D).
 //
-// go:embed schema/036_bypass_audit_pins.sql
+//go:embed schema/036_bypass_audit_pins.sql
 var migrationV6 string
 
 // migrationV7 adds conversation_wal — Layer 1 of the bypass resilience
@@ -224,24 +224,24 @@ var migrationV6 string
 // persisted BEFORE upstream call so a restart can replay the in-flight
 // turn.
 //
-// go:embed schema/037_conversation_wal.sql
+//go:embed schema/037_conversation_wal.sql
 var migrationV7 string
 
-// migrationV8 adds idempotency_keys — TTL 24h replay cache (
+// migrationV8 adds idempotency_keys — TTL 24h replay cache (release
 // ). MarkPending persists BEFORE upstream call; MarkCompleted
 // stores the full response so a restart in the upstream-response →
 // orchestrator-delivery gap replays without a second upstream charge
 // .
 //
-// go:embed schema/038_idempotency.sql
+//go:embed schema/038_idempotency.sql
 var migrationV8 string
 
-// migrationV9 adds notifications — bypass-event ledger (,
+// migrationV9 adds notifications — bypass-event ledger (release,
 // Task L-4, spec §8.4). Severity ∈ {INFO,WARN,CRITICAL}; CRITICAL rows
 // re-fire macOS osascript every 1h until acknowledged. Distinct from
 // notifications_queue.
 //
-// go:embed schema/039_notifications.sql
+//go:embed schema/039_notifications.sql
 var migrationV9 string
 
 // migrationV10 adds cost_ledger — Layer 2 of orchestrator observability
@@ -251,28 +251,28 @@ var migrationV9 string
 // dispatch (the Go layer translates the SQL UNIQUE failure into
 // ErrDuplicateIdempotency via cost_ledger.go).
 //
-// go:embed schema/040_cost_ledger.sql
+//go:embed schema/040_cost_ledger.sql
 var migrationV10 string
 
 // migrationV11 adds pin_overrides — operator-set tier pins at three scope
-// levels (session, project, global) with optional TTL (,
+// levels (session, project, global) with optional TTL (release,
 // Task I-1, invariant). UNIQUE(scope, scope_id) with scope_id=” for
 // global (SQLite NULL-distinctness workaround). expires_at is INTEGER unix
 // seconds; NULL means permanent. The 5-min sweep runs PurgeExpiredPins.
 //
-// go:embed schema/043_pin_overrides.sql
+//go:embed schema/043_pin_overrides.sql
 var migrationV11 string
 
 // migrationV12 adds doctrine_state — singleton row holding the last-
-// loaded Resolved.Schema + Provenance JSON snapshot (,
-// task A-6). Daemon reads on startup so workers dispatched
+// loaded Resolved.Schema + Provenance JSON snapshot (release,
+// task A-6). Daemon reads on startup so release workers dispatched
 // before a restart see consistent doctrine values across the restart
 // boundary; wires the /v1/doctrine/state endpoint.
 //
-// go:embed schema/044_doctrine_state.sql
+//go:embed schema/044_doctrine_state.sql
 var migrationV12 string
 
-// migrationV13 adds the three workforce durable queue tables (
+// migrationV13 adds the three workforce durable queue tables (release
 // ): workforce_tasks (SharedTaskList), workforce_checkpoints
 // (CheckpointQueue), workforce_fix_prompts (FixPromptQueue). All three
 // tables carry project_id for logical isolation (spec §7.1). WAL mode
@@ -280,10 +280,10 @@ var migrationV12 string
 // ; independent failure domains, no FK between tables
 // (spec §2.2).
 //
-// go:embed schema/045_workforce_queues.sql
+//go:embed schema/045_workforce_queues.sql
 var migrationV13 string
 
-// migrationV14 adds subprocess_sessions — Task C-5,
+// migrationV14 adds subprocess_sessions — release Task C-5,
 // persistent TeamLead + Reviewer L3/L4 crash recovery (Q3 C lifecycle).
 // Ephemeral Worker rows never appear here; only persistent variants.
 // Idempotency key (spec_id, doctrine_name). TTL semantics diverge per
@@ -292,7 +292,7 @@ var migrationV13 string
 // preserved by the SessionStore interface in subprocess package (no
 // internal/store import there); wires the adapter.
 //
-// go:embed schema/048_subprocess_lifecycle.sql
+//go:embed schema/048_subprocess_lifecycle.sql
 var migrationV14 string
 
 // migrationV15 adds worker_specs / team_lead_specs / reviewer_specs —
@@ -303,29 +303,29 @@ var migrationV14 string
 // MUST NOT import internal/store; the daemon workforceadapter
 // owns the read/write surface.
 //
-// go:embed schema/049_worker_specs.sql
+//go:embed schema/049_worker_specs.sql
 var migrationV15 string
 
-// migrationV16 adds aggregation_windows + aggregation_events —
+// migrationV16 adds aggregation_windows + aggregation_events — release
 // AggregationStream SQLite-durability layer (invariant boundary:
 // workforce/stream never imports internal/store; bridge via StreamAdapter
 // in workforceadapter). Window open/close/event records survive daemon
 // restart; LoadOpenWindows surfaces in-progress windows for recovery.
 // Partial index on status='open' accelerates restart scan.
 //
-// go:embed schema/046_aggregation_streams.sql
+//go:embed schema/046_aggregation_streams.sql
 var migrationV16 string
 
 // migrationV17 adds operator_gate_state — singleton row (id=1 UPSERT)
-// persisting OperatorGate pause/resume state across daemon restarts (
+// persisting OperatorGate pause/resume state across daemon restarts (release
 // ). CHECK constraint enforces the four-value State enum; LoadState
 // returns StateRunning when row absent (clean boot). invariant: gate/*
 // never imports internal/store; bridge via GateAdapter in workforceadapter.
 //
-// go:embed schema/047_operator_gate.sql
+//go:embed schema/047_operator_gate.sql
 var migrationV17 string
 
-// migrationV18 adds cost_axis_tags + axis_tag_loss_events —
+// migrationV18 adds cost_axis_tags + axis_tag_loss_events — release
 // Task F-1, Q6 C, invariant. The 4-axis attribution store
 // (project × doctrine × stage × task; +operation +worker_id optional).
 // UNIQUE (cost_id, axis_name) + INSERT OR IGNORE in the Go layer keeps
@@ -337,11 +337,11 @@ var migrationV17 string
 // ships without an FK back to keep the diff minimal — a future
 // migration may add it once budget tag callers are validated.
 //
-// go:embed schema/051_budget_axes.sql
+//go:embed schema/051_budget_axes.sql
 var migrationV18 string
 
 // migrationV19 adds budget_pauses + budget_anomalies + budget_anomaly_samples
-// — Task F-5, Q6 C, invariant + invariant. 4-scope
+// — release Task F-5, Q6 C, invariant + invariant. 4-scope
 // hierarchical pause state machine (project / doctrine / stage / worker_id),
 // z-score event log, and per-scope rolling sample window. budget_pauses
 // PRIMARY KEY (scope, scope_value) + UPSERT keeps the latest reason on
@@ -349,11 +349,11 @@ var migrationV18 string
 // (>24h cutoff). invariant: internal/budget never imports
 // internal/store; bridge via dispatcheradapter.
 //
-// go:embed schema/052_budget_pause.sql
+//go:embed schema/052_budget_pause.sql
 var migrationV19 string
 
 // migrationV20 adds cost_id column + UNIQUE constraint on
-// budget_anomaly_samples — post-review C-2 fix. The
+// budget_anomaly_samples — release post-review C-2 fix. The
 // PostCallWithCost retry path was non-idempotent: a partial-failure
 // retry double-counted samples in the rolling window, inflating the
 // denominator. Adding cost_id + UNIQUE (scope, scope_value, cost_id)
@@ -362,27 +362,27 @@ var migrationV19 string
 // Legacy rows get cost_id = -id (preserves data, never collides with
 // real positive cost_id values).
 //
-// go:embed schema/053_budget_anomaly_samples_cost_id.sql
+//go:embed schema/053_budget_anomaly_samples_cost_id.sql
 var migrationV20 string
 
-// migrationV23 adds substrate_health — Task M-1, Q2 C
+// migrationV23 adds substrate_health — release Task M-1, Q2 C
 // regression-by-self metric. Per-commit test pass-rate + doctrine-lint
-// outcome storage. extends additively. invariant: safetynet
+// outcome storage. release extends additively. invariant: safetynet
 // writes go through SubstrateHealthWriter interface; adapter in
 //
-// go:embed schema/056_substrate_health.sql
+//go:embed schema/056_substrate_health.sql
 var migrationV23 string
 
-// migrationV24 introduces projects_alias + path_history —
+// migrationV24 introduces projects_alias + path_history — release
 // implements AIP-2510 dual-ID per spec §1 Q3. sha256 canonical + human
 // alias separation; path_history tracks every (id_sha256, path) tuple
 // ever observed, enabling mv-detection in projectctx.DetectMv. ON
 // DELETE CASCADE links path_history → projects_alias. invariant.
 //
-// go:embed migrations/057_projects_alias_path_history.sql
+//go:embed migrations/057_projects_alias_path_history.sql
 var migrationV24 string
 
-// migrationV25 introduces priority_overrides — ships
+// migrationV25 introduces priority_overrides — release ships
 // the Layer 3 operator override seam per spec §1 Q10. UNIQUE(project_alias)
 // + multiplier > 0 + reason NOT NULL constraints. internal/quota declares
 // the OverrideStore interface; internal/daemon/quotaadapter is the only
@@ -390,10 +390,10 @@ var migrationV24 string
 // Set / Reset emit audit events in the SAME transaction as the row
 // mutation — invariant audit-chain integrity.
 //
-// go:embed migrations/060_priority_overrides.sql
+//go:embed migrations/060_priority_overrides.sql
 var migrationV25 string
 
-// migrationV26 introduces tmux_session_state — ships
+// migrationV26 introduces tmux_session_state — release ships
 // the per-session lifecycle storage row keyed by canonical
 // "zen-<alias>-<sha8>" name. Status four-value enum bounded by SQL CHECK
 // + Go validateTmuxStatus (defense in depth, invariant boundary
@@ -407,10 +407,10 @@ var migrationV25 string
 // 060_priority_overrides.sql alone, so picks 062 (slot 061
 // reserved for knowledge-index on a separate DB file).
 //
-// go:embed migrations/062_tmux_session_state.sql
+//go:embed migrations/062_tmux_session_state.sql
 var migrationV26 string
 
-// migrationV27 introduces schedules + schedule_history — Phase
+// migrationV27 introduces schedules + schedule_history — release Phase
 // D-1 ships the durable scheduler substrate. The schedules table hosts
 // Routine + Task + Loop schedules (3-tier per spec §1 Q8 D); the
 // schedule_history table is the append-only fire-attempt outcome
@@ -432,11 +432,11 @@ var migrationV26 string
 // daemon.db chain. Slot 059 is reserved for inbox storage;
 // slot 061 for knowledge-index DB (separate SQLite file).
 //
-// go:embed migrations/063_schedules.sql
+//go:embed migrations/063_schedules.sql
 var migrationV27 string
 
 // migrationV28 introduces per-project `inbox` + daemon.db
-// `inbox_aggregator_cache` — Task E-1 ships the Q11 C
+// `inbox_aggregator_cache` — release Task E-1 ships the Q11 C
 // hybrid storage substrate.
 //
 // Per-project authoritative inbox: severity 4-tier CHECK,
@@ -464,7 +464,7 @@ var migrationV27 string
 // property-based fuzz test in
 // tests/compliance/inv_zen_113_no_cross_project_inbox_leak_test.go.
 //
-// Drift note: spec-frozen plan-7-phase-E projected migrationV27 under
+// Drift note: spec-frozen release-phase-E projected migrationV27 under
 // the original A→C→B→D→E execution sequence ( would land 059
 // instead of 063). Reality at HEAD on 2026-05-07 has already
 // at v27, so picks v28 — the next free number. The migration
@@ -472,10 +472,10 @@ var migrationV27 string
 // §"Migration numbering coordination"). schemaVersion bump path:
 // 27 → 28 (this migration).
 //
-// go:embed migrations/058_inbox_aggregator_cache.sql
+//go:embed migrations/058_inbox_aggregator_cache.sql
 var migrationV28 string
 
-// migrationV29 introduces audit_events_raw chain integration —
+// migrationV29 introduces audit_events_raw chain integration — release
 // ships the Q3 C decision: per-event Tessera leaf + per-partition
 // seal hybrid granularity. Four chain columns added via additive ALTER
 // TABLE (prev_hash, record_hash, partition_id all TEXT NOT NULL DEFAULT ”;
@@ -506,27 +506,27 @@ var migrationV28 string
 // GetPartitionSeal, ListPartitions, ListEventsForPartition,
 // BackfillScan).
 //
-// go:embed schema/059_audit_chain_extension.sql
+//go:embed schema/059_audit_chain_extension.sql
 var migrationV29 string
 
-// migrationV30 adds cost_ledger.provider — Task 9, C9,
+// migrationV30 adds cost_ledger.provider — release Task 9, C9,
 // invariant. Per-provider cost attribution: the dispatcher cascade
 // iterates NAMED backends, so cost must be persisted at Backend.Name()
-// granularity (not just providers.Tier). DEFAULT ” so pre- rows
+// granularity (not just providers.Tier). DEFAULT ” so pre-release rows
 // decode cleanly. The cost_ledger window index is rebuilt to include
 // provider. schemaVersion bump path: 29 → 30.
 //
-// go:embed migrations/064_cost_ledger_provider.sql
+//go:embed migrations/064_cost_ledger_provider.sql
 var migrationV30 string
 
-// migrationV31 adds tier_health_samples — Task 11, C9,
+// migrationV31 adds tier_health_samples — release Task 11, C9,
 // invariant. Per-provider health observability: one row per backend
 // outcome (dispatcher attempt + RecoveryScheduler probe). provider is
 // Backend.Name() — the per-provider counterpart to the per-Name circuit
 // breaker. Append-only, no UNIQUE (health samples are not idempotency-
 // keyed). schemaVersion bump path: 30 → 31.
 //
-// go:embed migrations/065_tier_health_samples.sql
+//go:embed migrations/065_tier_health_samples.sql
 var migrationV31 string
 
 var migrations = []string{

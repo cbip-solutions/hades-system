@@ -41,12 +41,12 @@ def _privacy_filter_passes(
     existence via the audit chain — even the structure of the violation
     must not surface, only the count via ``miss_count``).
     """
-                                                                 
-                                                                        
-                                                                 
+    # ``project_id`` (caller-claimed) deliberately unused for the
+    # privacy decision per the doctrine above; retained in the signature
+    # so the audit-emit path can keep both values close together.
     _ = project_id
     if not cache.privacy_filter_enabled:
         return True
     if cache.active_project_id is None:
-        return False                     
+        return False  # defensive default
     return entry.project_id == cache.active_project_id

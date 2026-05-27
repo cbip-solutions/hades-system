@@ -595,7 +595,7 @@ func main() {
 			"scheduleradapter to fully satisfy scheduler.Store")
 
 	//
-	// Every 5 minutes, invoke each subsystem's prober via
+	// Every 5 minutes, invoke each release subsystem's prober via
 	// Server.SubsystemProbe and emit one structured slog line per
 	// subsystem with status counts. The output timeline is the substrate
 	//
@@ -620,10 +620,10 @@ func main() {
 	//
 	// dbPathFor resolves to <dataRoot>/projects/<id>/audit/audit.db —
 	// the per-project audit SQLite path. doctrineFor returns
-	// the daemon-global doctrine name for now; wires
+	// the daemon-global doctrine name for now; release wires
 	// per-project doctrine resolution from the doctrine TOML loader.
 	//
-	// knownProjectIDs comes from the projectctx adapter already wired
+	// knownProjectIDs comes from the release projectctx adapter already wired
 	// above. Empty remains a valid fresh-install state, but it is now the
 	// database result, not a hard-coded placeholder.
 	stateDirRoot := os.Getenv("XDG_STATE_HOME")

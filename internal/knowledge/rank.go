@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package knowledge — ranker for the hybrid query pipeline (
+// Package knowledge — ranker for the hybrid query pipeline (release
 // Task G-7).
 //
 // Three components combine into a single deterministic score:

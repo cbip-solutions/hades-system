@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// specs_sync.go — Task F-5 subcommand `zen specs sync`.
+// specs_sync.go — release Task F-5 subcommand `zen specs sync`.
 //
 // Calls POST /v1/knowledge/ecosystem/specs-sync to re-index openspec/specs/
 // into the ecosystem.db RAG store. Renders the daemon's chunks/specs

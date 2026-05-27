@@ -2,7 +2,7 @@
 // internal/config/resolver.go
 //
 // ProfileResolver materializes invariant: it merges the four config
-// layers of routing model into a single ordered provider
+// layers of release's routing model into a single ordered provider
 // cascade, deterministically.
 //
 // built-in defaults → profiles.toml → projects.toml[orchestrator] →.zen-swarm.toml

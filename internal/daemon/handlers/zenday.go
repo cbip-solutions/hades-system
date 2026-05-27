@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — zenday.go.
 //
-// Three routes for the zen day operator surface:
+// Three routes for the release zen day operator surface:
 //
 // POST /v1/zen-day/morning — generate (or re-render via force) today's morning brief
 // POST /v1/zen-day/eod — generate (or re-render via force) today's EOD digest

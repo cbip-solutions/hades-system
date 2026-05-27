@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package augment — BudgetGate enforces budget MCP cap_status pre-call
+// Package augment — BudgetGate enforces release budget MCP cap_status pre-call
 // check + writes cost_ledger entry post-call.
 //
 // invariant: every augmentation request MUST pass through BudgetGate.Check

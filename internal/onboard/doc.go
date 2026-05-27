@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package onboard implements shared onboarding infrastructure.
+// Package onboard implements release's shared onboarding infrastructure.
 //
 // Per spec §0.1 + §3.3: `zen config init` (WizardKindGlobal),
 // `zen new` (WizardKindGreenfield), and `zen init` (WizardKindBrownfield)
 // all consume the same Wizard engine (internal/onboard/qna/) +
 // defaults (internal/onboard/defaults.go) + persisted prefs
 // (internal/onboard/prefs/) + preflight checks
-// (internal/onboard/preflight/) + curated MCP set
+// (internal/onboard/preflight/) + reviewed MCP set
 // (internal/onboard/mcp/) + Hermes plugin location resolver
 // (internal/onboard/plugin/).
 //

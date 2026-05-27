@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-                                        
-"""Hermes Ink TUI renderer for citation envelopes."""
+# plugin/hades/renderers/ink_citation.py
+"""Hermes Ink TUI renderer for citation envelopes (the release design release track Task A-3)."""
 
 from __future__ import annotations
 

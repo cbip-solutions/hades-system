@@ -13,7 +13,7 @@
 // 3. Sample-size gate fires first to avoid divide-by-zero on tiny
 // denominators.
 //
-// Coverage target ≥90% per CLAUDE.md security/correctness-critical list
+// Coverage target ≥90% per project instructions security/correctness-critical list
 // (analogue to validator/cost_ledger families).
 package ci
 

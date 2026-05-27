@@ -2,7 +2,7 @@
 name: knowledge-promote
 description: |
   HADES knowledge promotion: promote a project-local item to global
-  cross-project memory (Plan 9 D aggregator.Promote, audit-logged). Use
+  cross-project memory (the release design D aggregator.Promote, audit-logged). Use
   when operator invokes /hades:knowledge-promote or decides item should be global.
 license: Proprietary
 agentskills_version: 1.0
@@ -11,14 +11,14 @@ keywords:
   - global-memory
   - aggregator
   - audit-chain
-  - plan-9
+  - the release design
   - hades
 ---
 
 # HADES — knowledge-promote skill (knowledge promotion)
 
 This skill promotes a knowledge item from project-local to global cross-project
-memory via Plan 9 D's `aggregator.Promote()`. Triggered by `/hades:knowledge-promote`.
+memory via the release design D's `aggregator.Promote()`. Triggered by `/hades:knowledge-promote`.
 
 ## When to use
 
@@ -45,12 +45,12 @@ curl --unix-socket /tmp/zen-swarm.sock \
 ```
 
 Daemon: adds to `global_pins` table + anchors `KnowledgePromoted` event in
-Plan 9 Tessera audit chain with operator identity from keychain.
+the release design Tessera audit chain with operator identity from keychain.
 
 ### 3. Invariants
 
 - Reason REQUIRED (load-bearing for audit chain readability)
-- Reason MUST NOT contain Claude/Anthropic/AI attribution (inv-zen-004)
+- Reason MUST NOT contain Claude/Anthropic/AI attribution (invariant)
 - 409 if already promoted; 422 if capa-firewall project (needs explicit override)
 
 ### 4. Reverse: unpromote
@@ -63,7 +63,7 @@ CLI only (no slash; demoting is rare + less time-critical).
 
 ## Cross-references
 
-- spec §9.1 Plan 9 D aggregator.Promote
+- spec §9.1 the release design D aggregator.Promote
 - spec §4.6 audit chain integration
-- inv-zen-163 privacy boundary (promotion crosses it)
+- invariant privacy boundary (promotion crosses it)
 - /hades:knowledge-promote slash command handler

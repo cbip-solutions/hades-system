@@ -1,8 +1,8 @@
 -- schemaVersion: 20
--- Plan 4 Phase G — audit events raw table.
+-- the release design release track — audit events raw table.
 -- All MCP and handler audit emit calls write here.
--- Plan 9 wraps this table with a hash-chain + OTel export pipeline
--- WITHOUT schema migration (Plan 9 note: add computed columns via ALTER TABLE
+-- the release design wraps this table with a hash-chain + OTel export pipeline
+-- WITHOUT schema migration (the release design note: add computed columns via ALTER TABLE
 -- ADD COLUMN or a new supplementary table — never drop/rename existing columns).
 -- emitted_at is unix epoch (integer); payload_json is the JSON blob from the caller.
 --

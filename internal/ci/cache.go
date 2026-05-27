@@ -18,7 +18,7 @@
 //
 // Cache path migration: pre- location was ~/.cache/zen-swarm/ci/
 // (legacy "zen-swarm" project name). policy + master §2.6 C4
-// fix: renamed to ~/.cache/hades/ci/ during No
+// fix: renamed to ~/.cache/hades/ci/ during release No
 // migration script needed — operators with stale entries will get a
 // cold cache on first run (gracefully repopulates).
 package ci

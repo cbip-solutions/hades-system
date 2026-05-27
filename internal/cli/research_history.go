@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — research_history.go.
 //
-// NEW leaf: `zen research history` — query the research dispatch event
+// NEW release leaf: `zen research history` — query the research dispatch event
 // log (GET /v1/research/history) and render a table with cache outcome.
 //
 // Deviation from plan-file: plan-file sketched ResearchHistoryEntry with
@@ -23,10 +23,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/cli/format"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 func attachPlan9ResearchSubs(parent *cobra.Command) {

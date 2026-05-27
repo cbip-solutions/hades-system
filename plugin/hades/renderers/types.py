@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-                                 
-"""Python type stubs mirroring   Go envelope substrate."""
+# plugin/hades/renderers/types.py
+"""Python type stubs mirroring the release design release track Go envelope substrate."""
 
 from __future__ import annotations
 
@@ -10,21 +10,21 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, ClassVar
 
-                                                                   
-                                  
-CitationID = str                                                             
-SessionID = str                              
-RequestID = str                              
-AuditEventID = str                                                        
+# Opaque ID type aliases — runtime form is ``str`` but type-checked
+# distinctively at API boundaries.
+CitationID = str  # opaque ID assigned by the release design release track augment/pipeline.go
+SessionID = str  # Hermes session ID (opaque)
+RequestID = str  # daemon request ID (opaque)
+AuditEventID = str  # the release design Tessera event ID (opaque, format "evt-<hex>")
 
-                                                                                    
+# Doctrine values per the release design doctrine.toml schema (max-scope/default/capa-firewall).
 ALLOWED_DOCTRINES: frozenset[str] = frozenset({"max-scope", "default", "capa-firewall"})
 
 
 class CitationType(str, Enum):
     """Citation type discriminating payload semantics.
 
-    Mirrors   ``internal/citation/types.go`` ``CitationType`` Go
+    Mirrors the release design release track ``internal/citation/types.go`` ``CitationType`` Go
     enum. Adding a value here REQUIRES adding to Go source first
     (cross-language source-of-truth: Go).
     """
@@ -41,23 +41,23 @@ class CitationType(str, Enum):
 class CitationSource(str, Enum):
     """Originating retrieval surface for a citation.
 
-    Mirrors   ``internal/citation/types.go`` ``CitationSource``.
-      renamed the code-graph sources gitnexus_* → caronte_*;
-    the old values are kept as backward-compat aliases so pre- audit
+    Mirrors the release design release track ``internal/citation/types.go`` ``CitationSource``.
+    the release design release track renamed the code-graph sources gitnexus_* → caronte_*;
+    the old values are kept as backward-compat aliases so pre-the release design audit
     rows (wire value ``gitnexus_query`` / ``gitnexus_context``) still round-trip
     without error — mirrors Go ``ParseCitationSource`` alias table.
     """
 
-    CARONTE_QUERY = "caronte_query"                                             
+    CARONTE_QUERY = "caronte_query"  # Lane 1 — KG semantic (was GITNEXUS_QUERY)
     CARONTE_CONTEXT = (
-        "caronte_context"                                                         
+        "caronte_context"  # Lane 3 — community + neighbors (was GITNEXUS_CONTEXT)
     )
     AGGREGATOR_FTS = "aggregator_fts"
     AGGREGATOR_VEC = "aggregator_vec"
     TEMPORAL = "temporal"
     MANUAL_OVERRIDE = "manual_override"
 
-                                                                                
+    # Backward-compat aliases for pre-the release design audit rows (wire value preserved).
     GITNEXUS_QUERY = "gitnexus_query"
     GITNEXUS_CONTEXT = "gitnexus_context"
 
@@ -65,7 +65,7 @@ class CitationSource(str, Enum):
 class RetrievalLane(str, Enum):
     """RRF lane that surfaced a citation.
 
-    Mirrors   ``internal/citation/types.go`` ``RetrievalLane``.
+    Mirrors the release design release track ``internal/citation/types.go`` ``RetrievalLane``.
     """
 
     SEMANTIC = "semantic"
@@ -78,7 +78,8 @@ class RetrievalLane(str, Enum):
 class Platform(str, Enum):
     """Render target.
 
-    6 platform-specific renderers + 1 fallback.
+    6 platform-specific renderers (the release design release track) + 1 fallback (the release design
+    substrate ``internal/citation/markdown_fallback.go``).
     """
 
     INK = "ink"
@@ -94,7 +95,7 @@ class Platform(str, Enum):
 class Envelope:
     """Per-citation structured envelope.
 
-    Round-trips with  Go ``internal/citation/types.go`` ``Envelope``
+    Round-trips with the release design Go ``internal/citation/types.go`` ``Envelope``
     struct byte-exact via JSON tags. Field order + names MUST match Go json
     tags; validation enforces invariants (confidence in [0.0, 1.0]; id
     non-empty) — these are invariant anchors.
@@ -170,10 +171,10 @@ class Envelope:
             "project_id": self.project_id,
             "payload": self.payload,
         }
-                                                                       
+        # Match Go's omitempty on Expiration (zero-value Time omitted).
         if self.expiration is not None:
             d["expiration"] = self.expiration.isoformat()
-                                                                          
+        # Match Go's omitempty on PlatformRenders (nil/empty map omitted).
         if self.platform_renders:
             d["platform_renders"] = {k: dict(v) for k, v in self.platform_renders.items()}
         return d
@@ -226,9 +227,9 @@ class Envelope:
 
 @dataclass(frozen=True, slots=True)
 class AugmentationResult:
-    """Wrapper type augmentation pipeline output.
+    """Wrapper type for the release design release track augmentation pipeline output.
 
-    Round-trips with  Go ``internal/augment/types.go``
+    Round-trips with the release design Go ``internal/augment/types.go``
     ``AugmentationResult`` struct byte-exact via JSON tags.
 
     Top-level container for an augmentation pipeline run; doctrine field is

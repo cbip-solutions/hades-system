@@ -1,5 +1,0 @@
-# Edge case: schema_version field absent.
-# ExtractSchemaVersion MUST return "" + nil error (caller decides whether
-# missing-version is fatal — Phase D treats absent as fatal for built-ins;
-# Phase G treats absent as F2 user-config-error).
-doctrine_version = "1.0.0"

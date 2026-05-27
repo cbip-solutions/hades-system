@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — ecosystem_docs_ops.go ( Task F-6 +
+// Package client — ecosystem_docs_ops.go (release Task F-6 +
 //
 // Typed client methods for the ecosystem docs management endpoints:
 //
@@ -155,7 +155,7 @@ func (c *Client) EcosystemPrunePreview(ctx context.Context, ecosystem, version s
 // the gate.
 //
 // SUPERSEDES F-6 POST /v1/knowledge/ecosystem/prune (retired DryRun-based
-// flow). The G-5 contract splits preview (GET prune-preview) from
+// flow). The release G-5 contract splits preview (GET prune-preview) from
 // commit (DELETE version) so the operator-confirmation gate is naturally
 // staged: preview → prompt → commit.
 func (c *Client) EcosystemPrune(ctx context.Context, ecosystem, version string) error {

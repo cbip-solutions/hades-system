@@ -1,6 +1,0 @@
-# Strict-mode fixture: top-level key not declared on v1.Schema.
-# Common operator typo: misnaming "doctrine_version" as "doctrineverion".
-# ParseStrict MUST reject this rather than silently dropping the value.
-schema_version = "1.0"
-doctrine_version = "1.0.0"
-doctrineverion = "1.0.0"   # typo (note missing "s" — silent ignore would be a bug)

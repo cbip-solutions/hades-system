@@ -1,14 +1,14 @@
 -- internal/research/ecosystem/migrations/008_ecosystem_audit_chain.sql
 --
--- Plan 14 Phase A Task A-9. Per spec §3.4 + §4.6.
+-- the release design release track Task A-9. Per spec §3.4 + §4.6.
 --
--- Plan 14 RAG audit chain (per ADR-0062 option C: per-event leaf +
--- monthly partition seal hybrid). Phase D dispatcher writes 8 EventType
+-- the release design RAG audit chain (per ADR-0062 option C: per-event leaf +
+-- monthly partition seal hybrid). release track dispatcher writes 8 EventType
 -- rows per Query/Ingest cycle (slots 92..99, EvtRAGQuery..EvtRAGIngestJoinKey).
--- partition_id = yyyy-mm; weekly Sunday 03:00 sweep (Phase G) seals the
+-- partition_id = yyyy-mm; weekly Sunday 03:00 sweep (release track) seals the
 -- prior month's partition.
 --
--- inv-zen-197: seq is monotonic, APPEND-ONLY, no reuse. Enforced by
+-- invariant: seq is monotonic, APPEND-ONLY, no reuse. Enforced by
 -- AUTOINCREMENT semantics (sqlite_sequence is never reused after row
 -- deletion in this design).
 --

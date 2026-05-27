@@ -9,18 +9,18 @@ from typing import Any
 
 import httpx
 
-                                                                   
-                                                                          
+# Default UDS path. Borderline-stays per spec §Q3 (operator scripts
+# reference this path; rename deferred to the release design+N borderline migration).
 DEFAULT_UDS_PATH: str = "/tmp/zen-swarm.sock"
 
-                                                                        
-                                                                      
-                                                                    
-                                 
+# Per-endpoint timeout in seconds. 3s is conservative — each endpoint is
+# a local UDS call and returns near-instantly under normal conditions;
+# 3s catches a degraded daemon (load spike, GC pause) without making
+# the operator wait indefinitely.
 ENDPOINT_TIMEOUT_S: float = 3.0
 
-                                                                
-                                                                 
+# Endpoint paths per spec §Q5. Order matters: it drives the line
+# ordering in the rendered block (per invariant stable schema).
 ENDPOINTS: tuple[str, ...] = (
     "/v1/health",
     "/v1/cascade/state",
@@ -65,8 +65,8 @@ async def query_daemon(
     body is returned (not None) so the top-level handler can detect and
     dispatch the three-line error block.
 
-     ships the happy-path semantics (every endpoint OK).
-     extends with degraded-mode classification: None marks
+    release track ships the happy-path semantics (every endpoint OK).
+    release track extends with degraded-mode classification: None marks
     a degraded field which downstream rendering surfaces as
     ``<field>: unavailable (...)`` per spec §Q5.
     """
@@ -80,19 +80,19 @@ async def query_daemon(
                 return None
             if not isinstance(body, dict):
                 return None
-                                        
+            # If 2xx, return as success.
             if resp.status_code == 200:
                 return body
-                                                                       
-                                                                       
+            # Non-2xx: if body has the structured-error envelope shape,
+            # return it so the top-level handler can detect + dispatch.
             if all(k in body for k in ("code", "title", "body", "recovery_hint")):
                 return body
-                                                                 
+            # Non-2xx without envelope = degraded for this field.
             return None
         except (httpx.HTTPError, ValueError):
-                                                                     
-                                                                  
-                                       
+            # ValueError covers JSON decode failures; httpx.HTTPError
+            # covers all httpx transport-level failures (timeouts,
+            # connection errors, etc.).
             return None
 
     results = await asyncio.gather(
@@ -125,7 +125,7 @@ def detect_structured_error_envelope(
         resp = responses.get(path)
         if resp is None:
             continue
-                                                                 
+        # Envelope detection: presence of all four required keys.
         if all(k in resp for k in ("code", "title", "body", "recovery_hint")):
             return {
                 "code": str(resp["code"]),

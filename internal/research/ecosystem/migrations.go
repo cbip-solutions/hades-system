@@ -1,4 +1,3 @@
-// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -23,7 +22,7 @@ const SchemaVersion = 2
 // go:embed + SQL files together compile into the binary at build time
 // so there is no runtime filesystem dependency.
 //
-// go:embed migrations/*.sql
+//go:embed migrations/*.sql
 var migrationsFS embed.FS
 
 // ApplyMigrations applies all embedded migration.sql files to db in

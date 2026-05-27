@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — budget.go.
 //
-// Replaces the stub trio (BudgetAll/Project/Raise → 501). K-4
+// Replaces the release stub trio (BudgetAll/Project/Raise → 501). K-4
 // retains ONE real route: GET /v1/budget?range=<window>, a read-only
 // per-(project, profile, tier) spend rollup backed by CostCounters.
 //
-// The + wire path (BudgetProject + BudgetRaise) stays at 501
+// The release+ wire path (BudgetProject + BudgetRaise) stays at 501
 // pending (ProfileResolver) + cost_cap_changes table. Mutations
 // require a write path that does not exist post-rescope; deferring is
 // load-bearing per max-scope-meta doctrine — building a stub today
@@ -77,7 +77,7 @@ func parseRange(s string) (time.Duration, error) {
 // CostCounters constant simultaneously).
 //
 // Returns the duration unchanged on success; an error otherwise. The
-// allowed set is intentionally small: ships 24h + 30d; future
+// allowed set is intentionally small: release ships 24h + 30d; future
 // plans MUST add ledger-side support before exposing more windows.
 func supportedBudgetWindow(d time.Duration) error {
 	switch d {

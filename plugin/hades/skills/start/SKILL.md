@@ -1,7 +1,7 @@
 ---
 name: start
 description: |
-  Recover a HADES session: read HANDOFF.md TL;DR, check git status,
+  Recover a HADES session: read .hades/session.md TL;DR, check git status,
   identify active plan, present concise session-resume summary, and await
   operator direction.
 keywords:
@@ -36,7 +36,7 @@ None — this skill reads project files autonomously.
 
 ## Steps
 
-1. **Read HANDOFF.md** (root of repo). Extract:
+1. **Read .hades/session.md** (root of repo). Extract:
    - `## TL;DR` — current state in 1-3 sentences
    - `## Repo state` — last commit + branch + tag (if any)
    - `## Active plan status` — which plan/phase is in flight
@@ -64,9 +64,9 @@ None — this skill reads project files autonomously.
 
    - **State**: [from TL;DR]
    - **Repo**: branch <name>, last commit <hash> "<subject>"
-   - **Active plan**: Plan N Phase X — <status>
+   - **Active plan**: release item release track — <status>
    - **Pending operator actions**: <list or "none">
-   - **Suggested next**: <from HANDOFF.md "Suggested first-message">
+   - **Suggested next**: <from .hades/session.md "Suggested first-message">
 
    ¿procedo con <suggested next>, o cambiamos prioridad?
    ```
@@ -79,12 +79,12 @@ None — this skill reads project files autonomously.
 - **Build the final product, not the stages** — refactor toward final shape
 - **No stubs** — production code complete day 1
 - **No defer, no tech debt** — fix coverage gaps + missing tests before next task
-- **No Claude attribution in commits** (inv-zen-004; gated by pre_tool_call callback)
+- **No Claude attribution in commits** (invariant; gated by pre_tool_call callback)
 - **Tag safety gate**: NEVER push tags without operator approval
 
 ## Edge cases
 
-- **HANDOFF.md missing**: instruct operator to invoke `/hades:handoff`
+- **.hades/session.md missing**: instruct operator to invoke `/hades:handoff`
   in a prior session, OR proceed with `git status + log` summary alone
 - **Methodology memory missing or stale (>14d)**: surface to operator,
   recommend re-reading `docs/METHODOLOGY.md`
@@ -93,7 +93,7 @@ None — this skill reads project files autonomously.
 
 ## See also
 
-- `/hades:handoff` — sister skill: snapshot state to HANDOFF.md + commit
+- `/hades:handoff` — sister skill: snapshot state to .hades/session.md + commit
 - `~/.claude/projects/-path-to-projects-hades-system/memory/reference_session_continuity.md`
-- Project CLAUDE.md (this skill replaces the CC-specific
+- Project project instructions (this skill replaces the CC-specific
   `.claude/commands/start.md` under Hermes substrate)

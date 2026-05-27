@@ -2,7 +2,7 @@
 // internal/providers/ollama_backend.go
 //
 // OllamaBackend forwards LLM requests to a local Ollama server via its
-// OpenAI-compatible /v1/chat/completions endpoint ( ; spec
+// OpenAI-compatible /v1/chat/completions endpoint (release ; spec
 // §3.6). Ollama runs on localhost with no authentication, so unlike the
 // anthropic_paygo / gemini / openai_compat backends NewOllamaBackend takes
 // no keychain.Resolver (frozen contract C5).

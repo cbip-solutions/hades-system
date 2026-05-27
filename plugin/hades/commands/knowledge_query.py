@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:knowledge-query — Cross-project knowledge query
 
-You are running a federated cross-project knowledge query in HADES. Wraps  D `aggregator.Query()` +  `/v1/augment` privacy filter (spec §9.1).
+You are running a federated cross-project knowledge query in HADES. Wraps the release design D `aggregator.Query()` + the release design `/v1/augment` privacy filter (spec §9.1).
 
 ## 1. Identify scope
 
@@ -16,7 +16,7 @@ PROJECT=$(curl --unix-socket /tmp/zen-swarm.sock -s http://unix/v1/project/activ
 ```
 
 Scope values:
-- `self` — only the current project
+- `self` — only the current project (mandatory in capa-firewall doctrine per the release design §3.4)
 - `max-scope` — only max-scope-doctrine projects
 - `default` — only default-doctrine projects
 - `all` — all visible projects per current doctrine ceiling
@@ -32,13 +32,13 @@ curl --unix-socket /tmp/zen-swarm.sock \\
      http://unix/v1/knowledge/query
 ```
 
-Daemon dispatches to  D `aggregator.Query()`:
-- `realtime=false` → consume cached aggregator.db
+Daemon dispatches to the release design D `aggregator.Query()`:
+- `realtime=false` → consume cached aggregator.db (the release design D Litestream-replicated)
 - `realtime=true` → live federation: query each in-scope project's aggregator live
 
 ## 3. Privacy filter at retrieval boundary
 
-Per  invariant +  §3.4 doctrine.knowledge.cross_project:
+Per the release design invariant + the release design §3.4 doctrine.knowledge.cross_project:
 - capa-firewall projects: visible only to other capa-firewall sessions (self-only)
 - max-scope ↔ max-scope OR default ↔ default: bidirectional
 - max-scope ↔ default: bidirectional
@@ -84,7 +84,7 @@ Cache: lane1=hit | lane2=miss | lane3=hit | lane4=miss | lane5=hit
 
 ## Cross-references
 
-- spec §9.1  D substrate consumption (aggregator.Query)
+- spec §9.1 the release design D substrate consumption (aggregator.Query)
 - spec §3.4 doctrine.knowledge.cross_project schema
 - invariant augmentation cross-project privacy boundary
 - invariant augmentation budget gate

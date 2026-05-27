@@ -3,23 +3,22 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/cbip-solutions/hades-system?sort=semver)](https://github.com/cbip-solutions/hades-system/releases)
 [![Go version](https://img.shields.io/github/go-mod/go-version/cbip-solutions/hades-system)](go.mod)
-[![Tests](https://github.com/cbip-solutions/hades-system/actions/workflows/release-gates.yml/badge.svg)](https://github.com/cbip-solutions/hades-system/actions/workflows/release-gates.yml)
 [![Brew tap](https://img.shields.io/badge/brew-cbip--solutions%2Ftap-orange)](https://github.com/cbip-solutions/homebrew-tap)
 
 HADES system is a local-first agentic development orchestrator for serious
 software work across multiple projects. It combines a long-running daemon, a
-terminal CLI, a TUI, a Hermes plugin, four MCP servers, release gates, audit
+terminal CLI, a TUI, a Hermes plugin, four MCP servers, audit
 trails, and Caronte, an in-process code-graph engine for impact, intent, and
 contract-federation analysis.
 
 This repository contains the HADES v1.0 source distribution: runtime code,
-tests, release tooling, and user-facing documentation needed to build, run, and
+build files, and user-facing documentation needed to build, run, and
 evaluate the system.
 
 ## What It Does
 
 - Coordinates autonomous coding work through daemon-owned queues, worktrees,
-  review gates, and merge orchestration.
+  review controls, and merge orchestration.
 - Tracks doctrine, confirmations, budgets, audit events, notifications, and
   recovery paths as first-class runtime surfaces.
 - Provides a terminal UX through `hades`, `zen`, `zen-swarm-ctld`, the TUI, and
@@ -27,8 +26,7 @@ evaluate the system.
 - Embeds Caronte for code-graph queries, blast-radius scoring, design-intent
   lookup, co-change analysis, and API-contract federation.
 - Ships a Tier 1 sidecar contract for advanced local Anthropic integrations.
-- Publishes reproducible release gates for licensing, SBOM, chaos, DCO,
-  security disclosure, and artifact verification.
+- Includes source-build, container, Homebrew, and security-disclosure surfaces.
 
 ## Quick Start
 
@@ -38,7 +36,7 @@ Install from source:
 git clone https://github.com/cbip-solutions/hades-system.git
 cd hades-system
 make build
-make verify-license-compliance
+make test
 ```
 
 Start the daemon:
@@ -69,8 +67,7 @@ See [INSTALL.md](INSTALL.md) for platform prerequisites and packaging notes.
   contract federation.
 - `plugin/hades` - Hermes plugin commands, hooks, renderers, and interactive
   UX.
-- `tests` - verification fixtures and release-gate coverage.
-- `configs` - runtime and release-gate configuration examples.
+- `configs` - runtime configuration examples.
 
 ## Architecture At A Glance
 
@@ -80,8 +77,8 @@ Execution surfaces connect through explicit adapters: MCP servers expose narrow
 tool contracts, the Hermes plugin renders operator UX, and Caronte provides
 in-process code graph and contract-federation queries without a sidecar process.
 
-The repository keeps runtime code, tests, documentation, and release tooling
-together so users can inspect build inputs and gate logic from one tree.
+The repository keeps runtime code, documentation, and build inputs together so
+users can inspect and build the source tree directly.
 
 ## Security Model
 
@@ -91,8 +88,8 @@ together so users can inspect build inputs and gate logic from one tree.
 - SSH execution uses the Go SSH client directly, requires agent credentials,
   verifies host keys with `known_hosts`, does not request a PTY, and revalidates
   commands against allowlists before execution.
-- Release verification includes license checks, DCO, secret scanning, SBOM/CGO
-  material, checksums, signatures, and security-advisory templates.
+- Published artifacts should be verified with the checksums, attestations, and
+  signatures attached to the corresponding release.
 
 ## Documentation
 

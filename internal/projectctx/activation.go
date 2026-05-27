@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// activation.go — : orchestration entry point.
+// activation.go — release : orchestration entry point.
 //
-// Activate is the load-bearing function every + caller consumes
+// Activate is the load-bearing function every release+ caller consumes
 // for project-identity bootstrap. Per spec §3.1, it resolves the
 // canonical project_id from canonicalPath, looks up the alias in the
 // store, detects mv if applicable, and INSERTs or UPDATEs as needed.

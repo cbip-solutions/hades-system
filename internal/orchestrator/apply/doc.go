@@ -9,7 +9,7 @@
 // branch patch application at a worker's commit boundary. No
 // concurrent writers; the failure modes are patch-rejection,
 // test-regression, and dirty-tree. Owned by ApplyEngine (this
-// package), shipped real in
+// package), shipped real in release
 //
 // 2. Cross-worker integration — N candidate branches competing for the
 // same integration target; the 3-way merge problem. Failure modes
@@ -26,7 +26,7 @@
 // └──────────────┬──────────────┘
 // ▼
 // ┌─────────────────────────────┐
-// │ ApplyEngine.ApplyFix │ (this package, real)
+// │ ApplyEngine.ApplyFix │ release (this package, real)
 // │ git apply on worker branch │
 // │ revert if tests fail │
 // └─────────────────────────────┘
@@ -37,7 +37,7 @@
 // └──────────────┬──────────────┘
 // ▼
 // ┌─────────────────────────────┐
-// │ MergeEngine.Merge │ (interface declared here)
+// │ MergeEngine.Merge │ release (interface declared here)
 // │ test-driven 3-way merge │
 // │ fast-forward winner │
 // └─────────────────────────────┘

@@ -24,7 +24,7 @@
 // 2. cmd/verify-release-checksums parses the
 // `--version` output to cross-check the binaries in dist/ against the
 // recorded checksum manifest.
-// 3. audit chain emit (internal/audit/chain) records build
+// 3. release audit chain emit (internal/audit/chain) records build
 // provenance with every event via Provenance() — so audit-log forensics
 // can attribute behaviour to a specific build.
 //

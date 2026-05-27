@@ -20,7 +20,7 @@ type MergeRequest struct {
 	BaseSHA      string           `json:"base_sha"`
 }
 
-// MergeOutcome is what real engine returns. callers use
+// MergeOutcome is what release's real engine returns. release callers use
 // the shape but never expect a non-nil value from the fake (J-5 contract:
 // callers MUST guard cross-worker scenarios with the canonical t.Skip).
 //
@@ -29,7 +29,7 @@ type MergeRequest struct {
 // - IntegrationSHA — the SHA on TargetBranch after fast-forward.
 // - TestsPassed — true iff the winner's substrate tests passed
 // after the merge.
-// - ReviewerSummary — free-form rationale for audit consumers +
+// - ReviewerSummary — free-form rationale for audit consumers + release
 // hash-chain replay.
 type MergeOutcome struct {
 	Winner          MergeCandidate `json:"winner"`
@@ -38,9 +38,9 @@ type MergeOutcome struct {
 	ReviewerSummary string         `json:"reviewer_summary,omitempty"`
 }
 
-// MergeEngine is the cross-worker integration contract. ships ONLY
-// this interface declaration; implements it. Callers MUST tolerate
-// a fake-only mode in by skipping cross-worker scenarios in tests
+// MergeEngine is the cross-worker integration contract. release ships ONLY
+// this interface declaration; release implements it. Callers MUST tolerate
+// a fake-only mode in release by skipping cross-worker scenarios in tests
 // ).
 //
 // Q1 D rationale: live correction is single-worker-branch sequential and

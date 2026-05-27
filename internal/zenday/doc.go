@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package zenday composes operator daily flow loop:
+// Package zenday composes release's operator daily flow loop:
 // morning brief at 0 8 * * 1-5, EOD digest at 0 18 * * 1-5, plus
 // operator-pull `bin/zen day` invocation. Per spec §1 Q13/Q14/Q15:
 //
@@ -21,7 +21,7 @@
 // dispatcheradapter.CostStore, eventlog.Reader, AutonomyStateReader,
 // GitCli. Production wire-up is done in cmd/zen-swarm-ctld via
 //
-// invariant: this package never directly invokes the dispatcher.
+// invariant: this package never directly invokes the release dispatcher.
 // CollectDeps exposes only read-only views (cost ledger counters, event
 // log).
 //

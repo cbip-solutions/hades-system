@@ -1,5 +1,5 @@
 -- Migration 052: budget_pauses + budget_anomalies + budget_anomaly_samples
--- (Plan 4 Phase F, Q6 C, inv-zen-078 + inv-zen-079).
+-- (the release design release track, Q6 C, invariant + invariant).
 --
 -- budget_pauses: durable 4-scope state machine. (scope, scope_value)
 -- is the natural key; UPSERT replaces the row on Trigger if the same
@@ -44,7 +44,7 @@ CREATE INDEX IF NOT EXISTS idx_budget_anomalies_scope
 
 -- budget_anomaly_samples: per-scope rolling window of cost-delta samples.
 -- Engine queries this via QueryAnomalyWindow with LIMIT N to feed the
--- z-score computation. Bounded by housekeeping vacuum (Plan 4 Phase G
+-- z-score computation. Bounded by housekeeping vacuum (the release design release track
 -- handler prunes >24h after default 1440 samples = 24h-of-minutes).
 CREATE TABLE IF NOT EXISTS budget_anomaly_samples (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,

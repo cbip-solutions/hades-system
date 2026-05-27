@@ -8,8 +8,8 @@
 // ships the daemon-side citation envelope + zen://audit handler
 // + markdown_fallback renderer. The "7 platforms tested" check counts
 // the markdown_fallback renderer + 6 platform renderers
-// — at ship time the count is 1; reading 1/7 is
-// expected and rendered as warn until ships the remaining 6.
+// — at release ship time the count is 1; reading 1/7 is
+// expected and rendered as warn until release ships the remaining 6.
 package cli
 
 import (

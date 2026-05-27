@@ -16,7 +16,7 @@
 //
 // # Naming
 //
-// doctor_adr.go is a new file — doctor_audit.go covers audit events;
+// doctor_adr.go is a new file — release's doctor_audit.go covers audit events;
 // there is no prior Plan doctor_adr.go. No _p9 suffix needed.
 //
 // Boundary:
@@ -37,7 +37,7 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunAdrIndexProbe orchestrates the adr.index doctor check (
+// RunAdrIndexProbe orchestrates the adr.index doctor check (release
 // Task J-2, spec §6.2).
 //
 // Delegates to DoctorDeps.ADRProber.Probe(ctx) and returns the resulting

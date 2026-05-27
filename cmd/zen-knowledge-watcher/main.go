@@ -23,8 +23,8 @@
 // idempotently. Identical to the daemon's wiring; the subprocess
 // and daemon share the same DB schema.
 // 4. NewWatcher + AddProject(per root) — fsnotify subscriptions on the
-// 5 canonical source dirs (memory, ADRs, specs, plans, root
-// for HANDOFF.md).
+// 5 canonical release source dirs (memory, ADRs, specs, plans, root
+// for .hades/session.md).
 // 5. Watcher.Run(ctx) — blocks until ctx is canceled. On
 // debounced.md events, the watcher dispatches Reindex/Delete to
 // this binary's indexerSink.
@@ -44,7 +44,7 @@
 // Inv-zen-130: composes knowledge.IncrementalUpdate which already
 // honors the NULL-discipline for the three extension-hook columns.
 // This binary does not bind audit_chain_anchor / ecosystem_join_keys /
-// caronte_symbol_refs at all — / / caronte engine own
+// caronte_symbol_refs at all — release / release / caronte engine own
 // those writes.
 package main
 

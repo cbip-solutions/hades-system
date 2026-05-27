@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — merge.go.
 //
-// `zen merge` exposes 8 operator subcommands surfacing the
+// `zen merge` exposes 8 operator subcommands surfacing the release
 // merge.MergeEngine (Phases A-E) into the CLI:
 //
 // zen merge inspect <generation_id|request_hash> # outcome + scoring + events

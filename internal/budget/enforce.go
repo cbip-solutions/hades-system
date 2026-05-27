@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// engine. Gate.Check is the function the dispatcher MUST call
+// engine. Gate.Check is the function the release dispatcher MUST call
 // before any backend.Forward(...) — that is invariant's call-site
 // contract. The Decision struct returned by Check carries:
 //

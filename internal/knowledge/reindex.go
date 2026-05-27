@@ -77,7 +77,7 @@ func (re ReindexError) Unwrap() error { return re.Err }
 // Per invariant: ColdRebuild does not directly touch
 // audit_chain_anchor / ecosystem_join_keys / caronte_symbol_refs —
 // it delegates to IndexDoc, which is already invariant-compliant
-// (G-5 enforces). Future / / Caronte writers fill those
+// (G-5 enforces). Future release / release / Caronte writers fill those
 // columns at materialization time without rebuild churn.
 //
 // Goroutine-safety: SQLite WAL mode allows concurrent readers during

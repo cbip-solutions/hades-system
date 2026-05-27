@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package inbox owns the per-project notification storage substrate plus
-// the 2-stage outbox bridge to the daemon-level aggregator cache (
+// the 2-stage outbox bridge to the daemon-level aggregator cache (release
 // , spec §1 Q11/Q12).
 //
 // Severity, dedup, batch window, cross-project collapse, and quiet-hours

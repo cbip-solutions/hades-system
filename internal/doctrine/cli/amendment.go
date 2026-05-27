@@ -3,7 +3,7 @@
 //
 // Amendment group commands: propose-list, ack, deny, revert, propose.
 //
-// Per spec Q11 D, all amendment business logic lives in the
+// Per release spec Q11 D, all amendment business logic lives in the release
 // amendment package (internal/orchestrator/amendment/); the CLI is a pure
 // HTTP client to the daemon's /v1/doctrine/{propose-list,ack,deny,revert,
 // propose} routes. Boundary invariant: zero internal/orchestrator/* or
@@ -13,15 +13,15 @@
 // not zen doctrine amendment ack ADR-0050). The cobra.Group{ID: "amendment"}
 // declared by doctrine.go organizes --help output only.
 //
-// Per CLAUDE.md operator language preference + spec §6.6, command help text
+// Per project instructions operator language preference + spec §6.6, command help text
 // and error messages are Spanish; JSON request/response field names are
 // English (machine-readable contract).
 //
 // names, same body fields, same exit codes). adds:
 // - propose-list: lists pending ADR proposals from the daemon's filesystem
-// scan ( already exposes /propose-list; adds the CLI
+// scan (release already exposes /propose-list; adds the CLI
 // surface with Spanish-localized table renderer + client-side filters).
-// - propose: NEW operator-initiated manual amendment entry.
+// - propose: NEW release operator-initiated manual amendment entry. release's
 // Proposer originates telemetry-driven proposals only; propose
 // lets the operator inject a manual proposal into the same lifecycle.
 //
@@ -286,7 +286,7 @@ subyacente o denegar la propuesta con 'zen doctrine deny ADR-NNNN
 
 // denyCmd constructs the `zen doctrine deny <adr_id> --reason...` command.
 //
-// Per K-3 verbatim baseline, --reason is REQUIRED for deny
+// Per release K-3 verbatim baseline, --reason is REQUIRED for deny
 // (operators MUST articulate rejection rationale for the audit trail).
 // The daemon writes DoctrineAmendmentSuppressed{decision="deny", reason}
 // to the eventlog and moves the ADR

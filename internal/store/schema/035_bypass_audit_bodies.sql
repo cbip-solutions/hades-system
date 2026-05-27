@@ -1,9 +1,9 @@
--- Migration 035: encrypted body storage (Q7 D, inv-zen-055).
+-- Migration 035: encrypted body storage (Q7 D, invariant).
 -- Body rows are 1:1 with bypass_audit rows but populated ONLY when the
--- request was served by tier=in-house (inv-zen-054). request_body and
+-- request was served by tier=in-house (invariant). request_body and
 -- response_body hold AES-256-GCM ciphertext layout: nonce(12) || ct_with_tag.
 -- Key lives in the macOS Keychain (service "anthropic-bypass-bodies-key");
--- key_version supports future rotation (out of Plan 2 scope).
+-- key_version supports future rotation (out of the release design scope).
 CREATE TABLE IF NOT EXISTS bypass_audit_bodies (
     audit_id      INTEGER PRIMARY KEY,
     request_body  BLOB    NOT NULL,

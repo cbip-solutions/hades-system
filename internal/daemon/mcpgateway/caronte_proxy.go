@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/daemon/mcpgateway/caronte_proxy.go
 //
-// CaronteProxy — gateway facade over the in-daemon Caronte engine (
+// CaronteProxy — gateway facade over the in-daemon Caronte engine (release
 // + L). The SOLE code-graph proxy: deleted the old gitnexus
 // subprocess proxy + the gitnexus subprocess client; this proxy fronts the
 // in-process engine under the "caronte" wire segment. The proxy:
@@ -15,7 +15,7 @@
 // 2. Exposes the 11 C-8 tools (query·context·impact·wiki·get_risk·get_why·
 // get_health·trace_call_path·get_cochange·get_implementations·
 // get_architecture) — all under the "caronte" subsystem segment
-// ( renamed the segment gitnexus->caronte; the REST adapter,
+// (release renamed the segment gitnexus->caronte; the REST adapter,
 // RBAC, and augment lanes all dispatch the caronte_* wire names).
 // query/context/impact are GENUINELY DISTINCT real ops (DECISION 6), not
 // aliases.

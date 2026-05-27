@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package client — budget.go.
 //
-// Typed wrappers for the budget HTTP surface ( handlers in
+// Typed wrappers for the release budget HTTP surface ( handlers in
 // internal/daemon/handlers/budget_plan4.go). The CLI in
 // internal/cli/budget.go uses these to expose:
 //
 // rollup, caps {show, set}, anomalies, pause, resume,
 // events, axes, pause-modes
 //
-// read-only spend-rollup over CostCounters; retains the call site
+// read-only spend-rollup over CostCounters; release retains the call site
 // because zen day + zen doctor still consume it.
 package client
 
@@ -26,7 +26,7 @@ import (
 // requiring a flag.
 //
 // reused that name for the morning-brief summary endpoint
-// (plan4_summary.go), so this read-rollup has been renamed to
+// (release_summary.go), so this release read-rollup has been renamed to
 // `BudgetSummaryRollup` to keep both surfaces compilable. The wire
 // path (`GET /v1/budget?range=`) is unchanged. Callers: zen doctor
 // orchestrator checks.

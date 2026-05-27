@@ -13,30 +13,30 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-                                                                    
-                                                                       
-                                                                      
-                                                          
+# The subprocess command target — the release design A wrapper subcommand that
+# dispatches to the release design `zen config init`. Operator may override binary
+# lookup via HADES_BIN env (test fixtures + custom installs). Default:
+# shutil.which("hades") then shutil.which("zen") fallback.
 _HADES_BIN_ENV = "HADES_BIN"
 _NO_WIZARD_ENV = "HADES_NO_WIZARD"
 _HERMES_SKIN_ENV = "HERMES_SKIN"
 _XDG_CONFIG_ENV = "XDG_CONFIG_HOME"
 _HADES_SKIN_NAME = "hades"
 
-                                                    
-                                                                      
-                                                                       
-                                                                       
-                  
+# The 3 wizard.* catalog codes from the release design release track
+# (internal/errors/codes.go). The hook does NOT directly route through
+# Render (the Go wrapper at the subprocess boundary owns rendering); it
+# logs these code names for operator traceability + release track invariant
+# compliance grep.
 _WIZARD_CATALOG_CODES = (
     "wizard.config-corrupt",
     "wizard.migrate-incomplete",
     "wizard.mcp-spawn-fail",
 )
 
-                                                                   
-                                                                 
-                                                                    
+# The reserved defense-in-depth fallback code from the release design release track
+# A-6 (catalog row "internal-uncaught"). Used when the subprocess
+# machinery itself fails before the wizard could emit its own error.
 _INTERNAL_UNCAUGHT_CODE = "internal-uncaught"
 
 
@@ -51,9 +51,9 @@ def _config_path() -> Path:
         return Path(xdg) / "zen-swarm" / "config.toml"
     home = os.environ.get("HOME", "").strip()
     if not home:
-                                                                       
-                                                                    
-                                                             
+        # Defensive: no HOME env (degenerate process env). Fall back to
+        # the path expansion which returns ~/ verbatim in this case;
+        # callers treat the file as "not present" downstream.
         return Path.home() / ".config" / "zen-swarm" / "config.toml"
     return Path(home) / ".config" / "zen-swarm" / "config.toml"
 
@@ -86,10 +86,10 @@ def _is_signal_cancel(returncode: int) -> bool:
     (cancel, log INFO, next session re-launches) from wizard-internal
     error (route through Render with catalog code, log WARN).
     """
-                                                    
+    # Python subprocess form: negative signal number
     if returncode == -signal.SIGINT or returncode == -signal.SIGTERM:
         return True
-                                              
+    # Unix exit-code form: 128 + signal_number
     return returncode in (128 + signal.SIGINT, 128 + signal.SIGTERM)
 
 
@@ -115,7 +115,7 @@ def _resolve_hades_bin() -> str | None:
 def _is_interactive_stdin() -> bool:
     """Return True iff stdin is a TTY.
 
-     bubbletea wizard requires a TTY for prompt rendering;
+    the release design bubbletea wizard requires a TTY for prompt rendering;
     spawning the subprocess in a non-TTY session would emit a wizard-side
     error after the subprocess-start cost. This helper detects the
     condition early so the hook can no-op silently.
@@ -126,7 +126,7 @@ def _is_interactive_stdin() -> bool:
     try:
         return os.isatty(0)
     except (OSError, ValueError):
-                                                                     
+        # stdin closed or invalid fd → conservatively non-interactive
         return False
 
 
@@ -146,21 +146,22 @@ def _maybe_launch_wizard(
     - HADES_NO_WIZARD=1 (operator escape hatch via `hades --no-wizard`)
     - config.toml present (subsequent session, not first run)
 
-    On trigger: spawns `hades config init` subprocess. Hands off stdin/stdout/stderr so the operator drives the
+    On trigger: spawns `hades config init` subprocess (the release design wizard
+    surface). Hands off stdin/stdout/stderr so the operator drives the
     interactive bubbletea TUI in their terminal. The subprocess writes
     config.toml on success; subsequent session-start invocations of this
     hook see the file + skip the wizard.
 
     Returns None (observer hook; Hermes ignores the return value).
     """
-                                                                
-                                                        
+    # Defensive guard: operator must be using the HADES wrapper.
+    # When HERMES_SKIN is anything else, no-op silently.
     if os.environ.get(_HERMES_SKIN_ENV, "").strip().lower() != _HADES_SKIN_NAME:
         return
 
-                                                                                  
-                                                                            
-                                                                      
+    # Defensive guard: explicit escape hatch (operator opted out via --no-wizard).
+    # The _should_launch_wizard predicate also checks this env; the explicit
+    # log here is for operator traceability via HADES_LOG_LEVEL=debug.
     if os.environ.get(_NO_WIZARD_ENV, "").strip() == "1":
         logger.debug(
             "HADES wizard auto-launch suppressed: %s=1 escape hatch in effect",
@@ -168,19 +169,19 @@ def _maybe_launch_wizard(
         )
         return
 
-                                                                         
-                                                                             
-                                                                     
-                                          
+    # Defensive guard: degenerate session (cwd empty/unset). Launching an
+    # interactive wizard from a process without a meaningful cwd would either
+    # hang waiting for input that never arrives OR write config in an
+    # unexpected location. No-op silently.
     if not cwd.strip():
         logger.debug(
             "HADES wizard auto-launch suppressed: empty cwd (degenerate session)"
         )
         return
 
-                                                                              
-                                                                            
-                                                                  
+    # Defensive guard: non-TTY stdin (CI / piped invocation). the release design wizard
+    # is bubbletea-based; spawning it without a TTY would emit a wizard-side
+    # error AFTER the subprocess start cost. Detect early + no-op.
     if not _is_interactive_stdin():
         logger.debug("HADES wizard auto-launch suppressed: stdin is not a TTY")
         return
@@ -196,11 +197,11 @@ def _maybe_launch_wizard(
         )
         return
 
-                                                                           
-                                                                          
-                                                                          
-                                                                        
-                  
+    # Subprocess args: `hades config init` (the release design release track global wizard).
+    # Stdio handoff: inherit from this process so the bubbletea TUI drives
+    # the operator's terminal directly. Lazygit-pattern terminal handoff —
+    # bubbletea handles its own alt-screen so the post-subprocess return
+    # is seamless.
     argv = [bin_path, "config", "init"]
     logger.debug(
         "HADES wizard launching: argv=%r cwd=%s session=%s source=%s",
@@ -218,9 +219,9 @@ def _maybe_launch_wizard(
             check=False,
         )
     except (OSError, subprocess.SubprocessError) as exc:
-                                                                       
-                                                                       
-                                                       
+        # Subprocess machinery itself failed (e.g., binary unexpectedly
+        # removed between which() and run()). Log + no-op; do NOT raise
+        # because hooks must never abort session start.
         logger.warning(
             "HADES wizard subprocess exec failed: %s. Fallback catalog "
             "code: %s. Hook continues; session start NOT aborted.",
@@ -241,13 +242,13 @@ def _maybe_launch_wizard(
             result.returncode,
         )
     else:
-                                                                  
-                                                                   
-                                                                    
-                                                                 
-                                                                   
-                                                               
-                          
+        # Non-cancel non-zero exit = wizard-internal error. The Go
+        # wrapper has ALREADY routed through Render at its own RunE
+        # boundary (the release design release track contract); the operator-visible
+        # HADES error block is already on stderr. The hook logs a
+        # structured trace entry referencing the candidate wizard.*
+        # catalog codes for operator traceability + invariant
+        # compliance grep.
         logger.warning(
             "HADES wizard exited with error (rc=%d). The wrapper has "
             "already rendered the operator-visible HADES error block "

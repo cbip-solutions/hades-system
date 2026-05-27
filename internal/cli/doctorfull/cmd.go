@@ -4,7 +4,7 @@
 //
 // Lives in its own sub-package to avoid an import cycle: internal/cli →
 // internal/doctor/aggregator → internal/doctor/check → internal/cli
-// (the adapter shims import the cli ProbeResult/
+// (the release adapter shims import the cli ProbeResult/
 // ProbeStatus types). By isolating the wiring code here, the cycle is
 // broken — doctorfull imports aggregator + check, but cli imports
 // doctorfull (one-way).
@@ -17,7 +17,7 @@
 // destructive-confirm gate
 // - internal/doctor/hermes (F2) — InstallCheck + PluginFormatCheck
 // - internal/doctor/migrate (F2) — DetectCheck (claude-code presence)
-// - internal/doctor/mcp (F2) — AvailabilityCheck (curated catalog)
+// - internal/doctor/mcp (F2) — AvailabilityCheck (reviewed catalog)
 //
 // Q5=C+ flag set: --fix, --auto-safe, --yes, --non-interactive, --quick,
 // --spotlight, --ascii, --format, --check-timeout, --no-color,
@@ -34,9 +34,9 @@
 // avoidance).
 //
 // Catalog scope:
-// The 4 NEW checks are wired by default.
+// The 4 NEW release checks are wired by default. release-9
 // per-flag checks are adapter-wrappable via internal/doctor/check/cliadapter.NewCLIProbeAdapter
-// — wiring those into this catalog is forward-additive (+
+// — wiring those into this catalog is forward-additive (release+
 // orthogonal scope per spec §1.3); the doctor surface remains stable
 // because consumers only ever iterate Report.Diagnostics.
 package doctorfull

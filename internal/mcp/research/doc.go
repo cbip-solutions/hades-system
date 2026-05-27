@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package research implements the zen-mcp-research MCP server.
+// Package research implements the release zen-mcp-research MCP server.
 //
 // (research-SOTA-always-integrated). It exposes 7 deterministic tools
 // (web_search, arxiv, github_search, code_graph, ecosystem_docs,
@@ -25,11 +25,11 @@
 // (max 3 restarts in 5 min before hard-fail emit). Includes the
 // compile-time GitnexusClient assertion (formerly in
 // code_graph.go which was folded post-review I-2).
-// - ecosystem_docs.go — SHIPPED; backed by
+// - ecosystem_docs.go — release SHIPPED; backed by
 // internal/research/ecosystem/Dispatcher (full corpus RAG with
 // embeddings, FTS5, RRF fusion, BGE reranker, Bayesian abstention,
 // citation grammar, symbol verification cascade, LLM-judge re-pass).
-// - synthesize.go — calls dispatcher via daemon HTTP
+// - synthesize.go — calls release dispatcher via daemon HTTP
 // /v1/messages with X-Zen-Profile=
 // research-synthesize.
 // - cite.go — RawCitation + VerifiedCitation + HEAD-probe

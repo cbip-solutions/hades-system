@@ -5,15 +5,15 @@ main third-party licensing posture for this repository.
 
 ## Runtime And Build Dependencies
 
-The Go dependency graph is managed by `go.mod` and `go.sum`. Generate a precise
-machine-readable dependency inventory with:
+The Go dependency graph is managed by `go.mod` and `go.sum`. Inspect the module
+inventory with:
 
 ```bash
-make sbom
+go list -m -json all
 ```
 
-Release verification uses generated SBOMs, checksums, attestations, and the CGO
-supplement under `configs/`.
+Published releases can include SBOMs, checksums, and attestations alongside the
+source tree.
 
 ## Notable Components
 
@@ -28,6 +28,6 @@ supplement under `configs/`.
 ## Policy
 
 - Keep SPDX headers in source files.
-- Keep `go.mod`, `go.sum`, SBOM output, and this summary in sync before
+- Keep `go.mod`, `go.sum`, dependency metadata, and this summary in sync before
   publishing releases.
 - Do not vendor or bundle dependencies with incompatible licenses.

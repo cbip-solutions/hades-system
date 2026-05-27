@@ -32,9 +32,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 type LayoutClient interface {

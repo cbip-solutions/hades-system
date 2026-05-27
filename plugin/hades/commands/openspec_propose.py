@@ -35,14 +35,14 @@ Per `feedback_methodology_and_conventions.md` §2 + §3:
 
 ## 4. Doctrine awareness
 
-Read `AGENTS.md` to determine project doctrine:
+Read `project instructions` to determine project doctrine:
 - `max-scope`: tasks.md must include "tradeoff hacia menos justificado" when not at full scope
 - `capa-firewall`: claim-strength tier per assertion (Empirical / Interpretation / Posterior); subagents WRITE but do NOT commit (advisory mode)
 - `default`: stock templates
 
 ## 5. When operator runs `/propose-done`
 
-Invoke pre-flight.
+Invoke pre-flight (the release design wires daemon endpoint that runs RAG audit on tasks.md against the codebase).
 
 ## 6. Begin
 

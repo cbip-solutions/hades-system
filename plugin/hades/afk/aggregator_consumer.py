@@ -15,14 +15,14 @@ def hydrate_from_aggregator_query(
     cache: KGOfflineCache,
     daemon_response: dict[str, Any],
 ) -> int:
-    """Populate the offline cache D aggregator.Query() results.
+    """Populate the offline cache from the release design D aggregator.Query() results.
 
     Args:
         cache: The ``KGOfflineCache`` instance (already constructed with
             active doctrine + project_id).
         daemon_response: The JSON body from daemon
             ``/v1/knowledge/query``. Shape:
-            ``{"results": [{"citation_id":..., "query_hash":...,...},...]}``.
+            ``{"results": [{"citation_id": ..., "query_hash": ..., ...}, ...]}``.
             Missing ``"results"`` is treated as empty.
 
     Returns:

@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-// Package plugin implements Hermes plugin location
+// Package plugin implements release's Hermes plugin location
 // resolution + installation primitives.
 //
 // Per spec §2.13 Q13=D + §4.5 spike re-verify + §8.6
 // invariant: the plugin install location depends on the 13-A0
-// Phase 0 spike outcome.
+// spike outcome.
 //
 // spike PASS → project-scope primary:
 // <repo>/.hermes/plugins/zen-swarm/
 //
 // spike FAIL → user-scope per-project fallback:
 // ~/.hermes/plugins/zen-swarm-<slug>/
-// (ADR-0086 documents fallback rationale; conditional
+// (ADR-0086 documents fallback rationale; releaseb conditional
 // sibling work triggered)
 //
 // Per spec §8.6 invariant: XDG-canonical path convention; macOS

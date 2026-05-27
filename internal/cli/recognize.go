@@ -18,9 +18,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/spf13/cobra"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 	"github.com/cbip-solutions/hades-system/internal/recognize"
+	"github.com/spf13/cobra"
 )
 
 func NewRecognizeCmd() *cobra.Command {

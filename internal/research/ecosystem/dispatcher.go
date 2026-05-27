@@ -4,7 +4,7 @@
 //
 // This is the load-bearing centerpiece of : every D-task (D-1..D-8 +
 // D-10..D-12 + audit emitter + indexer + version
-// detector + doctrine accessor) is wired here into a single
+// detector + release doctrine accessor) is wired here into a single
 // goroutine-safe Query method.
 //
 // Goroutine model:
@@ -18,7 +18,7 @@
 // 14-step orchestration (verbatim spec §4.2 + plan-file §D-9):
 //
 // 1. version-context detection cascade
-// 2. doctrine resolve → DoctrineProfile ( Accessor; req.Doctrine
+// 2. doctrine resolve → DoctrineProfile (release Accessor; req.Doctrine
 // override applied per-call without mutating package-level state)
 // 3. router.Classify(query) → single | top-2 | broadcast (D-1+D-2)
 // 4. audit.Emit(EvtRAGQuery, 92)

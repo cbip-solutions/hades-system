@@ -6,8 +6,8 @@ from __future__ import annotations
 import contextlib
 from typing import Any
 
-                                                                     
-                                                                      
+# Re-export status_core so tests can access status_core.ENDPOINTS via
+# ``status_provider.status_core.ENDPOINTS`` without a separate import.
 from hades.commands import status_core
 
 
@@ -40,14 +40,14 @@ def segments_from_responses(
     """
     segs: list[str] = []
 
-                                                                                 
+    # --- daemon health ---------------------------------------------------------
     health = responses.get("/v1/health")
     if health is not None:
-        segs.append("daemon✓")           
+        segs.append("daemon✓")  # daemon✓
     else:
-        segs.append("daemon✗")           
+        segs.append("daemon✗")  # daemon✗
 
-                                                                                
+    # --- cascade tier ---------------------------------------------------------
     cascade = responses.get("/v1/cascade/state")
     if cascade is not None:
         tier = cascade.get("active_tier")
@@ -58,18 +58,18 @@ def segments_from_responses(
     else:
         segs.append("tier?")
 
-                                                                                
+    # --- bypass state ---------------------------------------------------------
     bypass = responses.get("/v1/bypass/status")
     if bypass is not None:
         status_val = bypass.get("status", "")
         if status_val == "live":
-            segs.append("bypass✓")           
+            segs.append("bypass✓")  # bypass✓
         else:
-            segs.append("bypass⚠")           
+            segs.append("bypass⚠")  # bypass⚠
     else:
-        segs.append("bypass⚠")           
+        segs.append("bypass⚠")  # bypass⚠
 
-                                                                                
+    # --- 24h cost -------------------------------------------------------------
     cost = responses.get("/v1/cost/24h")
     if cost is not None:
         spend = cost.get("spend_24h_usd")
@@ -80,7 +80,7 @@ def segments_from_responses(
     else:
         segs.append("$-.--")
 
-                                                                                
+    # --- context usage % ------------------------------------------------------
     ctx_resp = responses.get("/v1/context/used")
     if ctx_resp is not None:
         used = ctx_resp.get("used_tokens")

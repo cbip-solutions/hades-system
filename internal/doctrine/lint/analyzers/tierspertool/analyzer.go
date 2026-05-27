@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package tierspertool ships the doctrine lint
+// Package tierspertool ships the release doctrine lint
 // analyzer validating [capa_firewall.tiers] per-tool granularity per
 // Q10=D + invariant.
 //
@@ -8,11 +8,11 @@
 // - Each key in [capa_firewall.tiers] is "mcpName.toolName" or "mcpName"
 // (mcp-wide tier; resolves to all tools of that MCP).
 // - Each value is one of "high" | "medium" | "low".
-// - The mcpName MUST exist in the curated catalog (zero-length
+// - The mcpName MUST exist in the reviewed catalog (zero-length
 // catalog = skip the catalog check; tests can omit it).
 // - Empty key components rejected (e.g., ".toolName" or "mcp.").
 //
-// Analyzer is consumed by zen-doctrine-lint (existing lint stack
+// Analyzer is consumed by zen-doctrine-lint (existing release lint stack
 // loader) which loads TOML doctrine bundles + invokes ValidateDoctrineFile
 // per file. Returns []Issue surfaced to operator output.
 package tierspertool

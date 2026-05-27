@@ -21,7 +21,7 @@
 // This unifies the opt-in with the pre-existing
 // private-tier1-module/audit_crypto_darwin_test.go
 // (`//go:build darwin && manual_keychain`): one tag (`manual_keychain`) opts
-// into ALL real-Keychain coverage. Introduced in v0.17.3 (gate-hygiene) so
+// into ALL real-Keychain coverage. Introduced in v0.17.3 (gate-quality) so
 // `make test` + `go test -race./... -count=2` run green without an
 // interactive Touch-ID approver. Production callers never import this.
 package manualkeychain

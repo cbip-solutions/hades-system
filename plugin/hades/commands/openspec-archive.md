@@ -21,8 +21,8 @@ Per spec §3.3 (Modo C híbrido):
 3. Operator confirms each tier-decision item.
 4. Apply deltas to `openspec/specs/<area>.md`.
 5. Commit with trailers: `Zen-Trace-Id`, `Zen-Provider`, `Zen-Audit-Passed`.
-6. **NEVER add Claude/Anthropic/AI attribution** (inv-zen-004 — the
+6. **NEVER add Claude/Anthropic/AI attribution** (invariant — the
    plugin's `tool.execute.before` hook regex-rejects).
 7. Cleanup worktrees + branches per project's archive strategy.
 
-Plan 6 implements the wiring.
+the release design implements the wiring.

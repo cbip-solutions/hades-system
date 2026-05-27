@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — quiet_p7.go.
 //
-// Three routes for the quiet-hours operator surface:
+// Three routes for the release quiet-hours operator surface:
 //
 // GET /v1/quiet — render quiet config + active pause
 // POST /v1/quiet/urgent-pause — set UrgentPauseUntil for a duration

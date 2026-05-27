@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // internal/research/ecosystem/mock_chain.go
 //
-// InMemoryRAGAuditChain — production-visible test utility (
+// InMemoryRAGAuditChain — production-visible test utility (release
 // Task A-7).
 //
-// The production wrapper (D-12) targets chain primitives
+// The production wrapper (D-12) targets release chain primitives
 // via SQLite. Phases B/C/E/F/G/H/I need to drive the RAGAuditEmitter in
-// isolation (unit + integration tests) WITHOUT a SQLite chain
+// isolation (unit + integration tests) WITHOUT a release SQLite chain
 // instance — that is what InMemoryRAGAuditChain provides.
 //
 // Implements the SAME chain-link hash semantics as the

@@ -27,7 +27,7 @@
 // Inbox | F12 | 2s | warm — notifications inbox
 //
 // These thresholds are doctrine-tunable post-ship via
-// ~/.config/zen-swarm/tui.toml; ships
+// ~/.config/zen-swarm/tui.toml; release ships
 // fixed defaults.
 package tui
 

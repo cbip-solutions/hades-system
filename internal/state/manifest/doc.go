@@ -8,7 +8,7 @@
 // - Regenerator (preserve-manual + emit-toml)
 // - Differ for `zen state verify`
 // - ManualTracker (detect manual changes + emit events)
-// - AutonomyValidator ( prereq validators consumed
+// - AutonomyValidator (release prereq validators consumed
 // orchestrator's autonomy gate)
 // - RegenerateWatcher (fsnotify-driven background goroutine per §3.7)
 // - 3 typed events (state.manual_field_changed, state.regenerate_partial,

@@ -6,7 +6,7 @@
 // wraps *store.Store CRUD primitives (internal/store/schedules.go) for
 // the schedules + schedule_history tables (migration 063). The skeleton
 // is fully working code — no stubs — operating on store.ScheduleRow /
-// store.ScheduleHistoryRow value types. Task D-2 lands
+// store.ScheduleHistoryRow value types. release Task D-2 lands
 // the internal/scheduler package with its own Schedule + HistoryEntry
 // value types and adds a thin translation layer (scheduler.Schedule ↔
 // store.ScheduleRow) on top of this adapter without touching the store
@@ -27,5 +27,5 @@
 // legitimate co-location of internal/scheduler (when D-2 lands it) and
 // internal/store anywhere in the codebase. The compliance test
 // inv_zen_122_inv_zen_031_plan7_packages_test.go extends to enforce
-// this on packages.
+// this on release packages.
 package scheduleradapter

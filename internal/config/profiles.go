@@ -2,7 +2,7 @@
 // internal/config/profiles.go
 //
 // ProfileConfig + LoadProfiles read profiles.toml — the role→cascade
-// layer of three-file config model. A profile is a role
+// layer of release's three-file config model. A profile is a role
 // (orchestrator, worker-code, tactical, …); its Cascade is the ordered
 // list of providers.toml [[providers]].name entries the dispatcher
 // iterates. The [profiles.<name>] table key supplies the

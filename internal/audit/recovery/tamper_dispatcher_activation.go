@@ -3,17 +3,17 @@
 //
 // declared TamperDispatcher (tamper_dispatcher.go) with doctrine-name
 // routing ("max-scope" / "default" / "capa-firewall"). ACTIVATES the
-// dispatcher by binding it to the [audit.tamper_response] mode read
+// dispatcher by binding it to the release [audit.tamper_response] mode read
 // per-project from the active doctrine bundle at Dispatch() call time (hot —
-// respects doctrine reload mid-flight Q10 C atomic-swap).
+// respects release doctrine reload mid-flight Q10 C atomic-swap).
 //
 // DoctrineDispatcher is a NEW struct
-// that carries the three dependencies and its own halt state. Its
+// that carries the three release dependencies and its own halt state. Its
 // Dispatch() method routes per [audit.tamper_response] mode:
 //
-// halt-per-project: HALT P only; emit audit.tamper_detected + inbox URGENT;
+// halt-per-project: HALT P only; emit audit.tamper_detected + release inbox URGENT;
 // emit audit.recovery_initiated (operator-gated recovery next step).
-// log-continue: NO halt; emit audit.tamper_detected + inbox URGENT;
+// log-continue: NO halt; emit audit.tamper_detected + release inbox URGENT;
 // CONTINUE new appends.
 // cascade-halt-all: HALT P + HALT ALL other known projects; emit per-project
 // audit.tamper_detected (one per affected project); emit
@@ -23,7 +23,7 @@
 // Per-project blast radius preserved unless mode=cascade-halt-all (capa-firewall
 // opt-in only).
 //
-// Recursive chain anchor: every event emitted flows into eventlog →
+// Recursive chain anchor: every event emitted flows into release eventlog →
 // forensically anchored, not just the original tamper detection. Dispatcher
 // MUST emit events synchronously to ensure ordering:
 // detection → tamper_detected → recovery_initiated (if applicable).

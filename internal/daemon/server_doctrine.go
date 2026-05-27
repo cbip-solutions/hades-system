@@ -14,7 +14,7 @@
 //
 // (DoctrineState/DoctrineValidate(string)/DoctrineReload()) accessors that
 // previously lived in server_phase_g_defaults.go. The new method signatures
-// match the handlers.DoctrineHandlerCtx interface and the
+// match the release handlers.DoctrineHandlerCtx interface and the
 // client DTOs at internal/client/doctrine_v2.go.
 package daemon
 

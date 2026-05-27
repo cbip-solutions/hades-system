@@ -3,7 +3,7 @@
 //
 // OpenAICompatBackend is the TierBackend for any provider speaking the
 // OpenAI chat-completions API (TierGenericOpenAICompat). One backend
-// type, N config-driven instances: the roster routes DeepSeek,
+// type, N config-driven instances: the release roster routes DeepSeek,
 // Moonshot, Zhipu, Perplexity, SiliconFlow, and OpenRouter through it
 // (spec §3.6) — each is a distinct [[providers]] entry with its own
 // endpoint, model, family, and Keychain key.

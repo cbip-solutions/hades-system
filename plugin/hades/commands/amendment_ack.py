@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:amendment-ack — Acknowledge + apply HADES doctrine amendment
 
-Apply amendment **{amendment_id}**. This is **audit-logged** chain (Tessera-anchored event `AmendmentAcknowledged`).
+Apply amendment **{amendment_id}**. This is **audit-logged** via the release design chain (Tessera-anchored event `AmendmentAcknowledged`).
 
 ## 1. Confirm intent
 
@@ -58,11 +58,11 @@ Run /amendment-show <dep-id> to investigate, or ack dependents first.
 
 ## 4. NEVER add Claude attribution to audit log entry
 
-The reason text becomes part of audit chain. Operator's reason MUST NOT contain Claude/Anthropic/AI attribution. Daemon's audit handler regex-rejects.
+The reason text becomes part of audit chain. Operator's reason MUST NOT contain Claude/Anthropic/AI attribution. Daemon's audit handler regex-rejects (the release design substrate hook).
 
 ## Cross-references
 
--  +  amendment lifecycle
+- the release design + the release design amendment lifecycle
 - invariant amendment audit chain anchor
 - /amendment-list, /amendment-show, /amendment-deny
 """

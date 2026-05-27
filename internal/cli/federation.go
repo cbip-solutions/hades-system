@@ -3,7 +3,7 @@
 //
 // `zen federation health [wsid]` + `zen api-impact <diff-ref>` — the
 // federation health surface + the cross-repo API-impact analysis verb.
-// Mirrors K's verb pattern (risk.go / why.go); each verb supports
+// Mirrors release K's verb pattern (risk.go / why.go); each verb supports
 // `--format text|json` policy Routes via the daemon
 // /v1/mcpgateway/{federation/health,api-impact} sub-routes (invariant
 // single-egress, invariant no direct net/http).

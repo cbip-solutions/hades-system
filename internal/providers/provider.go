@@ -15,8 +15,8 @@ import (
 // Tier identifies which LLM tier handled (or will handle) a request.
 //
 // Order matters: TierInHouse..TierPAYG preserve the numeric values used
-// 's bypass.Tier (so audit rows written before remain
-// readable when re-decoded), and appends new tiers after.
+// 's bypass.Tier (so audit rows written before release remain
+// readable when re-decoded), and release appends new tiers after.
 //
 // String() values are the canonical lowercase form persisted in
 // cost_ledger.tier, tier_health_samples.tier, pin_overrides.tier, and
@@ -38,10 +38,10 @@ const (
 
 	TierGenericOpenAICompat
 	// TierOpenClaude is a TOMBSTONE tier. The routing-layer backend that
-	// formerly reported this tier was removed in — the
+	// formerly reported this tier was removed in release — the
 	// providers.toml-driven cascade superseded it (ADR-0093). This
 	// constant is KEPT, not deleted: its String() value "openclaude"
-	// is persisted in cost_ledger.tier for pre- historical rows,
+	// is persisted in cost_ledger.tier for pre-release historical rows,
 	// and Tier String() values MUST NOT change across releases. No
 	// backend reports Tier() == TierOpenClaude anymore. invariant
 	// enforces the backend's removal while permitting this enum remnant.
@@ -185,7 +185,7 @@ type TierCapabilities struct {
 	MaxOutputTokens       int
 }
 
-// TierBackend is the contract every backend satisfies.
+// TierBackend is the contract every release backend satisfies.
 //
 // Phases B/C/D/H attach a compile-time guard at package scope:
 //

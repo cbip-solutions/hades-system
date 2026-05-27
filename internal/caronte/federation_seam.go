@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/caronte/federation_seam.go.
 //
-// FederationStore is the narrow seam interface the engine's federation
+// FederationStore is the narrow seam interface the engine's release federation
 // ops consume. The concrete *federation.WorkspaceFederationDB satisfies it (via
 // the methods shipped at internal/caronte/store/federation/*.go).
 // Declaring the interface here (NOT importing federation directly) keeps the

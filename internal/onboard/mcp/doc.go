@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package mcp implements 4-tier curated MCP set + Q7=D
+// Package mcp implements release's 4-tier reviewed MCP set + Q7=D
 // smart-default detection.
 //
 // Per spec §2.7 + §3.7 + Q7=D:

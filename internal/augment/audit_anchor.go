@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package augment — audit_anchor.go ships Tessera-anchored leaf
+// Package augment — audit_anchor.go ships release Tessera-anchored leaf
 // emission for the 7 augmentation event types.
 //
 // Single chokepoint for audit-chain emission from internal/augment/:

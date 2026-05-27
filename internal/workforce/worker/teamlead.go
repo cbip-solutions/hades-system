@@ -29,7 +29,7 @@ type SubprocessAcquirer interface {
 	Release(s subprocess.Session) error
 }
 
-// WorkerFactory creates child Workers on TeamLead's behalf.
+// WorkerFactory creates child Workers on TeamLead's behalf. release's
 // orchestrator wires the production factory; tests provide fakes.
 //
 // Concurrency implementations MUST be safe for concurrent NewChild

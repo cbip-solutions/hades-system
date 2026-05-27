@@ -15,7 +15,7 @@ class AFKPlatform(str, Enum):
     """The six AFK platforms per spec §3.1 Layer 5.
 
     Values match Hermes' multi-platform gateway platform-id taxonomy
-    (verified Spike-4 Phase 0 cross-platform parity).
+    (verified Spike-4 release track cross-platform parity).
     """
 
     TELEGRAM = "telegram"
@@ -31,7 +31,7 @@ class VoiceFlowMode(str, Enum):
 
     SYNC: estimated latency < 10s; operator hears response inline.
     ASYNC: estimated latency >= 10s; operator hears "results ready in
-    inbox" notification +  inbox notification with
+    inbox" notification + the release design inbox notification with
     ``severity=info-immediate``.
     """
 
@@ -39,10 +39,10 @@ class VoiceFlowMode(str, Enum):
     ASYNC = "async"
 
 
-                                                                      
-                                                                         
-                                                                       
-                                                        
+# Type alias for the canonical (key, value) top-field entry shape on a
+# MobileSummaryCard. Accepted at construction time as either a tuple or a
+# 2-element list (the latter surfaces naturally from JSON round-trips);
+# normalized to a tuple-of-tuples via ``__post_init__``.
 _TopFieldInput = list[list[str]] | list[tuple[str, str]] | tuple[tuple[str, str], ...]
 
 
@@ -61,7 +61,7 @@ class MobileSummaryCard:
       consequences drop extras silently in source citation envelope;
       this guard catches programming errors at construction time.
     - ``cache_state`` is one of ``{"fresh", "stale", "offline"}``. In the
-      canonical   ``citation.Envelope`` schema this
+      canonical the release design release track ``citation.Envelope`` schema this
       surfaces via ``platform_renders["mobile"]["cache_state"]`` (no
       top-level field on the envelope itself). The ``MobileSummaryCard``
       projects that hint into this typed field for downstream renderers.
@@ -84,7 +84,7 @@ class MobileSummaryCard:
         project_id: str,
         cache_state: str,
     ) -> None:
-                                                                            
+        # frozen dataclass workaround: bypass __setattr__ for normalization.
         normalized: list[tuple[str, str]] = []
         for field in top_fields:
             if isinstance(field, (list, tuple)) and len(field) == 2:
@@ -126,7 +126,7 @@ class VoiceFlow:
     """Metadata for a voice query in flight (sync vs async dispatch).
 
     Per spec §1 Q6=B: ``estimated_latency_ms < 10000`` → ``SYNC``;
-    otherwise ``ASYNC`` +  inbox notification. Operator may force
+    otherwise ``ASYNC`` + the release design inbox notification. Operator may force
     per-query via ``explicit_override`` (D-3 honours the request mode
     regardless of estimate when the flag is set).
 
@@ -167,7 +167,7 @@ class VoiceFlow:
 
 @dataclasses.dataclass(frozen=True, slots=True)
 class OfflineCacheEntry:
-    """Per-row payload hydrated D ``aggregator.Query()`` results.
+    """Per-row payload hydrated from the release design D ``aggregator.Query()`` results.
 
     The KG offline cache stores the last N (doctrine-sized) entries
     indexed by ``query_hash``; on cache hit, the entry's
@@ -176,8 +176,7 @@ class OfflineCacheEntry:
 
     Invariants:
 
-    - ``project_id`` is the canonical  sha256 hex — privacy filter
-      (D-5) compares this field exactly against the active operator
+    - ``project_id`` is the canonical the release design sha256 hex — privacy filter compares this field exactly against the active operator
       session's project_id under capa-firewall.
     - ``ingested_at_unix_ms`` is the daemon-side ingestion timestamp
       (UTC unix milliseconds) — used for LRU eviction tiebreaks when
@@ -203,7 +202,7 @@ class OfflineCacheEntry:
         )
 
 
-                                                     
+# Doctrine-tunable cache capacities per spec §1 Q6=B.
 _DOCTRINE_CAPACITIES: dict[str, int] = {
     "max-scope": 100,
     "default": 50,
@@ -253,11 +252,11 @@ class KGOfflineCache:
         self.capacity = _DOCTRINE_CAPACITIES[doctrine]
         self.privacy_filter_enabled = doctrine == "capa-firewall"
         self.active_project_id = active_project_id
-                                                                   
-                                                                      
-                                                            
+        # LRU storage; key = query_hash, value = OfflineCacheEntry.
+        # OrderedDict preserves insertion order; move_to_end on access
+        # makes oldest-by-access prefix the eviction target.
         self._entries: OrderedDict[str, OfflineCacheEntry] = OrderedDict()
-                                                                     
+        # Hit + miss counters (used by audit chain emission via D-6).
         self._hit_count: int = 0
         self._miss_count: int = 0
 
@@ -275,7 +274,7 @@ class KGOfflineCache:
             return
         self._entries[entry.query_hash] = entry
         if len(self._entries) > self.capacity:
-            self._entries.popitem(last=False)                
+            self._entries.popitem(last=False)  # evict oldest
 
     async def get(
         self,
@@ -293,7 +292,7 @@ class KGOfflineCache:
         emission with a permissive baseline filter.
 
         Args:
-            query_hash: Stable hash of the query.
+            query_hash: Stable hash of the query (canonical the release design D shape).
             project_id: Active operator session's project_id (privacy
                 filter input; D-5 rejects when
                 ``entry.project_id != project_id`` under capa-firewall).
@@ -305,31 +304,31 @@ class KGOfflineCache:
             The ``OfflineCacheEntry`` if present (and privacy-cleared
             when applicable), else ``None``.
         """
-        from . import kg_offline_cache as _impl                         
+        from . import kg_offline_cache as _impl  # local: avoid circular
 
         entry = self._entries.get(query_hash)
         if entry is None:
             self._miss_count += 1
             return None
 
-                                                                       
-                                                                  
-                                                                      
-                                               
+        # Privacy filter hook — D-5 wraps with capa-firewall isolation.
+        # D-4 baseline: permissive (returns True). Helper lives in
+        # ``kg_offline_cache.py`` so D-5 can replace the body in place
+        # without re-touching this declaration.
         if not _impl._privacy_filter_passes(self, entry, project_id):
-                                                                   
-                                                                   
-                                        
+            # Treated as a miss for audit purposes (no leak of even
+            # hit-existence across project boundaries per spec §8.3
+            # defense-in-depth layer 4).
             self._miss_count += 1
             return None
 
-                                                                            
+        # LRU access update — move to end so eviction prefers older entries.
         self._entries.move_to_end(query_hash)
         self._hit_count += 1
 
-                                                                    
-                                                                     
-                               
+        # Emit audit event — D-6 wires audit.emit_offline_cache_hit.
+        # cache_size is sampled AFTER the access for consistency with
+        # the stats() snapshot.
         await audit_emitter(
             query_hash=query_hash,
             citation_id=entry.citation_id,

@@ -14,14 +14,14 @@
 // internal/client.AuditDoctorChainIntegrity; wires the
 // daemon-side handler that invokes RunDoctorAuditChainIntegrity with
 // the production ChainStatus adapter (in-memory verify-cache populated
-// by tamper.scheduler + eventlog tamper-count query).
+// by tamper.scheduler + release eventlog tamper-count query).
 package cli
 
 import (
 	"context"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
+	"github.com/spf13/cobra"
 )
 
 func doctorAuditChainIntegrityCmd() *cobra.Command {

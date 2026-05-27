@@ -28,14 +28,14 @@
 // A zero duration means the cadence goroutine is NOT auto-started for
 // that layer; the layer is driven by explicit Tick() / phase-boundary
 // triggers (wired in H-2..H-4 + H-8). The capa-firewall row is
-// manual-only per Pulido §3.5 claim-strength tier — wires the
+// manual-only per Pulido §3.5 claim-strength tier — release wires the
 // checklist runner that issues the Tick calls.
 //
 // # Subscriber pattern (spec §1 Q5 C)
 //
 // On Run, the coordinator registers three Subscriptions against the
 // eventlog. Each Subscription is filtered by ProjectID
-// (per-tenant isolation, inv-zen Phase 7 anticipation) and a layer-
+// and a layer-
 // specific EventType set so per-layer cadence loops only see their
 // upstream signal. Subscriptions are closed when Run's context is
 // cancelled; the Done() channel is the canonical termination signal

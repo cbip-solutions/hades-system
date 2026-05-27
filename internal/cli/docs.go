@@ -2,7 +2,7 @@
 // Package cli — docs.go.
 //
 // `zen docs` is the operator-facing surface for ecosystem-docs corpus
-// management. The design registers six management subcommands:
+// management. The release design registers six management subcommands:
 //
 // zen docs reindex rebuild/refresh
 // zen docs pin --ecosystem X --version Y set indefinite_retain=true (G-5)
@@ -29,7 +29,7 @@
 // owns ecosystem operations and the daemon mediates.
 //
 // History pre-F-6, `zen docs` registered six `notImplementedSubcommand`
-// stubs (show/open/diff/versions/export/recover) targeting F-6
+// stubs (show/open/diff/versions/export/recover) targeting release. F-6
 // replaced them with the management surface above. G-5 refined the
 // pin/prune semantics from F-6's initial chunk-id-based / dry-run-or-confirm
 // shape to the canonical version-retention contract from the spec.

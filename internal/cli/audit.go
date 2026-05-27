@@ -13,8 +13,8 @@
 // zen audit criteria list
 //
 // Option A adaptation: the plan-doc enumerated `review --diff <p>` which
-// requires the audit MCP wiring landed in (the audit MCP
-// is the deliverable, not ). delivers
+// requires the audit MCP wiring landed in release (the audit MCP
+// is the release deliverable, not ). delivers
 // the read/catalog surface complete + real-round-tripped; the
 // `review --diff` proxy command will land additively in a future plan
 // (deferred to a future plan) without changing this surface.
@@ -28,11 +28,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/cli/format"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	"github.com/cbip-solutions/hades-system/internal/doctrine"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 func NewAuditCmd() *cobra.Command {

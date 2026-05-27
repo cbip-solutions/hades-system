@@ -2,7 +2,7 @@
 
 HADES is a local-first agentic development orchestrator. It is built around a
 daemon that owns long-lived state, with short-lived operator surfaces layered on
-top: CLI commands, the TUI, the Hermes plugin, MCP servers, and release gates.
+top: CLI commands, the TUI, the Hermes plugin, and MCP servers.
 
 The runtime model below is the supported architecture for HADES v1.0.
 
@@ -10,13 +10,13 @@ The runtime model below is the supported architecture for HADES v1.0.
 
 | Layer | Component | Responsibility |
 | --- | --- | --- |
-| Operator entry points | `hades`, `zen`, TUI, Hermes plugin | Human-facing command, status, workflow, and review surfaces. |
+| Operator entry points | `hades`, `zen`, TUI, Hermes plugin | Human-facing command, status, task-flow, and review surfaces. |
 | Local control plane | `zen-swarm-ctld` daemon | Queue ownership, auth, subsystem lifecycle, local HTTP, audit emission, and recovery hooks. |
 | Tool boundary | MCP servers | Narrow tool contracts for research, budget, audit review, and SSH execution. |
-| Execution engine | Orchestrator packages | Worktree leases, task dispatch, review flow, merge decisions, scheduling, and autonomy gates. |
-| Model routing | Provider registry and profiles | Provider selection, fallback cascades, rate-card metadata, cost gates, and optional sidecar registration. |
+| Execution engine | Orchestrator packages | Worktree leases, task dispatch, review flow, merge decisions, scheduling, and autonomy controls. |
+| Model routing | Provider registry and profiles | Provider selection, fallback cascades, rate-card metadata, budget controls, and optional sidecar registration. |
 | Knowledge substrate | Caronte | In-process code graph, impact analysis, design-intent lookup, co-change, and API-contract federation. |
-| Evidence plane | Audit and release gates | Hash-chained audit events, security checks, license checks, SBOM inputs, and artifact verification. |
+| Evidence plane | Audit evidence | Hash-chained audit events, security checks, and artifact-verification inputs. |
 
 ## Control Flow
 
@@ -30,7 +30,7 @@ The runtime model below is the supported architecture for HADES v1.0.
 4. The daemon dispatches work through isolated worktrees or narrow adapters.
 5. Subsystems emit audit events as work advances, fails, pauses, recovers, or
    crosses a confirmation boundary.
-6. Review, merge, release, and sync gates consume the recorded state
+6. Review, merge, release, and sync decisions consume the recorded state
    instead of relying on ad hoc operator memory.
 
 The daemon is the center of authority. Frontends render and initiate actions;
@@ -61,7 +61,7 @@ they do not own durable orchestration state.
 - `zen-swarm-ctld`: daemon binary.
 - `plugin/hades`: Hermes plugin, slash-command handlers, hooks, and renderers.
 - `mcp/*`: MCP server implementations.
-- `configs/*`: release and runtime configuration examples.
+- `configs/*`: runtime configuration examples.
 
 ## Persistence And State
 
@@ -72,8 +72,8 @@ HADES separates configuration from runtime state:
 - Daemon and federation state live under the XDG state directory.
 - Credentials are referenced by key names and are expected to live in the
   operating-system credential store, not in TOML files.
-- Release artifacts are verified through checksums, SBOM material, signatures,
-  and dedicated release-gate commands.
+- Published artifacts are expected to ship with checksums, attestations, and
+  signatures.
 
 ## Failure And Degraded Modes
 
@@ -85,12 +85,12 @@ HADES treats partial failure as a normal operating condition:
 - A stale or missing Caronte index is surfaced through doctor and reindex
   commands.
 - Budget caps can pause scopes while leaving unrelated scopes available.
-- Confirmation gates can pause risky work without tearing down daemon state.
-- Release gates fail closed when secret, license, signature, or artifact checks
+- Confirmation controls can pause risky work without tearing down daemon state.
+- Artifact checks should fail closed when signatures, checksums, or metadata
   detect drift.
 
-## Release Verification
+## Source Verification
 
-Source releases include runtime code, tests, documentation, and release
-configuration. Release gates validate licenses, checksums, signatures, SBOM
-inputs, and secret-scanning results before publication.
+The source tree is expected to build and test from a clean checkout with the
+public `Makefile`. Published artifacts should be verified against the checksums,
+attestations, and signatures attached to the release.

@@ -2,11 +2,11 @@
 // Package cli — doctor_ecosystem.go
 //
 // Reports per-ecosystem DB size, package/version/chunk counts, invariant
-// 4-state budget classification, F CAS blobs shared, cron worker
+// 4-state budget classification, release F CAS blobs shared, cron worker
 // PID, last upstream-poll + weekly-sweep timestamps, symbol-index health,
 // and verifier live-cmd health (go doc / pip show / npm view / cargo doc).
 //
-// Architecture follows Task J-2 (mirror of doctor_state.go):
+// Architecture follows release Task J-2 (mirror of doctor_state.go):
 //
 // - EcosystemProber interface declared in probe.go (CLI side)
 // - RunEcosystemProbe orchestrator declared here
@@ -34,7 +34,7 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunEcosystemProbe orchestrates the ecosystem doctor check (
+// RunEcosystemProbe orchestrates the ecosystem doctor check (release
 // Task G-4, spec §5 doctor surface).
 //
 // Delegates to DoctorDeps.EcosystemProber.Probe(ctx) within a 10-second

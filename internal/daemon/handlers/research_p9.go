@@ -3,9 +3,9 @@
 //
 // 4 NEW operator-facing research endpoints surfacing substrate
 // (research findings cache per Q8 A) over /v1/research/*. The cache
-// stats + cache list paths COLLIDE with N's admin handlers
+// stats + cache list paths COLLIDE with release N's admin handlers
 // (research_cache_admin.go); replaces the mux registration
-// because the wire shape is a strict superset (additive fields
+// because the release wire shape is a strict superset (additive fields
 // only; older clients deserialise without breakage).
 //
 // invariant: handlers consume ResearchStoreP9 interface only — no direct
@@ -15,14 +15,14 @@
 // production research/cache.Store; during development the 503 makes
 // intent explicit.
 //
-// GET /v1/research/history — eventlog research.* filter
-// GET /v1/research/cache/stats — extends N stats (additive)
+// GET /v1/research/history — release eventlog research.* filter
+// GET /v1/research/cache/stats — extends release N stats (additive)
 // POST /v1/research/cache/invalidate — force-stale by query match
-// GET /v1/research/cache/list — extends N list (additive)
+// GET /v1/research/cache/list — extends release N list (additive)
 //
-// Wire-compatibility: stats + list shapes are JSON strict supersets
-// of N — older clients deserialize cleanly (extra fields ignored).
-// The N handler functions become dead code post-H-10 wiring; left
+// Wire-compatibility: release stats + list shapes are JSON strict supersets
+// of release N — older clients deserialize cleanly (extra fields ignored).
+// The release N handler functions become dead code post-H-10 wiring; left
 // in place for review-friendly diff (CHANGELOG v0.9.0 documents).
 //
 // Boundary invariants:

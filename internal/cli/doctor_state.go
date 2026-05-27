@@ -40,7 +40,7 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunSystemStateProbe orchestrates the system-state doctor check (
+// RunSystemStateProbe orchestrates the system-state doctor check (release
 // Task J-2, spec §6.2).
 //
 // Delegates to DoctorDeps.StateProber.Probe(ctx) and returns the resulting

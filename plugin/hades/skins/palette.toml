@@ -1,4 +1,4 @@
-# Plan 18a Phase B — HADES palette (spec §Q2)
+# the release design release track — HADES palette (spec §Q2)
 # 8 color keys. Mapped to Hermes-equivalent keys at _build_hades_yaml time.
 # Tagline + agent_name are rendered into banner_text + branding.welcome.
 

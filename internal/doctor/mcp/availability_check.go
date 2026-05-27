@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package mcp (internal/doctor/mcp) ships the `curated-MCP-availability`
+// Package mcp (internal/doctor/mcp) ships the `reviewed-MCP-availability`
 // doctor check.
 //
-// Per Q7=D 4-tier curated MCP set, the check probes per-MCP availability
+// Per Q7=D 4-tier reviewed MCP set, the check probes per-MCP availability
 // via the package-manager-specific seam (npm / pip / binary).
 // catalog (`internal/onboard/mcp/catalog.go`) is the source-of-truth for
-// the curated entries; this check is a consumer (a translation adapter
+// the reviewed entries; this check is a consumer (a translation adapter
 // from internal/onboard/mcp.Entry to MCPSpec lives in production wiring,
 // shipped by CLI surface).
 //

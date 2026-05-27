@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain_history.go.
 //
-// `zen audit-chain history` queries audit_events_raw augmented with
-// the chain extension columns via GET /v1/audit-chain/history:
+// `zen audit-chain history` queries release audit_events_raw augmented with
+// the release chain extension columns via GET /v1/audit-chain/history:
 //
 // PrevHash — previous record's hash (chain linkage)
 // RecordHash — SHA-256 of this event's canonical bytes
@@ -10,7 +10,7 @@
 // PartitionID — monthly partition tag (e.g. "2026_05")
 //
 // Output table (default) or json/yaml (--format flag). Table adds three
-// chain-proof columns beyond the `zen audit events` surface:
+// chain-proof columns beyond the release `zen audit events` surface:
 //
 // REC_HASH (truncated 16 chars) TESSERA_LEAF PARTITION
 //
@@ -26,10 +26,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/cli/format"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 func newAuditChainHistoryCmd() *cobra.Command {

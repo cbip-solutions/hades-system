@@ -83,7 +83,7 @@ type CitationConfig struct {
 }
 
 // AnswerGenerator is the abstraction over the LLM call that produces an
-// answer. The production implementation wraps the dispatcher
+// answer. The production implementation wraps the release dispatcher
 // (Haiku / DeepSeek / Ollama backend with grammar-mask where supported).
 // Tests inject a fake returning canned outputs. Generate MUST honor
 // ctx cancellation; the reprompt string is "" on the first attempt and

@@ -3,7 +3,7 @@
 // schema struct definitions live in versioned sub-packages (v1, v2,...).
 //
 // CurrentSchemaVersion bumps when sections/fields are added/removed/renamed
-// in the latest schema package. ships at "1.0"; future minor changes
+// in the latest schema package. release ships at "1.0"; future minor changes
 // (e.g., new section "Capacity") bump to "1.1"; field rename or removal
 // bumps to "2.0" and adds a v2 sub-package.
 //

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package views — header.go.
 //
-// Shared per-panel header helper. TUI brand pass prefixes
+// Shared per-panel header helper. releaseb's TUI brand pass prefixes
 // every panel title with "HADES · " (spec §Q8 panel-header brand pass
 // + spec §Q2 tagline separator convention).
 //

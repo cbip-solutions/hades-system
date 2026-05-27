@@ -137,7 +137,7 @@ type FMVResult struct {
 	Trace []FMVTrace
 
 	// Degraded is true when the algorithm fell back to plurality on
-	// SupportingReviewers ( I-5: pool-exhausted; I-7: cost-
+	// SupportingReviewers (release I-5: pool-exhausted; I-7: cost-
 	// pressure). False on the happy / tie / all-failed paths. Callers
 	// that observe Degraded==true MUST consume Reason for the
 	// degradation cause — the audit-event emission is bound to the

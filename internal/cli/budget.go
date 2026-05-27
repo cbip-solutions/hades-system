@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — budget.go.
 //
-// `zen budget` is the operator's authoritative interface to the
+// `zen budget` is the operator's authoritative interface to the release
 // budget engine.
 //
 // Cobra layout (8 leaves + 2 group):
@@ -29,10 +29,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/cli/format"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 func NewBudgetCmd() *cobra.Command {

@@ -304,7 +304,7 @@ func NewRecoveryEngine(cfg RecoveryEngineConfig) (*RecoveryEngine, error) {
 //
 // Payload schema (review fix-pass): the payload map keys MUST match the
 // eventlog.WorkerRedispatched typed-struct json tags so replay
-// + hash-chain consumers can typed-Decode the row without losing
+// + release hash-chain consumers can typed-Decode the row without losing
 // fields. The contract is pinned by
 // TestRecoveryEngine_HandleWorkerDeath_TypedPayloadRoundTrip.
 func (r *RecoveryEngine) HandleWorkerDeath(ctx context.Context, in WorkerDeathInput) (Decision, error) {
@@ -319,7 +319,7 @@ func (r *RecoveryEngine) HandleWorkerDeath(ctx context.Context, in WorkerDeathIn
 		auditCtx := context.WithoutCancel(ctx)
 		// Map keys MUST match eventlog.WorkerRedispatched json tags so a
 		// typed Decode round-trip yields all fields populated (replay
-		// + hash-chain contract).
+		// + release hash-chain contract).
 		_, _ = r.evlog.Append(auditCtx, eventlog.Event{
 			Type:        eventlog.EvtWorkerRedispatched,
 			SessionID:   r.sessionID,

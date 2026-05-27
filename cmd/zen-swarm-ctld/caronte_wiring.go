@@ -26,7 +26,7 @@
 // shared caronteBlastRadiusCore).
 //
 // - newCaronteSubsystem(*mcpgateway.CaronteProxy) *caronteSubsystem
-// Wraps the proxy as a gateway Subsystem named "caronte" (
+// Wraps the proxy as a gateway Subsystem named "caronte" (release
 // renamed the segment gitnexus->caronte; RBAC/REST/augment lanes all moved
 // to the "caronte" segment in the same atomic cutover).
 package main

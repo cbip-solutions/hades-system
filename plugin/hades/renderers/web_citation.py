@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-                                        
-"""Web HTML5 + SVG renderer for citation envelopes."""
+# plugin/hades/renderers/web_citation.py
+"""Web HTML5 + SVG renderer for citation envelopes (the release design release track Task A-8)."""
 
 from __future__ import annotations
 
@@ -24,11 +24,11 @@ _SVG_CALLER_MAX_NODES = 5
 _SVG_BLAST_MAX_RADIUS = 32
 _PER_CITATION_PAYLOAD_CAP = 600
 
-                                                                           
-                                                                    
-                                                     
-                                                                
-                                                   
+# Blast-radius color thresholds: ratio (score / max_score) used to pick the
+# SVG fill color. Hoisted from inline magic numbers.
+#   ratio < _BLAST_LOW_THRESHOLD              → green
+#   _BLAST_LOW_THRESHOLD ≤ ratio < _BLAST_MID_THRESHOLD → orange
+#   ratio ≥ _BLAST_MID_THRESHOLD              → red
 _BLAST_LOW_THRESHOLD = 0.33
 _BLAST_MID_THRESHOLD = 0.66
 _BLAST_COLOR_LOW = "#28a745"
@@ -90,16 +90,16 @@ class WebCitationRenderer(Renderer):
         lane_e = escape(citation.retrieval_lane.value)
         project_e = escape(citation.project_id)
         audit_id_e = escape(citation.audit_event_id)
-                                                                         
-                                                                       
-                                                                     
-                                                                
+        # Canonical zen:// deep-link via Envelope helper:
+        # cross-renderer consistency with email + ink. The deep-link is
+        # ALSO escaped before substitution into the href attribute so
+        # XSS-style audit IDs cannot break out of the attribute.
         audit_url_e = escape(citation.audit_event_url())
         citation_id_e = escape(citation.id)
         confidence_class = self._confidence_class(citation.confidence)
         confidence_str = f"{citation.confidence:.2f}"
 
-                                                                  
+        # Optional SVG visualizations from platform_renders['web']
         aside_parts: list[str] = []
         web_hints = citation.platform_renders.get("web", {})
         callers = web_hints.get("callers")

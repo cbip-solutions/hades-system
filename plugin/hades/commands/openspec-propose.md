@@ -10,7 +10,7 @@ arguments:
 # Propose phase for: {{feature_name}}
 
 You are starting the propose phase for feature `{{feature_name}}`. Per
-spec §3.1 + inv-zen-015, follow this flow:
+spec §3.1 + invariant, follow this flow:
 
 1. **Load the brainstorming skill** explicitly:
    ```
@@ -27,7 +27,7 @@ spec §3.1 + inv-zen-015, follow this flow:
      directly, and the daemon's file watcher will surface diffs in
      subsequent conversation turns
 
-3. **Doctrine awareness**: read `AGENTS.md` to determine project doctrine:
+3. **Doctrine awareness**: read `project instructions` to determine project doctrine:
    - `max-scope`: tasks.md must include "tradeoff hacia menos justificado"
      when not at full scope
    - `capa-firewall`: claim-strength tier per assertion (Empirical /
@@ -35,7 +35,7 @@ spec §3.1 + inv-zen-015, follow this flow:
      (advisory mode)
    - `default`: stock templates
 
-4. **When operator runs `/propose-done`**: invoke pre-flight (Plan 9
+4. **When operator runs `/propose-done`**: invoke pre-flight (the release design
    wires daemon endpoint that runs RAG audit on tasks.md against the
    codebase).
 

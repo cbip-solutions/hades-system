@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — doctrine.go.
 //
-// per spec §2.5, replacing the 3-route surface (state,
-// validate, reload — DoctrineCtx interface) with a
+// per spec §2.5, replacing the release 3-route surface (state,
+// validate, reload — DoctrineCtx interface) with a release-doctrine-package-
 // aware DoctrineHandlerCtx interface. The 10 endpoints mirror the 15-command
 // CLI inventory at spec §6.1 (Q14 C: HTTP API mirrors CLI subcommand surface)
 // so CLI dispatches over Unix-socket HTTP.

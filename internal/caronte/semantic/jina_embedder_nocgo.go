@@ -1,4 +1,3 @@
-// go:build !cgo || nocgo
 //go:build !cgo || nocgo
 // +build !cgo nocgo
 

@@ -1,11 +1,11 @@
--- Migration 043: pin_overrides table (Plan 3 Phase E Task I-1, Q8 D, inv-zen-063).
+-- Migration 043: pin_overrides table (the release design release track Task I-1, Q8 D, invariant).
 -- Tracks operator-set tier pins at three scope levels (session, project,
 -- global). At most one active pin per (scope, scope_id). NULL expires_at
 -- means permanent (no TTL); non-NULL is a Unix epoch second past which
 -- the pin is auto-purged by the orchestrator's 5-min sweep.
 --
--- inv-zen-063 anchor: this table only stores PIN intent. The cap check
--- runs LATER (in tier_resolver.Select, Phase H) and OVERRIDES a pin when
+-- invariant anchor: this table only stores PIN intent. The cap check
+-- runs LATER (in tier_resolver.Select, release track) and OVERRIDES a pin when
 -- the pinned tier has reached its cap. There is no SQL constraint that
 -- couples pin_overrides to cost_ledger; the invariant is enforced at the
 -- code level by the capOverridesPin sentinel + integration tests.

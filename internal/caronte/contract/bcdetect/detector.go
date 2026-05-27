@@ -11,7 +11,7 @@ import "context"
 // findings, e.g., a renamed field counts as both removal + addition).
 //
 // Implementations MUST NOT shell out to external binaries — the SOLE
-// sanctioned process spawn in is graphql/nodefallback.go (inv-zen-
+// sanctioned process spawn in release is graphql/nodefallback.go (inv-zen-
 // 251). A detector that needs an external tool MUST extend the
 // invariant sovereignty perimeter via an explicit operator decision +
 // ADR; the invariant compliance test AST-scans bcdetect/ for os/exec

@@ -3,7 +3,7 @@
 //
 // `zen workspace {init,list,members,link,remove,policy {get,set}}` — 7 verbs
 // total. The DECISION-5 policy-set flow is the load-bearing core:
-// 1. CLI emits the audit row `policy_change_requested` FIRST
+// 1. CLI emits the release audit row `policy_change_requested` FIRST
 // (records operator intent regardless of prompt outcome);
 // 2. interactive confirmation prompt via cmd.InOrStdin() + bufio reader;
 // 3a. on confirm + daemon-OK: daemon API call performs the change + emits
@@ -22,7 +22,7 @@
 // TestRunWorkspacePolicySet* sister-tests in workspace_test.go.
 //
 // `--yes` bypasses the prompt for scripted runs; non-interactive without
-// `--yes` is rejected (destructive-default-no per CLAUDE.md hard rule).
+// `--yes` is rejected (destructive-default-no per project instructions hard rule).
 //
 // Routes via the daemon /v1/mcpgateway/workspace/* sub-routes (invariant
 // single-egress, invariant no direct net/http). Tests inject

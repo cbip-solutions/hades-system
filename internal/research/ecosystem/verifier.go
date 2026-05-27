@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — verifier.go
 //
-// 3-stage symbol existence verifier per spec §2.7 Q7=A Layer 2 (
+// 3-stage symbol existence verifier per spec §2.7 Q7=A Layer 2 (release
 // task D-5).
 //
 // Stages (sequential; first hit wins):

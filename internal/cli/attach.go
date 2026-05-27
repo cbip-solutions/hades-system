@@ -30,7 +30,7 @@
 //
 // gap: until the daemon ships POST /v1/sessions/{alias}/attach
 // in, the route returns 503. The CLI surfaces 503 as exit 2
-// (infra-issue, not operator-typo). This mirrors the
+// (infra-issue, not operator-typo). This mirrors the release
 // /v1/messages graceful-degradation pattern: client method shipped
 // early, daemon route added in a follow-up phase.
 package cli
@@ -45,9 +45,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 type AttachClient interface {

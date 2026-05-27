@@ -1,4 +1,4 @@
--- Migration v3 — bypass_anomaly_observations (Plan 2 Phase F, inv-zen-060)
+-- Migration v3 — bypass_anomaly_observations (the release design release track, invariant)
 --
 -- Per-event observation table for the rolling-window numerator. The v2
 -- bypass_anomalies table aggregates by field_path and stores a lifetime
@@ -9,7 +9,7 @@
 --
 -- This migration introduces one row per observation:
 --   - field_path: the un-normalised JSON path observed.
---   - ts: UTC unix seconds (inv-zen-005) at which the observation was
+--   - ts: UTC unix seconds (invariant) at which the observation was
 --     recorded. Indexed (field_path, ts) for fast window queries.
 --
 -- Lifecycle:
@@ -22,11 +22,11 @@
 --     window → 24h retention; operators may extend).
 --
 -- The FK uses ON DELETE CASCADE so acknowledging-and-deleting an
--- anomaly row also drops its observations (Plan 2 Phase L wires the
--- delete path; Phase F only writes ack=1 without deleting).
+-- anomaly row also drops its observations (the release design release track wires the
+-- delete path; release track only writes ack=1 without deleting).
 --
--- Refs: spec Plan 2 §2 Q6-C, §5 row "Shape unknown field", §7
--- inv-zen-060.
+-- Refs: spec the release design §2 Q6-C, §5 row "Shape unknown field", §7
+-- invariant.
 
 CREATE TABLE IF NOT EXISTS bypass_anomaly_observations (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,

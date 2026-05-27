@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package nostub implements noStubAnalyzer for zen-swarm (spec §1 Q4 B).
+// Package nostub implements noStubAnalyzer for zen-swarm release (spec §1 Q4 B).
 //
-// Detects production-code stubs that violate CLAUDE.md project doctrine
+// Detects production-code stubs that violate project instructions project doctrine
 // "No stubs, código completo":
 //
 // 1. nostub-panic : panic("not implemented") and case-insensitive variants

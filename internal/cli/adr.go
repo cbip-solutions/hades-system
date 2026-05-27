@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr.go.
 //
-// `zen adr` is the operator surface for the ADR machine-readable
+// `zen adr` is the release operator surface for the ADR machine-readable
 // index (spec §6.1 Q7 A). Ten leaves cover the full ADR lifecycle:
 //
 // propose <topic> — draft + $EDITOR + daemon commit [I-6]

@@ -276,7 +276,7 @@ func (r *RecoveryEngine) emitRestoreFromReplay(ctx context.Context, plan Reconst
 		Timestamp: r.clk.Now(),
 		// Map keys MUST match eventlog.OrchestratorRestoreFromReplay
 		// json tags so the typed Decode round-trip yields all fields
-		// populated ( hash-chain replay + audit-consumer
+		// populated (release hash-chain replay + audit-consumer
 		// contract).
 		Payload: map[string]any{
 			"session_id":           plan.SessionID,

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package recognize is the canonical home of
+// Package recognize is the canonical home of release
 // `zen recognize` 3-tier signal stack (linguist filters → manifest deps
 // → framework configs → monorepo walk → maturity probe) — see
 // internal design record

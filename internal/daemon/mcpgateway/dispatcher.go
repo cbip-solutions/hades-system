@@ -21,7 +21,7 @@
 // wires the in-process MCPs as Subsystem instances via thin
 // adapters lifted from each MCP package's existing Server.InvokeTool
 // method (lifted at the boundary in main.go A-7). The caronte engine is
-// wired the same way via CaronteProxy ( ; the engine's Close
+// wired the same way via CaronteProxy (release ; the engine's Close
 // is deferred at the daemon composition root, not in the Dispatcher).
 package mcpgateway
 

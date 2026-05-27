@@ -1,9 +1,9 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 
 // Package citationadapter bridges the citation package (substrate
-// renderer) to the audit chain so CitationRendered events
+// renderer) to the release audit chain so CitationRendered events
 // persist to audit_events_raw + chain-anchor through the same
-// daemon write path that already uses for every other audit
+// daemon write path that release already uses for every other audit
 // event (sshexec, budget, doctrine-reload, etc.).
 //
 // Why a dedicated adapter:
@@ -15,13 +15,13 @@
 // daemon.AuditEmitCtx without forcing the citation package into
 // the daemon's import set.
 //
-// - invariant: same boundary discipline as
+// - invariant: same release boundary discipline as
 // bypassadapter/dispatcheradapter — the bridge belongs in
 // internal/daemon/, not on the citation side.
 //
 // - Single-egress for audit writes: forwarding through Server.AuditEmit
 // means the CitationRendered event walks the same hot path
-// (audit_events_raw INSERT + chain compute via
+// (audit_events_raw INSERT + release chain compute via
 // OnEmitRaw when wired) as every other event — there's no
 // parallel write path to keep in sync.
 //
@@ -43,9 +43,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/cbip-solutions/hades-system/internal/citation"
 	"github.com/cbip-solutions/hades-system/internal/daemon/handlers"
+	"github.com/google/uuid"
 )
 
 type AuditEmitter interface {
@@ -77,7 +77,7 @@ type AuditEmitter interface {
 // stamped here.
 //
 // ID + emitted_at stamping: Server.AuditEmit blindly forwards both
-// fields to the audit_events_raw INSERT with no defaulting (per
+// fields to the audit_events_raw INSERT with no defaulting (per release
 // design — the HTTP handler at handlers/audit_emit.go stamps
 // both fields before calling Server.AuditEmit). This internal emit path
 // bypasses the HTTP handler, so the adapter MUST stamp them itself or
@@ -102,7 +102,7 @@ type Adapter struct {
 // Panics on nil emitter: a nil bridge silently drops every
 // CitationRendered event downstream, which the operator cannot
 // notice until they query the audit chain — fail loud at daemon
-// boot per CLAUDE.md hard rule "fail fast in dev; self-heal in prod"
+// boot per project instructions hard rule "fail fast in dev; self-heal in prod"
 // (a missing emitter at bootstrap is a wiring bug, not a runtime
 // degradation).
 func New(emitter AuditEmitter) *Adapter {

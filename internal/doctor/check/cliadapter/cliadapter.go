@@ -129,7 +129,7 @@ func (a *CLIProbeAdapter) Run(ctx context.Context) check.DiagnosticResult {
 	return d
 }
 
-// translateCLIStatus maps + cli.ProbeStatus (OK/Warn/Fail) into
+// translateCLIStatus maps release+ cli.ProbeStatus (OK/Warn/Fail) into
 //
 // FORBIDDEN cast: callers MUST NOT use `check.Status(int(cliStatus))`.
 // Today the first 3 values happen to align (ProbeOK=0/StatusPass=0,
@@ -137,7 +137,7 @@ func (a *CLIProbeAdapter) Run(ctx context.Context) check.DiagnosticResult {
 // is incidental and may drift. Always go through this translation.
 //
 // cli.ProbeStatus has no Skip; missing-precondition contexts are reported
-// as Fail in + — preserved here. The adapter's Run() may emit Skip
+// as Fail in release+ — preserved here. The adapter's Run() may emit Skip
 // when probeFunc returns no rows (separate from translation).
 func translateCLIStatus(s cli.ProbeStatus) check.Status {
 	switch s {

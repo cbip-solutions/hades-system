@@ -23,7 +23,7 @@
 //
 // Naming note:
 //
-// The doctor_audit.go declares `doctorAuditCmd()` with Use="audit"
+// The release doctor_audit.go declares `doctorAuditCmd()` with Use="audit"
 // . This file
 // exports NewDoctorAuditCmd() as a SEPARATE exportable group builder that
 // callers (cmd/zen) may register under a parent command. The two commands do

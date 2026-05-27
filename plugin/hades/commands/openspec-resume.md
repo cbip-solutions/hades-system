@@ -16,4 +16,4 @@ Query daemon for the current phase of `{{feature_name}}`:
 - If phase = "applying": stream SSE events; surface latest attention items.
 - If phase = "archiving": render the in-progress archive briefing.
 
-Plan 9 wires conversation state preservation across runtime restarts.
+the release design wires conversation state preservation across runtime restarts.

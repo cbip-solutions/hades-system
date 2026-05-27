@@ -3,7 +3,7 @@
 //
 // All non-zenday source dependencies live behind thin local interfaces.
 // Production wiring adapts the canonical concrete types from
-// internal/{inbox,scheduler,eventlog} + dispatcheradapter; tests
+// internal/{inbox,scheduler,eventlog} + release dispatcheradapter; tests
 // substitute fakes (per invariant, zenday/ never imports
 // internal/store).
 package zenday

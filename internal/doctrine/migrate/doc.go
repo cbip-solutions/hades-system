@@ -33,7 +33,7 @@
 //
 // - MigrateChain dispatcher + chain registry + passthrough Migrator
 // - V1→V2 placeholder (deliberate ErrMigrationNotImplemented; first real
-// migration ships when schema bumps in +)
+// migration ships when schema bumps in release+)
 //
 // Trust-tier delegation note:
 // The passthrough Migrator parses with parser.ParseOpts{AllowTransverseDeclaration:

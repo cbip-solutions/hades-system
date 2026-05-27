@@ -19,7 +19,7 @@
 // queue
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
-// newClientFromCmd (mirrors the C-12 attach/sessions/layout
+// newClientFromCmd (mirrors the release C-12 attach/sessions/layout
 // pattern). Tests inject a fake client via TestOnlyClientFactory at
 // the package level + a per-test ScheduleClient interface.
 //
@@ -35,7 +35,7 @@
 //
 // gap: until the daemon mounts the Run dispatch substrate in
 // , `zen schedule routine run <id>` surfaces 503 → exit 2
-// (infra-issue, not operator-typo). Mirrors the /v1/messages
+// (infra-issue, not operator-typo). Mirrors the release /v1/messages
 // graceful-degradation pattern.
 package cli
 
@@ -49,9 +49,9 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 type ScheduleClient interface {

@@ -39,7 +39,7 @@ func (m *Manifest) AddPatternService(pattern, targetRepo string) error {
 // in Task F-3 enforces this with ErrMultipleBaseURLVariants).
 //
 // - BaseURL: literal URL prefix the client hardcodes (e.g., `http://billing-svc`).
-// Matched against api_calls.base_url_ref EXACTLY ( resolve.go treats
+// Matched against api_calls.base_url_ref EXACTLY (release resolve.go treats
 // base_url_ref as the prefix the extractor saw in the source code).
 // - BaseURLEnv: env var NAME the client reads at runtime (e.g., `AUTH_SVC_URL`
 // for a `os.Getenv("AUTH_SVC_URL")` call). The runtime env VALUE is

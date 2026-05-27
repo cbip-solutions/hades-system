@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_doctrine.go ( Task N-1; replaces
+// Package cli — doctor_doctrine.go (release Task N-1; replaces
 // spec §6.2 doctor template).
 //
 // PLAN 4 BASELINE (preserved by name):
@@ -51,7 +51,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	builtinpkg "github.com/cbip-solutions/hades-system/internal/doctrine/builtin"
 	"github.com/cbip-solutions/hades-system/internal/doctrine/lint/analyzers/conventional_commit"
@@ -60,6 +59,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/doctrine/reinforcement"
 	"github.com/cbip-solutions/hades-system/internal/doctrine/schema"
 	v1 "github.com/cbip-solutions/hades-system/internal/doctrine/schema/v1"
+	"github.com/spf13/cobra"
 )
 
 func doctorDoctrineCmd() *cobra.Command {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 package federation
 
-// EventType is the C-11 closed-enum audit event vocabulary. Every
+// EventType is the C-11 closed-enum audit event vocabulary. Every release
 // federation write emits exactly ONE EventType through EmitAudit (audit.go)
 // → tessera.Adapter.AppendLeaf — the single chokepoint invariant asserts.
 // Strings are a STORED CONTRACT — they persist into the Tessera chain on

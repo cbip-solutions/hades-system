@@ -26,7 +26,7 @@
 // This bypasses TTL + ETag conditionals (cache.revalidator §5).
 // 3. If pkg in manifest: FetchPackageDoc + IndexerDeltaWriter.WriteDelta
 // (so the next query hits the corpus normally).
-// 4. Else: research-MCP synthesis. Cache finding in F
+// 4. Else: research-MCP synthesis. Cache finding in release F
 // research_findings table with cache_hit_reason='fresh_dispatch'.
 // 5. Return QueryResult{Provenance.FreshDispatch=true} in either branch.
 //
@@ -61,7 +61,7 @@ type LiveFallbackRequest struct {
 	ProjectPath string
 }
 
-// ResearchMCPSynthesizer abstracts the research MCP. The daemon wires
+// ResearchMCPSynthesizer abstracts the release research MCP. The daemon wires
 // the concrete impl at startup; tests inject a fake.
 //
 // Contract Synthesize returns the rendered answer text on success. ctx
@@ -70,7 +70,7 @@ type ResearchMCPSynthesizer interface {
 	Synthesize(ctx context.Context, query string, eco Ecosystem) (string, error)
 }
 
-// FindingsCache abstracts the F research_findings table writer.
+// FindingsCache abstracts the release F research_findings table writer.
 //
 // Contract Cache writes a row keyed by (key, query, answer, eco, reason).
 // The dispatcher always passes reason="fresh_dispatch" from this path.

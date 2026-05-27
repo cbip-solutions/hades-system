@@ -6,7 +6,7 @@
 // registers the SidecarBackend by name into the providers.Registry.
 //
 // Architectural choice — name-based registration (per invariant frozen
-// contract C8): the → cascade refactor moved from a
+// contract C8): the release → release cascade refactor moved from a
 // 2-tier hard-wire ("tier1 + tier2") to a name-based ProfileResolver
 // model. RegisterSidecars MUST register backends by name into
 // providers.Registry; the operator's profiles.toml determines which
@@ -15,7 +15,7 @@
 // (an earlier plan version cited one — that is plan-template drift).
 //
 // Graceful-degradation discipline:
-// - cfg == nil OR cfg.Tier1Bypass == nil → no-op; the cascade
+// - cfg == nil OR cfg.Tier1Bypass == nil → no-op; the release cascade
 // handles the path. Operators without sidecars.toml are the common
 // case.
 // - /health probe fails (5xx, transport error, ctx cancel) → log a

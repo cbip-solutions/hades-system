@@ -6,7 +6,7 @@
 // since the last successful poll). --full forces a complete reindex
 // across the configured ecosystems / versions.
 //
-// Flags
+// # Flags
 //
 // --ecosystem string restrict to a single ecosystem (go|python|...; empty = all)
 // --version string restrict to a single version (empty = current + 2 prior)

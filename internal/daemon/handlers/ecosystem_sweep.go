@@ -10,7 +10,7 @@
 // POST /v1/ecosystem/sweep/fingerprints — chunk fingerprint sweep
 // POST /v1/ecosystem/sweep/change-nodes — Change-node graph sweep
 // POST /v1/ecosystem/sweep/rebuild-symbol-index — symbol index rebuild
-// POST /v1/ecosystem/sweep/cas-gc — F CAS garbage collect
+// POST /v1/ecosystem/sweep/cas-gc — release F CAS garbage collect
 //
 // Status codes (shared across all four):
 //

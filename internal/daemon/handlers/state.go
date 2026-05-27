@@ -14,9 +14,9 @@
 //
 // Graceful degradation: any nil StateService passed to a
 // constructor returns an http.HandlerFunc that immediately responds with
-// HTTP 503 {"error":"feature not configured","code":"plan9_state_unavailable"}.
+// HTTP 503 {"error":"feature not configured","code":"release_state_unavailable"}.
 //
-// Endpoints
+// # Endpoints
 //
 // GET /v1/state/show — render full manifest (TOML + parsed)
 // POST /v1/state/regenerate — walk auth sources, rewrite auto-derived sections
@@ -69,7 +69,7 @@ type StateService interface {
 	Verify(ctx context.Context) (StateDiffP9, error)
 
 	// Pin sets a manual field value and emits state.manual_field_changed into
-	// the chain. reason MUST be non-empty; callers
+	// the release chain. reason MUST be non-empty; callers
 	// validate before calling Pin.
 	// Returns error when the field is not flagged x-manual-field=true in the
 	// schema (rejected fields must not be silently accepted).

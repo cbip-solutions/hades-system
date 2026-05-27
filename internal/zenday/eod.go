@@ -72,7 +72,7 @@ type EODDeps struct {
 
 // HandoffPostedPayload mirrors eventlog.HandoffPostedEvent's wire shape
 // locally so zenday does not import eventlog (avoids the circular-
-// import concern with ; keeps invariant boundary discipline as
+// import concern with release; keeps invariant boundary discipline as
 // zenday → eventlog only via the EventReader interface).
 //
 // JSON tags MUST match eventlog.HandoffPostedEvent exactly so the

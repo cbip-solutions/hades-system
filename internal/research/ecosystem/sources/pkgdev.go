@@ -1,4 +1,3 @@
-// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -14,7 +13,7 @@
 // All HTTP egress routes via a narrow FetchClient interface that wraps
 // cache.Revalidator.Fetch (invariant + invariant — single egress
 // point for the research data plane; no direct net/http imports in this
-// package). The narrow-interface pattern mirrors B-6 and B-2
+// package). The narrow-interface pattern mirrors release B-6 and B-2
 // chunker contextual-prefix wiring: production wires *cache.Revalidator;
 // tests wire a stub that pre-populates url→body and url→err maps.
 //

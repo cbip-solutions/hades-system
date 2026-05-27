@@ -2,7 +2,7 @@
 // Package errors centralises sentinel error values used across zen-swarm.
 //
 // The most important export is the family of ErrNotImplementedPlanN
-// constants — every stub created during (and replaced by subsequent
+// constants — every stub created during release (and replaced by subsequent
 // plans) returns one of these. This lets `zen doctor --verbose` count
 // references and report implementation progress.
 //

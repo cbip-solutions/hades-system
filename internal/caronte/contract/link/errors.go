@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package link is per-workspace contract linker: for every api_calls
+// Package link is release's per-workspace contract linker: for every api_calls
 // row in scope, it tries the precision-ordered tier chain (artifact → spec →
 // static → fuzzy → unresolved) and either persists a contract_links row
 // (Confidence + LinkMethod per master C-5) through federation
-// LinkStore + emits a Tessera
+// LinkStore + emits a release Tessera
 // audit row via federation.AuditEmitter, or records
 // an `unresolved` row (per caronte.yaml unresolved_policy; doctrine-default
 // surface; invariant).
 //
 // Boundary: this package NEVER imports
-// internal/store; it imports only internal/caronte/store (Phase 19 + Plan
+// internal/store; it imports only internal/caronte/store ( + Plan
 // 20 ), internal/caronte/contract/extract, and
 // internal/caronte/contract/yaml.
 package link

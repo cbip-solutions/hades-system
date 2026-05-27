@@ -17,36 +17,36 @@ from hades.commands import status_core
 
 logger = logging.getLogger(__name__)
 
-                                                                       
-                                                                      
-                                                                      
+# Module-level schema version constant (invariant anchor). Bumped per
+# ADR-0097 rules; v1 ships with release track and is frozen for the lifetime
+# of v1 consumers (release track compliance test + the release design +N future plans).
 SCHEMA_VERSION: int = 1
 
-                                                                             
-                                                                      
-                                                                         
-                                                                         
-                            
-                                                                             
+# ---------------------------------------------------------------------------
+# Fetch+classify symbols delegated to status_core (Task 4 extraction).
+# Private aliases preserved so existing tests + monkeypatches that target
+# ``hermes_plugins.hades.commands.status._build_client`` etc. continue to
+# work without modification.
+# ---------------------------------------------------------------------------
 _DEFAULT_UDS_PATH: str = status_core.DEFAULT_UDS_PATH
 _ENDPOINT_TIMEOUT_S: float = status_core.ENDPOINT_TIMEOUT_S
 _ENDPOINTS: tuple[str, ...] = status_core.ENDPOINTS
 
-                                                                 
-                                                
+# Standard degraded-mode hint per spec §Q5. The exact phrasing is
+# stable for invariant golden-file comparison.
 _DEGRADED_HINT = "unavailable (daemon path down — try: hades doctor)"
 
-                                                                     
-                                                                     
-                                                                      
-                                                              
-                                    
+# Catalog code for top-level daemon-down condition. Matches release track
+# `internal/errors/codes.go` entry `daemon.not-running` (the daemon's
+# HTTP error responses use the same code string, enforcing consistency
+# across the Go + Python sides — release track invariant ships the
+# compliance test for this routing).
 _CODE_DAEMON_NOT_RUNNING = "daemon.not-running"
 
-                                                                     
-                                                                      
-                                                                 
-                                         
+# Default error envelope for the local-detection path (UDS missing on
+# disk; connection refused before any structured response). The daemon
+# can't supply title/body/recovery because it isn't running — the
+# plugin falls back to canonical strings.
 _LOCAL_DAEMON_NOT_RUNNING_ENVELOPE: dict[str, str] = {
     "code": _CODE_DAEMON_NOT_RUNNING,
     "title": "daemon not running",
@@ -60,18 +60,18 @@ _LOCAL_DAEMON_NOT_RUNNING_ENVELOPE: dict[str, str] = {
     ),
 }
 
-                                                                  
-                                                            
-                                        
+# Spec §Q2 palette. 24-bit truecolor hex values pass to the Hermes
+# terminal helper which handles TTY detection + NO_COLOR env
+# conventions + 8/16/256-color fallback.
 _PALETTE: dict[str, str] = {
-    "ok": "#10b981",                                  
-    "warn": "#ffa726",                                  
-    "fail": "#c41e3a",                                           
-    "muted": "#999999",                          
+    "ok": "#10b981",  # ok-green (happy state markers)
+    "warn": "#ffa726",  # warn-orange (degraded markers)
+    "fail": "#c41e3a",  # fail-crimson (top-level errors per C-6)
+    "muted": "#999999",  # muted-gray (body text)
 }
 
-                                                                     
-                                               
+# Palette in 24-bit ANSI terms (pre-computed for direct emission when
+# the Hermes terminal helper is not available).
 _PALETTE_ANSI: dict[str, str] = {
     "ok": "\x1b[38;2;16;185;129m",
     "warn": "\x1b[38;2;255;167;38m",
@@ -86,7 +86,7 @@ def _try_import_terminal_helper() -> Any:
     helper's `colorize` callable, or None if Hermes is unavailable.
 
     The handler tolerates a missing helper by falling back to plain
-    text — color is a polish concern, content delivery is the primary
+    text — color is a quality concern, content delivery is the primary
     contract.
     """
     try:
@@ -117,7 +117,7 @@ def _colored_text(text: str, color_key: str) -> str:
     The helper invocation may raise ImportError if the helper went
     missing between module load and call time; _safe_colorize wraps this.
     """
-                                                            
+    # Honor NO_COLOR env convention (https://no-color.org/).
     no_color = os.environ.get("NO_COLOR")
     if no_color is not None:
         return text
@@ -128,7 +128,7 @@ def _colored_text(text: str, color_key: str) -> str:
             return text
         return _HERMES_COLORIZE(text, hex_color)  # type: ignore[no-any-return]
 
-                                                                
+    # Hermes not installed: emit ANSI directly if forced or TTY.
     force_color = os.environ.get("HERMES_FORCE_COLOR")
     if not force_color:
         return text
@@ -148,8 +148,8 @@ def _safe_colorize(text: str, color_key: str) -> str:
     try:
         return _colored_text(text, color_key)
     except (ImportError, AttributeError, TypeError, ValueError):
-                                                                     
-                                                                  
+        # Helper went missing OR returned unexpected type OR rejected
+        # the color key. Defense in depth: never break the render.
         return text
 
 
@@ -181,7 +181,7 @@ def _degraded_line(label: str) -> str:
     Spec §Q5 mandates the format:
         <label>: unavailable (daemon path down — try: hades doctor)
 
-    Color: warn-orange (#ffa726) per spec §Q5 +   palette.
+    Color: warn-orange (#ffa726) per spec §Q5 + the release design release track palette.
     The label is colored too so the eye lands on the degraded marker
     immediately. C-3 ships the literal text; C-4 wires the color.
     """
@@ -199,7 +199,7 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
     corresponding line surfaces the degraded hint instead of the
     happy-path text. The other fields continue to render normally.
 
-    Color application per spec §Q5 +   palette:
+    Color application per spec §Q5 + the release design release track palette:
       - 'ok' / 'live' state markers: ok-green #10b981
       - Body text (PID, UDS, counts, percentages): muted-gray #999
       - Degraded fields (whole line): warn-orange #ffa726
@@ -215,12 +215,12 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
     profile = responses.get("/v1/profile/active")
     cwd = responses.get("/v1/cwd")
 
-                                                                   
+    # Header version: from /v1/health if available, else "unknown".
     version = (health or {}).get("version", "unknown")
     header = f"HADES system v{version} — runtime status"
     lines: list[str] = [_safe_colorize(header, "ok")]
 
-                 
+    # daemon line
     if health is None:
         lines.append(_degraded_line("daemon:"))
     else:
@@ -230,14 +230,14 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
         body = _safe_colorize(f"(PID {pid}, UDS {uds})", "muted")
         lines.append(f"  daemon:    {ok_marker} {body}")
 
-                                                                
+    # model line (co-located with /v1/health; degrades together)
     if health is None:
         lines.append(_degraded_line("model:"))
     else:
         model = health.get("active_model", "?")
         lines.append(f"  model:     {_safe_colorize(str(model), 'muted')}")
 
-                  
+    # cascade line
     if cascade is None:
         lines.append(_degraded_line("cascade:"))
     else:
@@ -250,7 +250,7 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
         )
         lines.append(f"  cascade:   {body}")
 
-                                                                    
+    # bypass line — ok-green for 'live', warn for 'degraded' literal
     if bypass is None:
         lines.append(_degraded_line("bypass:"))
     else:
@@ -266,7 +266,7 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
         body = _safe_colorize(f"· success 24h: {success_pct}", "muted")
         lines.append(f"  bypass:    {status_marker} {body}")
 
-               
+    # cost line
     if cost is None:
         lines.append(_degraded_line("cost 24h:"))
     else:
@@ -278,7 +278,7 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
         )
         lines.append(f"  cost 24h:  {body}")
 
-                  
+    # context line
     if context is None:
         lines.append(_degraded_line("context:"))
     else:
@@ -290,7 +290,7 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
         body = _safe_colorize(f"{pct}% ({used_fmt} / {max_fmt} tokens)", "muted")
         lines.append(f"  context:   {body}")
 
-                  
+    # profile line
     if profile is None:
         lines.append(_degraded_line("profile:"))
     else:
@@ -299,7 +299,7 @@ def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
         body = _safe_colorize(f"{profile_name} ({profile_kind})", "muted")
         lines.append(f"  profile:   {body}")
 
-                                                
+    # cwd line — abbreviate operator HOME to `~`
     if cwd is None:
         lines.append(_degraded_line("cwd:"))
     else:
@@ -329,18 +329,18 @@ def _render_json(responses: dict[str, dict[str, Any] | None]) -> str:
           "schema_version": 1,
           "rendered_at": "<ISO-8601 UTC>",
           "fields": {
-            "daemon":   {"state":..., "pid":..., "uds_path":...},
-            "model":    {"state":..., "active_model":...},
-            "cascade":  {"state":..., "active_tier":...,...},
-            "bypass":   {"state":..., "status":...,...},
-            "cost_24h": {"state":..., "spend_24h_usd":...,...},
-            "context":  {"state":..., "used_tokens":...,...},
-            "profile":  {"state":..., "profile_name":...,...},
-            "cwd":      {"state":..., "cwd":...}
+            "daemon":   {"state": ..., "pid": ..., "uds_path": ...},
+            "model":    {"state": ..., "active_model": ...},
+            "cascade":  {"state": ..., "active_tier": ..., ...},
+            "bypass":   {"state": ..., "status": ..., ...},
+            "cost_24h": {"state": ..., "spend_24h_usd": ..., ...},
+            "context":  {"state": ..., "used_tokens": ..., ...},
+            "profile":  {"state": ..., "profile_name": ..., ...},
+            "cwd":      {"state": ..., "cwd": ...}
           }
         }
 
-    Future bumps (v2, v3...) per ADR-0097.
+    Future bumps (v2, v3 ...) per ADR-0097 (release track ships).
     """
     health = responses.get("/v1/health")
     cascade = responses.get("/v1/cascade/state")
@@ -350,49 +350,49 @@ def _render_json(responses: dict[str, dict[str, Any] | None]) -> str:
     profile = responses.get("/v1/profile/active")
     cwd = responses.get("/v1/cwd")
 
-                  
+    # daemon field
     daemon_field: dict[str, Any] = {"state": _classify_field_state(health)}
     if health is not None:
         daemon_field["pid"] = health.get("pid")
         daemon_field["uds_path"] = health.get("uds_path")
 
-                                              
+    # model field (co-located with /v1/health)
     model_field: dict[str, Any] = {"state": _classify_field_state(health)}
     if health is not None:
         model_field["active_model"] = health.get("active_model")
 
-                   
+    # cascade field
     cascade_field: dict[str, Any] = {"state": _classify_field_state(cascade)}
     if cascade is not None:
         cascade_field["active_tier"] = cascade.get("active_tier")
         cascade_field["tier_name"] = cascade.get("tier_name")
         cascade_field["provider_count"] = cascade.get("provider_count")
 
-                  
+    # bypass field
     bypass_field: dict[str, Any] = {"state": _classify_field_state(bypass)}
     if bypass is not None:
         bypass_field["status"] = bypass.get("status")
         bypass_field["success_rate_24h"] = bypass.get("success_rate_24h")
 
-                
+    # cost field
     cost_field: dict[str, Any] = {"state": _classify_field_state(cost)}
     if cost is not None:
         cost_field["spend_24h_usd"] = cost.get("spend_24h_usd")
         cost_field["spend_session_usd"] = cost.get("spend_session_usd")
 
-                   
+    # context field
     context_field: dict[str, Any] = {"state": _classify_field_state(context)}
     if context is not None:
         context_field["used_tokens"] = context.get("used_tokens")
         context_field["max_tokens"] = context.get("max_tokens")
 
-                   
+    # profile field
     profile_field: dict[str, Any] = {"state": _classify_field_state(profile)}
     if profile is not None:
         profile_field["profile_name"] = profile.get("profile_name")
         profile_field["kind"] = profile.get("kind")
 
-               
+    # cwd field
     cwd_field: dict[str, Any] = {"state": _classify_field_state(cwd)}
     if cwd is not None:
         cwd_field["cwd"] = cwd.get("cwd")
@@ -424,7 +424,7 @@ def _render_error(envelope: dict[str, str]) -> str:
 
     Color: HADES: prefix in fail-crimson #c41e3a; body in muted-gray
     #999; recovery arrow + hint in ok-green #10b981. Mirrors the
-     Go-side Render() output shape.
+    release track Go-side Render() output shape.
     """
     title = envelope.get("title", "internal error")
     body = envelope.get("body", "no body provided")
@@ -475,7 +475,7 @@ def _is_json_mode(raw_args: str) -> bool:
           a different flag in a hypothetical extension).
         - Forward-compat: unknown flags (e.g., `--bogus`) do NOT raise
           — they fall through to text mode silently. Strict
-          rejection would surface via  Render with code
+          rejection would surface via release track Render with code
           `cli.arg-validation-fail` if the handler grew an argparse
           surface in a future plan.
 
@@ -498,12 +498,12 @@ def handle_status(raw_args: str) -> str | None:
         raw_args: trailing text after the command name. Recognized
             tokens (whitespace-separated; case-sensitive):
                 --json   Emit machine-readable JSON output per
-                         schema-v1 instead of
+                         schema-v1 (invariant anchor) instead of
                          the spec §Q5 human-readable block.
 
             Unknown flags are tolerated (forward-compat) and fall
             through to default (text) mode. A future plan may add
-            stricter argparse + reject unknown flags via 
+            stricter argparse + reject unknown flags via release track
             catalog code `cli.arg-validation-fail`.
 
     Returns:
@@ -513,7 +513,7 @@ def handle_status(raw_args: str) -> str | None:
     """
     uds_path = os.environ.get("ZEN_SWARM_UDS") or _DEFAULT_UDS_PATH
 
-                                                         
+    # Top-level error path 1: UDS does not exist on disk.
     if not os.path.exists(uds_path):
         if _is_json_mode(raw_args):
             return _render_error_json(_LOCAL_DAEMON_NOT_RUNNING_ENVELOPE)
@@ -523,11 +523,11 @@ def handle_status(raw_args: str) -> str | None:
     try:
         responses = asyncio.run(_query_daemon(client))
     except httpx.HTTPError:
-                                                                   
-                                                                   
-                                                              
-                                                               
-                                              
+        # Connection-level error reaches here when the entire query
+        # batch fails before per-field classification. This is rare
+        # because _query_daemon catches per-fetch; this is the
+        # belt-and-suspenders catch for unexpected client-level
+        # failures (e.g., asyncio loop death).
         if _is_json_mode(raw_args):
             return _render_error_json(_LOCAL_DAEMON_NOT_RUNNING_ENVELOPE)
         return _render_error(_LOCAL_DAEMON_NOT_RUNNING_ENVELOPE)
@@ -535,14 +535,14 @@ def handle_status(raw_args: str) -> str | None:
         with contextlib.suppress(RuntimeError, httpx.HTTPError):
             asyncio.run(client.aclose())
 
-                                                                 
+    # Top-level error path 2: structured-error envelope detected.
     envelope = _detect_structured_error_envelope(responses)
     if envelope is not None:
         if _is_json_mode(raw_args):
             return _render_error_json(envelope)
         return _render_error(envelope)
 
-                                            
+    # Happy path + per-field degraded modes.
     if _is_json_mode(raw_args):
         return _render_json(responses)
     return _render_human(responses)

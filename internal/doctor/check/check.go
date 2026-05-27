@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package check declares the canonical Check interface
+// Package check declares the release canonical Check interface
 // + DiagnosticResult value type consumed by internal/doctor/aggregator
 // and internal/doctor/fix.
 //
-// Task F1 ships the interface contract; existing per-flag
+// Task F1 ships the interface contract; existing release-9 per-flag
 // checks compose via adapter shims in internal/doctor/check/adapters.go
 // .
 //

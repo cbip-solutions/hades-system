@@ -13,7 +13,8 @@
 // on a platform where peer-cred is not supported; the error returned
 // here surfaces that decision through the normal Authenticate path.
 
-// go:build !linux && !darwin
+//go:build !linux && !darwin
+
 package orchestrator
 
 import (

@@ -1,12 +1,12 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 
-// cmd/zen-swarm-ctld/url_handler.go — Task D-6.
+// cmd/zen-swarm-ctld/url_handler.go — release Task D-6.
 //
 // zen:// URL scheme registration + parse + forward-to-daemon translation.
 //
 // Cross-platform shell:
 // - parseZenURL — validates scheme + host + path; only zen://audit/<id>
-// supported in
+// supported in release.
 // - zenURLToHTTPPath — maps zen://audit/evt-0001 → /v1/audit/event/evt-0001
 // for forward to daemon HTTP via UDS or localhost.
 // - RegisterZenScheme — calls the build-tagged registerZenScheme; macOS

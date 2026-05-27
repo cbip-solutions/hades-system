@@ -19,7 +19,7 @@
 //
 // # Type-resolution strategy
 //
-// The plan's anticipated reusing C's semantic.Resolver +
+// The plan's anticipated reusing release C's semantic.Resolver +
 // golang.org/x/tools/go/packages for router-var type-info; the as-built
 // divergence (documented in the plan's §" divergences from
 // master/spec" #2) noted go/packages would be heavyweight (10-60 s per

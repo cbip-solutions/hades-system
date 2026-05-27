@@ -2,7 +2,7 @@
 // Package handlers — caronte_probe.go.
 //
 // GET /v1/caronte/probe?check=<name> — diagnostic probe surface for the
-// `zen doctor caronte` CLI section ( ; extended
+// `zen doctor caronte` CLI section (release ; extended
 //
 // Background — substrate gap closure (mirrors citation_probe.go +
 // hermes_probe.go):

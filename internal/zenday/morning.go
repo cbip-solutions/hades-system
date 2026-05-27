@@ -70,7 +70,7 @@ type MorningDeps struct {
 
 // MorningBriefReadyPayload mirrors eventlog.MorningBriefReadyEvent's
 // wire shape locally so zenday does not import eventlog (avoids the
-// circular-import concern when is composed before lands;
+// circular-import concern when is composed before release lands;
 // keeps invariant boundary discipline as zenday → eventlog only via
 // the EventEmitter interface).
 //

@@ -15,7 +15,7 @@ _SECTION_MAX_CHARS = 2000
 
 
 def _extract_section(handoff_body: str, section_name: str) -> str:
-    """Extract `## <section_name>` section from HANDOFF.md body.
+    """Extract `## <section_name>` section from .hades/session.md body.
 
     Pattern anchored at line start (rejects `### <name>` h3+ headings) and
     tolerant of same-line suffix content after the section name (e.g.
@@ -24,7 +24,7 @@ def _extract_section(handoff_body: str, section_name: str) -> str:
 
     Regression anchor: H'-4 surfaced the same broken pattern in
     session_handlers.py; H'-7 applies the corrected pattern proactively
-    here so the slash-command path handles real-world HANDOFF.md correctly.
+    here so the slash-command path handles real-world .hades/session.md correctly.
 
     **Constraint**: section names must not be prefixes of other section names in
     the same document. The `\\b` word boundary after the name allows
@@ -39,8 +39,8 @@ def _extract_section(handoff_body: str, section_name: str) -> str:
     if not m:
         return ""
     text = m.group("body").strip()
-                                                                        
-                                                                         
+    # Empty-body guard: if section body is empty, regex's lazy `.*?` may
+    # have consumed through to the next `##` header. Reject in that case.
     if re.match(r"^##\s", text):
         return ""
     if len(text) > _SECTION_MAX_CHARS:
@@ -120,18 +120,18 @@ def handle_start(raw_args: str) -> str | None:
         raw_args: trailing text after the command name (typically empty).
 
     Returns:
-        Markdown session-resume summary, or a fallback note if HANDOFF.md
+        Markdown session-resume summary, or a fallback note if .hades/session.md
         absent. Never raises.
     """
     cwd = Path(os.getcwd())
-    handoff_path = cwd / "HANDOFF.md"
+    handoff_path = cwd / ".hades/session.md"
     out_lines: list[str] = ["## HADES session resume", ""]
 
     if handoff_path.is_file():
         try:
             body = handoff_path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as exc:
-            logger.warning("HADES: HANDOFF.md read failed: %s", exc)
+            logger.warning("HADES: .hades/session.md read failed: %s", exc)
             body = ""
         if body:
             tldr = _extract_section(body, "TL;DR")
@@ -159,7 +159,7 @@ def handle_start(raw_args: str) -> str | None:
                 out_lines.append(suggested)
                 out_lines.append("")
     else:
-        out_lines.append("_HANDOFF.md not present in cwd._")
+        out_lines.append("_.hades/session.md not present in cwd._")
         out_lines.append("")
         out_lines.append("Run `/hades:handoff` in a future session to enable resume.")
         out_lines.append("")

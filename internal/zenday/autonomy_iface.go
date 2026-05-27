@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package zenday — autonomous-mode state contract.
 //
-// AutonomyStateReader is the boundary between zenday and
+// AutonomyStateReader is the boundary between zenday and release's
 // orchestrator-state reader. Production wiring adapts the orchestrator
 // snapshot; tests substitute fakes (per invariant, zenday/ never
 // imports internal/store).

@@ -5,7 +5,7 @@
 // output) into either an autonomous dispatch across affected client
 // repos OR a structured
 // surface recommendation (ModeSurface — surfaced via §10 MCP +
-// F7 TUI panel). Every dispatch emits a Tessera audit row via
+// F7 TUI panel). Every dispatch emits a release Tessera audit row via
 // the C-11 federation.EmitAudit helper.
 //
 // is the production owner of the Coordinator behavioural surface
@@ -16,7 +16,7 @@
 //
 // Boundary invariant / invariant / invariant: this package MUST
 // NOT import internal/orchestrator/{hra,merge,confirmation_policy} (the
-// F.7 hook packages — N-4 verified those are seam-for-future,
+// F.7 hook packages — release N-4 verified those are seam-for-future,
 // the D5 decoupling); MUST NOT import internal/store (the daemon store);
 // the SOLE permitted orchestrator-side bridge is the capability-detected
 // worktreepool.Pool interface + the orchestrator.ContractFixAutonomyOracle
@@ -80,7 +80,7 @@ type DispatchResult struct {
 // for fast-access surfaces ( TUI + the §10 MCP
 // get_recent_dispatches surface).
 //
-// NOTE(plan-15) — the persistent ledger of all dispatches is the Tessera
+// NOTE(release) — the persistent ledger of all dispatches is the release Tessera
 // audit chain (see AuditID below — it is the durable handle to the
 // Tessera leaf). The ring-buffer is a FAST-ACCESS CACHE for TUI/CLI
 // surfaces only, NOT the durable record. Every entry corresponds to a
@@ -129,7 +129,7 @@ type Coordinator interface {
 // full),
 //
 // (b) blast-radius does not exceed the workspace's RiskThreshold
-// ( G mirror — composite of cone-cardinality +
+// (release G mirror — composite of cone-cardinality +
 // cochange-coupling + LoC-percentile),
 //
 // (c) workspace.PrivacyLocked()=false OR affected consumers all live

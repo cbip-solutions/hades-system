@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-                                    
-"""HADES citation renderers — 6 platform-specific +"""
+# plugin/hades/renderers/__init__.py
+"""HADES citation renderers — 6 platform-specific (the release design release track) +"""
 
 from __future__ import annotations
 
@@ -29,34 +29,34 @@ __all__ = [
 _log = logging.getLogger(__name__)
 
 
-                                                                          
-                                                  
-                                                                         
-                                                                       
-                                                                
-                                  
- 
-                                                               
-                                                                    
-                                                                 
-                                                                    
-                                       
-                                                        
-                                                                    
-                                                                  
-                                                                 
-                                                                      
-                                               
- 
-                                                   
-                                                                      
-                                                                     
-                                                                    
-                                  
+# Canonical daemon TCP URL. Source-of-truth: cmd/zen-mcp-budget/main.go:15
+# and cmd/zen-mcp-audit/main.go:16 — both document
+# ``http://localhost:4471`` as the daemon's documented TCP listen address
+# for MCP / plugin clients. Production zen-swarm-ctld listens here when
+# ``--http 127.0.0.1:4471`` is passed; the renderer audit-anchor
+# side-channel is a TCP-only path.
+#
+# Canonical audit endpoint path: ``/v1/audit/emit`` (the legacy
+# pre-C-1-fix path that the daemon never registered is documented in
+# AUDIT_EMIT_PATH below; do NOT re-introduce a non-canonical path
+# constant here). Source-of-truth: ``internal/daemon/server.go:737``
+# registers ``POST /v1/audit/emit`` and
+# ``internal/daemon/handlers/audit_emit.go`` accepts the
+# ``AuditEventIn{ProjectID, Type, Payload}`` wire shape. The release track
+# AFK module (``plugin/hades/afk/audit.py``) already conforms; the
+# C-1 fix-cycle ports the renderers' ``audit_anchor`` to the same
+# canonical contract so invariant (Tessera anchor chain unbroken) is
+# preserved for every Python-rendered citation.
+#
+# Non-default operator-configured URLs flow through
+# ``register_default_renderers(reg, daemon_url=...)`` to each concrete
+# renderer's constructor, which derives ``self._audit_endpoint`` from
+# the URL. ``audit_anchor`` then defaults to that instance attribute
+# instead of this module constant.
 DEFAULT_DAEMON_URL: str = "http://localhost:4471"
 
-                                                                        
-                                                          
+# Canonical daemon path for the audit-emit endpoint. Mirrors the sibling
+# ``plugin/hades/afk/audit.py::AUDIT_EMIT_PATH`` constant.
 AUDIT_EMIT_PATH: str = "/v1/audit/emit"
 DEFAULT_AUDIT_ENDPOINT: str = f"{DEFAULT_DAEMON_URL}{AUDIT_EMIT_PATH}"
 
@@ -70,39 +70,39 @@ def _derive_audit_endpoint(daemon_url: str | None) -> str:
 
     Drift note: pre-C-1 fix-cycle this composed a legacy anchor-style
     path that the daemon never registered (``internal/daemon/server.go:737``
-    binds the canonical ``AUDIT_EMIT_PATH`` only).  cross-phase
+    binds the canonical ``AUDIT_EMIT_PATH`` only). release stage cross-phase
     code reviewer surfaced the drift; this helper now matches the
-     AFK contract (``plugin/hades/afk/audit.py``).
+    release track AFK contract (``plugin/hades/afk/audit.py``).
     """
     if not daemon_url:
         return DEFAULT_AUDIT_ENDPOINT
     return f"{daemon_url.rstrip('/')}{AUDIT_EMIT_PATH}"
 
 
-                                                                               
- 
-                                                                           
-                                                 
-                                                                      
-                                            
-                                                                         
-                                                                           
-                                                             
- 
-                                                                         
-                                                                          
+# Doctrine-aware enable/disable matrix per spec §3.4 doctrine schema extension.
+#
+# Source-of-truth (the release design release track M-5 fix): the canonical matrix now lives
+# in the Go doctrine schema ``RenderersConfig`` (
+# ``internal/doctrine/schema/v1/schema.go``) and is populated from the
+# ``[renderers]`` block in each builtin TOML
+# (``internal/doctrine/builtin/{max-scope,default,capa-firewall}.toml``).
+# The migration test ``internal/doctrine/builtin/renderers_matrix_test.go``
+# pins the matrix shape (invariant additive-only contract).
+#
+# This Python dict is the runtime fallback the renderers consult when the
+# daemon is unreachable (e.g., during plugin load before the daemon binds,
 # or during chaos rotation). It MUST stay in lockstep with the TOML
-                                                                      
-                                                                          
-                           
- 
-                                                                     
-                                                                       
-                                                                         
-                                 
- 
-                                                                           
-                                                                      
+# matrix; the Go-side migration test fails loud if the doctrine config
+# drifts. Operator may override per-project via zenswarm.toml tighten-only
+# (per the release design invariant).
+#
+# Layout: {doctrine_name -> frozenset[Platform]} → enabled platforms.
+# Voice intentionally disabled in capa-firewall: TTS surfaces sensitive
+# content audibly. Telegram/Slack/Web likewise disabled in capa-firewall:
+# third-party platform leak risk.
+#
+# max-scope and default both enable every platform; the shared frozenset is
+# stored once.
 _ALL_PLATFORMS_ENABLED: frozenset[Platform] = frozenset(
     {
         Platform.INK,
@@ -115,23 +115,23 @@ _ALL_PLATFORMS_ENABLED: frozenset[Platform] = frozenset(
     }
 )
 _DOCTRINE_ENABLED: dict[str, frozenset[Platform]] = {
-                                                                     
-                                                                 
-                                                                 
+    # MIRROR OF: internal/doctrine/builtin/max-scope.toml [renderers]
+    #   enabled_platforms = ["ink", "telegram", "slack", "email",
+    #                        "voice", "web", "markdown_fallback"]
     "max-scope": _ALL_PLATFORMS_ENABLED,
-                                                                   
-                                                                 
-                                                                 
+    # MIRROR OF: internal/doctrine/builtin/default.toml [renderers]
+    #   enabled_platforms = ["ink", "telegram", "slack", "email",
+    #                        "voice", "web", "markdown_fallback"]
     "default": _ALL_PLATFORMS_ENABLED,
-                                                                         
-                                                                 
-                                 
+    # MIRROR OF: internal/doctrine/builtin/capa-firewall.toml [renderers]
+    #   enabled_platforms = ["ink", "email", "markdown_fallback"]
+    #   voice_tts_enabled = false
     "capa-firewall": frozenset(
         {
-            Platform.INK,                
-            Platform.EMAIL,                                
+            Platform.INK,  # local TUI OK
+            Platform.EMAIL,  # operator-controlled inbox OK
             Platform.MARKDOWN_FALLBACK,
-                                                                
+            # Telegram/Slack/Web/Voice DISABLED in capa-firewall
         }
     ),
 }
@@ -156,7 +156,7 @@ class Renderer(ABC):
     is supplied.
     """
 
-    PLATFORM: Platform                     
+    PLATFORM: Platform  # subclass must set
 
     def __init__(self, *, daemon_url: str | None = None) -> None:
         """Wire the optional ``daemon_url`` into a per-instance audit endpoint.
@@ -187,8 +187,8 @@ class Renderer(ABC):
         render_method = cls.__dict__.get("render")
         if render_method is None or getattr(render_method, "__isabstractmethod__", False):
             return
-                                                                        
-                                                  
+        # Concrete subclass must declare PLATFORM directly OR inherit it
+        # from another concrete Renderer subclass.
         own_platform = cls.__dict__.get("PLATFORM")
         inherited = any(
             getattr(base, "PLATFORM", None) is not None
@@ -216,14 +216,14 @@ class Renderer(ABC):
         *,
         include_cache_key: bool = False,
     ) -> dict[str, Any]:
-        """Construct the shared per-renderer metadata dict (M-1 fix-cycle).
+        """Construct the shared per-renderer metadata dict.
 
         Default fields (every renderer): ``request_id``, ``session_id``,
         ``doctrine``, ``project_id``, ``audit_event_id``,
         ``kg_token_count``, ``emitted_at`` (RFC 3339 string), and
         ``citation_count``. Renderers that previously emitted a subset
         now emit the full set — strictly additive, so downstream
-        consumers
+        consumers (TUI panels, AFK card, release track AFK richness builder)
         gain context, never lose it.
 
         ``include_cache_key=True`` adds ``cache_key_hash``. Ink uses this
@@ -310,22 +310,22 @@ class Renderer(ABC):
 
         Failure mode: log a warning and return an empty string. Audit
         anchoring is a side channel; rendering is non-fatal under audit
-        failure to preserve operator-visible output.
+        failure to preserve operator-visible output (invariant).
 
         Subclasses may override to add platform-specific payload fields
         (e.g., voice may attach ``duration_ms``); the canonical contract
         keys must remain present so the daemon's hash-chain stays
-        well-formed.
+        well-formed (invariant).
         """
         endpoint = audit_endpoint if audit_endpoint is not None else self._audit_endpoint
-                                                                         
-                                                                
+        # Lazy httpx import to keep types module lightweight; httpx is in
+        # plugin runtime deps via Hermes' standard installation.
         import httpx  # noqa: PLC0415
 
-                                                                          
-                                                                         
-                                                     
-                                                                         
+        # Stamp ``rendered_at`` at the renderer's clock when not supplied.
+        # Match Go ``time.RFC3339`` with seconds precision + ``Z`` suffix
+        # for UTC (no fractional seconds; aligns with
+        # internal/citation/markdown_fallback.go::renderFootnote output).
         rendered_at_utc = (rendered_at or datetime.now(timezone.utc)).astimezone(
             timezone.utc
         )
@@ -349,9 +349,9 @@ class Renderer(ABC):
                 data = resp.json()
                 if not isinstance(data, dict):
                     return ""
-                                                                        
-                                                              
-                                                            
+                # Daemon returns ``AuditEventOut{ID string}`` — the JSON
+                # field name is ``id`` (NOT ``event_id``); see
+                # internal/daemon/handlers/audit_emit.go:89.
                 return str(data.get("id", ""))
         except Exception as exc:  # noqa: BLE001 — intentional broad catch
             _log.warning(
@@ -389,7 +389,7 @@ class RendererRegistry:
 
     def dispatch(self, result: AugmentationResult, platform: Platform) -> RenderResult:
         """Render `result` for `platform`; falls back to markdown on failure or doctrine disable."""
-                                               
+        # 1. Doctrine filter (privacy boundary)
         if not self.is_enabled(platform, result.doctrine):
             _log.info(
                 "renderer %s disabled by doctrine %s; emitting markdown fallback",
@@ -398,7 +398,7 @@ class RendererRegistry:
             )
             return self._emit_markdown_fallback(result)
 
-                            
+        # 2. Renderer lookup
         renderer = self._renderers.get(platform)
         if renderer is None:
             _log.warning(
@@ -407,7 +407,7 @@ class RendererRegistry:
             )
             return self._emit_markdown_fallback(result)
 
-                                                  
+        # 3. Exception-safe wrapper — never silent
         try:
             return renderer.render(result)
         except Exception as exc:  # noqa: BLE001 — intentional broad catch for fallback safety
@@ -419,10 +419,11 @@ class RendererRegistry:
             return self._emit_markdown_fallback(result)
 
     def _emit_markdown_fallback(self, result: AugmentationResult) -> RenderResult:
-        """Emit markdown fallback rendering.
+        """Emit markdown fallback rendering (byte-exact parity with the release design
+        substrate ``internal/citation/markdown_fallback.go::renderFootnote``).
 
         This is a TRUE fallback — the operator never sees an unhandled
-        error. Output matches what the  Go substrate would emit if
+        error. Output matches what the the release design Go substrate would emit if
         no plugin renderers were registered at all (universal degradation).
 
         Per-citation footnote (matches Go renderFootnote byte-for-byte):
@@ -505,8 +506,8 @@ class RendererRegistry:
             f"{envelope.confidence:.2f}",
         ]
         if envelope.expiration is not None:
-                                                                    
-                                                      
+            # Match Go time.Time.UTC().Format(time.RFC3339): seconds
+            # precision + trailing 'Z' suffix for UTC.
             exp_utc = envelope.expiration.astimezone(timezone.utc)
             parts.append("; expires=")
             parts.append(exp_utc.strftime("%Y-%m-%dT%H:%M:%SZ"))
@@ -519,7 +520,7 @@ def register_default_renderers(
     *,
     daemon_url: str | None = None,
 ) -> None:
-    """Register the 6 platform-specific renderers shipped en  
+    """Register the 6 platform-specific renderers shipped en the release design release track.
 
     Called from the plugin's ``__init__.py register(ctx)`` function on
     plugin load. Imports are deferred to avoid circular dependencies

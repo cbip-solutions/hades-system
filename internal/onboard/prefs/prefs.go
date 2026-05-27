@@ -126,7 +126,7 @@ func Save(path string, p *Prefs) error {
 	}
 
 	// Atomic write per SOTA-2 #6 crash-only: WriteFile to <path>.tmp
-	// (mode 0600 — operator-private; mirrors + doctrine
+	// (mode 0600 — operator-private; mirrors release + release doctrine
 	// TOML pattern) then Rename. The rename is the atomicity
 	// invariant; a crash mid-rename leaves the previous prefs file
 	// intact, a crash mid-write leaves the.tmp staging file which

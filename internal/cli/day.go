@@ -8,20 +8,20 @@
 // introspection preview; --force overrides today's-archive
 // idempotency.
 //
-// Pre- history: this file previously hosted the
+// Pre-release history: this file previously hosted the release-6
 // morning-brief composer that issued multiple GET /v1/*/summary calls
-// from the CLI side and stitched the markdown locally.
+// from the CLI side and stitched the markdown locally. release
 // consolidates the brief into a single daemon-side composer
 // (zenday.Generator, F-7..F-9) so the CLI is now a thin dispatcher:
-// one POST round-trip + Render. The sections (workforce,
+// one POST round-trip + Render. The release-6 sections (workforce,
 // research, audit, budget, sshexec, health, autonomy, merge,
 // notifications, bypass) are now sourced server-side via
 // zenday.Collect's parallel fan-out.
 //
 // --include-bypass is preserved as a no-op flag (with a stderr
 // deprecation notice) for backward compat with operators who scripted
-// the form. The deprecation message points at the new behaviour
-// — the brief always consolidates every source as of — so
+// the release form. The deprecation message points at the new behaviour
+// — the brief always consolidates every source as of release — so
 // removing the flag in the next major can happen without surprise.
 //
 // Exit-code contract via cmd.RunE / IsRecoverable:

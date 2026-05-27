@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package proto — protobuf breaking-change detector. Implements
+// Package proto — release protobuf breaking-change detector. Implements
 // the bcdetect.Detector C-7 interface for.proto source pairs.
 //
 // AS-BUILT divergence from the plan + divergence #2 +

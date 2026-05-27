@@ -1,7 +1,7 @@
 ; Caronte Rust tags query (Aider pattern). Captures free functions, struct/enum
 ; definitions, trait definitions, impl-block methods, and struct fields. Each
 ; definition node is @definition.<kind>; its identifier @name.<kind>. A trait
-; maps to KindInterface; a struct/enum maps to KindStruct (Phase A's frozen kind
+; maps to KindInterface; a struct/enum maps to KindStruct (release track frozen kind
 ; set). The impl-method owner (the type the impl is for) is derived in
 ; rustOwnerFor by walking to the enclosing impl_item.
 ;

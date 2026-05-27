@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ncruces/go-sqlite3"
 	zerrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/ncruces/go-sqlite3"
 )
 
 type ProjectRow struct {

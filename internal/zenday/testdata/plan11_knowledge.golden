@@ -1,8 +1,0 @@
-
-## Knowledge (Plan 11)
-
-- fts5_docs: 8,234 (+12 since yesterday)
-- aggregator_db_size_mb: 42
-- promote_today: 3
-- cross_project_queries: 7 (max-scope+default visible; capa-firewall=0)
-- litestream_replica_lag: 5s (healthy < 60s)

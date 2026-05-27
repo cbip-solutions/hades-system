@@ -184,7 +184,7 @@ func (ec *EmitClient) DrainBuffer(ctx context.Context) (int, error) {
 // MCP (matching pattern `zen-mcp-<MCPName>-emit-buffer-*.jsonl` plus
 // the `.draining` companion files left by crashed prior drains) and
 // drains each. Designed to be called once at process startup as part
-// of the (persistence + audit-trail subsystem) recovery hook.
+// of the release (persistence + audit-trail subsystem) recovery hook.
 //
 // Returns the total events drained across all buffer files. If any one
 // file's drain returns an error, DrainAllBuffers continues with the
@@ -195,11 +195,11 @@ func (ec *EmitClient) DrainBuffer(ctx context.Context) (int, error) {
 // Emit on the same EmitClient — it operates on file paths derived
 // from MCPName + glob, not from ec.bufPath, and crash recovery assumes
 // no live writers are appending to the orphans being scanned. In
-// practice the startup hook calls this BEFORE the MCP enters
+// practice the release startup hook calls this BEFORE the MCP enters
 // normal operation; once normal operation begins, ongoing emits use
 // DrainBuffer (which IS safe alongside Emit via the rotation pattern).
 //
-// Returns (0, nil) when bufDir does not exist ( startup may run
+// Returns (0, nil) when bufDir does not exist (release startup may run
 // before bufDir is materialised).
 func (ec *EmitClient) DrainAllBuffers(ctx context.Context, bufDir string) (int, error) {
 	mcpName := ec.c.MCPName()

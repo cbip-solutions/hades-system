@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package active is THE single public accessor for runtime doctrine reads
-// in zen-swarm It is the runtime read substrate
+// in zen-swarm release. It is the runtime read substrate
 // behind both the per-process default (Active) and the per-project
 // effective doctrine (For).
 //
-// Consumers ( worker.Spawn, orchestrator, merge engine,
+// Consumers (release worker.Spawn, release orchestrator, release merge engine,
 // active.Active() or active.For(projectID) rather than calling
 // internal/doctrine/parser.Parse() directly. Direct parser calls are
 // allowed ONLY at daemon startup init paths and CLI one-shot invocations.
@@ -40,7 +40,7 @@
 //
 // Active() uses the same chain skipping the per-project arm.
 //
-// # phases that consume / extend this package
+// # release phases that consume / extend this package
 //
 // - (builtin) provides the initial registry via
 // builtin.LoadAll() called at daemon startup; daemon then calls

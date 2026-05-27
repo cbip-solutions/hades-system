@@ -11,7 +11,7 @@
 // (OnTierSwitch / OnRefreshPermanentFail / OnCertPinFailure /
 // OnAnomalyThreshold living on the bypass Client + Validator) now
 // HTTP-post to this endpoint instead. The endpoint's request shape
-// matches the wire-schema documented in the spec §B-8:
+// matches the wire-schema documented in the release spec §B-8:
 //
 // {"severity": "info"|"warn"|"error",
 // "source": "bypass-sidecar",

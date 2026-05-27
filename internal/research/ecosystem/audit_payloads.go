@@ -32,7 +32,7 @@
 // the gate; D-12 ONLY supplies the payload schemas.
 //
 // - invariant boundary: this file imports internal/orchestrator/eventlog
-// for the EventType alias + slot constants. It does NOT import
+// for the EventType alias + slot constants. It does NOT import release
 // budget primitives (the RAGAuditChainEmitter interface in
 // audit_emitter.go is the boundary-respecting indirection).
 //

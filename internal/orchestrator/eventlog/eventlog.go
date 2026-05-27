@@ -11,7 +11,7 @@ import (
 )
 
 // Record is the durable wire shape of an event row, returned by Query
-// and propagated to subscribers (Task A-5). will hash-chain
+// and propagated to subscribers (Task A-5). release will hash-chain
 // these via prev_hash; leaves CausalChain as the seam.
 //
 // Payload is the raw JSON bytes encoded by PayloadEncoder.Payload().
@@ -56,7 +56,7 @@ type RawEmitter interface {
 // subscriber set and per-mailbox publish path; Subscribe/publish/
 // Close are all goroutine-safe.
 //
-// Eight downstream phases (D, E, F, G, H, K, M plus Replay)
+// Eight downstream release phases (D, E, F, G, H, K, M plus Replay)
 // emit through Log from concurrent worker + reviewer goroutines;
 // Append/Query MUST remain lock-free at this layer. Reviewers of any
 // future change to Log MUST verify this property still holds.
@@ -104,7 +104,7 @@ func New(emit RawEmitter, clk clock.Clock) *Log {
 // 2. evt non-nil
 // 3. evt.Type() must be IsValid() — rejects EvtUnknown (zero value)
 // and any out-of-range values not yet wired into AllEventTypes()
-// (IMP-2 from Task A-2 fix pass; J-2 promoted the
+// (IMP-2 from Task A-2 fix pass; release J-2 promoted the
 // reserved-for- slots 40-42 to valid).
 // 4. sessionID + projectID non-empty (inv-zen tagging contract)
 // 5. payload encode

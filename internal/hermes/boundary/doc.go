@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package boundary is the single Hermes-touching surface for hades-system
-// ( ; policy consolidation per reconciliation
+// (release ; policy consolidation per reconciliation
 // memo `reference_plan_15_v1_public_release_decisions.md`).
 //
 // # Why this package exists

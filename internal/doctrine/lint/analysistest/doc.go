@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package analysistest hosts the analyzer test infrastructure
+// Package analysistest hosts the release analyzer test infrastructure
 // per spec §1 Q16 D + §5.1 tier 10.
 //
-// Layout
+// # Layout
 //
 // testdata/src/<rule>/{good,bad}/ # analysistest convention: per-rule fixture packages
 // no-stub/ # nostub analyzer fixtures (Task L-2)

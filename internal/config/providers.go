@@ -2,8 +2,8 @@
 // internal/config/providers.go
 //
 // LoadProviders reads the [[providers]] array from providers.toml into
-// a []providers.ProviderConfig. It is the loader that
-// fills the gap: before the ProviderConfig schema
+// a []providers.ProviderConfig. It is the release loader that
+// fills the release- gap: before release the ProviderConfig schema
 // existed (internal/providers/registry.go) but nothing parsed the array.
 //
 // The companion [[rate_cards]] array in the same file is read by the

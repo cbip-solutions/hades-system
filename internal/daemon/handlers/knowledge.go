@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — knowledge.go.
 //
-// Three routes for the knowledge aggregator operator surface:
+// Three routes for the release knowledge aggregator operator surface:
 //
 // POST /v1/knowledge/query — hybrid FTS5 + structured filter
 // POST /v1/knowledge/reindex — cold rebuild dispatch
@@ -13,7 +13,7 @@
 // KnowledgeIndex satisfying interface and hands it to SetKnowledgeIndex).
 // Until lands the routes return 503 — the operator surface is
 // final-shape day 1 (`zen knowledge query` reaches a real route) but the
-// substrate ships in bootstrap (mirrors the D-13 schedule
+// substrate ships in bootstrap (mirrors the release D-13 schedule
 // + E-12 inbox + F-10 zen-day patterns).
 //
 // Status-code mapping (mirrors the inbox_p7 + zenday patterns):

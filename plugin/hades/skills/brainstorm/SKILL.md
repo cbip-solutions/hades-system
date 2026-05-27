@@ -35,7 +35,7 @@ slash command handler which explicitly calls `skill_load("superpowers:brainstorm
 skill_load("superpowers:brainstorming")
 ```
 
-Per inv-zen-015, Hermes is discover-then-call. Explicit invocation required.
+Per invariant, Hermes is discover-then-call. Explicit invocation required.
 
 ### 2. Research SOTA first (project-doctrine override)
 
@@ -66,7 +66,7 @@ Per `feedback_methodology_and_conventions.md` §2:
 
 ### 5. Output
 
-Write spec to `docs/superpowers/specs/<date>-zen-swarm-<topic>-design.md`.
+Write spec to `design records`.
 (filename convention preserved per spec §Q3 BORDERLINE)
 
 ## Cross-references

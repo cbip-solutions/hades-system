@@ -1,17 +1,17 @@
 -- schemaVersion: 23
--- Plan 5 Phase M — Q2 C regression-by-self metric.
+-- the release design release track — Q2 C regression-by-self metric.
 -- Persists per-commit substrate health (test pass rate + doctrine lint outcome)
 -- so the orchestrator can detect "substrate is regressing on its own commits"
 -- — the chicken-and-egg failure mode the Anthropic Apr 23 incident exposed.
 --
--- Plan 9 extends this table (history queries, time-series, adversarial corpus)
+-- the release design extends this table (history queries, time-series, adversarial corpus)
 -- ADDITIVELY — no schema rewrite. authored_by enumeration is intentionally
 -- narrow now to keep aggregation queries cheap; widening to per-agent labels
--- happens via a SEPARATE join table in Plan 9, not by relaxing this CHECK.
+-- happens via a SEPARATE join table in the release design, not by relaxing this CHECK.
 --
--- Boundary (inv-zen-031): writes from internal/orchestrator/safetynet/regression.go
+-- Boundary (invariant): writes from internal/orchestrator/safetynet/regression.go
 -- go through the SubstrateHealthWriter interface (declared in safetynet); the
--- store-side adapter lives in internal/daemon/orchestratoradapter/ (Phase N).
+-- store-side adapter lives in internal/daemon/orchestratoradapter/ (release track).
 
 CREATE TABLE substrate_health (
   id INTEGER PRIMARY KEY,

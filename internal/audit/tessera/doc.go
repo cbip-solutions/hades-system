@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package tessera implements the transparency-log audit substrate.
+// Package tessera implements the release transparency-log audit substrate.
 //
-// Per spec §0 + §1 Q1 D: ships RFC 9162 tile-based transparency
+// Per spec §0 + §1 Q1 D: release ships RFC 9162 tile-based transparency
 // logs (Tessera) as the audit substrate cross-eje desde día 1. Naive
 // sha256 hash chains were rejected en Q1 D as future tech debt vs the
 // RFC 9162 SOTA (RFC 6962 EOL feb 2026 per Let's Encrypt 2025-08-14).

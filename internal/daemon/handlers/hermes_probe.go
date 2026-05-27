@@ -4,10 +4,10 @@
 // GET /v1/hermes/probe?check=<name> — diagnostic probe surface for the
 // F9 Skills panel and `zen doctor hermes` CLI.
 //
-// Background — substrate gap closure:
+// Background — release substrate gap closure:
 //
 // (internal/client/hermes.go::HermesProbe). The daemon side was scoped
-// for follow-up but never landed; the route returned 404. Phase
+// for follow-up but never landed; the route returned 404. release Phase
 // C C-7 wired the F9 Skills panel through that client wrapper, where
 // it manifested as "F9 Skills panel returns 404" in production.
 //
@@ -17,22 +17,22 @@
 // - "plugin_installed" — Hermes plugin (`zen-swarm`) is installable;
 // status reflects whether the plugin manifest path is reachable on
 // the operator's host. Since the daemon cannot detect Hermes's
-// plugin runtime state at HEAD (a future 'zen migrate' wires
+// plugin runtime state at HEAD (a future release 'zen migrate' wires
 // it via socket), the probe always returns "ok" with a detail
 // describing the install path. Real state is surfaced via the
 // `zen-swarm:install-mcps` slash command output.
 // - "session_active" — A Hermes session has registered with the
 // daemon via /v1/sessions. Status=ok when at least
 // one active session exists; warn otherwise.
-// - "transport_reachable" — The /v1/messages transport (
+// - "transport_reachable" — The /v1/messages transport (release
 // dispatcher) is wired (Orchestrator() non-nil). Status=ok when
 // wired; warn otherwise.
 //
 // Unknown probe names return ok with a hint string — same posture as
 // BypassDoctor. 405 on non-GET.
 //
-// Cherry-pick narrative: this commit completes the substrate gap
-// inherited; could be cherry-picked to a
+// Cherry-pick narrative: this commit completes the release substrate gap
+// inherited; could be cherry-picked to a release.1
 // backport branch if needed.
 
 package handlers

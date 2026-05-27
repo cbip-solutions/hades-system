@@ -1,4 +1,3 @@
-// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -794,7 +793,7 @@ func computeSelfHashHex(seq int64, evt int, payload []byte, parentHash string) s
 }
 
 // =============================================================================
-// Cross-version query path — Task E-6
+// Cross-version query path — release Task E-6
 // =============================================================================
 //
 // IsCrossVersionQuery (package-level helper) + Indexer.QueryCrossVersion

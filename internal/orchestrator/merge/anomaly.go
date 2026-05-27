@@ -12,7 +12,7 @@
 // Drift-D structural enforcement (re-stated to keep it visible at the
 // file level): there is exactly ONE EventType for anomaly emission —
 // EvtMergeAnomalyDetected — and the AnomalyType discriminator lives in
-// the payload (AnomalyDetectedPayload.Type). amendment.proposer
+// the payload (AnomalyDetectedPayload.Type). release amendment.proposer
 // subscribes to EvtMergeAnomalyDetected, decodes the payload, and
 // switches on payload.Type for per-template ADR dispatch.
 
@@ -433,9 +433,9 @@ func (d *AnomalyDetector) emit(ctx context.Context, anomalyType AnomalyType, sev
 	})
 }
 
-// Plan6ADRRangeStart is the first ADR ID reserved anomaly proposals.
-// invariant: every ADR proposed in response to a EvtMergeAnomalyDetected
-// event MUST allocate its ID from [Plan6ADRRangeStart, Plan6ADRRangeEnd].
+// releaseADRRangeStart is the first ADR ID reserved anomaly proposals.
+// invariant: every ADR proposed in response to a release EvtMergeAnomalyDetected
+// event MUST allocate its ID from [releaseADRRangeStart, releaseADRRangeEnd]. release
 // amendment.proposer enforces at allocation time ( cross-branch
 // amendment); the compliance test verifies the reserved range constants are
 // present + correct here at the merge package surface.

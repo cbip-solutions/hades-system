@@ -37,7 +37,7 @@
 //
 // # invariant — Sole accessor
 //
-// External callers ( worker, orchestrator, merge,
+// External callers (release worker, release orchestrator, release merge,
 // , NOT through this package's per-doctrine accessors directly.
 // The per-doctrine accessors (MaxScope/Default/CapaFirewall) exist for
 // init-path callers and for the CLI debug
@@ -55,7 +55,7 @@ import (
 	v1 "github.com/cbip-solutions/hades-system/internal/doctrine/schema/v1"
 )
 
-// go:embed *.toml
+//go:embed *.toml
 var embedded embed.FS
 
 var canonicalNames = []string{"max-scope", "default", "capa-firewall"}

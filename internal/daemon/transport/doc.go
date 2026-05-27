@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package transport implements the daemon-side counterpart of zen-swarm's
 // ZenSwarmTransport — the cross-language LLM-dispatch bridge between the
-// Python Hermes plugin and the Go daemon's dispatcher.
+// Python Hermes plugin and the Go daemon's release dispatcher.
 //
 // # Architecture
 //
@@ -20,7 +20,7 @@
 // Hermes' main LLM loop.
 //
 // - Go side (this package): receives the forwarded HTTP requests at
-// /v1/messages and dispatches via the existing dispatcher chain
+// /v1/messages and dispatches via the existing release dispatcher chain
 // (BypassBackend → fail). Satisfies the providers.TierBackend interface
 // so the compile-time anchor proves the daemon side honours the same
 // contract.
@@ -45,9 +45,9 @@
 // the daemon, never directly to upstream providers.
 //
 // 2. Go side: the daemon's /v1/messages endpoint is the single chokepoint
-// for LLM forwarding. anthropic_proxy.go already hands every
+// for LLM forwarding. release's anthropic_proxy.go already hands every
 // request to dispatcher.Forward; this package wraps that with a
-// transport-aware shim that emits a Tessera anchor when the call
+// transport-aware shim that emits a release Tessera anchor when the call
 // originates from a Hermes session (X-Zen-Transport: zenswarm header
 // present).
 //
@@ -96,6 +96,6 @@
 // the same discipline (Augment panics on nil DoctrineReader); see
 // internal/daemon/handlers/doc.go § "Nil-dependency policy" for the
 // cross-package rationale. Optional dependencies with documented
-// graceful-degradation paths (e.g. audit anchors at nil → no
+// graceful-degradation paths (e.g. audit anchors at nil → no release
 // emit) MAY be nil; required engines MUST NOT.
 package transport

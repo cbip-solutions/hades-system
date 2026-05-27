@@ -48,7 +48,7 @@ Same as /amendment-ack — operator's reason MUST NOT contain Claude/Anthropic/A
 
 ## Cross-references
 
--  +  amendment lifecycle
+- the release design + the release design amendment lifecycle
 - invariant amendment audit chain anchor
 - /amendment-list, /amendment-show, /amendment-ack
 """

@@ -1,6 +1,6 @@
 // Copyright 2026 zen-swarm contributors. SPDX-License-Identifier: MIT
 //
-// RequireOperatorIdentity middleware ( Task F-5,
+// RequireOperatorIdentity middleware (release Task F-5,
 // invariant).
 //
 // The daemon accepts operator overrides (confirmation ack/deny,

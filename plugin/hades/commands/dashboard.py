@@ -12,7 +12,7 @@ def dashboard_handler(raw_args: str) -> str | None:
     Args:
         raw_args: Operator's args after the slash command name. For
             /hades:dashboard (no args), this is the empty string. Future
-            enhancements may parse sub-flags here, but  ships bare
+            enhancements may parse sub-flags here, but release track ships bare
             invocation.
 
     Returns:
@@ -24,6 +24,6 @@ def dashboard_handler(raw_args: str) -> str | None:
     Per spec §Q8 D-pattern. See _subprocess_handoff.run_hades_subprocess
     for the lazygit-pattern terminal save/restore implementation.
     """
-                                                                      
-                                                                   
+    # raw_args is ignored — /hades:dashboard takes no positional args.
+    # Future: parse --skin or --verbose passthrough here if needed.
     return run_hades_subprocess(extra_args=[])

@@ -26,7 +26,7 @@
 // ✓ Snoozed #230 until 2026-05-07T20:00:00Z
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
-// newClientFromCmd (mirrors the C-12 attach/sessions/layout +
+// newClientFromCmd (mirrors the release C-12 attach/sessions/layout +
 // D-13 schedule pattern). Tests inject a fake client via the
 // InboxClientFactory parameter to NewInboxCmd; production wires through
 // NewInboxCmdProd which adapts *client.Client → InboxClient.
@@ -37,7 +37,7 @@
 // - 1 operator-recoverable: invalid --severity, malformed --since,
 // malformed --until, daemon 404 (notification id not found).
 // - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
-// (until SetInboxStore wires; mirrors /v1/messages
+// (until SetInboxStore wires; mirrors release /v1/messages
 // graceful-degradation pattern).
 //
 // Severity flag validates client-side against the 4-tier enum

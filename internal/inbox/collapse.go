@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// CollapseRule is the cross-project collapse policy ( spec §3.3,
+// CollapseRule is the cross-project collapse policy (release spec §3.3,
 // Datadog Simple Alert pattern). When N distinct projects emit the
 // same EventType within Window, the N per-project notifications are
 // summarised as a single SimpleAlert.

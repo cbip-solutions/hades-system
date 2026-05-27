@@ -133,7 +133,7 @@ func (a *Adapter) Insert(ctx context.Context, evt dispatcher.CostEvent) error {
 // succeed. Note the orchestrator-level sentinel is the public contract;
 // the store-level sentinel is intentionally NOT re-exposed (errors.Is
 // against store.ErrDuplicateIdempotency returns false on the wrapped error)
-// to keep boundary hygiene: orchestrator package callers MUST NOT acquire
+// to keep boundary quality: orchestrator package callers MUST NOT acquire
 // a transitive dependency on store sentinels.
 //
 // Concurrency SQLite serialises writers via busy_timeout; safe to call

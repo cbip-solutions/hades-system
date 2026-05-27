@@ -3,7 +3,7 @@
 //
 // Capture serializes a session's event log to a JSONL stream with a
 // signed-metadata header and a closing footer. LLM bodies are redacted
-// by default (privacy-by-default per CLAUDE.md hard rule + spec §7.4);
+// by default (privacy-by-default per project instructions hard rule + spec §7.4);
 // callers explicitly opt-out via CaptureOptions.Redact = &false.
 //
 // The on-disk envelope is frozen at version=1 (Task O-1):

@@ -19,7 +19,7 @@
 // - Minimum sample: 30 classified commits (so rolling window meaningful
 // pre-1.0).
 //
-// Why this avoids "permanent-red trap" (per HANDOFF.md context):
+// Why this avoids "permanent-red trap" (per .hades/session.md context):
 //
 // - GHA billing-block commits bucket "infra"; gate stays gateable.
 // - Atlassian Flakinator + Trunk.io quarantine pattern empirically

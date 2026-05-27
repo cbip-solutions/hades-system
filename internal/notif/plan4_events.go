@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package notif — Task O-3.
+// Package notif — release Task O-3.
 //
 // Event-type taxonomy and structured payload schemas emit
-// hooks. ships the emit-side only; ships the routing
+// hooks. release ships the emit-side only; release ships the routing
 // chain (Slack/email/webhook/etc). This package has no runtime
 // dependencies beyond the standard library and must NEVER import
 // internal packages that carry secrets or credentials. The PII-free
@@ -31,7 +31,7 @@ import (
 	"time"
 )
 
-// Severity mirrors the notifications-table severity column,
+// Severity mirrors the release notifications-table severity column,
 // extended with SeveritySecurityAlert for security-grade always-notify
 // events that bypass any rate-limiting or batching layer.
 type Severity string
@@ -44,7 +44,7 @@ const (
 	SeverityCritical Severity = "CRITICAL"
 	// SeveritySecurityAlert is the highest severity, reserved for
 	// security-grade events that must always reach the operator regardless
-	// of doctrine-tunable aggregation. routes these BEFORE any
+	// of doctrine-tunable aggregation. release routes these BEFORE any
 	// rate-limiting or batching layer.
 	SeveritySecurityAlert Severity = "SECURITY_ALERT"
 )
@@ -137,7 +137,7 @@ func (et EventType) DefaultSeverity() Severity {
 
 // IsAlwaysNotify returns true if this event type is security-grade and
 // must always be surfaced to the operator regardless of doctrine
-// aggregation settings. consults this flag before applying
+// aggregation settings. release consults this flag before applying
 // any rate-limiting or batching.
 func (et EventType) IsAlwaysNotify() bool {
 	return alwaysNotifySet[et]

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package preflight implements preflight gates.
+// Package preflight implements release preflight gates.
 //
 // Per spec §3.10 + §5.2 + §8.1: every onboarding surface (zen config
 // init / zen new / zen init / zen migrate claude-code) runs preflight
 // BEFORE accepting operator input. Preflight failure exits 3 (distinct
 // from generic I/O 1 / user error 2 / conflict 4).
 //
-// ships three checks ( DECISION L-4: gitnexus removed; caronte
+// ships three checks (release DECISION L-4: gitnexus removed; caronte
 // is in-process):
 // - Hermes binary + version
 // - Plugin format remnants

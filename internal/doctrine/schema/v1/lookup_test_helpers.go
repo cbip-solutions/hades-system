@@ -1,4 +1,4 @@
-// go:build test_helpers
+//go:build test_helpers
 
 // SPDX-License-Identifier: MIT
 

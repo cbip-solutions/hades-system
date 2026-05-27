@@ -32,9 +32,9 @@ from typing import Any, Literal
 import httpx
 from fastmcp import FastMCP
 
-                                                                               
-        
-                                                                               
+# ─────────────────────────────────────────────────────────────────────────────
+# Config
+# ─────────────────────────────────────────────────────────────────────────────
 
 CONFIG_PATH = Path(
     os.environ.get("CODEGEN_CONFIG", str(Path(__file__).parent / "codegen.toml"))
@@ -55,7 +55,7 @@ if not CONFIG_PATH.exists():
 
 CFG = tomllib.loads(CONFIG_PATH.read_text())
 
-                                                                              
+# Load secrets from a simple KEY=VALUE file (avoid leaking via shell history).
 SECRETS: dict[str, str] = {}
 if SECRETS_PATH.exists():
     for line in SECRETS_PATH.read_text().splitlines():
@@ -65,9 +65,9 @@ if SECRETS_PATH.exists():
         k, v = line.split("=", 1)
         SECRETS[k.strip()] = v.strip().strip('"').strip("'")
 
-                                                                               
-                  
-                                                                               
+# ─────────────────────────────────────────────────────────────────────────────
+# Provider clients
+# ─────────────────────────────────────────────────────────────────────────────
 
 class ProviderError(RuntimeError):
     pass
@@ -126,9 +126,9 @@ def call_provider(provider_id: str, messages: list[dict],
     }
 
 
-                                                                               
-                
-                                                                               
+# ─────────────────────────────────────────────────────────────────────────────
+# Routing policy
+# ─────────────────────────────────────────────────────────────────────────────
 
 TaskKind = Literal["implement", "fix", "review", "test_gen", "refactor"]
 
@@ -161,7 +161,7 @@ def route(kind: TaskKind, *, hint: str | None = None,
     chain = [primary] + fallbacks.get(primary, [])
     if forbid_provider:
         chain = [p for p in chain if p != forbid_provider]
-                             
+    # dedupe preserving order
     seen, out = set(), []
     for p in chain:
         if p not in seen and p in CFG["providers"]:
@@ -224,18 +224,18 @@ def call_with_fallback(*, kind: TaskKind, messages: list[dict],
     raise ProviderError(f"all providers failed; last error: {last_err}")
 
 
-                                                                               
-                   
-                                                                               
+# ─────────────────────────────────────────────────────────────────────────────
+# Output sanitation
+# ─────────────────────────────────────────────────────────────────────────────
 
 def strip_code_fences(text: str, language: str | None = None) -> str:
     t = text.strip()
     if not t.startswith("```"):
         return t
     lines = t.splitlines()
-                      
+    # drop first fence
     lines = lines[1:]
-                                
+    # drop last fence if present
     if lines and lines[-1].strip().startswith("```"):
         lines = lines[:-1]
     return "\n".join(lines)
@@ -246,9 +246,9 @@ def write_safely(path: Path, content: str) -> None:
     path.write_text(content)
 
 
-                                                                               
-            
-                                                                               
+# ─────────────────────────────────────────────────────────────────────────────
+# MCP server
+# ─────────────────────────────────────────────────────────────────────────────
 
 mcp = FastMCP("zen-swarm-codegen")
 
@@ -414,7 +414,7 @@ def codegen_test_gen(file_path: str, focus: str = "", framework: str = "auto",
     if not target.exists():
         return {"ok": False, "error": f"file not found: {file_path}"}
 
-                               
+    # naive test path inference
     if framework == "auto":
         if target.suffix == ".py":
             framework = "pytest"
@@ -506,7 +506,7 @@ def codegen_write_artifact(path: str, content: str) -> dict:
     p = Path(path)
     rel = str(p)
     if any(rel.startswith(x) for x in forbidden_prefixes):
-                                                             
+        # allow inside openspec/ or worktree notes regardless
         if "openspec/" not in rel and ".notes." not in rel:
             return {"ok": False, "error": "refused: source directory; use codegen_implement"}
     write_safely(p, content)

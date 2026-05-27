@@ -11,7 +11,7 @@ import (
 type PayloadPredicate func(eventlog.PayloadEncoder) bool
 
 // RuleSpec is the registration record for a single enforce-tier rule.
-// Per design spec §1 Q3 C Tier 2 schema, each rule carries
+// Per release design spec §1 Q3 C Tier 2 schema, each rule carries
 // revert_category + revert_threshold_pct + revert_window_sessions +
 // revert_cooldown_hours metadata; the aggregator uses the
 // AnomalousEvents whitelist to decide whether each session's events

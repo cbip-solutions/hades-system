@@ -15,7 +15,7 @@ import (
 
 // OpenClaudeWorker is the concrete Worker implementation that drives an
 // OpenClaude subprocess via the subprocess.Session (stdio
-// JSON-RPC). It implements the spec §3.1 Flow 1 pipeline:
+// JSON-RPC). It implements the release spec §3.1 Flow 1 pipeline:
 //
 // 1. Claim a SharedTaskList row (status: pending → in_progress)
 // 2. Drain pending FixPromptQueue rows for this worker
@@ -31,7 +31,7 @@ import (
 // 6. Finalize SharedTaskList (success → review, failure → failed)
 //
 // invariant boundary: NewOpenClaudeWorker REQUIRES non-empty
-// worktreePath. The Worker is the consumer; WorktreePool will own
+// worktreePath. The Worker is the consumer; release WorktreePool will own
 // allocation. Compile-check via constructor signature; runtime check via
 // panic at construction with explanatory message.
 //
@@ -446,7 +446,7 @@ func (w *OpenClaudeWorker) LastResponseText() string {
 }
 
 // MakeCheckpointID returns the stable string used as the worker-local
-// identifier for a checkpoint emission. reviewer dispatcher
+// identifier for a checkpoint emission. release's reviewer dispatcher
 // MUST compute the same string deterministically from (projectID,
 // taskID, seq) to correlate Drain reads with the upstream worker's
 // RunResult.CheckpointIDs slice.

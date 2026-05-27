@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package client — research_p9.go.
 //
-// 4 typed wrappers for the research endpoints declared in
+// 4 typed wrappers for the release research endpoints declared in
 // internal/daemon/handlers/research_p9.go. Wire types mirror the handler
 // declarations; duplication is intentional (client compiles standalone without
-// importing internal/daemon — N convention).
+// importing internal/daemon — release N convention).
 //
 // GET /v1/research/history — ResearchHistory
 // GET /v1/research/cache/stats — ResearchCacheStatsP9 (P9 suffix avoids
-// conflict with N ResearchCacheStatsCall)
+// conflict with release N ResearchCacheStatsCall)
 // POST /v1/research/cache/invalidate — ResearchCacheInvalidate
 // GET /v1/research/cache/list — ResearchCacheListP9 (P9 suffix avoids
-// conflict with N ResearchCacheList)
+// conflict with release N ResearchCacheList)
 //
 // invariant: this file imports stdlib only (context, net/url, strconv).
 // No internal/daemon, internal/store, or internal/research imports.

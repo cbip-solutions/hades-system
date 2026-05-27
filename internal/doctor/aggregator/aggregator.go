@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator ships the doctor aggregator
+// Package aggregator ships the release doctor aggregator
 // orchestrator: parallel execution via errgroup bounded min(numCPU, 8),
 // per-check context timeout, Tessera audit emit, JSON schemaVersion=1.0
 // serialization, bitmask exit-code computation.

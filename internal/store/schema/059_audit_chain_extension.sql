@@ -1,12 +1,12 @@
 -- schemaVersion: 29
--- Plan 9 Phase B — audit_events_raw chain integration (Q3 C decision).
+-- the release design release track — audit_events_raw chain integration (Q3 C decision).
 --
 -- Adds four chain columns + REFUSE triggers + monthly partition view +
 -- audit_partition_seals CRUD table. Chain hashes are computed in
 -- app-layer (auditadapter post-INSERT same-row UPDATE) — no SQL trigger
--- recursion. inv-zen-143 enforced via REFUSE triggers.
+-- recursion. invariant enforced via REFUSE triggers.
 --
--- Boundary (inv-zen-031): writes go through auditadapter (which imports
+-- Boundary (invariant): writes go through auditadapter (which imports
 -- both store + chain). The chain layer (internal/audit/chain) NEVER
 -- imports internal/store; it operates on chain.EventStore interface
 -- satisfied by auditadapter.
@@ -31,8 +31,8 @@
 --   audit_partition_seals TABLE: monthly seal records
 --     PK partition_id; FK-style references audit_events_partitions logically
 --
--- Plan 9 chain integrity invariants:
---   inv-zen-143: audit_events_raw append-only — REFUSE triggers enforce
+-- the release design chain integrity invariants:
+--   invariant: audit_events_raw append-only — REFUSE triggers enforce
 --   (UPDATE permitted only on chain compute path which targets the
 --    chain columns explicitly via UPDATE … SET col=… WHERE col=''
 --    — the trigger condition checks the OLD row's chain columns).
@@ -54,7 +54,7 @@ CREATE INDEX IF NOT EXISTS idx_audit_events_raw_tessera_leaf ON audit_events_raw
 CREATE INDEX IF NOT EXISTS idx_audit_events_raw_record_hash ON audit_events_raw(record_hash) WHERE record_hash != '';
 
 -- ======================================================================
--- REFUSE triggers — append-only enforcement (inv-zen-143)
+-- REFUSE triggers — append-only enforcement (invariant)
 -- ======================================================================
 --
 -- Strategy: BEFORE UPDATE of append-only columns refuses;
@@ -68,7 +68,7 @@ CREATE INDEX IF NOT EXISTS idx_audit_events_raw_record_hash ON audit_events_raw(
 CREATE TRIGGER IF NOT EXISTS audit_events_raw_no_update_immutable
 BEFORE UPDATE OF id, project_id, type, payload_json, emitted_at ON audit_events_raw
 BEGIN
-    SELECT RAISE(FAIL, 'audit_events_raw is append-only (Plan 9 chain integrity inv-zen-143); immutable columns id/project_id/type/payload_json/emitted_at cannot be modified');
+    SELECT RAISE(FAIL, 'audit_events_raw is append-only (the release design chain integrity invariant); immutable columns id/project_id/type/payload_json/emitted_at cannot be modified');
 END;
 
 -- Refuse UPDATE attempts that touch prev_hash or record_hash AFTER they
@@ -79,7 +79,7 @@ CREATE TRIGGER IF NOT EXISTS audit_events_raw_no_update_chain_hashes
 BEFORE UPDATE OF prev_hash, record_hash ON audit_events_raw
 WHEN OLD.prev_hash != '' OR OLD.record_hash != ''
 BEGIN
-    SELECT RAISE(FAIL, 'audit_events_raw is append-only (Plan 9 chain integrity inv-zen-143); chain hashes cannot be rewritten once computed');
+    SELECT RAISE(FAIL, 'audit_events_raw is append-only (the release design chain integrity invariant); chain hashes cannot be rewritten once computed');
 END;
 
 -- Refuse UPDATE attempts that touch partition_id AFTER it has been set
@@ -88,7 +88,7 @@ CREATE TRIGGER IF NOT EXISTS audit_events_raw_no_update_partition
 BEFORE UPDATE OF partition_id ON audit_events_raw
 WHEN OLD.partition_id != ''
 BEGIN
-    SELECT RAISE(FAIL, 'audit_events_raw is append-only (Plan 9 chain integrity inv-zen-143); partition_id cannot be rewritten');
+    SELECT RAISE(FAIL, 'audit_events_raw is append-only (the release design chain integrity invariant); partition_id cannot be rewritten');
 END;
 
 -- Refuse UPDATE attempts that overwrite tessera_leaf_id once set.
@@ -98,14 +98,14 @@ CREATE TRIGGER IF NOT EXISTS audit_events_raw_no_update_tessera_leaf
 BEFORE UPDATE OF tessera_leaf_id ON audit_events_raw
 WHEN OLD.tessera_leaf_id IS NOT NULL
 BEGIN
-    SELECT RAISE(FAIL, 'audit_events_raw is append-only (Plan 9 chain integrity inv-zen-143); tessera_leaf_id cannot be rewritten once batch sealed');
+    SELECT RAISE(FAIL, 'audit_events_raw is append-only (the release design chain integrity invariant); tessera_leaf_id cannot be rewritten once batch sealed');
 END;
 
 -- DELETE is unconditionally refused.
 CREATE TRIGGER IF NOT EXISTS audit_events_raw_no_delete
 BEFORE DELETE ON audit_events_raw
 BEGIN
-    SELECT RAISE(FAIL, 'audit_events_raw is append-only (Plan 9 chain integrity inv-zen-143); DELETE is forbidden');
+    SELECT RAISE(FAIL, 'audit_events_raw is append-only (the release design chain integrity invariant); DELETE is forbidden');
 END;
 
 -- ======================================================================

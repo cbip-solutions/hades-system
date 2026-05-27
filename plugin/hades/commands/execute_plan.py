@@ -17,9 +17,9 @@ skill_load("superpowers:executing-plans")
 skill_load("superpowers:subagent-driven-development")
 ```
 
-## 2. Pre-flight  reality-check (BEFORE first dispatch)
+## 2. Pre-flight release stage reality-check (BEFORE first dispatch)
 
-Per `feedback_methodology_and_conventions.md` §13  + memoria `feedback_plan_template_drift.md`:
+Per `feedback_methodology_and_conventions.md` §13 release stage + memoria `feedback_plan_template_drift.md`:
 
 ```bash
 # Extract every package.Symbol reference from the phase plan-file:
@@ -30,14 +30,14 @@ grep -ohE '[a-z][a-z_]+\\.[A-Z][a-zA-Z]+' \\
 # For each unfamiliar symbol, verify it exists in current codebase:
 while read sym; do
   pkg="${{sym%.*}}"; name="${{sym##*.}}"
-  hits=$(grep -rln "type $name \\|func.*$name(" internal/ 2>/dev/null | head -3)
+  hits=$(grep -rln "type $name \\|func .*$name(" internal/ 2>/dev/null | head -3)
   [ -z "$hits" ] && echo "MISSING: $sym"
 done < /tmp/plan-symbols.txt
 ```
 
 Decision tree:
 - 0-2 missing: include "verify against codebase; adapt with deviation note" in implementer prompt
-- 3-5 missing: inline-edit plan-file in main session (one `docs(plan-N):...` commit) THEN dispatch
+- 3-5 missing: inline-edit plan-file in main session (one `docs(plan-N): ...` commit) THEN dispatch
 - ≥6 missing OR fundamental shape mismatch: dispatch dedicated doc-revision Opus subagent; halt implementer
 
 ## 3. Per-task execution loop
@@ -60,7 +60,7 @@ For each task in phase file:
 
 ## 4. Doctrine — no tech debt, no defer
 
-Per project CLAUDE.md + memoria `feedback_no_tech_debt.md` + `feedback_no_defer.md`:
+Per project project instructions + memoria `feedback_no_tech_debt.md` + `feedback_no_defer.md`:
 
 - Reviewer "Minor" tag is severity, NOT permission to skip
 - Every Minor surfacing real coverage gap / missing test for documented behavior / uncovered branch on existing code MUST be fixed before next task
@@ -70,20 +70,20 @@ Per project CLAUDE.md + memoria `feedback_no_tech_debt.md` + `feedback_no_defer.
 
 ```bash
 make build && make lint && make test && make verify-invariants
-go test -race./... -count=2
-GOOS=linux go build./...
+go test -race ./... -count=2
+GOOS=linux go build ./...
 ```
 
-For   Python plugin code:
+For the release design release track Python plugin code:
 ```bash
 ruff check plugin/hades/
 mypy plugin/hades/
 pytest plugin/hades/tests/ -v --cov=plugin/hades --cov-report=term --cov-fail-under=85
 ```
 
-Coverage targets: ≥85% new code; ≥90% security/correctness-critical (per project CLAUDE.md "Hard rules" #5).
+Coverage targets: ≥85% new code; ≥90% security/correctness-critical (per project project instructions "Hard rules" #5).
 
-## 6. NO Claude attribution
+## 6. NO Claude attribution (invariant)
 
 Every commit message: `feat(scope): subject` (imperative, lowercase, no trailing period). NO `Co-Authored-By: prohibited assistant`. NO `Generated with prohibited assistant`. Plugin hook regex-rejects.
 
@@ -91,7 +91,7 @@ Every commit message: `feat(scope): subject` (imperative, lowercase, no trailing
 
 - docs/METHODOLOGY.md §4 plan-execution
 - feedback_methodology_and_conventions.md §4
-- feedback_plan_template_drift.md
+- feedback_plan_template_drift.md (release stage reality-check)
 """
 
 

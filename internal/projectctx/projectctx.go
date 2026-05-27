@@ -29,7 +29,7 @@
 // TestCanonicalPathAbsErrorPath, but CI is currently macos-14-only.
 // Package coverage is 92.0% by platform, not test gap. Adding a Linux
 // CI runner would close to 100% — operator decision tracked as
-// follow-up; see HANDOFF.md / NEXT_SESSION notes.
+// follow-up; see .hades/session.md / NEXT_SESSION notes.
 package projectctx
 
 import (

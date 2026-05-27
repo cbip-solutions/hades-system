@@ -20,7 +20,7 @@
 // awk the output): ALIAS, SHA8, PATH, LAST-ACTIVE, STATE.
 //
 // Drift from spec §6.2 example output: the spec shows a "QUOTA" + "PRIORITY"
-// pair. Those columns belong to quota substrate (live in
+// pair. Those columns belong to release quota substrate (live in
 // `zen project priority --ls` per ) and would require a daemon-side
 // JOIN that GET /v1/projects intentionally avoids ( cap: pure project
 // registry; quota state surfaces via /v1/priority/* in ). Adding
@@ -35,8 +35,8 @@
 // - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503/501 gap
 //
 // gap acknowledgment: the daemon-side `GET /v1/projects` is still
-// the 501-stub at HEAD (`internal/daemon/handlers/projects.go
-// ProjectsList` returns notImplemented). plan §"Step 4"
+// the release 501-stub at HEAD (`internal/daemon/handlers/projects.go
+// ProjectsList` returns notImplemented). release plan §"Step 4"
 // scheduled the replacement (ProjectsP7List) but that closeout has not
 // landed at HEAD f4b69c6. Until it does, operators see exit 2 with the
 // 501 body — the CLI surface is final-shape day 1 nonetheless, mirroring
@@ -49,9 +49,9 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 type ProjectRow = client.Project

@@ -7,7 +7,7 @@
 // checkpoint queue depth and unconsumed fix-prompts are CLI-default
 // health-check values, intentionally NOT part of the doctrine schema.
 // Promoting them to doctrine-resolved values would require a doctrine
-// schema addition, which is out of scope per invariant
+// schema addition, which is out of release scope per invariant
 // (additive-only schema; schema bumps belong to a future Plan that
 // owns the doctrine surface). The constants below document the rationale
 // and act as the sole source of truth for the namespace; a future Plan
@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
+	"github.com/spf13/cobra"
 )
 
 const (

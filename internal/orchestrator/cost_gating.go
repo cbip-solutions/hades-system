@@ -15,7 +15,7 @@
 // enforcement lands in G-4
 //
 // Adaptation notes vs plan code:
-// - doctrine package is interface-based (Doctrine interface),
+// - release doctrine package is interface-based (Doctrine interface),
 // not value-typed (Profile struct). (TOML loader for the
 // cost_degradation stanza) hasn't shipped. owns its own
 // CostProfile + BuiltinCostProfile fixtures matching spec §1 Q9 D

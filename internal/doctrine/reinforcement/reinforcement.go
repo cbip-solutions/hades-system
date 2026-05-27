@@ -177,7 +177,7 @@ func ValidateOverridePathForTest(overrideDir, doctrineName string) (string, erro
 	return validateOverridePath(overrideDir, doctrineName)
 }
 
-// go:embed embed/*.md.tmpl
+//go:embed embed/*.md.tmpl
 var embeddedFS embed.FS
 
 func embeddedTemplate(doctrineName string) (string, bool) {

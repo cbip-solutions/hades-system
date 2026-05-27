@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package client — knowledge_aggregator.go.
 //
-// Five typed methods wrapping the five daemon aggregator routes:
+// Five typed methods wrapping the five release daemon aggregator routes:
 //
 // AggQuery POST /v1/knowledge/aggregator/query
 // AggPromote POST /v1/knowledge/aggregator/promote
@@ -9,9 +9,9 @@
 // AggList GET /v1/knowledge/aggregator/list
 // AggRebuild POST /v1/knowledge/aggregator/rebuild
 //
-// These are DISTINCT from the knowledge client methods
+// These are DISTINCT from the release knowledge client methods
 // (KnowledgeQuery/KnowledgeReindex/KnowledgeStats in knowledge.go) which
-// back /v1/knowledge/{query,reindex,stats}. Both surfaces coexist;
+// back /v1/knowledge/{query,reindex,stats}. Both surfaces coexist; release
 // adds the aggregator-specific routes.
 //
 // Wire types mirror handlers/knowledge_aggregator.go exactly (single

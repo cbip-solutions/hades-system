@@ -417,7 +417,7 @@ func (s *Server) registerRoutes() {
 	s.mux.HandleFunc("POST /v1/inbox/ack", handlers.InboxAckHandler(s))
 	s.mux.HandleFunc("POST /v1/inbox/snooze", handlers.InboxSnoozeHandler(s))
 
-	// ----- Task I-2: HandoffPosted event ingestion ---
+	// ----- release Task I-2: HandoffPosted event ingestion ---
 	// POST /v1/events/handoff_posted — plugin-emitted HandoffPostedEvent
 	// consumed by EOD digest.
 	// Wrapped under requireDaemonBearer so the bearer middleware
@@ -428,7 +428,7 @@ func (s *Server) registerRoutes() {
 	// The functional handler factory + HandoffEmitter() accessor pattern
 	// makes the emitter-readiness gate at request-time (not
 	// registration-time), so cmd/zen-swarm-ctld can wire the emitter
-	// AFTER s.New runs — mirrors the accessor gate
+	// AFTER s.New runs — mirrors the release accessor gate
 	// pattern.
 	s.mux.Handle("POST /v1/events/handoff_posted",
 		s.requireDaemonBearer(handlers.HandoffPosted(s)))
@@ -610,7 +610,7 @@ func (s *Server) Bypass() any {
 	return s.bypassFwd
 }
 
-// SetCostCounters injects the in-memory cost counters cache ( Phase
+// SetCostCounters injects the in-memory cost counters cache (release Phase
 // C F-7). Called once at daemon boot in cmd/zen-swarm-ctld AFTER
 // buildOrchestrator has returned the dispatcheradapter.Adapter and the
 // caller has rebuilt counters from the ledger (RebuildFromLedger) +
@@ -760,8 +760,8 @@ func (s *Server) PaygSafety() *orchestrator.PaygSafety {
 	return s.paygSafety
 }
 
-// SetCircuitBreaker injects the per-provider circuit breaker (
-// K-3 / re-key). Called once at daemon boot in
+// SetCircuitBreaker injects the per-provider circuit breaker (release
+// K-3 / release re-key). Called once at daemon boot in
 // cmd/zen-swarm-ctld AFTER buildOrchestrator has constructed and wired
 // the breaker into the dispatcher. The breaker decides at
 // Backend.Name() granularity (NOT the broad providers.Tier enum), so
@@ -1039,7 +1039,7 @@ func (s *Server) SetContractFederation(f ContractFederationForDaemon) {
 // ContractFederation returns the injected federation DB or nil. Callers
 // MUST guard for nil and degrade gracefully (the TUI subview returns
 // empty roster section + the REST handler returns 503-style "federation
-// not configured" — nil-gate posture).
+// not configured" — release nil-gate posture).
 func (s *Server) ContractFederation() ContractFederationForDaemon {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -1305,7 +1305,7 @@ func (s *Server) EcosystemHandler() handlers.EcosystemHandler {
 // requireDaemonBearer-wrapped route then falls open with a logged
 // warning. This deterministic "boot race" posture matters for
 // integration tests + handler-level unit tests that don't want to
-// drag in the audit pipeline. Production main.go MUST call
+// drag in the release audit pipeline. Production main.go MUST call
 // SetDaemonBearer BEFORE Start() per invariant; production paths
 // fail-closed at daemon-startup (see cmd/zen-swarm-ctld/main.go).
 //
@@ -1330,7 +1330,7 @@ func (s *Server) SetDaemonBearer(b *auth.DaemonBearer, emitter auth.AuditEmitter
 //
 // invariant contract: production main.go MUST call SetDaemonBearer
 // BEFORE Start. The fall-open path exists ONLY for the test fixture
-// shape (httptest harnesses that don't want to construct a
+// shape (httptest harnesses that don't want to construct a release
 // audit pipeline) and emits a single-line stderr warning so accidental
 // production deployment is loud, not silent.
 //

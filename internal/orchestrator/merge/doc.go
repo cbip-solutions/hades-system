@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package merge implements zen-swarm's cross-worker MergeEngine: the
-// test-driven 3-way merge layer. shipped MergeEngine as
-// an interface in internal/orchestrator/apply/; ships the real
+// test-driven 3-way merge layer. release shipped MergeEngine as
+// an interface in internal/orchestrator/apply/; release ships the real
 // implementation here (Q1 B package boundary; ADR-0030).
 //
 // # Architecture (Q1 B)

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package qna implements the hybrid wizard engine.
+// Package qna implements the release hybrid wizard engine.
 //
 // Per spec §2.3 Q3=D: shared engine consumed by `zen config init` +
 // `zen new` + `zen init` with WizardKind discriminator. Q0 three-way
@@ -21,6 +21,6 @@
 //
 // Per spec §3.3 + master plan integration notes: Wizard interface lives
 // in package onboard (parent); concrete bubbleteaWizard lives here.
-// No same-package interface-vs-struct collision (
+// No same-package interface-vs-struct collision (release
 // precedent learned).
 package qna

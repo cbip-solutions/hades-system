@@ -17,7 +17,7 @@
 // Wire types live in merge_dto.go alongside the interface; invariant
 // boundary preserved (no internal/orchestrator/merge import here).
 //
-// Routes
+// # Routes
 //
 // GET /v1/merge/inspect?id=<generation|hash>
 // POST /v1/merge/replay (body: {"session_id": "..."})

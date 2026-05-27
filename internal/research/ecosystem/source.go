@@ -12,7 +12,7 @@ import (
 // =============================================================================
 // Source interface (master §3.3)
 //
-// Source is the per-ecosystem-per-fetcher contract. ships 7
+// Source is the per-ecosystem-per-fetcher contract. release ships 7
 // concrete implementations in internal/research/ecosystem/sources/ at
 // :
 //

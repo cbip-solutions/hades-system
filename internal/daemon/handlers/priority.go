@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — priority.go.
 //
-// Three routes for the Layer 3 operator override surface:
+// Three routes for the release Layer 3 operator override surface:
 //
 // POST /v1/priority/boost — install or replace an override
 // POST /v1/priority/reset — remove the override (idempotent)

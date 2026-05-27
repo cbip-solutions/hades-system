@@ -32,7 +32,7 @@
 // leases are in-memory only (warm slice + leased map).
 //
 // Inv-zen-102 cost-ledger isolation: this adapter MUST NOT write the
-// cost_ledger table directly. All cost-ledger writes flow through
+// cost_ledger table directly. All cost-ledger writes flow through release
 // dispatcher → internal/daemon/dispatcheradapter. Compliance test in
 // tests/compliance/inv_zen_102_cost_ledger_isolation_test.go.
 //

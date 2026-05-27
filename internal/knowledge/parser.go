@@ -34,7 +34,7 @@ const binaryHeadBytes = 4096
 //
 // Per invariant: Parse MUST NOT populate AuditChainAnchor /
 // EcosystemJoinKeys / CaronteSymbolRefs even if the operator's YAML
-// frontmatter contains keys with those names. / / caronte
+// frontmatter contains keys with those names. release / release / caronte
 // are the authoritative writers for those fields.
 //
 // Title fallback chain (spec §3.5 + §4.5):
@@ -69,7 +69,7 @@ func Parse(sf ScannedFile) (Doc, error) {
 		LastModified: time.Unix(0, sf.ModTime).UTC(),
 		LastIndexed:  time.Now().UTC(),
 		// Extension-hook fields LEFT AS ZERO sql.NullString (Valid=false).
-		// invariant: parser MUST NOT populate. (audit_chain_anchor),
+		// invariant: parser MUST NOT populate. release (audit_chain_anchor),
 		// are the authoritative writers at materialization time.
 		AuditChainAnchor:  sql.NullString{},
 		EcosystemJoinKeys: sql.NullString{},

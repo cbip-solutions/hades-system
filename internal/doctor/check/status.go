@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package check — status.go ships the Status + FixMode enums declared in
-// the spec §3.3.
+// the release spec §3.3.
 //
 // Status (4 levels per Q5=C+):
 // - StatusPass (0) — check satisfied; nothing to remediate

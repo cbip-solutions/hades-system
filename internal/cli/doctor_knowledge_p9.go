@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_knowledge_p9.go
 //
-// Adds `zen doctor knowledge aggregator` subcommand — a leaf under the
+// Adds `zen doctor knowledge aggregator` subcommand — a leaf under the release
 // `zen doctor knowledge` group. RunKnowledgeAggregatorProbe delegates to
 // AggregatorProber declared in probe.go; 4 results:
 //

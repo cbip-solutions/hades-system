@@ -8,7 +8,7 @@ across calls (avoids model reload overhead).
 
 Protocol:
   Input:  {"text": "..."}
-  Output: {"embedding": [float,...], "dimensions": 384}
+  Output: {"embedding": [float, ...], "dimensions": 384}
   Error:  {"error": "message"}
 
 Requires: Python 3.10+; sentence-transformers; torch with MPS support.
@@ -25,7 +25,7 @@ import sys
 
 
 def main() -> None:
-                                                      
+    # Lazy import to keep startup error messages clean
     try:
         from sentence_transformers import SentenceTransformer  # type: ignore[import]
     except ImportError as e:
@@ -35,7 +35,7 @@ def main() -> None:
         return
 
     try:
-                                                                    
+        # Use MPS device on Apple Silicon; CPU fallback inside torch
         model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2", device="mps")
     except Exception as e:
         json.dump({"error": f"model load failed: {e}"}, sys.stdout)

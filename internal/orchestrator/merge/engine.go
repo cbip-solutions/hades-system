@@ -9,9 +9,9 @@
 // D-7 → Steps 7–8 (winner lookup + fast-forward + Cache.Store +
 // EvtMergeCompleted emit). Pipeline complete after D-7 — Merge()
 // returns (MergeOutcome, nil) on the success path; no placeholder
-// tail remains (per CLAUDE.md doctrine §"no stubs / código completo").
+// tail remains (per project instructions doctrine §"no stubs / código completo").
 //
-// Per master plan §"Cross-phase interface vs struct collisions",
+// Per release master plan §"Cross-phase interface vs struct collisions",
 // the lowercase narrow consumer interfaces (cacheClient, anomalyClient)
 // live HERE — engine.go is the only consumer in this package, so the
 // interface definitions sit beside the struct that consumes them.
@@ -20,7 +20,7 @@
 // impl site.
 //
 // Boundary note: nothing in this file
-// imports internal/store. talks to only via the
+// imports internal/store. talks to release only via the
 // EventEmitter interface declared in events.go.
 
 package merge
@@ -74,7 +74,7 @@ type EngineConfig struct {
 // - deps — collaborator wiring (immutable after NewEngine).
 // - gen — per-engine generation counter (atomic.Int64-backed)
 // producing strictly monotonic event GenerationIDs across
-// all Merge() invocations — amendment.proposer
+// all Merge() invocations — release amendment.proposer
 // relies on the monotonic property when reconstructing
 // causal chains across replay (Q9 D).
 // - targetMu — sync.Map[string]*sync.Mutex providing

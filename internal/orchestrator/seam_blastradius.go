@@ -37,6 +37,6 @@ type BlastRadiusProvider interface {
 	// BlastRadius scores a change (changed fully-qualified symbols + their
 	// files) for projectID. An error means the score is unavailable; callers
 	// degrade (they do NOT block the build on a scorer failure — mirrors the
-	// proxy escalate() degradation in ).
+	// proxy escalate() degradation in release/J).
 	BlastRadius(ctx context.Context, projectID string, changedSymbols, changedFiles []string) (Verdict, error)
 }

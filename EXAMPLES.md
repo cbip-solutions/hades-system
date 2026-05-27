@@ -165,17 +165,12 @@ bin/hades status
 If the sidecar is absent and `required = false`, the daemon should continue
 through the normal provider cascade.
 
-## 8. Run Release Gates Locally
+## 8. Check A Clean Build
 
 Before publishing or trusting a source release:
 
 ```bash
-make verify-license-compliance
-make verify-no-personal-references
-make verify-no-task-context-comments
-make verify-release-artifacts
+make build
+make test
 git diff --check
 ```
-
-For the full local release-gate set, use the Make targets documented in
-[INSTALL.md](INSTALL.md) and the release workflow files.

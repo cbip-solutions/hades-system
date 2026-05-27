@@ -11,14 +11,14 @@ import httpx
 
 from .types import VoiceFlow, VoiceFlowMode
 
-                                                            
-                                                                             
+# Threshold for sync vs async classification (milliseconds).
+# Per spec §1 Q6=B: "sync if estimated <10s; async with notification beyond".
 SYNC_THRESHOLD_MS = 10_000
 
-                                                               
-                                                                      
-                                                                    
-                                       
+# Estimator rule constants — sourced from spec §1 Q8 aggressive
+# performance budgets. Empirical calibration (release track spike + the release design D
+# production) tunes these post-ship via doctrine amendment lifecycle
+# (the release design + the release design) per §1 Q8 footnote.
 _BASE_RRF_MS = 2_000
 _CROSS_PROJECT_BASELINE_MS = 8_000
 _PER_EXTRA_PROJECT_MS = 1_500
@@ -43,7 +43,7 @@ def estimate_latency_ms(
 ) -> int:
     """Estimate query latency in milliseconds via rule-based heuristics.
 
-    Per spec §1 Q8: empirical calibration via Phase 0 spike + production
+    Per spec §1 Q8: empirical calibration via release track spike + production
     measurement; this function captures the calibrated baseline at
     plan-write time. Doctrine amendment lifecycle re-tunes constants as
     production data accumulates.
@@ -51,7 +51,9 @@ def estimate_latency_ms(
     Args:
         query: The voice query text (operator's spoken intent).
         cross_project: True when the operator asked across project
-            boundaries.
+            boundaries (release track ``/voice`` slash parser sets this when
+            ``--cross-project`` flag present OR query mentions multiple
+            project ids).
         project_count: Number of projects spanned (used only when
             ``cross_project`` is True; ignored otherwise). Values ≤ 1
             collapse to the cross-project baseline floor (no extra
@@ -96,7 +98,7 @@ async def dispatch_voice_query(
     Args:
         query: The voice query text.
         operator_id: Session operator id (audit + inbox attribution).
-        project_id: Active project's sha256 hex.
+        project_id: Active project's sha256 hex (the release design inbox project_id).
         explicit_override: If not None, forces the dispatch mode
             regardless of estimate. Honours the operator's ``--sync`` /
             ``--async`` flag.
@@ -106,10 +108,10 @@ async def dispatch_voice_query(
         client: ``httpx.AsyncClient`` (test injects mock; production
             constructs via
             ``plugin/zen-swarm/transports/zen_swarm_transport.py``).
-        audit_emitter: Emits ``AUDIT_VOICE_QUERY_DISPATCHED`` to 
+        audit_emitter: Emits ``AUDIT_VOICE_QUERY_DISPATCHED`` to the release design
             chain.
-        inbox_poster: Posts to  inbox via daemon
-            ``/v1/notifications/inbox`` (D-6 wires the canonical impl).
+        inbox_poster: Posts to the release design inbox via daemon
+            ``/v1/notifications/inbox``.
 
     Returns:
         A ``VoiceFlow`` capturing the dispatch decision (mode, estimate,
@@ -133,13 +135,13 @@ async def dispatch_voice_query(
 
     notification_dispatched = False
     if mode == VoiceFlowMode.ASYNC:
-                                                                        
-                                                                     
-                                                                    
-                                                                          
-                                                                     
-                                                                     
-                                                  
+        # Post the release design inbox notification ("results ready in inbox") with
+        # severity=info-immediate. The daemon-side query continuation
+        # will post the completion notification (the release design amendment);
+        # Python's responsibility ends at dispatch + initial notification.
+        # The inbox_poster is dependency-injected so D-6 / production
+        # wires through to httpx; the daemon_url is forwarded for the
+        # canonical impl to compose the final URL.
         await inbox_poster(
             daemon_url=daemon_url,
             client=client,
@@ -154,7 +156,7 @@ async def dispatch_voice_query(
         )
         notification_dispatched = True
 
-                                                              
+    # Audit event emission per the release design chain anchor convention.
     await audit_emitter(
         daemon_url=daemon_url,
         client=client,

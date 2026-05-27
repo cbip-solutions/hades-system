@@ -9,7 +9,7 @@
 // loopback TCP if the daemon was started with --http 127.0.0.1:<port>.
 //
 // 2. Daemon-bearer (POST /v1/events/handoff_posted; RequireDaemonBearer).
-// Plugin writes a structured event after writing HANDOFF.md. The
+// Plugin writes a structured event after writing .hades/session.md. The
 // daemon-bearer token is generated at boot (rotates with daemon
 // restart) and persisted to ~/.config/zen-swarm/daemon-bearer.txt
 // (mode 0600) for the plugin to read.

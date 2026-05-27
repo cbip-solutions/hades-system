@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// alias.go — : human alias resolution per spec §1 Q3.
+// alias.go — release : human alias resolution per spec §1 Q3.
 //
 // The alias is read from <canonical-path>/zenswarm.toml [project] id, with
 // fallback <dirname>-<sha256[:8]>. Both forms validate against the same

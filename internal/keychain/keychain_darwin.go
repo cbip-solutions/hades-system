@@ -1,4 +1,4 @@
-// go:build darwin
+//go:build darwin
 
 // SPDX-License-Identifier: MIT
 
@@ -8,8 +8,8 @@ import (
 	"errors"
 	"fmt"
 
-	gokeychain "github.com/keybase/go-keychain"
 	"github.com/cbip-solutions/hades-system/internal/redact"
+	gokeychain "github.com/keybase/go-keychain"
 )
 
 type SystemResolver struct{}

@@ -2,7 +2,7 @@
 // internal/config/routing.go
 //
 // RoutingConfig + LoadRouting read routing.toml — the optional
-// task-kind→profile rule layer. LoadRouting fills the
+// task-kind→profile rule layer. LoadRouting fills the release-
 // ErrNotImplementedPlan3 stub. The rules are consumed by the
 // orchestrator when it maps an incoming task to a profile name before
 // calling the ProfileResolver (resolver.go).

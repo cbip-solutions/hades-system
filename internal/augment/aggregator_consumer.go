@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package augment — AggregatorConsumer wraps D's
+// Package augment — AggregatorConsumer wraps release D's
 // internal/knowledge/aggregator query surface (via the KnowledgeIndex +
 // Embedder seams) for single-project augmentation.
 //

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — ecosystem.go.
 //
-// EcosystemHandler interface + 8 HTTP handlers for the ecosystem
+// EcosystemHandler interface + 8 HTTP handlers for the release ecosystem
 // docs operator surface. Referenced server-side by:
 //
 // POST /v1/ecosystem/pin — pin a version
@@ -20,7 +20,7 @@
 // verifier + symbol_index façade and calls SetEcosystemHandler), every
 // path returns 503 Service Unavailable so the operator/cron worker sees
 // "feature not configured" rather than a silent 404 from an unmounted
-// route. Mirrors the KnowledgeIndex pattern + the
+// route. Mirrors the release KnowledgeIndex pattern + the
 // HandoffEmitter / DayGenerator nil-safety contracts.
 //
 // Status-code mapping (mirrors knowledge_p7 + day_p7 patterns):

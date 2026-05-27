@@ -17,19 +17,19 @@ from .._constants import DEFAULT_DAEMON_BASE_URL
 
 logger = logging.getLogger(__name__)
 
-                                                                                
+# Path to the snippet (same directory as this command module's parent's parent).
 SNIPPET_PATH = Path(__file__).resolve().parent.parent / "hermes-config-snippet.yaml"
 
-                                                                        
+# Path to the HADES provider plugin source — symlinked into HERMES_HOME.
 PROVIDER_PLUGIN_SRC = Path(__file__).resolve().parent.parent / "providers"
 
-                                                                        
-                                                                       
-                                                                    
-                                                                            
+# Hermes config keys we manage. Listed for verifiability + auditability.
+# PROVIDER_NAME stays as "zen-swarm" per spec §Q3 BORDERLINE — keychain
+# service prefix + provider-registration name preserved for operator
+# re-provisioning friction; full borderline migration deferred to the release design+N.
 PROVIDER_NAME = "zen-swarm"
-                                                                        
-                                                                   
+# Re-exported for backward compatibility with callers / tests; canonical
+# definition lives in ``plugin/hades/_constants.py`` (reviewer M1).
 DEFAULT_BASE_URL = DEFAULT_DAEMON_BASE_URL
 
 
@@ -52,16 +52,16 @@ def _format_manual_install_block(entries: dict[str, dict]) -> str:
     lines.append("```bash")
     for name, entry in entries.items():
         cmd_parts = [entry.get("command", name)] + (entry.get("args") or [])
-                                                                            
-                                                                         
-                                                                        
-                                                  
+        # Multi-flag '--env K=V' form (matches live-mode _run_hermes_mcp_add
+        # invocation + 'hermes mcp add --help' syntax — H'-10 NIT-2). The
+        # prior single-flag '--env "K1=V1 K2=V2"' form did not match the
+        # CLI's documented per-pair flag handling.
         env_block = ""
         if entry.get("env"):
             env_block = "".join(f" --env {k}={v}" for k, v in entry["env"].items())
-                                                                              
-                                                                            
-                                                         
+        # `hermes mcp add <name> -- <command> <args...>` is the canonical CLI.
+        # The exact subcommand args vary across Hermes versions; the snippet
+        # is the source of truth, the CLI is convenience.
         lines.append(
             f"hermes mcp add {name} --command {' '.join(cmd_parts)!r}{env_block}"
         )
@@ -99,12 +99,12 @@ def _run_hermes_mcp_add(name: str, entry: dict) -> tuple[bool, str]:
         return False, f"{name}: invocation failed: {exc}"
     if result.returncode == 0:
         return True, f"{name}: added"
-                                                                    
-                                                                   
-                                                                   
-                                                                    
-                                                                      
-                                                                            
+    # Reviewer M2: treat ONLY the canonical idempotence phrasings as
+    # success. The prior loose match (``\"already\" in stderr_lc or
+    # \"exist\" in stderr_lc``) false-positives on hard errors like
+    # ``\"path does not exist\"`` or ``\"binary does not exist\"`` —
+    # both of which contain ``\"exist\"`` but mean the install failed.
+    # Require the fuller phrase so only deliberate idempotence is swallowed.
     stderr_lc = (result.stderr or "").lower()
     if "already exists" in stderr_lc or "already registered" in stderr_lc:
         return True, f"{name}: already present"
@@ -114,9 +114,9 @@ def _run_hermes_mcp_add(name: str, entry: dict) -> tuple[bool, str]:
     )
 
 
-                                                                             
-                                                                              
-                                                                             
+# ---------------------------------------------------------------------------
+# release track extension (2026-05-15): provider plugin symlink + config.yaml wiring
+# ---------------------------------------------------------------------------
 
 
 def _resolve_hermes_home() -> Path:
@@ -163,16 +163,16 @@ def _install_provider_plugin_symlink(hermes_home: Path) -> tuple[bool, str]:
             current = None
         if current == canonical_src:
             return True, f"provider plugin already linked: {link} -> {canonical_src}"
-                                                                     
-                               
+        # Stale link (operator moved repo, or earlier install pointed
+        # elsewhere) — replace.
         link.unlink()
         try:
             link.symlink_to(canonical_src)
         except OSError as exc:
-                                                                 
-                                                                    
-                                                                  
-                                                                       
+            # Reviewer M5: filesystem may reject symlink creation
+            # (Windows non-NTFS, sandboxed FUSE mounts, cross-device
+            # links, EPERM on hardened mounts). Surface as a clean
+            # operator-facing error rather than a raw Python traceback.
             return (
                 False,
                 f"provider plugin symlink creation failed: {exc} "
@@ -181,9 +181,9 @@ def _install_provider_plugin_symlink(hermes_home: Path) -> tuple[bool, str]:
         return True, f"provider plugin link refreshed: {link} -> {canonical_src}"
 
     if link.exists():
-                                                                    
-                                                                        
-                                                               
+        # Path exists and is NOT a symlink — refuse to clobber. Real
+        # directory means operator did ``make plugin-install`` or copied
+        # the plugin manually; we must not destroy their state.
         return (
             False,
             f"provider plugin path exists but is NOT a symlink (real directory): {link}. "
@@ -193,8 +193,8 @@ def _install_provider_plugin_symlink(hermes_home: Path) -> tuple[bool, str]:
     try:
         link.symlink_to(canonical_src)
     except OSError as exc:
-                                                                       
-                                                                   
+        # Reviewer M5: same filesystem-reject path as the stale-replace
+        # branch above — operator sees an actionable error message.
         return (
             False,
             f"provider plugin symlink creation failed: {exc} "
@@ -242,13 +242,13 @@ def _update_hermes_config_provider(hermes_home: Path, base_url: str) -> tuple[bo
         original_text = ""
         parsed = {}
 
-                                                                          
-                                          
+    # Merge provider config into model section. Preserve all other model.*
+    # subkeys (default, max_tokens, etc.).
     model_cfg = parsed.get("model") if isinstance(parsed.get("model"), dict) else {}
-    model_cfg = dict(model_cfg)                                          
-                                                                      
-                                                                        
-                                                                     
+    model_cfg = dict(model_cfg)  # copy so we can mutate without surprise
+    # Clear stale api_mode/api_key from prior custom-provider config —
+    # mirrors hermes_cli/auth.py:4192-4193 (those fields would otherwise
+    # override the registered ProviderProfile's api_mode at runtime).
     model_cfg.pop("api_key", None)
     model_cfg.pop("api_mode", None)
     model_cfg["provider"] = PROVIDER_NAME
@@ -257,27 +257,27 @@ def _update_hermes_config_provider(hermes_home: Path, base_url: str) -> tuple[bo
 
     new_text = yaml.safe_dump(parsed, sort_keys=False)
 
-                                                                               
+    # Idempotency short-circuit: if content is identical, no write + no backup.
     if pre_existing and new_text == original_text:
         return True, f"config.yaml already wired for {PROVIDER_NAME}; no changes"
 
-                                            
+    # Backup the prior config if it existed.
     if pre_existing:
-                                                                  
-                                                                   
-                                                                       
-                                                                     
-                                                                       
-                                                                 
-                            
+        # Reviewer M6: exclusive-create the backup so a sub-second
+        # collision (two updates landing within the same wall-clock
+        # second — possible when the operator chains script invocations
+        # or toggles ZEN_INSTALL_MCPS_DRY_RUN with the slash command)
+        # does NOT clobber the first backup. On collision, fall back to
+        # a microsecond-suffixed name so both backups survive for
+        # operator recovery.
         ts = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
         backup = config_path.with_suffix(f".yaml.bak.{ts}")
         try:
-                                                             
+            # mode='x' raises FileExistsError if path exists.
             with open(backup, "x", encoding="utf-8") as fh:
                 fh.write(original_text)
         except FileExistsError:
-                                                                   
+            # Collision — retry with microsecond-resolution suffix.
             ts_micro = _dt.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
             backup = config_path.with_suffix(f".yaml.bak.{ts_micro}")
             try:
@@ -288,7 +288,7 @@ def _update_hermes_config_provider(hermes_home: Path, base_url: str) -> tuple[bo
         except OSError as exc:
             return False, f"failed to write backup {backup}: {exc}"
 
-                                                      
+    # Atomic write: tempfile in same dir + os.replace.
     try:
         with tempfile.NamedTemporaryFile(
             mode="w",
@@ -352,7 +352,7 @@ def handle_install_mcps(raw_args: str) -> str | None:
         out.append(_format_manual_install_block(servers))
         return "\n".join(out)
 
-                                                 
+    # Live mode: invoke hermes mcp add per entry.
     out.append("### MCP install results")
     out.append("")
     any_failed = False
@@ -364,9 +364,9 @@ def handle_install_mcps(raw_args: str) -> str | None:
             any_failed = True
     out.append("")
 
-                                                                          
-                                                                           
-                                                                         
+    # release track extension (2026-05-15): wire the ProviderProfile end-to-end.
+    # This makes Hermes' anthropic.Anthropic SDK POST native Anthropic JSON
+    # to zen-swarm-ctld's /v1/messages on next start. Closes invariant.
     hermes_home = _resolve_hermes_home()
     base_url = os.environ.get("ZEN_SWARM_BASE_URL", DEFAULT_BASE_URL)
     out.append("### Provider plugin wiring")

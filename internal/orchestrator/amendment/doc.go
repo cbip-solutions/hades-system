@@ -49,7 +49,7 @@
 // doctrine.ValidateAdditive on the proposed diff BEFORE any git
 // operation; failure aborts + emits DoctrineAmendmentSuppressed
 // {reason:"validate_failed"}.
-// - invariant — ADR range reservation. reserves
+// - invariant — ADR range reservation. release reserves
 // decisions/0020..0029 (10 slots); range.NextAvailableID returns
 // ErrADRRangeExhausted + emits ADRRangeExhausted on overflow.
 //

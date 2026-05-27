@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package parser decodes per-doctrine self-contained TOML files into the
-// v1 Schema struct ( Q2 A: no merge engine; one TOML = one
+// v1 Schema struct (release Q2 A: no merge engine; one TOML = one
 // effective doctrine). The parser is the SOLE entry point used by the
 // embedded built-in loader and the user-override
 // reload loop so both surfaces share one code path

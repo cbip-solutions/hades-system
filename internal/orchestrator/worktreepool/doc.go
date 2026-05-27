@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package worktreepool — git-worktree subprocess pool.
+// Package worktreepool — release git-worktree subprocess pool.
 //
-// Supplies isolated working directories to every subsystem needing
+// Supplies isolated working directories to every release subsystem needing
 // off-trunk filesystem isolation: HRA voting (Functional Majority Voting
-// per Q8 B), ApplyEngine live-correction (Q1 D), and future cross-
+// per Q8 B), ApplyEngine live-correction (Q1 D), and future release cross-
 // worker integration via test-driven merge.
 //
 // Backend is `git worktree` invoked via os/exec (Q3 A: every public agent

@@ -2,7 +2,7 @@
 // internal/config/ecosystem_providers.go
 //
 // TOML schema types + Load/Validate/default helpers for the 5 ecosystem
-// provider config files ingester + retrieval pipeline consume at
+// provider config files release ingester + retrieval pipeline consume at
 // daemon startup.
 //
 // Files live at ~/.config/zen-swarm/providers/ (operator home) — NOT in

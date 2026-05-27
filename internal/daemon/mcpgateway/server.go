@@ -15,7 +15,7 @@
 // tools/list — returns Dispatcher.ListTools as MCP-spec tools array
 // tools/call — routes to Dispatcher.Dispatch and re-encodes response
 //
-// Header conventions (Hermes side forwards via ZenSwarmTransport,
+// Header conventions (Hermes side forwards via ZenSwarmTransport, release
 // ):
 //
 // X-Zen-Doctrine — active doctrine slug (max-scope / default / capa-firewall)

@@ -2,7 +2,7 @@
 // Package cli — memory_promote.go.
 //
 // `zen memory promote <note-id>` pins a note to the global aggregator pin
-// index. promote is the D canonical term; `zen memory pin` is the
+// index. promote is the release D canonical term; `zen memory pin` is the
 // CLI-ergonomic alias for the same daemon endpoint.
 //
 // invariant gates (same as pin):

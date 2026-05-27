@@ -3,8 +3,8 @@
 //
 // OrchestratorConfig + LoadOrchestrator read the per-project
 // [projects.<id>.orchestrator] sub-table from projects.toml — the
-// per-project override layer of three-file config model.
-// LoadOrchestrator fills the ErrNotImplementedPlan3 stub.
+// per-project override layer of release's three-file config model.
+// LoadOrchestrator fills the release- ErrNotImplementedPlan3 stub.
 package config
 
 import (

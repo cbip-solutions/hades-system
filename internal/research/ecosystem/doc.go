@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/research/ecosystem/doc.go
 //
-// Package ecosystem implements — ecosystem-documentation RAG
+// Package ecosystem implements release — ecosystem-documentation RAG
 // (Layer 4 of the 4-tier knowledge-aggregator boundary; see
 // docs/operations/knowledge-aggregator-boundary.md).
 //

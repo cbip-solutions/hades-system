@@ -4,10 +4,10 @@
 // providers packages MUST NOT import internal/store; this package is
 // the boundary that absorbs the dependency.
 //
-// Mirrors the bypassadapter pattern: store-aware translation
+// Mirrors the release bypassadapter pattern: store-aware translation
 // lives here, exposing typed methods that satisfy the dispatcher's
 // CostSink interface (a single Insert(ctx, CostEvent) method today,
-// extensible by composition if + grows the seam).
+// extensible by composition if release+ grows the seam).
 //
 // Type-translation strategy. The package defines its own
 // CostLedgerRow value type rather than reusing dispatcher.CostEvent

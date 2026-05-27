@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package client — federation.go.
 //
-// Thin pass-throughs for the daemon's federation REST sub-routes:
+// Thin pass-throughs for the daemon's release federation REST sub-routes:
 // /v1/mcpgateway/federation/health and /v1/mcpgateway/api-impact. The
 // daemon-side adapters translate each into JSON-RPC tools/call requests against
 // the caronte federation_health / get_breaking_changes engine ops.

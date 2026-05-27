@@ -38,7 +38,7 @@ Per `feedback_methodology_and_conventions.md` §2:
 - ONE question per message — overwhelming otherwise
 - Multiple choice A/B/C/D with explicit recommendation
 - Each option includes Pro/Con bullets
-- ALWAYS state your recommendation: "Mi recomendación: D. Razones:..."
+- ALWAYS state your recommendation: "Mi recomendación: D. Razones: ..."
 - ~10-15 questions per brainstorm typical
 - Probe ALL dimensions: architecture, data flow, errors, performance, security, operator UX, structure
 
@@ -60,7 +60,7 @@ Each section ends with "¿OK sección N?" — operator answers `y` to confirm.
 
 ## 6. Output
 
-Write design spec to `internal design record` per `feedback_spec_hierarchy_and_plan_types.md` Layer 3 plan-level convention.
+Write design spec to `design records` per `feedback_spec_hierarchy_and_plan_types.md` Layer 3 plan-level convention.
 
 ## Cross-references
 

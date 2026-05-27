@@ -20,7 +20,7 @@ func CorruptPayloadCount() uint64 {
 	return corruptPayloadCount.Load()
 }
 
-// Event is the canonical in-memory shape consumers across phases
+// Event is the canonical in-memory shape consumers across release phases
 // (B, D, E, F, G, H, K, M) construct + emit. It is the LOAD-BEARING wire
 // shape between orchestrator subsystems.
 //

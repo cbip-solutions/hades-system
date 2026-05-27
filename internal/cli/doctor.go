@@ -2,7 +2,7 @@
 // Package cli — doctor.go
 //
 // Task L-3 added the Bypass section (10 checks per spec §8.5)
-// to the existing environment + daemon report.
+// to the existing release environment + daemon report.
 //
 // research, budget, audit, sshexec, doctrine, mcps, caronte) plus
 // preserves the aggregate `zen doctor` invocation that runs ALL
@@ -10,7 +10,7 @@
 //
 // Review I-2: the doctor namespace now wires
 // format.AttachFlags so `--json`, `--yaml`, `--quiet`, `--verbose`,
-// `--filter` work the same as every other namespace. Output
+// `--filter` work the same as every other release namespace. Output
 // switches to a structured `[]CheckResult` slice when --format != table
 // so operators automating `zen doctor --json | jq` get the same
 // machine-parseable shape every namespace ships.
@@ -24,13 +24,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/cli/doctorfull"
 	"github.com/cbip-solutions/hades-system/internal/cli/format"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	"github.com/cbip-solutions/hades-system/internal/doctor/backup"
 	"github.com/cbip-solutions/hades-system/internal/doctor/fix"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 func NewDoctorCmd() *cobra.Command {

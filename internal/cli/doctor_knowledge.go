@@ -9,7 +9,7 @@
 // invariant: NEVER issues HTTP request; --remote handling is daemon-side
 // . RunKnowledgeProbe stays local.
 // invariant: probe surface includes a sanity check that extension hook
-// columns are NULL by default in
+// columns are NULL by default in release.
 package cli
 
 import (

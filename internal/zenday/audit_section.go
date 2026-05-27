@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package zenday — audit_section.go
 //
-// Extends zenday with a NEW collector that walks per-project
+// Extends release zenday with a NEW collector that walks per-project release
 // substrate health (chain integrity + backup status + ADR transitions today
 // + research cache hit rate + state freshness) and produces BriefItem per
 // project. LeverageRank assigned per worst-substrate-status:
@@ -117,7 +117,7 @@ func buildAuditProjectItem(p AuditProjectStatus, now time.Time) BriefItem {
 type auditSubstrateStatus int
 
 const (
-	auditStatusOK   auditSubstrateStatus = iota
+	auditStatusOK auditSubstrateStatus = iota
 	auditStatusWarn
 	auditStatusFail
 )

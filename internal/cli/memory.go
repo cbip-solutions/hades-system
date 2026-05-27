@@ -2,8 +2,8 @@
 // Package cli — memory.go.
 //
 // `zen memory` is the operator-facing entry point for cross-corpus memory
-// retrieval over the D aggregator (per-project + global pin index)
-// and the ecosystem RAG (Go/Python/TypeScript/Rust docs corpus).
+// retrieval over the release D aggregator (per-project + global pin index)
+// and the release ecosystem RAG (Go/Python/TypeScript/Rust docs corpus).
 //
 // Five leaves under one root:
 //
@@ -13,10 +13,10 @@
 // zen memory unpin <note-id> [--reason <text>] [--operator <id>]
 // zen memory promote <note-id> --reason <text> [--operator <id>]
 //
-// Semantics
+// # Semantics
 //
-// - query: cross-corpus search. With --remote, fans out to BOTH the
-// aggregator AND the ecosystem RAG dispatcher in parallel, then
+// - query: cross-corpus search. With --remote, fans out to BOTH the release
+// aggregator AND the release ecosystem RAG dispatcher in parallel, then
 // fuses results via RRF k=60.
 // Without --remote, queries the aggregator only. Soft-fails when ONE
 // source errors (renders the other); hard-fails only when BOTH error.
@@ -24,7 +24,7 @@
 // - list: enumerate pinned notes from the aggregator's global pin index.
 //
 // - pin / promote: alias pair (pin is the operator-ergonomics term, promote
-// the D term). Both call MemoryPromote (POST /v1/knowledge/aggregator/promote).
+// the release D term). Both call MemoryPromote (POST /v1/knowledge/aggregator/promote).
 // invariant: --reason MANDATORY (cobra MarkFlagRequired + RunE TrimSpace check).
 //
 // - unpin: reverse promote (POST /v1/knowledge/aggregator/unpromote).

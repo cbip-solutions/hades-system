@@ -13,8 +13,8 @@ This document covers installing the `hades-system` source tree published at
 
 Optional tools:
 
-- Docker 24+ for container image workflows.
-- `gitleaks`, `cosign`, and SBOM tooling for full release verification.
+- Docker 24+ for container image builds.
+- `cosign` or GitHub's attestation tooling for published artifact verification.
 
 The module declares `go 1.26` and `toolchain go1.26.0`. With the default
 `GOTOOLCHAIN=auto`, Go will download the matching toolchain when needed. If your
@@ -82,16 +82,16 @@ The sidecar is intentionally optional. The sidecar contract is the daemon's
 localhost HTTP integration point; deployments that need it should provide a
 compatible local implementation and keep credentials outside this repository.
 
-## Release Verification
+## Source Verification
 
-Before publishing or trusting a release artifact, run the release gates:
+Before publishing or trusting a release artifact, build and test from a clean
+checkout:
 
 ```bash
-make verify-license-compliance
-make verify-no-personal-references
-make verify-no-task-context-comments
 make build
+make test
+git diff --check
 ```
 
-Supply-chain checks are rooted in the release artifacts, generated SBOMs,
-checksums, and the CGO supplement under `configs/`.
+Published artifacts should also be checked against the checksums, attestations,
+and signatures attached to the corresponding release.

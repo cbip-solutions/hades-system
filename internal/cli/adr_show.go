@@ -12,8 +12,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
+	"github.com/spf13/cobra"
 )
 
 func adrShowCmd() *cobra.Command {

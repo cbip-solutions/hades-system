@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package notification routes events through the 5-channel pipeline
-// (spec §8). implements; establishes shape.
+// (spec §8). release implements; release establishes shape.
 package notification
 
 import zerrors "github.com/cbip-solutions/hades-system/internal/errors"

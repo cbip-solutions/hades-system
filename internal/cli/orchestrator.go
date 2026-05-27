@@ -13,7 +13,7 @@
 // - history — current state per tier (post-rescope: CircuitBreaker
 // does not yet track state-transition history)
 //
-// Replaces the stub set (status/pin/unpin via /switch + 4-tier
+// Replaces the release stub set (status/pin/unpin via /switch + 4-tier
 // numeric mapping). Tier names are now canonical providers.Tier strings
 // ("in-house" / "openclaude" / etc.) so future tiers added in
 // buildOrchestrator widen this surface without CLI changes.
@@ -26,9 +26,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 func NewOrchestratorCmd() *cobra.Command {

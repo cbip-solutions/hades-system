@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-                                          
-"""HTML email renderer for citation envelopes."""
+# plugin/hades/renderers/email_citation.py
+"""HTML email renderer for citation envelopes (the release design release track Task A-6)."""
 
 from __future__ import annotations
 
@@ -31,10 +31,10 @@ class EmailCitationRenderer(Renderer):
         """``web_fallback_audit_url``: substitute ``zen://audit/<id>`` with https form.
 
         ``audit_web_base_url``: base URL for the fallback (default
-        ``https://hades.local`` per plan 18b phase D brand pass).
+        ``https://hades.local`` per the release design phase D brand pass).
         Operator configures via hades-side config
         (``~/.hermes/config.yaml`` operator section or daemon env
-        var) when daemon exposes a public audit web UI.
+        var) when daemon exposes a public audit web UI (the release design+).
 
         ``daemon_url`` is forwarded to the base ``Renderer`` so the
         instance-level audit endpoint (``self._audit_endpoint``) honors
@@ -89,10 +89,10 @@ class EmailCitationRenderer(Renderer):
         audit_url = self._audit_url_for(citation)
         audit_url_e = escape(audit_url)
 
-                                                                      
-                                                                           
-                                                                          
-                                                         
+        # Inline CSS only; table layout for cross-client safety. Using
+        # Markup + .format ensures the escaped substitutions remain escaped
+        # (markupsafe.Markup is the canonical container for "trusted" HTML
+        # fragments; escape() produces Markup instances).
         block = Markup("""
 <tr>
   <td style="padding:12px 16px;background-color:#ffffff;border:1px solid #e1e4e8;border-radius:4px;">
@@ -137,7 +137,7 @@ class EmailCitationRenderer(Renderer):
         Default (``web_fallback_audit_url=False``) returns the canonical
         zen:// deep-link via ``Envelope.audit_event_url()`` (the
         cross-language helper that mirrors Go's ``AuditEventURL``).
-        Cross-renderer consistency check (M-2 fix-cycle): web + ink also
+        Cross-renderer consistency check: web + ink also
         use this helper.
 
         When ``web_fallback_audit_url=True`` is passed at construction,
@@ -147,7 +147,7 @@ class EmailCitationRenderer(Renderer):
         renderer whose downstream surface (an MUA / webmail client) may
         not register the ``zen://`` URL handler.
 
-        + may add a daemon-side HTTPS audit redirector that
+        the release design+ may add a daemon-side HTTPS audit redirector that
         consumes the same path; the email HTTPS form is a forward-
         compatible alias for that surface.
         """

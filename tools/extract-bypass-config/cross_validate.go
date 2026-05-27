@@ -11,10 +11,10 @@ import (
 	"strings"
 )
 
-// go:embed testdata/meridian_plugin_sample.go
+//go:embed fixtures/meridian_plugin_sample.go
 var meridianFixture []byte
 
-// go:embed testdata/griffinmartin_plugin_sample.json
+//go:embed fixtures/griffinmartin_plugin_sample.json
 var griffinmartinFixture []byte
 
 type PluginFields struct {
@@ -49,7 +49,7 @@ func loadEmbeddedPluginFields(plugin string) (PluginFields, error) {
 
 // meridianConstRegex is a fixture-grade scanner, not a Go parser. It matches
 // any "Ident = \"value\"" line — including non-const declarations — which is
-// fine for the curated meridian sample; do NOT extend this to general Go.
+// fine for the reviewed meridian sample; do NOT extend this to general Go.
 var meridianConstRegex = regexp.MustCompile(`(?m)^\s*([A-Za-z][A-Za-z0-9_]*)\s*=\s*"([^"]*)"`)
 
 func parseMeridianBytes(b []byte) (PluginFields, error) {

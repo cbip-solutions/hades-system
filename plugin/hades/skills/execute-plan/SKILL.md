@@ -1,7 +1,7 @@
 ---
 name: execute-plan
 description: |
-  HADES subagent-driven plan execution: Stage 0 reality-check, per-task
+  HADES subagent-driven plan execution: release stage reality-check, per-task
   dispatch loop with review gates, no-tech-debt doctrine, hard gates per commit.
   Use when operator invokes /hades:execute-plan or when implementing a phase plan.
 license: Proprietary
@@ -10,7 +10,7 @@ keywords:
   - execute-plan
   - subagent-dispatch
   - review-gates
-  - stage-0
+  - release stage
   - no-tech-debt
   - hades
 ---
@@ -35,7 +35,7 @@ skill_load("superpowers:executing-plans")
 skill_load("superpowers:subagent-driven-development")
 ```
 
-### 2. Stage 0 reality-check (BEFORE first dispatch)
+### 2. release stage reality-check (BEFORE first dispatch)
 
 Per `feedback_plan_template_drift.md`:
 - Extract package.Symbol references from plan-file
@@ -69,6 +69,6 @@ GOOS=linux go build ./...
 ## Cross-references
 
 - docs/METHODOLOGY.md §4 plan-execution
-- feedback_plan_template_drift.md (Stage 0 reality-check)
+- feedback_plan_template_drift.md (release stage reality-check)
 - feedback_no_tech_debt.md
 - /hades:execute-plan slash command handler

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/validator.go
 //
-// Task L-2 — Go port of the Python _validate_command.
+// Task L-2 — Go port of the release Python _validate_command.
 //
 // Strict-prefix-match + forbidden-chars scan. Returns ValidationResult
 // (typed; never a bare bool). The exec layer's Run signature requires a

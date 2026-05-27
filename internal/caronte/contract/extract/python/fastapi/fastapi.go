@@ -1,4 +1,3 @@
-// go:build cgo
 //go:build cgo
 // +build cgo
 

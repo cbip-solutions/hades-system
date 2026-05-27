@@ -17,7 +17,7 @@
 // stateless, no struct receiver, just an assembly function plus the
 // CostLedgerReader interface that decouples it from any specific
 // *store.Store implementation. Tests inject fakes; daemon wiring
-// passes the *store.Store via a thin shim ( scheduler
+// passes the *store.Store via a thin shim (release scheduler
 // composition or a future cost_ledger reader implementation).
 //
 // invariant boundary: this file imports internal/quota +
@@ -90,7 +90,7 @@ type CostLedgerReader interface {
 //
 // Unit (dollars / cents / tokens) is opaque to BuildPreFlightDeps; the
 // caller's ledger + cap configuration MUST agree on a unit. The Plan
-// 4 + ledger conventionally uses USD-cents.
+// 4 + release ledger conventionally uses USD-cents.
 func BuildPreFlightDeps(
 	ctx context.Context,
 	alias string,

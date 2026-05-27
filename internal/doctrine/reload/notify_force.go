@@ -38,7 +38,7 @@ func (w *Watcher) NotifyForce(path string) error {
 }
 
 // SubscribeReloadEvents returns a channel that emits DoctrineReloaded
-// events. Applier subscribes to wait for reload completion
+// events. release Applier subscribes to wait for reload completion
 // synchronously after NotifyForce. Channel is buffered; emit drops on
 // full buffer (slow subscriber does not block fan-out).
 //

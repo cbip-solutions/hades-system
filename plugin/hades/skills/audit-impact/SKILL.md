@@ -1,7 +1,7 @@
 ---
 name: audit-impact
 description: |
-  HADES audit event KG context: resolve a Plan 9 Tessera-anchored audit
+  HADES audit event KG context: resolve a the release design Tessera-anchored audit
   event + show full 5-lane RRF augmentation context (citations, callers,
   callees, community). Use when operator invokes /hades:audit-impact <event-id>.
 license: Proprietary
@@ -17,7 +17,7 @@ keywords:
 
 # HADES — audit-impact skill (audit event KG context)
 
-This skill resolves a Plan 9 Tessera-anchored audit event and shows its full
+This skill resolves a the release design Tessera-anchored audit event and shows its full
 knowledge graph augmentation context. Triggered by `/hades:audit-impact <event-id>`.
 
 ## When to use
@@ -48,7 +48,7 @@ Returns full 5-lane RRF context:
 
 ### 3. Privacy filter
 
-Per inv-zen-163: capa-firewall events filtered from non-capa-firewall sessions.
+Per invariant: capa-firewall events filtered from non-capa-firewall sessions.
 
 ### 4. Navigation
 
@@ -59,6 +59,6 @@ Operator can recurse: `/hades:audit-impact <prior_event_id>` to navigate the cha
 - spec §4.2 slash command flow
 - spec §4.6 audit chain integration
 - spec §1 Q9 citation envelope structure
-- inv-zen-163 privacy boundary
-- inv-zen-172 zen://audit URL handler auth check
+- invariant privacy boundary
+- invariant zen://audit URL handler auth check
 - /hades:audit-impact slash command handler

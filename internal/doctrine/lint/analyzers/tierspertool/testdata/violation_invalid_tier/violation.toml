@@ -1,7 +1,0 @@
-# Plan 13 Phase F6 testdata — tier value not in {high, medium, low}.
-# Should surface SeverityError "invalid tier value".
-schema_version = "1.0"
-name = "violation-invalid-tier"
-
-[capa_firewall.tiers]
-"playwright" = "extreme"

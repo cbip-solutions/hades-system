@@ -1,4 +1,3 @@
-// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -61,7 +60,7 @@ func WithLinkStore(ls linkStorePort) WorkspaceOption {
 // EnableGraphQLNodeFallback returns the persisted flag for the workspaceID
 // the Workspace was constructed with. Returning (false, nil) on lookup
 // failure is the graceful-degrade contract: an unreachable federation DB
-// MUST NOT open the gate; the default is gate-closed (the
+// MUST NOT open the gate; the release default is gate-closed (the
 // SevInsufficient result is surfaced to the operator instead of triggering
 // a Node spawn). Implementations MAY return a wrapped error for
 // observability; the Workspace accessor swallows the error and degrades
@@ -225,8 +224,8 @@ func (w *Workspace) FederatedQuery(ctx context.Context, q FederatedQuery) ([]Fed
 
 // CrossRepoLink validates a cross-repo contract edge and records it. Both
 // CallRepo + EndpointRepo MUST be roster members; under a privacy-locked
-// doctrine a cross-repo link (CallRepo != EndpointRepo) is denied.
-// records the validated link in an in-memory ledger (w.pending);
+// doctrine a cross-repo link (CallRepo != EndpointRepo) is denied. release
+// records the validated link in an in-memory ledger (w.pending); release
 // extends with a persistent contract_links table via w.linkStore (a
 // federation.LinkStore wired at the daemon composition root). The
 // persistent write runs AFTER w.authorize so capa-firewall consistency is

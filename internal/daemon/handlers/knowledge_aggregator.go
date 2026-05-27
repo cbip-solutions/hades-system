@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — knowledge_aggregator.go.
 //
-// Five HTTP handler functions for the knowledge aggregator surface:
+// Five HTTP handler functions for the release knowledge aggregator surface:
 //
 // POST /v1/knowledge/aggregator/query — FTS + structured filter via
 // Aggregator.QueryFTS
@@ -10,10 +10,10 @@
 // GET /v1/knowledge/aggregator/list — list pinned notes
 // POST /v1/knowledge/aggregator/rebuild — enqueue async re-embed
 //
-// These are DISTINCT from the knowledge handler factory functions
+// These are DISTINCT from the release knowledge handler factory functions
 // (KnowledgeQueryHandler, KnowledgeReindexHandler, KnowledgeStatsHandler in
 // knowledge.go) which back the legacy /v1/knowledge/{query,reindex,stats}
-// routes. Both surfaces coexist; the aggregator routes delegate to an
+// routes. Both surfaces coexist; the release aggregator routes delegate to an
 // AggregatorService interface (structural typing) to avoid importing
 // internal/knowledge/aggregator directly in the handlers package.
 //

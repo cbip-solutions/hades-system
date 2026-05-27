@@ -13,5 +13,5 @@ import _ "embed"
 // matching kind→store.NodeKind table is nodeKindForCapture in lang_go.go; the
 // two MUST stay in sync (queries_test.go gates the capture-name contract).
 //
-// go:embed queries/go.scm
+//go:embed queries/go.scm
 var goTagsQuery string

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-                                        
-"""Hermes pre_llm_call callback for zen-swarm ( baseline + """
+# plugin/zen-swarm/hooks/llm_handlers.py
+"""Hermes pre_llm_call callback for zen-swarm (release track' baseline + the release design"""
 
 from __future__ import annotations
 
@@ -17,8 +17,8 @@ from ._common import invoke_event_poster
 
 _log = logging.getLogger("zen-swarm.hooks.pre_llm_call")
 
-                                                                           
-                                    
+# Module-level daemon client; lazy-initialised on first use; replaceable by
+# tests via _set_client_for_testing.
 _DAEMON_CLIENT: httpx.Client | None = None
 
 
@@ -65,7 +65,7 @@ def pre_llm_call(
         cwd: current working directory
         messages: list of message dicts in the current turn
         model: requested LLM model name
-        project_id: zen-swarm project alias (from.zen-swarm.toml or session
+        project_id: zen-swarm project alias (from .zen-swarm.toml or session
             context); empty falls back to "default"
         conversation_id: Hermes conversation correlation key
         **kwargs: forward-compatible extras (e.g. task_id, doctrine)
@@ -76,10 +76,10 @@ def pre_llm_call(
           context prefix (system prompt is left untouched to preserve the
           Anthropic prompt-cache prefix across turns).
     """
-                                                                        
-                                                                      
-                                                           
-                                                                        
+    # ------------------------------------------------------------------
+    # release track' baseline: emit event (audit-visible) FIRST so we record
+    # the call even if the augmentation path 204s or fails.
+    # ------------------------------------------------------------------
     payload: dict[str, Any] = {
         "session_id": session_id,
         "cwd": cwd,
@@ -94,8 +94,8 @@ def pre_llm_call(
             payload[k] = v
     _ = invoke_event_poster("pre_llm_call", payload)
 
-                                                                        
-                                                                        
+    # ------------------------------------------------------------------
+    # ------------------------------------------------------------------
     if not messages:
         return None
     last_user = _last_user_message(messages)
@@ -122,7 +122,7 @@ def pre_llm_call(
         return None
 
     if response.status_code == 204:
-                                                                              
+        # invariant: doctrine veto. Operator-visible: Hermes chats normally.
         return None
     if response.status_code != 200:
         _log.debug(
@@ -145,9 +145,9 @@ def pre_llm_call(
     if not static_context and not volatile_context:
         return None
 
-                                                                       
-                                                                         
-                                                                
+    # Assemble into the single string Hermes' {"context": ...} contract
+    # expects. Static portion (cache-eligible per Anthropic prompt cache)
+    # goes first; volatile portion second (per-query specifics).
     parts: list[str] = []
     if static_context:
         parts.append(static_context)
@@ -156,9 +156,9 @@ def pre_llm_call(
     return {"context": "\n\n".join(parts)}
 
 
-                                                                        
-         
-                                                                        
+# ----------------------------------------------------------------------
+# Helpers
+# ----------------------------------------------------------------------
 
 
 def _last_user_message(

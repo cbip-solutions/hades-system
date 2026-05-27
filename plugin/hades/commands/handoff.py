@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 """Slash command handler for /hades:handoff.
 
-Composes a proposed HANDOFF.md update + proposed commit message for the
+Composes a proposed .hades/session.md update + proposed commit message for the
 operator to review and apply. Does NOT autonomously write or commit (the
 write+commit decision is operator-driven; the handler emits guidance).
 
@@ -65,7 +65,7 @@ def _git_brief(cwd: Path) -> dict[str, str]:
 
 
 def _read_prior_handoff(cwd: Path) -> str:
-    path = cwd / "HANDOFF.md"
+    path = cwd / ".hades/session.md"
     if not path.is_file():
         return ""
     try:
@@ -78,9 +78,9 @@ def _build_handoff_template(
     tldr_seed: str,
     git: dict[str, str],
 ) -> str:
-    """Compose the proposed HANDOFF.md content.
+    """Compose the proposed .hades/session.md content.
 
-    Caller (handle_handoff) handles the prior-HANDOFF.md presence
+    Caller (handle_handoff) handles the prior-.hades/session.md presence
     branching at the wrapper-message level; the template body is the
     same regardless. See feedback in H'-8 NIT-1 backlog.
     """
@@ -106,7 +106,7 @@ _Last updated: {ts}_
 
 ## Active plan status
 
-<Plan N Phase X — <status>; or "no active plan">
+<release item release track — <status>; or "no active plan">
 
 ## Pending dispatches
 
@@ -124,7 +124,7 @@ interactively to enable /v1/messages').>
 
 ## See also
 
-- `docs/superpowers/plans/<active-plan-master>.md`
+- `design records`
 - `docs/METHODOLOGY.md`
 - `~/.claude/projects/-path-to-projects-hades-system/memory/MEMORY.md`
 """
@@ -133,11 +133,11 @@ interactively to enable /v1/messages').>
 def _build_commit_msg(tldr_seed: str) -> str:
     if not tldr_seed:
         return "docs(handoff): refresh state snapshot"
-                                                                         
+    # Truncate to a conventional-commit-friendly subject (~70 chars max).
     seed = re.sub(r"\s+", " ", tldr_seed).strip()
-                                                                       
-                                                                       
-                                                         
+    # Whitespace-only inputs collapse to empty here even when tldr_seed
+    # was truthy (e.g. "   "). Guard against producing a subject with a
+    # trailing space. See feedback in H'-8 NIT-2 backlog.
     if not seed:
         return "docs(handoff): refresh state snapshot"
     if len(seed) > 60:
@@ -153,7 +153,7 @@ def handle_handoff(raw_args: str) -> str | None:
             of context, e.g. "phase H' shipping").
 
     Returns:
-        Markdown block with proposed HANDOFF.md content + proposed commit
+        Markdown block with proposed .hades/session.md content + proposed commit
         message + apply instructions. Operator reviews and applies in their
         terminal or via Hermes Bash tool.
     """
@@ -166,13 +166,13 @@ def handle_handoff(raw_args: str) -> str | None:
     template = _build_handoff_template(tldr_seed, git)
     commit_msg = _build_commit_msg(tldr_seed)
 
-    out = ["## Proposed HANDOFF.md update", ""]
+    out = ["## Proposed .hades/session.md update", ""]
     if prior_present:
         out.append(
-            "_(replaces existing HANDOFF.md — preserve any sections not in this proposal)_"
+            "_(replaces existing .hades/session.md — preserve any sections not in this proposal)_"
         )
     else:
-        out.append("_(no prior HANDOFF.md in cwd — creating from scratch)_")
+        out.append("_(no prior .hades/session.md in cwd — creating from scratch)_")
     out.append("")
     out.append("```markdown")
     out.append(template)
@@ -182,10 +182,10 @@ def handle_handoff(raw_args: str) -> str | None:
     out.append("")
     out.append("```bash")
     out.append(
-        "# Save the markdown above to HANDOFF.md (replace existing or create new)."
+        "# Save the markdown above to .hades/session.md (replace existing or create new)."
     )
     out.append("# Then:")
-    out.append("git add HANDOFF.md")
+    out.append("git add .hades/session.md")
     out.append(f"git commit -m {commit_msg!r}")
     out.append("```")
     out.append("")
@@ -200,7 +200,7 @@ def handle_handoff(raw_args: str) -> str | None:
     out.append("")
     out.append(
         "Doctrine: conventional commit subject, NO AI-attribution "
-        "(inv-zen-004 gated by pre_tool_call callback)."
+        "(invariant gated by pre_tool_call callback)."
     )
 
     return "\n".join(out)

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// handoff_emitter.go — Task I-9 production HandoffEmitter
+// handoff_emitter.go — release Task I-9 production HandoffEmitter
 // adapter (composition of *eventlog.Log on top of *orchestratoradapter.Adapter
 // as the RawEmitter substrate).
 //

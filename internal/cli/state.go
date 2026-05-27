@@ -7,7 +7,7 @@
 // regenerate — rebuild manifest from authoritative sources
 // verify — regenerate-and-diff CI gate
 // pin — set a manual field with --reason
-// history — walk chain showing manual field changes
+// history — walk release chain showing manual field changes
 // list — enumerate XDG state entries
 // cleanup — apply retention policy to XDG state
 //

@@ -156,7 +156,7 @@ func (c *Checkpoint) Verify(ctx context.Context, pub *ecdsa.PublicKey, sth STH) 
 // signature-mismatch leaf) without standing up the live Tessera
 // library — mirrors the verifyInclusionWithReader split in sth.go.
 //
-// Steps
+// # Steps
 //
 // 1. Compute the target CanonicalBytes from the supplied STH; this
 // is the byte-for-byte key we compare against persisted leaves.

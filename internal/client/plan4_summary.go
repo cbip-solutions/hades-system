@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package client — plan4_summary.go.
+// Package client — release_summary.go.
 //
 // Typed daemon-API helpers for the GET /v1/{workforce,research,audit,
-// budget,sshexec}/summary and GET /v1/health/plan4 endpoints. The
+// budget,sshexec}/summary and GET /v1/health/release endpoints. The
 // morning-brief renderer (`zen day`) calls these to populate the
 //
 // Each helper consults daemon over the canonical UDS dialer (or the

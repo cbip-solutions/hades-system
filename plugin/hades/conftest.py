@@ -46,18 +46,18 @@ def _preload_hermes_providers_registry() -> None:
     if "providers" in sys.modules:
         return
 
-                                                                       
-                                                                        
-                                                                      
-                                                                
-                                                                        
-                                                     
+    # Hermes lives in a non-standard site-packages dir (Homebrew Cellar
+    # path is set via PYTHONPATH by the operator's pytest invocation; in
+    # CI/dev wrappers we look it up from the import metadata). We must
+    # locate Hermes' real ``providers`` and load it directly via
+    # ``importlib.util.spec_from_file_location`` so the local sibling at
+    # ``plugin/hades/providers/`` does NOT shadow it.
     import importlib.util as _util
 
-                                                                
-                                                                         
-                                                                               
-                                                                        
+    # Walk every entry on sys.path looking for a directory named
+    # ``providers`` that contains the canonical Hermes registry sentinels
+    # (``register_provider`` + ``get_provider_profile`` + ``ProviderProfile``).
+    # We skip the plugin's own ``providers/`` (under ``plugin/hades/``).
     hermes_providers_init: Path | None = None
     for entry in sys.path:
         if not entry:
@@ -65,7 +65,7 @@ def _preload_hermes_providers_registry() -> None:
         candidate = Path(entry) / "providers" / "__init__.py"
         if not candidate.is_file():
             continue
-                                                     
+        # Reject the plugin's own providers/ sub-dir.
         try:
             if candidate.resolve().is_relative_to(_PLUGIN_DIR.resolve()):
                 continue
@@ -77,9 +77,9 @@ def _preload_hermes_providers_registry() -> None:
             break
 
     if hermes_providers_init is None:
-                                                                         
-                                                                        
-                             
+        # Couldn't locate; let the natural import fail later with a clear
+        # error. Test environments without Hermes installed simply won't
+        # exercise this path.
         return
 
     spec = _util.spec_from_file_location(
@@ -157,19 +157,19 @@ def _locate_hermes_site_packages() -> Path | None:
     return None
 
 
-                                                                         
-                                                      
- 
-                                                                          
-                                                                     
-                                                                            
-                                                                            
+# Run at conftest-import time so the pre-load happens before pytest's own
+# directory traversal triggers any __init__.py import.
+#
+# Step 0: auto-locate the installed hermes-agent and put its site-packages
+# on ``sys.path`` so Hermes' real ``providers`` package is importable
+# without the caller exporting ``PYTHONPATH``. An explicit ``PYTHONPATH`` is
+# already on ``sys.path`` and therefore takes precedence over this fallback.
 _hermes_site_packages = _locate_hermes_site_packages()
 if _hermes_site_packages is not None and str(_hermes_site_packages) not in sys.path:
     sys.path.insert(0, str(_hermes_site_packages))
 
 # Order matters: Hermes' real ``providers`` MUST be in sys.modules BEFORE
-                                                                         
+# the plugin (which transitively imports its own ``providers/`` sub-dir).
 _preload_hermes_providers_registry()
 _preload_plugin_as_hermes_does()
 
@@ -191,7 +191,7 @@ def pytest_collect_directory(
     Hermes loader-mirror in ``_preload_plugin_as_hermes_does`` above.
     """
     if path == _PLUGIN_DIR:
-                                                                            
-                                                                      
+        # Return a non-Package Directory so children are still collected but
+        # the Package.setup chain that imports __init__.py is skipped.
         return Dir.from_parent(parent, path=path)
-    return None                                                         
+    return None  # default: pytest creates Package if __init__.py exists

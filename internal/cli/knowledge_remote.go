@@ -11,7 +11,7 @@
 // invariant boundary is preserved by routing distinction:
 // - --remote=true → ecosystem RAG over ingested corpus
 // (daemon-side Dispatcher; no open-web queries from the daemon).
-// - --remote=false → aggregator (FTS5 over local docs;
+// - --remote=false → release aggregator (FTS5 over local docs;
 // internal/knowledge package returns ErrRemoteNotShipped if a
 // caller bypasses the CLI and passes Query{Remote: true}).
 //

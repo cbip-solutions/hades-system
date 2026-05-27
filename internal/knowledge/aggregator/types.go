@@ -14,9 +14,9 @@
 // never in the method files.
 //
 // invariant: ScopePinnedOnly is the widest scope this aggregator honours.
-// Ecosystem-wide RAG (cross-project web + external-source search) is
+// Ecosystem-wide RAG (cross-project web + external-source search) is release
 // territory. Any call-site that passes Scope("ecosystem-rag") will receive an
-// explicit error message pointing at — never a silent default.
+// explicit error message pointing at release — never a silent default.
 package aggregator
 
 import (

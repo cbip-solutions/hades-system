@@ -133,7 +133,7 @@ func buildSealPayload(partitionID, finalRecordHash string, eventCount int64, las
 // witness pubkey. Used by verify-chain (B-7) and the
 // audit.chain-integrity doctor check.
 //
-// Steps
+// # Steps
 //
 // 1. Read seal from store.
 // 2. Read current partition stats.

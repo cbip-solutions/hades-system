@@ -5,7 +5,7 @@
 //
 // # Invariant
 //
-// invariant: ingester / ecosystem code NEVER imports net/http
+// invariant: release ingester / ecosystem code NEVER imports net/http
 // (or crypto/tls). ALL outbound egress goes via
 // internal/research/cache/Revalidator.Fetch (the sole legal HTTP callsite
 // per invariant + ADR-0087 amendment). The boundary is enforced both
@@ -41,10 +41,10 @@
 //
 // # Pattern
 //
-// Mirrors the Task J-7 `noWebInAggregator` analyzer in
+// Mirrors the release Task J-7 `noWebInAggregator` analyzer in
 // shape (`golang.org/x/tools/go/analysis.Analyzer`) for consistency.
-// Registered in `cmd/zen-doctrine-lint/plan14_extension.go` alongside
-// the extension surface.
+// Registered in `cmd/zen-doctrine-lint/release_extension.go` alongside
+// the release extension surface.
 //
 // # Known-uncaught callsite shape (acknowledged limitation)
 //
@@ -62,10 +62,10 @@
 // allowlist.
 //
 // References
-// - Spec §7.3 ingester invariants
+// - Spec §7.3 release ingester invariants
 // - ADR-0087 Revalidator.Fetch single-egress amendment
-// - Task H-1 spec (internal design record)
-// - J-7 `noWebInAggregator` precedent
+// - release Task H-1 spec (internal design record)
+// - release J-7 `noWebInAggregator` precedent
 package lint
 
 import (

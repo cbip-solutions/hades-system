@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: MIT
-                                        
-                                                                   
- 
-                                                                                   
-                                                                    
-                                                                     
+# Imported by `zen migrate claude-code`.
+# Event: pre_tool_call (Hermes VALID_HOOKS canonical, post-SOTA-5).
+#
+# Sidecar file pattern: the bash body lives in `pre_tool_call.sh` (raw, no escape).
+# This wrapper is a fixed delegate — operator-supplied content NEVER
+# enters Python source, eliminating the docstring-escape / RCE class.
 
 import subprocess
 from pathlib import Path

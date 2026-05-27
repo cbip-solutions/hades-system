@@ -11,7 +11,7 @@ import (
 )
 
 // Config mirrors the Litestream-on-disk YAML config schema (subset
-// relevant to : per-project SQLite + per-project S3
+// relevant to release : per-project SQLite + per-project S3
 // prefix replica). Field names + yaml tags MUST match the upstream
 // litestream binary's expectations; see https://litestream.io/reference/config/
 //

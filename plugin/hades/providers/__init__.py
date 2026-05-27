@@ -21,7 +21,7 @@ def _load_default_base_url() -> str:
     ``submodule_search_locations=[<providers-dir>]`` (see
     ``providers/__init__.py:_import_plugin_dir`` in Hermes itself), which
     means relative imports above the providers/ directory (``from
-   .._constants``) do NOT resolve in production — there is no parent
+    .._constants``) do NOT resolve in production — there is no parent
     package wrapping providers/ in that load mode. The test environment
     DOES wrap it under ``hermes_plugins.hades.providers`` (see
     plugin's ``conftest.py``), where relative imports would work.
@@ -37,16 +37,16 @@ def _load_default_base_url() -> str:
         can still drive the plugin.
     """
     constants_path = Path(__file__).resolve().parent.parent / "_constants.py"
-                                                                     
-                                       
+    # Stable module name keeps repeated loads idempotent (sys.modules
+    # cache hit on subsequent imports).
     module_name = "_zen_swarm_plugin_constants"
     cached = sys.modules.get(module_name)
     if cached is not None:
         return cached.DEFAULT_DAEMON_BASE_URL
     if not constants_path.is_file():
-                                                                      
-                                                                        
-                                                                   
+        # Defensive fallback — operator install is corrupt; documented
+        # default keeps the plugin operational while doctor surfaces the
+        # missing file. Matches the value in _constants.py exactly.
         return "http://127.0.0.1:8080"
     spec = importlib.util.spec_from_file_location(module_name, constants_path)
     if spec is None or spec.loader is None:  # pragma: no cover - defensive
@@ -57,11 +57,11 @@ def _load_default_base_url() -> str:
     return mod.DEFAULT_DAEMON_BASE_URL
 
 
-                                                                          
-                                                                     
-                                                                        
-                                                                      
-                                                                        
+# Default base_url — operator override via env var ``ZEN_SWARM_BASE_URL``.
+# Canonical literal lives in ``plugin/hades/_constants.py`` (reviewer
+# M1: single source of truth across providers + install_mcps consumers).
+# Loaded via absolute path because Hermes loads this module standalone
+# (no parent package); see ``_load_default_base_url`` for the rationale.
 _DEFAULT_BASE_URL = _load_default_base_url()
 
 

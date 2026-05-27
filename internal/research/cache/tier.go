@@ -1,4 +1,3 @@
-// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -7,7 +6,7 @@
 // Package cache — tier.go
 //
 // Body storage tier decision: inline (≤InlineThresholdBytes) vs CAS
-// (>InlineThresholdBytes).
+// (>InlineThresholdBytes). release
 //
 // # Design
 //

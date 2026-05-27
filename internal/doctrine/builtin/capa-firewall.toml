@@ -8,7 +8,7 @@
 # documents-don't-decide research workflows). Every hard guard enforced.
 #
 # Hard guards (cannot be relaxed without operator amendment + ADR):
-# - auto_upgrade = "none" (inv-zen-100 generalized — capa-firewall NEVER
+# - auto_upgrade = "none" (invariant generalized — capa-firewall NEVER
 #   auto-upgrades; only the operator may bump versions via explicit
 #   `zen doctrine migrate --confirm`)
 # - autonomy.mode = "assisted" (operator gates ALL substantive decisions)
@@ -17,20 +17,20 @@
 # - notifications: action-needed promoted to urgent (interrupts always);
 #   info-immediate delivered during quiet (Pulido visibility-mandated)
 #
-# Phase 0 R1-R5 ack values for capa-firewall come from
-# docs/superpowers/plans/2026-05-03-plan-8-phase-0-acks.md (operator-acked
+# release track R1-R5 ack values for capa-firewall come from
+# design records release design (operator-acked
 # 2026-05-08, locked into tests/doctrine/reconciliation_test.go).
 #
 # Edits to this file MUST be accompanied by an updated
-# tests/doctrine/reconciliation_test.go entry AND an ADR per Plan 5 Q10 C
+# tests/doctrine/reconciliation_test.go entry AND an ADR per the release design Q10 C
 # amendment proposal flow.
 
 schema_version = "1.0"
 doctrine_version = "1.0.0"
-auto_upgrade = "none"     # HARD GUARD — inv-zen-100 generalized
+auto_upgrade = "none"     # HARD GUARD — invariant generalized
 
 # ──────────────────────────────────────────────────────────────────────────
-# Doctrine transverse axioms — Q3 C Tier 1 + inv-zen-135
+# Doctrine transverse axioms — Q3 C Tier 1 + invariant
 # ──────────────────────────────────────────────────────────────────────────
 
 [doctrine_transverse]
@@ -79,14 +79,14 @@ sota_orchestrator_enforced = true
 # ──────────────────────────────────────────────────────────────────────────
 # Gates — Pulido strict but no LLM cost (skip realworld/replay/timeaccel/
 # orchestrator_chaos per Pulido §3.5: zero LLM-cost gates for capa-firewall)
-# Phase 0 R3 ack — capa-firewall: 6 tiers.
+# release track R3 ack — capa-firewall: 6 tiers.
 # ──────────────────────────────────────────────────────────────────────────
 
 [gates]
 coverage_min_pct = 95
 
 [gates.test_tiers]
-# Phase 0 R3 ack — capa-firewall: Pulido strict but no LLM cost.
+# release track R3 ack — capa-firewall: Pulido strict but no LLM cost.
 enabled = ["unit", "integration", "compliance", "adversarial", "chaos",
            "analysistest"]
 
@@ -101,7 +101,7 @@ rotate_reviewer_every_pr = 1
 require_dual_review = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Autonomy — Plan 5 Q11 C HARD GUARDS
+# Autonomy — the release design Q11 C HARD GUARDS
 # capa-firewall: assisted mode mandatory (operator confirmation required
 # for ALL substantive decisions); strict --check.
 # ──────────────────────────────────────────────────────────────────────────
@@ -112,7 +112,7 @@ check_mode = "strict"
 amendment_cooldown_hours = 168
 
 [autonomy.confirmation_policy]
-# Phase 0 R1 ack — capa-firewall: high×3 + low for architectural escalation
+# release track R1 ack — capa-firewall: high×3 + low for architectural escalation
 # (capa-firewall escalates eagerly per Pulido §3.5; low threshold = more
 # frequent confirmation).
 budget_breach_threshold = "high"
@@ -121,7 +121,7 @@ invariant_violation = "high"
 architectural_review_escalation = "low"
 
 [autonomy.voting]
-# Phase 0 R2 ack — capa-firewall: 100% consensus; never early-stop.
+# release track R2 ack — capa-firewall: 100% consensus; never early-stop.
 plurality_threshold_pct = 100
 fmv_enable = true
 ems_enable = false
@@ -152,7 +152,7 @@ diff_size = 5
 duration = 5
 
 # ──────────────────────────────────────────────────────────────────────────
-# Caronte — Plan 19 in-daemon code-graph engine; strict branch policy;
+# Caronte — the release design in-daemon code-graph engine; strict branch policy;
 # HRA review on.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -161,7 +161,7 @@ branch_policy = "strict"
 hra_review_enabled = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Notifications — Plan 7 Q12 B (R4)
+# Notifications — the release design Q12 B (R4)
 # Pulido demands explicit re-trigger; action-needed treated as urgent;
 # info-immediate delivered during quiet.
 # ──────────────────────────────────────────────────────────────────────────
@@ -171,28 +171,28 @@ quiet_hours_start = "23:00"
 quiet_hours_end = "06:00"
 
 [notifications.severity_per_doctrine]
-# Phase 0 R4 ack — capa-firewall: action-needed promoted to urgent;
+# release track R4 ack — capa-firewall: action-needed promoted to urgent;
 # info-immediate delivered during quiet.
 action_needed_promotes_to_urgent = true
 urgent_bypasses_quiet_hours = true
 info_immediate_during_quiet = "deliver"
 
 # ──────────────────────────────────────────────────────────────────────────
-# zen day cadence — Plan 7 Q13 C (R5)
+# zen day cadence — the release design Q13 C (R5)
 # capa-firewall: daily 7-day; tight 1h catch-up reflects scoped-context
 # philosophy (every workday + weekend gets brief; 1h catch-up enforces
 # fresh-state).
 # ──────────────────────────────────────────────────────────────────────────
 
 [zen_day_cadence]
-# Phase 0 R5 ack — capa-firewall: daily 7-day; tight 1h catch-up.
+# release track R5 ack — capa-firewall: daily 7-day; tight 1h catch-up.
 morning_brief_cron = "0 9 * * 1-7"
 morning_brief_if_within_hours = 1
 eod_digest_cron = "0 17 * * 1-7"
 eod_digest_if_within_hours = 1
 
 # ──────────────────────────────────────────────────────────────────────────
-# Quota — Plan 7 Q4 C: capa-firewall tightest bounds (4 max concurrent
+# Quota — the release design Q4 C: capa-firewall tightest bounds (4 max concurrent
 # within 2*2=4 Workforce capacity ceiling).
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -202,7 +202,7 @@ max_daily_budget_usd = 20
 max_storage_gb = 10
 
 # ──────────────────────────────────────────────────────────────────────────
-# Tmux — Plan 7 Q7 D: capa-firewall = 4h idle TTL (short).
+# Tmux — the release design Q7 D: capa-firewall = 4h idle TTL (short).
 # ──────────────────────────────────────────────────────────────────────────
 
 [tmux]
@@ -210,7 +210,7 @@ idle_ttl_min = 240
 auto_reap = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Scheduling — Plan 7 Q9 C: capa-firewall = skip (notify via Plan 7 Q12 B
+# Scheduling — the release design Q9 C: capa-firewall = skip (notify via the release design Q12 B
 # severity escalation; capa-firewall promotes action_needed → urgent so the
 # operator sees missed runs immediately).
 # ──────────────────────────────────────────────────────────────────────────
@@ -220,7 +220,7 @@ miss_policy = "skip"
 miss_catchup_max_jobs = 0
 
 # ──────────────────────────────────────────────────────────────────────────
-# WFQ — Plan 7 Q10 D: capa-firewall project weight 30 (below default).
+# WFQ — the release design Q10 D: capa-firewall project weight 30 (below default).
 # Reject overcommit so quota cap is hard.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -240,7 +240,7 @@ obsidian_vault_path = "~/Obsidian/zen-swarm-capa-firewall"
 cross_project_aggregator_enabled = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Gateway — Plan 11 Phase A mcpgateway RBAC deny list (Q1=B + inv-zen-084)
+# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + invariant)
 # capa-firewall: caronte code-graph tools + research_agentic denied per spec
 # §1 Q3 (capa-firewall augmentation disabled). Operator-tunable extension.
 # ──────────────────────────────────────────────────────────────────────────
@@ -254,7 +254,7 @@ disabled_tools = [
 ]
 
 # ──────────────────────────────────────────────────────────────────────────
-# Augmentation — Plan 11 Phase C HARD GUARD per inv-zen-170.
+# Augmentation — the release design release track HARD GUARD per invariant.
 # capa-firewall: augmentation DISABLED by default; max_kg_tokens=0.
 # 500ms timeout (lowest); forbidden cross-project scope.
 # ──────────────────────────────────────────────────────────────────────────
@@ -267,7 +267,7 @@ on_timeout = "graceful_truncate"
 cross_project_scope = "forbidden"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Renderers — Plan 12 Phase E M-5 platform-renderer enable matrix.
+# Renderers — the release design release track M-5 platform-renderer enable matrix.
 # capa-firewall: ink + email + markdown_fallback only. Telegram, slack,
 # voice, web all DISABLED (third-party leak risk + audible exposure).
 # voice_tts_enabled=false is the fast-path guard for audit-chain rejection.

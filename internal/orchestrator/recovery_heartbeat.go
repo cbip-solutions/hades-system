@@ -48,8 +48,8 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
 )
 
-// HeartbeatProbe is the read-only liveness view of worker (and
-// future reviewer) subprocesses. The real implementation in
+// HeartbeatProbe is the read-only liveness view of release worker (and
+// future reviewer) subprocesses. The real implementation in release
 // queries worker.SubprocessManager for the in-memory last-beat
 // timestamp map; tests inject deterministic fakes (see fakeProbe).
 //

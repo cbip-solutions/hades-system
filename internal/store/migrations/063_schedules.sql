@@ -1,35 +1,35 @@
--- Migration 063: schedules + schedule_history (Plan 7 Phase D Task D-1).
+-- Migration 063: schedules + schedule_history (the release design release track Task D-1).
 --
 -- Hosts the durable scheduler substrate: Routine + Task + Loop schedules
 -- (3-tier per spec §1 Q8 D) plus the per-fire outcome ledger driving
--- `zen schedule history`. Phase D ships only the schema (this file) and
+-- `zen schedule history`. release track ships only the schema (this file) and
 -- the Go-side CRUD primitives (internal/store/schedules.go); the
 -- internal/scheduler/ package and its scheduleradapter bridge land in
 -- D-2..D-12.
 --
--- Drift note (Plan 7 Phase D-1):
+-- Drift note (the release design release track):
 --   The original master plan §"Migration numbering coordination"
---   reserved slot 059 for Phase D's schedules table under an
+--   reserved slot 059 for release track schedules table under an
 --   execution-order sequence A→C→B→D→E. Reality at HEAD on 2026-05-07:
---     - 057 taken by Phase A (projects_alias + path_history)
---     - 060 taken by Phase B-6 (priority_overrides; joint payload split)
---     - 062 taken by Phase C-11 (tmux_session_state)
---     - schemaVersion = 26 entering Phase D-1
---   Phase D-1 therefore picks 063 — the next free number on the
---   daemon.db schema chain. Slot 059 is reserved for Phase E inbox
---   storage, slot 061 is reserved for Phase G knowledge-index DB
+--     - 057 taken by release track (projects_alias + path_history)
+--     - 060 taken by release track (priority_overrides; joint payload split)
+--     - 062 taken by release track (tmux_session_state)
+--     - schemaVersion = 26 entering release track
+--   release track therefore picks 063 — the next free number on the
+--   daemon.db schema chain. Slot 059 is reserved for release track inbox
+--   storage, slot 061 is reserved for release track knowledge-index DB
 --   (separate SQLite file, no daemon.db schemaVersion bump).
---   schemaVersion bump path: 26 (Phase C-11) → 27 (this migration).
+--   schemaVersion bump path: 26 (release track) → 27 (this migration).
 --
--- Boundary (inv-zen-031 Phase D slice):
+-- Boundary (invariant release track slice):
 --   internal/scheduler/* MUST NEVER import internal/store; the daemon
 --   adapter (internal/daemon/scheduleradapter/) is the ONLY package
 --   permitted to bridge scheduler value types to *store.Store via the
---   CRUD primitives in internal/store/schedules.go. Phase K's
---   inv_zen_122 compliance test extends to enforce this on Plan-7
+--   CRUD primitives in internal/store/schedules.go. release track
+--   inv_zen_122 compliance test extends to enforce this on the release design
 --   packages.
 --
--- Boundary (inv-zen-080 / inv-zen-123 Phase D slice):
+-- Boundary (invariant / invariant release track slice):
 --   The schedules table itself stores no LLM-call surface; it is the
 --   trigger substrate. scheduler.Fire orchestrates dispatch via the
 --   dispatcher.Client interface so this table is single-egress-aligned
@@ -37,10 +37,10 @@
 --   never internal/providers/ direct).
 --
 -- Compile-time invariants surfaced:
---   - inv-zen-120 (jitter deterministic) — enforced in app code via
+--   - invariant (jitter deterministic) — enforced in app code via
 --     scheduler.ComputeJitter(routineID, period); the schedules.id
 --     column is the canonical hash input.
---   - inv-zen-121 (per-doctrine miss policy + rate-limit) — enforced
+--   - invariant (per-doctrine miss policy + rate-limit) — enforced
 --     in app code via scheduler.DoctrineMissPolicy(d) matrix and
 --     scheduler.RateLimiter; the miss_policy column is CHECK-
 --     constrained so a corrupted INSERT fails fast.
@@ -51,7 +51,7 @@
 --
 -- One row per Routine, Task, or Loop schedule. UUIDv7-keyed (TEXT PK
 -- so the canonical id is content-addressable on the wire and across
--- backups). All time columns store UTC unix seconds (per inv-zen-005);
+-- backups). All time columns store UTC unix seconds (per invariant);
 -- the Go layer translates to time.Time, mapping NULL to zero-value.
 --
 -- Constraints:
@@ -72,7 +72,7 @@
 --                          fires (better error message + faster
 --                          short-circuit).
 --
---   - project_alias TEXT NOT NULL: Phase A projectctx alias. Plain text
+--   - project_alias TEXT NOT NULL: release track projectctx alias. Plain text
 --                          — NOT a FK to projects_alias.alias.
 --                          Schedules are forensic-relevant beyond
 --                          project lifecycle (`zen day` digest reads
@@ -83,9 +83,9 @@
 --                          tmux_session_state (migration 062).
 --
 --   - action TEXT NOT NULL: semantic action key (e.g. `morning-brief`,
---                          `cost-sweep`, `hra-l2-tick`); the Plan 3
+--                          `cost-sweep`, `hra-l2-tick`); the the release design
 --                          dispatcher resolves this to a TaskInput via
---                          routing rules (Plan 5+ extends).
+--                          routing rules (the release design+ extends).
 --
 --   - trigger_type INTEGER NOT NULL CHECK (trigger_type IN (0,1,2)):
 --                          0=Cron, 1=HTTP, 2=GitPoll. Three trigger
@@ -106,7 +106,7 @@
 --                          0=Skip, 1=CatchUpBounded, 2=Coalesce,
 --                          3=NotifyOnly. Per-doctrine miss-policy
 --                          matrix lives in scheduler.DoctrineMissPolicy
---                          (inv-zen-121); CHECK is the floor.
+--                          (invariant); CHECK is the floor.
 --
 --   - miss_lookback_seconds INTEGER NOT NULL DEFAULT 604800:
 --                          7 days; configurable per routine via
@@ -153,7 +153,7 @@
 --     scan path.
 --
 --   - idx_schedules_due (status, next_run_at_unix) WHERE status = 0:
---     the scheduler tick (Phase D-12) runs every 10s per spec §3.6;
+--     the scheduler tick (release track) runs every 10s per spec §3.6;
 --     the partial index keeps the scan in-index without touching
 --     disabled or failed rows, accelerating the common case (most
 --     rows enabled, a few due at any time).
@@ -196,8 +196,8 @@ CREATE INDEX IF NOT EXISTS idx_schedules_project_alias
 -- queries by schedule_id + time range; idx_schedule_history_lookup
 -- supports both predicates with one composite index.
 --
--- Retention: Phase D ships unbounded growth; the per-spec retention
--- policy is deferred to Plan 8 polish (operator-driven vacuum). No FK
+-- Retention: release track ships unbounded growth; the per-spec retention
+-- policy is deferred to the release design quality (operator-driven vacuum). No FK
 -- back to schedules.id (history outlives the schedule — `zen day`
 -- digest must surface fires for since-deleted routines).
 --
@@ -216,7 +216,7 @@ CREATE INDEX IF NOT EXISTS idx_schedules_project_alias
 --   - reason TEXT NOT NULL DEFAULT '': human-readable failure / skip
 --                          reason; empty for Success.
 --   - cost_usd REAL NOT NULL DEFAULT 0: cost emitted from cost_ledger
---                          post-call (Plan 3 inv-zen-062 integration).
+--                          post-call (the release design invariant integration).
 --                          The Go-side rejects negative values.
 --   - duration_ms INTEGER NOT NULL DEFAULT 0: end-to-end fire latency.
 --                          The Go-side rejects negative values.

@@ -1,4 +1,3 @@
-// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -197,9 +196,9 @@ func queryGlobal(ctx context.Context, a *Aggregator, req *QueryRequest, queryEmb
 // - Any other scope → base (the sub-query's natural source: "fts", "vec", "graph").
 //
 // Rationale queryPinIndex operates on the aggregator's own promoted pins;
-// operator-curated pins deserve the 1.5× boost in cross-scope comparisons.
+// operator-reviewed pins deserve the 1.5× boost in cross-scope comparisons.
 // Per-project results from queryGlobal do NOT get the boost — they are raw
-// retrieval matches, not operator-curated promotions.
+// retrieval matches, not operator-reviewed promotions.
 func pickSource(scope Scope, base string) string {
 	if scope == ScopePinnedOnly {
 		return "pin"

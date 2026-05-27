@@ -16,7 +16,7 @@
 //
 // Graceful degradation: any nil KnowledgeAdapterP9 passed
 // to a constructor returns an http.HandlerFunc that immediately responds
-// 503 {"error":"feature not configured","code":"plan9_knowledge_unavailable"}.
+// 503 {"error":"feature not configured","code":"release_knowledge_unavailable"}.
 // wires *daemon.Server to satisfy KnowledgeAdapterP9 once the
 // adapter is available; during development the 503 makes intent
 // explicit.

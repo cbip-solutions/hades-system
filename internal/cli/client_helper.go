@@ -7,8 +7,8 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
+	"github.com/spf13/cobra"
 )
 
 func bypassNewClientWithURL(cmd *cobra.Command, url string) *client.Client {

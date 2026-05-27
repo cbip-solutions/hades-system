@@ -7,7 +7,7 @@
 // internal/scheduler/prober.go.
 //
 // invariant + invariant anchor: the dispatcher.bound aspect probes
-// that the scheduler can reach the dispatcher at runtime — a
+// that the scheduler can reach the release dispatcher at runtime — a
 // non-nil "scheduler.fire dispatched directly" path would surface here.
 package cli
 

@@ -14,7 +14,7 @@ import (
 
 // GlobalConfig is the on-disk shape of $XDG_CONFIG_HOME/zen-swarm/config.toml,
 // authored by WriteGlobalConfig at the end of `zen config init`. The shape
-// mirrors the doctrine TOML pattern (schema-versioned per
+// mirrors the release doctrine TOML pattern (schema-versioned per
 // ADR-0050). All non-mandatory fields are `omitempty` so unselected
 // answers do not pollute the file.
 //

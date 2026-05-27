@@ -1,9 +1,9 @@
--- Plan 4 Phase A — singleton row holding the last-loaded doctrine
--- snapshot. Daemon reads on startup so Plan 5 workers dispatched
+-- the release design release track — singleton row holding the last-loaded doctrine
+-- snapshot. Daemon reads on startup so the release design workers dispatched
 -- before a restart see consistent doctrine values across the restart
 -- boundary (no layer-flicker due to mid-flight ~/.config/ changes).
 --
--- Phase G wires /v1/doctrine/state endpoint that reads here.
+-- release track wires /v1/doctrine/state endpoint that reads here.
 -- Singleton enforced by CHECK(id = 1).
 --
 -- IF NOT EXISTS (defense-in-depth, I-2 fix): aligns with migrations

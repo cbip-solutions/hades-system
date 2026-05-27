@@ -8,16 +8,16 @@ import threading
 from collections.abc import Callable
 from typing import Any
 
-                                                                              
+# Default TUI wait timeout in seconds. Tests may monkeypatch to a small value.
 _TUI_TIMEOUT: float = 60.0
 
-                                  
+# Truthy answer set for confirm().
 _TRUTHY_ANSWERS = frozenset({"y", "yes", "o", "once", "session", "always"})
 
 
-                                                                             
-                                     
-                                                                             
+# ---------------------------------------------------------------------------
+# Private prompt_toolkit indirections
+# ---------------------------------------------------------------------------
 
 
 def _get_app_or_none() -> object | None:
@@ -54,9 +54,9 @@ def _run_in_terminal(func: Callable[[], None]) -> None:
         func()
 
 
-                                                                             
-                  
-                                                                             
+# ---------------------------------------------------------------------------
+# Internal helpers
+# ---------------------------------------------------------------------------
 
 
 def _truthy(answer: str | None, default: bool) -> bool:
@@ -86,7 +86,7 @@ def _prompt_terminal_confirm(question: str, default: bool) -> bool:
     full_prompt = f"{question} {hint} "
 
     if app is not None:
-                                                                            
+        # Live TUI: schedule input on the event-loop thread, wait from here.
         result: list[bool] = [default]
         done = threading.Event()
 
@@ -110,7 +110,7 @@ def _prompt_terminal_confirm(question: str, default: bool) -> bool:
         except (EOFError, KeyboardInterrupt):
             return default
 
-                                     
+    # Gateway / non-tty: never block.
     return default
 
 
@@ -149,13 +149,13 @@ def _prompt_terminal_choose(prompt: str, options: list[str]) -> str | None:
         except (EOFError, KeyboardInterrupt):
             return None
 
-                                     
+    # Gateway / non-tty: never block.
     return None
 
 
-                                                                             
-            
-                                                                             
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
 
 
 def confirm(
@@ -188,7 +188,7 @@ def confirm(
         if confirm("Overwrite config.yaml?", default=False, ctx=ctx):
             config_path.write_text(new_content)
     """
-                                                             
+    # 1. Hermes gateway seam (hasattr-guarded — invariant).
     if ctx is not None and hasattr(ctx, "request_user_input"):
         hint = "[y/N]" if not default else "[Y/n]"
         answer: str = ctx.request_user_input(
@@ -197,7 +197,7 @@ def confirm(
         )
         return _truthy(answer, default)
 
-                                                                            
+    # 2-4. Terminal path (live TUI / HERMES_INTERACTIVE / gateway fallback).
     return _prompt_terminal_confirm(question, default)
 
 
@@ -229,7 +229,7 @@ def choose(
         if backend is not None:
             cfg["backend"] = backend
     """
-                                                             
+    # 1. Hermes gateway seam (hasattr-guarded — invariant).
     if ctx is not None and hasattr(ctx, "request_user_input"):
         answer = ctx.request_user_input(
             f"{prompt} ({'/'.join(options)}): ",
@@ -237,5 +237,5 @@ def choose(
         )
         return answer if answer in options else None
 
-                         
+    # 2-4. Terminal path.
     return _prompt_terminal_choose(prompt, options)

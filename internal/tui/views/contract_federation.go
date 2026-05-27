@@ -2,7 +2,7 @@
 // Package views — contract_federation.go.
 //
 // F7 Code Graph panel "Contract Federation" sub-panel per spec §10.3
-// + master C-14. Renders three sections sourced from the
+// + master C-14. Renders three sections sourced from the release
 // workspace federation substrate,
 // breaking-change events, and L10 dispatch
 // decisions:

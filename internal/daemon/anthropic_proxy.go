@@ -3,7 +3,7 @@
 // for POST /v1/messages.
 //
 // dispatches via the orchestrator → dispatcher → Tier 1 (bypass) /
-// Tier 2+ (OpenClaude) chain. functionality preserved end-to-end:
+// Tier 2+ (OpenClaude) chain. release functionality preserved end-to-end:
 // Idempotency-Key auto-generation, X-Zen-Conversation-Id
 // extraction, multi-value header preservation (Anthropic-Beta etc).
 //
@@ -25,10 +25,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/cbip-solutions/hades-system/internal/daemon/dispatcher"
 	"github.com/cbip-solutions/hades-system/internal/daemon/orchestrator"
 	"github.com/cbip-solutions/hades-system/internal/providers"
+	"github.com/google/uuid"
 )
 
 var multiValueHeaders = map[string]struct{}{
@@ -87,7 +87,7 @@ var hopByHopHeaders = map[string]struct{}{
 // headers are dropped — they live in the typed Call fields above.
 // - Forwards via the orchestrator which stamps X-Zen-* correlation
 // headers, resolves the routing profile, and dispatches to Tier 1 /
-// Tier 2+ via the dispatcher. Per ADR-0008: dispatcher chooses
+// Tier 2+ via the dispatcher. Per ADR-0008: release dispatcher chooses
 // tier-of-tier (in-house bypass vs OpenClaude substrate); provider-
 // level routing within Tier 2+ is OpenClaude's responsibility.
 // - Mirrors upstream status + headers verbatim, drops hop-by-hop on
@@ -100,7 +100,7 @@ var hopByHopHeaders = map[string]struct{}{
 // error message is included verbatim because the dispatcher layer
 // already wraps backend errors with truncated upstream bodies (cap
 // 512 bytes per provider backend convention) and CostEvents redact
-// credentials at emission. Phase 2 redact module (internal/redact)
+// credentials at emission. redact module (internal/redact)
 // confirms zero-secret leakage on this path.
 //
 // invariant: this handler is the single egress point for /v1/messages.

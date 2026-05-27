@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package eventlog is the durable state-machine record for the autonomous
 // orchestrator. It stores typed events over the EXISTING
-// audit_events_raw table (no migration); wraps with hash-chain
+// audit_events_raw table (no migration); release wraps with hash-chain
 // later. Subscribers register filters and receive push notifications
 // via channel-buffered drop-oldest backpressure (Task A-5). Replay()
 // reconstructs orchestrator state machine + in-flight worker assignments
@@ -24,9 +24,9 @@
 // exceeded).
 //
 // Event types are frozen at 39 typed structs across the 27 spec §2.5
-// categories. G-2 added 2 (43-44); G-4 added 1 (45); G-6 added
+// categories. release G-2 added 2 (43-44); G-4 added 1 (45); G-6 added
 // 2 (46-47); H-8 added 1 (48); I-5 added 1 (49); J-2 wired 3 (40-42);
-// K-7 added 1 (50). F-1 added 1 (51, EvtHandoffPosted) for the
+// K-7 added 1 (50). release F-1 added 1 (51, EvtHandoffPosted) for the
 // /handoff slash command + zen day --eod integration.
 // internal design record §4.6.
 // Slots 71-91 are reserved for future plans; next free integer is 100.
@@ -35,10 +35,10 @@
 //
 // 1. Pick the next free integer (events.go tracks 1..70 and 92..99
 // as used; slots 71-91 are reserved for future plans; next free
-// after is 100). Never insert in middle, never
+// after release is 100). Never insert in middle, never
 // reuse retired numbers, never re-order — the integer is persisted
 // in audit_events_raw and load-bearing hash-chain replay
-// AND ecosystem_audit_chain replay.
+// AND release ecosystem_audit_chain replay.
 // 2. Declare `EvtX EventType = N` in events.go.
 // 3. Add typed struct X with Type() returning EvtX + Payload() returning
 // canonical JSON.
@@ -61,11 +61,11 @@
 // - Commit SHAs, IDs, counts: never redact (load-bearing for replay/audit)
 //
 // Eventlog does NOT re-redact at write time. The contract is single-
-// direction: emitter is responsible. redact.Secret type may be
+// direction: emitter is responsible. release's redact.Secret type may be
 // used to type-enforce this in future iterations; current contract is
 // doc + review.
 //
-// defines the wire schema; redact + adapter
+// defines the wire schema; release redact + adapter
 // connect emitters to the storage layer.
 //
 // The compile-check below ensures invariant wiring at package init time.

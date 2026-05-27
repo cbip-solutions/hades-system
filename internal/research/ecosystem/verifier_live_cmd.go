@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 package ecosystem
 
-// verifier_live_cmd.go — production LiveCmdRunner (
+// verifier_live_cmd.go — production LiveCmdRunner (release
 // task D-5, Appendix A.3).
 //
 // Shells out to per-ecosystem package-manager / doc-tool binaries:

@@ -6,9 +6,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-                                                                           
-                                                                             
-                       
+# Import helpers from the plugin's sub-packages. Import errors here surface
+# at register-time and Hermes' loader will log them via the plugin error path
+# (LoadedPlugin.error).
 from .commands.handoff import handle_handoff
 from .commands.install_mcps import handle_install_mcps
 from .commands.start import handle_start
@@ -23,15 +23,15 @@ from .skins.hades import _maybe_activate_hades, register_hades_skin
 _PLUGIN_ROOT = Path(__file__).resolve().parent
 _SKILLS_DIR = _PLUGIN_ROOT / "skills"
 
-                                                                          
-                                                                            
-                                                                        
-                                                                      
-                                                  
- 
-                                                                       
-                                                                          
-                                                                      
+# Module-global RendererRegistry instance. Populated by `register(ctx)` on
+# plugin load via `register_default_renderers(_RENDERER_REGISTRY)`. zen-side
+# callbacks (hook handlers, AFK summary builder, slash command handlers)
+# consume this registry via `get_renderer_registry()` when dispatching
+# citation envelopes for platform-specific output.
+#
+# Per the empirically verified 2026-05-11 Hermes plugin spike artifact,
+# Hermes does NOT auto-discover renderers — they are a zen-internal module
+# imported here and made available to zen-side code via this accessor.
 _RENDERER_REGISTRY: RendererRegistry = RendererRegistry()
 
 
@@ -42,7 +42,7 @@ def get_renderer_registry() -> RendererRegistry:
     builder, slash command handlers) to dispatch citation envelopes
     through the 6 platform renderers + markdown fallback.
 
-     this returns a registry pre-populated with the 6 default
+    release track this returns a registry pre-populated with the 6 default
     platform renderers (Ink/Telegram/Slack/Email/Voice/Web) and the
     universal markdown fallback (registry-internal)."""
     return _RENDERER_REGISTRY
@@ -69,28 +69,28 @@ def register(ctx: Any) -> None:
       /hades:audit-impact, /hades:doctrine-drift-check,
       /hades:knowledge-{query,promote}, /hades:full, /hades:voice,
       /hades:openspec-{apply,archive,propose,resume},
-      /hades:status, /hades:dashboard + /hades:panel
+      /hades:status (the release design C), /hades:dashboard + /hades:panel (the release design D)
     """
-                                                                               
+    # --- Hooks ---------------------------------------------------------------
     ctx.register_hook("on_session_start", on_session_start)
     ctx.register_hook("on_session_end", on_session_end)
     ctx.register_hook("pre_tool_call", pre_tool_call)
     ctx.register_hook("post_tool_call", post_tool_call)
     ctx.register_hook("pre_llm_call", pre_llm_call)
 
-                                                                               
-                                                                          
-                                                                        
-                                                                         
-                                                                           
-                                                                          
-                                                                         
-                                                              
+    # --- HADES skin (the release design release track) ---------------------------------------
+    # Deploy hades.yaml to ~/.hermes/skins/ at register-time so Hermes can
+    # discover the skin via its standard user-skin loader. Activation is
+    # gated by HERMES_SKIN=hades env (set by the release track `hades` wrapper)
+    # and handled in the _maybe_activate_hades on_session_start hook below.
+    # Per the release design release track B-1 amendment: Hermes v0.13.0 does not expose a
+    # register_skin() Python API; YAML deployment + env-driven activation
+    # is the supported plugin-contributed-skin extension path.
     try:
         register_hades_skin()
     except Exception as e:  # pragma: no cover — defensive
-                                                                        
-                                                            
+        # Log + continue: the rest of the plugin must still load even if
+        # the skin write fails (read-only ~/.hermes/, etc.).
         import logging
 
         logging.getLogger(__name__).warning(
@@ -98,15 +98,15 @@ def register(ctx: Any) -> None:
         )
     ctx.register_hook("on_session_start", _maybe_activate_hades)
 
-                                                                               
-                                                                          
-                                                                          
-                                                                                
-                                                                           
-                                                                          
+    # --- the release design release track: wizard auto-launch hook ---------------------------
+    # Third on_session_start hook. Detects first-run condition by checking
+    # ~/.config/zen-swarm/config.toml presence + HADES_NO_WIZARD=1 escape.
+    # Spawns `hades config init` subprocess (the release design wizard surface) on trigger.
+    # No-op on subsequent sessions (config present). invariant preserved:
+    # wizard is subprocess to local Go binary, not LLM-mediated HTTP call.
     ctx.register_hook("on_session_start", _maybe_launch_wizard)
 
-                                                                               
+    # --- Skills (registered with full SKILL.md paths) ------------------------
     ctx.register_skill(
         "hades",
         _SKILLS_DIR / "hades" / "SKILL.md",
@@ -115,15 +115,15 @@ def register(ctx: Any) -> None:
     ctx.register_skill(
         "start",
         _SKILLS_DIR / "start" / "SKILL.md",
-        description="Recover a hades session: read HANDOFF.md TL;DR + git state + active plan.",
+        description="Recover a hades session: read .hades/session.md TL;DR + git state + active plan.",
     )
     ctx.register_skill(
         "handoff",
         _SKILLS_DIR / "handoff" / "SKILL.md",
-        description="Snapshot hades session state to HANDOFF.md, commit, optionally push.",
+        description="Snapshot hades session state to .hades/session.md, commit, optionally push.",
     )
 
-                                                                               
+    # --- the release design release track Task B-9: 10 NEW skills -----------------------------
     ctx.register_skill(
         "brainstorm",
         _SKILLS_DIR / "brainstorm" / "SKILL.md",
@@ -137,7 +137,7 @@ def register(ctx: Any) -> None:
     ctx.register_skill(
         "execute-plan",
         _SKILLS_DIR / "execute-plan" / "SKILL.md",
-        description="hades subagent-driven plan execution (Stage 0 reality-check, per-task dispatch, review gates)",
+        description="hades subagent-driven plan execution (release stage reality-check, per-task dispatch, review gates)",
     )
     ctx.register_skill(
         "doctrine",
@@ -147,12 +147,12 @@ def register(ctx: Any) -> None:
     ctx.register_skill(
         "amendment",
         _SKILLS_DIR / "amendment" / "SKILL.md",
-        description="hades doctrine-amendment lifecycle: list, show, acknowledge, or deny proposals (Plan 5+8)",
+        description="hades doctrine-amendment lifecycle: list, show, acknowledge, or deny proposals (the release design)",
     )
     ctx.register_skill(
         "impact-pre-merge",
         _SKILLS_DIR / "impact-pre-merge" / "SKILL.md",
-        description="hades pre-merge blast radius analysis via Plan 11 augmentation pipeline + caronte code-graph",
+        description="hades pre-merge blast radius analysis via the release design augmentation pipeline + caronte code-graph",
     )
     ctx.register_skill(
         "audit-impact",
@@ -162,33 +162,33 @@ def register(ctx: Any) -> None:
     ctx.register_skill(
         "doctrine-drift-check",
         _SKILLS_DIR / "doctrine-drift-check" / "SKILL.md",
-        description="hades doctrine drift detection via caronte code-graph query vs Plan 8 config",
+        description="hades doctrine drift detection via caronte code-graph query vs the release design config",
     )
     ctx.register_skill(
         "knowledge-query",
         _SKILLS_DIR / "knowledge-query" / "SKILL.md",
-        description="hades cross-project federated knowledge query (Plan 9 D aggregator + Plan 11 privacy filter)",
+        description="hades cross-project federated knowledge query (the release design D aggregator + the release design privacy filter)",
     )
     ctx.register_skill(
         "knowledge-promote",
         _SKILLS_DIR / "knowledge-promote" / "SKILL.md",
-        description="hades knowledge promotion to global cross-project memory (Plan 9 D, audit-logged)",
+        description="hades knowledge promotion to global cross-project memory (the release design D, audit-logged)",
     )
 
-                                                                               
-                                                                         
-                                                                   
-                                                                        
-                                                                         
+    # --- Slash commands ------------------------------------------------------
+    # Note: Hermes lowercases + strips leading slash; the registered name
+    # becomes ``hades:start`` after normalization (we pass the full
+    # qualified form so the slash command surfaces as ``/hades:start``).
+    # release track (the release design) completed the rebrand from the legacy namespace.
     ctx.register_command(
         "hades:start",
         handler=handle_start,
-        description="Recover a HADES session (HANDOFF.md + git state + active plan).",
+        description="Recover a HADES session (.hades/session.md + git state + active plan).",
     )
     ctx.register_command(
         "hades:handoff",
         handler=handle_handoff,
-        description="Snapshot HADES session state to HANDOFF.md and commit.",
+        description="Snapshot HADES session state to .hades/session.md and commit.",
     )
     ctx.register_command(
         "hades:install-mcps",
@@ -202,7 +202,7 @@ def register(ctx: Any) -> None:
         args_hint="[--json]",
     )
 
-                                                                               
+    # --- the release design release track Task B-3: Workflow commands -------------------------
     from .commands.brainstorm import brainstorm_handler
     from .commands.write_plan import write_plan_handler
     from .commands.execute_plan import execute_plan_handler
@@ -226,7 +226,7 @@ def register(ctx: Any) -> None:
         args_hint="<plan-path>",
     )
 
-                                                                               
+    # --- the release design release track Task B-4: Doctrine + amendment commands -------------
     from .commands.doctrine import doctrine_handler
     from .commands.amendment_list import amendment_list_handler
     from .commands.amendment_show import amendment_show_handler
@@ -236,13 +236,13 @@ def register(ctx: Any) -> None:
     ctx.register_command(
         "hades:doctrine",
         handler=doctrine_handler,
-        description="Show active doctrine OR override at runtime (audit-logged via Plan 9)",
+        description="Show active doctrine OR override at runtime (audit-logged via the release design)",
         args_hint="[doctrine-name]",
     )
     ctx.register_command(
         "hades:amendment-list",
         handler=amendment_list_handler,
-        description="List pending doctrine-amendment proposals (Plan 5 + Plan 8 lifecycle)",
+        description="List pending doctrine-amendment proposals (the release design + the release design lifecycle)",
         args_hint="[project]",
     )
     ctx.register_command(
@@ -264,7 +264,7 @@ def register(ctx: Any) -> None:
         args_hint="<amendment-id> <reason>",
     )
 
-                                                                               
+    # --- the release design release track Task B-5: zen-specific KG commands ------------------
     from .commands.impact_pre_merge import impact_pre_merge_handler
     from .commands.audit_impact import audit_impact_handler
     from .commands.doctrine_drift_check import doctrine_drift_check_handler
@@ -288,24 +288,24 @@ def register(ctx: Any) -> None:
         args_hint="[project]",
     )
 
-                                                                               
+    # --- the release design release track Task B-6: Knowledge commands ------------------------
     from .commands.knowledge_query import knowledge_query_handler
     from .commands.knowledge_promote import knowledge_promote_handler
 
     ctx.register_command(
         "hades:knowledge-query",
         handler=knowledge_query_handler,
-        description="Cross-project federated knowledge query (Plan 9 D aggregator + Plan 11 privacy filter)",
+        description="Cross-project federated knowledge query (the release design D aggregator + the release design privacy filter)",
         args_hint="<pattern> [scope]",
     )
     ctx.register_command(
         "hades:knowledge-promote",
         handler=knowledge_promote_handler,
-        description="Promote a knowledge item to global (Plan 9 D promote with audit chain anchor)",
+        description="Promote a knowledge item to global (the release design D promote with audit chain anchor)",
         args_hint="<item-id> <reason>",
     )
 
-                                                                               
+    # --- the release design release track Task B-7: AFK commands ------------------------------
     from .commands.full import full_handler
     from .commands.voice import voice_handler
 
@@ -322,7 +322,7 @@ def register(ctx: Any) -> None:
         args_hint="[query]",
     )
 
-                                                                               
+    # --- the release design release track Task B-8: OpenSpec commands -------------------------
     from .commands.openspec_apply import openspec_apply_handler
     from .commands.openspec_archive import openspec_archive_handler
     from .commands.openspec_propose import openspec_propose_handler
@@ -353,14 +353,14 @@ def register(ctx: Any) -> None:
         args_hint="<feature-name>",
     )
 
-                                                                                
-                                                                            
-                                                                             
-                                                                               
-                                                                                 
-                                                                               
-                                                                                
-            
+    # --- the release design release track: TUI dashboard + panel slash commands ---------------
+    # /hades:dashboard — subprocess handoff to TUI dashboard (no panel arg).
+    # /hades:panel <name> — subprocess handoff to TUI dashboard with specific
+    # panel; validates name against the 12-panel enum; invalid names render the
+    # release track catalog cli.arg-validation-fail block LOCALLY (release stage C-5 operator
+    # policy: no daemon /v1/errors/render roundtrip). Per spec §Q8
+    # D-pattern + the release design A A-7 wrapper alias. Extends the release design B's 22 commands
+    # to 24.
     from .commands.dashboard import dashboard_handler
     from .commands.panel import panel_handler
 
@@ -383,23 +383,23 @@ def register(ctx: Any) -> None:
         args_hint="<name>",
     )
 
-                                                                               
-                                                                              
-                                                                  
-                                                                             
-                                                                          
-                                                
+    # --- GAP 2 (ADR-0110): dormant status-bar provider -----------------------
+    # Hermes v0.13.0 exposes no plugin seam to contribute a persistent status-
+    # bar segment — ``register_status_provider`` does NOT exist on
+    # PluginContext in the current release. This guard registers the provider
+    # ONLY when the seam is present: dormant today, auto-activates if/when
+    # Hermes ships ``register_status_provider``.
     if hasattr(ctx, "register_status_provider"):
         from .commands.status_provider import status_segments
 
         ctx.register_status_provider(status_segments)
 
-                                                                               
-                                                                     
-                                                                       
-                                                                         
-                                                                      
-                                                                       
-                                                                         
-                                  
+    # --- Citation renderers (the release design release track) --------------------------------
+    # Populates the module-global RendererRegistry with the 6 default
+    # platform renderers (Ink/Telegram/Slack/Email/Voice/Web). zen-side
+    # callbacks consume the registry via ``get_renderer_registry()`` when
+    # dispatching citation envelopes for platform-specific output. The
+    # universal markdown fallback is registry-internal (mirrors the release design
+    # ``internal/citation/markdown_fallback.go``) and applies on doctrine
+    # disable or renderer failure.
     register_default_renderers(_RENDERER_REGISTRY)

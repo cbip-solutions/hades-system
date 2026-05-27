@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package main — orchestrator_wiring.go ( Task 17 cutover:
+// Package main — orchestrator_wiring.go (release Task 17 cutover:
 // the 2-tier hard-wire is gone; the dispatcher now resolves a profile to
 // an ordered provider-name cascade against the runtime registry).
 //
@@ -46,7 +46,7 @@
 // verify` surfaces it). Same end-shape as the bypass-disabled path.
 // - Every backend in a cascade fails → dispatcher returns
 // ErrAllTiersUnavailable; the proxy maps it to 503 (same operator-
-// visible behaviour as "/v1/messages returns 503" contract).
+// visible behaviour as release's "/v1/messages returns 503" contract).
 //
 // invariant: this file does the cross-package wiring (orchestrator +
 // dispatcher + providers + dispatcheradapter + bypass.Client) that no
@@ -62,12 +62,12 @@
 // PLAN 16 T17 KILL: the `tier1/tier2` hard-wire + the
 // ZEN_OPENCLAUDE_ENDPOINT/TOKEN env-var path + the inlineTwoTier*
 // compile-keep shims + the noopCostSink placeholder — all deleted.
-// CostSink path now lands in cost_ledger via costLedgerSink (
+// CostSink path now lands in cost_ledger via costLedgerSink (release
 // Task 18).
 //
 // PHASE 8 PLACEHOLDER: CircuitBreakerConfig is constructed with zero values
 // here so NewCircuitBreaker applies its defaults (FailureThreshold=3,
-// Window=5m, Cooldown=10m). doctrine-implementation will read the
+// Window=5m, Cooldown=10m). release doctrine-implementation will read the
 // per-doctrine TOML schema and override these knobs. Until then defaults
 // are the contract.
 
@@ -141,17 +141,17 @@ type buildOrchestratorDeps struct {
 	Resolver *config.ProfileResolver
 }
 
-// buildOrchestrator assembles the full LLM-traffic chain plus the
+// buildOrchestrator assembles the full release LLM-traffic chain plus the
 // I-5 operator-facing pin overrides + PAYG safety net.
 //
-// The pre- positional signature (bypassClient, st, notifier) is
+// The pre-release positional signature (bypassClient, st, notifier) is
 // gone — at 5 inputs a struct (buildOrchestratorDeps) is materially
 // cleaner. Registry + Resolver are now load-bearing: the dispatcher
 // resolves a cascade per request against deps.Registry / deps.Resolver
 // (no more hard-coded tier1/tier2).
 //
 // Compatibility contract: a disabled "bypass" backend is registered into
-// deps.Registry HERE for operator profiles created before the
+// deps.Registry HERE for operator profiles created before the release
 // sidecar extraction. The real Tier 1 provider is "bypass-sidecar", wired by
 // dispatcheradapter.RegisterSidecars in main.go when sidecars.toml declares a
 // healthy localhost sidecar.

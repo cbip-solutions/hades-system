@@ -296,7 +296,7 @@ var errSkipResumability = errors.New("ingester: skip per resumability check")
 //
 // startedAt is captured here (at processPackage entry) and threaded to
 // emit* helpers so audit payloads distinguish processing-start from emit
-// time ( B-10 fix-cycle 2026-05-18 / IMPORTANT-2; pre-fix the
+// time (release B-10 fix-cycle 2026-05-18 / IMPORTANT-2; pre-fix the
 // emit-time time.Now() served BOTH started_at AND completed_at, which
 // made ops dashboards lose per-package latency signal).
 //

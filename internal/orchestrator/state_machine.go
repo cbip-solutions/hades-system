@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package orchestrator state machine —
+// Package orchestrator state machine — release
 //
 // Defines the 9 supervisor states and the canonical TransitionTable of
 // 28 valid transitions per spec §1 Q6 D. invariant enforces that

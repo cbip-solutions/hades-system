@@ -388,7 +388,7 @@ func parseCSV(s string) map[string]bool {
 	return out
 }
 
-// emitMigrateClaudeCodeAudit fires the canonical audit events for
+// emitMigrateClaudeCodeAudit fires the canonical release audit events for
 // a successful `zen migrate claude-code` apply: one
 // evt.migrate.claude_code.run summarising the migration + one
 // evt.migrate.claude_code.permission.unmapped per unrecognised permission

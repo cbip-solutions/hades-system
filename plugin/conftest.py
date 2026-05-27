@@ -40,11 +40,11 @@ from _pytest.main import Dir
 
 _PLUGIN_PARENT_DIR = Path(__file__).resolve().parent
 
-                                                                          
-                                                                             
-                                                                         
-                                                                        
-                                                    
+# Pre-load the hades plugin as hermes_plugins.hades before pytest's import
+# machinery tries to import hades.conftest (which triggers hades/__init__.py,
+# which does absolute imports like hermes_plugins.hades.renderers.types).
+# We replicate the same loader pattern as plugin/hades/conftest.py — the
+# child conftest will skip on the sys.modules guard.
 _NS_PARENT = "hermes_plugins"
 _HADES_DIR = _PLUGIN_PARENT_DIR / "hades"
 if _HADES_DIR.is_dir():
@@ -68,9 +68,9 @@ if _HADES_DIR.is_dir():
             try:
                 _spec.loader.exec_module(_mod)
             except Exception:
-                                                                         
-                                                                           
-                                              
+                # If pre-load fails (e.g. missing optional dependencies),
+                # remove the partial module so the child conftest can retry
+                # with its own error handling.
                 sys.modules.pop(_module_name, None)
                 raise
 
@@ -95,4 +95,4 @@ def pytest_collect_directory(
     """
     if path.parent == _PLUGIN_PARENT_DIR and (path / "__init__.py").is_file():
         return Dir.from_parent(parent, path=path)
-    return None                           
+    return None  # default: pytest decides

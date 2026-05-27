@@ -6,7 +6,7 @@
 // internal/client.MergeClient transport. The handler is wired in the
 // daemon bootstrap (alongside F-1's NewMergeEngineFromConfig); for
 // the production wiring of `Engine` is left optional so the
-// route registration test can run without the full substrate
+// route registration test can run without the full release substrate
 // graph.
 //
 // Routes (registered on a *http.ServeMux via Register):
@@ -26,7 +26,7 @@
 // other and invariant is preserved).
 //
 // surfaces are intentionally THIN for inspect / replay /
-// score-explain / baseline / anomaly: full capture
+// score-explain / baseline / anomaly: full release capture
 // machinery is the load-bearing dependency, and the F.7 amendment
 // wires it. The cache + config endpoints are FULLY wired today
 // (cache.Size + cache.Clear + ScoringConfig fields → wire types).

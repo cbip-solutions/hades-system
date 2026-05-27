@@ -1,4 +1,3 @@
-// go:build cgo
 //go:build cgo
 // +build cgo
 
@@ -6,7 +5,7 @@
 
 // Package cache — dispatcher.go
 //
-// Dispatcher is the cache-aware research MCP integration layer (
+// Dispatcher is the cache-aware research MCP integration layer (release
 // ). It composes the exact lookup (F-5), semantic lookup (F-6),
 // HEAD revalidation (F-7), and fresh MCP dispatch into the canonical
 // LookupOrDispatch flow defined in spec §3.5.

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain.go.
 //
-// `zen audit-chain` is the umbrella for chain-integrity, backup,
+// `zen audit-chain` is the release umbrella for chain-integrity, backup,
 // witness, and recovery operations. Distinct's `zen audit`
 // event-emit/query surface (which lives in audit.go and serves the
 // audit_events_raw row-level read API).
 //
 // Spec §6.1 enumerates 7 direct subcommands; cobra registers them here:
 // - verify-chain: walk the tile-log Merkle + record_hash + witness sig [I-2]
-// - history: query eventlog with chain proofs [I-2]
+// - history: query release eventlog with chain proofs [I-2]
 // - recover: interactive recovery (Litestream + cold archive + verify) [I-2]
 // - checkpoint: capa-firewall manual checkpoint [I-3]
 // - cold-archive: nested group → ls | restore [I-3]
@@ -40,9 +40,9 @@ package cli
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/cli/format"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 func NewAuditChainCmd() *cobra.Command {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — knowledge_p9.go.
 //
-// `zen knowledge` is the operator surface for the cross-project
+// `zen knowledge` is the release operator surface for the cross-project
 // knowledge aggregator (spec §6.1 Q6 C). Five leaves cover the full lifecycle:
 //
 // query <q> federated/pinned/chain-verified search
@@ -11,18 +11,18 @@
 // rebuild re-embed + re-index one project
 //
 // DISTINCT's `zen knowledge` surface (knowledge.go: query/reindex/
-// stats backed by FTS5 daemon routes). This group hits the
+// stats backed by FTS5 daemon routes). This group hits the release
 // aggregator endpoints /v1/knowledge/{query,promote,unpromote,list,rebuild}.
 //
 // Constructor NewKnowledge9Cmd() (not NewKnowledgeCmd) — zero-arg, registered
-// on root as `knowledge-p9` to avoid shadowing the existing group.
+// on root as `knowledge-p9` to avoid shadowing the existing release group.
 // See root.go for the registration comment.
 //
 // invariant: promote and unpromote MUST require non-empty --reason; enforced
 // via cobra MarkFlagRequired (presence gate) + TrimSpace check in RunE
 // (non-empty gate). Cross-cutting compliance test in reason_flag_test.go (I-12).
 //
-// invariant: aggregator NEVER queries the web — territory. No
+// invariant: aggregator NEVER queries the web — release territory. No
 // --remote or --ecosystem flag is exposed here.
 package cli
 

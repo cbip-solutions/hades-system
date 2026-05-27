@@ -6,10 +6,10 @@
 // - internal/tui/views F3 Cost panel via the
 // AugmentCache thin alias in internal/client/codegraph_plan12.go
 //
-// Background — substrate gap closure:
+// Background — release substrate gap closure:
 //
 // (internal/client/augment.go::AugmentSummary). The daemon side was
-// scoped for follow-up but never landed; the route returned 404.
+// scoped for follow-up but never landed; the route returned 404. release
 // built the F3 augmentation cache stats display on top of that
 // wrapper, where it manifested as "augmentation stats render zero
 // forever" in production.
@@ -29,11 +29,11 @@
 // Defensive design: handler tolerates absent audit events (returns zeros
 // with date echoed) and malformed payloads (skipped + counted in a
 // warning log; never crashes). The F3 panel renders zeros as "no
-// activity today" rather than an error — same posture as
+// activity today" rather than an error — same posture as release's
 // bypass-config 503 graceful-degrade.
 //
-// Cherry-pick narrative: this commit completes the substrate gap
-// inherited; could be cherry-picked to a
+// Cherry-pick narrative: this commit completes the release substrate gap
+// inherited; could be cherry-picked to a release.1
 // backport branch if needed.
 //
 // invariant: handler relies on AuditQueryCtx (interface), not the

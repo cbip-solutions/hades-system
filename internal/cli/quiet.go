@@ -31,7 +31,7 @@
 //
 // Production wires through NewQuietCmdProd which adapts *client.Client
 // → QuietClient. Tests inject a fake client via the QuietClientFactory
-// parameter to NewQuietCmd; this mirrors the D-13 schedule + E-12
+// parameter to NewQuietCmd; this mirrors the release D-13 schedule + E-12
 // inbox dependency-injection pattern.
 //
 // Exit-code mapping (per spec §6.2; ErrRecoverable contract from
@@ -40,7 +40,7 @@
 // - 1 operator-recoverable: invalid duration on --urgent-pause,
 // conflicting flags (e.g., --list + --cancel).
 // - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
-// (until SetQuietStore wires; mirrors /v1/messages
+// (until SetQuietStore wires; mirrors release /v1/messages
 // graceful-degradation pattern).
 //
 // File-as-source-of-truth: the persistent config (Default + PerProject)

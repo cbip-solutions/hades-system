@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package graphql — GraphQL breaking-change detector wrapping
+// Package graphql — release GraphQL breaking-change detector wrapping
 // vektah/gqlparser/v2 (MIT). The sole Go SDL diff library used here per
 // invariant; the imports scan asserts no other diff library is imported
 // in this file (except the gated Node fallback in nodefallback.go).

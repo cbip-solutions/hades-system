@@ -11,9 +11,9 @@ The first tagged source release is `v1.0.0`.
 
 - HADES system v1.0.0 release under the MIT License.
 - Local daemon, CLI, TUI, Hermes plugin, and four MCP servers for agentic
-  development workflows.
+  development flows.
 - Autonomous orchestration primitives: task queues, worktree management,
-  hierarchical review, merge evaluation, confirmation gates, budget controls,
+  hierarchical review, merge evaluation, confirmation controls, budget controls,
   notification routing, and recovery paths.
 - Caronte, the in-daemon code-graph engine for symbol search, impact analysis,
   blast-radius scoring, implementation lookup, co-change analysis, and
@@ -25,7 +25,7 @@ The first tagged source release is `v1.0.0`.
   license posture, and security reporting.
 - Security policy using GitHub Security Advisories as the primary private
   vulnerability reporting channel.
-- DCO-based contribution workflow and release rulesets.
+- DCO-based contribution guidelines and artifact-verification notes.
 
 ### Changed
 
@@ -36,9 +36,9 @@ The first tagged source release is `v1.0.0`.
 
 ### Security
 
-- Added secret scanning for release material.
-- Added identity and local-path checks for release material.
-- Added Go documentation gates for exported public APIs.
+- Added secret scanning expectations for published material.
+- Added identity and local-path checks for published material.
+- Documented exported Go APIs and public security expectations.
 
 ### Notes
 

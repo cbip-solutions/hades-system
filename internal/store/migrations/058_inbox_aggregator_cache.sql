@@ -1,11 +1,11 @@
 -- Migration 058: per-project `inbox` table + daemon.db `inbox_aggregator_cache`
--- (Plan 7 Phase E Task E-1, Q11 C hybrid storage).
+-- (the release design release track Task E-1, Q11 C hybrid storage).
 --
 -- ============================================================================
 -- Architecture (spec §3.3, Q11 C):
 --
 --   Per-project authoritative `inbox` table:
---     - severity 4-tier CHECK (inv-zen-124)
+--     - severity 4-tier CHECK (invariant)
 --     - 5min sliding-window dedup UNIQUE on
 --       (event_type, content_hash, created_at_bucket)
 --     - cascade-delete on project removal (handled at adapter layer; the
@@ -37,7 +37,7 @@
 --   2. A generated stored column adds version-compat complexity (SQLite
 --      ≥3.31 only); we target a wider compatibility window.
 --   3. Explicit bucket storage is the cleanest path: Go-side
---      `dedup.ComputeDedupKey` (Phase E-4) writes
+--      `dedup.ComputeDedupKey` (release track) writes
 --      `created_at_bucket = created_at / 300`; SQLite enforces UNIQUE
 --      on the triple. Defense in depth: Go-side rejects malformed
 --      bucket values BEFORE the SQL layer; SQLite UNIQUE is the floor.
@@ -45,48 +45,48 @@
 -- ============================================================================
 -- Inv-zen anchors (spec §7.2):
 --
---   - inv-zen-113 (no cross-project leak): inbox_aggregator_cache rows
+--   - invariant (no cross-project leak): inbox_aggregator_cache rows
 --     carry project_id matching the originating per-project source DB.
---     Compile-time anchor in inbox/sentinel.go (Phase E-2);
+--     Compile-time anchor in inbox/sentinel.go (release track);
 --     runtime via the outbox bridge writing project_id from the source
---     scope (Phase E-8); property-based fuzz test in
+--     scope (release track); property-based fuzz test in
 --     tests/compliance/inv_zen_113_no_cross_project_inbox_leak_test.go
---     (Phase E-14).
+--     (release track).
 --
---   - inv-zen-124 (severity 4-tier CHECK enum): inbox.severity column +
+--   - invariant (severity 4-tier CHECK enum): inbox.severity column +
 --     inbox_aggregator_cache.severity column both enforce the 4-tier
 --     enum at the SQL layer. Defense in depth: Go-side ValidSeverity
---     (Phase E-2) rejects first; SQL CHECK is the floor.
+--     (release track) rejects first; SQL CHECK is the floor.
 --
---   - inv-zen-031 (boundary): internal/inbox/* MUST NEVER import
+--   - invariant (boundary): internal/inbox/* MUST NEVER import
 --     internal/store. The internal/daemon/inboxadapter/ package
---     (Phase E-10) is the ONLY package permitted to bridge inbox
+--     (release track) is the ONLY package permitted to bridge inbox
 --     value types to *store.Store via this migration's tables.
---     Phase K's inv_zen_122 compliance test extends to enforce this
---     on Plan-7 packages (greps internal/inbox/*.go for forbidden
+--     release track inv_zen_122 compliance test extends to enforce this
+--     on the release design packages (greps internal/inbox/*.go for forbidden
 --     internal/store imports).
 --
 -- ============================================================================
--- Drift note (Plan 7 Phase E-1):
+-- Drift note (the release design release track):
 --
 --   The original master plan §"Migration numbering coordination"
---   reserved slot 058 for Phase E inbox storage under an
---   execution-order sequence A → C → B → D → E in which Phase E ships
+--   reserved slot 058 for release track inbox storage under an
+--   execution-order sequence A → C → B → D → E in which release track ships
 --   migrationV27 (HEAD baseline 23 → ... → 26 → 27).
 --
 --   Reality at HEAD on 2026-05-07:
---     - 057 taken by Phase A (projects_alias + path_history, V24)
---     - 060 taken by Phase B-6 (priority_overrides, V25)
---     - 062 taken by Phase C-11 (tmux_session_state, V26)
---     - 063 taken by Phase D-1 (schedules + schedule_history, V27)
---     - schemaVersion = 27 entering Phase E-1.
+--     - 057 taken by release track (projects_alias + path_history, V24)
+--     - 060 taken by release track (priority_overrides, V25)
+--     - 062 taken by release track (tmux_session_state, V26)
+--     - 063 taken by release track (schedules + schedule_history, V27)
+--     - schemaVersion = 27 entering release track.
 --
---   Phase E-1 therefore picks migrationV28 (next free) — the FILE
+--   release track therefore picks migrationV28 (next free) — the FILE
 --   number stays at 058 (slot reserved for inbox per master plan
 --   reconciliation; only the in-Go variable name shifts to V28).
---   schemaVersion bump path: 27 (Phase D-1) → 28 (this migration).
+--   schemaVersion bump path: 27 (release track) → 28 (this migration).
 --
---   Slot 061 remains reserved for Phase G knowledge-index DB
+--   Slot 061 remains reserved for release track knowledge-index DB
 --   (separate SQLite file, no daemon.db schemaVersion bump).
 --
 -- ============================================================================
@@ -117,7 +117,7 @@
 --                          unused for inbox but present for shape
 --                          parity with the cache table).
 --
---   - severity TEXT NOT NULL CHECK: 4-tier enum per inv-zen-124.
+--   - severity TEXT NOT NULL CHECK: 4-tier enum per invariant.
 --                          Defense in depth — Go-side ValidSeverity
 --                          rejects first; SQL CHECK is the floor.
 --
@@ -127,7 +127,7 @@
 --                          (string-based).
 --
 --   - content_hash TEXT NOT NULL: sha256 hex of canonical fields used
---                          by inbox/dedup.ComputeDedupKey (Phase E-4).
+--                          by inbox/dedup.ComputeDedupKey (release track).
 --                          The dedup contract: same content_hash within
 --                          a 5min bucket → same notification, second
 --                          write rejected by UNIQUE.
@@ -136,7 +136,7 @@
 --                          this layer. The Go-side decoder validates
 --                          per event_type before surfacing to render.
 --
---   - created_at INTEGER NOT NULL: UTC unix seconds (inv-zen-005).
+--   - created_at INTEGER NOT NULL: UTC unix seconds (invariant).
 --
 --   - created_at_bucket INTEGER NOT NULL: created_at / 300 (5min). The
 --                          dedup pivot. Stored explicitly (not generated)
@@ -148,7 +148,7 @@
 --                          query path.
 --
 --   - snoozed_until INTEGER: NULL if not snoozed. UTC unix seconds.
---                          Sweep runs Phase E-12 (zen inbox snooze
+--                          Sweep runs release track (zen inbox snooze
 --                          surfaces).
 --
 -- Index strategy:
@@ -173,7 +173,7 @@
 --                          Go-side dedup module computes the bucket;
 --                          the SQL UNIQUE is the floor. The Go layer
 --                          translates a UNIQUE failure into
---                          ErrDedupViolation (Phase E-3 sentinel)
+--                          ErrDedupViolation (release track sentinel)
 --                          plus driver-stable
 --                          sqlite3.CONSTRAINT_UNIQUE (defense in
 --                          depth — same predicate in two places).
@@ -189,11 +189,11 @@ CREATE TABLE IF NOT EXISTS inbox (
                           'action-needed',
                           'info-immediate',
                           'info-digest'
-                      )),                              -- inv-zen-124
+                      )),                              -- invariant
     event_type        TEXT NOT NULL,                  -- e.g. "hra.l4_alert"
     content_hash      TEXT NOT NULL,                  -- sha256 hex of canonical fields
     payload           TEXT NOT NULL DEFAULT '{}',     -- JSON blob
-    created_at        INTEGER NOT NULL,               -- UTC unix seconds (inv-zen-005)
+    created_at        INTEGER NOT NULL,               -- UTC unix seconds (invariant)
     created_at_bucket INTEGER NOT NULL,               -- created_at / 300 (5min dedup pivot)
     acked_at          INTEGER,                        -- NULL if not acked
     snoozed_until     INTEGER,                        -- NULL if not snoozed
@@ -213,7 +213,7 @@ CREATE INDEX IF NOT EXISTS idx_inbox_unacked
 --
 -- Q11 C hybrid: the per-project `inbox` is the authoritative source;
 -- this cache is rebuildable from those sources (Aggregator.Rebuild,
--- Phase E-9). Written by the outbox bridge (Phase E-8) on every
+-- release track). Written by the outbox bridge (release track) on every
 -- per-project INSERT; read-only from the query path. Cold rebuild on
 -- daemon boot — ~1s for 10 projects per spec target.
 --
@@ -222,15 +222,15 @@ CREATE INDEX IF NOT EXISTS idx_inbox_unacked
 --   - cache_id INTEGER PRIMARY KEY AUTOINCREMENT: append-only.
 --
 --   - project_id TEXT NOT NULL: sha256 hex matching authoritative
---                          source. inv-zen-113 anchor — runtime
+--                          source. invariant anchor — runtime
 --                          fanout MUST write the source DB's
 --                          project_id; cross-project leaks fail the
---                          property-based fuzz test (Phase E-14).
+--                          property-based fuzz test (release track).
 --
 --   - project_alias TEXT NOT NULL: human alias joined from projects
 --                          table at write time. Denormalized for the
 --                          `zen day` cross-project digest path
---                          (Phase F leverage-sort) — avoids a JOIN
+--                          (release track leverage-sort) — avoids a JOIN
 --                          on every render.
 --
 --   - notification_id INTEGER NOT NULL: the per-project inbox.id this
@@ -240,7 +240,7 @@ CREATE INDEX IF NOT EXISTS idx_inbox_unacked
 --                          (the periodic Rebuild reconciles).
 --
 --   - severity TEXT NOT NULL CHECK: mirror of the per-project
---                          inv-zen-124 enum. Denormalized but the
+--                          invariant enum. Denormalized but the
 --                          same CHECK enforces parity at the SQL
 --                          layer.
 --
@@ -264,7 +264,7 @@ CREATE INDEX IF NOT EXISTS idx_inbox_unacked
 -- Index strategy:
 --
 --   - idx_aggregator_project: hot `zen day` cross-project digest
---                          (Phase F) + cascade DeleteByProject sweep.
+--                          (release track) + cascade DeleteByProject sweep.
 --
 --   - idx_aggregator_severity_created (composite): accelerates
 --                          severity-filtered chronological reads
@@ -272,7 +272,7 @@ CREATE INDEX IF NOT EXISTS idx_inbox_unacked
 --                          across all projects").
 --
 --   - idx_aggregator_event_type (composite): accelerates the
---                          cross-project collapse rule (Phase E-6
+--                          cross-project collapse rule (release track
 --                          DetectCollapse) which queries by
 --                          event_type + 60s window.
 
@@ -286,7 +286,7 @@ CREATE TABLE IF NOT EXISTS inbox_aggregator_cache (
                           'action-needed',
                           'info-immediate',
                           'info-digest'
-                      )),                              -- inv-zen-124 (mirror)
+                      )),                              -- invariant (mirror)
     event_type        TEXT NOT NULL,
     content_hash      TEXT NOT NULL,
     created_at        INTEGER NOT NULL,

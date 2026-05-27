@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// tier_health_samples.go — CRUD for the tier_health_samples table (
+// tier_health_samples.go — CRUD for the tier_health_samples table (release
 // ; migration 065; invariant).
 //
 // tier_health_samples is the per-provider health observability layer. One

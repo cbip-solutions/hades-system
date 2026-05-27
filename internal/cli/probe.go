@@ -2,11 +2,11 @@
 // Package cli — probe.go
 //
 // Task J-1 introduces the canonical ProbeResult value type that
-// every doctor probe returns. ProbeResult subsumes
+// every release doctor probe returns. ProbeResult subsumes release's
 // CheckResult (which stays in doctor_checks.go for the bypass.* slice;
 // the bridge in RunFullProbe adapts CheckResult → ProbeResult). The
 // rendering format mirrors `flutter doctor` / `brew doctor` and matches
-// the doctor output already in `internal/cli/doctor.go`.
+// the release doctor output already in `internal/cli/doctor.go`.
 //
 // Why a fresh type instead of extending CheckResult: ProbeStatus is an
 // int enum (compile-time exhaustiveness; Glyph/String methods on the
@@ -180,7 +180,7 @@ type StateProber interface {
 	Probe(ctx context.Context) []ProbeResult
 }
 
-// EcosystemProber is the read-only doctor probe surface for the
+// EcosystemProber is the read-only doctor probe surface for the release
 // ecosystem RAG substrate.
 //
 // Probe returns ≥15 ProbeResults covering per-eco DB size, storage budget,
@@ -191,7 +191,7 @@ type StateProber interface {
 //
 // ecosystem.{go,python,typescript,rust}.db_size per-ecosystem DB size on disk
 // ecosystem.budget invariant 4-state classification
-// ecosystem.cas_blobs_shared F CAS dedup count + total size
+// ecosystem.cas_blobs_shared release F CAS dedup count + total size
 // ecosystem.last_upstream_poll last 6h cron upstream-poll timestamp
 // ecosystem.last_weekly_sweep last Sunday 03:00 integrity sweep
 // ecosystem.cron.pid zen-docs-cron worker PID (or "not running")

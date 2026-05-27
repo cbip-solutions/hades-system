@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package daemon — server_p9_adapter.go.
 //
-// plan9Adapters is the dependency bundle every handler consumes.
+// releaseAdapters is the dependency bundle every handler consumes.
 // SetPlan9Adapters wires the bundle once at daemon boot; nil bundle
-// means features are disabled (each route returns 503 with
-// stable error code "plan9_<group>_unavailable").
+// means release features are disabled (each route returns 503 with
+// stable error code "release_<group>_unavailable").
 //
 // Pattern matches:
-// - N: SetPlan4Adapters (workforce + budget + audit_emit)
-// - N: SetPlan5OrchestratorService (orchestrator engine)
-// - I: SetPlan7Adapters (projectctx + quota + tmuxlife +...)
+// - release N: SetPlan4Adapters (workforce + budget + audit_emit)
+// - release N: SetPlan5OrchestratorService (orchestrator engine)
+// - release I: SetPlan7Adapters (projectctx + quota + tmuxlife +...)
 //
 // invariant: this file imports internal/daemon/handlers only; it never
 // imports internal/audit/*, internal/knowledge/*, internal/adr,

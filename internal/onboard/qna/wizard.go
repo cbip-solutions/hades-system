@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"io"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/cbip-solutions/hades-system/internal/onboard"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 type Options struct {

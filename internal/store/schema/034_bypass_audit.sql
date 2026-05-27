@@ -1,5 +1,5 @@
--- Migration 034: extend bypass_audit with conversation_id (Plan 2 Phase G).
--- Additive only; no data loss. Column is nullable because pre-Phase-G rows
+-- Migration 034: extend bypass_audit with conversation_id (the release design release track).
+-- Additive only; no data loss. Column is nullable because pre-release track rows
 -- didn't carry a conversation grouping.
 ALTER TABLE bypass_audit ADD COLUMN conversation_id TEXT;
 CREATE INDEX IF NOT EXISTS idx_bypass_audit_conversation

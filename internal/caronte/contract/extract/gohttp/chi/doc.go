@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package chi is the Go go-chi/chi router extractor (Language:
+// Package chi is the release Go go-chi/chi router extractor (Language:
 // LangGo, framework: "chi"). The (LangGo, "chi") tuple is reserved for this
 // package by daemon-time Register() call (the init() in chi.go).
 //

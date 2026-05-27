@@ -8,8 +8,8 @@
 // 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 //
 // Wire method: KnowledgeUnpromoteP9(ctx, noteID, reason) → error (204 No Content).
-// The daemon emits a vault.note_unpromoted_from_global audit event
-// anchored on the chain.
+// The daemon emits a vault.note_unpromoted_from_global release audit event
+// anchored on the release chain.
 package cli
 
 import (

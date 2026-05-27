@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package store — audit.go
 //
-// CRUD wrappers for the audit triple:
+// CRUD wrappers for the release audit triple:
 // - bypass_audit (existing v1 table, extended in v4 with conversation_id)
 // - bypass_audit_bodies
 // - bypass_audit_pins (v6, retention-exempt registry, Q7 D)

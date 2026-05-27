@@ -14,7 +14,8 @@
 // instead. Cross-compile is exercised by `GOOS=darwin go build./...`
 // in the F-5 gate set; live behaviour lands in integration.
 
-// go:build darwin
+//go:build darwin
+
 package orchestrator
 
 import (

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — research_cache_invalidate.go.
 //
-// NEW leaf: `zen research cache invalidate <query>` — operator
+// NEW release leaf: `zen research cache invalidate <query>` — operator
 // force-stale. Marks cache entries matching the query string as stale so the
 // next dispatch repopulates from source (T9 mitigation).
 //

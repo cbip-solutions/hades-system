@@ -40,9 +40,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/client"
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
+	"github.com/spf13/cobra"
 )
 
 // ErrRecoverable is the sentinel root any operator-recoverable error in
@@ -70,7 +70,7 @@ import (
 var ErrRecoverable = errors.New("operator-recoverable")
 
 // ErrPreflightFailure is the sentinel root any preflight-gate failure
-// ( `zen config init`: Hermes not installed, plugin
+// (release `zen config init`: Hermes not installed, plugin
 // format remnant detected) MUST wrap. The process entry point
 // (cmd/zen/main.go) maps this category to exit code 3 — distinct from
 // generic recoverable errors (exit 1) and unrecoverable errors (exit 2)

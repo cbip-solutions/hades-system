@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package conventional_commit implements conventionalCommitAnalyzer for
-// zen-swarm (spec §1 Q4 B). Enforces CLAUDE.md hard rule 2 +
+// zen-swarm release (spec §1 Q4 B). Enforces project instructions hard rule 2 +
 // invariant.
 //
 // Mechanism shell out to `git log --pretty=%H %s` in the cwd OR a
@@ -30,11 +30,11 @@ import (
 )
 
 // conventionalCommitRegex matches the canonical conventional-commit subject
-// format per CLAUDE.md hard rule 2:
+// format per project instructions hard rule 2:
 //
 // type(scope): subject
 //
-// Where
+// # Where
 //
 // type = one of feat|fix|refactor|test|docs|chore|style|build|ci
 // scope = lowercase letter followed by lowercase letters/digits/hyphens;

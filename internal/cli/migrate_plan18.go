@@ -3,7 +3,7 @@
 //
 // Operator migration tooling for legacy /zen-swarm:* slash command
 // references in operator home-directory surfaces. Subcommand
-// `hades migrate plan-18 --from-zen-swarm-aliases` (or `zen migrate plan-18...`
+// `hades migrate release --from-zen-swarm-aliases` (or `zen migrate release...`
 // via the wrapper). Idempotent + dry-run-by-default + allowlist-scoped +
 // atomic per-file writes + backup directory.
 //
@@ -76,7 +76,7 @@ type allowlistEntry struct {
 
 type migratePlan18Match struct {
 	Path         string
-	LineNo       int    // 1-indexed; 0 = per-file warning/skip entry
+	LineNo       int // 1-indexed; 0 = per-file warning/skip entry
 	LineText     string
 	ReplacedText string
 }

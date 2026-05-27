@@ -15,11 +15,11 @@
 // any pending changes that the operator has authored but not yet
 // reloaded. --project narrows to a specific project alias.
 //
-// History queries the eventlog via daemon /v1/doctrine/history;
+// History queries the release eventlog via daemon /v1/doctrine/history;
 // filter values follow spec §6.1 enumeration.
 //
 // Diff invokes daemon-side canonical diff to keep parity with HTTP API
-// consumers (avoids v1's locally-computed diff that drifts from
+// consumers (avoids release v1's locally-computed diff that drifts from
 // server-side canonicalisation).
 //
 // Validate reads TOML from disk and posts to daemon /v1/doctrine/validate;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — research_cache_ls.go.
 //
-// NEW leaf: `zen research cache ls` — browse cache entries with
+// NEW release leaf: `zen research cache ls` — browse cache entries with release
 // filters (--source URL prefix, --project). Distinct's
 // `cache list` which is project-agnostic and pagination-oriented.
 //
@@ -13,7 +13,7 @@
 //
 // Renders a table with HASH (truncated), SOURCE_URL, PROJECT, BYTES, EXPIRES.
 // The route called is GET /v1/research/cache/list but
-// with query params; the ls command is the CLI-side alias per spec §6.5.
+// with release query params; the ls command is the CLI-side alias per spec §6.5.
 package cli
 
 import (
@@ -21,9 +21,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/cli/format"
 	"github.com/cbip-solutions/hades-system/internal/client"
+	"github.com/spf13/cobra"
 )
 
 func researchCacheLsCmd() *cobra.Command {

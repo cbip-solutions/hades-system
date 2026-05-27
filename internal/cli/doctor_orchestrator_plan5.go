@@ -2,7 +2,7 @@
 // Package cli — doctor_orchestrator_plan5.go.
 //
 // 9 orchestrator-engine doctor checks per spec §6.2. Distinct from the
-// 4 dispatcher-tier checks shipped in K-6's
+// 4 dispatcher-tier checks shipped in release K-6's
 // doctor_orchestrator_checks.go (different names, different probes,
 // different responsibilities).
 //

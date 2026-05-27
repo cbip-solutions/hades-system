@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package stdlib is the Go net/http stdlib (1.22+ "METHOD /path/{param}"
+// Package stdlib is the release Go net/http stdlib (1.22+ "METHOD /path/{param}"
 // pattern) extractor namespace (Language: LangGo, framework: "stdlib"). The
 // concrete RouteExtractor lands in (master row D, wave W3) as
 // stdlib.go. The (LangGo, "stdlib") tuple is reserved for this package by

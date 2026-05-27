@@ -22,7 +22,7 @@
 //
 // Graceful degradation: any nil ADRIndex passed to a
 // constructor returns an http.HandlerFunc that immediately responds with
-// HTTP 503 {"error":"feature not configured","code":"plan9_adr_unavailable"}.
+// HTTP 503 {"error":"feature not configured","code":"release_adr_unavailable"}.
 // wires *daemon.Server once the adr.Index adapter is
 // available; during development the 503 makes intent explicit.
 //

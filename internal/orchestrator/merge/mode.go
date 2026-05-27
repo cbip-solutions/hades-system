@@ -80,7 +80,7 @@ type ModeConfig struct {
 }
 
 // ModeFor returns the canonical ModeConfig for the given Mode. Panics
-// on ModeUnknown or out-of-range — cost_gating MUST always
+// on ModeUnknown or out-of-range — release cost_gating MUST always
 // resolve to a valid Mode; an unmapped Mode is a contract violation
 // upstream and the engine fails fast (defense-in-depth).
 func ModeFor(m Mode) ModeConfig {

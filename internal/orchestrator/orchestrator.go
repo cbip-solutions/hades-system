@@ -3,11 +3,11 @@
 //
 // Package orchestrator owns the autonomous-orchestrator state machine
 // , the depth/width decision (depth.go,
-// D-4/D-5), the dispatcher integration with workforce
+// D-4/D-5), the dispatcher integration with release workforce
 // (dispatcher.go, D-3), and the public RunStage4 entry point used by
 // the daemon HTTP layer (D-2).
 //
-// The Orchestrator is the load-bearing supervisor of It owns
+// The Orchestrator is the load-bearing supervisor of release. It owns
 // one of each substrate primitive (clock, eventlog, state machine,
 // worktree pool, dispatcher, research gate) by composition — it never
 // reaches into them via package globals. New is pure construction
@@ -37,7 +37,7 @@
 // - invariant: this package NEVER imports internal/store. Persistence
 // flows through internal/daemon/orchestratoradapter.
 // - invariant: this package NEVER imports internal/workforce/queue
-// directly. workforce.Manager is wired via the Dispatcher
+// directly. release workforce.Manager is wired via the Dispatcher
 // interface (D-3) so eventlog (durable) ⊥ queue (transient) stays
 // a clean separation.
 //
@@ -64,7 +64,7 @@ import (
 )
 
 // Spec is the build-spec contract RunStage4 consumes. The full
-// implementation lives outside this package ( phase boundaries
+// implementation lives outside this package (release phase boundaries
 // keep Spec abstract here so the orchestrator never reaches into the
 // daemon's domain types). The four methods are the minimal slice the
 // orchestrator needs to size depth/width and propagate the request to
@@ -154,7 +154,7 @@ type Config struct {
 	DefaultDoctrine string
 
 	// PoolCapacity is the orchestrator's view of the worktree pool's
-	// concurrent-lease ceiling. worktreepool.Pool
+	// concurrent-lease ceiling. release worktreepool.Pool
 	// interface intentionally omits a Capacity() method (the elastic
 	// Floor..ElasticMax model is private to the pool implementation),
 	// so the supervisor consumes its own configured capacity instead.

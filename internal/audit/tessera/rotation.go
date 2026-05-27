@@ -58,7 +58,7 @@ func NewRotation(w *Witness, cp *Checkpoint) *Rotation {
 // hold the NEW key. The reason MUST be non-empty (operator-attributable
 // doctrine `--reason` mandatory).
 //
-// Flow
+// # Flow
 //
 // 1. Validate reason (non-empty).
 // 2. Snapshot the OLD pubkey via Witness.Load.

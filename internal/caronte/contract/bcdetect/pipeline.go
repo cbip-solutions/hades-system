@@ -110,7 +110,7 @@ func (p *Pipeline) Fan(ctx context.Context, kind store.APIEndpointKind, endpoint
 	// Wiring a NodeFallback into PipelineDeps MUST NOT bleed into
 	// other detection paths.
 	// 2. Wiring-gate: PipelineDeps.NodeFallback nil ⇒ skip entirely
-	// ( / early- composition root behaviour — no
+	// (release / early-release composition root behaviour — no
 	// graphql-inspector binary available; surface SevInsufficient
 	// to the operator unchanged).
 	// 3. SevInsufficient-gate: no Insufficient entries in goResult ⇒

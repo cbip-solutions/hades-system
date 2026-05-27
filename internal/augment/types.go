@@ -9,7 +9,7 @@
 // - Q2=C — Full 5-lane RRF in this plan (no MVP-then-extend)
 // - Q3=C — Aggressive token budgets (max-scope=25k, default=10k, capa-firewall=0)
 // - Q8=C — Aggressive performance budgets (timeout 2/1/0.5s; concurrency 20/10/5; queue 50)
-// - Q11=α — D substrate consumption
+// - Q11=α — release D substrate consumption
 //
 // Invariants compile-checked + runtime-enforced (per spec §8.2):
 //
@@ -23,7 +23,7 @@
 // Boundary: this package depends ONLY on:
 //
 // - stdlib
-// - internal/knowledge/rrf (CGO-free RRF Fuse — fix-cycle
+// - internal/knowledge/rrf (CGO-free RRF Fuse — release fix-cycle
 // Important-2; replaces the pre-fix inline 135 LOC and the
 // pre-fix-cycle planned import of internal/knowledge/aggregator
 // which transitively pulls CGO mattn/go-sqlite3 — incompatible with

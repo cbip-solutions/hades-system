@@ -20,8 +20,8 @@
 //
 // # Backend routing
 //
-// Production dispatcher → Claude Haiku (`claude-haiku-4-6` per
-// spec §22.7 model table; ratecard ships pricing for this model
+// Production release dispatcher → Claude Haiku (`claude-haiku-4-6` per
+// spec §22.7 model table; release ratecard ships pricing for this model
 // at internal/providers/ratecard_test.go:400). Backend abstracted via
 // the small JudgeBackend interface so this package does NOT import the
 // daemon dispatcher (which would create an import cycle: research/ecosystem
@@ -246,7 +246,7 @@ func buildJudgePrompt(query, answer string, chunks []QueryChunk, citations []Cit
 // generateNonce returns a hex-encoded 16-byte (128-bit) random nonce used
 // to bind prompt-injection envelopes in buildJudgePrompt.
 //
-// crypto/rand.Read is documented to never error on the platforms
+// crypto/rand.Read is documented to never error on the platforms release
 // targets (Linux, macOS, BSD) post-init; the error-handling branch is
 // defensive and falls back to a time-derived nonce so the function is
 // infallible. Even the fallback path is non-trivial to guess by an

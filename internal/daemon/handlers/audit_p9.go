@@ -7,7 +7,7 @@
 // AuditCtxP9 interface and never import internal/audit/* directly.
 //
 // POST /v1/audit-chain/verify-chain — walk chain + return tamper events
-// GET /v1/audit-chain/history — eventlog with chain proofs
+// GET /v1/audit-chain/history — release eventlog with chain proofs
 // POST /v1/audit-chain/recover — two-phase: plan-only OR plan+execute
 // GET /v1/audit-chain/partition-seals — per-project seal list
 // POST /v1/audit-chain/checkpoint — capa-firewall manual checkpoint
@@ -26,7 +26,7 @@
 //
 // Graceful degradation: any nil AuditCtxP9 passed to a
 // constructor returns an http.HandlerFunc that immediately responds with
-// HTTP 503 {"error":"feature not configured","code":"plan9_audit_unavailable"}.
+// HTTP 503 {"error":"feature not configured","code":"release_audit_unavailable"}.
 // wires *daemon.Server to satisfy AuditCtxP9 once the Phase
 // A-C adapter is available; during development the 503 makes intent
 // explicit.

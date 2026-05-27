@@ -23,7 +23,7 @@ PHASE=$(curl --unix-socket /tmp/zen-swarm.sock -s \\
 ### Phase = "proposing"
 
 Re-enter doc-live mode:
-<!--  — pending endpoint registration: swarm conversation history (GET);  swarm substrate ships but conversation log endpoint awaits  -->
+<!-- the release design — pending endpoint registration: swarm conversation history (GET); the release design swarm substrate ships but conversation log endpoint awaits the release design -->
 - Load conversation history from daemon: `curl --unix-socket /tmp/zen-swarm.sock -s "http://unix/v1/swarms/<id>/conversation"`
 - Continue the wizard / live-edit loop where operator left off
 - Render any file diffs since session pause
@@ -31,7 +31,7 @@ Re-enter doc-live mode:
 ### Phase = "applying"
 
 Stream SSE events:
-<!--  — pending endpoint registration: swarm SSE event stream awaits  'zen migrate' -->
+<!-- the release design — pending endpoint registration: swarm SSE event stream awaits the release design 'zen migrate' -->
 - `curl --unix-socket /tmp/zen-swarm.sock --no-buffer "http://unix/v1/swarms/<id>/events"`
 - Surface latest attention items
 - Show progress (tasks complete / tasks in flight / tasks blocked)
@@ -48,12 +48,12 @@ Show "Feature {feature_name} complete; nothing to resume." + show last commit SH
 
 ## 3. Conversation state
 
- wires conversation state preservation across runtime restarts (daemon-side persistence).
+the release design wires conversation state preservation across runtime restarts (daemon-side persistence).
 
 ## Cross-references
 
 - spec §3 modo C híbrido
--  conversation continuity
+- the release design conversation continuity
 - /hades:openspec-propose (precedent if not yet started)
 - /hades:openspec-apply (precedent for apply phase)
 - /hades:openspec-archive (precedent for archive phase)

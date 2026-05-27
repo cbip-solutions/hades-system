@@ -1,7 +1,7 @@
 ---
 name: handoff
 description: |
-  Snapshot HADES session state to HANDOFF.md, commit with conventional
+  Snapshot HADES session state to .hades/session.md, commit with conventional
   message (no AI attribution), prepare for /clear or session end.
   Sister skill to /hades:start.
 keywords:
@@ -21,14 +21,14 @@ Use this skill at the end of a Hermes session before `/clear` OR when the
 operator says "handoff", "snapshot state", or "guardar progreso".
 
 Operator entry point: invoke `/hades:handoff` (slash command registered
-by the plugin). The slash command handler emits a proposed HANDOFF.md
+by the plugin). The slash command handler emits a proposed .hades/session.md
 content + proposed commit message; operator reviews and runs the
 actual git commit (typically via Hermes' Bash tool in the same session).
 
 > **Note**: Step 1 (synthesize state) is partially mechanized in the
 > slash command handler (`commands/handoff.py` collects the git brief
 > + existing-HANDOFF read + commit-message template); steps 2 (read
-> existing HANDOFF.md), 3 (compose updated HANDOFF.md fields with
+> existing .hades/session.md), 3 (compose updated .hades/session.md fields with
 > session-specific TL;DR + plan status + pending dispatches), 4
 > (propose commit message wording), and 5 (operator decides apply vs
 > skip) apply to the LLM consuming this skill in conversation context.
@@ -47,10 +47,10 @@ actual git commit (typically via Hermes' Bash tool in the same session).
    - Suggested first-message for next session (specific, actionable;
      ideally a single-letter approval like `procede` or `y`)
 
-2. **Read existing HANDOFF.md** (if present) to preserve format conventions
+2. **Read existing .hades/session.md** (if present) to preserve format conventions
    and any sections this session did NOT touch.
 
-3. **Compose updated HANDOFF.md** with sections (template below):
+3. **Compose updated .hades/session.md** with sections (template below):
 
    ```markdown
    # HADES — Session handoff
@@ -70,7 +70,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
 
    ## Active plan status
 
-   <Plan N Phase X — <status>; or "no active plan">
+   <release item release track — <status>; or "no active plan">
 
    ## Pending dispatches
 
@@ -86,7 +86,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
 
    ## See also
 
-   - `docs/superpowers/plans/<active-plan-master>.md`
+   - `design records`
    - `docs/METHODOLOGY.md`
    - `~/.claude/projects/-path-to-projects-hades-system/memory/MEMORY.md`
    ```
@@ -97,7 +97,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
    docs(handoff): refresh post <brief-context>
    ```
 
-   Conventional commit, NO AI attribution. inv-zen-004 gate enforces
+   Conventional commit, NO AI attribution. invariant gate enforces
    automatically (pre_tool_call callback blocks if violated).
 
 5. **Operator decides**:
@@ -108,7 +108,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
 
 ## Edge cases
 
-- **HANDOFF.md doesn't exist yet**: create from scratch using the section
+- **.hades/session.md doesn't exist yet**: create from scratch using the section
   template above
 - **No changes since last commit + HANDOFF unchanged**: skip the empty
   commit; ask operator if the session should end without snapshot
@@ -128,6 +128,6 @@ actual git commit (typically via Hermes' Bash tool in the same session).
 
 ## See also
 
-- `/hades:start` — sister skill: read HANDOFF.md and resume
-- `docs/METHODOLOGY.md` §"HANDOFF.md maintenance"
-- Project CLAUDE.md (Hermes-substrate version)
+- `/hades:start` — sister skill: read .hades/session.md and resume
+- `docs/METHODOLOGY.md` §".hades/session.md maintenance"
+- Project project instructions (Hermes-substrate version)

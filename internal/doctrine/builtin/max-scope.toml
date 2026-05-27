@@ -7,13 +7,13 @@
 # decision; under-engineering today is tech debt taken in advance against
 # a worse future self.
 #
-# Phase 0 R1-R5 ack values for max-scope come from
-# docs/superpowers/plans/2026-05-03-plan-8-phase-0-acks.md (operator-acked
+# release track R1-R5 ack values for max-scope come from
+# design records release design (operator-acked
 # 2026-05-08, locked into tests/doctrine/reconciliation_test.go as golden
 # corpus).
 #
 # Edits to this file MUST be accompanied by an updated
-# tests/doctrine/reconciliation_test.go entry AND an ADR per Plan 5 Q10 C
+# tests/doctrine/reconciliation_test.go entry AND an ADR per the release design Q10 C
 # amendment proposal flow. Do NOT bypass the golden corpus + ADR workflow.
 
 schema_version = "1.0"
@@ -21,7 +21,7 @@ doctrine_version = "1.0.0"
 auto_upgrade = "patch"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Doctrine transverse axioms — Q3 C Tier 1 + inv-zen-135
+# Doctrine transverse axioms — Q3 C Tier 1 + invariant
 # Hardcoded operator-only. User TOML attempting override REJECTED at parse.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -44,7 +44,7 @@ max_depth = 4
 max_width_per_layer = 8
 
 [workforce.recovery]
-# Plan 5 Q7 D failure-class taxonomy + retry budget.
+# the release design Q7 D failure-class taxonomy + retry budget.
 transient_retry_budget = 5
 permanent_infra_escalate = "operator-notify"
 doctrine_retry_budget = 3
@@ -62,7 +62,7 @@ cadence_architectural_min = 240
 reviewer_to_worker_ratio = 1
 
 # ──────────────────────────────────────────────────────────────────────────
-# Research — Plan 14 RAG hybrid + ADR-0006 SOTA orchestrator-enforced
+# Research — the release design RAG hybrid + ADR-0006 SOTA orchestrator-enforced
 # max-scope: enabled with generous budget; SOTA enforcement on.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -73,7 +73,7 @@ sota_orchestrator_enforced = true
 
 # ──────────────────────────────────────────────────────────────────────────
 # Gates — test tier enable + coverage thresholds
-# Phase 0 R3 ack — max-scope: full 10-tier coverage.
+# release track R3 ack — max-scope: full 10-tier coverage.
 # ──────────────────────────────────────────────────────────────────────────
 
 [gates]
@@ -95,7 +95,7 @@ rotate_reviewer_every_pr = 1
 require_dual_review = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Autonomy — Plan 5 Q6 D + Q8 B + Q9 D + Q11 C + Q13 D
+# Autonomy — the release design Q6 D + Q8 B + Q9 D + Q11 C + Q13 D
 # max-scope: agent mode (operator-confirmed gates only; remaining
 # decisions autonomous); strict --check.
 # ──────────────────────────────────────────────────────────────────────────
@@ -106,27 +106,27 @@ check_mode = "strict"
 amendment_cooldown_hours = 24
 
 [autonomy.confirmation_policy]
-# Phase 0 R1 ack — max-scope: all "high" (Plan 5 Q6 D pre-acked).
+# release track R1 ack — max-scope: all "high" (the release design Q6 D pre-acked).
 budget_breach_threshold = "high"
 spec_amendment_proposal = "high"
 invariant_violation = "high"
 architectural_review_escalation = "high"
 
 [autonomy.voting]
-# Phase 0 R2 ack — max-scope: full voting stack.
+# release track R2 ack — max-scope: full voting stack.
 plurality_threshold_pct = 50
 fmv_enable = true
 ems_enable = true
 
 [autonomy.cost_degradation]
-# Plan 5 Q9 D — sliding cost thresholds. max-scope: generous bounds;
+# the release design Q9 D — sliding cost thresholds. max-scope: generous bounds;
 # downshift-tier rather than abort to keep work flowing.
 soft_check_usd = 20
 hard_stop_usd = 100
 degrade_strategy = "downshift-tier"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Merge — Plan 6 Q4 B + Q13 D scoring + Q7 B Mode enum + §2.5 doctrine
+# Merge — the release design Q4 B + Q13 D scoring + Q7 B Mode enum + §2.5 doctrine
 # max-scope: balanced mode; broad candidate fan-out (5).
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -137,7 +137,7 @@ anomaly_window_min = 60
 max_candidates = 5
 
 [merge.scoring_weights]
-# Plan 6 Q4 B per-axis weights — sum MUST equal 100 (CFI invariant).
+# the release design Q4 B per-axis weights — sum MUST equal 100 (CFI invariant).
 test_pass = 40
 lint_pass = 15
 coverage = 25
@@ -145,7 +145,7 @@ diff_size = 10
 duration = 10
 
 # ──────────────────────────────────────────────────────────────────────────
-# Caronte — Plan 19 in-daemon code-graph engine; balanced branch policy;
+# Caronte — the release design in-daemon code-graph engine; balanced branch policy;
 # HRA review on.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -154,7 +154,7 @@ branch_policy = "balanced"
 hra_review_enabled = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Notifications — Plan 7 Q12 B severity per-doctrine variation (R4)
+# Notifications — the release design Q12 B severity per-doctrine variation (R4)
 # max-scope: strict tier (urgent always interrupts; action-needed respects
 # quiet hours; info-immediate queues during quiet).
 # ──────────────────────────────────────────────────────────────────────────
@@ -164,25 +164,25 @@ quiet_hours_start = "22:00"
 quiet_hours_end = "07:00"
 
 [notifications.severity_per_doctrine]
-# Phase 0 R4 ack — max-scope: strict tier.
+# release track R4 ack — max-scope: strict tier.
 action_needed_promotes_to_urgent = false
 urgent_bypasses_quiet_hours = true
 info_immediate_during_quiet = "queue"
 
 # ──────────────────────────────────────────────────────────────────────────
-# zen day cadence — Plan 7 Q13 C (R5 per-doctrine variation)
+# zen day cadence — the release design Q13 C (R5 per-doctrine variation)
 # max-scope: twice-daily Mon-Fri 08/18 with 2h catch-up window (narrow).
 # ──────────────────────────────────────────────────────────────────────────
 
 [zen_day_cadence]
-# Phase 0 R5 ack — max-scope: twice-daily, narrow catch-up.
+# release track R5 ack — max-scope: twice-daily, narrow catch-up.
 morning_brief_cron = "0 8 * * 1-5"
 morning_brief_if_within_hours = 2
 eod_digest_cron = "0 18 * * 1-5"
 eod_digest_if_within_hours = 2
 
 # ──────────────────────────────────────────────────────────────────────────
-# Quota — Plan 7 Q4 C per-project quota
+# Quota — the release design Q4 C per-project quota
 # max-scope: open-ended within Workforce capacity (4*8=32 max concurrent).
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -192,7 +192,7 @@ max_daily_budget_usd = 200
 max_storage_gb = 100
 
 # ──────────────────────────────────────────────────────────────────────────
-# Tmux — Plan 7 Q7 D tmux idle TTL
+# Tmux — the release design Q7 D tmux idle TTL
 # max-scope: long-lived sessions (24h idle TTL); auto-reap on.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -201,7 +201,7 @@ idle_ttl_min = 1440
 auto_reap = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Scheduling — Plan 7 Q9 C miss-policy
+# Scheduling — the release design Q9 C miss-policy
 # max-scope: catchup-bounded; recover up to 24 missed jobs.
 # ──────────────────────────────────────────────────────────────────────────
 
@@ -210,7 +210,7 @@ miss_policy = "catchup-bounded"
 miss_catchup_max_jobs = 24
 
 # ──────────────────────────────────────────────────────────────────────────
-# WFQ (Weighted Fair Queueing) — Plan 7 Q10 D
+# WFQ (Weighted Fair Queueing) — the release design Q10 D
 # max-scope: project weight 100 (above default 50); long starvation guard;
 # overcommit policy = degrade.
 # ──────────────────────────────────────────────────────────────────────────
@@ -231,7 +231,7 @@ obsidian_vault_path = "~/Obsidian/zen-swarm-max-scope"
 cross_project_aggregator_enabled = true
 
 # ──────────────────────────────────────────────────────────────────────────
-# Gateway — Plan 11 Phase A mcpgateway RBAC deny list (Q1=B + inv-zen-084)
+# Gateway — the release design release track mcpgateway RBAC deny list (Q1=B + invariant)
 # max-scope: no tools disabled — agentic deep research + caronte permitted
 # (max-scope doctrine intentionally allows the widest tool surface).
 # ──────────────────────────────────────────────────────────────────────────
@@ -240,7 +240,7 @@ cross_project_aggregator_enabled = true
 disabled_tools = []
 
 # ──────────────────────────────────────────────────────────────────────────
-# Augmentation — Plan 11 Phase C 5-lane RRF knobs (Q2=C + Q3=C + Q8=C)
+# Augmentation — the release design release track 5-lane RRF knobs (Q2=C + Q3=C + Q8=C)
 # max-scope: full enable + aggressive 25k tokens + 2s timeout + opt-in
 # cross-project scope.
 # ──────────────────────────────────────────────────────────────────────────
@@ -253,7 +253,7 @@ on_timeout = "graceful_truncate"
 cross_project_scope = "opt-in"
 
 # ──────────────────────────────────────────────────────────────────────────
-# Renderers — Plan 12 Phase E M-5 platform-renderer enable matrix.
+# Renderers — the release design release track M-5 platform-renderer enable matrix.
 # max-scope: all 7 platforms enabled. Replaces hardcoded
 # _DOCTRINE_ENABLED matrix in plugin/zen-swarm/renderers/__init__.py.
 # ──────────────────────────────────────────────────────────────────────────

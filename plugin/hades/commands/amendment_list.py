@@ -59,9 +59,9 @@ Operator can:
 
 ## Cross-references
 
--  +  doctrine-amendment lifecycle
+- the release design + the release design doctrine-amendment lifecycle
 - spec §7.2 (slash commands)
--  invariant amendment audit chain anchor
+- the release design invariant amendment audit chain anchor
 """
 
 

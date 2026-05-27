@@ -2,9 +2,9 @@
 // Package filewatcher monitors file changes for the daemon.
 //
 // Used (doc-live mode: watch openspec/changes/<feature>/*.md
-// and emit events when operator saves) and (config reload on
-// projects.toml edit). establishes types + the debouncer (REAL);
-// the watcher loop itself is
+// and emit events when operator saves) and release (config reload on
+// projects.toml edit). release establishes types + the debouncer (REAL);
+// the watcher loop itself is release.
 package filewatcher
 
 import zerrors "github.com/cbip-solutions/hades-system/internal/errors"

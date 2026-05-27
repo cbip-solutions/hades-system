@@ -12,8 +12,8 @@
 // $XDG_CACHE_HOME/zen-swarm (default ~/.cache/zen-swarm)
 //
 // Retention defaults: doctor-backups 30d / migrate-backups 30d /
-// spike-artifacts indefinite / cache 7d. doctrine TOML override
-// at [state.backup_retention] tunes per-subsystem (+ wiring
+// spike-artifacts indefinite / cache 7d. release doctrine TOML override
+// at [state.backup_retention] tunes per-subsystem (release+ wiring
 // loads the override from the active doctrine bundle).
 package cli
 

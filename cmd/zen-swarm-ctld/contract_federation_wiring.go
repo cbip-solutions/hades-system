@@ -19,7 +19,7 @@
 // Opens the workspace.db via federation.Open(ctx,
 // statePath, opts...) (variadic Option per as-built Wave-1),
 // constructs the Coordinator via plain struct-literal
-// with capability-detected pool (nil-tolerant per D9 —
+// with capability-detected pool (nil-tolerant per D9 — release
 // WorktreePool not yet daemon-wired at v0.19.0 ship; present →
 // ModeAutonomy, absent → ModeSurface). Returns both concretes;
 // main.go defers Close on fedDB + injects via the two narrow

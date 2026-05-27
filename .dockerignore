@@ -1,4 +1,4 @@
-# .dockerignore — Plan 15 Phase D-9
+# .dockerignore — the release design release track
 #
 # Excludes large/unneeded files from the Docker build context so the
 # multi-stage build is fast and the resulting image stays minimal.
@@ -37,9 +37,7 @@ coverage.html
 
 # Documentation source — the image carries only LICENSE + README.md.
 # Everything else under docs/ stays out of the build context.
-docs/
 *.md.bak
-HANDOFF.md
 NEXT_SESSION.md
 CHANGELOG.md.bak
 

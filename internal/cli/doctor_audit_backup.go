@@ -22,9 +22,9 @@ package cli
 import (
 	"context"
 
-	"github.com/spf13/cobra"
 	"github.com/cbip-solutions/hades-system/internal/audit/recovery"
 	"github.com/cbip-solutions/hades-system/internal/client"
+	"github.com/spf13/cobra"
 )
 
 func doctorAuditBackupCmd() *cobra.Command {

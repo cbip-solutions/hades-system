@@ -78,7 +78,7 @@ type Result struct {
 }
 
 // ApplyEngine is the Q1 D contract: live correction at a worker branch's
-// commit boundary, sequential, single-branch. owns cross-worker
+// commit boundary, sequential, single-branch. release owns cross-worker
 // integration via MergeEngine (declared in merge_engine.go).
 //
 // Implementations MUST:

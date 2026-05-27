@@ -3,7 +3,7 @@
 //
 // `zen specs <subcommand>` is the operator-facing entry point for the
 // read-only OpenSpec management surface (spec §0.2). Specs are read-only
-// at the CLI in ; write-back is deferred to post-v0.14.0.
+// at the CLI in release; write-back is deferred to post-v0.14.0.
 //
 // Four leaves under one root:
 //

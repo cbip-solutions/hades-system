@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package proto is the gRPC +.proto IDL extractor namespace
+// Package proto is the release gRPC +.proto IDL extractor namespace
 // (Language: LangProto). The concrete RouteExtractor implementation lands in
 // (master row D, wave W3) as proto.go alongside fixtures under
 // fixtures/. The (LangProto, "grpc") tuple is reserved for this package by

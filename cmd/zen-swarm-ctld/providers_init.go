@@ -2,7 +2,7 @@
 // cmd/zen-swarm-ctld/providers_init.go
 //
 // BuildProviderRegistry constructs the providers.Registry from
-// providers.toml — completing never-shipped registry
+// providers.toml — completing release's never-shipped registry
 // build. It is the cross-package wiring point (orchestrator_wiring.go's
 // sibling) that:
 //

@@ -13,7 +13,7 @@
 // The Adapter satisfies the aggregator.PerProjectKnowledgeStore interface:
 //
 // ListAuthorizedProjects — reads projects_alias (all active rows, no
-// knowledge_aggregator_authorized column in
+// knowledge_aggregator_authorized column in release
 // schema; D-12 ships the defensive fallback that
 // returns all active projects). The column seam
 // is documented as a forward-compat hook for a
@@ -27,7 +27,7 @@
 // UpdateAuditChainAnchor — writes the canonical audit chain anchor back
 // into the per-project vault's
 // knowledge_extension table after a Promote.
-// If the table does not yet exist ( schema
+// If the table does not yet exist (release schema
 // seam), the method creates it on first use
 // (idempotent DDL). This lets D-12 ship without
 // depending on a vault schema migration.

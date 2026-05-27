@@ -9,18 +9,18 @@ import _ "embed"
 // is a JSX-accepting superset; the same defs query applies). The matching
 // capture→store.NodeKind table is tsCaptures (lang_typescript.go).
 //
-// go:embed queries/typescript.scm
+//go:embed queries/typescript.scm
 var tsTagsQuery string
 
 // pyTagsQuery is the Python tags query (queries/python.scm); captures
 // @definition.{function,method,struct}. Table: pyCaptures (lang_python.go).
 //
-// go:embed queries/python.scm
+//go:embed queries/python.scm
 var pyTagsQuery string
 
 // rustTagsQuery is the Rust tags query (queries/rust.scm); captures
 // @definition.{function,method,struct,interface,field}. Table: rustCaptures
 // (lang_rust.go).
 //
-// go:embed queries/rust.scm
+//go:embed queries/rust.scm
 var rustTagsQuery string

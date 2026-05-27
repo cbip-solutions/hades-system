@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — projects_p7.go.
 //
-// Three POST routes for the project lifecycle surface:
+// Three POST routes for the release project lifecycle surface:
 //
 // POST /v1/projects/doctor — diagnose project identity (alias OR cwd)
 // POST /v1/projects/archive — soft-delete (preserves path_history)
 // POST /v1/projects/rm — hard-delete (cascades path_history)
 //
-// These operate on the projects_alias / path_history substrate (
+// These operate on the projects_alias / path_history substrate (release
 // migration 057) via projectctx.ProjectStore (the daemon-side adapter
 // is internal/daemon/projectctxadapter.Adapter — invariant: this
 // package never imports internal/store directly).
 //
 // File name uses the `_p7` suffix to avoid colliding with the legacy
-// projects.go in the same package, which carries stubs for the
+// projects.go in the same package, which carries release stubs for the
 // older /v1/projects/{id}, /v1/projects, agents-md, and sync routes
 // (those operate on the original `projects` table — distinct schema).
 //

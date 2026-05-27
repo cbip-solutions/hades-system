@@ -10,7 +10,7 @@
 // - partitionPattern enforces YYYY_MM (e.g. "2026_05"), matching the monthly
 // audit_events_raw table naming convention from
 // - FillAuditChainAnchor explicitly allows anchor="" (clear semantics) so
-// unpromote and pre- backfill can clear the column without producing
+// unpromote and pre-release backfill can clear the column without producing
 // a parse error on the empty string.
 // - The boundary is respected: no internal/store import.
 // All DB access goes through the PerProjectKnowledgeStore interface.

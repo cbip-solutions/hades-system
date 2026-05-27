@@ -2,7 +2,7 @@
 // Package zenday — cost ledger contract.
 //
 // The local CostStore interface is the boundary between the zenday
-// package and dispatcheradapter.CostStore. Production wiring
+// package and release's dispatcheradapter.CostStore. Production wiring
 // adapts the dispatcher's concrete cost-ledger reader; tests substitute
 // in-memory fakes (per invariant, zenday/ never imports
 // internal/store).

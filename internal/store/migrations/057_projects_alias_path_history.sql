@@ -1,4 +1,4 @@
--- Migration 057: project alias dual-ID + path_history (Plan 7 Phase A, Q3, inv-zen-114).
+-- Migration 057: project alias dual-ID + path_history (the release design release track, Q3, invariant).
 -- Two new tables introduce AIP-2510 dual-ID separation:
 --   - projects_alias: sha256(canonical-path) canonical id + human alias
 --                     UX-facing operator commands resolve via alias
@@ -7,9 +7,9 @@
 --                     different sha256 → daemon prompts `zen project doctor`
 --                     rebind (see internal/projectctx/path_history.go).
 --
--- NOTE: Phase A leaves the existing v1 `projects` table untouched. Plans
--- 1-3 (CRUD stubs returning ErrNotImplementedPlan7) remain functional.
--- Plan 7 reads/writes via `projects_alias` + `path_history`. Future plans
+-- NOTE: release track leaves the existing v1 `projects` table untouched. Plans
+-- 1-3 remain functional.
+-- the release design reads/writes via `projects_alias` + `path_history`. Future plans
 -- may reconcile the legacy table at a major version boundary; until then
 -- the dual-source-of-truth split is intentional + documented.
 --
@@ -28,7 +28,7 @@
 --   - archived_at INTEGER (nullable): NULL = active, non-NULL = archived
 --                   timestamp (ms). Archive ≠ delete; preserves audit trail.
 --
--- ts columns: unix MILLISECONDS (UnixMilli()) — matches Plan 3 cost_ledger
+-- ts columns: unix MILLISECONDS (UnixMilli()) — matches the release design cost_ledger
 -- pattern + supports boundary-correctness tests.
 CREATE TABLE IF NOT EXISTS projects_alias (
     id_sha256       TEXT PRIMARY KEY,        -- sha256 hex (64 chars), of EvalSymlinks(canonical_path)

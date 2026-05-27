@@ -4,7 +4,7 @@
 // Handler for the `get_contract` MCP tool. Validates the required `endpoint`
 // arg + dispatches to engine.GetContract; returns the ContractPayload as the
 // MCP payload. Capa-firewall is enforced UPSTREAM in the engine call
-// (Workspace.authorize() chokepoint, M / A); this handler
+// (Workspace.authorize() chokepoint, release M / release A); this handler
 // does NOT re-enforce — separating capa-firewall (storage) from argument
 // validation (surface) is the invariant split.
 package mcpgateway

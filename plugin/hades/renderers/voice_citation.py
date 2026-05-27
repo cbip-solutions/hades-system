@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
-                                          
-"""TTS-ready voice renderer for citation envelopes."""
+# plugin/hades/renderers/voice_citation.py
+"""TTS-ready voice renderer for citation envelopes (the release design release track Task A-7)."""
 
 from __future__ import annotations
 
@@ -14,19 +14,19 @@ from hermes_plugins.hades.renderers.types import (
     RenderResult,
 )
 
-                                                                   
+# Shell metacharacters stripped from TTS output (defence-in-depth).
 SHELL_METACHARS = "$`;|&<>\\\n\r"
 _SHELL_METACHARS_RE = re.compile(r"[\$`;|&<>\\\n\r]")
-                                                            
+# Markdown formatting chars stripped (TTS mispronunciation).
 _MARKDOWN_FORMATTING_RE = re.compile(r"[*_~\[\]()#{}=+]")
 
-                                                                           
-                                                                          
-                                                      
+# Per-citation word budget (~25 words → ~10 seconds at 150 wpm; 3 citations
+# → 30 seconds total). Total TTS budget is _TOTAL_WORD_BUDGET (~75 words);
+# per-citation budget scales 1/N within that envelope.
 _PER_CITATION_WORD_BUDGET = 25
 _TOTAL_WORD_BUDGET = 75
 
-                                                
+# Number-to-word maps for confidence percentage.
 _TENS_WORDS = {
     0: "zero",
     10: "ten",
@@ -76,7 +76,7 @@ def confidence_to_words(confidence: float) -> str:
     if pct == 100:
         return "one hundred percent"
     if pct < 10:
-                                                      
+        # 0..9: "zero percent" / "five percent" / etc.
         if pct == 0:
             return "zero percent"
         return f"{_ONES_WORDS[pct]} percent"
@@ -123,7 +123,7 @@ def pronounce_event_id(event_id: str) -> str:
     current_is_digit: bool | None = None
     for ch in body:
         if not ch.isalnum():
-                                                                       
+            # Flush any accumulated chunk then skip the non-alnum char.
             if current_chunk:
                 parts.append(_chunk_to_voice(current_chunk, current_is_digit or False))
                 current_chunk = ""
@@ -180,7 +180,7 @@ class VoiceCitationRenderer(Renderer):
             )
 
         full_text = " ".join(sentences)
-                                                  
+        # Final defensive cap on total word count.
         words = full_text.split()
         if len(words) > _TOTAL_WORD_BUDGET:
             full_text = " ".join(words[:_TOTAL_WORD_BUDGET]) + "."
@@ -195,8 +195,8 @@ class VoiceCitationRenderer(Renderer):
     def _build_sentence(self, citation: Envelope, word_budget: int) -> str:
         """Build one TTS-ready sentence per spec §1 Q9 example pattern."""
         payload_words = sanitize_for_tts(citation.payload).split()
-                                                                 
-                             
+        # Take first ~6 payload words; preserves identity without
+        # overrunning budget.
         payload_phrase = " ".join(payload_words[:6])
         if len(payload_words) > 6:
             payload_phrase += " and so on"
@@ -209,8 +209,8 @@ class VoiceCitationRenderer(Renderer):
             f"Citing {source}: {payload_phrase}, "
             f"{event_phrase}, confidence {confidence_phrase}."
         )
-                                                                        
-                                                 
+        # Per-citation budget cap (defensive: keeps the total TTS budget
+        # stable even with adversarial payloads).
         words = sentence.split()
         if len(words) > word_budget:
             words = words[:word_budget]

@@ -3,7 +3,7 @@
 // by RuntimeEvaluator to resolve per-MCP risk tiers + active doctrine
 // profile + allow/deny lists.
 //
-// Production impl wraps doctrine.Active accessor; tests substitute
+// Production impl wraps release doctrine.Active accessor; tests substitute
 // stubPolicy for deterministic state. This indirection (vs reaching
 // into internal/doctrine directly) keeps the eval package boundary
 // minimal — the caller decides how doctrine state is sourced (file,
@@ -16,7 +16,7 @@ type TierPolicy interface {
 	// per-tool-granularity overrides per Q10=D dynamic eval.
 	//
 	// Implementation MUST default to "unknown" for MCPs not in the
-	// curated catalog so the evaluator can apply the conservative
+	// reviewed catalog so the evaluator can apply the conservative
 	// fallback (CallAllowWithAudit under default profile).
 	RiskTierFor(mcpName, toolName string) string
 

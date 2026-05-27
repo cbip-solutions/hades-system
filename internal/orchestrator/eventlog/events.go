@@ -458,7 +458,7 @@ func (e OrchestratorRestarting) Payload() ([]byte, error) { return json.Marshal(
 // completes — successful or HardPause-aborted. originally
 // declared the struct with {SessionID, RecoveryMs, EventsReplayed,
 // EventsCorrupted}; Task E-6 extends it with structured replay-result
-// fields so downstream audit consumers + hash-chain replay can
+// fields so downstream audit consumers + release hash-chain replay can
 // observe the recovered task count and HardPause flag without re-
 // scanning the eventlog.
 //
@@ -536,7 +536,7 @@ func (e WorkerDeath) Payload() ([]byte, error) { return json.Marshal(e) }
 // emits it. (replay) reads it.
 //
 // Field set is the FROZEN integration contract between recovery
-// engine and downstream replay + audit consumers (
+// engine and downstream replay + audit consumers (release
 // hash-chain). Adding fields is non-breaking; renaming or removing
 // requires schema-version coordination.
 //
@@ -873,11 +873,11 @@ func (e ReplayCorruptionDetected) Payload() ([]byte, error) { return json.Marsha
 // BudgetSnapshotError is the audit-trail event the cost-gating evaluator
 // emits when BudgetSnapshotReader.Snapshot
 // returns a non-nil error during a poll cycle. Run continues to the
-// next tick; this event is the diagnostic seam for transient
+// next tick; this event is the diagnostic seam for transient release
 // budget-engine read failures.
 //
 // Privacy contract (IMP-3 carry-forward): Error is the wrapped
-// error.Error() string; callers ( dispatcheradapter Snapshot
+// error.Error() string; callers (release dispatcheradapter Snapshot
 // implementation) MUST ensure the error message never echoes
 // secret-shaped bytes (API tokens, raw URLs with embedded credentials,
 // etc.). The cost-gating engine does NOT redact — it forwards verbatim.
@@ -1019,11 +1019,11 @@ func (e ADRRangeExhausted) Payload() ([]byte, error) { return json.Marshal(e) }
 // Producer/consumer wiring (cross-phase load-bearing):
 // - Producer: plugin /handoff slash command emits via daemon
 // HTTP POST /v1/events/handoff_posted. The plugin also
-// continues to write HANDOFF.md to disk (existing behaviour
+// continues to write .hades/session.md to disk (existing behaviour
 // preserved); the event is the cross-project signal surface.
 // - Consumer A: `zen day --eod` reads per-project event-log
 // entries to compose ProjectStatusSection blocks in the EOD digest.
-// - Consumer B: doctrine notification routing +
+// - Consumer B: release doctrine notification routing + release
 // multi-channel delivery may opt-in for operator-channel surfacing.
 //
 // Field semantics:

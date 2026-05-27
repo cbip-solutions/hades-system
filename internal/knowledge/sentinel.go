@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package knowledge owns the cross-project knowledge aggregator: a SQLite +
 // FTS5 hybrid index over per-project Obsidian-style memory dirs, ADRs,
-// specs, plans, HANDOFF.md, and the global research cache.
+// specs, plans, .hades/session.md, and the global research cache. release
 // (spec internal design record
 // §1 Q16 + Q17 D + §3.5 + §3.6 + §4.5 + §6.6 + §7.2 invariant +
 // invariant).
@@ -19,7 +19,7 @@
 //
 // Imports in this package are intentionally limited to stdlib +
 // database/sql + the SQLite driver (ncruces/go-sqlite3, pure-Go via
-// WASM, no CGO; preserves invariant compatibility for
+// WASM, no CGO; preserves release invariant compatibility for
 // this package's own state). Specifically: no net/http (invariant
 // no remote queries), no internal/store (separate-DB boundary), no
 // internal/projectctx (knowledge runs cross-project; receives ProjectID
@@ -37,7 +37,7 @@ var _ = knowledgeFTS5SchemaSentinel()
 //
 // invariant (per spec §7.2): the three extension-hook columns
 // (audit_chain_anchor, ecosystem_join_keys, caronte_symbol_refs) ship
-// NULL by default in ; INSERT statements MUST NOT populate them.
+// NULL by default in release; INSERT statements MUST NOT populate them.
 //
 // The sentinel pattern (a no-op function called by Init) is the
 // standard zen-swarm anchor for "this code path is reachable from

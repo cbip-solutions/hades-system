@@ -109,7 +109,7 @@ func (a *Aggregator) Close() error {
 }
 
 // DB returns the underlying *sql.DB if Options.DB was supplied at
-// construction; otherwise returns nil. C-9 amendment
+// construction; otherwise returns nil. release C-9 amendment
 // :
 //
 // this directly for the cross-ecosystem query surface (BinaryTop200 +
@@ -119,7 +119,7 @@ func (a *Aggregator) Close() error {
 //
 // Why additive (vs constructor-time injection): the aggregator is the
 // canonical owner of the *sql.DB lifecycle for the aggregator.db
-// . per-ecosystem.db handles live in a DIFFERENT
+// . release's per-ecosystem.db handles live in a DIFFERENT
 // SQLite file (one per ecosystem per spec §2.2 Q2=A), so the aggregator
 // DOES NOT own the Indexer's *sql.DB — only its own. The DB() accessor
 // surfaces the read-only handle for daemon glue to wire into
@@ -129,7 +129,7 @@ func (a *Aggregator) Close() error {
 // did.
 //
 // Boundary note: this exposes the read-side
-// handle intentionally; Indexer is the SOLE intended caller.
+// handle intentionally; release Indexer is the SOLE intended caller.
 // A compliance test (tests/compliance/) enforces that no other
 // importer reads DB() without an explicit allowlist entry. The
 // aggregator package itself remains the canonical owner of writes.

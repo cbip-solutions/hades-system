@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_full_adapters.go.
 //
-// Constructs the subsystem doctor check.Check instances that
-// `zen doctor full` composes alongside the 4 NEW checks per
+// Constructs the release-9 subsystem doctor check.Check instances that
+// `zen doctor full` composes alongside the 4 NEW release checks per
 // spec §2.5 line 229 ("Composing aggregator over Plans 1-9 per-flag
 // checks (--knowledge/--scheduler/--inbox/--tmux/--merge/--hermes) plus
-// 4 new checks").
+// 4 new release checks").
 //
 // Import-cycle note: internal/doctor/check/cliadapter imports internal/cli
 // (for ProbeResult/ProbeStatus). If this file imported cliadapter, the
@@ -19,7 +19,7 @@
 //
 // Adapter wiring contract per plan F-tail F-imp:
 //
-// - Each prober function (RunKnowledgeProbe / RunSchedulerProbe
+// - Each release-9 prober function (RunKnowledgeProbe / RunSchedulerProbe
 // / RunInboxProbe / RunTmuxProbe / RunMergeChecks / RunHermesChecks /
 // RunBypassChecks / etc) is wrapped via the local adapter constructor.
 // - The adapter func builds a fresh client per invocation (lazy daemon
@@ -310,7 +310,7 @@ func checkResultStatusToProbeStatus(s string) ProbeStatus {
 var buildPlan1To9DoctorFullAdaptersOverride func() []check.Check
 
 // BuildPlan1To9DoctorFullAdaptersForTesting installs a test-only override
-// for the adapter list construction. Returns a cleanup function
+// for the release-9 adapter list construction. Returns a cleanup function
 // callers MUST defer.
 func BuildPlan1To9DoctorFullAdaptersForTesting(adapters func() []check.Check) func() {
 	prev := buildPlan1To9DoctorFullAdaptersOverride

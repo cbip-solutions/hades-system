@@ -65,7 +65,7 @@ RESPONSE=$(curl --unix-socket /tmp/zen-swarm.sock \\
                 http://unix/v1/augment)
 ```
 
-Render via voice TTS renderer.
+Render via voice TTS renderer (release track `plugin/hades/renderers/voice_citation.py`).
 
 ## 6. Async flow (estimated ≥10s)
 
@@ -79,7 +79,7 @@ JOB_ID=$(curl --unix-socket /tmp/zen-swarm.sock \\
               | jq -r '.job_id')
 ```
 
-Result will be in  inbox + push notification per Hermes routing.
+Result will be in the release design inbox + push notification per Hermes routing.
 
 When operator returns:
 ```
@@ -108,8 +108,8 @@ Per invariant, voice TTS NEVER reads aloud capa-firewall sensitive content per s
 - spec §1 Q6=B AFK comprehensive
 - spec §7.4 AFK UX
 - spec §7.6 notification routing
--  renderers/voice_citation.py
--  AFK richness substrate (offline cache; sync/async flow logic)
+- release track renderers/voice_citation.py
+- release track AFK richness substrate (offline cache; sync/async flow logic)
 - /full (companion command for citation expansion)
 """
 

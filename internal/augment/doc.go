@@ -19,5 +19,5 @@
 // - C-7 (community_summarize.go): structural cluster summarization
 // - C-8 (cache_split.go): static/volatile split
 // - C-9 (truncation.go): graceful_truncate guard
-// - C-10 (audit_anchor.go): Tessera leaf emission
+// - C-10 (audit_anchor.go): release Tessera leaf emission
 package augment

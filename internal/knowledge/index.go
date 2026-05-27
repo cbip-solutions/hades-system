@@ -89,7 +89,7 @@ func buildDSN(dbPath string) string {
 //
 // Per spec §1 Q17 D + invariant: the three extension-hook columns
 // (audit_chain_anchor, ecosystem_join_keys, caronte_symbol_refs)
-// declared here ship NULL by default in ; INSERT statements
+// declared here ship NULL by default in release; INSERT statements
 // MUST NOT populate them (G-16 compliance test enforces).
 func Init(ctx context.Context, db *sql.DB) error {
 	if db == nil {
@@ -112,7 +112,7 @@ func Init(ctx context.Context, db *sql.DB) error {
 // invariant enforcement site (compile-time-visible): the column list
 // MUST NOT include audit_chain_anchor, ecosystem_join_keys, or
 // caronte_symbol_refs. SQLite defaults the absent columns to NULL
-// automatically, which is the contract / / Caronte
+// automatically, which is the contract release / release / Caronte
 // rely on (they fill those columns at index time without retrofit migrations).
 //
 // The column rowid is bound explicitly as NULL so SQLite assigns the
@@ -155,7 +155,7 @@ const (
 // Per invariant: the canonical INSERT (indexInsertSQL) does NOT list
 // the three extension-hook columns. Doc fields AuditChainAnchor /
 // EcosystemJoinKeys / CaronteSymbolRefs are IGNORED here even if
-// Valid=true — the data flows / / Caronte
+// Valid=true — the data flows / release / Caronte
 // writers, NOT from this code path. The runtime check
 // TestIndexExtensionHookColumnsNullByDefault asserts the row's columns
 // are NULL post-INSERT regardless of Doc field values; the compile-time

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package chain implements the audit_events_raw chain
+// Package chain implements the release audit_events_raw chain
 // integrity layer: per-record sha256 hash chain (prev_hash → record_hash)
 // over the existing audit_events_raw table, plus monthly partition seal
 // computation, plus a chain walker for verify-chain semantics, plus a
@@ -8,7 +8,7 @@
 // This package is the pure-Go domain layer for chain integrity. It
 // NEVER imports internal/store — boundary invariant enforced. All
 // store-side I/O goes through the EventStore interface (store.go),
-// which is satisfied by internal/daemon/auditadapter (the
+// which is satisfied by internal/daemon/auditadapter (the release
 // equivalent of bypassadapter / dispatcheradapter / orchestratoradapter
 // from earlier plans).
 //
@@ -46,7 +46,7 @@
 // monthly partition.seal_worker goroutine (auditadapter, wires
 // the goroutine; ships the SealPartition function pure-domain).
 //
-// Errors
+// # Errors
 //
 // ErrChainTampered — record_hash mismatch during walk
 // ErrChainGap — missing prev_hash chain (rowid skip mid-partition)

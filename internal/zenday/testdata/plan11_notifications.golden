@@ -1,8 +1,0 @@
-
-## Notifications (Plan 11 — Hermes-routed)
-
-- routes_active: email, slack
-- pending_acks: 2 (zen inbox --since 24h)
-- cost_cap_alerts: 50%=1, 80%=0, 100%=0
-- caronte_health_digests: 3
-- hermes_dispatch_errors: 0

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain_prompt.go.
 //
-// bufio-based interactive prompt helpers used by the interactive
+// bufio-based interactive prompt helpers used by the release interactive
 // operator flows:
 // - `zen audit-chain recover` (spec §6.5 — blank defaults to N)
 // - `zen audit-chain checkpoint` (operator confirmation before emit)

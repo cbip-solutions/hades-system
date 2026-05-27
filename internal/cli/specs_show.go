@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// specs_show.go — Task F-5 subcommand `zen specs show <id>`.
+// specs_show.go — release Task F-5 subcommand `zen specs show <id>`.
 //
 // Pure filesystem read of openspec/specs/<id>.md — no daemon call.
 // Renders the full file content. --format text|md is a no-op alias

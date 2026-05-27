@@ -19,7 +19,7 @@
 //
 // zen-mcp-sshexec --doctrine-file /path/to/doctrine.toml --project-id zen-swarm
 //
-// Flags
+// # Flags
 //
 // --doctrine named built-in doctrine: default | max-scope | capa-firewall
 // (mutually exclusive with --doctrine-file; default: "default")

@@ -16,7 +16,7 @@ import (
 // compile-anchor (the underlying transport.ZenSwarmTransport file stays at
 // its canonical path); the boundary package consumes it via this adapter.
 //
-// Per / policy: the ZenSwarmTransport is NOT moved
+// Per release / policy: the ZenSwarmTransport is NOT moved
 // . Instead, the boundary package
 // wraps it so the consolidation surface (Surface interface) covers the
 // existing single-egress completion path AND adds capability-feature

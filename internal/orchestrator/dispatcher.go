@@ -3,7 +3,7 @@
 //
 //
 // The dispatcher is a thin coordination layer between the §3.1 RunStage4
-// lifecycle and workforce.Manager. Given a DispatchRequest it:
+// lifecycle and release's workforce.Manager. Given a DispatchRequest it:
 //
 // 1. Validates Width > 0 (else ErrInvalidBuildRequest).
 // 2. Leases Width worktrees from the WorktreePool. On any
@@ -35,15 +35,15 @@
 //
 // Privacy contract (IMP-3): event payloads + error messages name field
 // keys and sentinel constants but never echo BuildRequest values; the
-// only worker-side string surfaced is r.Err.Error() ( worker
+// only worker-side string surfaced is r.Err.Error() (release's worker
 // surface is itself bound to the same redaction discipline).
 //
 // Boundary invariants (carry-forward from orchestrator.go):
 // - invariant: this file does NOT import internal/workforce/queue.
-// The workforce.Manager is consumed via the WorkforceManager
+// The release workforce.Manager is consumed via the WorkforceManager
 // interface declared here so eventlog (durable) ⊥ queue (transient)
 // stays a clean separation; bootstrap ( adapter / daemon
-// main) wires the real impl when is merged.
+// main) wires the real impl when release is merged.
 // - invariant: this file does NOT import internal/store. Persistence
 // flows through the eventlog.Appender contract.
 //
@@ -77,15 +77,15 @@ type WorkforceManager interface {
 	AbortAll(ctx context.Context) error
 }
 
-// SpawnRequest is the contract input. ships the minimum
-// fields Manager.Spawn signature requires; richer fields
+// SpawnRequest is the release contract input. ships the minimum
+// fields release's Manager.Spawn signature requires; richer fields
 // (HRA reviewer hierarchy, cost-tier fan-out, doctrine-driven retry
-// budget) land in Phases F/G/H/M without narrowing this struct.
+// budget) land in release Phases F/G/H/M without narrowing this struct.
 //
 // Worktrees is a slice of pointers so
 // the workforce.Manager can cheaply route per-worker context (path,
 // branch, lease id) without copying the value. The dispatcher owns
-// the lease lifecycle: workers MUST NOT call Release.
+// the lease lifecycle: release workers MUST NOT call Release.
 type SpawnRequest struct {
 	SessionID string
 	ProjectID string

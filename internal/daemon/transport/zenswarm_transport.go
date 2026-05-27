@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // ZenSwarmTransport is the daemon-side counterpart of the Python
-// ProviderTransport ABC implementation. It exposes the dispatcher
+// ProviderTransport ABC implementation. It exposes the release dispatcher
 // chain as a providers.TierBackend so the compile-anchor proves the Go
 // side honours the same contract the Python side enforces at the Hermes
 // boundary.
@@ -10,7 +10,7 @@
 // directly. ZenSwarmTransport.Forward exists so daemon-internal callers
 // (future MCP-internal LLM dispatch) can route through the same single-
 // egress chokepoint without instantiating the dispatcher directly. This is
-// the same defence-in-depth pattern uses for BypassBackend and the
+// the same defence-in-depth pattern release uses for BypassBackend and the
 // providers.toml cascade backends (concrete types behind the
 // providers.TierBackend interface).
 
@@ -61,7 +61,7 @@ func (t *ZenSwarmTransport) Close() error { return nil }
 
 // Name returns the stable registry key for ZenSwarmTransport. MUST NOT
 // change across releases (cost_ledger.tier and audit-chain rows persist
-// this string verbatim). discipline applies.
+// this string verbatim). release discipline applies.
 func (t *ZenSwarmTransport) Name() string { return "zenswarm-transport" }
 
 func (t *ZenSwarmTransport) Capabilities() providers.TierCapabilities {

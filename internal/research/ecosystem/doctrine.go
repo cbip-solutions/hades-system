@@ -3,8 +3,8 @@
 //
 // DoctrineProfile + DoctrineResolver.
 //
-// Wraps *active.Accessor (which carries the canonical doctrine
-// pointer via *v1.Schema) and maps the schema to a
+// Wraps release *active.Accessor (which carries the canonical doctrine
+// pointer via *v1.Schema) and maps the schema to a release
 // DoctrineProfile via the frozen `builtinProfiles` table per spec §2.7
 // Q7=A doctrine table.
 //
@@ -16,7 +16,7 @@
 //
 // Reference precedent (`internal/daemon/server_doctrine.go`
 // `doctrineNameForSchema`): the daemon reverses the lookup via
-// pointer-equality scan over `builtin.LoadAll()`. follows the
+// pointer-equality scan over `builtin.LoadAll()`. release follows the
 // same pattern but takes the registry by injection (not via
 // `builtin.LoadAll()`) so test seeding is decoupled from the production
 // embed loader and resolver construction has no I/O dependency.

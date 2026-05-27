@@ -68,7 +68,7 @@ to defer.
 ## Workflow patterns
 
 Pipeline per plan: **brainstorm → design sections → spec → write-plan →
-self-review (Stage 0 reality-check + Stage 1 grep + Stage 2 code-reviewer)
+self-review (release stage reality-check + release stage grep + release stage code-reviewer)
 → execute-plan → release**.
 
 Canonical methodology: `docs/METHODOLOGY.md` in the repo. Quick reference
@@ -76,7 +76,7 @@ in user-level memory at `~/.claude/projects/-path-to-projects-hades-system/memor
 
 ## Hard rules
 
-1. **NO AI-attribution markers in commits** (inv-zen-004). Never
+1. **NO AI-attribution markers in commits** (invariant). Never
    `Co-Authored-By: prohibited assistant`, `Generated with prohibited assistant`, or any
    AI-attribution marker. Violations gated automatically by the plugin's
    `pre_tool_call` hook callback — returns `{"action": "block",
@@ -96,22 +96,22 @@ in user-level memory at `~/.claude/projects/-path-to-projects-hades-system/memor
 
 ## Recovery flow
 
-For session start (post `/clear` or new Hermes session): read `HANDOFF.md`
+For session start (post `/clear` or new Hermes session): read `.hades/session.md`
 at repo root. The `on_session_start` hook callback (in
 `plugin/hades/hooks/session_handlers.py`) auto-loads its TL;DR
-section. For canonical Hermes context injection, Plan 11 wires
+section. For canonical Hermes context injection, the release design wires
 `pre_llm_call` augmentation.
 
 Operator may also invoke `/hades:start` (skill + slash command) for
 explicit session resume synthesis.
 
 For session end: invoke `/hades:handoff` (snapshots state to
-HANDOFF.md + commits + optionally pushes).
+.hades/session.md + commits + optionally pushes).
 
 ## Substrate
 
 Hermes Agent (peer dependency, MIT, `brew install hermes-agent`). Per
-ADR-0080 (substrate pivot from OpenClaude to Hermes Agent, 2026-05-10).
+ADR-0080 (substrate pivot from legacy plugin format to Hermes Agent, 2026-05-10).
 
 HADES is the specialized SE backend (HRA + workforce + cost +
 doctrine + audit + apply + merge); Hermes is the UX substrate (chat REPL +
@@ -121,10 +121,10 @@ multi-platform gateway + skills + memory + Curator + voice + Ink TUI).
 
 - `~/.claude/projects/-path-to-projects-hades-system/memory/MEMORY.md` —
   per-project memory index
-- `docs/decisions/0080-substrate-pivot-to-hermes-agent.md` — substrate ADR
-- `docs/superpowers/specs/2026-05-09-zen-swarm-gitnexus-integration-design.md` —
-  Plans 11+12 design (augmentation pipeline + Hermes UX; Plan 19 replaced gitnexus with caronte)
-- `docs/superpowers/specs/2026-05-11-zen-swarm-spike-hermes-plugin-contract.md` —
+- `architecture records` — substrate ADR
+- `design records` —
+  the release design design (augmentation pipeline + Hermes UX; the release design replaced gitnexus with caronte)
+- `design records` —
   empirical Hermes v0.13.0 plugin contract
 - `docs/METHODOLOGY.md` — canonical methodology (4 nested levels +
   3 transversals)

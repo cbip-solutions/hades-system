@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-                                   
+# plugin/zen-swarm/hooks/_common.py
 """Shared helpers for zen-swarm Hermes hook callbacks."""
 
 from __future__ import annotations
@@ -13,14 +13,14 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-                                                                       
-                                                                
+# Path to the Go event-poster binary (built by `make plugin`). Resolved
+# relative to the plugin root (parent of this hooks/ directory).
 _PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 _POSTER_BIN = _PLUGIN_ROOT / "bin" / "zen-event-poster"
 
-                                                                         
-                                                                         
-                                                              
+# Subprocess timeout for the Go poster invocation (seconds). At 1s, hooks
+# never noticeably slow down Hermes tool calls; daemon-side processing is
+# async (event submitted to batcher and returned immediately).
 _POSTER_TIMEOUT = 1.0
 
 
@@ -46,8 +46,8 @@ def invoke_event_poster(event_name: str, payload: dict[str, Any]) -> int:
         return 0
 
     if not _POSTER_BIN.exists():
-                                                                        
-                                                                        
+        # Defensive: never crash the user's tool call on missing poster.
+        # Log via logger (Hermes captures it via the plugin error path).
         logger.warning(
             "zen-swarm hook: bin/zen-event-poster not built; run 'make plugin' "
             "in zen-swarm root. expected at %s",
@@ -80,8 +80,8 @@ def invoke_event_poster(event_name: str, payload: dict[str, Any]) -> int:
         return 1
 
     if result.stderr:
-                                                                        
-                                                                              
+        # Surface poster's stderr (e.g., daemon unreachable) via logger.
+        # Hermes' logging pipeline will route to its operator-visible channel.
         try:
             err_text = result.stderr.decode("utf-8", errors="replace").strip()
         except Exception:

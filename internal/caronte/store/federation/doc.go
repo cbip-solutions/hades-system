@@ -2,7 +2,7 @@
 // Package federation owns the per-daemon workspace.db: the C-2 cross-repo
 // API-contract federation schema (caronte_workspaces +
 // caronte_workspace_members + contract_links + breaking_changes +
-// breaking_change_consumers) and the CRUD surface later phases
+// breaking_change_consumers) and the CRUD surface release's later phases
 // (linker, breaking-change detector, L10 coordinator, MCP surface, TUI)
 // write through.
 //
@@ -20,28 +20,28 @@
 // internal/caronte/contract/{extract,link,break} + internal/caronte/coordinated
 // NEVER import internal/store. The ONLY internal/caronte/... import this
 // package itself makes is internal/caronte/store (for the FROZEN value types
-// ContractLink + WorkspacePolicy + the sentinel error set M ships).
+// ContractLink + WorkspacePolicy + the sentinel error set release M ships).
 // The compliance test
 // tests/compliance/inv_zen_271_boundary_no_internal_store_test.go enforces
 // the prohibition; federationBoundarySentinel (db.go) is the runtime witness.
 //
 // Audit: every workspace-level write
 // (contract_links INSERT, breaking_changes INSERT, coordinated-fix dispatch,
-// federated-query denied-access, workspace-policy mutation) emits a
+// federated-query denied-access, workspace-policy mutation) emits a release
 // Tessera audit row via the single C-11 chokepoint EmitAudit(ctx,
 // *tessera.Adapter, Event) — append-only, hash-chained. Callers MUST NOT
 // call tessera.Adapter.AppendLeaf directly; the AST scan in
 // tests/compliance/inv_zen_269_audit_every_write_test.go asserts EmitAudit
-// is the only AppendLeaf call site. The FIX-5 AuditEmitter
+// is the only release AppendLeaf call site. The FIX-5 AuditEmitter
 // interface + NewAuditEmitter(adapter, workspaceID) constructor provide
 // the per-workspace adapter + wire into the consumers.
 //
 // Capa-firewall extension: every persistent contract_links /
-// breaking_changes write transits store.Workspace.authorize() ( M's
+// breaking_changes write transits store.Workspace.authorize() (release M's
 // chokepoint at workspace.go:117). The seam swap in
 // internal/caronte/store/workspace.go (Task A-12) routes through this
 // package's LinkStore port AFTER the existing authorize() gate — never
-// before — so the capa-firewall contract M extends to
+// before — so the capa-firewall contract M extends to release
 // persistence without change.
 //
 // CGO split: the schema + the file-opening core lives in cgo-tagged files

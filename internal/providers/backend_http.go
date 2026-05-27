@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package providers — shared HTTP helpers used by every HTTP-based tier
-// backend in the cascade (BypassBackend, AnthropicPaygoBackend,
+// backend in the release cascade (BypassBackend, AnthropicPaygoBackend,
 // GeminiBackend, OpenAICompatBackend, OllamaBackend).
 //
 // These helpers were extracted from the routing-layer backend that

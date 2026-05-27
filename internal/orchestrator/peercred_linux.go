@@ -13,7 +13,8 @@
 // instead. Cross-compile is exercised by `GOOS=linux go build./...`
 // in the F-5 gate set; live behaviour lands in integration.
 
-// go:build linux
+//go:build linux
+
 package orchestrator
 
 import (

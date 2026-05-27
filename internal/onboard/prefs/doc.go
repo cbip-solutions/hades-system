@@ -70,7 +70,7 @@
 //
 // # File mode
 //
-// Save persists with mode 0600 (operator-private). Mirrors +
+// Save persists with mode 0600 (operator-private). Mirrors release +
 // hints or provider URLs leaking on a shared host.
 //
 // # Boundary discipline

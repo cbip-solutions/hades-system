@@ -93,7 +93,7 @@ func SetUserDefault(name string) error {
 
 // SetForProject installs the per-project effective doctrine for
 // projectID. The schema MUST already be merged (baseline + override) by
-// the caller (daemon startup OR reload OR amendment
+// the caller (daemon startup OR reload OR release amendment
 // applier in ); only stores + retrieves the pointer,
 // never performs merge.
 //
@@ -116,7 +116,7 @@ func SetUserDefault(name string) error {
 // - reload after file-watcher detects override file change
 // and the re-merge succeeds + ValidateTighten passes.
 //
-// - Applier after amendment
+// - release Applier after amendment
 // write succeeds.
 func (a *Accessor) SetForProject(projectID string, schema *v1.Schema) {
 	if schema == nil {

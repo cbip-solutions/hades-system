@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package cli — day_autonomy.go.
 //
-// Renders the `[plan-5 autonomy]` section of the morning brief per
+// Renders the `[release autonomy]` section of the morning brief per
 // spec §6.3. The renderer is graceful on daemon-down: rather than
 // failing the whole brief, it emits a single "daemon unreachable"
-// line. This matches day.go pattern (the brief
+// line. This matches release day.go pattern (the brief
 // always renders, even partially).
 //
 // Pulls from 4 daemon endpoints:

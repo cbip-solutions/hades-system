@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package backup ships the backup-before-modify
+// Package backup ships the release backup-before-modify
 // substrate per spec §2.5 + §2.12 + §5.1 + invariant.
 //
 // Backups land at $XDG_STATE_HOME/zen-swarm/doctor-backups/<ISO8601>/<check>/

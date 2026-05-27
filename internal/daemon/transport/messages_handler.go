@@ -8,7 +8,7 @@
 // 2. Translate to providers.TierRequest (preserving SessionID, Profile,
 // Project, Model, IdempotencyKey, Body).
 // 3. Call dispatcher.Forward — single-egress chokepoint per invariant.
-// 4. On success: emit Tessera audit anchor (best-effort; failure
+// 4. On success: emit release Tessera audit anchor (best-effort; failure
 // does not block forwarding); encode response as ForwardedResponse;
 // write back to caller.
 // 5. On dispatcher error: respond 502 with the wrapped error message and
@@ -16,7 +16,7 @@
 //
 // What MessagesHandler does NOT do:
 // - Inject credentials (defence in depth: tokens never cross the Python ↔
-// Go boundary; bypass module attaches them inside the dispatcher
+// Go boundary; release bypass module attaches them inside the dispatcher
 // chain).
 // - Log request bodies (operator privacy: bodies may carry user prompts).
 // - Retry on dispatcher failure (dispatcher's own breaker handles failover;

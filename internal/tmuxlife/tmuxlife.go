@@ -41,7 +41,7 @@ import "errors"
 // operator's regular tmux namespace with zen-spawned sessions.
 //
 // File permissions are 0600 owner-only after first creation (set by tmux
-// itself; daemon does NOT chmod). spec §7.3 "Tmux contamination
+// itself; daemon does NOT chmod). release spec §7.3 "Tmux contamination
 // prevention Layer 3" documents the permission model.
 const SocketPath = "/tmp/zen-swarm.sock"
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — inbox_p7.go.
 //
-// Three routes for the inbox operator surface:
+// Three routes for the release inbox operator surface:
 //
 // POST /v1/inbox/list — list cached notifications (cross-project)
 // POST /v1/inbox/ack — acknowledge a notification by id (sets AckedAt)

@@ -50,7 +50,7 @@ func (s *Server) NewAdapterForKnowledge() *knowledgeadapter.Adapter {
 	return knowledgeadapter.NewAdapterFromDB(s.store.DB())
 }
 
-// RegisterKnowledgeAggregator mounts the five D-12 aggregator routes:
+// RegisterKnowledgeAggregator mounts the five release D-12 aggregator routes:
 //
 // POST /v1/knowledge/aggregator/query
 // POST /v1/knowledge/aggregator/promote
