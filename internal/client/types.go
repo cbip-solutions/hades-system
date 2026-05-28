@@ -95,21 +95,6 @@ type BypassTestResp struct {
 	Probes    []BypassTestProbe `json:"probes"`
 }
 
-type ExtractOpts struct {
-	CaptureOnly bool `json:"capture_only"`
-}
-
-type BypassExtractResp struct {
-	CapturedRequests int    `json:"captured_requests"`
-	OutputPath       string `json:"output_path"`
-	Detail           string `json:"detail"`
-}
-
-type BypassCrossValidateResp struct {
-	Plugin string `json:"plugin"`
-	Report string `json:"report"`
-}
-
 type BypassAnomaly struct {
 	Field        string    `json:"field"`
 	Count        int       `json:"count"`

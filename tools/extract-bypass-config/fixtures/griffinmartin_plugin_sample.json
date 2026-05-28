@@ -1,9 +1,0 @@
-{
-  "headers": {
-    "User-Agent": "Claude-Code/2.1.114 (darwin; arm64)",
-    "X-Claude-Version": "2.1.114",
-    "X-Claude-Client": "claude-code"
-  },
-  "endpoint": "/v1/messages",
-  "tool_naming": "PascalCase"
-}

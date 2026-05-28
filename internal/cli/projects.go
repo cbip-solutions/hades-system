@@ -68,7 +68,7 @@ func NewProjectsCmd(factory ProjectsClientFactory) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "projects",
 		Short: "Inspect known projects across the daemon (ls)",
-		Long: "Cross-fleet view of the daemon's project registry.\n\nCurrently only \"ls\" is registered; future subcommands (future HADES releases /\nHADES design) will extend this namespace without breaking the existing\nsurface.\n\nDistinct from \"hades project\" (singular): plural form lists; singular\nform acts on one alias (doctor / archive / rm / priority). The split\nmirrors " +
+		Long: "Cross-fleet view of the daemon's project registry.\n\nCurrently only \"ls\" is registered; future subcommands (HADES design+ /\nHADES design) will extend this namespace without breaking the existing\nsurface.\n\nDistinct from \"hades project\" (singular): plural form lists; singular\nform acts on one alias (doctor / archive / rm / priority). The split\nmirrors " +
 			"`git remote`" + ` (singular management) vs ` + "`git remote ls`" + `
 (plural inspection) — both surfaces matter and live as siblings,
 neither subsumes the other.`,

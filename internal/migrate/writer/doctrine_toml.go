@@ -116,7 +116,7 @@ func renderDoctrineTOML(allow, deny []string, tiers map[string]string, env map[s
 	sb.WriteString("schema_version = \"1.0\"\n")
 	sb.WriteString("name = \"imported-from-claude-code\"\n")
 	sb.WriteString("inherits_from = \"max-scope\"\n")
-	sb.WriteString("description = \"Imported from local agent memory/settings.json permissions.\"\n\n")
+	sb.WriteString("description = \"Imported from ~/local agent config/settings.json permissions.\"\n\n")
 	sb.WriteString("[capa_firewall]\n")
 	sb.WriteString("allow = [\n")
 	for _, p := range allow {

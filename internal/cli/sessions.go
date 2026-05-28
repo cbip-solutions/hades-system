@@ -47,7 +47,7 @@ func NewSessionsCmd(factory SessionsClientFactory) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "sessions",
 		Short: "Manage HADES tmux sessions (ls)",
-		Long: "Inspect or manage the per-project tmux sessions tracked by the daemon.\n\nCurrently only \"ls\" is registered; future subcommands (future HADES releases — kill,\nsnapshot, restore) will extend this namespace without breaking the\nexisting surface. The plural form mirrors " +
+		Long: "Inspect or manage the per-project tmux sessions tracked by the daemon.\n\nCurrently only \"ls\" is registered; future subcommands (HADES design+ — kill,\nsnapshot, restore) will extend this namespace without breaking the\nexisting surface. The plural form mirrors " +
 			"`hades projects`" + ` (cross-
 fleet inspection); singular per-alias actions live on ` + "`hades attach`" + `
 and ` + "`hades layout repaint`" + `.`,

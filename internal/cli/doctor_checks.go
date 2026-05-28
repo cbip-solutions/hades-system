@@ -32,8 +32,6 @@ func runBypassChecks(ctx context.Context, c *client.Client) []CheckResult {
 		checkBypassCFRangeFresh,
 		checkBypassCertValid,
 		checkBypassConnectivity,
-		checkBypassConfigsRepoReachable,
-		checkBypassMitmproxyAvailable,
 	}
 	results := make([]CheckResult, 0, len(checks))
 	for _, fn := range checks {
@@ -90,27 +88,6 @@ func checkBypassConnectivity(ctx context.Context, c *client.Client) CheckResult 
 	r, err := c.BypassDoctor(ctx, "connectivity")
 	return resultFrom("bypass.connectivity", r, err,
 		"cannot reach api.anthropic.com; check DNS / VPN / network")
-}
-
-func checkBypassConfigsRepoReachable(ctx context.Context, c *client.Client) CheckResult {
-	r, err := c.BypassDoctor(ctx, "sidecar config.repo-reachable")
-	return resultFrom("bypass.sidecar config.repo-reachable", r, err,
-		"sidecar config repo unreachable; check gh auth status")
-}
-
-func checkBypassMitmproxyAvailable(ctx context.Context, c *client.Client) CheckResult {
-	r, err := c.BypassDoctor(ctx, "tools.mitmproxy-available")
-	if err != nil {
-
-		return CheckResult{
-			Name:   "bypass.tools.mitmproxy-available",
-			Status: "warn",
-			Detail: err.Error(),
-			Hint:   "optional; only needed for `hades bypass extract-config`. brew install mitmproxy",
-		}
-	}
-	return resultFrom("bypass.tools.mitmproxy-available", r, nil,
-		"optional; only needed for extract-config. brew install mitmproxy")
 }
 
 func resultFrom(name string, r *client.BypassDoctorResp, err error, hint string) CheckResult {

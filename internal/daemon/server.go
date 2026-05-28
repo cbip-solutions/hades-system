@@ -290,8 +290,6 @@ func (s *Server) registerRoutes() {
 	s.mux.HandleFunc("POST /v1/bypass/refresh-now", handlers.BypassRefreshNow(s))
 	s.mux.HandleFunc("POST /v1/bypass/test", handlers.BypassTest(s))
 	s.mux.HandleFunc("POST /v1/bypass/update-config", handlers.BypassUpdateConfig(s))
-	s.mux.HandleFunc("POST /v1/bypass/extract-config", handlers.BypassExtractConfig(s))
-	s.mux.HandleFunc("POST /v1/bypass/cross-validate", handlers.BypassCrossValidate(s))
 	s.mux.HandleFunc("GET /v1/bypass/anomalies", handlers.BypassAnomalies(s))
 	s.mux.HandleFunc("POST /v1/bypass/anomalies/ack", handlers.BypassAnomaliesAck(s))
 	s.mux.HandleFunc("POST /v1/bypass/pin", handlers.BypassPin(s))

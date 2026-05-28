@@ -1,4 +1,4 @@
-.PHONY: build build-hades build-ctld build-mcp-research build-mcp-budget build-mcp-audit build-mcp-sshexec build-knowledge-watcher build-docs-cron build-extract-bypass-config plugin test lint fmt fmt-check vet clean
+.PHONY: build build-hades build-ctld build-mcp-research build-mcp-budget build-mcp-audit build-mcp-sshexec build-knowledge-watcher build-docs-cron plugin test lint fmt fmt-check vet clean
 
 BIN_DIR ?= bin
 GO_BUILD_TAGS ?= sqlite_fts5
@@ -13,9 +13,8 @@ MCP_AUDIT_BIN := $(BIN_DIR)/hades-mcp-audit
 MCP_SSHEXEC_BIN := $(BIN_DIR)/hades-mcp-sshexec
 KNOWLEDGE_WATCHER_BIN := $(BIN_DIR)/hades-knowledge-watcher
 DOCS_CRON_BIN := $(BIN_DIR)/hades-docs-cron
-EXTRACT_BYPASS_CONFIG_BIN := $(BIN_DIR)/extract-bypass-config
 POSTER_BIN := plugin/hades/bin/hades-event-poster
-build: build-hades build-ctld build-mcp-research build-mcp-budget build-mcp-audit build-mcp-sshexec build-knowledge-watcher build-docs-cron plugin build-extract-bypass-config
+build: build-hades build-ctld build-mcp-research build-mcp-budget build-mcp-audit build-mcp-sshexec build-knowledge-watcher build-docs-cron plugin
 
 build-hades:
 	@mkdir -p $(BIN_DIR)
@@ -52,10 +51,6 @@ build-docs-cron:
 plugin:
 	@mkdir -p $(dir $(POSTER_BIN))
 	go build -tags="$(GO_BUILD_TAGS)" $(GO_LDFLAGS) -o $(POSTER_BIN) ./cmd/hades-event-poster
-
-build-extract-bypass-config:
-	@mkdir -p $(BIN_DIR)
-	go build -tags="$(GO_BUILD_TAGS)" $(GO_LDFLAGS) -o $(EXTRACT_BYPASS_CONFIG_BIN) ./tools/extract-bypass-config
 
 test:
 	go test -tags="$(GO_BUILD_TAGS)" $(GO_LDFLAGS) ./...

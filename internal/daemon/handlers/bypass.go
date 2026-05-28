@@ -14,7 +14,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"runtime"
 	"strconv"
@@ -232,9 +231,6 @@ func runDoctorCheck(s any, name string) (string, string) {
 			return "ok", "configured (verified on update-config)"
 		}
 		return "warn", "bypass client not configured"
-	case "tools.mitmproxy-available":
-
-		return "warn", "optional; not verified at runtime"
 	default:
 		return "fail", "unknown check: " + name
 	}
@@ -315,39 +311,6 @@ func BypassUpdateConfig(s any) http.HandlerFunc {
 			"applied":         false,
 			"check_only":      body.CheckOnly,
 			"diff_only":       body.DiffOnly,
-		}
-		writeJSON(w, http.StatusOK, out)
-	}
-}
-
-func BypassExtractConfig(s any) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if bypassClient(s) == nil {
-			bypassUnavailable(w)
-			return
-		}
-		out := map[string]any{
-			"captured_requests": 0,
-			"output_path":       "",
-			"detail":            "see tools/extract-bypass-config (manual workflow)",
-		}
-		writeJSON(w, http.StatusOK, out)
-	}
-}
-
-func BypassCrossValidate(s any) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if bypassClient(s) == nil {
-			bypassUnavailable(w)
-			return
-		}
-		var body struct {
-			Plugin string `json:"plugin"`
-		}
-		_ = json.NewDecoder(r.Body).Decode(&body)
-		out := map[string]any{
-			"plugin": body.Plugin,
-			"report": fmt.Sprintf("cross-validation against %q: scaffold (stage)", body.Plugin),
 		}
 		writeJSON(w, http.StatusOK, out)
 	}
