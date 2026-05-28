@@ -192,7 +192,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"daemon.reachable",
 		check.CategoryRuntime,
-		"Daemon UDS liveness + uptime (future HADES releases surface)",
+		"Daemon UDS liveness + uptime (HADES design+ surface)",
 		func(ctx context.Context) []ProbeResult {
 			deps := DoctorDeps{Client: clientFactory()}
 			return runDaemonReachable(ctx, deps)

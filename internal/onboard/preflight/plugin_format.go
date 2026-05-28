@@ -172,7 +172,7 @@ func scanForRemnants(root string) (bool, string, string) {
 func hintForKind(kind string) string {
 	switch kind {
 	case "claude-code":
-		return "Run `hades migrate claude-code --dry-run` to preview migration; then `hades migrate claude-code --apply` to import. Or move the legacy install out of the scan paths (local agent memory/, ./.hades/) if intentionally preserved offline."
+		return "Run `hades migrate claude-code --dry-run` to preview migration; then `hades migrate claude-code --apply` to import. Or move the legacy install out of the scan paths (~/local agent config/, ./.hades/) if intentionally preserved offline."
 	case "openclaude":
 		return "Run the Hermes-provided migration command to convert to Hermes plugin format, or move legacy plugin directories out of the scan paths."
 	default:

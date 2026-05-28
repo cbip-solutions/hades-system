@@ -94,6 +94,6 @@ var (
 		Plan: 14, PlanRef: "Documentation system + RAG hybrid",
 	}
 	ErrNotImplementedPlan15 = &NotImplementedError{
-		Plan: 15, PlanRef: "Migration tooling + distribution tooling",
+		Plan: 15, PlanRef: "Migration and distribution tooling",
 	}
 )
