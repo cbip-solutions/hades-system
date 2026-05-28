@@ -56,7 +56,7 @@ type TaskParams struct {
 //
 // Boundary (invariant): stdlib + the in-package ComputeJitter
 // function only. No internal/store, internal/providers, or
-// private-tier1-module imports.
+// tier1-sidecar imports.
 func NewTask(p TaskParams, now time.Time) (*Schedule, error) {
 	if p.ID == "" {
 		return nil, fmt.Errorf("%w: empty ID", ErrInvalidSchedule)
@@ -98,7 +98,7 @@ func NewTask(p TaskParams, now time.Time) (*Schedule, error) {
 // MarkTaskFired transitions a TierTask Schedule to Status=Disabled
 // after a successful (or final-failed) fire. Routines do NOT call this;
 // routines auto-advance via Routine.Advance to the next tick. Loops do
-// NOT call this; loops re-tick via Loop.Tick (D-9) until the bound
+// NOT call this; loops re-tick via Loop.Tick until the bound
 // session is gone.
 //
 // Idempotent + nil-safe + tier-safe (defence in depth):

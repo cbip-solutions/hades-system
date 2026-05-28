@@ -26,7 +26,7 @@
 //
 // invariant boundary: this file imports stdlib only (net/http,
 // encoding/json, context, errors, fmt, io, net/url, time). It does NOT
-// import internal/store, private-tier1-module, or
+// import internal/store, tier1-sidecar, or
 // internal/providers — the capabilities vector is daemon-owned state
 // independent of the dispatcher's TierBackend cascade.
 //

@@ -26,11 +26,11 @@
 // 6. cross-eco RRF k=60 weighted-by-confidence (D-10 FuseWeighted)
 // 7. audit.Emit(EvtRAGRetrieval, 93)
 // 8. BGE-reranker-v2-m3 → top-K per profile.MaxResults (D-3; fallback D-4)
-// 9. Bayesian abstention μ−λσ (D-6); if abstain → emit EvtRAGAbstain + return
+// 9. Bayesian abstention μ−λσ; if abstain → emit EvtRAGAbstain + return
 // 10. hydrate chunks + AnswerGenerator + citation grammar validation 3-retry
-// (D-7); on persistent failure → emit EvtRAGAbstain + return.
+// ; on persistent failure → emit EvtRAGAbstain + return.
 // On accept: emit EvtRAGCitation (gated by doctrine).
-// 11. verifier.Verify() 3-stage cascade (D-5); emit EvtRAGVerify
+// 11. verifier.Verify() 3-stage cascade; emit EvtRAGVerify
 // 12. capa-firewall refuse-on-unverified gate (RefuseOnUnverified + !Strict);
 // if fire → emit EvtRAGAbstain + return.
 // 13. LLM-judge re-pass (max-scope only via DoctrineProfile.LLMJudgeEnabled;

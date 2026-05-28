@@ -93,9 +93,9 @@ func checkBypassConnectivity(ctx context.Context, c *client.Client) CheckResult 
 }
 
 func checkBypassConfigsRepoReachable(ctx context.Context, c *client.Client) CheckResult {
-	r, err := c.BypassDoctor(ctx, "private config repo.repo-reachable")
-	return resultFrom("bypass.private config repo.repo-reachable", r, err,
-		"private private config repo repo unreachable; check gh auth status")
+	r, err := c.BypassDoctor(ctx, "sidecar config.repo-reachable")
+	return resultFrom("bypass.sidecar config.repo-reachable", r, err,
+		"sidecar config repo unreachable; check gh auth status")
 }
 
 func checkBypassMitmproxyAvailable(ctx context.Context, c *client.Client) CheckResult {

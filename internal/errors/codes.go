@@ -353,7 +353,7 @@ var catalog = map[Code]*CatalogEntry{
 	"wizard.migrate-incomplete": {
 		Code:         "wizard.migrate-incomplete",
 		Title:        "Migration step did not complete cleanly.",
-		BodyTemplate: "The wizard's migrate step (e.g., importing local agent memory/ artifacts) returned a partial-success status. Some artifacts were imported; some were skipped due to schema mismatch or permission issues.",
+		BodyTemplate: "The wizard's migrate step (e.g., importing ~/local agent config/ artifacts) returned a partial-success status. Some artifacts were imported; some were skipped due to schema mismatch or permission issues.",
 		RecoveryHint: "review skipped items: hades migrate HADES design --dry-run (lists what would still change); to retry, run: hades migrate HADES design --apply (idempotent — safe to invoke multiple times); see docs/operations/hades-entry-point.md §migration-tooling for the per-source allowlist",
 		Severity:     SeverityWarn,
 		Category:     CategoryWizard,
@@ -525,7 +525,7 @@ var catalog = map[Code]*CatalogEntry{
 	"migrate.allowlist-violation": {
 		Code:         "migrate.allowlist-violation",
 		Title:        "File is outside the migration allowlist.",
-		BodyTemplate: "The path {{.rel}} is not in the set of operator home-dir surfaces that `hades migrate HADES design` is allowed to read or write. The tool NEVER touches files outside the allowlist (shell RC files, ~/.config/hades-system/, ~/.hades/, ~/.hermes/plugins/hades-system/, specific ~/local agent config/ files).",
+		BodyTemplate: "The path {{.rel}} is not in the set of operator home-dir surfaces that `hades migrate HADES design` is allowed to read or write. The tool NEVER touches files outside the allowlist (shell RC files, ~/.config/hades-system/, ~/.hades/, ~/.hermes/plugins/hades-system/, specific local agent memory/ files).",
 		RecoveryHint: "verify the file path is within the allowlist: hades migrate HADES design --help (prints the full scope); if you believe the path should be in scope, open an issue at https://github.com/cbip-solutions/hades-system/issues/new referencing migrate.allowlist-violation + the rejected path",
 		Severity:     SeverityError,
 		Category:     CategoryMigrate,

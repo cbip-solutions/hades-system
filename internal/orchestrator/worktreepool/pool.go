@@ -61,7 +61,7 @@ type PoolConfig struct {
 	// design choice C). Production code leaves this nil so NewPool installs
 	// clock.Real{}; tests inject *clock.Fake to drive deterministic
 	// time advancement for the saturation debounce window
-	// (exhaustEmitDebounce, B-4) and the GC ticker cadence (B-7).
+	// (exhaustEmitDebounce, B-4) and the GC ticker cadence.
 	//
 	// Doctrine note: every orchestrator-tier component that consumes
 	// time MUST take a Clock seam (see clock package godoc). Direct

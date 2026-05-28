@@ -5,7 +5,7 @@
 // , the depth/width decision (depth.go,
 // D-4/D-5), the dispatcher integration with HADES design workforce
 // (dispatcher.go, D-3), and the public RunStage4 entry point used by
-// the daemon HTTP layer (D-2).
+// the daemon HTTP layer.
 //
 // The Orchestrator is the load-bearing supervisor of HADES design It owns
 // one of each substrate primitive (clock, eventlog, state machine,
@@ -38,7 +38,7 @@
 // flows through internal/daemon/orchestratoradapter.
 // - invariant: this package NEVER imports internal/workforce/queue
 // directly. HADES design workforce.Manager is wired via the Dispatcher
-// interface (D-3) so eventlog (durable) ⊥ queue (transient) stays
+// interface so eventlog (durable) ⊥ queue (transient) stays
 // a clean separation.
 //
 // Sanctioned scaffolding remaining after D-2:
@@ -46,7 +46,7 @@
 // with the spec §5.3.2 min-over-5-factors / ceil(log_W(N)) formulas.
 // - Dispatcher concrete impl (dispatcher.go, D-3) — the interface is
 // consumed here; tests inject a fake.
-// - ResearchGate concrete impl (D-6) — same pattern.
+// - ResearchGate concrete impl — same pattern.
 // - Shutdown (this file) — D-7 wholesale-replace with graceful drain.
 package orchestrator
 

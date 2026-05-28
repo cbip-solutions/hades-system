@@ -50,7 +50,7 @@ import (
 // the loosest of the three doctrines for granularity).
 //
 // Boundary (invariant): stdlib + internal/doctrine only. No
-// internal/store, internal/providers, or private-tier1-module.
+// internal/store, internal/providers, or tier1-sidecar.
 //
 // invariant contract.
 func ComputeMissed(s *Schedule, now time.Time) MissedFire {

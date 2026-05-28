@@ -5,7 +5,7 @@
 
 // Package cache — ttl.go
 //
-// Per-source TTL rules engine for the research finding cache (F-8).
+// Per-source TTL rules engine for the research finding cache.
 //
 // The engine evaluates a slice of TTLRule in declaration order; the first
 // matching rule wins ("first-match-wins"). Pattern matching uses simple

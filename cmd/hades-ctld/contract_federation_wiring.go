@@ -11,7 +11,7 @@
 // internal/caronte/coordinated packages. The intermediate layers see
 // only the narrow seam interfaces (invariant boundary; mirrors the
 //
-// Three public helpers exported to main.go (J-8):
+// Three public helpers exported to main.go:
 //
 // - buildContractFederation(deps contractFederationWiringDeps)
 // (*federation.WorkspaceFederationDB,

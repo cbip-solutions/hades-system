@@ -25,7 +25,7 @@
 //
 // Boundary discipline (invariant): imports stdlib + internal/doctrine/schema/v1
 // + internal/doctrine/errors only. No internal/store, no internal/orchestrator,
-// no internal/daemon, no internal/redact, no private-tier1-module.
+// no internal/daemon, no internal/redact, no tier1-sidecar.
 //
 // Concurrency Engine.cache is sync.Map (lock-free read after first Parse).
 // Render is goroutine-safe; concurrent calls on different doctrines load

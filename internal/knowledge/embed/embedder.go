@@ -6,7 +6,7 @@
 // subprocess (JSON stdin/stdout; MPS inference; ~10-20ms warm latency).
 // - CPUEmbedder: pure-Go deterministic-from-hash placeholder; functional
 // contract complete (L2-normalized 384-dim); FTS5 + wikilink graph
-// compensate quality gap via RRF (D-6). upgrade hook for real
+// compensate quality gap via RRF. upgrade hook for real
 // Model2Vec when a stable pure-Go port ships.
 // - MockEmbedder: deterministic from sha256+sin; for unit tests only.
 //

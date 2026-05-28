@@ -3,7 +3,7 @@
 //
 // It exists so every direct backend (anthropic_paygo, gemini,
 // openai_compat) resolves its API key from one place. Earlier,
-// private-tier1-module, internal/litestream, and the cohere
+// tier1-sidecar, internal/litestream, and the cohere
 // ecosystem path each carried their own Keychain accessor; bypass's
 // was hard-wired to the refresh-token slot and lived in a package
 // internal/providers may not import (invariant). This package is
@@ -12,7 +12,7 @@
 // github.com/keybase/go-keychain on darwin).
 //
 // Convention service = "hades-system/<provider>", account = "hades-system" —
-// the form documented in HANDOFF
+// the form documented in session handoff
 // (security add-generic-password -s "hades-system/<provider>" -a "hades-system").
 //
 // CI path: the macOS Keychain is not reliably available in CI (known

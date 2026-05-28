@@ -121,7 +121,7 @@ func Init(ctx context.Context, db *sql.DB) error {
 //
 // Two grep sites cover this constant:
 // - in-package: TestIndexInsertSQLDoesNotMentionExtensionHookColumns
-// - tree-wide compliance: tests/compliance/inv_hades_130_*_test.go (G-16)
+// - tree-wide compliance: tests/compliance/inv_hades_130_*_test.go
 const indexInsertSQL = `
 INSERT INTO knowledge_meta (
     rowid,

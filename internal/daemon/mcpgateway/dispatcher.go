@@ -3,8 +3,8 @@
 //
 // Dispatcher — multiplexes the 5 internal Go MCPs + the in-process caronte
 // code-graph engine. The single entry point Hermes uses for tool dispatch (via
-// server.go A-6 HTTP wrapper). Built on top of ToolRegistry (A-2) +
-// RBAC (A-3); subsystem-agnostic via the Subsystem interface.
+// server.go A-6 HTTP wrapper). Built on top of ToolRegistry +
+// RBAC; subsystem-agnostic via the Subsystem interface.
 //
 // Routing flow per CallRequest:
 // 1. RBAC.Check (doctrine filter → ACL → concurrency gate)

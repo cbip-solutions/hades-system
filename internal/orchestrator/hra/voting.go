@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Voting algorithms for the Hierarchical Reviewer Assembly per
 // spec §1 design choice B + §5.4. This file ships the Plurality classification
-// vote (I-1); EMSDecide lands in I-3 and FMV in voting_fmv.go (I-4..I-7).
+// vote; EMSDecide lands in I-3 and FMV in voting_fmv.go.
 //
 // # File map (one file per concern)
 //
-// voting.go — Plurality (I-1) + EMSDecide (I-3): classification voting
-// voting_fmv.go — Functional Majority Voting (I-4..I-7): fix-proposal selection
+// voting.go — Plurality + EMSDecide: classification voting
+// voting_fmv.go — Functional Majority Voting: fix-proposal selection
 //
 // # design choice B references
 //

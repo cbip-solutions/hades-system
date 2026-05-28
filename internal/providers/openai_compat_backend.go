@@ -14,7 +14,7 @@
 // after — so the dispatcher and cost ledger always see canonical bytes.
 //
 // invariant: imports internal/keychain (boundary-neutral), not
-// internal/store / private-tier1-module.
+// internal/store / tier1-sidecar.
 // invariant compile guard below the struct. invariant: API key is a
 // redact.Secret revealed only at header-injection time.
 package providers

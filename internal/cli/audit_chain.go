@@ -29,7 +29,7 @@
 //
 // invariant (--reason mandatory) is enforced per leaf inside the individual
 // constructors (checkpoint, witness rotate); see Tasks I-3, I-4.
-// Cross-cutting reason-flag enforcement test lives in reason_flag_test.go (I-12).
+// Cross-cutting reason-flag enforcement test lives in reason_flag_test.go.
 //
 // Wiring I-1 shipped scaffolds. I-2 wires verify-chain, history, recover
 // by delegating to newAuditChainVerifyCmd / newAuditChainHistoryCmd /

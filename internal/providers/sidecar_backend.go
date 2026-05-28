@@ -5,7 +5,7 @@
 // to the private hades-bypass-tier1 sidecar process running on loopback.
 //
 // Substrate split: the in-process bypass.Client
-// (BypassBackend, private-tier1-module) is being relocated to a
+// (BypassBackend, tier1-sidecar) is being relocated to a
 // separate private binary (hades-bypass-tier1) speaking the HTTP contract
 // defined in cmd/hades-bypass — the public daemon (this dev repo)
 // communicates with the private sidecar over loopback so:
@@ -44,7 +44,7 @@
 //
 // Boundary discipline (invariant): this file lives in internal/providers/
 // (the canonical home for every concrete TierBackend impl); it imports only
-// stdlib. NO import of internal/store, private-tier1-module, or
+// stdlib. NO import of internal/store, tier1-sidecar, or
 // internal/config — registration wiring (RegisterSidecars) lives in
 // internal/daemon/dispatcheradapter/ and reads the config there.
 package providers

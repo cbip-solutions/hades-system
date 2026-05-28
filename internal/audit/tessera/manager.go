@@ -74,7 +74,7 @@ func (m *Manager) CoSigner() *CoSigner { return m.cosigner }
 // POSIX storage + Tessera Appender.
 // 2. The new Adapter is attached to the singleton witness via
 // a.Attach(witness) so Adapter.WitnessCoSignSeal can produce
-// daemon-witness signatures over partition-seal payloads (A-6b).
+// daemon-witness signatures over partition-seal payloads.
 // Without Attach, every WitnessCoSignSeal call would return
 // ErrWitnessKeyMissing.
 // 3. The cosigner subscribes to the new Adapter's STH stream via

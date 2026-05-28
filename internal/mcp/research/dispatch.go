@@ -15,7 +15,7 @@
 // - Per-backend errors are recorded as soft-fail (other backends
 // keep running) to maximize coverage; only the empty-aggregate
 // case becomes a hard error, and the error message + audit
-// payload include the per-backend root causes (C-3).
+// payload include the per-backend root causes.
 // - Aggregator deduplicates by canonicalized URL key and applies a
 // min-source threshold (doctrine-tunable; default 1).
 // - Raw hits become RawCitation seeds; CiteService.Verify converts

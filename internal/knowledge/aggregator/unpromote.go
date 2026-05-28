@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator — Unpromote method (D-10).
+// Package aggregator — Unpromote method.
 //
 // Unpromote is the symmetric reverse of Promote: it removes a note from the
 // cross-project knowledge_pin_index (and its satellite tables pin_fts, pin_vec,

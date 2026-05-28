@@ -42,7 +42,7 @@
 // indices are not stable across orchestrator restarts because the tier-
 // chain configuration may have changed (tiers added, removed,
 // reordered) between the death and the replay; identifiers are
-// invariant. The dispatcher (D-3) translates the identifier back to its
+// invariant. The dispatcher translates the identifier back to its
 // current chain index when the redispatch is acted on; if the tier no
 // longer exists the dispatcher's fallback logic kicks in.
 //

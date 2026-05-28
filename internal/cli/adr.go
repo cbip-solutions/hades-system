@@ -16,7 +16,7 @@
 // index [--check] — dual manifest regenerate / CI gate [I-8]
 //
 // invariant: accept / reject / supersede MUST require non-empty --reason.
-// Cross-cutting compliance test in reason_flag_test.go (I-12).
+// Cross-cutting compliance test in reason_flag_test.go.
 //
 // Wire types: client.ADR, client.ADRGraph, client.ADRGraphNode,
 // client.ADREdge, client.ADRTransition, client.ADRManifest (H-9 final

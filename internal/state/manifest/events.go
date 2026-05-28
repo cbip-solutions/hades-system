@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/state/manifest/events.go — HADES design typed event constants.
 //
-// TypeStateManualFieldChanged is declared in manual.go (G-5) alongside the
+// TypeStateManualFieldChanged is declared in manual.go alongside the
 // EventPayload struct and EventAppender interface. This file declares the two
 // additional HADES design event-type string constants and the EventTypes()
 // canonical list helper.

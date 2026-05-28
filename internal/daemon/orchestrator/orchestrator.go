@@ -21,7 +21,7 @@
 // supplied Forwarder is. The HADES design dispatcher documents this guarantee at
 // its package level.
 //
-// stage scope (B-6): profile resolution + dispatcher invocation.
+// stage scope: profile resolution + dispatcher invocation.
 // adds a budget pre-check that consults the HADES design budget MCP `cap_status`
 // before dispatch; that integration replaces the no-op pre-check stub here
 // without changing the public surface.

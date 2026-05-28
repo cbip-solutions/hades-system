@@ -126,10 +126,10 @@ type ProjectOverride struct {
 // {"60","80","90","100","payg"}; missing keys yield ErrMissingCostActionRow.
 // Unknown action strings yield ErrUnknownCostAction.
 // - AtomicityTimeout: per-doctrine cap on the atomic-boundary wait
-// before warn-and-proceed (G-4). Zero falls back to 30s in
+// before warn-and-proceed. Zero falls back to 30s in
 // NewCostGatingEngine.
 // - RecoveryStepInterval: per-doctrine cadence for gradual restoration
-// (G-6). Set to spec-default 60s for all three built-ins.
+// . Set to spec-default 60s for all three built-ins.
 type CostProfile struct {
 	DoctrineName         string
 	Actions              map[string]string

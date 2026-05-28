@@ -9,8 +9,8 @@
 // Invariant invariant: every row written to ecosystem_changes
 // has a matching ecosystem_versions row for version_from + version_to. Enforced by:
 //
-// (1) writeChangeNodes() always checks version existence before INSERT (E-6)
-// (2) SweepChangeNodes() weekly consistency verifier (E-7)
+// (1) writeChangeNodes() always checks version existence before INSERT
+// (2) SweepChangeNodes() weekly consistency verifier
 // (3) SQL UNIQUE constraint on (package_id, version_from, version_to, symbol_path)
 //
 // SourceExtracted contract:

@@ -4,7 +4,7 @@
 // InMemoryRAGAuditChain — production-visible test utility (HADES design
 // task).
 //
-// The production wrapper (D-12) targets HADES design chain primitives
+// The production wrapper targets HADES design chain primitives
 // via SQLite. Phases B/C/E/F/G/H/I need to drive the RAGAuditEmitter in
 // isolation (unit + integration tests) WITHOUT a HADES design SQLite chain
 // instance — that is what InMemoryRAGAuditChain provides.

@@ -55,7 +55,7 @@ type FireDeps struct {
 //
 // Boundary (invariant / invariant): dispatch happens ONLY through
 // deps.Dispatcher. This file imports stdlib + internal/doctrine only;
-// it MUST NOT import internal/providers or private-tier1-module.
+// it MUST NOT import internal/providers or tier1-sidecar.
 // Compile-checked by D-14 + boundary tests.
 //
 // # Returns

@@ -5,7 +5,7 @@
 // §"task" lines 4295–4368 (canonical) — method-bound aggregator
 // over the G-1..G-16 free-function entry points (Open, Init, IndexDoc,
 // Delete, Execute, ColdRebuild, IncrementalUpdate,...). The façade
-// exists so HTTP handlers and the CLI surface (G-11) can hold
+// exists so HTTP handlers and the CLI surface can hold
 // a single value-type and invoke queries + reindexes without
 // re-assembling state on every call.
 //

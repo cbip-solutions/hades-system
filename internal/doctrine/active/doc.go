@@ -65,7 +65,7 @@
 // github.com/cbip-solutions/hades-system/internal/doctrine/errors.
 //
 // No imports of internal/store, internal/orchestrator, internal/daemon,
-// internal/redact, private-tier1-module, internal/workforce,
+// internal/redact, tier1-sidecar, internal/workforce,
 // internal/budget, internal/notif, internal/providers, internal/cli,
 // internal/client, internal/config, internal/mcp, internal/tui.
 package active

@@ -3,7 +3,7 @@
 //
 // ToolRegistry — dedup-enforcing canonical-tool-name registry. Implements
 // invariant (no two downstream MCPs may register the same canonical
-// name). Lookup is the routing primitive Dispatcher (A-5) consults on
+// name). Lookup is the routing primitive Dispatcher consults on
 // every CallRequest; List is the response payload for the gateway's
 // `tools/list` MCP method (server.go A-6).
 package mcpgateway

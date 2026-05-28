@@ -5,8 +5,8 @@
 // management. The HADES design design registers six management subcommands:
 //
 // hades docs reindex rebuild/refresh
-// hades docs pin --ecosystem X --version Y set indefinite_retain=true (G-5)
-// hades docs prune --ecosystem X --version Y --confirm hard-remove version (G-5)
+// hades docs pin --ecosystem X --version Y set indefinite_retain=true
+// hades docs prune --ecosystem X --version Y --confirm hard-remove version
 // hades docs status per-ecosystem table
 // hades docs sources --list per-source health table
 // hades docs router-retrain retrain D-2 classifier

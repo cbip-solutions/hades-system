@@ -18,7 +18,7 @@ import (
 // Callers decode via Decode(et, payload). Timestamp is unix nanoseconds
 // stamped at Append time via the injected clock.Clock.
 //
-// READ-ONLY contract (N-2): Record.Payload is shared by reference with
+// READ-ONLY contract: Record.Payload is shared by reference with
 // the originating PayloadEncoder and the future task subscriber
 // fan-out path. Subscribers and Query callers MUST NOT mutate the
 // slice — mutation corrupts later subscriber deliveries and any
@@ -46,7 +46,7 @@ type RawEmitter interface {
 // receive in-process notifications after the durable write succeeds
 // (task).
 //
-// Goroutine safety (I-3): Log itself holds no mutable state — it is
+// Goroutine safety: Log itself holds no mutable state — it is
 // safe for concurrent use by any number of goroutines. Serialization
 // is delegated downstream:
 // - RawEmitter implementations own their own synchronization
@@ -167,7 +167,7 @@ func (l *Log) appendTyped(ctx context.Context, sessionID, projectID string, evt 
 // this contract; task Replay relies on it for crash recovery from
 // a fresh boot. Use since=lastSeenID to resume replay from a checkpoint.
 //
-// Like Append, Query short-circuits on a pre-cancelled ctx (I-1).
+// Like Append, Query short-circuits on a pre-cancelled ctx.
 func (l *Log) Query(ctx context.Context, sessionID string, since int64) ([]Record, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, fmt.Errorf("eventlog.Query: ctx cancelled before start: %w", err)

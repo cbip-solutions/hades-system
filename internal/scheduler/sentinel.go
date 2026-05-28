@@ -48,7 +48,7 @@ func missPolicyDoctrineSentinel() bool {
 // dispatcherSingleEgressSentinel anchors invariant / invariant
 // (scheduler slice): scheduler.Fire MUST dispatch via the Dispatcher
 // interface only; never imports internal/providers or
-// private-tier1-module.
+// tier1-sidecar.
 //
 // Body asserts the structural property at compile time: the Fire
 // function exists and accepts a FireDeps containing a non-nil

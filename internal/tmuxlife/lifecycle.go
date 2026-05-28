@@ -40,7 +40,7 @@ type IdleTTL int
 // capa-firewall → 4
 //
 // Per-project override (hadessystem.toml [project.tmux] idle_ttl_hours = X)
-// is consumed by IdleReaper.doctrineFor callback (C-10); this function
+// is consumed by IdleReaper.doctrineFor callback; this function
 // returns ONLY the doctrine-default. Override resolution lives at the
 // callsite, NOT here, so the doctrine-default mapping stays the single
 // source of truth for invariant enforcement.

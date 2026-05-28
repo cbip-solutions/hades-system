@@ -85,7 +85,7 @@ type Message struct {
 
 // Session is the bidirectional handle to an OpenClaude subprocess.
 // Implementations
-// - openClaudeSession (C-3): wraps os/exec; production transport.
+// - openClaudeSession: wraps os/exec; production transport.
 // - memSession (this file): in-memory channels; for type-validation tests.
 //
 // Concurrency every method on Session is safe to call from any

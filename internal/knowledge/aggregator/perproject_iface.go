@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package aggregator — PerProjectKnowledgeStore interface.
 //
-// Extracted from aggregator.go (D-2) to give the interface a dedicated file
+// Extracted from aggregator.go to give the interface a dedicated file
 // that mirrors the Embedder extraction pattern (D-7 → embedder_iface.go).
 //
 // Boundary (invariant): the shared types and interface are defined in

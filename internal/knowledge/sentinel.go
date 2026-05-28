@@ -31,7 +31,7 @@ var _ = knowledgeFTS5SchemaSentinel()
 // knowledgeFTS5SchemaSentinel returns nil when the FTS5 + supplementary
 // metadata schema in index.go's Init is reachable from production code
 // (not just test code). The compliance test
-// inv_hades_130_knowledge_extension_hooks_null_test.go (G-16) asserts
+// inv_hades_130_knowledge_extension_hooks_null_test.go asserts
 // this anchor is invocable, proving the canonical schema is the one
 // actually used at runtime.
 //
@@ -41,7 +41,7 @@ var _ = knowledgeFTS5SchemaSentinel()
 //
 // The sentinel pattern (a no-op function called by Init) is the
 // standard hades-system anchor for "this code path is reachable from
-// production" — see also private-tier1-module and invariant
+// production" — see also tier1-sidecar and invariant
 // for prior usages. Without the explicit reachability call, a
 // compliance test could pass against a schema constant that no runtime
 // path ever consults.

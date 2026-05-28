@@ -15,7 +15,7 @@ const pubkeyFingerprintHexLen = 16
 // derived from the witness public key.
 //
 // Per invariant every entry in the daemon-global checkpoint log
-// (A-7) MUST be a SignedSTH; there is NO unsigned variant in the
+// MUST be a SignedSTH; there is NO unsigned variant in the
 // public type system. The only public path to construct one is via
 // CoSigner.Sign, so a caller cannot bypass the witness signing path
 // short of forging the SignedSTH zero-value (which CheckpointSink

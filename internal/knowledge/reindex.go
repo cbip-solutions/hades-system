@@ -15,7 +15,7 @@
 // cleanly when the operator-configured 30 min cap is exceeded.
 //
 // `IncrementalUpdate` is the watcher's hot path: every debounced
-// per-file change (G-8) lands in this function, which Parses the
+// per-file change lands in this function, which Parses the
 // single file and Indexes it via the atomic upsert from G-5. No
 // scanner walk, no DELETE-everything — milliseconds per call.
 //
@@ -129,7 +129,7 @@ func ColdRebuild(ctx context.Context, db *sql.DB, sources []ScannerSource) ([]Re
 }
 
 // IncrementalUpdate re-indexes a SINGLE file via Parser → IndexDoc. This is
-// the file watcher's hot path (G-8): every debounced fsnotify Write/Create
+// the file watcher's hot path: every debounced fsnotify Write/Create
 // event for an `.md` file under a tracked source dispatches here. Designed
 // for milliseconds per call — no scanner walk, no DELETE-everything, just
 // one Parse and one atomic upsert via IndexDoc.

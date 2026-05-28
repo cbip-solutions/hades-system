@@ -27,9 +27,9 @@
 // A fourth layer, the compile-time check in compile_check.go, links a
 // symbol whose presence is verified by `make verify-invariants` to enforce
 // that no struct field whose name contains "Token" / "Credential" / "OAuth"
-// uses raw string in private-tier1-module.
+// uses raw string in tier1-sidecar.
 //
-// The package itself imports nothing from private-tier1-module to
+// The package itself imports nothing from tier1-sidecar to
 // keep the dependency graph one-directional (bypass imports redact;
 // redact never imports bypass).
 package redact

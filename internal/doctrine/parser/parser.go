@@ -81,7 +81,7 @@ type ParseOpts struct {
 
 // ParseStrict decodes data into target, rejecting any unknown keys
 // (MetaData.Undecoded() check, B-3) and any transverse-section
-// violation (B-4). source identifies the input origin for error
+// violation. source identifies the input origin for error
 // wrapping ("embed:max-scope.toml", "user:~/.config/.../foo.toml",
 // "project:/repo/.hades/doctrine-override.toml", etc.).
 //
@@ -99,8 +99,8 @@ type ParseOpts struct {
 // Returns
 // - nil on success.
 // - *errors.TransverseOverrideAttempt if opts.AllowTransverseDeclaration=false
-// and the input declares [doctrine_transverse] (B-4).
-// - error wrapping ErrParseFailed for syntax errors (B-5) or unknown keys (B-3).
+// and the input declares [doctrine_transverse].
+// - error wrapping ErrParseFailed for syntax errors or unknown keys.
 //
 // Example:
 //

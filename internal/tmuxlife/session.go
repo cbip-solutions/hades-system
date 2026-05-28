@@ -94,7 +94,7 @@ type SessionStore interface {
 
 	// ExpectedPanesFor returns the daemon-recorded pane-id set per
 	// daemon-owned window for the given session name. Used by
-	// DriftPoller (C-9) to compare daemon.db expected state against
+	// DriftPoller to compare daemon.db expected state against
 	// the live `tmux list-panes` output.
 	//
 	// Contract

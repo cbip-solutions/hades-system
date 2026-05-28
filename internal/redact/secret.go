@@ -52,9 +52,9 @@ func (s Secret) MarshalText() ([]byte, error) {
 // Reveal returns the underlying bytes. ONLY for narrow callsites:
 //
 // - internal/redact/transport.go: setting the Authorization header.
-// - private-tier1-module/refresh.go: building the OAuth refresh
+// - tier1-sidecar/refresh.go: building the OAuth refresh
 // request body.
-// - private-tier1-module/credentials.go: writing to macOS Keychain
+// - tier1-sidecar/credentials.go: writing to macOS Keychain
 // via security(1).
 //
 // Returns nil for an empty Secret.

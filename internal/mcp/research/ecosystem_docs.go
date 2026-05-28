@@ -30,7 +30,7 @@
 // trivially (it already has Query). Unit tests can implement it directly
 // (see mockEcosystemDispatcher in ecosystem_docs_test.go). This matches the
 // narrow-interface pattern proven at scale in D-4 (CohereForwarder),
-// D-7 (AnswerGenerator), D-8 (JudgeBackend) — see HANDOFF lesson #5.
+// D-7 (AnswerGenerator), D-8 (JudgeBackend) — see session handoff lesson #5.
 //
 // Boundary (spec §3.5 + invariant): this file imports
 // internal/research/ecosystem only. It never accesses ecosystem.db directly,

@@ -13,7 +13,7 @@
 // the canonical Anthropic shape.
 //
 // invariant: imports internal/keychain (boundary-neutral), not
-// internal/store / private-tier1-module.
+// internal/store / tier1-sidecar.
 // invariant compile guard below the struct. invariant: API key is a
 // redact.Secret revealed only at the instant of URL construction.
 package providers

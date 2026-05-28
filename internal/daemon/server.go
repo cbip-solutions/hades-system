@@ -768,7 +768,7 @@ func (s *Server) PaygSafety() *orchestrator.PaygSafety {
 // two backends sharing one Tier (e.g. deepseek-direct +
 // siliconflow-deepseek both providers.TierGenericOpenAICompat) have
 // independent breaker state. The breaker has no goroutine of its own —
-// its recovery loop is owned by RecoveryScheduler (D-6) — so this
+// its recovery loop is owned by RecoveryScheduler — so this
 // setter does NOT take cancel/done handles.
 //
 // The injected breaker is the SAME instance the dispatcher consults via

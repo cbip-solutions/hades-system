@@ -269,7 +269,7 @@ type ProjectProfileTier struct {
 
 // AllKeys returns the set of (project, profile, tier) tuples observed in
 // any rolling-window counter (24h or 30d). Used by the budget summary
-// handler (K-4) and by orchestrator-status / collect30dCosts (K-3
+// handler and by orchestrator-status / collect30dCosts (K-3
 // backfill) to render per-tier breakdowns.
 //
 // Dedup contract: each Record creates one WindowCounter PER window name

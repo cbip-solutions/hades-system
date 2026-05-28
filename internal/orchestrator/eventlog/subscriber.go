@@ -16,7 +16,7 @@ type Filter struct {
 // drop-oldest activation) against memory footprint (~2 KiB per
 // subscription at sizeof(Record) ≈ 32 bytes plus payload pointer).
 //
-// Range guidance (N-3): pick 16–32 for low-volume filtered subscriptions
+// Range guidance: pick 16–32 for low-volume filtered subscriptions
 // (single EventType narrowing); pick 64 for unfiltered debug consumers;
 // pick 256+ only if a consumer is known to do bursty multi-ms work per
 // event. Larger buffers do NOT increase delivery guarantees — drop-oldest
@@ -29,7 +29,7 @@ const DefaultBufferSize = 64
 // Pre r is the Record produced by Log.Append (Payload may be a shared
 // []byte; Filter MUST NOT mutate it).
 //
-// Complexity (N-1): O(|Types|) linear scan over the Types slice. Intentional
+// Complexity: O(|Types|) linear scan over the Types slice. Intentional
 // — typical |Types| ≤ 10 ( reviewer, amendment proposer
 // each subscribe to ≤ 5 EventTypes), and a 10-element linear scan beats a
 // map lookup on cache-friendliness for these sizes. If a future caller

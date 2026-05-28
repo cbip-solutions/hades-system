@@ -4,7 +4,7 @@ package manifest
 import "errors"
 
 // Sentinel errors. All MUST be errors.Is-comparable per package convention
-// (see private-tier1-module for prior art).
+// (see tier1-sidecar for prior art).
 var (
 	ErrSchemaNotFound = errors.New("manifest: schema file not found")
 

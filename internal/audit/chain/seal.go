@@ -130,7 +130,7 @@ func buildSealPayload(partitionID, finalRecordHash string, eventCount int64, las
 // VerifySeal checks that the partition's stored seal is consistent with
 // the events in audit_events_raw AND that the daemon witness signature
 // stored on the seal row validates against the daemon's currently-active
-// witness pubkey. Used by verify-chain (B-7) and the
+// witness pubkey. Used by verify-chain and the
 // audit.chain-integrity doctor check.
 //
 // # Steps

@@ -6,7 +6,7 @@
 //
 // Boundary discipline (invariant): this package imports stdlib only +
 // internal/doctrine/errors. Never imports internal/store, internal/orchestrator,
-// private-tier1-module, internal/redact. Verified by close-out
+// tier1-sidecar, internal/redact. Verified by close-out
 // `go list -deps`.
 //
 // Versioning (per design spec §1 design choice B): SchemaVersion governs file shape;

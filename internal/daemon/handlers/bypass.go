@@ -226,7 +226,7 @@ func runDoctorCheck(s any, name string) (string, string) {
 			return "ok", "last probe succeeded"
 		}
 		return "warn", "bypass client not configured"
-	case "private config repo.repo-reachable":
+	case "sidecar config.repo-reachable":
 
 		if bypassClient(s) != nil {
 			return "ok", "configured (verified on update-config)"

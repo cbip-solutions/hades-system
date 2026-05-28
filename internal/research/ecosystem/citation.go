@@ -32,7 +32,7 @@
 // to 1) generator calls, feeding the prior validation failure into the
 // next reprompt. Persistent failure → returns
 // ValidationResult{AbstainTriggered: true, Attempts: maxAttempts}. The
-// dispatcher (D-9) consumes the abstain flag to emit EvtRAGAbstain.
+// dispatcher consumes the abstain flag to emit EvtRAGAbstain.
 //
 // # Why both grammar generation AND validate-at-receive
 //

@@ -20,7 +20,7 @@ import (
 // MUST use instead of httputil.DumpRequest{,Out}.
 //
 // invariant (compile-checked): every HTTP path in
-// private-tier1-module that issues outbound requests must use a
+// tier1-sidecar that issues outbound requests must use a
 // client whose Transport is a *RedactingTransport. The compile-check
 // symbol in compile_check.go enforces this by referencing the
 // constructor, so removing the wrap call surfaces in `make

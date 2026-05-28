@@ -14,7 +14,7 @@
 // (single MDNSource registered under Source[EcoTypeScript][SrcMDN])
 // matches pkgdev/pypi/npm/cratesio (each is the sole authority for its
 // ecosystem×source combination) and contrasts with arXiv's
-// 1-instance-per-ecosystem topology (B-8).
+// 1-instance-per-ecosystem topology.
 //
 // FetchManifest fetches https://developer.mozilla.org/sitemap.xml (~30k
 // canonical URLs) and filters to the JS subtree (/Web/JavaScript/Reference/)

@@ -164,7 +164,7 @@ type buildOrchestratorDeps struct {
 //
 // invariant boundary: orchestrator + dispatcher + providers MUST NOT
 // import internal/store. dispatcheradapter is the bridge; PinStoreAdapter
-// (I-4) is its sibling for the PinStore path (Go method-name collision
+// is its sibling for the PinStore path (Go method-name collision
 // forced a separate type — Adapter.Insert vs PinStoreAdapter.Insert have
 // incompatible signatures).
 func buildOrchestrator(deps buildOrchestratorDeps) Built {

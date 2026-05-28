@@ -9,7 +9,7 @@
 // 30s grace → SIGKILL escalation).
 //
 // This is an explicit multi-task TDD progression: D-1 ships the surface
-// so engine.go (D-4..D-7) can reference the types while D-2/D-3 fill
+// so engine.go can reference the types while D-2/D-3 fill
 // the body in the same
 //
 // Layout note: Runner is the per-candidate fanout coordinator that

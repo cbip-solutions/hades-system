@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/providers/bypass_backend.go
 //
-// BypassBackend wraps HADES design's bypass.Client (private-tier1-module) as a
+// BypassBackend wraps HADES design's bypass.Client (tier1-sidecar) as a
 // TierBackend so the dispatcher can select between Tier 1 (bypass,
 // this file) and the providers.toml cascade uniformly.
 //
@@ -13,7 +13,7 @@
 // breaker permits; falls back to the providers.toml cascade otherwise.
 //
 // Import boundary (invariant + doc.go):
-// - This file MUST NOT import private-tier1-module directly.
+// - This file MUST NOT import tier1-sidecar directly.
 // - The BypassClient interface defined here uses only context + stdlib types.
 // - Daemon bootstrap constructs a thin adapter
 // that wraps *bypass.Client and satisfies BypassClient.
@@ -39,7 +39,7 @@
 //
 // invariant compile guard (TierBackend interface) sits below the struct.
 // invariant boundary: this file must NOT import internal/store or
-// private-tier1-module (enforced by the providers package-level doc.go).
+// tier1-sidecar (enforced by the providers package-level doc.go).
 package providers
 
 import (

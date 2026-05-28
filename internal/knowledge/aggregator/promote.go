@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator — Promote method (D-9).
+// Package aggregator — Promote method.
 //
 // Promote is the operator-gated action that moves a note from a per-project
 // Obsidian vault into the cross-project knowledge_pin_index. The operation is:
@@ -17,7 +17,7 @@
 // Boundary (invariant): promote.go does NOT import internal/store. The
 // per-project vault is accessed via PerProjectKnowledgeStore.OpenProjectVault,
 // which returns a ProjectVault (interface{}). Promote type-asserts to *sql.DB —
-// the only contract the aggregator package observes; the adapter (D-12) satisfies
+// the only contract the aggregator package observes; the adapter satisfies
 // it with a real *sql.DB from the daemon's per-project connection pool.
 //
 // invariant: no web calls. All data comes from the per-project SQLite vault

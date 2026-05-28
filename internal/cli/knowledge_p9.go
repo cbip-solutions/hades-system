@@ -20,7 +20,7 @@
 //
 // invariant: promote and unpromote MUST require non-empty --reason; enforced
 // via cobra MarkFlagRequired (presence gate) + TrimSpace check in RunE
-// (non-empty gate). Cross-cutting compliance test in reason_flag_test.go (I-12).
+// (non-empty gate). Cross-cutting compliance test in reason_flag_test.go.
 //
 // invariant: aggregator NEVER queries the web — HADES design territory. No
 // --remote or --ecosystem flag is exposed here.

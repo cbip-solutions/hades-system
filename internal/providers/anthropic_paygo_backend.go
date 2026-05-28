@@ -12,7 +12,7 @@
 // key resolves from the shared internal/keychain package at construction.
 //
 // invariant: this file imports internal/keychain (boundary-neutral)
-// but NOT internal/store or private-tier1-module.
+// but NOT internal/store or tier1-sidecar.
 // invariant compile guard sits below the struct.
 // invariant: the API key is a redact.Secret, revealed only at the
 // moment of header injection.

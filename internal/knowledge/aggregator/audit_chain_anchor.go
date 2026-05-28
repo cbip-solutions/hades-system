@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator — audit chain anchor fill + format validation (D-11).
+// Package aggregator — audit chain anchor fill + format validation.
 //
 // parseAnchor validates and splits the canonical anchor string
 // `<partition>:<event_id>:<record_hash>` per the design choice-C format contract.

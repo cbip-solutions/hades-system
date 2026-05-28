@@ -45,9 +45,9 @@ func watcherPollInterval() time.Duration {
 }
 
 // STH is the signed-tree-head record produced after every Tessera
-// batch flush. The witness co-signer (A-6) consumes STHs over the
+// batch flush. The witness co-signer consumes STHs over the
 // SubscribeSTH channel and appends signed copies to the daemon-global
-// checkpoint log (A-7).
+// checkpoint log.
 //
 // IMPORTANT — Timestamp + Digest non-determinism for A-7 dedupe:
 // Timestamp is wall-clock at synthesis time inside tryPublishSTH. If
@@ -144,7 +144,7 @@ func newTesseraAppender(ctx context.Context, projectID string, s *posixStorage, 
 // `name` is the Tessera origin string the signer's Name() returns;
 // callers MUST pass a stable string so a verifier can rebind. The
 // per-project Adapter passes `sthOriginPrefix + "/" + projectID`; the
-// daemon-global Checkpoint (A-7) passes `sthOriginPrefix + "-checkpoint"`
+// daemon-global Checkpoint passes `sthOriginPrefix + "-checkpoint"`
 // so its checkpoints never collide with any per-project tile-log's.
 //
 // ships these ephemeral signatures unverified; the daemon

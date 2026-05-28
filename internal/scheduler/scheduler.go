@@ -10,7 +10,7 @@
 //
 // Boundary (invariant / invariant): scheduler.Fire dispatches
 // LLM ONLY via the Dispatcher interface declared in dispatcher_iface.go;
-// it never imports internal/providers or private-tier1-module.
+// it never imports internal/providers or tier1-sidecar.
 //
 // Zero-value defaults (load-bearing): a fresh Schedule{} carries the
 // most common case (TierRoutine + TriggerCron + StatusEnabled +

@@ -7,7 +7,7 @@
 // - bypass_audit_pins (v6, retention-exempt registry, design choice D)
 //
 // The bypass package never imports this file directly — it goes through
-// the in-package adapter at private-tier1-module/audit_integration_adapter.go
+// the in-package adapter at tier1-sidecar/audit_integration_adapter.go
 // so the bypass-side types stay decoupled from the SQL row types.
 //
 // The legacy stub in bypass_audit.go (InsertBypassAudit / ListBypassAudit /

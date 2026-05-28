@@ -10,7 +10,7 @@ import _ "embed"
 
 // ADRProposal is the HADES design doctrine-amendment ADR markdown template
 // (Go text/template). Loaded once at init via //go:embed; consumed by
-// amendment.TemplateDrafter (K-2).
+// amendment.TemplateDrafter.
 //
 //go:embed adr_proposal.md.tmpl
 var ADRProposal string

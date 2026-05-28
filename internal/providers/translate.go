@@ -402,7 +402,7 @@ func mapGeminiStopReason(r string) string {
 }
 
 // keychainAccount is the account component of every hades-system Keychain
-// entry — the form documented in HANDOFF
+// entry — the form documented in session handoff
 // (security add-generic-password -s "hades-system/<provider>" -a "hades-system").
 // Backend constructors pass it to keychain.Resolver.Lookup.
 const keychainAccount = "hades-system"

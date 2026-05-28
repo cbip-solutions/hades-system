@@ -21,7 +21,7 @@ import "flag"
 // no build-tag-flipped const, no resolver indirection) is doctrine-
 // consistent with the project's narrow-surface convention — fewer
 // moving parts means fewer accident vectors. The compliance test
-// (J-6) verifies IsTestRun() returns false in the production binary
+// verifies IsTestRun() returns false in the production binary
 // + true under `go test`.
 //
 // A future extension may strengthen this guard if a production path

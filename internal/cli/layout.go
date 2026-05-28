@@ -49,7 +49,7 @@ func NewLayoutCmd(factory LayoutClientFactory) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "layout",
 		Short: "Recover tmux layout (after drift)",
-		Long: "Operate on per-project tmux layout.\n\nCurrently only \"repaint\" is registered; the namespace is reserved for\nfuture HADES design+ recovery primitives (e.g. snapshot, kill-orphaned). The\ncanonical workflow is: " +
+		Long: "Operate on per-project tmux layout.\n\nCurrently only \"repaint\" is registered; the namespace is reserved for\nfuture future HADES releases recovery primitives (e.g. snapshot, kill-orphaned). The\ncanonical workflow is: " +
 			"`hades day`" + ` surfaces a TmuxLayoutDriftDetected
 event in the inbox, operator runs ` + "`hades layout repaint <alias>`" + ` to
 re-construct the daemon-owned windows in place.`,

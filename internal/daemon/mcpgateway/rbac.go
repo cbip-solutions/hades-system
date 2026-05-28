@@ -23,7 +23,7 @@
 // queue depth 50). sync.Cond signals queued waiters on release.
 //
 // The release function returned by Check MUST be called exactly once. The
-// Dispatcher (A-5) wraps each Handler call with `defer release()` so the
+// Dispatcher wraps each Handler call with `defer release()` so the
 // slot is freed even on Handler panic.
 package mcpgateway
 

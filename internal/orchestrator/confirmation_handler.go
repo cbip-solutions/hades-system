@@ -2,7 +2,7 @@
 // Package orchestrator confirmation_handler — HADES design Tasks F-2 + F-3.
 //
 // ConfirmationHandler is the stateful coordinator wiring
-// ConfirmationPolicy (F-1) + StateMachine + eventlog
+// ConfirmationPolicy + StateMachine + eventlog
 // + HADES design OperatorGate. RequestConfirmation evaluates the policy, and
 // on a mandatory or optional pause verdict transitions
 // RUNNING → WAITING_FOR_CONFIRMATION, locks the operator gate

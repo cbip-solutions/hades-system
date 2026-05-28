@@ -17,7 +17,7 @@
 //
 // invariant (spec §7.2): aggregator NEVER queries web sources directly.
 // Query.Remote=true short-circuits to ErrRemoteNotShipped; the CLI layer
-// (G-12) translates the sentinel to the deferred-message UX. HADES design
+// translates the sentinel to the deferred-message UX. HADES design
 // owns the eventual --remote ecosystem RAG implementation.
 //
 // invariant (spec §7.2): the three extension-hook columns

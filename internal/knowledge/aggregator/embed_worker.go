@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator — EmbedWorker background goroutine (D-13).
+// Package aggregator — EmbedWorker background goroutine.
 //
 // EmbedWorker listens on a VaultChangeSubscriber channel, debounces events by
 // NoteID (last-writer-wins within each debounce window), and calls

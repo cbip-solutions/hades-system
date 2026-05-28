@@ -92,7 +92,7 @@ func (t *TierHealth) ConsecutiveFailures() int {
 //
 // Boundary semantics: threshold = now - window. Outcomes with ts strictly
 // after the threshold survive; outcomes with ts <= threshold are pruned.
-// This matches WindowCounter's strict edge-prune convention (F-4):
+// This matches WindowCounter's strict edge-prune convention:
 // "ts exactly at the boundary" is considered expired and dropped.
 //
 // Implementation scan from the front (oldest first) until we find the first

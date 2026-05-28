@@ -13,7 +13,7 @@
 // sentinel.go — D-2 compile-time invariant anchors
 // cron.go — D-3 robfig/cron/v3 wrapper, 5-field vixie
 // jitter.go — D-4 deterministic jitter (invariant)
-// miss_policy.go — D-5 doctrine matrix + ComputeMissed (D-6)
+// miss_policy.go — D-5 doctrine matrix + ComputeMissed
 // coalesce.go — D-6 BackfillWindow construction
 // routine.go — D-7 durable cron-driven schedule
 // task.go — D-8 ephemeral one-shot
@@ -27,7 +27,7 @@
 // - invariant — package never imports internal/store; bridge via
 // internal/daemon/scheduleradapter satisfying Store interface.
 // - invariant / invariant — package never imports
-// internal/providers or private-tier1-module; LLM dispatch
+// internal/providers or tier1-sidecar; LLM dispatch
 // goes only through the Dispatcher interface.
 // - invariant — Scheduler jitter offset deterministic
 // (jitterDeterministicSentinel anchor in sentinel.go).

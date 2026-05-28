@@ -14,7 +14,7 @@
 // The legacy exit-code-3 path collapses
 // to exit 2 (fatal)c. Operator scripts depending on
 // the 1/2/3 split must migrate to severity-based handling; see
-// docs/operations/hades-entry-point.md "Error UX" section (B-10).
+// docs/operations/hades-entry-point.md "Error UX" section.
 //
 // Defense-in-depth: a defer-recover() wraps cmd.Execute() so panics
 // are rendered via internal-uncaught code with the panic

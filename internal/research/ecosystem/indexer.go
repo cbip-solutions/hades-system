@@ -616,7 +616,7 @@ type CachedEmbedding struct {
 // (sha256(content_text)) if any chunk row already carries it, else nil.
 // Returns the first match (LIMIT 1); ordering is implementation-defined
 // because all rows with the same fingerprint MUST carry identical
-// embeddings per the cross-shape invariant (C-1).
+// embeddings per the cross-shape invariant.
 //
 // ingester usage:
 //

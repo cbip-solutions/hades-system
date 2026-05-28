@@ -2,7 +2,7 @@
 // Package providers declares the common TierBackend interface, value
 // types, and registry that all HADES design LLM tier backends satisfy.
 //
-// of: bypass.Client (Tier 1, declared in private-tier1-module),
+// of: bypass.Client (Tier 1, declared in tier1-sidecar),
 // anthropic-paygo native client (Tier 2), Gemini native client (Tier 3),
 // Ollama OpenAI-compat client (Tier 4), generic OpenAI-compat client
 // (operator-extensible Tier 4 slot), or the PauseBackend sentinel
@@ -46,7 +46,7 @@
 //
 // This package does NOT import internal/store. Cost ledger writes
 // flow via internal/daemon/dispatcheradapter. The package
-// also does NOT import private-tier1-module — bypass.Client is
+// also does NOT import tier1-sidecar — bypass.Client is
 // adapted into a TierBackend by, not by this layer, so the
 // dependency arrow points the right way (high-level orchestrator
 // depends on low-level providers, not the reverse).

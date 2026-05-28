@@ -73,7 +73,7 @@
 // - Resume is a no-op when already running (returns nil without
 // calling persist or appending a log entry).
 //
-// # Validation defense-in-depth (N-3)
+// # Validation defense-in-depth
 //
 // LoadState is validated by the GateAdapter at the SQLite CHECK
 // constraint boundary (the operator_gate_state.state column rejects
