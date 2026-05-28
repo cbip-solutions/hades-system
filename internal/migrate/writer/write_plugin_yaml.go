@@ -25,7 +25,7 @@ func renderPluginYAML(plan *mapping.Plan) []byte {
 	sb.WriteString("# imported-from: claude-code\n")
 	sb.WriteString("name: hades-system\n")
 	sb.WriteString("version: 0.0.1\n")
-	sb.WriteString("description: Imported from a Claude Code installation via `hades migrate claude-code`.\n")
+	sb.WriteString("description: Imported from a local agent installation via `hades migrate claude-code`.\n")
 	sb.WriteString("license: imported\n")
 	sb.WriteString("metadata:\n")
 	sb.WriteString("  hades-system:\n")

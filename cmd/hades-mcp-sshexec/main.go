@@ -30,6 +30,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -103,6 +104,9 @@ func run() error {
 	projectTOML := fs.String("project-toml", "", "path to per-project hadessystem.toml (empty = doctrine-only)")
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
+		if errors.Is(err, flag.ErrHelp) {
+			return nil
+		}
 		return fmt.Errorf("parse flags: %w", err)
 	}
 

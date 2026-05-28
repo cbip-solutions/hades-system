@@ -1,16 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_hermes.go
 //
-// §7.4 Hermes integration block.
+// Hermes integration block.
 //
-// design choice hard required posture: hermes.installed surfaces as `fail` when
-// the binary is absent (NOT `warn`); aggregate `hades doctor` exits
-// non-zero. The hint points at brew install hermes-agent.
-//
-// Probe pattern mirrors doctor_checks.go::runBypassChecks: 4 probe
-// helpers, each with a 3s timeout, dispatched to the same /v1/*/probe
-// shape the daemon exposes. The HermesProber interface is the seam
-// tests inject.
+// The CLI mirrors the daemon's live /v1/hermes/probe surface exactly: plugin
+// payload linkage, active Hermes session registration, and transport
+// reachability. Unknown or historical probe names are never mapped to OK.
 package cli
 
 import (
@@ -31,9 +26,9 @@ type HermesProber interface {
 func NewDoctorHermesCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "hermes",
-		Short: "Hermes integration checks (HADES design; 4 checks per design contract)",
+		Short: "Hermes integration checks",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Hermes integration (HADES design)", runHermesChecks)
+			return runOneSection(cmd, "Hermes integration", runHermesChecks)
 		},
 	}
 	return cmd
@@ -50,27 +45,22 @@ func runHermesChecksWith(ctx context.Context, p HermesProber) []CheckResult {
 		hint       string
 	}{
 		{
-			probeName:  "installed",
-			resultName: "hermes.installed",
-			hint:       "brew install hermes-agent (design choice hard required dependency; daemon refuses bootstrap without)",
+			probeName:  "plugin_installed",
+			resultName: "hermes.plugin.installed",
+			hint:       "link plugin: mkdir -p ~/.hermes/plugins && ln -sfn $(brew --prefix hades)/share/hades/hades ~/.hermes/plugins/hades (source checkout: make plugin-install)",
 		},
 		{
-			probeName:  "plugin-hades-system-loaded",
-			resultName: "hermes.plugin-hades-system-loaded",
-			hint:       "verify plugin/hades-system/plugin.yaml exists; run: hades migrate hermes (HADES design)",
+			probeName:  "session_active",
+			resultName: "hermes.session.active",
+			hint:       "start a Hermes session after installing the HADES plugin",
 		},
 		{
-			probeName:  "config-mcp-reachable",
-			resultName: "hermes.config.mcp_servers.hades-system-reachable",
-			hint:       "check ~/.hermes/config.yaml mcp_servers.hades-system.url; run: hades daemon status",
-		},
-		{
-			probeName:  "curator-last-run",
-			resultName: "hermes.curator.last-run",
-			hint:       "Hermes Curator hasn't graded skills recently; run: hermes curator run",
+			probeName:  "transport_reachable",
+			resultName: "hermes.transport.reachable",
+			hint:       "run hades status; ensure hades-ctld is running",
 		},
 	}
-	out := make([]CheckResult, 0, 4)
+	out := make([]CheckResult, 0, len(checks))
 	for _, ch := range checks {
 		cctx, cancel := context.WithTimeout(ctx, hermesProbeTimeout)
 		r, err := p.HermesProbe(cctx, ch.probeName)

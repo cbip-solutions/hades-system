@@ -140,6 +140,32 @@ func cobraUnknownSubcmdError(root *cobra.Command, err error) *errors.CodedError 
 	)
 }
 
+func cobraArgValidationError(err error) *errors.CodedError {
+	if err == nil {
+		return nil
+	}
+	if _, ok := err.(*errors.CodedError); ok {
+		return nil
+	}
+	msg := err.Error()
+	argValidationFragments := []string{
+		"unknown flag:",
+		"unknown shorthand flag:",
+		"flag needs an argument:",
+		"invalid argument",
+		"requires at least",
+		"requires at most",
+		"accepts ",
+		"required flag",
+	}
+	for _, fragment := range argValidationFragments {
+		if strings.Contains(msg, fragment) {
+			return errors.Wrap(errors.Code("cli.arg-validation-fail"), fmt.Errorf("%s", msg))
+		}
+	}
+	return nil
+}
+
 func argsHaveFlag(name string) bool {
 	flag := "--" + name
 	for _, a := range os.Args[1:] {
@@ -151,7 +177,6 @@ func argsHaveFlag(name string) bool {
 }
 
 func main() {
-	root := cli.NewRootCmd()
 
 	var panicRendered bool
 	defer func() {
@@ -165,6 +190,8 @@ func main() {
 		}
 		_ = panicRendered // silence unused warning; set by deferred func
 	}()
+
+	root := cli.NewRootCmd()
 
 	if v := os.Getenv("HADES_TEST_PANIC"); v != "" {
 		panic(v)
@@ -182,6 +209,8 @@ func main() {
 		}
 
 		if coded := cobraUnknownSubcmdError(root, err); coded != nil {
+			err = coded
+		} else if coded := cobraArgValidationError(err); coded != nil {
 			err = coded
 		}
 		fmt.Fprintln(os.Stderr, cli.Render(err, opts))

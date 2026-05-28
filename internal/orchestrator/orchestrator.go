@@ -301,7 +301,7 @@ func (o *Orchestrator) RunStage4(ctx context.Context, req BuildRequest) error {
 				"parallelizable_upper_bound": req.Spec.ParallelizableUpperBound(),
 				"task_count":                 req.Spec.TaskCount(),
 			},
-			"rationale": "stage-d2-scaffolding",
+			"rationale": "phase-d2-scaffolding",
 		},
 	}
 	if _, err := o.cfg.EventLog.Append(ctx, dwEv); err != nil {

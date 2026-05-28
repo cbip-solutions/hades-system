@@ -96,7 +96,7 @@ func classifySpecsError(err error, op string) error {
 		return err
 	}
 	if client.IsHTTPStatus(err, http.StatusNotFound) {
-		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, fmt.Sprintf("specs: %s: daemon route unavailable (stage g)", op)))
+		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, fmt.Sprintf("specs: %s: daemon route unavailable (phase g)", op)))
 	}
 	if client.IsHTTPStatus(err, http.StatusUnprocessableEntity) {
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, fmt.Sprintf("specs: %s: daemon rejected input", op)))

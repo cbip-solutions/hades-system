@@ -111,12 +111,12 @@ func runConfigInit(cmd *cobra.Command, flags configInitFlags) error {
 			cmd.Printf("warning: cc detection: %v; proceeding without gate\n", ccErr)
 		} else if present {
 			if flags.nonInteractive {
-				return errors.New("detected ~/local agent config/; run 'hades migrate claude-code' first or pass --yes to skip this check")
+				return errors.New("detected local agent memory/; run 'hades migrate claude-code' first or pass --yes to skip this check")
 			}
 			confirmed, promptErr := configInitPromptYesNo(
 				cmd.OutOrStdout(),
 				cmd.InOrStdin(),
-				"Detected local agent memory/. Run `hades migrate claude-code` first to import your existing install. Continue anyway? [y/N]",
+				"Detected ~/local agent config/. Run `hades migrate claude-code` first to import your existing install. Continue anyway? [y/N]",
 				false,
 			)
 			if promptErr != nil {

@@ -35,6 +35,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/cbip-solutions/hades-system/internal/buildinfo"
 	"github.com/cbip-solutions/hades-system/internal/daemon/orchestrator"
 	"github.com/cbip-solutions/hades-system/internal/providers"
 )
@@ -174,4 +175,160 @@ func CWD(_ any) http.HandlerFunc {
 		}
 		writeJSON(w, http.StatusOK, cwdResp{Cwd: cwd})
 	}
+}
+
+type RuntimeStatusResponse struct {
+	Daemon      runtimeDaemonStatus     `json:"daemon"`
+	Config      runtimeConfigStatus     `json:"config"`
+	Project     runtimeProjectStatus    `json:"project"`
+	Provider    runtimeProviderStatus   `json:"provider"`
+	Cascade     runtimeCascadeStatus    `json:"cascade"`
+	Cost        runtimeCostStatus       `json:"cost"`
+	Context     *runtimeContextStatus   `json:"context,omitempty"`
+	Profile     runtimeProfileStatus    `json:"profile"`
+	Caronte     *runtimeSubsystemStatus `json:"caronte,omitempty"`
+	Federation  *runtimeSubsystemStatus `json:"federation,omitempty"`
+	NextActions []string                `json:"next_actions"`
+}
+
+type runtimeDaemonStatus struct {
+	Status        string `json:"status"`
+	Version       string `json:"version"`
+	UptimeSeconds int64  `json:"uptime_seconds"`
+	PID           int    `json:"pid"`
+	UDSPath       string `json:"uds_path"`
+	ActiveModel   string `json:"active_model"`
+}
+
+type runtimeConfigStatus struct {
+	SocketPath string `json:"socket_path"`
+}
+
+type runtimeProjectStatus struct {
+	CWD string `json:"cwd"`
+}
+
+type runtimeProviderStatus struct {
+	ActiveModel   string `json:"active_model"`
+	ProviderCount int    `json:"provider_count"`
+}
+
+type runtimeCascadeStatus struct {
+	ActiveTier    int    `json:"active_tier"`
+	TierName      string `json:"tier_name"`
+	ProviderCount int    `json:"provider_count"`
+}
+
+type runtimeCostStatus struct {
+	Spend24hUSD     float64  `json:"spend_24h_usd"`
+	SpendSessionUSD *float64 `json:"spend_session_usd,omitempty"`
+}
+
+type runtimeContextStatus struct {
+	UsedTokens int `json:"used_tokens"`
+	MaxTokens  int `json:"max_tokens"`
+}
+
+type runtimeProfileStatus struct {
+	ProfileName string `json:"profile_name"`
+	Kind        string `json:"kind"`
+}
+
+type runtimeSubsystemStatus struct {
+	Status string `json:"status"`
+	Detail string `json:"detail,omitempty"`
+}
+
+const defaultRuntimeStatusSocketPath = "/tmp/hades-system.sock"
+
+func RuntimeStatus(s any) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		acc := resolveStatusEndpointAccessor(s)
+		socketPath := defaultRuntimeStatusSocketPath
+		activeModel := ""
+		providerCount := 0
+		activeTier := 0
+		tierName := "none"
+		spend24h := 0.0
+
+		if acc != nil {
+			if uds := acc.UDSPath(); uds != "" {
+				socketPath = uds
+			}
+			activeModel = acc.ActiveModel()
+			tiers := acc.Tiers()
+			providerCount = len(tiers)
+			if len(tiers) > 0 {
+				activeTier = 1
+				tierName = tiers[0].Name()
+			}
+			if counters := acc.CostCounters(); counters != nil {
+				for _, key := range counters.AllKeys() {
+					spend24h += counters.ProjectProfileTierTotal(
+						key.Project, key.Profile, key.Tier, 24*time.Hour,
+					)
+				}
+			}
+		}
+
+		profileName := os.Getenv("HADES_PROFILE")
+		profileKind := "builtin"
+		if profileName == "" {
+			profileName = "default"
+		} else {
+			profileKind = "env"
+		}
+
+		cwd, err := os.Getwd()
+		if err != nil {
+			cwd = ""
+		}
+
+		nextActions := make([]string, 0, 3)
+		if providerCount == 0 {
+			nextActions = append(nextActions, "configure a provider, then run hades providers list")
+		}
+		nextActions = append(nextActions, "run hades doctor for full diagnostics")
+
+		writeJSON(w, http.StatusOK, RuntimeStatusResponse{
+			Daemon: runtimeDaemonStatus{
+				Status:        "ok",
+				Version:       buildinfo.Version(),
+				UptimeSeconds: int64(time.Since(resolveStartedAt(s)).Seconds()),
+				PID:           os.Getpid(),
+				UDSPath:       socketPath,
+				ActiveModel:   activeModel,
+			},
+			Config: runtimeConfigStatus{
+				SocketPath: socketPath,
+			},
+			Project: runtimeProjectStatus{
+				CWD: cwd,
+			},
+			Provider: runtimeProviderStatus{
+				ActiveModel:   activeModel,
+				ProviderCount: providerCount,
+			},
+			Cascade: runtimeCascadeStatus{
+				ActiveTier:    activeTier,
+				TierName:      tierName,
+				ProviderCount: providerCount,
+			},
+			Cost: runtimeCostStatus{
+				Spend24hUSD: spend24h,
+			},
+			Profile: runtimeProfileStatus{
+				ProfileName: profileName,
+				Kind:        profileKind,
+			},
+			NextActions: nextActions,
+		})
+	}
+}
+
+func resolveStartedAt(s any) time.Time {
+	if ctx, ok := s.(ServerCtx); ok {
+		return ctx.StartedAt()
+	}
+	return time.Now()
 }

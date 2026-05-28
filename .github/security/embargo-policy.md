@@ -24,4 +24,4 @@ The 90-day window aligns with:
 
 ## Out of scope
 
-Private sidecar vulnerabilities follow their own disclosure path and are outside this public repository's GHSA scope.
+Optional local integration vulnerabilities follow their own disclosure path and are outside this public repository's GHSA scope.

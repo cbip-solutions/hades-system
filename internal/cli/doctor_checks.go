@@ -32,6 +32,8 @@ func runBypassChecks(ctx context.Context, c *client.Client) []CheckResult {
 		checkBypassCFRangeFresh,
 		checkBypassCertValid,
 		checkBypassConnectivity,
+		checkBypassConfigsRepoReachable,
+		checkBypassMitmproxyAvailable,
 	}
 	results := make([]CheckResult, 0, len(checks))
 	for _, fn := range checks {
@@ -45,7 +47,7 @@ func runBypassChecks(ctx context.Context, c *client.Client) []CheckResult {
 func checkBypassCredentialsReadable(ctx context.Context, c *client.Client) CheckResult {
 	r, err := c.BypassDoctor(ctx, "credentials.readable")
 	return resultFrom("bypass.credentials.readable", r, err,
-		"file local agent memory/credentials.json must exist with mode 0600")
+		"file ~/local agent config/credentials.json must exist with mode 0600")
 }
 
 func checkBypassCredentialsFresh(ctx context.Context, c *client.Client) CheckResult {
@@ -88,6 +90,27 @@ func checkBypassConnectivity(ctx context.Context, c *client.Client) CheckResult 
 	r, err := c.BypassDoctor(ctx, "connectivity")
 	return resultFrom("bypass.connectivity", r, err,
 		"cannot reach api.anthropic.com; check DNS / VPN / network")
+}
+
+func checkBypassConfigsRepoReachable(ctx context.Context, c *client.Client) CheckResult {
+	r, err := c.BypassDoctor(ctx, "sidecar config.repo-reachable")
+	return resultFrom("bypass.sidecar config.repo-reachable", r, err,
+		"local integration config repository unreachable; check authentication status")
+}
+
+func checkBypassMitmproxyAvailable(ctx context.Context, c *client.Client) CheckResult {
+	r, err := c.BypassDoctor(ctx, "tools.mitmproxy-available")
+	if err != nil {
+
+		return CheckResult{
+			Name:   "bypass.tools.mitmproxy-available",
+			Status: "warn",
+			Detail: err.Error(),
+			Hint:   "optional; only needed for `hades bypass extract-config`. brew install mitmproxy",
+		}
+	}
+	return resultFrom("bypass.tools.mitmproxy-available", r, nil,
+		"optional; only needed for extract-config. brew install mitmproxy")
 }
 
 func resultFrom(name string, r *client.BypassDoctorResp, err error, hint string) CheckResult {

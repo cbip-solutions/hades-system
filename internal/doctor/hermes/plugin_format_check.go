@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package hermes — plugin_format_check.go ships the `hermes.plugin-format`
 // doctor check (invariant + invariant). Validates plugin directory
-// shape matches canonical Hermes plugin format; rejects CC
-// remnants + OpenClaude (legacy) markers.
+// shape matches the canonical Hermes plugin format; rejects legacy
+// plugin-format remnants.
 //
 // Boundary (invariant): consumes ONLY internal/doctor/check + the
 // PluginPathResolver injection seam; MUST NOT import internal/store.
@@ -52,7 +52,7 @@ func (c *PluginFormatCheck) Name() string { return "hermes.plugin-format" }
 func (c *PluginFormatCheck) Category() check.Category { return check.CategoryPreflight }
 
 func (c *PluginFormatCheck) Description() string {
-	return "Hermes plugin format match + reject CC/OpenClaude remnants (invariant + 190)"
+	return "Hermes plugin format match + reject legacy plugin remnants"
 }
 
 func (c *PluginFormatCheck) IsDestructive() bool { return true }
@@ -71,7 +71,7 @@ var canonicalFiles = []string{
 	"skills",
 }
 
-// remnantMarkers signal CC (Claude-Code legacy) or OpenClaude scaffolds
+// remnantMarkers signal legacy plugin scaffolds
 // that have NOT been migrated to Hermes plugin format. Their presence is
 // invariant violation; the check returns StatusFail with hint to run
 // `hades migrate claude-code` first.
@@ -151,7 +151,7 @@ func (c *PluginFormatCheck) Run(ctx context.Context) check.DiagnosticResult {
 		markerPath := filepath.Join(pluginPath, marker)
 		if _, err := os.Stat(markerPath); err == nil {
 			d.Status = check.StatusFail
-			d.Message = fmt.Sprintf("plugin remnant detected: %s (CC/OpenClaude legacy)", marker)
+			d.Message = fmt.Sprintf("plugin remnant detected: %s (legacy plugin format)", marker)
 			d.Hint = "run `hades migrate claude-code --backup-target ~/.local/state/hades-system/migrate-backups/$(date +%Y%m%dT%H%M%S)/` then re-run doctor"
 			return d
 		}

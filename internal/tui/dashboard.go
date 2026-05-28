@@ -56,15 +56,32 @@ type Model struct {
 	inbox         *views.InboxView
 }
 
+type Options struct {
+	InitialPanel string
+}
+
 func NewModel(udsPath string, pollEvery time.Duration) Model {
+	m, _ := NewModelWithOptions(udsPath, pollEvery, Options{})
+	return m
+}
+
+func NewModelWithOptions(udsPath string, pollEvery time.Duration, opts Options) (Model, error) {
 	if pollEvery == 0 {
 		pollEvery = 1 * time.Second
+	}
+	activePanel := panelHelp
+	if opts.InitialPanel != "" {
+		var ok bool
+		activePanel, ok = parsePanelName(opts.InitialPanel)
+		if !ok {
+			return Model{}, validatePanelName(opts.InitialPanel)
+		}
 	}
 	c := client.New(udsPath)
 	return Model{
 		c:             c,
 		pollEvery:     pollEvery,
-		activePanel:   panelHelp,
+		activePanel:   activePanel,
 		help:          views.NewHelpView(),
 		workforce:     views.NewWorkforceView(c),
 		cost:          views.NewCostView(c),
@@ -77,7 +94,7 @@ func NewModel(udsPath string, pollEvery time.Duration) Model {
 		doctrine:      views.NewDoctrineView(c),
 		crossProject:  views.NewCrossProjectView(c),
 		inbox:         views.NewInboxView(c),
-	}
+	}, nil
 }
 
 func (m Model) Init() tea.Cmd {

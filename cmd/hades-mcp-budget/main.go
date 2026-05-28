@@ -17,6 +17,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -65,10 +66,13 @@ func main() {
 func run() error {
 
 	fs := flag.NewFlagSet("hades-mcp-budget", flag.ContinueOnError)
-	socket := fs.String("socket", "/var/run/hades-system/hades-system.sock", "daemon Unix socket path")
+	socket := fs.String("socket", client.DefaultSocketPath(), "daemon Unix socket path")
 	daemonURL := fs.String("daemon-url", "", "daemon HTTP base URL (overrides --socket; used in tests)")
 	authTokenPath := fs.String("auth-token-path", "", "path to daemon auth-token file (required)")
 	if err := fs.Parse(os.Args[1:]); err != nil {
+		if errors.Is(err, flag.ErrHelp) {
+			return nil
+		}
 		return fmt.Errorf("parse flags: %w", err)
 	}
 

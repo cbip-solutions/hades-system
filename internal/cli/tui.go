@@ -14,14 +14,20 @@ import (
 
 func NewTUICmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "tui",
-		Short: "Launch the dashboard TUI",
+		Use:     "dashboard",
+		Aliases: []string{"tui", "panels"},
+		Short:   "Launch the dashboard TUI",
+		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			udsPath, _ := cmd.Flags().GetString("uds")
 			pollMs, _ := cmd.Flags().GetInt("poll-ms")
+			panel, _ := cmd.Flags().GetString("panel")
 			poll := time.Duration(pollMs) * time.Millisecond
 
-			m := tui.NewModel(udsPath, poll)
+			m, err := tui.NewModelWithOptions(udsPath, poll, tui.Options{InitialPanel: panel})
+			if err != nil {
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), err)
+			}
 			p := tea.NewProgram(m, tea.WithAltScreen())
 			if _, err := p.Run(); err != nil {
 				return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("tui: %w", err))
@@ -29,6 +35,7 @@ func NewTUICmd() *cobra.Command {
 			return nil
 		},
 	}
+	cmd.Flags().String("panel", "", "Initial dashboard panel")
 	cmd.Flags().Int("poll-ms", 1000, "Health poll interval (ms)")
 	return cmd
 }

@@ -72,7 +72,7 @@ func main() {
 		if bv := buildinfo.Version(); bv != "" && bv != "dev" && brandVersion == "0.1.0-dev" {
 			brandVersion = bv
 		}
-		fmt.Printf("HADES system v%s (binary: hades-ctld)\n%s\n", brandVersion, buildinfo.Summary())
+		fmt.Printf("HADES system v%s (binary: hades-ctld)\n%s\n", buildinfo.BrandVersion(brandVersion), buildinfo.Summary())
 		os.Exit(0)
 	}
 
@@ -229,7 +229,7 @@ func main() {
 	srv.SetRecoveryScheduler(built.RecoveryScheduler, recoveryCancel, recoveryDone)
 	logger.Info("circuit-breaker recovery scheduler live",
 		"interval", "30s (default)",
-		"tiers", "Tier 1 (bypass) + Tier 2+ (OpenClaude)")
+		"tiers", "Tier 1 (bypass) + Tier 2+ provider cascade")
 
 	if err := built.CostCounters.RebuildFromLedger(time.Now().Add(-30 * 24 * time.Hour)); err != nil {
 		logger.Error("cost counters rebuild from ledger (invariant)",

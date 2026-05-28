@@ -14,10 +14,10 @@ var buildinfoVersion = buildinfo.Version
 
 func effectiveVersion() string {
 	if Version != "" && Version != "0.1.0-dev" {
-		return Version
+		return buildinfo.BrandVersion(Version)
 	}
 	if bv := buildinfoVersion(); bv != "" && bv != "dev" {
-		return bv
+		return buildinfo.BrandVersion(bv)
 	}
 	return Version
 }

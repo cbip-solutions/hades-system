@@ -64,7 +64,7 @@ var (
 		Plan: 4, PlanRef: "Workforce + MCPs implementations",
 	}
 	ErrNotImplementedPlan5 = &NotImplementedError{
-		Plan: 5, PlanRef: "Worktree + opencode spawn + apply stage",
+		Plan: 5, PlanRef: "Worktree + opencode spawn + apply phase",
 	}
 	ErrNotImplementedPlan6 = &NotImplementedError{
 		Plan: 6, PlanRef: "Archive + delta application",

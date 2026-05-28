@@ -23,6 +23,23 @@ before running `make build`.
 
 ## Build From Source
 
+Homebrew is the primary install path:
+
+```bash
+brew tap cbip-solutions/tap
+brew install hades
+mkdir -p ~/.hermes/plugins
+ln -sfn "$(brew --prefix hades)/share/hades/hades" ~/.hermes/plugins/hades
+hades-ctld --version
+hades --version
+brew services start cbip-solutions/tap/hades
+hades status
+hades doctor
+```
+
+Source builds are useful for inspection, local patching, and platforms where
+the tap is not available:
+
 ```bash
 git clone https://github.com/cbip-solutions/hades-system.git
 cd hades-system
@@ -46,6 +63,8 @@ Then inspect local health:
 ```bash
 bin/hades status
 bin/hades doctor
+bin/hades providers list
+bin/hades dashboard
 ```
 
 ## SSH Exec Host Verification
@@ -63,11 +82,20 @@ verified with `known_hosts`:
 ## Install The Hermes Plugin
 
 The repository includes the HADES Hermes plugin under `plugin/hades`.
-Install it with the repository tooling or copy it into the Hermes plugin path
-used by your environment.
+Homebrew installs the payload under the package share directory; source
+checkouts can copy it with the repository tooling.
 
 ```bash
-bin/hades doctor
+mkdir -p ~/.hermes/plugins
+ln -sfn "$(brew --prefix hades)/share/hades/hades" ~/.hermes/plugins/hades
+```
+
+For a source checkout:
+
+```bash
+make plugin-install
+bin/hades doctor hermes
+bin/hades doctor mcps
 ```
 
 Use the doctor output as the authority for missing local prerequisites.

@@ -67,7 +67,7 @@ func NewAuditChainCmd() *cobra.Command {
 
 func notWiredYet(taskRef string) func(cmd *cobra.Command, args []string) error {
 	return func(cmd *cobra.Command, args []string) error {
-		return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("stage I task %s: leaf unavailable (see HADES design)", taskRef))
+		return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("phase I task %s: leaf unavailable (see HADES design)", taskRef))
 	}
 }
 

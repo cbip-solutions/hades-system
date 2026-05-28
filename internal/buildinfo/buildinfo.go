@@ -47,6 +47,8 @@ var date = "unknown"
 
 func Version() string { return version }
 
+func BrandVersion(v string) string { return strings.TrimPrefix(v, "v") }
+
 func Commit() string { return commit }
 
 func Date() string { return date }

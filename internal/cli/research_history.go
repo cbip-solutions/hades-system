@@ -39,7 +39,7 @@ func attachPlan9ResearchSubs(parent *cobra.Command) {
 		}
 	}
 
-	panic("HADES design stage-i i-9: research 'cache' parent missing; cannot attach invalidate/ls")
+	panic("HADES design phase-i i-9: research 'cache' parent missing; cannot attach invalidate/ls")
 }
 
 func researchHistoryCmd() *cobra.Command {

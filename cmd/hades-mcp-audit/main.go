@@ -19,12 +19,14 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/cbip-solutions/hades-system/internal/mcp/audit"
+	mcpclient "github.com/cbip-solutions/hades-system/internal/mcp/client"
 )
 
 type buildOptions struct {
@@ -120,7 +122,7 @@ func main() {
 func run() error {
 
 	fs := flag.NewFlagSet("hades-mcp-audit", flag.ContinueOnError)
-	socket := fs.String("socket", "/var/run/hades-system/hades-system.sock", "daemon Unix socket path")
+	socket := fs.String("socket", mcpclient.DefaultSocketPath(), "daemon Unix socket path")
 	daemonURL := fs.String("daemon-url", "", "daemon HTTP base URL (overrides --socket; used in tests)")
 	authTokenPath := fs.String("auth-token-path", "", "path to daemon auth-token file (required)")
 	reviewerPool := fs.String("reviewer-pool", "", "comma-separated reviewer family pool (default: anthropic,google,deepseek,local-qwen,openai)")
@@ -129,6 +131,9 @@ func run() error {
 	doctrine := fs.String("doctrine", "default", "doctrine mode: max-scope | default | capa-firewall")
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
+		if errors.Is(err, flag.ErrHelp) {
+			return nil
+		}
 		return fmt.Errorf("parse flags: %w", err)
 	}
 

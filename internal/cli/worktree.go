@@ -8,7 +8,7 @@ func NewWorktreeCmd() *cobra.Command {
 		Use:   "worktree",
 		Short: "Worktree management",
 	}
-	cmd.AddCommand(notImplementedSubcommand("list", "List active worktrees", 5, "Worktree + apply stage"))
-	cmd.AddCommand(notImplementedSubcommand("clean [--older-than Nd]", "Clean up stale worktrees", 5, "Worktree + apply stage"))
+	cmd.AddCommand(notImplementedSubcommand("list", "List active worktrees", 5, "Worktree + apply phase"))
+	cmd.AddCommand(notImplementedSubcommand("clean [--older-than Nd]", "Clean up stale worktrees", 5, "Worktree + apply phase"))
 	return cmd
 }

@@ -2,25 +2,11 @@
 // Package handlers — hermes_probe.go.
 //
 // GET /v1/hermes/probe?check=<name> — diagnostic probe surface for the
-// F9 Skills panel and `hades doctor hermes` CLI.
+// dashboard Skills panel and `hades doctor hermes` CLI.
 //
-// Background — HADES design substrate gap closure:
-//
-// (internal/client/hermes.go::HermesProbe). The daemon side was scoped
-// for follow-up but never landed; the route returned 404. HADES design stage
-// C C-7 wired the F9 Skills panel through that client wrapper, where
-// it manifested as "F9 Skills panel returns 404" in production.
-//
-// This handler closes the gap. Each probe check is a static introspection
-// against the daemon-known state:
-//
-// - "plugin_installed" — Hermes plugin (`hades-system`) is installable;
-// status reflects whether the plugin manifest path is reachable on
-// the operator's host. Since the daemon cannot detect Hermes's
-// plugin runtime state at HEAD (a future HADES design 'hades migrate' wires
-// it via socket), the probe always returns "ok" with a detail
-// describing the install path. Real state is surfaced via the
-// `hades-system:install-mcps` slash command output.
+// - "plugin_installed" — Hermes plugin (`hades`) is installable;
+// status is warn until a future Hermes runtime API can confirm the
+// operator's plugin link.
 // - "session_active" — A Hermes session has registered with the
 // daemon via /v1/sessions. Status=ok when at least
 // one active session exists; warn otherwise.
@@ -28,17 +14,17 @@
 // dispatcher) is wired (Orchestrator() non-nil). Status=ok when
 // wired; warn otherwise.
 //
-// Unknown probe names return ok with a hint string — same posture as
-// BypassDoctor. 405 on non-GET.
-//
-// Cherry-pick narrative: this commit completes the HADES design substrate gap
-// inherited; could be cherry-picked to a HADES design
-// backport branch if needed.
+// Unknown probe names return warn so callers cannot silently treat stale
+// probe contracts as healthy. 405 on non-GET.
 
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
 type HermesProbeResp struct {
@@ -52,6 +38,10 @@ type HermesProbeCtx interface {
 	Orchestrator() any
 }
 
+type hermesPluginManifestPathProvider interface {
+	HermesPluginManifestPath() string
+}
+
 func HermesProbeHandler(s HermesProbeCtx) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -63,13 +53,12 @@ func HermesProbeHandler(s HermesProbeCtx) http.HandlerFunc {
 		resp := HermesProbeResp{Status: "ok"}
 		switch check {
 		case "plugin_installed":
-
-			resp.Detail = "plugin installs via `/hades-system:install-mcps` slash command (ADR-0080)"
+			resp = probeHermesPluginInstalled(s)
 		case "session_active":
 			n := s.HermesActiveSessions()
 			if n == 0 {
 				resp.Status = "warn"
-				resp.Detail = "no active Hermes session registered (POST /v1/sessions); start a Hermes session via `/hades-system:start`"
+				resp.Detail = "no active Hermes session registered (POST /v1/sessions); start a Hermes session via `/hades:start`"
 			} else if n == 1 {
 				resp.Detail = "1 active Hermes session"
 			} else {
@@ -83,10 +72,57 @@ func HermesProbeHandler(s HermesProbeCtx) http.HandlerFunc {
 				resp.Detail = "/v1/messages orchestrator wired"
 			}
 		case "":
+			resp.Status = "warn"
 			resp.Detail = "no check specified; pass ?check=plugin_installed|session_active|transport_reachable"
 		default:
+			resp.Status = "warn"
 			resp.Detail = "unknown check name; pass ?check=plugin_installed|session_active|transport_reachable"
 		}
 		writeJSON(w, http.StatusOK, resp)
 	}
+}
+
+func probeHermesPluginInstalled(s HermesProbeCtx) HermesProbeResp {
+	manifest := hermesPluginManifestPath(s)
+	if manifest == "" {
+		return HermesProbeResp{
+			Status: "warn",
+			Detail: "cannot resolve Hermes plugin path; link plugin/hades to ~/.hermes/plugins/hades; then run /hades:install-mcps in Hermes",
+		}
+	}
+	if _, err := os.Stat(manifest); err == nil {
+		return HermesProbeResp{
+			Status: "ok",
+			Detail: fmt.Sprintf("HADES Hermes plugin manifest found at %s", manifest),
+		}
+	} else if errors.Is(err, os.ErrNotExist) {
+		return HermesProbeResp{
+			Status: "warn",
+			Detail: fmt.Sprintf("plugin manifest not found at %s; link plugin/hades to ~/.hermes/plugins/hades; then run /hades:install-mcps in Hermes", manifest),
+		}
+	} else {
+		return HermesProbeResp{
+			Status: "warn",
+			Detail: fmt.Sprintf("cannot inspect Hermes plugin manifest at %s: %v", manifest, err),
+		}
+	}
+}
+
+func hermesPluginManifestPath(s HermesProbeCtx) string {
+	if provider, ok := s.(hermesPluginManifestPathProvider); ok {
+		if path := provider.HermesPluginManifestPath(); path != "" {
+			return path
+		}
+	}
+	if dir := os.Getenv("HERMES_PLUGIN_DIR"); dir != "" {
+		return filepath.Join(dir, "plugin.yaml")
+	}
+	if dir := os.Getenv("HERMES_PLUGINS_DIR"); dir != "" {
+		return filepath.Join(dir, "hades", "plugin.yaml")
+	}
+	home, err := os.UserHomeDir()
+	if err != nil || home == "" {
+		return ""
+	}
+	return filepath.Join(home, ".hermes", "plugins", "hades", "plugin.yaml")
 }

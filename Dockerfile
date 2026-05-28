@@ -25,7 +25,10 @@ RUN CGO_ENABLED=1 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
     -trimpath \
     -tags="sqlite_fts5" \
     -ldflags="-s -w -buildid= \
+        -X github.com/ncruces/go-sqlite3/driver.driverName=sqlite3_ncruces \
+        -X github.com/cbip-solutions/hades-system/internal/cli.Version=${VERSION} \
         -X main.version=${VERSION} \
+        -X main.Version=${VERSION} \
         -X main.commit=${COMMIT} \
         -X main.date=${DATE} \
         -X github.com/cbip-solutions/hades-system/internal/buildinfo.version=${VERSION} \
@@ -37,7 +40,10 @@ RUN CGO_ENABLED=1 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
     -trimpath \
     -tags="sqlite_fts5" \
     -ldflags="-s -w -buildid= \
+        -X github.com/ncruces/go-sqlite3/driver.driverName=sqlite3_ncruces \
+        -X github.com/cbip-solutions/hades-system/internal/cli.Version=${VERSION} \
         -X main.version=${VERSION} \
+        -X main.Version=${VERSION} \
         -X main.commit=${COMMIT} \
         -X main.date=${DATE} \
         -X github.com/cbip-solutions/hades-system/internal/buildinfo.version=${VERSION} \

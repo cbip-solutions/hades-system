@@ -44,6 +44,8 @@ func NewBypassCmd() *cobra.Command {
 		bypassAuditCmd(),
 		bypassUpdateConfigCmd(),
 		bypassTestCmd(),
+		newBypassExtractCmd(),
+		newBypassCrossValidateCmd(),
 		bypassAnomaliesCmd(),
 		bypassRefreshNowCmd(),
 		bypassPinCmd(),

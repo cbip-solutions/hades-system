@@ -17,7 +17,7 @@ import (
 
 var ErrHostNotAllowed = errors.New("mcp/client: outbound host not in allowedHosts whitelist (invariant)")
 
-const defaultSocketPath = "/var/run/hades-system/hades-system.sock"
+const defaultSocketPath = "/tmp/hades-system.sock"
 
 const defaultAuthTokenPath = "~/.config/hades-system/auth-token"
 
@@ -39,6 +39,21 @@ type Config struct {
 	MCPName string
 }
 
+func DefaultSocketPath() string {
+	for _, name := range []string{
+		"HADES_DAEMON_SOCKET",
+		"HADES_DAEMON_UDS",
+		"HADES_SYSTEM_UDS",
+		"HADES_DAEMON_SOCKET",
+		"HADES_DAEMON_UDS",
+	} {
+		if v := strings.TrimSpace(os.Getenv(name)); v != "" {
+			return v
+		}
+	}
+	return defaultSocketPath
+}
+
 type Client struct {
 	cfg        Config
 	token      string
@@ -48,7 +63,7 @@ type Client struct {
 
 func New(cfg Config) (*Client, error) {
 	if cfg.SocketPath == "" && cfg.BaseURL == "" {
-		cfg.SocketPath = defaultSocketPath
+		cfg.SocketPath = DefaultSocketPath()
 	}
 	if cfg.AuthTokenPath == "" {
 		cfg.AuthTokenPath = expandHome(defaultAuthTokenPath)

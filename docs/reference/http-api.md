@@ -28,8 +28,8 @@ session.
 | --- | --- |
 | `/v1/health` | Basic daemon liveness. |
 | `/v1/status` | Runtime summary consumed by CLI and TUI. |
-| `/v1/doctor/*` | Subsystem probes and degraded-state reporting. |
-| `/v1/providers/*` | Provider roster, health, and registration state. |
+| `hades doctor` | CLI subsystem probes and degraded-state reporting. |
+| `hades providers list` | CLI provider roster and registration state. |
 | `/v1/budget/*` | Spend events, cap checks, pause, and resume. |
 | `/v1/audit/*` | Audit events and evidence lookup. |
 | `/v1/caronte/*` | Code-graph queries, impact, intent, and reindex surfaces. |

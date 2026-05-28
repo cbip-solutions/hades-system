@@ -274,7 +274,7 @@ func doctorAggregateRunE(cmd *cobra.Command, _ []string) error {
 		ctx11h, cancel11h := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel11h()
 		for _, r := range runHermesChecks(ctx11h, c) {
-			r.Section = "Hermes integration (HADES design)"
+			r.Section = "Hermes integration"
 			allResults = append(allResults, r)
 		}
 

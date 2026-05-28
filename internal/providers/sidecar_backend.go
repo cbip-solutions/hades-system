@@ -6,9 +6,9 @@
 //
 // Substrate split: the in-process bypass.Client
 // (BypassBackend, tier1-sidecar) is being relocated to a
-// separate private binary (hades-bypass-tier1) speaking the HTTP contract
+// separate sidecar binary (hades-bypass-tier1) speaking the HTTP contract
 // defined in cmd/hades-bypass — the public daemon (this dev repo)
-// communicates with the private sidecar over loopback so:
+// communicates with the loopback sidecar over loopback so:
 // - the Anthropic-Max-subscription OAuth bypass code never ships in the
 // public Apache-2.0 distribution;
 // - the dispatcher (this package's consumer) keeps a uniform

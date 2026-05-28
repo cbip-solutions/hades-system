@@ -250,7 +250,7 @@ func (c *Client) Reinforce(ctx context.Context, req ReinforceReq) (client.Doctri
 		q.Set("stage", req.Stage)
 	}
 	if req.Phase != "" {
-		q.Set("stage", req.Phase)
+		q.Set("phase", req.Phase)
 	}
 	if req.PlanID != "" {
 		q.Set("plan_id", req.PlanID)

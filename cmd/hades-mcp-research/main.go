@@ -21,6 +21,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -41,11 +42,14 @@ func main() {
 
 func run() error {
 	fs := flag.NewFlagSet("hades-mcp-research", flag.ContinueOnError)
-	socket := fs.String("socket", "/var/run/hades-system/hades-system.sock", "daemon Unix socket path")
+	socket := fs.String("socket", client.DefaultSocketPath(), "daemon Unix socket path")
 	authTokenPath := fs.String("auth-token-path", "", "path to daemon auth-token file (required)")
 	daemonURL := fs.String("daemon-url", "", "daemon HTTP base URL (overrides --socket for non-unix-socket setups)")
 	allowFallback := fs.Bool("allow-fallback", false, "permit start with NoOp budget+audit when daemon unreachable (DANGEROUS — disables the SEMANTIC budget gate; production MUST set false)")
 	if err := fs.Parse(os.Args[1:]); err != nil {
+		if errors.Is(err, flag.ErrHelp) {
+			return nil
+		}
 		return fmt.Errorf("parse flags: %w", err)
 	}
 

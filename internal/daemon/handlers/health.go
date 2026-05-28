@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/cbip-solutions/hades-system/internal/buildinfo"
 )
 
 type ServerCtx interface {
@@ -40,7 +42,7 @@ func Health(s HealthCtx) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body := map[string]any{
 			"status":         "ok",
-			"version":        "0.1.0-dev",
+			"version":        buildinfo.Version(),
 			"uptime_seconds": int64(time.Since(s.StartedAt()).Seconds()),
 			"pid":            os.Getpid(),
 		}

@@ -531,7 +531,7 @@ func DoctrineReinforce(s any) http.HandlerFunc {
 			body.Stage = q.Get("stage")
 		}
 		if body.Phase == "" {
-			body.Phase = q.Get("stage")
+			body.Phase = q.Get("phase")
 		}
 		if body.PlanID == "" {
 			body.PlanID = q.Get("plan_id")

@@ -25,7 +25,7 @@ func reinforceCmd() *cobra.Command {
 		Use:     "reinforce <task-kind>",
 		GroupID: "debug",
 		Short:   "Renderiza el bloque de refuerzo que recibirá un worker (preview)",
-		Long:    "Imprime el bloque de refuerzo que un worker recibiría dado un\ntask_kind y opcionalmente: --project, --stage, --stage, --plan-id.\n\nEl renderizado pasa por el daemon (no localmente) para garantizar paridad\ncon lo que reciben los workers reales — la resolución de doctrina activa\nper-project ocurre server-side.\n\nVariables disponibles en plantillas (per design contract):\n  DoctrineName, ProjectAlias, ProjectID, CurrentStage, CurrentPhase,\n  TaskKind (orchestrator|team_lead|worker|reviewer_*), TaskComplexityTier,\n  PlanID, TransverseAxioms.\n\ntask_kind values: orchestrator, team_lead, worker, reviewer_tactical,\nreviewer_strategic, reviewer_architectural.",
+		Long:    "Imprime el bloque de refuerzo que un worker recibiría dado un\ntask_kind y opcionalmente: --project, --stage, --phase, --plan-id.\n\nEl renderizado pasa por el daemon (no localmente) para garantizar paridad\ncon lo que reciben los workers reales — la resolución de doctrina activa\nper-project ocurre server-side.\n\nVariables disponibles en plantillas (per design contract):\n  DoctrineName, ProjectAlias, ProjectID, CurrentStage, CurrentPhase,\n  TaskKind (orchestrator|team_lead|worker|reviewer_*), TaskComplexityTier,\n  PlanID, TransverseAxioms.\n\ntask_kind values: orchestrator, team_lead, worker, reviewer_tactical,\nreviewer_strategic, reviewer_architectural.",
 
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
@@ -39,7 +39,7 @@ func reinforceCmd() *cobra.Command {
 			}
 			project, _ := cmd.Flags().GetString("project")
 			stage, _ := cmd.Flags().GetString("stage")
-			phase, _ := cmd.Flags().GetString("stage")
+			phase, _ := cmd.Flags().GetString("phase")
 			planID, _ := cmd.Flags().GetString("plan-id")
 			ctx, cancel := context.WithTimeout(cmd.Context(), 5*time.Second)
 			defer cancel()
@@ -80,7 +80,7 @@ func reinforceCmd() *cobra.Command {
 	}
 	cmd.Flags().String("project", "", "Alias del proyecto (resuelve doctrina activa per-project)")
 	cmd.Flags().String("stage", "", "Stage actual (variable de plantilla)")
-	cmd.Flags().String("stage", "", "stage actual (variable de plantilla)")
+	cmd.Flags().String("phase", "", "Phase actual (variable de plantilla)")
 	cmd.Flags().String("plan-id", "", "Plan ID actual (variable de plantilla)")
 	return cmd
 }

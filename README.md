@@ -30,7 +30,21 @@ evaluate the system.
 
 ## Quick Start
 
-Install from source:
+Install with Homebrew:
+
+```bash
+brew tap cbip-solutions/tap
+brew install hades
+hades-ctld --version
+hades --version
+brew services start cbip-solutions/tap/hades
+hades status
+hades doctor
+hades providers list
+hades dashboard
+```
+
+Build from source:
 
 ```bash
 git clone https://github.com/cbip-solutions/hades-system.git
@@ -50,10 +64,13 @@ Use the CLI:
 ```bash
 bin/hades status
 bin/hades doctor
+bin/hades providers list
+bin/hades dashboard
 bin/hades doctor caronte
 ```
 
 See [INSTALL.md](INSTALL.md) for platform prerequisites and packaging notes.
+For the guided first run, see [First Five Minutes](docs/operations/first-five-minutes.md).
 
 ## Main Surfaces
 
@@ -97,6 +114,8 @@ users can inspect and build the source tree directly.
 - [Threat model](THREAT_MODEL.md)
 - [Configuration reference](CONFIGURATION.md)
 - [End-to-end examples](EXAMPLES.md)
+- [First five minutes](docs/operations/first-five-minutes.md)
+- [Troubleshooting](docs/operations/troubleshooting.md)
 - [Subsystem handbook](docs/README.md)
 - [Release notes](CHANGELOG.md)
 - [Contributing](CONTRIBUTING.md)

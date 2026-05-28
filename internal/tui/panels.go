@@ -32,6 +32,9 @@
 package tui
 
 import (
+	"fmt"
+	"sort"
+	"strings"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -83,6 +86,48 @@ func (p panelKey) String() string {
 	default:
 		return "unknown"
 	}
+}
+
+var panelNameRegistry = map[string]panelKey{
+	"help":          panelHelp,
+	"workforce":     panelWorkforce,
+	"cost":          panelCost,
+	"audit":         panelAudit,
+	"hra":           panelHRA,
+	"confirmations": panelConfirmations,
+	"confirm":       panelConfirmations,
+	"codegraph":     panelCodegraph,
+	"memory":        panelMemory,
+	"skills":        panelSkills,
+	"doctrine":      panelDoctrine,
+	"crossproject":  panelCrossProject,
+	"cross-project": panelCrossProject,
+	"xproject":      panelCrossProject,
+	"inbox":         panelInbox,
+}
+
+func ValidPanelNames() []string {
+	names := make([]string, 0, len(panelNameRegistry))
+	for name := range panelNameRegistry {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
+}
+
+func parsePanelName(name string) (panelKey, bool) {
+	key, ok := panelNameRegistry[strings.ToLower(strings.TrimSpace(name))]
+	return key, ok
+}
+
+func validatePanelName(name string) error {
+	if strings.TrimSpace(name) == "" {
+		return nil
+	}
+	if _, ok := parsePanelName(name); ok {
+		return nil
+	}
+	return fmt.Errorf("unknown dashboard panel %q; valid panels: %s", name, strings.Join(ValidPanelNames(), ", "))
 }
 
 func panelCadence(k panelKey) time.Duration {

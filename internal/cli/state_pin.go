@@ -31,7 +31,7 @@ func newStatePinCmd() *cobra.Command {
 
 A confirmation prompt is shown before the daemon call.
 Blank input or anything other than "y"/"yes" aborts without error.`,
-		Example: "  hades state pin substrate_min_version 0.7.1 --reason \"OpenClaude 0.7.0 has CVE-2026-X\"\n  hades state pin schema_version 24 --reason \"HADES design schema bump\"",
+		Example: "  hades state pin substrate_min_version 0.7.1 --reason \"worker runtime 0.7.0 has CVE-2026-X\"\n  hades state pin schema_version 24 --reason \"HADES design schema bump\"",
 
 		RunE: func(cmd *cobra.Command, args []string) error {
 			reason, _ := cmd.Flags().GetString("reason")

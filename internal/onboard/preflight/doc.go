@@ -9,7 +9,7 @@
 // ships three checks (HADES design decision L-4: gitnexus removed; caronte
 // is in-process):
 // - Hermes binary + version (invariant ≥0.13.0)
-// - Plugin format remnants (invariant; legacy CC/OpenClaude format halts)
+// - Plugin format remnants (legacy plugin format halts)
 // - Daemon socket (optional; Status=skip if absent per design choice+)
 //
 // Surface forms (per master plan §"Cross-stage type sharing" + stage

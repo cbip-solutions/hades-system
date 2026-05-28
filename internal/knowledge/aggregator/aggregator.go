@@ -179,7 +179,7 @@ func (noopChainAnchorComputer) ComputeAnchor(
 	createdAt time.Time,
 ) (string, error) {
 	partition := createdAt.UTC().Format("2006_01")
-	return fmt.Sprintf("%s:%s:noop-pre-stage-b", partition, eventID), nil
+	return fmt.Sprintf("%s:%s:noop-pre-phase-b", partition, eventID), nil
 }
 
 type Clock interface {

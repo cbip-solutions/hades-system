@@ -62,7 +62,7 @@ func (c *PluginFormatCheck) Run(ctx context.Context) Result {
 				Name:            c.Name(),
 				Status:          StatusFail,
 				Summary:         fmt.Sprintf("%s format remnant detected at %s", kind, root),
-				Details:         fmt.Sprintf("invariant halts on legacy plugin-format remnants. Evidence: %s. stage (commit 8bd84187) made the Hermes plugin format canonical; legacy CC/OpenClaude installs require migration before HADES onboarding.", evidence),
+				Details:         fmt.Sprintf("HADES halts on legacy plugin-format remnants. Evidence: %s. The Hermes plugin format is canonical; legacy installs require migration before HADES onboarding.", evidence),
 				RemediationHint: hintForKind(kind),
 				ExitCode:        3,
 			}
@@ -71,7 +71,7 @@ func (c *PluginFormatCheck) Run(ctx context.Context) Result {
 	return Result{
 		Name:    c.Name(),
 		Status:  StatusPass,
-		Summary: "No CC/OpenClaude format remnants detected",
+		Summary: "No legacy plugin-format remnants detected",
 	}
 }
 
@@ -174,7 +174,7 @@ func hintForKind(kind string) string {
 	case "claude-code":
 		return "Run `hades migrate claude-code --dry-run` to preview migration; then `hades migrate claude-code --apply` to import. Or move the legacy install out of the scan paths (local agent memory/, ./.hades/) if intentionally preserved offline."
 	case "openclaude":
-		return "Run `hermes claw migrate` (Hermes-provided OpenClaude importer) to convert to Hermes plugin format. Or move ~/.openclaude/ out of the scan paths."
+		return "Run the Hermes-provided migration command to convert to Hermes plugin format, or move legacy plugin directories out of the scan paths."
 	default:
 		return "Remove or relocate the detected remnant; consult docs/operations/migrate.md."
 	}

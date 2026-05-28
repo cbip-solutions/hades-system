@@ -70,6 +70,25 @@ func (c *Client) BypassUpdateConfig(ctx context.Context, opts BypassUpdateOpts) 
 	return &out, nil
 }
 
+func (c *Client) BypassExtractConfig(ctx context.Context, opts ExtractOpts) (*BypassExtractResp, error) {
+	var out BypassExtractResp
+	if err := c.postJSON(ctx, "/v1/bypass/extract-config", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *Client) BypassCrossValidate(ctx context.Context, plugin string) (*BypassCrossValidateResp, error) {
+	var out BypassCrossValidateResp
+	body := struct {
+		Plugin string `json:"plugin"`
+	}{Plugin: plugin}
+	if err := c.postJSON(ctx, "/v1/bypass/cross-validate", body, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *Client) BypassAnomalies(ctx context.Context) ([]BypassAnomaly, error) {
 	var out []BypassAnomaly
 	if err := c.getJSON(ctx, "/v1/bypass/anomalies", &out); err != nil {
