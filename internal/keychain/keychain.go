@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package keychain is the shared OS-credential resolver for hades-system.
+// Package keychain is the shared OS-credential resolver for hades-system/HADES.
 //
 // It exists so every direct backend (anthropic_paygo, gemini,
 // openai_compat) resolves its API key from one place. Earlier,
@@ -11,17 +11,15 @@
 // violate invariant (it imports only internal/redact + stdlib +
 // github.com/keybase/go-keychain on darwin).
 //
-// Convention service = "hades-system/<provider>", account = "hades-system" —
-// the form documented in session handoff
-// (security add-generic-password -s "hades-system/<provider>" -a "hades-system").
+// Convention service = "hades/<provider>" or legacy
+// "hades-system/<provider>", account = "hades-system" — the latter remains
+// supported for private-history compatibility.
 //
-// CI path: the macOS Keychain is not reliably available in CI (known
-// blocker — HADES_BYPASS_DISABLE_KEYCHAIN=1 precedent). When
-// HADES_KEYCHAIN_DISABLE=1 is set, SystemResolver.Lookup reads the
-// credential from a HADES_KEYCHAIN_<SERVICE> environment variable instead
-// (service mangled to upper-case with every non-alphanumeric run
-// collapsed to a single underscore). Real-world integration tests skip
-// cleanly when neither the Keychain nor the env var supplies a key.
+// Cross-platform path: SystemResolver.Lookup checks HADES_KEYCHAIN_* env
+// aliases before any OS store. The legacy HADES_KEYCHAIN_* aliases and
+// HADES_KEYCHAIN_DISABLE=1 remain supported for CI and old operator shells.
+// Real-world integration tests skip cleanly when neither the Keychain nor
+// an env var supplies a key.
 package keychain
 
 import (
@@ -43,9 +41,10 @@ var ErrUnsupported = errors.New("keychain: unsupported platform")
 
 var ErrInvalidService = errors.New("keychain: invalid service name")
 
-// validateServiceName enforces the convention service = "hades-system/<provider>"
-// or "anthropic-bypass" (the legacy bypass slot). Returns ErrInvalidService
-// wrapped with a descriptive message when the input violates the rules.
+// validateServiceName enforces the convention service = "hades/<provider>",
+// "hades-system/<provider>", or "anthropic-bypass" (the legacy bypass slot).
+// Returns ErrInvalidService wrapped with a descriptive message when the input
+// violates the rules.
 //
 // Rules
 // - non-empty
@@ -100,8 +99,19 @@ func keychainDisabled() bool {
 }
 
 func envVarName(service string) string {
+	return "HADES_KEYCHAIN_" + envVarSuffix(service)
+}
+
+func publicEnvVarName(service string) string {
+	return "HADES_KEYCHAIN_" + envVarSuffix(shortServiceName(service))
+}
+
+func publicFullEnvVarName(service string) string {
+	return "HADES_KEYCHAIN_" + envVarSuffix(service)
+}
+
+func envVarSuffix(service string) string {
 	var b strings.Builder
-	b.WriteString("HADES_KEYCHAIN_")
 	prevUnderscore := false
 	for _, r := range strings.ToUpper(service) {
 		if (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') {
@@ -118,15 +128,57 @@ func envVarName(service string) string {
 	return b.String()
 }
 
-func lookupFromEnv(service string) (redact.Secret, error) {
+func shortServiceName(service string) string {
+	if i := strings.LastIndex(service, "/"); i >= 0 && i < len(service)-1 {
+		return service[i+1:]
+	}
+	return service
+}
+
+func CredentialEnvVars(service string) ([]string, error) {
 	if err := validateServiceName(service); err != nil {
 		return nil, err
 	}
-	v := sanitizeKeyValue(os.Getenv(envVarName(service)))
-	if v == "" {
-		return nil, ErrNotFound
+	candidates := []string{
+		publicEnvVarName(service),
+		publicFullEnvVarName(service),
+		envVarName(service),
 	}
-	return redact.NewSecret(v), nil
+	out := make([]string, 0, len(candidates))
+	seen := make(map[string]struct{}, len(candidates))
+	for _, name := range candidates {
+		if _, ok := seen[name]; ok {
+			continue
+		}
+		seen[name] = struct{}{}
+		out = append(out, name)
+	}
+	return out, nil
+}
+
+// CredentialPublicEnvVar returns the single documented env-var alias for a
+// credential service. Compatibility aliases are intentionally omitted so
+// public CLI and daemon messages do not teach legacy/private names.
+func CredentialPublicEnvVar(service string) (string, error) {
+	if err := validateServiceName(service); err != nil {
+		return "", err
+	}
+	return publicEnvVarName(service), nil
+}
+
+func lookupFromEnv(service string) (redact.Secret, error) {
+	names, err := CredentialEnvVars(service)
+	if err != nil {
+		return nil, err
+	}
+	for _, name := range names {
+		v := sanitizeKeyValue(os.Getenv(name))
+		if v == "" {
+			continue
+		}
+		return redact.NewSecret(v), nil
+	}
+	return nil, ErrNotFound
 }
 
 func sanitizeKeyValue(raw string) string {

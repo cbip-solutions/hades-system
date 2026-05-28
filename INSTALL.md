@@ -54,6 +54,9 @@ The primary binaries are:
 
 ## Run The Daemon
 
+If you want external LLM providers active on the first daemon boot, export
+their credentials before starting `hades-ctld`; see Provider Credentials below.
+
 ```bash
 bin/hades-ctld
 ```
@@ -65,6 +68,34 @@ bin/hades status
 bin/hades doctor
 bin/hades providers list
 bin/hades dashboard
+```
+
+## Provider Credentials
+
+HADES can run without pay-as-you-go provider credentials; missing providers are
+reported as degraded and the daemon should still start. Configure direct
+provider credentials only when you want the provider cascade to call external
+LLM APIs.
+
+Linux and source installs use environment variables before any OS credential
+store lookup:
+
+```bash
+hades providers init
+export HADES_KEYCHAIN_OPENROUTER="$OPENROUTER_API_KEY"
+export HADES_KEYCHAIN_GOOGLE_AI="$GEMINI_API_KEY"
+export HADES_KEYCHAIN_DEEPSEEK="$DEEPSEEK_API_KEY"
+hades providers verify openrouter-deepseek
+```
+
+If the daemon is already running, restart it after exporting new credentials so
+the provider registry observes the updated environment.
+
+On macOS the same environment variables work. You can also store a credential
+in the macOS Keychain:
+
+```bash
+hades providers rotate openrouter-deepseek
 ```
 
 ## SSH Exec Host Verification

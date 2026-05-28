@@ -508,7 +508,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "reserved.slot-6",
 		Title:        "Reserved overflow slot 6 (catalog capacity).",
 		BodyTemplate: "This code is reserved capacity per the HADES design max-scope doctrine. stage ships 6 reserved slots; this is the last slot (slot 6). If all 6 slots are consumed and a new code is needed, the catalog grows by adding new struct literals (additive expansion); no schema change required.",
-		RecoveryHint: "see: design records release design §\"Doctrine applied\" + §\"No tech debt\" (reserved-capacity is doctrine-compliant, NOT tech debt); the doctrine memory at ~/local agent config/projects/-path-to-projects-hades-system/memory/feedback_no_stubs_complete_code.md is the load-bearing reference",
+		RecoveryHint: "see: design records release design §\"Doctrine applied\" + §\"No tech debt\" (reserved-capacity is doctrine-compliant, NOT tech debt); the doctrine memory at local agent memory/projects/-path-to-projects-hades-system/memory/feedback_no_stubs_complete_code.md is the load-bearing reference",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -525,7 +525,7 @@ var catalog = map[Code]*CatalogEntry{
 	"migrate.allowlist-violation": {
 		Code:         "migrate.allowlist-violation",
 		Title:        "File is outside the migration allowlist.",
-		BodyTemplate: "The path {{.rel}} is not in the set of operator home-dir surfaces that `hades migrate HADES design` is allowed to read or write. The tool NEVER touches files outside the allowlist (shell RC files, ~/.config/hades-system/, ~/.hades/, ~/.hermes/plugins/hades-system/, specific local agent memory/ files).",
+		BodyTemplate: "The path {{.rel}} is not in the set of operator home-dir surfaces that `hades migrate HADES design` is allowed to read or write. The tool NEVER touches files outside the allowlist (shell RC files, ~/.config/hades-system/, ~/.hades/, ~/.hermes/plugins/hades-system/, specific ~/local agent config/ files).",
 		RecoveryHint: "verify the file path is within the allowlist: hades migrate HADES design --help (prints the full scope); if you believe the path should be in scope, open an issue at https://github.com/cbip-solutions/hades-system/issues/new referencing migrate.allowlist-violation + the rejected path",
 		Severity:     SeverityError,
 		Category:     CategoryMigrate,

@@ -39,7 +39,8 @@ bin/hades providers setup
 ```
 
 Provider configuration lives in `providers.toml` and `profiles.toml`; secrets
-belong in the operating-system credential store.
+belong outside those files. Use `HADES_KEYCHAIN_*` env aliases on Linux/source
+installs, or `hades providers rotate <name>` on macOS.
 
 ## Caronte
 

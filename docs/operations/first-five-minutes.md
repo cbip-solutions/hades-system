@@ -10,6 +10,9 @@ mkdir -p ~/.hermes/plugins
 ln -sfn "$(brew --prefix hades)/share/hades/hades" ~/.hermes/plugins/hades
 hades-ctld --version
 hades --version
+# Optional external-provider credentials must be set before daemon start:
+# export HADES_KEYCHAIN_OPENROUTER="$OPENROUTER_API_KEY"
+# export HADES_KEYCHAIN_GOOGLE_AI="$GEMINI_API_KEY"
 brew services start cbip-solutions/tap/hades
 hades status
 hades doctor
@@ -18,6 +21,16 @@ hades doctor hermes
 hades doctor mcps
 hades dashboard
 hades caronte reindex --help
+```
+
+Provider credentials are optional for the first boot. When you add external
+provider API keys later, export them and restart the daemon so the provider
+registry observes the updated environment:
+
+```bash
+export HADES_KEYCHAIN_OPENROUTER="$OPENROUTER_API_KEY"
+export HADES_KEYCHAIN_GOOGLE_AI="$GEMINI_API_KEY"
+brew services restart cbip-solutions/tap/hades
 ```
 
 Expected shape:

@@ -35,6 +35,7 @@ doctor output until the operator wires the desired backends.
 | `HADES_HOOK_DRY_RUN` | Test-only hook dry-run path for plugin hook tests. |
 | `HADES_MCP_DRAIN_TIMEOUT` | MCP shutdown drain timeout override for controlled process tests. |
 | `HADES_LOG_DIR` | Log directory override for MCP processes that need file logging. |
+| `HADES_KEYCHAIN_<PROVIDER>` | Provider API key env alias. For `api_key_keychain = "hades/openrouter"`, export `HADES_KEYCHAIN_OPENROUTER`. |
 
 ## Global Config
 
@@ -79,8 +80,19 @@ family = "example"
 api_key_keychain = "hades/provider/example-openai-compatible"
 ```
 
-`api_key_keychain` is a credential-store key name. The secret itself should live
-in the operating-system credential store.
+`api_key_keychain` is the stable credential reference used by the roster. HADES
+first checks matching env vars, then the macOS Keychain when available. For the
+example above, set a public env alias before starting the daemon:
+
+```bash
+export HADES_KEYCHAIN_EXAMPLE_OPENAI_COMPATIBLE="$EXAMPLE_API_KEY"
+```
+
+For any roster entry, the short alias uses the final path segment:
+
+```bash
+export HADES_KEYCHAIN_OPENROUTER="$OPENROUTER_API_KEY"
+```
 
 ## Profile Roster
 

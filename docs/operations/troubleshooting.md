@@ -52,11 +52,22 @@ Confirm each MCP shows `/tmp/hades-system.sock` or the value of
 
 ```bash
 hades providers list
+hades providers setup
 hades doctor
 ```
 
-Store secrets in the OS credential store and keep only references in
-`~/.config/hades-system`.
+Provider credentials are optional at first boot. On Linux/source installs, set
+the env alias that matches the `api_key_keychain` reference before starting the
+daemon:
+
+```bash
+export HADES_KEYCHAIN_OPENROUTER="$OPENROUTER_API_KEY"
+export HADES_KEYCHAIN_GOOGLE_AI="$GEMINI_API_KEY"
+brew services restart cbip-solutions/tap/hades
+```
+
+On macOS the env aliases work too; `hades providers rotate <name>` can store
+the key in macOS Keychain instead.
 
 ## Caronte Index Empty
 

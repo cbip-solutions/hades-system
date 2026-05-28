@@ -12,7 +12,8 @@ trusted.
 
 - Source repositories and generated worktrees.
 - Daemon bearer tokens, local sockets, and operator session state.
-- Provider credentials referenced by Keychain or compatible credential stores.
+- Provider credentials referenced by env aliases, Keychain, or compatible
+  credential stores.
 - SSH agent access and trusted host-key material.
 - Audit events, recovery state, checksums, and artifact-verification metadata.
 - Caronte indexes, workspace federation state, and API-contract metadata.
@@ -84,7 +85,8 @@ signatures, and dependency metadata.
 
 ## Operator Responsibilities
 
-- Keep provider secrets in the operating-system credential store.
+- Keep provider secrets outside config files: use `HADES_KEYCHAIN_*` env aliases
+  on Linux/source installs or macOS Keychain for local operator machines.
 - Keep `known_hosts` current for SSH targets.
 - Build and test from a clean checkout before publishing or trusting artifacts.
 - Treat optional sidecars as privileged local components.

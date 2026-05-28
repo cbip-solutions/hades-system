@@ -5,6 +5,7 @@
 package keychain
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/cbip-solutions/hades-system/internal/redact"
@@ -13,12 +14,19 @@ import (
 type SystemResolver struct{}
 
 func (SystemResolver) Lookup(service, account string) (redact.Secret, error) {
+	sec, envErr := lookupFromEnv(service)
+	if envErr == nil {
+		return sec, nil
+	}
+	if !errors.Is(envErr, ErrNotFound) {
+		return nil, envErr
+	}
 	if keychainDisabled() {
-		return lookupFromEnv(service)
+		return nil, envErr
 	}
-
-	if err := validateServiceName(service); err != nil {
-		return nil, err
+	envVar, _ := CredentialPublicEnvVar(service)
+	if envVar == "" {
+		envVar = "HADES_KEYCHAIN_<PROVIDER>"
 	}
-	return nil, fmt.Errorf("keychain.Lookup(%q): %w (set HADES_KEYCHAIN_DISABLE=1 to use env vars)", service, ErrUnsupported)
+	return nil, fmt.Errorf("keychain.Lookup(%q): %w (export %s)", service, ErrUnsupported, envVar)
 }

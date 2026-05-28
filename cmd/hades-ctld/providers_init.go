@@ -80,6 +80,21 @@ func tierForProviderType(t string) providers.Tier {
 	}
 }
 
+func credentialResolutionFailureReason(cfg providers.ProviderConfig, err error) (string, bool) {
+	if errors.Is(err, keychain.ErrNotFound) || errors.Is(err, keychain.ErrUnsupported) {
+		envVar, envErr := keychain.CredentialPublicEnvVar(cfg.APIKeyKeychain)
+		envHint := ""
+		if envErr == nil && envVar != "" {
+			envHint = "; export " + envVar
+		}
+		if errors.Is(err, keychain.ErrUnsupported) {
+			return "credential store unsupported on this platform for " + cfg.APIKeyKeychain + envHint, true
+		}
+		return "credential " + cfg.APIKeyKeychain + " not found" + envHint, true
+	}
+	return "", false
+}
+
 func registerConstructors(reg *providers.Registry, kc keychain.Resolver) error {
 	ctors := map[string]providers.BackendConstructor{
 		"anthropic-paygo": func(cfg providers.ProviderConfig) (providers.TierBackend, error) {
@@ -123,11 +138,11 @@ func BuildProviderRegistry(configDir string) (*providers.Registry, error) {
 	for _, cfg := range declared {
 		if err := reg.RegisterFromConfig(cfg); err != nil {
 
-			if errors.Is(err, keychain.ErrNotFound) {
+			if reason, ok := credentialResolutionFailureReason(cfg, err); ok {
 				stub := &disabledBackend{
 					name:   cfg.Name,
 					tier:   tierForProviderType(cfg.Type),
-					reason: "keychain entry " + cfg.APIKeyKeychain + " not found",
+					reason: reason,
 				}
 				if rerr := reg.Register(cfg.Name, stub); rerr != nil {
 					return nil, fmt.Errorf("providers_init: register disabled stub %q: %w", cfg.Name, rerr)

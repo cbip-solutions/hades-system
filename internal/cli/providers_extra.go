@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package cli — providers_extra.go
 //
-// The Keychain-touching `hades providers` subcommands: verify, rotate,
-// add, setup. Split from providers.go (list + init) to keep each file
-// focused. All four resolve their config dir via the configDirFunc seam
-// so tests point at a t.TempDir().
+// The credential-touching `hades providers` subcommands: verify, rotate, add,
+// setup. Env vars are the cross-platform path; rotate writes macOS Keychain.
+// Split from providers.go (list + init) to keep each file focused. All four
+// resolve their config dir via the configDirFunc seam so tests point at a
+// t.TempDir().
 package cli
 
 import (
@@ -14,6 +15,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -55,6 +57,17 @@ func buildBackend(cfg providers.ProviderConfig) (providers.TierBackend, error) {
 	}
 }
 
+func providerCredentialHint(cfg providers.ProviderConfig) string {
+	envVar, err := keychain.CredentialPublicEnvVar(cfg.APIKeyKeychain)
+	if err != nil || envVar == "" {
+		return "check the provider credential reference in providers.toml"
+	}
+	if runtime.GOOS == "darwin" {
+		return fmt.Sprintf("export %s or run `hades providers rotate %s` to store it in macOS Keychain", envVar, cfg.Name)
+	}
+	return fmt.Sprintf("export %s before starting hades-ctld and running verify", envVar)
+}
+
 func newProvidersVerifyCmd(dir configDirFunc) *cobra.Command {
 	return &cobra.Command{
 		Use:   "verify <name>",
@@ -67,9 +80,9 @@ func newProvidersVerifyCmd(dir configDirFunc) *cobra.Command {
 			}
 			backend, err := buildBackend(cfg)
 			if err != nil {
-				if errors.Is(err, keychain.ErrNotFound) {
-					return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("providers verify %q: Keychain entry %q not found — provision it with `security add-generic-password -U -s %q -a \"hades-system\" -w \"<key>\"`",
-						args[0], cfg.APIKeyKeychain, cfg.APIKeyKeychain))
+				if errors.Is(err, keychain.ErrNotFound) || errors.Is(err, keychain.ErrUnsupported) {
+					return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("providers verify %q: credential %q unavailable — %s",
+						args[0], cfg.APIKeyKeychain, providerCredentialHint(cfg)))
 				}
 				return ierrors.Wrap(ierrors.Code("daemon.unreachable"), fmt.Errorf("providers verify %q: %w", args[0], err))
 			}
@@ -79,7 +92,7 @@ func newProvidersVerifyCmd(dir configDirFunc) *cobra.Command {
 			if err := backend.Probe(ctx); err != nil {
 				return ierrors.Wrap(ierrors.Code("daemon.unreachable"), fmt.Errorf("providers verify %q: probe failed: %w", args[0], err))
 			}
-			fmt.Fprintf(cmd.OutOrStdout(), "provider %q OK — Keychain key resolves, endpoint reachable\n", args[0])
+			fmt.Fprintf(cmd.OutOrStdout(), "provider %q OK — credential resolves, endpoint reachable\n", args[0])
 			return nil
 		},
 	}
@@ -155,7 +168,7 @@ func newProvidersAddCmd(dir configDirFunc) *cobra.Command {
 	cmd.Flags().StringVar(&endpoint, "endpoint", "", "http(s) base URL")
 	cmd.Flags().StringVar(&model, "model", "", "model name")
 	cmd.Flags().StringVar(&family, "family", "", "family key (invariant)")
-	cmd.Flags().StringVar(&kcRef, "keychain", "", "Keychain service ref (hades-system/<provider>)")
+	cmd.Flags().StringVar(&kcRef, "keychain", "", "Credential service ref (hades/<provider>)")
 	return cmd
 }
 
@@ -174,8 +187,11 @@ func newProvidersSetupCmd(dir configDirFunc) *cobra.Command {
 				fmt.Fprintf(out, "providers.toml present at %s\n", providersPath)
 			}
 			fmt.Fprintln(out, "step 2: edit each [[providers]] endpoint to the provider's real base URL")
-			fmt.Fprintln(out, "step 3: provision each Keychain key:")
-			fmt.Fprintln(out, "        security add-generic-password -U -s \"hades-system/<provider>\" -a \"hades-system\" -w \"<key>\"")
+			fmt.Fprintln(out, "step 3: export provider credentials before starting hades-ctld:")
+			fmt.Fprintln(out, "        export HADES_KEYCHAIN_DEEPSEEK=\"<key>\"")
+			fmt.Fprintln(out, "        export HADES_KEYCHAIN_OPENROUTER=\"<key>\"")
+			fmt.Fprintln(out, "        export HADES_KEYCHAIN_GOOGLE_AI=\"<key>\"")
+			fmt.Fprintln(out, "        macOS alternative: run `hades providers rotate <name>` to store a key in Keychain")
 			fmt.Fprintln(out, "step 4: run `hades providers verify <name>` per provider to confirm")
 			return nil
 		},

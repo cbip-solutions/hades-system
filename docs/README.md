@@ -56,7 +56,9 @@ be visible through doctor, health, and audit surfaces.
 - Prefer daemon-owned state over ad hoc shell memory.
 - Run Caronte impact and intent checks before high-blast-radius changes.
 - Treat HRA attention as a control surface, not a notification stream.
-- Keep provider credentials in the operating-system credential store.
+- Keep provider credentials outside config files. Use `HADES_KEYCHAIN_*` env
+  aliases on Linux/source installs, or macOS Keychain via `hades providers
+  rotate <name>`.
 - Use workspace federation before changing API contracts across repositories.
 - Check audit and budget state when a workflow pauses.
 - Verify published artifacts with checksums, signatures, and attestations when

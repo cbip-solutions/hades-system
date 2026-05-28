@@ -83,7 +83,7 @@ func (c *DetectCheck) Run(_ context.Context) check.DiagnosticResult {
 		d.Message = "~/local agent config/ exists but no migration markers detected"
 		return d
 	}
-	d.Message = fmt.Sprintf("~/local agent config/ detected with %d marker(s); migration available", len(found))
+	d.Message = fmt.Sprintf("local agent memory/ detected with %d marker(s); migration available", len(found))
 	d.Hint = "run `hades migrate claude-code --dry-run` to preview migration plan"
 	return d
 }
