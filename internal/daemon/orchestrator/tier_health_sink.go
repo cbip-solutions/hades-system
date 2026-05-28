@@ -9,7 +9,7 @@
 // store.InsertTierHealthSample.
 //
 // Boundary (invariant): the orchestrator package MUST NOT import
-// internal/store. TierHealthSampleRow is an orchestrator-local mirror of
+// internal/store. TierHealthSampleRow is an orchestrator-formula of
 // store.TierHealthSampleRow (intentionally identical in shape) — the same
 // "two type sets" discipline used for CostLedgerRow. The dispatcheradapter
 // is the sole place the two row types meet; a reflective parity test there

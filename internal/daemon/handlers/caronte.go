@@ -59,7 +59,7 @@ type ProjectsAliasResolverForReindex interface {
 	Resolve(ctx context.Context, idOrAlias string) (string, error)
 }
 
-// ErrCaronteAliasNotFound is the handler-local mirror of
+// ErrCaronteAliasNotFound is the handler-formula of
 // mcpgateway.ErrAliasNotFound. The production resolver adapter MUST
 // return this sentinel (not the mcpgateway sentinel directly) so the
 // handler can errors.Is-match without importing mcpgateway.

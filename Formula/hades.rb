@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-#
-# Formula/hades.rb — local mirror for verify-brew-formula self-check.
-#
-# Canonical authority: github.com/cbip-solutions/homebrew-tap/Formula/hades.rb.
-# This local mirror is kept in sync by the verify-brew-formula gate and the
-# GoReleaser brews block.
-#
 class Hades < Formula
   desc "Autonomous agentic development orchestrator (Hermes substrate)"
   homepage "https://github.com/cbip-solutions/hades-system"
@@ -34,16 +27,15 @@ class Hades < Formula
       HADES uses Caronte (in-tree code-graph; Apache-2.0/MIT per project
       LICENSE) — no external code-graph dependency required.
 
-      Default LLM access: Anthropic API + Gemini + OpenRouter via the HADES design
-      provider cascade (paygo). Configure with:
+      Default LLM access: Anthropic API + Gemini + OpenRouter via the
+      provider cascade. Configure with:
         `hades providers add anthropic --key $ANTHROPIC_API_KEY`
         `hades providers add gemini --key $GEMINI_API_KEY`
         `hades providers add openrouter --key $OPENROUTER_API_KEY`
 
-      Optional advanced configuration: a private Tier 1 sidecar can be
-      attached for direct Anthropic Max subscription integration. See
-      public Tier 1 sidecar recipe for the HTTP API contract; the reference
-      implementation is distributed separately.
+      Optional advanced configuration: a Tier 1 sidecar can be attached
+      for direct Anthropic Max subscription integration. See the sidecar
+      HTTP API recipe for the supported contract.
 
       License: MIT (see LICENSE). MIT permits commercial use; no commercial
       license required for any HADES component.

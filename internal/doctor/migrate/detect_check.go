@@ -68,7 +68,7 @@ func (c *DetectCheck) Run(_ context.Context) check.DiagnosticResult {
 	claudeDir := filepath.Join(c.homeDir, "local agent config")
 	info, err := os.Stat(claudeDir)
 	if err != nil || !info.IsDir() {
-		d.Message = "no ~/local agent config/ detected"
+		d.Message = "no local agent memory/ detected"
 		return d
 	}
 

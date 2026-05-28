@@ -393,7 +393,7 @@ func (c *CostCounters) RebuildFromLedger(since time.Time) error {
 // verified here (it is a pure subset of 30d; verifying 30d is sufficient
 // to catch routing bugs).
 //
-// Boundary rows is `[]CostLedgerRow` (orchestrator-local mirror), NOT
+// Boundary rows is `[]CostLedgerRow` (orchestrator-formula), NOT
 // `[]store.CostLedgerRow`. F-5/F-6 boundary pivot — orchestrator MUST
 // NOT import internal/store (invariant).
 func (c *CostCounters) verifyRebuild(rows []CostLedgerRow, since time.Time) error {
