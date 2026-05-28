@@ -134,20 +134,7 @@ Five leaves:
 inv-hades-146: pin / promote / unpin all REQUIRE a non-empty --reason.
 The reason is anchored on the Plan 9 audit chain and surfaces via
 ` + "`hades audit-chain history`" + `.`,
-		Example: `  # Cross-corpus query (Plan 9 aggregator only)
-  hades memory query "context cancellation"
-
-  # Cross-corpus with Plan 14 ecosystem RAG fusion
-  hades memory query "context cancellation" --remote
-
-  # List pinned notes
-  hades memory list
-
-  # Pin a note (inv-hades-146: --reason required)
-  hades memory pin internal-platform-x/M0-doctrine --reason "load-bearing for max-scope"
-
-  # Unpin a note
-  hades memory unpin internal-platform-x/M0-doctrine --reason "superseded by N0"`,
+		Example: " # Cross-corpus query\n  hades memory query \"context cancellation\"\n\n # Cross-corpus with release ecosystem RAG fusion\n  hades memory query \"context cancellation\" --remote\n\n # List pinned notes\n  hades memory list\n\n # Pin a note (invariant: --reason required)\n  hades memory pin internal-platform-x/M0-doctrine --reason \"load-bearing for max-scope\"\n\n # Unpin a note\n  hades memory unpin internal-platform-x/M0-doctrine --reason \"superseded by N0\"",
 	}
 	cmd.AddCommand(newMemoryQueryCmd())
 	cmd.AddCommand(newMemoryListCmd())

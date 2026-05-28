@@ -81,14 +81,8 @@ propuesta atraviesa el ciclo: proposed → applied | denied → reverted.
 
 Use 'hades doctrine ack ADR-NNNN' o 'hades doctrine deny ADR-NNNN
 --reason ...' para resolver propuestas pendientes.`,
-		Example: `  # Listar todas las propuestas (cualquier estado)
-  hades doctrine propose-list
+		Example: " # Listar todas las propuestas (cualquier estado)\n  hades doctrine propose-list\n\n # Solo propuestas pendientes\n  hades doctrine propose-list --status proposed\n\n # Salida JSON para piping a jq\n  hades doctrine propose-list --json | jq '.proposals[] | select(.status == \"proposed\")'",
 
-  # Solo propuestas pendientes
-  hades doctrine propose-list --status proposed
-
-  # Salida JSON para piping a jq
-  hades doctrine propose-list --json | jq '.proposals[] | select(.status == "proposed")'`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if err := format.ValidateExclusive(cmd); err != nil {
 				return err
@@ -245,11 +239,8 @@ Si el validador rechaza (HTTP 409 + cuerpo *TightenViolation), la
 propuesta queda como "proposed" y el operador puede editar el override
 subyacente o denegar la propuesta con 'hades doctrine deny ADR-NNNN
 --reason ...'.`,
-		Example: `  # Aceptar sin comentario
-  hades doctrine ack ADR-0050
+		Example: " # Aceptar sin comentario\n  hades doctrine ack ADR-0050\n\n # Aceptar con justificación (visible en eventlog para auditoría)\n  hades doctrine ack ADR-0050 --reason \"telemetría confirma reducción de falsos positivos\"",
 
-  # Aceptar con justificación (visible en eventlog para auditoría)
-  hades doctrine ack ADR-0050 --reason "telemetría confirma reducción de falsos positivos"`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			adrID := ""
@@ -362,11 +353,8 @@ HTTP 409 con un mensaje claro.
 del evento DoctrineAmendmentReverted; si se omite, el evento aún se
 emite con reason vacío. Para reverts vinculados a fire-drill (donde
 el contexto del audit trail ya es claro), --reason puede omitirse.`,
-		Example: `  # Revert sin razón (audit trail tiene contexto suficiente)
-  hades doctrine revert ADR-0050
+		Example: " # Revert sin razón (audit trail tiene contexto suficiente)\n  hades doctrine revert ADR-0050\n\n # Revert con justificación (recomendado para no-emergency reverts)\n  hades doctrine revert ADR-0050 --reason \"regresión confirmada en métricas cost-degradation tras 24h\"",
 
-  # Revert con justificación (recomendado para no-emergency reverts)
-  hades doctrine revert ADR-0050 --reason "regresión confirmada en métricas cost-degradation tras 24h"`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			adrID := ""
@@ -437,16 +425,8 @@ auditoría).
 --category es obligatorio (cost|merge|recovery; Plan 8 Q13 C aggregator
 categories) — determina qué aggregator monitorea esta regla para
 revert-attribution (inv-hades-141).`,
-		Example: `  # Propuesta manual con justificación
-  hades doctrine propose amendment.cooldown_hours 12 \
-      --justify "Reducir cooldown basado en telemetría P50 operator-ack" \
-      --category merge
+		Example: " # Propuesta manual con justificación\n  hades doctrine propose amendment.cooldown_hours 12 \\\n      --justify \"Reducir cooldown basado en telemetría P50 operator-ack\" \\\n      --category merge\n\n # Forzar override de cooldown (operador conoce contexto)\n  hades doctrine propose amendment.threshold_pct 0.04 \\\n      --justify \"Tightening preemptivo antes de Plan 9 cost-degradation\" \\\n      --category cost \\\n      --cooldown-override",
 
-  # Forzar override de cooldown (operador conoce contexto)
-  hades doctrine propose amendment.threshold_pct 0.04 \
-      --justify "Tightening preemptivo antes de Plan 9 cost-degradation" \
-      --category cost \
-      --cooldown-override`,
 		Args: cobra.MaximumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) < 2 {

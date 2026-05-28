@@ -33,14 +33,8 @@ lists all notes across all projects. Filter to a single project with --project;
 filter to pinned notes with --pinned-only.
 
 Output columns: NOTE_ID / PROJECT / PATH / PINNED / UPDATED`,
-		Example: `  # All notes
-  hades knowledge-p9 ls
+		Example: " # All notes\n  hades knowledge-p9 ls\n\n # One project\n  hades knowledge-p9 ls --project internal-platform-x\n\n # Pinned-only across all projects\n  hades knowledge-p9 ls --pinned-only",
 
-  # One project
-  hades knowledge-p9 ls --project internal-platform-x
-
-  # Pinned-only across all projects
-  hades knowledge-p9 ls --pinned-only`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(cmd.Context(), 30*time.Second)
 			defer cancel()

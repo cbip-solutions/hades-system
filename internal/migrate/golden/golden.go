@@ -113,7 +113,7 @@ func normalizeFixtureBody(expected, actual []byte) []byte {
 	}
 
 	actStr := string(actual)
-	markers := []string{"# Raw source: ", "# 1:1 preservation per inv-hades-183. Source: "}
+	markers := []string{"# Raw source: ", "# 1:1 preservation per invariant. Source: "}
 	for _, m := range markers {
 		if idx := strings.Index(actStr, m); idx >= 0 {
 			end := strings.Index(actStr[idx:], "\n")

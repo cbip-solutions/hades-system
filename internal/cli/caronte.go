@@ -31,14 +31,7 @@ without a running Hermes session.
 
 Subcommands:
   reindex     trigger initial / full reindex of a project's caronte graph`,
-		Example: `  # Reindex the project anchored at cwd
-  hades caronte reindex
-
-  # Reindex an explicit alias
-  hades caronte reindex <alias>
-
-  # Reindex every registered project (sequential)
-  hades caronte reindex --all`,
+		Example: " # Reindex the project anchored at cwd\n  hades caronte reindex\n\n # Reindex an explicit alias\n  hades caronte reindex <alias>\n\n # Reindex every registered project (sequential)\n  hades caronte reindex --all",
 	}
 	cmd.AddCommand(NewCaronteReindexCmdProd())
 	return cmd

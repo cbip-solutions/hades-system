@@ -95,14 +95,8 @@ only the runtime UrgentPauseUntil state is mutated via
 
 Mutually exclusive: pass exactly one of --list / --urgent-pause /
 --cancel (bare invocation defaults to --list).`,
-		Example: `  # Inspect current quiet-hours config + active pause
-  hades quiet
+		Example: " # Inspect current quiet-hours config + active pause\n  hades quiet\n\n # Disable urgent-bypass for the next 30 minutes (e.g. during a meeting)\n  hades quiet --urgent-pause 30m\n\n # Cancel an active urgent-pause early\n  hades quiet --cancel",
 
-  # Disable urgent-bypass for the next 30 minutes (e.g. during a meeting)
-  hades quiet --urgent-pause 30m
-
-  # Cancel an active urgent-pause early
-  hades quiet --cancel`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 

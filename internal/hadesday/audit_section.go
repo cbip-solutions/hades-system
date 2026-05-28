@@ -346,7 +346,7 @@ func auditHumanDuration(d time.Duration) string {
 
 func RenderAuditSection(items []BriefItem, now time.Time) string {
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf("## [plan-9 audit + persistence] — %s\n\n",
+	b.WriteString(fmt.Sprintf("## [release audit + persistence] — %s\n\n",
 		now.Format("2006-01-02")))
 	for _, it := range items {
 		glyph := auditRankGlyph(it.Rank)

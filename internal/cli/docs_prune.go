@@ -96,11 +96,8 @@ Required flags:
   --version     semver string (e.g. "1.18.0")
   --dry-run     preview row counts (mutually exclusive with --confirm)
   --confirm     execute the prune after promptYN gate`,
-		Example: `  # Preview what would be deleted (no mutation)
-  hades docs prune --ecosystem go --version 1.18.0 --dry-run
+		Example: " # Preview what would be deleted (no mutation)\n  hades docs prune --ecosystem go --version 1.18.0 --dry-run\n\n # Execute the prune (renders preview, prompts y/N, commits on yes)\n  hades docs prune --ecosystem python --version 3.9.0 --confirm",
 
-  # Execute the prune (renders preview, prompts y/N, commits on yes)
-  hades docs prune --ecosystem python --version 3.9.0 --confirm`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

@@ -83,20 +83,8 @@ emits raw JSON for piping.
 
 Closes the dangling hint at internal/cli/doctor_caronte.go:52
 ("trigger reindex: hades caronte reindex <project>").`,
-		Example: `  # Reindex the project anchored at cwd
-  hades caronte reindex
+		Example: " # Reindex the project anchored at cwd\n  hades caronte reindex\n\n # Reindex an explicit alias\n  hades caronte reindex <alias>\n\n # Reindex by canonical id\n  hades caronte reindex abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789\n\n # Reindex every registered project (sequential)\n  hades caronte reindex --all\n\n # JSON output for piping into jq\n  hades caronte reindex --format json | jq '.files_indexed'",
 
-  # Reindex an explicit alias
-  hades caronte reindex <alias>
-
-  # Reindex by canonical id
-  hades caronte reindex abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
-
-  # Reindex every registered project (sequential)
-  hades caronte reindex --all
-
-  # JSON output for piping into jq
-  hades caronte reindex --format json | jq '.files_indexed'`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

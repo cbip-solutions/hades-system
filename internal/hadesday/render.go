@@ -76,9 +76,9 @@ const morningTemplate = "# hades day — {{.Date.Format \"2006-01-02\"}} morning
 
 const eodTemplate = "# hades day — {{.Date.Format \"2006-01-02\"}} EOD digest\n" +
 	"\n" +
-	"## Per-project status ({{len .PerProjectStatus}} active)\n" +
+	"## Per-project status ({{len.PerProjectStatus}} active)\n" +
 	"{{range .PerProjectStatus}}\n" +
-	"### {{.Alias}}{{if .AutonomousState}} (autonomous: {{.AutonomousState}}){{end}}\n" +
+	"### {{.Alias}}{{if.AutonomousState}} (autonomous: {{.AutonomousState}}){{end}}\n" +
 	"{{- if .HandoffSummary}}\n" +
 	"- {{.HandoffSummary}}\n" +
 	"{{- else}}\n" +
@@ -164,7 +164,7 @@ func renderAugmentation(s *AugmentationSection) string {
 		return ""
 	}
 	var b strings.Builder
-	b.WriteString("\n## Augmentation (Plan 11)\n\n")
+	b.WriteString("\n## Augmentation\n\n")
 	fmt.Fprintf(&b, "- total_cost: $%.2f USD\n", s.TotalCostUSD)
 	fmt.Fprintf(&b, "- tokens_consumed: %s / %s",
 		formatThousands(s.TokensConsumed), formatThousands(s.TokensCeiling))
@@ -190,7 +190,7 @@ func renderKnowledge(s *KnowledgeSection) string {
 		return ""
 	}
 	var b strings.Builder
-	b.WriteString("\n## Knowledge (Plan 11)\n\n")
+	b.WriteString("\n## Knowledge\n\n")
 	line := fmt.Sprintf("- fts5_docs: %s", formatThousands(s.FTS5Docs))
 	if s.FTS5DocsDeltaSinceYesterday != 0 {
 		line += fmt.Sprintf(" (+%d since yesterday)", s.FTS5DocsDeltaSinceYesterday)
@@ -218,7 +218,7 @@ func renderNotifications(s *NotificationsSection) string {
 		return ""
 	}
 	var b strings.Builder
-	b.WriteString("\n## Notifications (Plan 11 — Hermes-routed)\n\n")
+	b.WriteString("\n## Notifications\n\n")
 	if len(s.RoutesActive) > 0 {
 		fmt.Fprintf(&b, "- routes_active: %s\n", strings.Join(s.RoutesActive, ", "))
 	} else {

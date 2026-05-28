@@ -73,14 +73,8 @@ The daemon enforces inv-hades-172: auth check + doctrine-aware filtering.
 Output formats:
   text  human-readable summary (default)
   json  structured JSON for jq pipelines`,
-		Example: `  # Bare ID
-  hades audit event evt-abc123
+		Example: " # Bare ID\n  hades audit event evt-abc123\n\n # hades:// URL form (e.g. paste from a Hermes citation)\n  hades audit event \"hades://audit/evt-abc123\"\n\n # JSON for tooling\n  hades audit event evt-abc123 --format json | jq '.detail.tokens_used'",
 
-  # hades:// URL form (e.g. paste from a Hermes citation)
-  hades audit event "hades://audit/evt-abc123"
-
-  # JSON for tooling
-  hades audit event evt-abc123 --format json | jq '.detail.tokens_used'`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

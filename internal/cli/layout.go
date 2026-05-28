@@ -56,8 +56,7 @@ future Plan 7+ recovery primitives (e.g. snapshot, kill-orphaned). The
 canonical workflow is: ` + "`hades day`" + ` surfaces a TmuxLayoutDriftDetected
 event in the inbox, operator runs ` + "`hades layout repaint <alias>`" + ` to
 re-construct the daemon-owned windows in place.`,
-		Example: `  # Repaint the daemon-owned windows for a specific session
-  hades layout repaint internal-platform-x`,
+		Example: " # Repaint the daemon-owned windows for a specific session\n  hades layout repaint internal-platform-x",
 	}
 	root.AddCommand(newLayoutRepaintCmd(factory))
 	return root
@@ -86,8 +85,8 @@ Exit codes:
   0  repainted (or no-op when layout already correct)
   1  alias not found
   2  unrecoverable: transport, decode, daemon 5xx, tmux server stuck`,
-		Example: `  # Repaint after drift
-  hades layout repaint internal-platform-x`,
+		Example: " # Repaint after drift\n  hades layout repaint internal-platform-x",
+
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			alias := args[0]

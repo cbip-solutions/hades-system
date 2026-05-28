@@ -100,11 +100,8 @@ Exit codes:
   0  every check OK (or only WARNs without --strict)
   1  any check FAIL OR (any WARN AND --strict)
   2  unrecoverable: prober wiring, transport`,
-		Example: `  # Probe the ecosystem RAG substrate
-  hades doctor ecosystem
+		Example: " # Probe the ecosystem RAG substrate\n  hades doctor ecosystem\n\n # CI gate: fail on Warn rows (Yellow budget band) too\n  hades doctor ecosystem --strict",
 
-  # CI gate: fail on Warn rows (Yellow budget band) too
-  hades doctor ecosystem --strict`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			udsPath, strict := resolveDoctorFlags(cmd)
 			deps, err := buildDoctorDepsFunc(udsPath, strict)

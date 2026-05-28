@@ -125,14 +125,8 @@ Duration grammar:
 Recap is filesystem-only: no daemon required. Use this for vacation
 catch-up, post-incident audits, or sprint retrospectives where you
 need the rolled-up sequence of daily briefs without re-running them.`,
-		Example: `  # Default 24h window
-  hades recap
+		Example: " # Default 24h window\n  hades recap\n\n # Last week\n  hades recap --since 7d\n\n # Last 2 weeks\n  hades recap --since 2w",
 
-  # Last week
-  hades recap --since 7d
-
-  # Last 2 weeks
-  hades recap --since 2w`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			dur, err := parseRecapSince(since)
 			if err != nil {

@@ -46,38 +46,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/recognize"
 )
 
-const sidecarsExampleAsset = `# Example sidecars.toml — copy to ~/.config/hades/sidecars.toml to enable.
-#
-# [tier1.bypass] declares the optional Tier 1 sidecar for advanced
-# Anthropic Max-subscription integration. Per decisión 17-i, the default
-# install path uses the Plan 16 provider cascade (Anthropic paygo +
-# Gemini + OpenRouter direct backends); this section is only needed for
-# operators who run the private bypass sidecar binary (hades-bypass-tier1).
-#
-# Path resolution:
-#   $XDG_CONFIG_HOME/hades/sidecars.toml     (when XDG_CONFIG_HOME is set)
-#   $HOME/.config/hades/sidecars.toml        (default fallback)
-#
-# Validation rules enforced at daemon startup:
-#   * url MUST be http://127.0.0.1:PORT or http://localhost:PORT
-#     (loopback only; the sidecar binds to loopback, never publicly).
-#   * tier MUST equal 1 (the table-name encodes the tier).
-#   * health_probe_interval_s MUST be in [5, 3600].
-#   * request_timeout_s MUST be in [1, 600].
-#   * required is optional (default false; graceful-degrade lets the
-#     dispatcher fall through to the Plan 16 cascade when the sidecar
-#     is absent or unhealthy).
-#
-# A missing sidecars.toml is a NORMAL state — the daemon falls through
-# to the Plan 16 cascade automatically.
-
-[tier1.bypass]
-url = "http://127.0.0.1:39823"
-tier = 1
-health_probe_interval_s = 30
-request_timeout_s = 30
-required = false
-`
+const sidecarsExampleAsset = "# Example sidecars.toml — copy to ~/.config/hades/sidecars.toml to enable.\n#\n# [tier1.bypass] declares the optional Tier 1 sidecar for advanced\n# Anthropic Max-subscription integration. policy, the default\n# install path uses the release provider cascade (Anthropic paygo +\n# Gemini + OpenRouter direct backends); this section is only needed for\n# operators who run the private bypass sidecar binary (hades-bypass-tier1).\n#\n# Path resolution:\n# $XDG_CONFIG_HOME/hades/sidecars.toml (when XDG_CONFIG_HOME is set)\n# $HOME/.config/hades/sidecars.toml (default fallback)\n#\n# Validation rules enforced at daemon startup:\n# * url MUST be http://127.0.0.1:PORT or http://localhost:PORT\n# (loopback only; the sidecar binds to loopback, never publicly).\n# * tier MUST equal 1 (the table-name encodes the tier).\n# * health_probe_interval_s MUST be in [5, 3600].\n# * request_timeout_s MUST be in [1, 600].\n# * required is optional (default false; graceful-degrade lets the\n# dispatcher fall through to the release cascade when the sidecar\n# is absent or unhealthy).\n#\n# A missing sidecars.toml is a NORMAL state — the daemon falls through\n# to the release cascade automatically.\n\n[tier1.bypass]\nurl = \"http://127.0.0.1:39823\"\ntier = 1\nhealth_probe_interval_s = 30\nrequest_timeout_s = 30\nrequired = false\n"
 
 func NewInitCmd() *cobra.Command {
 	var (
@@ -115,14 +84,8 @@ EXIT CODES:
   2  unrecoverable (generic I/O, recognize failure)
   3  preflight failure (Hermes missing)
 `,
-		Example: `  # Interactive: walk-up + recognize + confirm:
-  hades init
+		Example: " # Interactive: walk-up + recognize + confirm:\n  hades init\n\n # Accept inference and proceed:\n  hades init --accept-inference\n\n # CI-friendly:\n  hades init --non-interactive --accept-inference --yes",
 
-  # Accept inference and proceed:
-  hades init --accept-inference
-
-  # CI-friendly:
-  hades init --non-interactive --accept-inference --yes`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 			if ctx == nil {

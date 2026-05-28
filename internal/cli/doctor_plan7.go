@@ -99,11 +99,8 @@ Exit codes:
   0  every aspect OK (or only Warns without --strict)
   1  any aspect Fail OR (any Warn AND --strict)
   2  unrecoverable: prober wiring, transport`,
-		Example: `  # Probe the knowledge subsystem
-  hades doctor knowledge
+		Example: " # Probe the knowledge subsystem\n  hades doctor knowledge\n\n # CI gate: fail on Warn rows too\n  hades doctor knowledge --strict",
 
-  # CI gate: fail on Warn rows too
-  hades doctor knowledge --strict`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			udsPath, strict := resolveDoctorFlags(cmd)
 			deps, err := buildDoctorDepsFunc(udsPath, strict)
@@ -146,11 +143,8 @@ Exit codes:
   0  every aspect OK (or only Warns without --strict)
   1  any aspect Fail OR (any Warn AND --strict)
   2  unrecoverable: prober wiring, transport`,
-		Example: `  # Probe the scheduler subsystem
-  hades doctor scheduler
+		Example: " # Probe the scheduler subsystem\n  hades doctor scheduler\n\n # CI gate: fail on Warn rows too\n  hades doctor scheduler --strict",
 
-  # CI gate: fail on Warn rows too
-  hades doctor scheduler --strict`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			udsPath, strict := resolveDoctorFlags(cmd)
 			deps, err := buildDoctorDepsFunc(udsPath, strict)
@@ -195,11 +189,8 @@ Exit codes:
   0  every aspect OK (or only Warns without --strict)
   1  any aspect Fail OR (any Warn AND --strict)
   2  unrecoverable: prober wiring, transport`,
-		Example: `  # Probe the inbox subsystem
-  hades doctor inbox
+		Example: " # Probe the inbox subsystem\n  hades doctor inbox\n\n # CI gate: fail on Warn rows too\n  hades doctor inbox --strict",
 
-  # CI gate: fail on Warn rows too
-  hades doctor inbox --strict`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			udsPath, strict := resolveDoctorFlags(cmd)
 			deps, err := buildDoctorDepsFunc(udsPath, strict)
@@ -247,11 +238,8 @@ Exit codes:
   0  every aspect OK (or only Warns without --strict)
   1  any aspect Fail OR (any Warn AND --strict)
   2  unrecoverable: prober wiring, transport`,
-		Example: `  # Probe the tmux subsystem
-  hades doctor tmux
+		Example: " # Probe the tmux subsystem\n  hades doctor tmux\n\n # CI gate: fail on Warn rows too\n  hades doctor tmux --strict",
 
-  # CI gate: fail on Warn rows too
-  hades doctor tmux --strict`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			udsPath, strict := resolveDoctorFlags(cmd)
 			deps, err := buildDoctorDepsFunc(udsPath, strict)

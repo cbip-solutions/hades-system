@@ -135,14 +135,7 @@ sources directly. The --remote flag is reserved for Plan 14 ecosystem
 RAG and short-circuits with a deferred-message pointer until then.
 The --audit-chain flag is reserved for Plan 9 hash-chain output and
 short-circuits identically.`,
-		Example: `  # Search for a string across all indexed docs
-  hades knowledge query "WFQ saturation"
-
-  # Refresh the index after a doc edit (full rebuild)
-  hades knowledge reindex
-
-  # Inspect index health
-  hades knowledge stats`,
+		Example: " # Search for a string across all indexed docs\n  hades knowledge query \"WFQ saturation\"\n\n # Refresh the index after a doc edit (full rebuild)\n  hades knowledge reindex\n\n # Inspect index health\n  hades knowledge stats",
 	}
 	root.AddCommand(newKnowledgeQueryCmd(factory))
 	root.AddCommand(newKnowledgeReindexCmd(factory))
@@ -212,17 +205,8 @@ Flags:
                        returns 0 results until Caronte populates).
   --remote             Plan 14 ecosystem RAG (not yet shipped; see roadmap).
   --audit-chain        Plan 9 hash-chain (not yet shipped; see roadmap).`,
-		Example: `  # Free-text search across the whole index
-  hades knowledge query "tmux drift"
+		Example: " # Free-text search across the whole index\n  hades knowledge query \"tmux drift\"\n\n # Limit to memory + adr files in internal-platform-x\n  hades knowledge query \"max scope\" --project internal-platform-x --type memory --type adr\n\n # JSON output for jq pipelines\n  hades knowledge query \"WFQ\" --format json | jq '.[].Title'\n\n # Recent edits only\n  hades knowledge query \"scheduler\" --since 7d",
 
-  # Limit to memory + adr files in internal-platform-x
-  hades knowledge query "max scope" --project internal-platform-x --type memory --type adr
-
-  # JSON output for jq pipelines
-  hades knowledge query "WFQ" --format json | jq '.[].Title'
-
-  # Recent edits only
-  hades knowledge query "scheduler" --since 7d`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			flags.FreeText = strings.Join(args, " ")
 			c := factory(cmd)
@@ -380,14 +364,8 @@ Use this after manually editing docs that the fsnotify watcher missed,
 or after a daemon migration that touched the index schema. Output
 reports rows indexed + per-row error count; non-zero error count is
 not a failure (some files may be invalid markdown).`,
-		Example: `  # Full rebuild across all projects
-  hades knowledge reindex
+		Example: " # Full rebuild across all projects\n  hades knowledge reindex\n\n # Single-project rebuild\n  hades knowledge reindex --project internal-platform-x\n\n # Explicit full flag (same as bare invocation)\n  hades knowledge reindex --full",
 
-  # Single-project rebuild
-  hades knowledge reindex --project internal-platform-x
-
-  # Explicit full flag (same as bare invocation)
-  hades knowledge reindex --full`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
 			ctx, cancel := context.WithTimeout(cmd.Context(), knowledgeReindexTimeout)
@@ -434,11 +412,8 @@ With --schema, also prints the migration-061 SQL filename for the
 extension-hook columns (audit_chain_anchor, ecosystem_join_keys,
 caronte_symbol_refs). Useful when verifying that a recent migration
 landed before debugging Plan 9 / Plan 14 hook wiring.`,
-		Example: `  # Default stats output
-  hades knowledge stats
+		Example: " # Default stats output\n  hades knowledge stats\n\n # Include the schema migration filename\n  hades knowledge stats --schema",
 
-  # Include the schema migration filename
-  hades knowledge stats --schema`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
 			ctx, cancel := context.WithTimeout(cmd.Context(), knowledgeStatsTimeout)

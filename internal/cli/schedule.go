@@ -92,14 +92,7 @@ HTTP client. All real logic lives in internal/scheduler +
 internal/daemon/scheduleradapter. The 3-tier split (routine / task /
 loop) lets operator pick the right durability + binding for each
 need without re-implementing cron logic per use case.`,
-		Example: `  # List every routine across every project
-  hades schedule routine list --all
-
-  # Inspect the next 24h of scheduled fires
-  hades schedule queue
-
-  # See history for one routine
-  hades schedule history --id <id> --since 7d`,
+		Example: " # List every routine across every project\n  hades schedule routine list --all\n\n # Inspect the next 24h of scheduled fires\n  hades schedule queue\n\n # See history for one routine\n  hades schedule history --id <id> --since 7d",
 	}
 	root.AddCommand(newScheduleRoutineCmd(factory))
 	root.AddCommand(newScheduleTaskCmd(factory))
@@ -167,15 +160,7 @@ Subcommands:
   list     filter by --project or --all
   delete   soft-delete (Disabled then DELETE)
   run      manually trigger a routine (Phase I substrate)`,
-		Example: `  # Daily 8am cron routine
-  hades schedule routine create --project internal-platform-x --action morning-brief \
-      --trigger cron --cron "0 8 * * 1-5"
-
-  # List routines for one project
-  hades schedule routine list --project internal-platform-x
-
-  # Delete a routine by id
-  hades schedule routine delete <id>`,
+		Example: " # Daily 8am cron routine\n  hades schedule routine create --project internal-platform-x --action morning-brief \\\n      --trigger cron --cron \"0 8 * * 1-5\"\n\n # List routines for one project\n  hades schedule routine list --project internal-platform-x\n\n # Delete a routine by id\n  hades schedule routine delete <id>",
 	}
 	root.AddCommand(newScheduleRoutineCreateCmd(factory))
 	root.AddCommand(newScheduleRoutineListCmd(factory))
@@ -364,11 +349,8 @@ Exit codes:
   0  task scheduled
   1  validation reject (missing --project, missing --in, --in <= 0)
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Fire after 30 minutes
-  hades schedule task --project internal-platform-x --in 30m send daily report
+		Example: " # Fire after 30 minutes\n  hades schedule task --project internal-platform-x --in 30m send daily report\n\n # Fire 4 hours from now\n  hades schedule task --project internal-platform-x --in 4h check ci status",
 
-  # Fire 4 hours from now
-  hades schedule task --project internal-platform-x --in 4h check ci status`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if strings.TrimSpace(project) == "" {
@@ -423,11 +405,8 @@ Exit codes:
   0  loop scheduled
   1  validation reject (missing --project, --interval below 1min floor)
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Poll every 5 minutes (default interval)
-  hades schedule loop --project internal-platform-x watch ci builds
+		Example: " # Poll every 5 minutes (default interval)\n  hades schedule loop --project internal-platform-x watch ci builds\n\n # Poll every 2 minutes for an active monitoring window\n  hades schedule loop --project internal-platform-x --interval 2m tail logs",
 
-  # Poll every 2 minutes for an active monitoring window
-  hades schedule loop --project internal-platform-x --interval 2m tail logs`,
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if strings.TrimSpace(project) == "" {
@@ -489,11 +468,8 @@ Exit codes:
   0  history fetched (zero rows is success)
   1  --id missing OR id not found in schedules table
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Default 24h history
-  hades schedule history --id <id>
+		Example: " # Default 24h history\n  hades schedule history --id <id>\n\n # Widen to 7 days\n  hades schedule history --id <id> --since 7d",
 
-  # Widen to 7 days
-  hades schedule history --id <id> --since 7d`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if strings.TrimSpace(id) == "" {
@@ -537,8 +513,8 @@ a header-only table (header-only output misleads).
 Exit codes:
   0  queue rendered (zero rows is success)
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Inspect the next-24h horizon
-  hades schedule queue`,
+		Example: " # Inspect the next-24h horizon\n  hades schedule queue",
+
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

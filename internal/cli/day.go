@@ -115,17 +115,8 @@ than the cap allows.
 backward compat with scripted callers; the brief now consolidates
 all sources (bypass health is rendered alongside the other sections
 by the daemon-side composer).`,
-		Example: `  # Default: today's morning brief (idempotent)
-  hades day
+		Example: " # Default: today's morning brief (idempotent)\n  hades day\n\n # Force regeneration even if today's brief is already archived\n  hades day --force\n\n # End-of-day digest\n  hades day --eod\n\n # Check what would fire next + pending-since-last counts (read-only)\n  hades day --check-pending",
 
-  # Force regeneration even if today's brief is already archived
-  hades day --force
-
-  # End-of-day digest
-  hades day --eod
-
-  # Check what would fire next + pending-since-last counts (read-only)
-  hades day --check-pending`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(cmd.Context(), dayClientTimeout)
 			defer cancel()

@@ -399,7 +399,7 @@ func doctrineSchemaCmd() *cobra.Command {
 			}
 			out := cmd.OutOrStdout()
 			fmt.Fprintln(out, "# Canonical doctrine TOML schema (from default builtin).")
-			fmt.Fprintln(out, "# Field set is additive-only across schema versions (inv-hades-084).")
+			fmt.Fprintln(out, "# Field set is additive-only across schema versions (invariant).")
 			fmt.Fprintln(out)
 			fmt.Fprint(out, buf.String())
 			return nil

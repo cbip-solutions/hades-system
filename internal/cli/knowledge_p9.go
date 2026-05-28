@@ -42,24 +42,7 @@ Five leaves:
   unpromote Reverse a prior promote (inv-hades-146 mandatory reason)
   ls        List notes (per-project or pinned-only)
   rebuild   Re-embed + re-index one project (async; returns job_id)`,
-		Example: `  # Federated query (all scopes)
-  hades knowledge-p9 query "audit chain integrity"
-
-  # Pinned-only across all projects
-  hades knowledge-p9 query "max scope doctrine" --pinned-only
-
-  # Chain-verified notes only
-  hades knowledge-p9 query "tessera vendor" --audit-chain
-
-  # Operator-gated promote (inv-hades-146)
-  hades knowledge-p9 promote internal-platform-x/M0-pattern-vault-format \
-    --reason "applies to all max-scope projects"
-
-  # List all pinned notes
-  hades knowledge-p9 ls --pinned-only
-
-  # Rebuild one project's index async
-  hades knowledge-p9 rebuild --project hades-system`,
+		Example: " # Federated query (all scopes)\n  hades knowledge-p9 query \"audit chain integrity\"\n\n # Pinned-only across all projects\n  hades knowledge-p9 query \"max scope doctrine\" --pinned-only\n\n # Chain-verified notes only\n  hades knowledge-p9 query \"tessera vendor\" --audit-chain\n\n # Operator-gated promote (invariant)\n  hades knowledge-p9 promote internal-platform-x/M0-pattern-vault-format \\\n    --reason \"applies to all max-scope projects\"\n\n # List all pinned notes\n  hades knowledge-p9 ls --pinned-only\n\n # Rebuild one project's index async\n  hades knowledge-p9 rebuild --project hades-system",
 	}
 	cmd.AddCommand(knowledge9QueryCmd())
 	cmd.AddCommand(knowledge9PromoteCmd())

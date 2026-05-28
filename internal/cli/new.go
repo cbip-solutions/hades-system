@@ -94,14 +94,8 @@ EXIT CODES:
   2  unrecoverable (transport, daemon 5xx, generic I/O)
   3  preflight failure (Hermes missing, plugin format remnant)
 `,
-		Example: `  # Recommended defaults, embedded plugin template:
-  hades new --template hermes-plugin-only --project-name my-plugin
+		Example: " # Recommended defaults, embedded plugin template:\n  hades new --template hermes-plugin-only --project-name my-plugin\n\n # Pluggable from GitHub:\n  hades new --template gh:foo/bar --template-version v1.0.0 --project-name my-app\n\n # Non-interactive in CI:\n  hades new --non-interactive --template go-cli --project-name svc --yes",
 
-  # Pluggable from GitHub:
-  hades new --template gh:foo/bar --template-version v1.0.0 --project-name my-app
-
-  # Non-interactive in CI:
-  hades new --non-interactive --template go-cli --project-name svc --yes`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
 			if ctx == nil {

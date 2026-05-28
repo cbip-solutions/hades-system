@@ -52,14 +52,8 @@ func NewDocsReindexCmd(factory DocsClientFactory) *cobra.Command {
 
 By default performs a delta sweep (only docs that changed since last poll).
 Use --full to force a complete reindex.`,
-		Example: `  # Delta sweep across all ecosystems
-  hades docs reindex
+		Example: " # Delta sweep across all ecosystems\n  hades docs reindex\n\n # Full reindex of Go ecosystem only\n  hades docs reindex --ecosystem go --full\n\n # Pin to a specific version\n  hades docs reindex --ecosystem python --version 3.12.0",
 
-  # Full reindex of Go ecosystem only
-  hades docs reindex --ecosystem go --full
-
-  # Pin to a specific version
-  hades docs reindex --ecosystem python --version 3.12.0`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

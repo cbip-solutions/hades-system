@@ -93,17 +93,8 @@ Exit codes (spec §6.2):
   1 operator-recoverable (validation reject, alias not found, daemon
     422 quota.ErrInvalidOverride)
   2 unrecoverable (transport / decode / daemon 5xx)`,
-		Example: `  # Boost a project for 4 hours with a documented reason (audit-logged)
-  hades project priority --boost internal-platform-x --duration 4h --reason "release prep"
+		Example: " # Boost a project for 4 hours with a documented reason (audit-logged)\n  hades project priority --boost internal-platform-x --duration 4h --reason \"release prep\"\n\n # Specify a non-default multiplier (5x weight)\n  hades project priority --boost internal-platform-x --duration 1h --reason \"demo\" --multiplier 5\n\n # Reset (remove) an existing override\n  hades project priority --reset internal-platform-x\n\n # List active overrides\n  hades project priority --ls",
 
-  # Specify a non-default multiplier (5x weight)
-  hades project priority --boost internal-platform-x --duration 1h --reason "demo" --multiplier 5
-
-  # Reset (remove) an existing override
-  hades project priority --reset internal-platform-x
-
-  # List active overrides
-  hades project priority --ls`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			actions := 0
 			if boostAlias != "" {

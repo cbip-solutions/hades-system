@@ -170,14 +170,8 @@ Filter via:
 Subcommands:
   ack <id>     mark a notification as acked (sets AckedAt = now)
   snooze <id>  hide a notification until a future time`,
-		Example: `  # Bare list (most recent unacked, all projects, top 20)
-  hades inbox
+		Example: " # Bare list (most recent unacked, all projects, top 20)\n  hades inbox\n\n # Filter by urgent severity in the last 24h\n  hades inbox --severity urgent --since 24h\n\n # JSON output for jq pipelines\n  hades inbox --format json | jq '.[] | select(.Severity==\"urgent\")'",
 
-  # Filter by urgent severity in the last 24h
-  hades inbox --severity urgent --since 24h
-
-  # JSON output for jq pipelines
-  hades inbox --format json | jq '.[] | select(.Severity=="urgent")'`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)
@@ -292,8 +286,8 @@ Exit codes (spec §6.5):
   0  acked
   1  invalid id (not numeric, ≤0) OR id not found
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Ack notification #42
-  hades inbox ack 42`,
+		Example: " # Ack notification #42\n  hades inbox ack 42",
+
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			id, err := strconv.ParseInt(args[0], 10, 64)
@@ -338,11 +332,8 @@ Exit codes:
   0  snoozed
   1  invalid id, missing --until, malformed duration, OR id not found
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Snooze notification 42 for 30 minutes
-  hades inbox snooze 42 --until 30m
+		Example: " # Snooze notification 42 for 30 minutes\n  hades inbox snooze 42 --until 30m\n\n # Snooze until tomorrow morning (8h after midnight UTC)\n  hades inbox snooze 42 --until 24h",
 
-  # Snooze until tomorrow morning (8h after midnight UTC)
-  hades inbox snooze 42 --until 24h`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if until == "" {

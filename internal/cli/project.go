@@ -125,17 +125,7 @@ Subcommands:
   archive   soft-delete an alias (excluded from default ls)
   rm        hard-delete an alias (cascades path_history; --yes required)
   priority  Layer-3 WFQ override (boost / reset / list; spec §1 Q10)`,
-		Example: `  # Diagnose the project anchored at the current cwd
-  hades project doctor
-
-  # Archive the "internal-platform-x" alias (reversible)
-  hades project archive internal-platform-x
-
-  # Permanently remove an alias and its path_history rows
-  hades project rm old-prototype --yes
-
-  # Boost the "internal-platform-x" alias for 4 hours
-  hades project priority --boost internal-platform-x --duration 4h --reason "release prep"`,
+		Example: " # Diagnose the project anchored at the current cwd\n  hades project doctor\n\n # Archive the \"internal-platform-x\" alias (reversible)\n  hades project archive internal-platform-x\n\n # Permanently remove an alias and its path_history rows\n  hades project rm old-prototype --yes\n\n # Boost the \"internal-platform-x\" alias for 4 hours\n  hades project priority --boost internal-platform-x --duration 4h --reason \"release prep\"",
 	}
 	cmd.AddCommand(projectDoctorCmd())
 	cmd.AddCommand(projectArchiveCmd())
@@ -149,32 +139,10 @@ func projectDoctorCmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "doctor [<alias>]",
 		Short: "Diagnose project identity (cwd-based or by alias)",
-		Long: `Run a project-identity health probe against the daemon's project
-registry. With no argument the CLI captures cwd; the daemon walks up
-to find hadessystem.toml or .git via projectctx.FindProjectRoot. With an
-alias argument the daemon resolves directly without filesystem walking.
+		Long:  "Run a project-identity health probe against the daemon's project\nregistry. With no argument the CLI captures cwd; the daemon walks up\nto find hadessystem.toml or .git via projectctx.FindProjectRoot. With an\nalias argument the daemon resolves directly without filesystem walking.\n\nOutput reports:\n * resolved alias + sha256 (truncated to 8 chars for table use)\n * canonical path the registry agrees on\n * full path_history (every path the project has lived at, with\n    first-seen and last-seen timestamps)\n * MV-DETECTED block when the daemon notices the cwd's sha256 does\n    not match any registered project (operator moved the directory\n    or the alias-on-disk drifted)\n\nExit codes (spec §6.2):\n  0  healthy\n  1  mv-detection pending OR alias not found OR daemon healthy:false\n  2  unrecoverable: transport, decode, daemon 5xx",
 
-Output reports:
-  * resolved alias + sha256 (truncated to 8 chars for table use)
-  * canonical path the registry agrees on
-  * full path_history (every path the project has lived at, with
-    first-seen and last-seen timestamps)
-  * MV-DETECTED block when the daemon notices the cwd's sha256 does
-    not match any registered project (operator moved the directory
-    or the alias-on-disk drifted)
+		Example: " # Probe the project anchored at cwd\n  hades project doctor\n\n # Probe a specific project by alias\n  hades project doctor internal-platform-x\n\n # : rebind the alias to cwd's sha256 after a directory move\n  hades project doctor --rebind",
 
-Exit codes (spec §6.2):
-  0  healthy
-  1  mv-detection pending OR alias not found OR daemon healthy:false
-  2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Probe the project anchored at cwd
-  hades project doctor
-
-  # Probe a specific project by alias
-  hades project doctor internal-platform-x
-
-  # Phase B/J: rebind the alias to cwd's sha256 after a directory move
-  hades project doctor --rebind`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			alias := ""
@@ -211,11 +179,8 @@ Exit codes (spec §6.2):
   0  archived
   1  alias not found (operator typo or already archived/removed)
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Archive a deprecated project
-  hades project archive old-prototype
+		Example: " # Archive a deprecated project\n  hades project archive old-prototype\n\n # Inspect after archiving (archived rows show with STATE=archived)\n  hades projects ls",
 
-  # Inspect after archiving (archived rows show with STATE=archived)
-  hades projects ls`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cli := newClientFromCmd(cmd)
@@ -248,11 +213,8 @@ Exit codes (spec §6.2):
   0  removed
   1  --yes omitted OR alias not found
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Refused (no --yes; safe default)
-  hades project rm old-prototype
+		Example: " # Refused (no --yes; safe default)\n  hades project rm old-prototype\n\n # Confirmed removal (cascades path_history)\n  hades project rm old-prototype --yes",
 
-  # Confirmed removal (cascades path_history)
-  hades project rm old-prototype --yes`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			yes, _ := cmd.Flags().GetBool("yes")

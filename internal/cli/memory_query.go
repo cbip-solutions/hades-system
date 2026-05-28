@@ -72,14 +72,8 @@ Failure modes:
   - empty <free-text>      → exit 1 (operator-recoverable)
   - one source errors      → soft-fail: render what the other returned
   - both sources error     → exit 2 (unrecoverable transport / decode)`,
-		Example: `  # Aggregator-only (default)
-  hades memory query "max-scope doctrine"
+		Example: " # Aggregator-only (default)\n  hades memory query \"max-scope doctrine\"\n\n # Cross-corpus fusion with release ecosystem\n  hades memory query \"context cancellation\" --remote --limit 20\n\n # JSON for jq pipelines\n  hades memory query \"tessera\" --remote --format json | jq '.[].title'",
 
-  # Cross-corpus fusion with Plan 14 ecosystem
-  hades memory query "context cancellation" --remote --limit 20
-
-  # JSON for jq pipelines
-  hades memory query "tessera" --remote --format json | jq '.[].title'`,
 		Args: cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			flags.FreeText = strings.Join(args, " ")

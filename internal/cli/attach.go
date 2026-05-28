@@ -86,14 +86,8 @@ Exit codes (spec §6.2):
   0  attached (operator now in tmux)
   1  alias not found OR --window invalid
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # Attach to the orch window (default)
-  hades attach internal-platform-x
+		Example: " # Attach to the orch window (default)\n  hades attach internal-platform-x\n\n # Attach to the logs window\n  hades attach internal-platform-x --window logs\n\n # Attach to the operator-owned scratch window\n  hades attach internal-platform-x --window scratch",
 
-  # Attach to the logs window
-  hades attach internal-platform-x --window logs
-
-  # Attach to the operator-owned scratch window
-  hades attach internal-platform-x --window scratch`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			alias := args[0]

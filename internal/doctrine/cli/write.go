@@ -392,27 +392,9 @@ func resolveProjectRoot(path, project string) (string, error) {
 }
 
 func overrideStub(projectRoot string) []byte {
-	return []byte(fmt.Sprintf(`# Override per-proyecto de la doctrina activa.
-#
-# Proyecto: %s
-#
-# Reglas (inv-hades-136 tighten-only):
-#   - Solo se permiten valores MÁS estrictos que la doctrina baseline.
-#   - Aflojar (loosen) cualquier campo provoca DoctrineTightenViolationRejected
-#     y el archivo será rechazado en el próximo file-watcher tick.
-#
-# Ejemplos legítimos (asumiendo baseline = max-scope):
-#   research.depth = "very-deep"      # tighten: deep -> very-deep
-#   merge.weights.cost = 0.7          # tighten: 0.5 -> 0.7
-#
-# Ejemplos REJECTED (loosening):
-#   research.depth = "shallow"        # rejection: deep -> shallow
-#   merge.weights.cost = 0.3          # rejection: 0.5 -> 0.3
-#
-# Use 'hades doctrine-v2 show <doctrina-baseline>' para ver los valores
-# permitidos como punto de partida.
+	return []byte(fmt.Sprintf("# Override per-proyecto de la doctrina activa.\n#\n# Proyecto: %s\n#\n# Reglas (invariant tighten-only):\n# - Solo se permiten valores MÁS estrictos que la doctrina baseline.\n# - Aflojar (loosen) cualquier campo provoca DoctrineTightenViolationRejected\n# y el archivo será rechazado en el próximo file-watcher tick.\n#\n# Ejemplos legítimos (asumiendo baseline = max-scope):\n# research.depth = \"very-deep\" # tighten: deep -> very-deep\n# merge.weights.cost = 0.7 # tighten: 0.5 -> 0.7\n#\n# Ejemplos REJECTED (loosening):\n# research.depth = \"shallow\" # rejection: deep -> shallow\n# merge.weights.cost = 0.3 # rejection: 0.5 -> 0.3\n#\n# Use 'hades doctrine-v2 show <doctrina-baseline>' para ver los valores\n# permitidos como punto de partida.\n\n",
 
-`, projectRoot))
+		projectRoot))
 }
 
 func openEditor(cmd *cobra.Command, path string) error {

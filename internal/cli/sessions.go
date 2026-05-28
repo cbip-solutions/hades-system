@@ -54,8 +54,7 @@ snapshot, restore) will extend this namespace without breaking the
 existing surface. The plural form mirrors ` + "`hades projects`" + ` (cross-
 fleet inspection); singular per-alias actions live on ` + "`hades attach`" + `
 and ` + "`hades layout repaint`" + `.`,
-		Example: `  # List every tracked tmux session across projects
-  hades sessions ls`,
+		Example: " # List every tracked tmux session across projects\n  hades sessions ls",
 	}
 	root.AddCommand(newSessionsLsCmd(factory))
 	return root
@@ -86,11 +85,8 @@ Columns:
 Exit codes:
   0  success
   2  unrecoverable: transport, decode, daemon 5xx`,
-		Example: `  # List every tracked session
-  hades sessions ls
+		Example: " # List every tracked session\n  hades sessions ls\n\n # Spot orphaned sessions (drift candidates)\n  hades sessions ls | grep Orphaned",
 
-  # Spot orphaned sessions (drift candidates)
-  hades sessions ls | grep Orphaned`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

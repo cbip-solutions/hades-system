@@ -54,17 +54,8 @@ Chain flag:
   --audit-chain  Filter to notes whose audit_chain_anchor is present.
 
 inv-hades-129: NEVER queries the web — Plan 14 territory.`,
-		Example: `  # Default federated query
-  hades knowledge-p9 query "WFQ saturation"
+		Example: " # Default federated query\n  hades knowledge-p9 query \"WFQ saturation\"\n\n # Global pin index only\n  hades knowledge-p9 query \"max scope\" --global\n\n # One project, chain-verified\n  hades knowledge-p9 query \"tessera\" --project internal-platform-x --audit-chain\n\n # Pinned-only across all projects, limit 5\n  hades knowledge-p9 query \"doctrine\" --pinned-only --limit 5",
 
-  # Global pin index only
-  hades knowledge-p9 query "max scope" --global
-
-  # One project, chain-verified
-  hades knowledge-p9 query "tessera" --project internal-platform-x --audit-chain
-
-  # Pinned-only across all projects, limit 5
-  hades knowledge-p9 query "doctrine" --pinned-only --limit 5`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if global && project != "" {

@@ -95,7 +95,7 @@ func renderMCPServersBlock(operator map[string]hermesMCPServerEntry) []string {
 			"    socket: /tmp/hades-system.sock",
 		)
 	} else {
-		lines = append(lines, "  # hades-system gateway entry collided with operator config; operator wins.")
+		lines = append(lines, " # hades-system gateway entry collided with operator config; operator wins.")
 	}
 	return lines
 }

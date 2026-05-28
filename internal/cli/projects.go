@@ -79,8 +79,7 @@ form acts on one alias (doctor / archive / rm / priority). The split
 mirrors ` + "`git remote`" + ` (singular management) vs ` + "`git remote ls`" + `
 (plural inspection) — both surfaces matter and live as siblings,
 neither subsumes the other.`,
-		Example: `  # List every alias the daemon knows about (active + archived)
-  hades projects ls`,
+		Example: " # List every alias the daemon knows about (active + archived)\n  hades projects ls",
 	}
 	root.AddCommand(newProjectsLsCmd(factory))
 	return root
@@ -114,11 +113,8 @@ listing (no N+1 round-trips, no cross-cutting JOIN).
 Exit codes (spec §6.2):
   0  success (any row count, including zero)
   2  unrecoverable: transport, decode, daemon 5xx, daemon 503/501`,
-		Example: `  # List every known project
-  hades projects ls
+		Example: " # List every known project\n  hades projects ls\n\n # Pipe through awk for the alias column only\n  hades projects ls | awk 'NR>1 {print $1}'",
 
-  # Pipe through awk for the alias column only
-  hades projects ls | awk 'NR>1 {print $1}'`,
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			c := factory(cmd)

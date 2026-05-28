@@ -77,11 +77,8 @@ error pointing at the rate-limit window.
 
 Note: caronte is in-process (Plan 19) — use 'hades doctor caronte' for
 engine health instead of restart-mcp.`,
-		Example: `  # Restart the research MCP
-  hades daemon restart-mcp research
+		Example: " # Restart the research MCP\n  hades daemon restart-mcp research\n\n # Restart the budget MCP\n  hades daemon restart-mcp budget",
 
-  # Restart the budget MCP
-  hades daemon restart-mcp budget`,
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {

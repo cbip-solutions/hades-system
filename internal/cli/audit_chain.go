@@ -58,17 +58,7 @@ credentials, and rotate the daemon witness key.
 
 Plan 4's ` + "`hades audit`" + ` group remains for raw event emit/query.
 Plan 9's ` + "`hades audit-chain`" + ` group is for chain operations.`,
-		Example: `  # Verify integrity for one project
-  hades audit-chain verify-chain --project hades-system
-
-  # Manually checkpoint capa-firewall project before sensitive batch
-  hades audit-chain checkpoint --reason "pre-merge audit anchor for v0.9.0"
-
-  # Recover from detected tamper interactively
-  hades audit-chain recover --project hades-system --from 2026-05-06T08:00:00Z
-
-  # Rotate the daemon-level ECDSA witness key
-  hades audit-chain witness rotate --reason "scheduled 90d rotation"`,
+		Example: " # Verify integrity for one project\n  hades audit-chain verify-chain --project hades-system\n\n # Manually checkpoint capa-firewall project before sensitive batch\n  hades audit-chain checkpoint --reason \"pre-merge audit anchor for v0.9.0\"\n\n # Recover from detected tamper interactively\n  hades audit-chain recover --project hades-system --from 2026-05-06T08:00:00Z\n\n # Rotate the daemon-level ECDSA witness key\n  hades audit-chain witness rotate --reason \"scheduled 90d rotation\"",
 	}
 	format.AttachFlags(cmd)
 	cmd.AddCommand(auditChainVerifyCmd())
