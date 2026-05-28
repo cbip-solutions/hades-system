@@ -1,6 +1,6 @@
 -- ==============================================================================
 -- Migration 065: tier_health_samples — per-provider health observability
--- (HADES design release track; C9; invariant).
+-- (HADES design stage; C9; invariant).
 -- ==============================================================================
 --
 -- One row per backend outcome. Two write-paths land samples here:

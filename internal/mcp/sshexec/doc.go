@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package sshexec implements the production-grade ssh-exec MCP.
 //
-// Per Q8 C (spec §1, §2.2 Capa 3, §3.5 Flow 5), the package exposes 3
+// Per design choice C (spec §1, §2.2 Capa 3, §3.5 Flow 5), the package exposes 3
 // MCP tools over stdio JSON-RPC:
 //
 // - validate(cmd, project) -> {ok, reason, pattern}

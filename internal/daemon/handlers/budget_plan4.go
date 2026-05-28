@@ -11,8 +11,8 @@
 // POST /v1/budget/pause — operator manual pause
 // POST /v1/budget/resume — operator manual resume
 //
-// Note existing release routes /v1/budget, /v1/budget/{project}, /v1/budget/{project}/raise
-// remain in budget.go unchanged. release routes use sub-path keys (cap_status, record, etc.)
+// Note existing HADES design routes /v1/budget, /v1/budget/{project}, /v1/budget/{project}/raise
+// remain in budget.go unchanged. HADES design routes use sub-path keys (cap_status, record, etc.)
 // to avoid collision.
 //
 // invariant: never imports internal/budget directly; all access via BudgetCtx interface.

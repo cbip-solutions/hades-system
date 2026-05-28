@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_merge.go.
 //
-// `runMergeChecks` is the [release merge] section of `hades doctor`. It
+// `runMergeChecks` is the [HADES design merge] section of `hades doctor`. It
 // produces 4 spec §6.2 checks against the daemon's /v1/merge/* surface
 // and the host git binary, returning a `[]CheckResult` slice that the
 // doctorAggregateRunE caller appends to the unified results pipeline:

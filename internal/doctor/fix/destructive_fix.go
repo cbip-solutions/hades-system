@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package fix ships the release doctor `Fix(ctx, FixMode) error`
+// Package fix ships the HADES design doctor `Fix(ctx, FixMode) error`
 // implementations + the destructive-confirmation guard (invariant).
 //
 // Each per-check Fix impl satisfies internal/doctor/check.Check.Fix; the

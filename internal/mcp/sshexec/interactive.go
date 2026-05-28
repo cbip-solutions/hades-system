@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/interactive.go
 //
-// Task L-7 (front-loaded into L-5 to avoid stub) — interactive
+// task (front-loaded into L-5 to avoid stub) — interactive
 // prompt detector. Sealed type; constructor is the unexported
 // newDetector() called by Run only.
 //

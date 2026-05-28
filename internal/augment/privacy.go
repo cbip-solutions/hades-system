@@ -5,7 +5,7 @@
 // invariant: augmentation cross-project respects doctrine privacy boundaries.
 // invariant: aggregator queries filter doctrine privacy.
 //
-// ARBITER pattern (Q4 SOTA Report Dec 2025): filter at retrieval, never at
+// ARBITER pattern (design choice SOTA Report Dec 2025): filter at retrieval, never at
 // presentation. NEVER trust the LLM to filter privacy-sensitive content.
 //
 // Sealed type: the only constructor is NewPrivacyFilter which requires both

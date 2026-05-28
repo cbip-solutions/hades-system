@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package augment — truncation.go ships the graceful_truncate guard.
 //
-// Q8=C on_timeout = "graceful_truncate" (constant; not doctrine-tunable).
+// design choice on_timeout = "graceful_truncate" (constant; not doctrine-tunable).
 // When static + volatile token estimate exceeds doctrine.augmentation.max_kg_tokens,
 // the guard returns a partial summary rather than fail-loud.
 //

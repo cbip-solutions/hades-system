@@ -25,22 +25,22 @@
 // Urgent pause cancelled
 //
 // The CLI does NOT directly write notifications.toml — operator edits
-// that file manually (file-as-source-of-truth per spec §6.5); the CLI
+// that file manually (file-as-source-of-truth per design contract); the CLI
 // reads + renders, and manages only the runtime UrgentPauseUntil
 // state via --urgent-pause / --cancel.
 //
 // Production wires through NewQuietCmdProd which adapts *client.Client
 // → QuietClient. Tests inject a fake client via the QuietClientFactory
-// parameter to NewQuietCmd; this mirrors the release D-13 schedule + E-12
+// parameter to NewQuietCmd; this mirrors the HADES design D-13 schedule + E-12
 // inbox dependency-injection pattern.
 //
-// Exit-code mapping (per spec §6.2; ErrRecoverable contract from
+// Exit-code mapping (per design contract; ErrRecoverable contract from
 // ):
 // - 0 success
 // - 1 operator-recoverable: invalid duration on --urgent-pause,
 // conflicting flags (e.g., --list + --cancel).
 // - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503
-// (until SetQuietStore wires; mirrors release /v1/messages
+// (until SetQuietStore wires; mirrors HADES design /v1/messages
 // graceful-degradation pattern).
 //
 // File-as-source-of-truth: the persistent config (Default + PerProject)

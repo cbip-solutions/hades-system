@@ -19,7 +19,7 @@
 //
 // # Type-resolution strategy
 //
-// The plan's anticipated reusing release C's semantic.Resolver +
+// The plan's anticipated reusing HADES design C's semantic.Resolver +
 // golang.org/x/tools/go/packages for router-var type-info; the as-built
 // divergence (documented in the plan's §" divergences from
 // master/spec" #2) noted go/packages would be heavyweight (10-60 s per
@@ -41,7 +41,7 @@
 // Boundary (invariant + invariant): imports only
 // `internal/caronte/store` + `internal/caronte/contract/extract` + the
 // standard library. Does NOT import `internal/store` (daemon store boundary)
-// nor `golang.org/x/tools/go/packages` (kept out of the dep chain for Phase
+// nor `golang.org/x/tools/go/packages` (kept out of the dep chain for stage
 // D Wave 3; future may add types-info C's existing
 // loadgo.go path).
 package chi

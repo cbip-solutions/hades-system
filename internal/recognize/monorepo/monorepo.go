@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package monorepo implements walk-UP workspace detection per spec §2.4 Q4=B
+// Package monorepo implements walk-UP workspace detection per design contract=B
 // + SOTA-3 #4. Walks from a starting absolute path toward filesystem root,
 // stopping at either the.git boundary or root. Returns the first matching
 // workspace marker per the priority order:
@@ -105,7 +105,7 @@ func dirHasGit(dir string) bool {
 // WalkUp walks from absPath up to filesystem root or.git boundary,
 // returning the first workspace match. Zero-value Workspace{} when none found.
 //
-// Per spec §2.4 + SOTA-3 #4. PRECONDITION: absPath MUST be absolute.
+// per design contract#4. PRECONDITION: absPath MUST be absolute.
 func WalkUp(absPath string) (Workspace, error) {
 	if !filepath.IsAbs(absPath) {
 		return Workspace{}, ErrRelativePath

@@ -21,15 +21,14 @@ func adrAcceptCmd() *cobra.Command {
 	var reason string
 	cmd := &cobra.Command{
 		Use:   "accept <id>",
-		Short: "Mark ADR as accepted (--reason mandatory; inv-hades-146)",
+		Short: "Mark ADR as accepted (--reason mandatory; invariant)",
 		Args:  cobra.ExactArgs(1),
-		Long: `accept transitions the ADR from proposed → accepted.
-Emits an adr.accepted event anchored on the Plan 9 audit chain.
---reason is mandatory per inv-hades-146 (cannot be empty or whitespace-only).`,
-		Example: `  hades adr accept ADR-0070 --reason "Q4 B approved in operator review"`,
+		Long:  "accept transitions the ADR from proposed → accepted.\nEmits an adr.accepted event anchored on the HADES design audit chain.\n--reason is mandatory per invariant (cannot be empty or whitespace-only).",
+
+		Example: "  hades adr accept ADR-0070 --reason \"design choice B approved in operator review\"",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if strings.TrimSpace(reason) == "" {
-				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason must not be empty (inv-hades-146)"))
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason must not be empty (invariant)"))
 			}
 			ctx, cancel := context.WithTimeout(cmd.Context(), 10*time.Second)
 			defer cancel()
@@ -41,7 +40,7 @@ Emits an adr.accepted event anchored on the Plan 9 audit chain.
 			return nil
 		},
 	}
-	cmd.Flags().StringVar(&reason, "reason", "", "Rationale for acceptance (mandatory; inv-hades-146)")
+	cmd.Flags().StringVar(&reason, "reason", "", "Rationale for acceptance (mandatory; invariant)")
 	_ = cmd.MarkFlagRequired("reason")
 	return cmd
 }

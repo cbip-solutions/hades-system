@@ -8,7 +8,7 @@
 //
 // Halts on conflict by default; --overwrite forces replacement.
 //
-// Exit codes (per spec §5.2 + cmd/hades/main.go):
+// Exit codes (per design contract):
 // - 0 — restore succeeded
 // - 1 — recoverable error (conflict halt; operator should re-run with --overwrite)
 // - 2 — unrecoverable error (missing manifest, tarball corrupt, etc.)

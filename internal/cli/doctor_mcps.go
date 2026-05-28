@@ -18,7 +18,7 @@ func doctorMCPsCmd() *cobra.Command {
 		Use:   "mcps",
 		Short: "MCP children health (research, budget, audit, sshexec)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "MCPs (Plan 4)", runMCPsChecks)
+			return runOneSection(cmd, "MCPs (HADES design)", runMCPsChecks)
 		},
 	}
 }

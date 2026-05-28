@@ -3,9 +3,9 @@ package inbox
 
 import "errors"
 
-var ErrCrossProjectInboxLeakAnchor = errors.New("inbox: no cross-project leak anchor (inv-hades-113)")
+var ErrCrossProjectInboxLeakAnchor = errors.New("inbox: no cross-project leak anchor (invariant)")
 
-var ErrQuietHoursUrgentBypassAnchor = errors.New("inbox: urgent quiet-hours bypass anchor (inv-hades-125)")
+var ErrQuietHoursUrgentBypassAnchor = errors.New("inbox: urgent quiet-hours bypass anchor (invariant)")
 
 func severity4TierEnumSentinel() error {
 

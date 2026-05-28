@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package proto is the release gRPC +.proto IDL extractor namespace
+// Package proto is the HADES design gRPC +.proto IDL extractor namespace
 // (Language: LangProto). The concrete RouteExtractor implementation lands in
 // (master row D, wave W3) as proto.go alongside fixtures under
 // fixtures/. The (LangProto, "grpc") tuple is reserved for this package by
@@ -14,7 +14,7 @@
 // *_pb2_grpc.py / *_grpc_web_pb.js — the StubArtifacts() return is the
 // load-bearing exact_proto_import linking tier per master C-5 / spec §6).
 // - proto_test.go: per-fixture extraction tests + StubArtifacts roundtrip
-// tests (≥10 fixtures per spec §13.1).
+// tests (≥10 fixtures per design contract).
 // - fixtures/: real.proto + generated-stub source pairs from the SOTA
 // research catalog.
 //

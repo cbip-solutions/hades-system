@@ -6,10 +6,10 @@
 // design v1.2 R3.
 //
 // This package owns the schema and exposes one Go file per table with
-// typed CRUD. release establishes the full schema (all ~16 tables) and
+// typed CRUD. HADES design establishes the full schema (all ~16 tables) and
 // type signatures; most CRUD bodies are stubs returning
 // errors.ErrNotImplementedPlan{N} (subsequent plans fill them in). The
-// EXCEPTION is events.go, which is fully implemented in release because
+// EXCEPTION is events.go, which is fully implemented in HADES design because
 // the daemon's batched event writer needs it from day 1.
 package store
 

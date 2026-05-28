@@ -1,12 +1,12 @@
 // Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
-// cmd/hades-ctld/url_handler.go — release Task D-6.
+// cmd/hades-ctld/url_handler.go — HADES design task
 //
 // hades:// URL scheme registration + parse + forward-to-daemon translation.
 //
 // Cross-platform shell:
 // - parseHadesURL — validates scheme + host + path; only hades://audit/<id>
-// supported in release.
+// supported in HADES design
 // - hadesURLToHTTPPath — maps hades://audit/evt-0001 → /v1/audit/event/evt-0001
 // for forward to daemon HTTP via UDS or localhost.
 // - RegisterHadesScheme — calls the build-tagged registerHadesScheme; macOS
@@ -51,7 +51,7 @@ func parseHadesURL(raw string) (*url.URL, error) {
 		}
 		return u, nil
 	default:
-		return nil, fmt.Errorf("parseHadesURL: unknown host %q (only 'audit' supported in Plan 11)", u.Host)
+		return nil, fmt.Errorf("parseHadesURL: unknown host %q (only 'audit' supported in HADES design)", u.Host)
 	}
 }
 

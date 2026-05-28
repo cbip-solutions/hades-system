@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — budget.go.
 //
-// `hades budget` is the operator's authoritative interface to the release
+// `hades budget` is the operator's authoritative interface to the HADES design
 // budget engine.
 //
 // Cobra layout (8 leaves + 2 group):
@@ -38,7 +38,7 @@ import (
 func NewBudgetCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "budget",
-		Short: "Multi-axis cost rollup, caps, anomalies, hierarchical pause (Plan 4)",
+		Short: "Multi-axis cost rollup, caps, anomalies, hierarchical pause (HADES design)",
 	}
 	format.AttachFlags(cmd)
 	cmd.AddCommand(budgetCapStatusCmd())
@@ -95,12 +95,8 @@ func budgetRecordCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "record",
 		Short: "Manual axis-tag a cost row (operator escape hatch)",
-		Long: `Record a cost row with explicit axis tags. The daemon writes the row
-into cost_axis_tags; the same path is normally hit by workers via the
-Plan 4 budget engine. Operators rarely need this; provided for
-post-incident recovery and debugging only.
+		Long:  "Record a cost row with explicit axis tags. The daemon writes the row\ninto cost_axis_tags; the same path is normally hit by workers via the\nHADES design budget engine. Operators rarely need this; provided for\npost-incident recovery and debugging only.\n\nRequired: --cost-id, --amount-usd, --tag (axis=value, repeatable).",
 
-Required: --cost-id, --amount-usd, --tag (axis=value, repeatable).`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			costID, _ := cmd.Flags().GetString("cost-id")
 			amount, _ := cmd.Flags().GetFloat64("amount-usd")

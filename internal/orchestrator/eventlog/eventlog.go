@@ -11,7 +11,7 @@ import (
 )
 
 // Record is the durable wire shape of an event row, returned by Query
-// and propagated to subscribers (Task A-5). release will hash-chain
+// and propagated to subscribers (task). HADES design will hash-chain
 // these via prev_hash; leaves CausalChain as the seam.
 //
 // Payload is the raw JSON bytes encoded by PayloadEncoder.Payload().
@@ -19,7 +19,7 @@ import (
 // stamped at Append time via the injected clock.Clock.
 //
 // READ-ONLY contract (N-2): Record.Payload is shared by reference with
-// the originating PayloadEncoder and the future Task A-5 subscriber
+// the originating PayloadEncoder and the future task subscriber
 // fan-out path. Subscribers and Query callers MUST NOT mutate the
 // slice — mutation corrupts later subscriber deliveries and any
 // concurrent Query reading the same row from a caching emitter.
@@ -44,7 +44,7 @@ type RawEmitter interface {
 // Log is the orchestrator's append-only event log over audit_events_raw.
 // All mutations go through Append; reads through Query. Subscribers
 // receive in-process notifications after the durable write succeeds
-// (Task A-5).
+// (task).
 //
 // Goroutine safety (I-3): Log itself holds no mutable state — it is
 // safe for concurrent use by any number of goroutines. Serialization
@@ -56,7 +56,7 @@ type RawEmitter interface {
 // subscriber set and per-mailbox publish path; Subscribe/publish/
 // Close are all goroutine-safe.
 //
-// Eight downstream release phases (D, E, F, G, H, K, M plus Replay)
+// Eight downstream HADES design phases (D, E, F, G, H, K, M plus Replay)
 // emit through Log from concurrent worker + reviewer goroutines;
 // Append/Query MUST remain lock-free at this layer. Reviewers of any
 // future change to Log MUST verify this property still holds.
@@ -91,7 +91,7 @@ func New(emit RawEmitter, clk clock.Clock) *Log {
 // appendTyped is the typed-PayloadEncoder path used internally by
 // (Replay's corruption-detection emit) and by package-internal tests
 // exercising the typed-encoder error paths. The method is intentionally
-// PACKAGE-PRIVATE (I-2 from A-5b code review): cross-phase consumers
+// PACKAGE-PRIVATE (I-2 from A-5b code review): cross-stage consumers
 // (Phases B/D/E/F/G/H/K/M) MUST use the canonical Event-shape Append
 // (event.go) which satisfies the Appender interface. There is no external
 // caller of appendTyped — the rename locks the canonical surface to
@@ -103,8 +103,8 @@ func New(emit RawEmitter, clk clock.Clock) *Log {
 // non-cancel-aware emitter).
 // 2. evt non-nil
 // 3. evt.Type() must be IsValid() — rejects EvtUnknown (zero value)
-// and any out-of-range values not yet wired into AllEventTypes()
-// (IMP-2 from Task A-2 fix pass; release J-2 promoted the
+// and any out-of-range values unavailable into AllEventTypes()
+// (IMP-2 from task fix pass; HADES design J-2 promoted the
 // reserved-for- slots 40-42 to valid).
 // 4. sessionID + projectID non-empty (invariant tagging contract)
 // 5. payload encode
@@ -164,7 +164,7 @@ func (l *Log) appendTyped(ctx context.Context, sessionID, projectID string, evt 
 // event_ids are 1-indexed by the adapter, so "strictly > 0" is
 // the canonical "all events" sentinel. All RawEmitter implementations
 // MUST honor
-// this contract; Task A-4 Replay relies on it for crash recovery from
+// this contract; task Replay relies on it for crash recovery from
 // a fresh boot. Use since=lastSeenID to resume replay from a checkpoint.
 //
 // Like Append, Query short-circuits on a pre-cancelled ctx (I-1).

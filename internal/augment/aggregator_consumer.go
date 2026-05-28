@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package augment — AggregatorConsumer wraps release D's
+// Package augment — AggregatorConsumer wraps HADES design D's
 // internal/knowledge/aggregator query surface (via the KnowledgeIndex +
 // Embedder seams) for single-project augmentation.
 //
-// Q11=α:
+// design choice=α:
 // methods + a package-level aggregator.Fuse function + aggregator.Embedder
 // interface. fix: the wrapper consumes the *Aggregator query surface
 // via the KnowledgeIndex seam; the Embedder is a separate seam.
 //
-// Method mapping (5-lane RRF Q2=C):
+// Method mapping (5-lane RRF design choice):
 // - Lane 2 (FTS5 BM25): AggregatorConsumer.Lane2FTS -> KnowledgeIndex.QueryFTS
 // - Lane 4 (sqlite-vec KNN): AggregatorConsumer.Lane4Vec -> Embedder.Embed + KnowledgeIndex.QueryVec
 // - Lane 5 (temporal): AggregatorConsumer.Lane5Temporal -> KnowledgeIndex.QueryFTS + decay

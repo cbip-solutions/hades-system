@@ -12,7 +12,7 @@ from typing import Final
 
 
 def render_hades_block(title: str, body: str, recovery: str) -> str:
-    """Construct a HADES three-line block per spec §Q6 format.
+    """Construct a HADES three-line block per design contract
 
     Format:
         HADES: <title>
@@ -20,9 +20,9 @@ def render_hades_block(title: str, body: str, recovery: str) -> str:
           → <recovery>
 
     Used by both dashboard.py and panel.py to render error blocks LOCALLY
-    (release stage C-5 operator policy: no daemon error-render
-    roundtrip; render locally using release track catalog text). Mirrors the
-    three-line format of release track Go-side Render().
+    (stage C-5 operator policy: no daemon error-render
+    roundtrip; render locally using stage catalog text). Mirrors the
+    three-line format of stage Go-side Render().
 
     Per invariant (visible-strings-HADES preserved): all strings returned by
     this function contain the HADES brand by construction.
@@ -59,10 +59,10 @@ def run_hades_subprocess(extra_args: list[str]) -> str | None:
         - subprocess returncode 130 (POSIX SIGINT)
         - subprocess returncode non-zero other
 
-    Per spec §Q8 D-pattern: lazygit-style subprocess handoff. Terminal mode
+    per design contract: lazygit-style subprocess handoff. Terminal mode
     is captured before spawn and restored in finally block.
 
-    Per invariant prep (release track): this function NEVER raises at the
+    Per invariant prep (stage): this function NEVER raises at the
     slash-command boundary; all paths return either a rendered string or
     None.
     """

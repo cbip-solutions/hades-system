@@ -66,17 +66,8 @@ func NewDaemonRestartMCPCmd(factory MCPRestartClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "restart-mcp <name>",
 		Short: "Manually restart one MCP child (research|budget|audit|sshexec|codegen)",
-		Long: `Trigger a manual restart of one MCP child managed by the daemon's
-mcpgateway. Use this when a stuck child needs a nudge; the daemon's
-normal health-probe + rate-limited auto-restart governor (inv-hades-168)
-handles most cases automatically.
+		Long:  "Trigger a manual restart of one MCP child managed by the daemon's\nmcpgateway. Use this when a stuck child needs a nudge; the daemon's\nnormal health-probe + rate-limited auto-restart governor (invariant)\nhandles most cases automatically.\n\nThe daemon enforces a per-child restart rate-limit (3 restarts in 5\nminutes). Hitting the limit returns 429; the CLI surfaces a recoverable\nerror pointing at the rate-limit window.\n\nNote: caronte is in-process (HADES design) — use 'hades doctor caronte' for\nengine health instead of restart-mcp.",
 
-The daemon enforces a per-child restart rate-limit (3 restarts in 5
-minutes). Hitting the limit returns 429; the CLI surfaces a recoverable
-error pointing at the rate-limit window.
-
-Note: caronte is in-process (Plan 19) — use 'hades doctor caronte' for
-engine health instead of restart-mcp.`,
 		Example: " # Restart the research MCP\n  hades daemon restart-mcp research\n\n # Restart the budget MCP\n  hades daemon restart-mcp budget",
 
 		Args: cobra.MaximumNArgs(1),
@@ -126,7 +117,7 @@ func classifyMCPRestartError(err error) error {
 	}
 	if client.IsHTTPStatus(err, http.StatusTooManyRequests) {
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err,
-			"restart-mcp: rate-limit hit (per inv-hades-168 — 3 restarts in 5min); wait and retry"))
+			"restart-mcp: rate-limit hit (per invariant — 3 restarts in 5min); wait and retry"))
 	}
 	if client.IsHTTPStatus(err, http.StatusUnprocessableEntity) {
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, "restart-mcp: daemon rejected request"))

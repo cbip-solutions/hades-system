@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_full_adapters.go.
 //
-// Constructs the release-9 subsystem doctor check.Check instances that
-// `hades doctor full` composes alongside the 4 NEW release checks per
-// spec §2.5 line 229 ("Composing aggregator over Plans 1-9 per-flag
+// Constructs the HADES design subsystem doctor check.Check instances that
+// `hades doctor full` composes alongside the 4 NEW HADES design checks per
+// spec §2.5 line 229 ("Composing aggregator over HADES design per-flag
 // checks (--knowledge/--scheduler/--inbox/--tmux/--merge/--hermes) plus
-// 4 new release checks").
+// 4 new HADES design checks").
 //
 // Import-cycle note: internal/doctor/check/cliadapter imports internal/cli
 // (for ProbeResult/ProbeStatus). If this file imported cliadapter, the
@@ -19,14 +19,14 @@
 //
 // Adapter wiring contract per plan F-tail F-imp:
 //
-// - Each release-9 prober function (RunKnowledgeProbe / RunSchedulerProbe
+// - Each HADES design prober function (RunKnowledgeProbe / RunSchedulerProbe
 // / RunInboxProbe / RunTmuxProbe / RunMergeChecks / RunHermesChecks /
 // RunBypassChecks / etc) is wrapped via the local adapter constructor.
 // - The adapter func builds a fresh client per invocation (lazy daemon
 // dial) so doctor full never panics on daemon-down — the per-probe
 // defensive paths surface daemon-down as one ProbeFail row each
 // (operator-actionable; first remediation: `hades daemon start`).
-// - Categories are assigned per spec §3.3 enum: Configuration for
+// - Categories are assigned per design contract: Configuration for
 // subsystem-config probes; Connectivity for daemon-reachability;
 // Hints for info-only.
 //
@@ -69,7 +69,7 @@ func (a *cliProbeCheckAdapter) Run(ctx context.Context) check.DiagnosticResult {
 	if a.probeFunc == nil {
 		d.Status = check.StatusSkip
 		d.Message = "probe function nil"
-		d.Hint = "verify Plan 1-9 substrate prober wiring"
+		d.Hint = "verify HADES design substrate prober wiring"
 		d.DurationMs = time.Since(start).Milliseconds()
 		return d
 	}
@@ -78,7 +78,7 @@ func (a *cliProbeCheckAdapter) Run(ctx context.Context) check.DiagnosticResult {
 	if len(results) == 0 {
 		d.Status = check.StatusSkip
 		d.Message = "no probe results emitted"
-		d.Hint = "verify Plan 1-9 substrate prober is wired"
+		d.Hint = "verify HADES design substrate prober is wired"
 		return d
 	}
 	worst := check.StatusPass
@@ -148,7 +148,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.knowledge",
 		check.CategoryConfiguration,
-		"Plan 7 knowledge subsystem (FTS5 index, indexer, watcher) — 5 aspects",
+		"HADES design knowledge subsystem (FTS5 index, indexer, watcher) — 5 aspects",
 		func(ctx context.Context) []ProbeResult {
 			deps := DoctorDeps{Client: clientFactory()}
 			rs, _ := RunKnowledgeProbeWithDeps(ctx, deps)
@@ -159,7 +159,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.scheduler",
 		check.CategoryConfiguration,
-		"Plan 7 scheduler subsystem (queue, missed fires, WFQ) — 4 aspects",
+		"HADES design scheduler subsystem (queue, missed fires, WFQ) — 4 aspects",
 		func(ctx context.Context) []ProbeResult {
 			deps := DoctorDeps{Client: clientFactory()}
 			rs, _ := RunSchedulerProbeWithDeps(ctx, deps)
@@ -170,7 +170,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.inbox",
 		check.CategoryConfiguration,
-		"Plan 7 inbox subsystem (aggregator cache, outbox, dedup) — 4 aspects",
+		"HADES design inbox subsystem (aggregator cache, outbox, dedup) — 4 aspects",
 		func(ctx context.Context) []ProbeResult {
 			deps := DoctorDeps{Client: clientFactory()}
 			rs, _ := RunInboxProbeWithDeps(ctx, deps)
@@ -181,7 +181,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.tmux",
 		check.CategoryConfiguration,
-		"Plan 7 tmux subsystem (binary, server, sessions, drift) — 5 aspects",
+		"HADES design tmux subsystem (binary, server, sessions, drift) — 5 aspects",
 		func(ctx context.Context) []ProbeResult {
 			deps := DoctorDeps{Client: clientFactory()}
 			rs, _ := RunTmuxProbeWithDeps(ctx, deps)
@@ -192,7 +192,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"daemon.reachable",
 		check.CategoryRuntime,
-		"Daemon UDS liveness + uptime (Plan 1+ surface)",
+		"Daemon UDS liveness + uptime (HADES design+ surface)",
 		func(ctx context.Context) []ProbeResult {
 			deps := DoctorDeps{Client: clientFactory()}
 			return runDaemonReachable(ctx, deps)
@@ -202,7 +202,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.bypass",
 		check.CategoryConfiguration,
-		"Plan 2 bypass subsystem (config + transport + tokens) — 10 checks",
+		"HADES design bypass subsystem (config + transport + tokens) — 10 checks",
 		func(ctx context.Context) []ProbeResult {
 			c := clientFactory()
 			results := runBypassChecks(ctx, c)
@@ -213,7 +213,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.merge",
 		check.CategoryConfiguration,
-		"Plan 6 merge subsystem (daemon, git, eventlog, cache) — 4 checks",
+		"HADES design merge subsystem (daemon, git, eventlog, cache) — 4 checks",
 		func(ctx context.Context) []ProbeResult {
 			c := clientFactory()
 			mergeClient := client.NewMergeClient(c.HTTPClient(), c.BaseURL())
@@ -225,7 +225,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.hermes",
 		check.CategoryConfiguration,
-		"Plan 11 hermes integration (plugin format, events) — 4 checks",
+		"HADES design hermes integration (plugin format, events) — 4 checks",
 		func(ctx context.Context) []ProbeResult {
 			c := clientFactory()
 			results := runHermesChecks(ctx, c)
@@ -236,7 +236,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.augment",
 		check.CategoryConfiguration,
-		"Plan 11 augmentation substrate (5-lane RRF) — 6 checks",
+		"HADES design augmentation substrate (5-lane RRF) — 6 checks",
 		func(ctx context.Context) []ProbeResult {
 			c := clientFactory()
 			results := runAugmentChecks(ctx, c)
@@ -247,7 +247,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.citation",
 		check.CategoryConfiguration,
-		"Plan 11 citation system (provenance + reproducibility) — 3 checks",
+		"HADES design citation system (provenance + reproducibility) — 3 checks",
 		func(ctx context.Context) []ProbeResult {
 			c := clientFactory()
 			results := runCitationChecks(ctx, c)
@@ -258,7 +258,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.coordination",
 		check.CategoryConfiguration,
-		"Plan 11 coordination (cross-subsystem messaging) — 2 checks",
+		"HADES design coordination (cross-subsystem messaging) — 2 checks",
 		func(ctx context.Context) []ProbeResult {
 			c := clientFactory()
 			results := runCoordinationChecks(ctx, c)
@@ -269,7 +269,7 @@ func BuildPlan1To9DoctorFullAdapters(udsPath string) []check.Check {
 	out = append(out, newCLIProbeAdapter(
 		"subsystem.orchestrator",
 		check.CategoryConfiguration,
-		"Plan 3 orchestrator engine (dispatcher, workers, recovery)",
+		"HADES design orchestrator engine (dispatcher, workers, recovery)",
 		func(ctx context.Context) []ProbeResult {
 			c := clientFactory()
 			results := runOrchestratorChecks(ctx, c)
@@ -310,7 +310,7 @@ func checkResultStatusToProbeStatus(s string) ProbeStatus {
 var buildPlan1To9DoctorFullAdaptersOverride func() []check.Check
 
 // BuildPlan1To9DoctorFullAdaptersForTesting installs a test-only override
-// for the release-9 adapter list construction. Returns a cleanup function
+// for the HADES design adapter list construction. Returns a cleanup function
 // callers MUST defer.
 func BuildPlan1To9DoctorFullAdaptersForTesting(adapters func() []check.Check) func() {
 	prev := buildPlan1To9DoctorFullAdaptersOverride

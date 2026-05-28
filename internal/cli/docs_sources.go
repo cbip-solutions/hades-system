@@ -17,7 +17,7 @@
 // TTL), "stale" (older than TTL; next poll refreshes), "error" (last
 // poll failed; details in audit-events).
 //
-// Exit codes (per spec §6.2):
+// Exit codes (per design contract):
 //
 // 0 success (table render OR hint print)
 // 1 recoverable: daemon 404 / 422

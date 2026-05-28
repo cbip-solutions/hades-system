@@ -17,7 +17,7 @@ Spawn workers and team_leads per plan; do not implement directly.
 Inspect last commit batch; flag style + correctness issues.
 {{else if eq .TaskKind "reviewer_strategic"}}
 ## Strategic reviewer role
-Inspect plan-phase boundary; ensure plan compliance.
+Inspect plan-stage boundary; ensure plan compliance.
 {{else if eq .TaskKind "reviewer_architectural"}}
 ## Architectural reviewer role
 Inspect cross-plan invariants; defer to operator on amendments.
@@ -28,5 +28,5 @@ Inspect cross-plan invariants; defer to operator on amendments.
 {{end}}
 
 ## Stage context
-Stage: {{.CurrentStage}}{{if .CurrentPhase}} | Phase: {{.CurrentPhase}}{{end}}
+Stage: {{.CurrentStage}}{{if .CurrentPhase}} | stage: {{.CurrentPhase}}{{end}}
 Complexity: {{.TaskComplexityTier}}

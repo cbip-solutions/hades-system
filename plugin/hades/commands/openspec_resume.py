@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""/hades:openspec-resume handler — Resume a paused propose/apply/archive phase.
+"""/hades:openspec-resume handler — Resume a paused propose/apply/archive stage.
 
 Port from CC-format plugin/hades/commands/openspec-resume.md workflow logic.
 """
@@ -8,19 +8,19 @@ from __future__ import annotations
 
 _PROMPT = """# HADES /openspec-resume — Resume {feature_name}
 
-Query HADES daemon for the current phase of `{feature_name}`:
+Query HADES daemon for the current stage of `{feature_name}`:
 
 ## 1. Query daemon
 
 ```bash
 PHASE=$(curl --unix-socket /tmp/hades-system.sock -s \\
              "http://unix/v1/swarms?feature={feature_name}" \\
-             | jq -r '.swarms[0].phase')
+             | jq -r '.swarms[0].stage')
 ```
 
-## 2. Branch by phase
+## 2. Branch by stage
 
-### Phase = "proposing"
+### stage = "proposing"
 
 Re-enter doc-live mode:
 <!-- HADES design — pending endpoint registration: swarm conversation history (GET); HADES design swarm substrate ships but conversation log endpoint awaits HADES design -->
@@ -28,7 +28,7 @@ Re-enter doc-live mode:
 - Continue the wizard / live-edit loop where operator left off
 - Render any file diffs since session pause
 
-### Phase = "applying"
+### stage = "applying"
 
 Stream SSE events:
 <!-- HADES design — pending endpoint registration: swarm SSE event stream awaits HADES design 'hades migrate' -->
@@ -36,13 +36,13 @@ Stream SSE events:
 - Surface latest attention items
 - Show progress (tasks complete / tasks in flight / tasks blocked)
 
-### Phase = "archiving"
+### stage = "archiving"
 
 Render the in-progress archive briefing:
 - Same UI as `/openspec-archive` but pre-populated with prior decisions
 - Continue from where operator left off
 
-### Phase = "complete"
+### stage = "complete"
 
 Show "Feature {feature_name} complete; nothing to resume." + show last commit SHA + suggest next feature.
 
@@ -55,12 +55,12 @@ HADES design wires conversation state preservation across runtime restarts (daem
 - spec §3 modo C híbrido
 - HADES design conversation continuity
 - /hades:openspec-propose (precedent if not yet started)
-- /hades:openspec-apply (precedent for apply phase)
-- /hades:openspec-archive (precedent for archive phase)
+- /hades:openspec-apply (precedent for apply stage)
+- /hades:openspec-archive (precedent for archive stage)
 """
 
 _PROMPT_NO_FEATURE = """HADES: feature name required for openspec-resume
-  /hades:openspec-resume requires a feature name to identify which swarm phase to resume.
+  /hades:openspec-resume requires a feature name to identify which swarm stage to resume.
   → Invoke /hades:openspec-resume <feature-name> or start fresh with /hades:openspec-propose <feature-name>
 """
 

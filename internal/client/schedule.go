@@ -21,9 +21,9 @@
 //
 // gap: until the daemon mounts the /v1/schedules/* routes in
 // , every call returns 503. The CLI surfaces 503 as exit 2
-// (infra-issue, not operator-typo). Mirrors the release /v1/messages
+// (infra-issue, not operator-typo). Mirrors the HADES design /v1/messages
 // graceful-degradation pattern: client method shipped early, daemon
-// route ships in a follow-up phase.
+// route ships in a follow-up stage.
 package client
 
 import (

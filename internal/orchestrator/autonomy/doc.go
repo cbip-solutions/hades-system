@@ -2,7 +2,7 @@
 // Package autonomy implements the 3-layer autonomy mode resolver and the
 // per-doctrine prerequisite check engine Build.
 //
-// Mode resolution (Q11 C, top wins):
+// Mode resolution (design choice C, top wins):
 //
 // 1. Per-build flag --autonomy=manual|semi|full
 // 2. Per-project hadessystem.toml [autonomy] default = "..."
@@ -13,7 +13,7 @@
 // override, and records the attempted override in Resolution.RejectedOverride
 // so the caller can emit AutonomyOverrideRejected to the event log.
 //
-// Check engine (Q13 D, hard/soft/informational tiers per doctrine) is in
+// Check engine (design choice D, hard/soft/informational tiers per doctrine) is in
 // check.go; the per-doctrine tier matrix is in tiers.go.
 //
 // Boundary (invariant): this package MUST NOT import internal/store,

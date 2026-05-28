@@ -3,7 +3,7 @@
 //
 // G-1 ships:
 // - CostProfile value type + 3 canonical built-in fixtures (max-scope,
-// default, capa-firewall) per spec §1 Q9 D
+// default, capa-firewall) per design contract
 // - LoadThresholdTable(profile, override?) — closed-vocab validation,
 // per-project tighten-only override, sort by Pct ascending with
 // PctPAYG last
@@ -15,10 +15,10 @@
 // enforcement lands in G-4
 //
 // Adaptation notes vs plan code:
-// - release doctrine package is interface-based (Doctrine interface),
+// - HADES design doctrine package is interface-based (Doctrine interface),
 // not value-typed (Profile struct). (TOML loader for the
 // cost_degradation stanza) hasn't shipped. owns its own
-// CostProfile + BuiltinCostProfile fixtures matching spec §1 Q9 D
+// CostProfile + BuiltinCostProfile fixtures matching spec §1 design choice D
 // verbatim. When ships, BuiltinCostProfile is replaced by
 // a TOML loader returning the same shape; engine code stays put.
 // - Type renamed from "Action" to "CostAction" for prefix consistency
@@ -117,7 +117,7 @@ type ProjectOverride struct {
 
 // CostProfile is the per-doctrine cost-degradation table consumed by
 // Three canonical built-ins (BuiltinCostProfile) match spec
-// §1 Q9 D verbatim. (when shipped) replaces BuiltinCostProfile
+// §1 design choice D verbatim. (when shipped) replaces BuiltinCostProfile
 // with a TOML loader returning the same shape — engine code untouched.
 //
 // Fields
@@ -450,7 +450,7 @@ func (e *CostGatingEngine) Evaluate(s BudgetSnapshot) ThresholdRow {
 // tick retries Apply. This makes Apply effectively at-least-once.
 //
 // The ticker fires at pollEvery (default 500ms; <1s is a hard
-// requirement for sub-second cap-cross detection per spec §1 Q9).
+// requirement for sub-second cap-cross detection per design contract).
 func (e *CostGatingEngine) Run(ctx context.Context) {
 	defer close(e.stoppedCh)
 	tick := e.clk.NewTicker(e.pollEvery)

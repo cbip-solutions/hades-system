@@ -14,11 +14,8 @@ func newBypassCrossValidateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "cross-validate",
 		Short: "Diff extracted bypass-config against a community plugin source",
-		Long: `Cross-validate the extracted bypass-config.json (from
-'hades bypass extract-config') against a community plugin source
-(meridian or griffinmartin). Emits a per-field diff report
-(MATCH / DIFF / MISSING). Implements spec §2 Q1-C cold-start
-cross-validation.`,
+		Long:  "Cross-validate the extracted bypass-config.json (from\n'hades bypass extract-config') against a community plugin source\n(meridian or griffinmartin). Emits a per-field diff report\n(MATCH / DIFF / MISSING). Implements spec §2 design choice-C cold-start\ncross-validation.",
+
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if plugin != "meridian" && plugin != "griffinmartin" {
 				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--plugin must be one of: meridian, griffinmartin (got %q)", plugin))

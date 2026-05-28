@@ -7,16 +7,16 @@
 // - RRF fusion input/output (QueryResult, TopK)
 // - Cross-project wikilink graph (WikilinkEdge)
 //
-// Phase ownership: D-3 ships the complete type surface. D-4..D-7 extend the
+// stage ownership: D-3 ships the complete type surface. D-4..D-7 extend the
 // behaviour (QueryFTS, QueryVec, Promote) but add NO new exported types to
 // this file — they add methods to the Aggregator struct. D-9 may extend
 // QueryRequest if audit-chain filters need additional fields; extend here,
 // never in the method files.
 //
 // invariant: ScopePinnedOnly is the widest scope this aggregator honours.
-// Ecosystem-wide RAG (cross-project web + external-source search) is release
+// Ecosystem-wide RAG (cross-project web + external-source search) is HADES design
 // territory. Any call-site that passes Scope("ecosystem-rag") will receive an
-// explicit error message pointing at release — never a silent default.
+// explicit error message pointing at HADES design — never a silent default.
 package aggregator
 
 import (
@@ -79,7 +79,7 @@ func (r *QueryRequest) Validate() error {
 
 	default:
 		return errors.New("aggregator: QueryRequest.Scope must be global|project|pinned-only " +
-			"(ecosystem RAG is Plan 14 territory; see inv-hades-152)")
+			"(ecosystem RAG is HADES design territory; see invariant)")
 	}
 	if r.Scope == ScopeProject && r.ProjectID == "" {
 		return errors.New("aggregator: QueryRequest.ProjectID required when Scope=project")

@@ -91,7 +91,7 @@ func (o *Outbox) Run(ctx context.Context) {
 //
 // Daemon-boot ordering contract: callers MUST invoke Recover BEFORE
 // starting Run, so the live drain loop never races against the cold
-// rehydration write path. Per spec §4.4 (cache divergence + boot
+// rehydration write path. per design contract(cache divergence + boot
 // rehydration), Rebuild discards every existing cache row and rehydrates
 // from the union of source contents; on a successful return, the cache
 // is consistent with the per-project authoritative stores.

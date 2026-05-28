@@ -3,7 +3,7 @@
 //
 // §7.4 Hermes integration block.
 //
-// Q5=A hard required posture: hermes.installed surfaces as `fail` when
+// design choice hard required posture: hermes.installed surfaces as `fail` when
 // the binary is absent (NOT `warn`); aggregate `hades doctor` exits
 // non-zero. The hint points at brew install hermes-agent.
 //
@@ -31,9 +31,9 @@ type HermesProber interface {
 func NewDoctorHermesCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "hermes",
-		Short: "Hermes integration checks (Plan 11; 4 checks per spec §7.4)",
+		Short: "Hermes integration checks (HADES design; 4 checks per design contract)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Hermes integration (Plan 11)", runHermesChecks)
+			return runOneSection(cmd, "Hermes integration (HADES design)", runHermesChecks)
 		},
 	}
 	return cmd
@@ -52,12 +52,12 @@ func runHermesChecksWith(ctx context.Context, p HermesProber) []CheckResult {
 		{
 			probeName:  "installed",
 			resultName: "hermes.installed",
-			hint:       "brew install hermes-agent (Q5=A hard required dependency; daemon refuses bootstrap without)",
+			hint:       "brew install hermes-agent (design choice hard required dependency; daemon refuses bootstrap without)",
 		},
 		{
 			probeName:  "plugin-hades-system-loaded",
 			resultName: "hermes.plugin-hades-system-loaded",
-			hint:       "verify plugin/hades-system/plugin.yaml exists; run: hades migrate hermes (Plan 13)",
+			hint:       "verify plugin/hades-system/plugin.yaml exists; run: hades migrate hermes (HADES design)",
 		},
 		{
 			probeName:  "config-mcp-reachable",

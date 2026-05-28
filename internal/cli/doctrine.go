@@ -37,7 +37,7 @@ import (
 func NewDoctrineCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "doctrine",
-		Short: "Doctrine TOML schema + amendment lifecycle (Plan 4 + Plan 5)",
+		Short: "Doctrine TOML schema + amendment lifecycle (HADES design + HADES design)",
 	}
 	format.AttachFlags(cmd)
 	attachPlan5DaemonURLFlag(cmd)
@@ -235,7 +235,7 @@ func doctrineWhichCmd() *cobra.Command {
 			}
 			fmt.Fprintf(out, "Active doctrine: %s\n", active)
 			fmt.Fprintln(out, "Resolution chain:")
-			fmt.Fprintln(out, "  1. user-level CLAUDE.md doctrine (if set)")
+			fmt.Fprintln(out, "  1. user-level project instructions doctrine (if set)")
 			fmt.Fprintln(out, "  2. project hadessystem.toml [doctrine.name] (if set)")
 			fmt.Fprintln(out, "  3. CLI --doctrine override (if passed)")
 			fmt.Fprintln(out, "  4. built-in catalog (max-scope|default|capa-firewall)")

@@ -2,7 +2,7 @@
 // Package cli — safetynet_divergence.go.
 //
 // `hades safetynet divergence {run,history}` triggers and inspects the
-// config-divergence audit (Q2 C element 2). Run is on-demand (POST);
+// config-divergence audit (design choice C element 2). Run is on-demand (POST);
 // history pulls recent reports from the daemon's persistence.
 package cli
 
@@ -17,7 +17,7 @@ import (
 func safetynetDivergenceCmd() *cobra.Command {
 	div := &cobra.Command{
 		Use:   "divergence",
-		Short: "Config-divergence audit (Q2 C element 2)",
+		Short: "Config-divergence audit (design choice C element 2)",
 	}
 	div.AddCommand(safetynetDivergenceRunCmd())
 	div.AddCommand(safetynetDivergenceHistoryCmd())

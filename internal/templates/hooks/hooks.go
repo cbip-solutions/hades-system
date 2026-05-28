@@ -2,7 +2,7 @@
 // Package hooks executes lifecycle hooks + transactional materialization
 // templates.
 //
-// Lifecycle (per spec §3.5):
+// Lifecycle (per design contract):
 //
 // 1. pre_prompt.{sh,py} — validate host env (BEFORE the wizard runs).
 // In the entry-point flow, this hook is invoked BY THE CLI

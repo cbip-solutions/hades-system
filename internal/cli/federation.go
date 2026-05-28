@@ -3,7 +3,7 @@
 //
 // `hades federation health [wsid]` + `hades api-impact <diff-ref>` — the
 // federation health surface + the cross-repo API-impact analysis verb.
-// Mirrors release K's verb pattern (risk.go / why.go); each verb supports
+// Mirrors HADES design K's verb pattern (risk.go / why.go); each verb supports
 // `--format text|json` policy Routes via the daemon
 // /v1/mcpgateway/{federation/health,api-impact} sub-routes (invariant
 // single-egress, invariant no direct net/http).
@@ -45,7 +45,7 @@ func (p *productionFederationClient) APIImpact(ctx context.Context, req client.A
 func NewFederationCmdProd() *cobra.Command {
 	root := &cobra.Command{
 		Use:   "federation",
-		Short: "Plan 20 cross-repo federation observability",
+		Short: "HADES design cross-repo federation observability",
 		Long:  `Inspect federation reachability + per-workspace health.`,
 	}
 	root.AddCommand(NewFederationHealthCmdProd())
@@ -62,9 +62,8 @@ func NewFederationHealthCmd(factory func(cmd *cobra.Command) FederationClient) *
 	cmd := &cobra.Command{
 		Use:   "health [workspace_id]",
 		Short: "Report federation reachability + per-workspace health",
-		Long: `Read the daemon's federation health surface. When [workspace_id] is
-provided, scopes to one workspace; otherwise reports daemon-wide health.
-Routes via the daemon (single-egress, inv-hades-088).`,
+		Long:  "Read the daemon's federation health surface. When [workspace_id] is\nprovided, scopes to one workspace; otherwise reports daemon-wide health.\nRoutes via the daemon (single-egress, invariant).",
+
 		Example: `  hades federation health
   hades federation health ws-1 --format json`,
 		Args: cobra.MaximumNArgs(1),
@@ -133,11 +132,8 @@ func NewAPIImpactCmd(factory func(cmd *cobra.Command) FederationClient) *cobra.C
 	cmd := &cobra.Command{
 		Use:   "api-impact <diff-ref>",
 		Short: "Report consumers impacted by recorded API-contract changes",
-		Long: `Report cross-repo consumers affected by the federation breaking-change
-ledger. A concrete change_id, or change:<id>, scopes the result to one recorded
-event; other selectors are preserved in the output while the daemon reports the
-workspace's current affected-consumer set. Routes via the daemon (single-egress,
-inv-hades-088).`,
+		Long:  "Report cross-repo consumers affected by the federation breaking-change\nledger. A concrete change_id, or change:<id>, scopes the result to one recorded\nevent; other selectors are preserved in the output while the daemon reports the\nworkspace's current affected-consumer set. Routes via the daemon (single-egress,\ninvariant).",
+
 		Example: `  hades api-impact change:chg-abc123 --workspace ws-1
   hades api-impact HEAD~3..HEAD --workspace ws-1 --format json`,
 		Args: cobra.MaximumNArgs(1),

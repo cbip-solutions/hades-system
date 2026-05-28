@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Package parser decodes per-doctrine self-contained TOML files into the
-// v1 Schema struct (release Q2 A: no merge engine; one TOML = one
+// v1 Schema struct (HADES design design choice A: no merge engine; one TOML = one
 // effective doctrine). The parser is the SOLE entry point used by the
 // embedded built-in loader and the user-override
 // reload loop so both surfaces share one code path
-// (Q9 B). Strict-mode decoding is mandatory: any unknown key surfaces
-// as ErrParseFailed (Q5 B + spec §1; research SOTA "silent strictness
-// drift" anti-pattern guard). Per-Q3 C Tier 1, user/override TOMLs that
+// (design choice B). Strict-mode decoding is mandatory: any unknown key surfaces
+// as ErrParseFailed (design choice B + spec §1; research SOTA "silent strictness
+// drift" anti-pattern guard). Per-design choice C Tier 1, user/override TOMLs that
 // declare the [doctrine_transverse] section are rejected with a typed
 // *errors.TransverseOverrideAttempt (invariant enforcement).
 //
 // The parser is policy-free with respect to schema_version: it returns
 // the literal value via ExtractSchemaVersion and lets the caller (daemon
 // startup) decide whether to dispatch to internal/doctrine/migrate/
-// (Q15 A). It is also I/O-free: callers supply []byte; the `source`
+// (design choice A). It is also I/O-free: callers supply []byte; the `source`
 // argument is a free-form label used only for error wrapping.
 //
 // Boundary parser ⊥ internal/store (invariant). No store imports;
@@ -73,7 +73,7 @@ type ParseOpts struct {
 	// AllowTransverseDeclaration enables the [doctrine_transverse]
 	// section to appear in the input. ONLY embedded built-in TOMLs
 	// (max-scope, default, capa-firewall) MAY declare transverse
-	// axioms (Q3 C Tier 1: hardcoded operator-only). User TOMLs and
+	// axioms (design choice C Tier 1: hardcoded operator-only). User TOMLs and
 	// per-project overrides MUST NOT, and the parser returns
 	// *errors.TransverseOverrideAttempt when they do (invariant).
 	AllowTransverseDeclaration bool
@@ -86,7 +86,7 @@ type ParseOpts struct {
 // "project:/repo/.hades/doctrine-override.toml", etc.).
 //
 // Pre/postconditions:
-// - data must be a complete, self-contained TOML byte slice (Q2 A;
+// - data must be a complete, self-contained TOML byte slice (design choice A;
 // no merge engine — what's in the file is the effective doctrine).
 // - target must be a non-nil *v1.Schema; on nil target the parser
 // returns an error wrapping ErrParseFailed (we do NOT panic on

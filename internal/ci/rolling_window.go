@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 //
-// 30-CI-green gate per spec §7.3 (amendment §2.5 D-5). The "30" in the
+// 30-CI-green gate per design contract(amendment §2.5 D-5). The "30" in the
 // gate name is the MinSampleSize floor (denominator must be ≥30 before
 // the gate is meaningful); the WindowSize is the lookback depth (50 by
 // default). Implementation invariants:

@@ -23,12 +23,8 @@ func adrIndexCmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "index",
 		Short: "Regenerate dual manifest (--check exits non-zero on drift; CI use)",
-		Long: `index regenerates docs/decisions/_index.json (flat list) and
-_graph.json (supersede edges). Without --check, regenerates and overwrites
-the committed files. With --check, regenerates in memory and diffs against
-committed; any drift returns exit code 1 (CI gate).
+		Long:  "index regenerates architecture records (flat list) and\n_graph.json (supersede edges). Without --check, regenerates and overwrites\nthe committed files. With --check, regenerates in memory and diffs against\ncommitted; any drift returns exit code 1 (CI gate).\n\nUsed by 'make verify-invariants' to enforce ADR index freshness.",
 
-Used by 'make verify-invariants' to enforce ADR index freshness.`,
 		Example: `  hades adr index           # regenerate + overwrite (developer use)
   hades adr index --check  # CI gate: exit non-zero on drift`,
 		RunE: func(cmd *cobra.Command, _ []string) error {

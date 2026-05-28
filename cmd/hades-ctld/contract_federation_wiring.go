@@ -19,7 +19,7 @@
 // Opens the workspace.db via federation.Open(ctx,
 // statePath, opts...) (variadic Option per as-built Wave-1),
 // constructs the Coordinator via plain struct-literal
-// with capability-detected pool (nil-tolerant per D9 — release
+// with capability-detected pool (nil-tolerant per D9 — HADES design
 // WorktreePool not yet daemon-wired at v0.19.0 ship; present →
 // ModeAutonomy, absent → ModeSurface). Returns both concretes;
 // main.go defers Close on fedDB + injects via the two narrow
@@ -67,7 +67,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/worktreepool"
 )
 
-var ErrBuildContractFederationNoAudit = errors.New("buildContractFederation: audit *tessera.Adapter is required (inv-hades-269 chokepoint)")
+var ErrBuildContractFederationNoAudit = errors.New("buildContractFederation: audit *tessera.Adapter is required (invariant chokepoint)")
 
 var ErrBuildContractFederationEmptyStatePath = errors.New("buildContractFederation: statePath is required (caller resolves via federation.WorkspaceDBPath)")
 
@@ -574,7 +574,7 @@ func wireContractFederation(
 		return func() error { return nil }, fmt.Errorf("wireContractFederation: srv *daemon.Server is required (defense-in-depth)")
 	}
 	if tesseraMgr == nil {
-		return func() error { return nil }, fmt.Errorf("wireContractFederation: tesseraMgr *tessera.Manager is required (inv-hades-269 chokepoint)")
+		return func() error { return nil }, fmt.Errorf("wireContractFederation: tesseraMgr *tessera.Manager is required (invariant chokepoint)")
 	}
 
 	statePath, err := federation.WorkspaceDBPath(envSnapshot)

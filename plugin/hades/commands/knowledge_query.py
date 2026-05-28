@@ -69,7 +69,7 @@ hades://audit/<aggregate_event_id>
 
 ## 5. Token budget enforcement
 
-Per spec §1 Q3 doctrine.augmentation.max_kg_tokens:
+per design contract:
 - max-scope: 25000
 - default: 10000
 - capa-firewall: 0 (augmentation disabled by default)

@@ -24,23 +24,23 @@ Read `{spec_path}`. Verify it is frozen (per memoria `feedback_spec_hierarchy_an
 
 Per `feedback_methodology_and_conventions.md` §3:
 
-### Master + phase files pattern (REQUIRED)
-- Master file: `design records` (~150-200 lines)
-- Phase files: `design records` (~700-3000 lines each)
-- Phase letters: A through K/L/N depending on plan size
+### Master + stage files pattern (REQUIRED)
+- Master file: `design records item-<topic>-master.md` (~150-200 lines)
+- stage files: `design records item-stage-X-<scope>.md` (~700-3000 lines each)
+- stage letters: A through K/L/N depending on plan size
 
 ### Master plan structure
-- Phase index table (Phase / File / Scope / Q-source / Tasks / LOC / Critical-path)
-- Quality gates per phase
+- stage index table (stage / File / Scope / Q-source / Tasks / LOC / Critical-path)
+- Quality gates per stage
 - Doctrine applied
-- Phase ordering DAG
+- stage ordering DAG
 - Subagent dispatch model selection
 - Reference paths
 - Known integration adjustments
 
 ### Plan-writer dispatch strategy
 1. Write master inline (~150 lines, single message)
-2. Dispatch N writer subagents in parallel (one per phase) using `general-purpose`
+2. Dispatch N writer subagents in parallel (one per stage) using `general-purpose`
 3. Each writer prompt includes: required reading, scope, decisions, Q-tags, types/functions, tasks list, output path, format rules
 4. Run with `run_in_background: true` for parallelism (BUT see watchdog mitigation below)
 5. Wait for all notifications
@@ -60,17 +60,17 @@ If background writer fails 2+ times → dispatch foreground (NOT `run_in_backgro
 
 Per `feedback_methodology_and_conventions.md` §13:
 
-### release stage — Mechanical greps
+### stage — Mechanical greps
 - Placeholder scan (TBD/FIXME/XXX/implement-later)
 - Claude attribution scan
 - Type-name uniqueness across phases
 - Module path consistency
 - invariant-XXX coverage
 
-### release stage — Code-reviewer subagent dispatch (MANDATORY)
+### stage — Code-reviewer subagent dispatch (MANDATORY)
 - Dispatch `superpowers:code-reviewer` foreground
-- Cross-phase signature/field-set drift
-- Skipping release stage = compile errors guaranteed during execution
+- Cross-stage signature/field-set drift
+- Skipping stage = compile errors guaranteed during execution
 
 ### When findings ≥1 CRITICAL
 Doctrine "no defer" + "no tech debt" prohibit pushing with known CRITICAL findings. Fix inline before commit.

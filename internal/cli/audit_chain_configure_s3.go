@@ -42,20 +42,9 @@ import (
 func auditChainConfigureS3Cmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "configure-s3",
-		Short: "Interactive S3 credential setup (Keychain integrated, Plan 2 pattern)",
-		Long: `configure-s3 walks the operator through interactively configuring
-per-project S3 backup credentials for Tessera cold archiving. Prompts for
-endpoint URL, bucket name, region, access key, and secret key.
+		Short: "Interactive S3 credential setup (Keychain integrated, HADES design pattern)",
+		Long:  "configure-s3 walks the operator through interactively configuring\nper-project S3 backup credentials for Tessera cold archiving. Prompts for\nendpoint URL, bucket name, region, access key, and secret key.\n\nCredentials are transmitted over the local daemon UDS socket; the daemon\nadapter stores them in macOS Keychain (darwin) or\n~/.config/hades-system/s3-credentials.json mode 0600 (non-darwin).\n\nThe secret is NEVER echoed back to stdout or stderr (privacy-by-default;\nHADES design pattern). The success message confirms project ID, bucket, and\nendpoint only.\n\nRequired: --project.",
 
-Credentials are transmitted over the local daemon UDS socket; the daemon
-adapter stores them in macOS Keychain (darwin) or
-~/.config/hades-system/s3-credentials.json mode 0600 (non-darwin).
-
-The secret is NEVER echoed back to stdout or stderr (privacy-by-default;
-Plan 2 pattern). The success message confirms project ID, bucket, and
-endpoint only.
-
-Required: --project.`,
 		Example: `  hades audit-chain configure-s3 --project hades-system`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			project, _ := cmd.Flags().GetString("project")

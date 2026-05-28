@@ -106,7 +106,7 @@ _Last updated: {ts}_
 
 ## Active plan status
 
-<release item release track — <status>; or "no active plan">
+<release item stage — <status>; or "no active plan">
 
 ## Pending dispatches
 
@@ -150,7 +150,7 @@ def handle_handoff(raw_args: str) -> str | None:
 
     Args:
         raw_args: trailing text — optionally a TL;DR seed phrase (1-2 words
-            of context, e.g. "phase H' shipping").
+            of context, e.g. "stage H' shipping").
 
     Returns:
         Markdown block with proposed .hades/session.md content + proposed commit

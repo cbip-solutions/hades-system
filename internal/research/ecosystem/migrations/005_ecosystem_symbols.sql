@@ -1,9 +1,9 @@
 -- internal/research/ecosystem/migrations/005_ecosystem_symbols.sql
 --
--- HADES design release track Task A-9. Per spec §3.4.
+-- HADES design stage task. per design contract
 --
--- Per-package symbol registry. release track symbol_index.Register populates
--- this on every package ingest. release track verifier.go queries by symbol_path
+-- Per-package symbol registry. stage symbol_index.Register populates
+-- this on every package ingest. stage verifier.go queries by symbol_path
 -- as the O(1) primary lookup. introduced_in is part of UNIQUE so the same
 -- symbol can appear across multiple versions (e.g., crypto/sha256.Sum256
 -- in 1.22.0 + 1.23.0; same path, different introduced_in).

@@ -1,4 +1,4 @@
--- Idempotency keys cache — TTL 24h (HADES design release track).
+-- Idempotency keys cache — TTL 24h (HADES design stage).
 --
 -- Lifecycle:
 --   MarkPending    — written BEFORE upstream call (invariant).
@@ -11,7 +11,7 @@
 --
 -- Expired rows surface as "unknown" via the bypass-side wrapper so the
 -- caller falls through to a fresh upstream call. PurgeExpired runs on
--- a 1h ticker (StartPurgeScheduler) launched by the daemon (release track).
+-- a 1h ticker (StartPurgeScheduler) launched by the daemon (stage).
 --
 -- error_message captures the human-readable cause when MarkFailed is
 -- invoked, mirroring conversation_wal.error_message (FailTurn). Symmetry

@@ -3,8 +3,8 @@
 //
 // `hades memory query` cross-corpus retrieval with RRF k=60 fusion.
 //
-// Without --remote: only the release D aggregator is queried (single source).
-// With --remote: both the aggregator + the release ecosystem RAG dispatcher
+// Without --remote: only the HADES design D aggregator is queried (single source).
+// With --remote: both the aggregator + the HADES design ecosystem RAG dispatcher
 // are queried in parallel, then results are fused via Reciprocal Rank Fusion
 // .
 //
@@ -13,7 +13,7 @@
 // - one source errors → render the other (no error surfaced to operator)
 // - both sources error → return an error mentioning both
 //
-// The RRF formula `1.0 / float64(k+rank+1)` matches the release D-10
+// The RRF formula `1.0 / float64(k+rank+1)` matches the HADES design D-10
 // cross-ecosystem fusion implementation (internal/research/ecosystem/dispatcher.go);
 // keeping the constant in sync across layers avoids re-ranking drift.
 package cli
@@ -60,19 +60,9 @@ func newMemoryQueryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "query <free-text>",
 		Short: "Cross-corpus memory search (aggregator + optional ecosystem fusion)",
-		Long: `Search the Plan 9 D aggregator (per-project memory + global pin index).
-With --remote, also query the Plan 14 ecosystem RAG dispatcher and fuse
-results via RRF k=60 (cross-corpus reciprocal rank fusion).
+		Long:  "Search the HADES design D aggregator (per-project memory + global pin index).\nWith --remote, also query the HADES design ecosystem RAG dispatcher and fuse\nresults via RRF k=60 (cross-corpus reciprocal rank fusion).\n\nOutput formats:\n  text  (default) — tabwriter table with SOURCE/SCORE/TITLE/URL/SNIPPET\n  json            — array of MemoryHit objects (key, title, source, url, snippet, rrf_score)\n\nFailure modes:\n  - empty <free-text>      → exit 1 (operator-recoverable)\n  - one source errors      → soft-fail: render what the other returned\n  - both sources error     → exit 2 (unrecoverable transport / decode)",
 
-Output formats:
-  text  (default) — tabwriter table with SOURCE/SCORE/TITLE/URL/SNIPPET
-  json            — array of MemoryHit objects (key, title, source, url, snippet, rrf_score)
-
-Failure modes:
-  - empty <free-text>      → exit 1 (operator-recoverable)
-  - one source errors      → soft-fail: render what the other returned
-  - both sources error     → exit 2 (unrecoverable transport / decode)`,
-		Example: " # Aggregator-only (default)\n  hades memory query \"max-scope doctrine\"\n\n # Cross-corpus fusion with release ecosystem\n  hades memory query \"context cancellation\" --remote --limit 20\n\n # JSON for jq pipelines\n  hades memory query \"tessera\" --remote --format json | jq '.[].title'",
+		Example: " # Aggregator-only (default)\n  hades memory query \"max-scope doctrine\"\n\n # Cross-corpus fusion with HADES design ecosystem\n  hades memory query \"context cancellation\" --remote --limit 20\n\n # JSON for jq pipelines\n  hades memory query \"tessera\" --remote --format json | jq '.[].title'",
 
 		Args: cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -84,7 +74,7 @@ Failure modes:
 		},
 	}
 	cmd.Flags().BoolVar(&flags.Remote, "remote", false,
-		"include Plan 14 ecosystem RAG (cross-corpus RRF fusion)")
+		"include HADES design ecosystem RAG (cross-corpus RRF fusion)")
 	cmd.Flags().IntVar(&flags.Limit, "limit", 10, "result limit (default 10)")
 	cmd.Flags().StringVar(&flags.Format, "format", "text", "output format: text|json")
 	return cmd

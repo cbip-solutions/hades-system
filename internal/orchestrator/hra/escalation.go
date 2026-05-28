@@ -46,7 +46,7 @@ func NewEscalationRules(log EventLog, clk clock.Clock, sessionID, projectID stri
 // per-layer aggregator emits a Finding with Disagreement=true OR
 // (architectural-only) NeedsFix=true. Emits a single
 // EvtEscalationDecision row with the routed from/to/class triple per
-// spec §1 Q6 D.
+// spec §1 design choice D.
 //
 // L1 (worker) and any unknown Layer values silently no-op — workers
 // aren't reviewers and have no escalation target in this chain.

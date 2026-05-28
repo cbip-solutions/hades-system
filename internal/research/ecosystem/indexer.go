@@ -793,7 +793,7 @@ func computeSelfHashHex(seq int64, evt int, payload []byte, parentHash string) s
 }
 
 // =============================================================================
-// Cross-version query path — release Task E-6
+// Cross-version query path — HADES design task
 // =============================================================================
 //
 // IsCrossVersionQuery (package-level helper) + Indexer.QueryCrossVersion
@@ -862,7 +862,7 @@ func IsCrossVersionQuery(query string) (matched bool, versionFrom, versionTo str
 // IndexerQueryAdapter contract pattern. dispatcher will add a
 // QueryCrossVersion method to that adapter interface separately (it is
 // not part of the C-9 frozen surface; the cross-version path is an
-// E-phase extension consumed via a dispatcher-side cross-version
+// E-stage extension consumed via a dispatcher-side cross-version
 // router).
 //
 // invariant (Change-node graph consistency): every row's

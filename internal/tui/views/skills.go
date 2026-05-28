@@ -3,7 +3,7 @@
 //
 // Skills browser surfaced via Hermes probe. The skills registry lives
 // in the Hermes plugin (ADR-0080) which the daemon probes via
-// /v1/hermes/probe?check=skills. release+ may add a richer
+// /v1/hermes/probe?check=skills. HADES design may add a richer
 // /v1/hermes/skills endpoint; this panel renders whatever the probe
 // reports today + degrades cleanly when Hermes is offline.
 package views

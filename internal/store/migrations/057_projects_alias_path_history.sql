@@ -1,4 +1,4 @@
--- Migration 057: project alias dual-ID + path_history (HADES design release track, Q3, invariant).
+-- Migration 057: project alias dual-ID + path_history (HADES design stage, design choice, invariant).
 -- Two new tables introduce AIP-2510 dual-ID separation:
 --   - projects_alias: sha256(canonical-path) canonical id + human alias
 --                     UX-facing operator commands resolve via alias
@@ -7,7 +7,7 @@
 --                     different sha256 → daemon prompts `hades project doctor`
 --                     rebind (see internal/projectctx/path_history.go).
 --
--- NOTE: release track leaves the existing v1 `projects` table untouched. Plans
+-- NOTE: stage leaves the existing v1 `projects` table untouched. Plans
 -- 1-3 remain functional.
 -- HADES design reads/writes via `projects_alias` + `path_history`. Future plans
 -- may reconcile the legacy table at a major version boundary; until then

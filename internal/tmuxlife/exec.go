@@ -40,7 +40,7 @@ func ExecTmux(ctx context.Context, args ...string) ([]byte, error) {
 
 		if i == 0 && a == "tmux" {
 			panic(fmt.Sprintf(
-				"tmuxlife.ExecTmux: args[0] = %q; pass subcommand args only (do not pre-pend %q). inv-hades-117 socket %s",
+				"tmuxlife.ExecTmux: args[0] = %q; pass subcommand args only (do not pre-pend %q). invariant socket %s",
 				a, "tmux", SocketPath,
 			))
 		}
@@ -50,7 +50,7 @@ func ExecTmux(ctx context.Context, args ...string) ([]byte, error) {
 	}
 	if !hasDashS {
 		panic(fmt.Sprintf(
-			"tmuxlife.ExecTmux: -S flag missing in args %v; inv-hades-117 forbids default socket /tmp/tmux-<uid>; pass -S %s explicitly",
+			"tmuxlife.ExecTmux: -S flag missing in args %v; invariant forbids default socket /tmp/tmux-<uid>; pass -S %s explicitly",
 			args, SocketPath,
 		))
 	}

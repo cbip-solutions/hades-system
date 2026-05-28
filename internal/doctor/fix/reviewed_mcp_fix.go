@@ -28,7 +28,7 @@ type CuratedMCPFix struct {
 	MissingMCPs []MCPInstallSpec
 }
 
-func (c *CuratedMCPFix) Name() string { return "mcp.curated-availability" }
+func (c *CuratedMCPFix) Name() string { return "mcp.reviewed-availability" }
 
 func (c *CuratedMCPFix) IsDestructive() bool { return false }
 

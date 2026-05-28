@@ -2,7 +2,7 @@
 // Package litestream owns the per-project Litestream subprocess
 // lifecycle, S3 prefix configuration, Tessera POSIX rsync scheduler,
 // and month-end cold archive worker that together implement spec
-// §1 Q5 (max-scope: continuous WAL + nightly Tessera rsync + month-end
+// §1 design choice (max-scope: continuous WAL + nightly Tessera rsync + month-end
 // partition seal cold archive; default: hourly checkpoint + weekly +
 // month-end; capa-firewall: continuous + nightly + month-end on
 // object-lock immutable bucket).

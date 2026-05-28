@@ -1,6 +1,6 @@
 -- internal/research/ecosystem/migrations/002_ecosystem_versions.sql
 --
--- HADES design release track Task A-9. Per spec §3.4.
+-- HADES design stage task. per design contract
 --
 -- One row per (package_id, version) tuple. source_blob_sha256 is the
 -- pointer to HADES design F CAS (set when ingester writes the doc body).

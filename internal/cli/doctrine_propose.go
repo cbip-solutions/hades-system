@@ -2,8 +2,8 @@
 // Package cli — doctrine_propose.go.
 //
 // Adds the amendment-lifecycle sub-commands to the existing hades doctrine
-// namespace (release N-7 owns show/list/validate/which/reload/
-// diff/schema). Per Q10 C + spec §6.1:
+// namespace (HADES design N-7 owns show/list/validate/which/reload/
+// diff/schema). Per design choice C + spec §6.1:
 //
 // hades doctrine propose-list
 // hades doctrine propose-show <id>

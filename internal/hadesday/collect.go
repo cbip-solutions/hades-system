@@ -4,7 +4,7 @@
 // Collect is the canonical entry point that fans out across N source
 // legs (inbox cache, scheduler history, gh CLI poll, autonomous state,
 // cost ledger, eventlog HandoffPosted) in parallel, classifies and
-// ranks each result, applies per-rank caps from spec §1 Q14 B, and
+// ranks each result, applies per-rank caps from spec §1 design choice B, and
 // returns the merged [BriefItem] slice.
 //
 // Partial-tolerance (spec §6.9 friction primitive): if at least one leg
@@ -131,7 +131,7 @@ func Collect(ctx context.Context, deps CollectDeps, since time.Time, eod bool) (
 		return nil, legErrors, fmt.Errorf("%w: %d leg failures", ErrSourceCollectFailed, len(legErrors))
 	}
 
-	// Apply per-rank caps from spec §1 Q14 B at this layer (NOT at
+	// Apply per-rank caps from spec §1 design choice B at this layer (NOT at
 	// Render): cost-cap-warning ≤ 2, autonomous-milestone ≤ 1,
 	// external-activity ≤ 1.
 	merged = applyPerRankCaps(merged)
@@ -397,18 +397,18 @@ func collectEventlogLeg(ctx context.Context, reader EventReader, eod bool, from,
 func collectPlan9AuditLeg(ctx context.Context, provider AuditProjectsProvider, now time.Time) legResult {
 	if provider == nil {
 
-		return legResult{leg: "plan-9-audit"}
+		return legResult{leg: "HADES design"}
 	}
 	projects, err := provider.GetAuditProjects(ctx)
 	if err != nil {
-		return legResult{leg: "plan-9-audit", err: fmt.Errorf("GetAuditProjects: %w", err)}
+		return legResult{leg: "HADES design", err: fmt.Errorf("GetAuditProjects: %w", err)}
 	}
 	items, err := CollectAuditSection(ctx, AuditSectionDeps{
 		Projects: projects,
 		Now:      now,
 	})
 	if err != nil {
-		return legResult{leg: "plan-9-audit", err: err}
+		return legResult{leg: "HADES design", err: err}
 	}
-	return legResult{leg: "plan-9-audit", items: items}
+	return legResult{leg: "HADES design", items: items}
 }

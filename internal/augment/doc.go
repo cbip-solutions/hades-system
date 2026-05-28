@@ -9,7 +9,7 @@
 // github.com/cbip-solutions/hades-system/internal/augment` reports the package
 // docstring even when no other Go file is loaded.
 //
-// Phase ownership (per internal design record):
+// stage ownership (per design records design*):
 // - C-1 (this file + types.go + sentinel.go): types + sentinels + doc
 // - C-2 (doctrine_gate.go): DoctrineGate.Check
 // - C-3 (budget_gate.go): BudgetGate.Check + Commit
@@ -19,5 +19,5 @@
 // - C-7 (community_summarize.go): structural cluster summarization
 // - C-8 (cache_split.go): static/volatile split
 // - C-9 (truncation.go): graceful_truncate guard
-// - C-10 (audit_anchor.go): release Tessera leaf emission
+// - C-10 (audit_anchor.go): HADES design Tessera leaf emission
 package augment

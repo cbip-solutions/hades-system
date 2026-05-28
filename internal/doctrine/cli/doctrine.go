@@ -11,15 +11,15 @@
 // registers group only)
 // Debug group → reinforce
 //
-// Q14 C: flat invocation pattern — `hades doctrine show max-scope`, NOT
+// design choice C: flat invocation pattern — `hades doctrine show max-scope`, NOT
 // `hades doctrine read show max-scope`. cobra.Group annotation organizes
 // `--help` into visual groups WITHOUT introducing intermediate command
 // nodes.
 //
-// Q15 A: `migrate` operator-explicit write-back; daemon never auto-writes
+// design choice A: `migrate` operator-explicit write-back; daemon never auto-writes
 // (invariant).
 //
-// Q12 C: `reinforce` previews template render output for operator inspection
+// design choice C: `reinforce` previews template render output for operator inspection
 // of what worker subprocess will receive.
 //
 // Help text + error messages in español per project instructions operator language §6.6.
@@ -88,7 +88,7 @@ func registerGroups(root *cobra.Command) {
 	root.AddGroup(
 		&cobra.Group{ID: "read", Title: "Comandos de lectura:"},
 		&cobra.Group{ID: "write", Title: "Comandos de escritura:"},
-		&cobra.Group{ID: "amendment", Title: "Comandos de enmienda (Plan 5 + Plan 8 Phase K):"},
+		&cobra.Group{ID: "amendment", Title: "Comandos de enmienda (HADES design + HADES design stage):"},
 		&cobra.Group{ID: "debug", Title: "Comandos de depuración:"},
 	)
 }

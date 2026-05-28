@@ -14,7 +14,7 @@
 // alongside the daemon-side handler so wire shape and rendering
 // stay co-evolved.
 //
-// Exit codes (per spec §6.2):
+// Exit codes (per design contract):
 //
 // 0 success
 // 1 recoverable: daemon 404 / 422 (rare for a read-only GET)

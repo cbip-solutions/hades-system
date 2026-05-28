@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Package cli — probe.go
 //
-// Task J-1 introduces the canonical ProbeResult value type that
-// every release doctor probe returns. ProbeResult subsumes release's
+// task introduces the canonical ProbeResult value type that
+// every HADES design doctor probe returns. ProbeResult subsumes HADES design's
 // CheckResult (which stays in doctor_checks.go for the bypass.* slice;
 // the bridge in RunFullProbe adapts CheckResult → ProbeResult). The
 // rendering format mirrors `flutter doctor` / `brew doctor` and matches
-// the release doctor output already in `internal/cli/doctor.go`.
+// the HADES design doctor output already in `internal/cli/doctor.go`.
 //
 // Why a fresh type instead of extending CheckResult: ProbeStatus is an
 // int enum (compile-time exhaustiveness; Glyph/String methods on the
@@ -180,7 +180,7 @@ type StateProber interface {
 	Probe(ctx context.Context) []ProbeResult
 }
 
-// EcosystemProber is the read-only doctor probe surface for the release
+// EcosystemProber is the read-only doctor probe surface for the HADES design
 // ecosystem RAG substrate.
 //
 // Probe returns ≥15 ProbeResults covering per-eco DB size, storage budget,
@@ -191,7 +191,7 @@ type StateProber interface {
 //
 // ecosystem.{go,python,typescript,rust}.db_size per-ecosystem DB size on disk
 // ecosystem.budget invariant 4-state classification
-// ecosystem.cas_blobs_shared release F CAS dedup count + total size
+// ecosystem.cas_blobs_shared HADES design F CAS dedup count + total size
 // ecosystem.last_upstream_poll last 6h cron upstream-poll timestamp
 // ecosystem.last_weekly_sweep last Sunday 03:00 integrity sweep
 // ecosystem.cron.pid hades-docs-cron worker PID (or "not running")
@@ -199,7 +199,7 @@ type StateProber interface {
 // ecosystem.symbol_index.last_rebuild last weekly symbol-index rebuild timestamp
 // ecosystem.verifier.{go,python,npm,cargo} live cmd reachable + non-empty response
 //
-// Inv-hades-031 boundary: implementations live in the daemon or in a CLI shim
+// invariant boundary: implementations live in the daemon or in a CLI shim
 // that consumes the daemon HTTP surface — never in internal/cli directly.
 type EcosystemProber interface {
 	Probe(ctx context.Context) []ProbeResult
@@ -290,7 +290,7 @@ func runProjectsProbe(ctx context.Context, deps DoctorDeps) []ProbeResult {
 			Status:  ProbeWarn,
 			Message: "list failed",
 			Detail:  err.Error(),
-			Hint:    "Phase I /v1/projects endpoint must be wired",
+			Hint:    "stage /v1/projects endpoint must be wired",
 		}}
 	}
 	out := []ProbeResult{{
@@ -351,7 +351,7 @@ func invokeKnowledgeProber(ctx context.Context, p KnowledgeProber) []ProbeResult
 			Name:    "knowledge.prober",
 			Status:  ProbeWarn,
 			Message: "prober not configured",
-			Hint:    "Phase J wires knowledge.Prober; until then probe is a no-op",
+			Hint:    "stage wires knowledge.Prober; until then probe is a no-op",
 		}}
 	}
 	pctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -374,7 +374,7 @@ func invokeSchedulerProber(ctx context.Context, p SchedulerProber) []ProbeResult
 			Name:    "scheduler.prober",
 			Status:  ProbeWarn,
 			Message: "prober not configured",
-			Hint:    "Phase J wires scheduler.Prober; until then probe is a no-op",
+			Hint:    "stage wires scheduler.Prober; until then probe is a no-op",
 		}}
 	}
 	pctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -397,7 +397,7 @@ func invokeInboxProber(ctx context.Context, p InboxProber) []ProbeResult {
 			Name:    "inbox.prober",
 			Status:  ProbeWarn,
 			Message: "prober not configured",
-			Hint:    "Phase J wires inbox.Prober; until then probe is a no-op",
+			Hint:    "stage wires inbox.Prober; until then probe is a no-op",
 		}}
 	}
 	pctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -420,7 +420,7 @@ func invokeTmuxProber(ctx context.Context, p TmuxProber) []ProbeResult {
 			Name:    "tmux.prober",
 			Status:  ProbeWarn,
 			Message: "prober not configured",
-			Hint:    "Phase J wires tmux.Prober; until then probe is a no-op",
+			Hint:    "stage wires tmux.Prober; until then probe is a no-op",
 		}}
 	}
 	pctx, cancel := context.WithTimeout(ctx, 5*time.Second)

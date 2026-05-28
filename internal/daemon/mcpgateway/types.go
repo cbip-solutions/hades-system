@@ -177,9 +177,9 @@ func (d Doctrine) Resolved() Doctrine {
 	return d
 }
 
-// MaxConcurrent returns the Q8=C concurrency ceiling for d. Other
+// MaxConcurrent returns the design choice concurrency ceiling for d. Other
 // doctrines fall through to default. The values are constants here so
-// that gateway tests do not require release doctrine TOML loader; main.go
+// that gateway tests do not require HADES design doctrine TOML loader; main.go
 // override-injects values from the doctrine config at boot.
 func (d Doctrine) MaxConcurrent() int {
 	switch d.Resolved() {

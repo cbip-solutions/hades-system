@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator ships the release doctor aggregator
+// Package aggregator ships the HADES design doctor aggregator
 // orchestrator: parallel execution via errgroup bounded min(numCPU, 8),
 // per-check context timeout, Tessera audit emit, JSON schemaVersion=1.0
 // serialization, bitmask exit-code computation.
@@ -11,7 +11,7 @@
 // + Emitter (interface; satisfied by internal/audit/chain in production);
 // MUST NOT import internal/store.
 //
-// Audit-pending queue (per spec §3.4 chaos test daemon-disconnect):
+// Audit-pending queue (per design contract):
 // when the daemon is down, the production Emitter implementation buffers
 // to ~/.local/state/hades-system/audit-pending.jsonl. The
 // aggregator's contract is "best-effort emit": on Emitter error, the

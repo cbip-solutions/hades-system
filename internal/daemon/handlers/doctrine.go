@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — doctrine.go.
 //
-// per spec §2.5, replacing the release 3-route surface (state,
-// validate, reload — DoctrineCtx interface) with a release-doctrine-package-
+// per design contract, replacing the HADES design 3-route surface (state,
+// validate, reload — DoctrineCtx interface) with a HADES design
 // aware DoctrineHandlerCtx interface. The 10 endpoints mirror the 15-command
-// CLI inventory at spec §6.1 (Q14 C: HTTP API mirrors CLI subcommand surface)
+// CLI inventory at spec §6.1 (design choice C: HTTP API mirrors CLI subcommand surface)
 // so CLI dispatches over Unix-socket HTTP.
 //
 // Read endpoints:
@@ -19,7 +19,7 @@
 // POST /v1/doctrine/validate body: {against_baseline, toml_content}; response: {valid, errors[]}
 // POST /v1/doctrine/reload body: {path}; trigger reload.NotifyForce + wait DoctrineReloaded
 // POST /v1/doctrine/migrate body: {toml_content, from_schema_version}; IN-MEMORY ONLY (invariant)
-// POST /v1/doctrine/reinforce body: {task_kind, project_alias, stage, phase, plan_id}; response: {rendered}
+// POST /v1/doctrine/reinforce body: {task_kind, project_alias, stage, stage, plan_id}; response: {rendered}
 //
 // Wire shapes follow client DTOs at internal/client/doctrine_v2.go
 // VERBATIM ( shipped its CLI httptest mocks before landed; the
@@ -170,7 +170,7 @@ func DoctrineActive(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}
@@ -194,7 +194,7 @@ func DoctrineList(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}
@@ -231,7 +231,7 @@ func DoctrineShow(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}
@@ -274,7 +274,7 @@ func DoctrineValidate(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}
@@ -317,7 +317,7 @@ func DoctrineStatus(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}
@@ -349,7 +349,7 @@ func DoctrineHistory(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}
@@ -423,7 +423,7 @@ func DoctrineDiff(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}
@@ -458,7 +458,7 @@ func DoctrineMigrate(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}
@@ -503,7 +503,7 @@ func DoctrineReinforce(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}
@@ -531,7 +531,7 @@ func DoctrineReinforce(s any) http.HandlerFunc {
 			body.Stage = q.Get("stage")
 		}
 		if body.Phase == "" {
-			body.Phase = q.Get("phase")
+			body.Phase = q.Get("stage")
 		}
 		if body.PlanID == "" {
 			body.PlanID = q.Get("plan_id")
@@ -564,7 +564,7 @@ func DoctrineReinforce(s any) http.HandlerFunc {
 // Subscribe* returns a per-subscriber buffered channel)
 // 3. Call DoctrineReload(path) — kicks file-watcher's force-reload
 // 4. select { ev := <-success: respond reloaded=true with active state;
-// ev := <-failure: respond per-phase status code (422/500);
+// ev := <-failure: respond per-stage status code (422/500);
 // <-time.After(timeout): respond 408 }
 // 5. Always Unsubscribe before return (defer)
 //
@@ -584,7 +584,7 @@ func DoctrineReload(s any) http.HandlerFunc {
 		ctx := resolveDoctrineHandlerCtx(s)
 		if ctx == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
-				"error": "doctrine subsystem not yet wired",
+				"error": "doctrine subsystem unavailable",
 			})
 			return
 		}

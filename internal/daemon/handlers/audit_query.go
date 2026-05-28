@@ -41,7 +41,7 @@ type AuditQueryCtx interface {
 
 	AuditTypes() ([]AuditTypeRow, error)
 	// AuditEventByID returns a single row by id, or
-	// (zero-value, ErrAuditEventNotFound) when absent. release D-5
+	// (zero-value, ErrAuditEventNotFound) when absent. HADES design D-5
 	// (hades://audit URL handler). The Doctrine field MUST be populated
 	// (extracted from payload_json) so the handler's doctrine privacy
 	// filter can run without re-parsing.

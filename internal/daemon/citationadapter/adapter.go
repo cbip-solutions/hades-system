@@ -1,9 +1,9 @@
 // Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
 // Package citationadapter bridges the citation package (substrate
-// renderer) to the release audit chain so CitationRendered events
+// renderer) to the HADES design audit chain so CitationRendered events
 // persist to audit_events_raw + chain-anchor through the same
-// daemon write path that release already uses for every other audit
+// daemon write path that HADES design already uses for every other audit
 // event (sshexec, budget, doctrine-reload, etc.).
 //
 // Why a dedicated adapter:
@@ -15,13 +15,13 @@
 // daemon.AuditEmitCtx without forcing the citation package into
 // the daemon's import set.
 //
-// - invariant: same release boundary discipline as
+// - invariant: same HADES design boundary discipline as
 // bypassadapter/dispatcheradapter — the bridge belongs in
 // internal/daemon/, not on the citation side.
 //
 // - Single-egress for audit writes: forwarding through Server.AuditEmit
 // means the CitationRendered event walks the same hot path
-// (audit_events_raw INSERT + release chain compute via
+// (audit_events_raw INSERT + HADES design chain compute via
 // OnEmitRaw when wired) as every other event — there's no
 // parallel write path to keep in sync.
 //
@@ -77,7 +77,7 @@ type AuditEmitter interface {
 // stamped here.
 //
 // ID + emitted_at stamping: Server.AuditEmit blindly forwards both
-// fields to the audit_events_raw INSERT with no defaulting (per release
+// fields to the audit_events_raw INSERT with no defaulting (per HADES design
 // design — the HTTP handler at handlers/audit_emit.go stamps
 // both fields before calling Server.AuditEmit). This internal emit path
 // bypasses the HTTP handler, so the adapter MUST stamp them itself or
@@ -85,8 +85,8 @@ type AuditEmitter interface {
 // constraints fail-loud on every render.
 //
 // Failure semantics: AuditEmit error surfaces verbatim; MarkdownFallback
-// treats it as soft-fail (logs + continues rendering) per spec §1
-// Q9=C+'s "audit emission is best-effort; render must not block on
+// treats it as soft-fail (logs + continues rendering) per design contract
+// design choice+'s "audit emission is best-effort; render must not block on
 // chain failure".
 type Adapter struct {
 	emitter AuditEmitter

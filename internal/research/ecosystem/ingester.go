@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — ingester.go orchestrates bulk + delta source ingestion.
 //
-// Per spec §4.1 ingestion pipeline + §0.4 doctrine (no stubs, código completo).
+// per design contract§0.4 doctrine (no stubs, código completo).
 // Concurrent per-package goroutines + per-package failure isolation +
 // resumability via ecosystem_packages.last_indexed_at + audit emit
 // EvtRAGIngestPackage = 98 (per-package) + EvtRAGIngestJoinKey = 99 (B-11
@@ -47,7 +47,7 @@
 // - EventType slots 98/99 declared canonically at A-1 in
 // internal/orchestrator/eventlog/events.go; consumes by name
 // (no local uint32 redeclarations).
-// - Per spec §4.1 per-package atomicity: chunks + symbols + changes flow
+// - per design contract: chunks + symbols + changes flow
 // through a SINGLE IndexerWriter.WriteChunks call ( concrete
 // *Indexer wraps that in a single SQLite transaction).
 
@@ -296,7 +296,7 @@ var errSkipResumability = errors.New("ingester: skip per resumability check")
 //
 // startedAt is captured here (at processPackage entry) and threaded to
 // emit* helpers so audit payloads distinguish processing-start from emit
-// time (release B-10 fix-cycle 2026-05-18 / IMPORTANT-2; pre-fix the
+// time (HADES design B-10 fix-cycle 2026-05-18 / IMPORTANT-2; pre-fix the
 // emit-time time.Now() served BOTH started_at AND completed_at, which
 // made ops dashboards lose per-package latency signal).
 //

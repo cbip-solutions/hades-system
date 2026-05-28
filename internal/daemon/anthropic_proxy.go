@@ -3,7 +3,7 @@
 // for POST /v1/messages.
 //
 // dispatches via the orchestrator → dispatcher → Tier 1 (bypass) /
-// Tier 2+ (OpenClaude) chain. release functionality preserved end-to-end:
+// Tier 2+ (OpenClaude) chain. HADES design functionality preserved end-to-end:
 // Idempotency-Key auto-generation (invariant), X-HADES-Conversation-Id
 // extraction, multi-value header preservation (Anthropic-Beta etc).
 //
@@ -87,7 +87,7 @@ var hopByHopHeaders = map[string]struct{}{
 // headers are dropped — they live in the typed Call fields above.
 // - Forwards via the orchestrator which stamps X-HADES-* correlation
 // headers, resolves the routing profile, and dispatches to Tier 1 /
-// Tier 2+ via the dispatcher. Per ADR-0008: release dispatcher chooses
+// Tier 2+ via the dispatcher. Per ADR-0008: HADES design dispatcher chooses
 // tier-of-tier (in-house bypass vs OpenClaude substrate); provider-
 // level routing within Tier 2+ is OpenClaude's responsibility.
 // - Mirrors upstream status + headers verbatim, drops hop-by-hop on

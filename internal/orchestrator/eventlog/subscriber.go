@@ -99,7 +99,7 @@ func (h *subscriberHub) add(s *subscriber) {
 // drop-oldest path.
 // 3. Drop-oldest path: drain ONE oldest record non-blocking, then retry
 // the send (still under the s.closed-watching select). If the channel
-// re-fills in the race window, drop the new record — spec §1 Q5 C:
+// re-fills in the race window, drop the new record — spec §1 design choice C:
 // publisher MUST NOT block.
 // 4. Closed subscribers are pruned in a final write-lock pass.
 //
@@ -111,7 +111,7 @@ func (h *subscriberHub) add(s *subscriber) {
 // this eliminates "send on closed channel" panics under stress.
 //
 // Note this method does NOT mutate r.Payload — subscribers receive the
-// same shared []byte reference that Log.Append produced (Task A-3 N-2
+// same shared []byte reference that Log.Append produced (task N-2
 // contract: Record.Payload is read-only).
 func (h *subscriberHub) publish(r Record) {
 	h.mu.RLock()
@@ -157,7 +157,7 @@ func (h *subscriberHub) publish(r Record) {
 			default:
 				// Still full (rare race with a publisher-side burst into
 				// a freshly-vacated slot). Drop the new record rather
-				// than block — spec Q5 C: publisher MUST NOT block.
+				// than block — spec design choice C: publisher MUST NOT block.
 			}
 		}
 	}

@@ -39,7 +39,7 @@ None — this skill reads project files autonomously.
 1. **Read .hades/session.md** (root of repo). Extract:
    - `## TL;DR` — current state in 1-3 sentences
    - `## Repo state` — last commit + branch + tag (if any)
-   - `## Active plan status` — which plan/phase is in flight
+   - `## Active plan status` — which plan/stage is in flight
    - `## Pending dispatches` — background subagents not recoverable
    - `## Pending operator actions` — items awaiting operator
    - `## Suggested first-message` — primer for operator response
@@ -64,7 +64,7 @@ None — this skill reads project files autonomously.
 
    - **State**: [from TL;DR]
    - **Repo**: branch <name>, last commit <hash> "<subject>"
-   - **Active plan**: release item release track — <status>
+   - **Active plan**: release item stage — <status>
    - **Pending operator actions**: <list or "none">
    - **Suggested next**: <from .hades/session.md "Suggested first-message">
 

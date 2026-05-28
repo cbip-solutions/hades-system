@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 # Default base URL for the hades-ctld HTTP listener (binary name
-# preserved per spec section Q3 BORDERLINE). Loopback
+# preserved per spec section design choice BORDERLINE). Loopback
 # (127.0.0.1 not "localhost") chosen for deterministic DNS resolution;
 # port 8080 is the daemon default (see ``cmd/hades-ctld/main.go``).
 # Hermes' ``_validate_base_url`` accepts ``http+unix://`` — when it

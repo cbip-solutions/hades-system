@@ -2,7 +2,7 @@
 // Package cli — safetynet_prev.go.
 //
 // `hades safetynet prev {install,show,exec}` manages the pinned-prior
-// bin/hades-prev binary (Q2 C element 1). The exec sub-command pipes a
+// bin/hades-prev binary (design choice C element 1). The exec sub-command pipes a
 // one-shot argv through bin/hades-prev so operators can validate that
 // substrate regressions don't reproduce on the prior known-good build.
 package cli

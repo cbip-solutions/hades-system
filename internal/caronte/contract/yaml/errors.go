@@ -32,7 +32,7 @@ const MaxPatternRunes = 512
 const MaxPatternComplexity = 16
 
 // InlineSecretBlacklist is the canonical (snake_case) corpus of field names
-// caronte.yaml MUST NOT inline. Task F-3's variant walker derives the kebab-
+// caronte.yaml MUST NOT inline. task variant walker derives the kebab-
 // case ("api-key"), camelCase ("apiKey"), and UPPER ("API_KEY") variants
 // programmatically + case-folds before comparison, so this list stays the
 // single source of truth.

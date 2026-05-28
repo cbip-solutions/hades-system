@@ -81,7 +81,7 @@ func NewDefaultSelectorWithProber(logger *slog.Logger, _ func(ctx context.Contex
 	return &defaultSelector{logger: logger}
 }
 
-var ErrEcosystemMCPProbeNotWired = errors.New("caronte/semantic: ecosystem-mcp http probe not wired (composition-root injection required for http endpoints)")
+var ErrEcosystemMCPProbeNotWired = errors.New("caronte/semantic: ecosystem-mcp http probe unavailable (composition-root injection required for http endpoints)")
 
 func (s *defaultSelector) Select(ctx context.Context, cfg EmbedderConfig) (intent.CodeEmbedder, EmbedderMode, error) {
 	if err := cfg.Validate(); err != nil {

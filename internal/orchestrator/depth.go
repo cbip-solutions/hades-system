@@ -2,9 +2,9 @@
 // internal/orchestrator/depth.go
 //
 // D-4 wholesale-replaces the D-2 DecideWidth scaffolding with the spec
-// §5.3.2 min-over-5-factors formula. Three factors are wired in this phase:
+// §5.3.2 min-over-5-factors formula. Three factors are wired in this stage:
 //
-// 1. doctrine.MaxWidth — hard ceiling from the canonical §1 Q4 C matrix.
+// 1. doctrine.MaxWidth — hard ceiling from the canonical §1 design choice C matrix.
 // 2. spec.ParallelizableUpperBound — spec-side parallelism cap.
 // 3. machine_capacity — worktree pool capacity (o.cfg.PoolCapacity in RunStage4).
 //

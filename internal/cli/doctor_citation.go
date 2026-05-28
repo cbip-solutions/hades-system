@@ -8,8 +8,8 @@
 // ships the daemon-side citation envelope + hades://audit handler
 // + markdown_fallback renderer. The "7 platforms tested" check counts
 // the markdown_fallback renderer + 6 platform renderers
-// — at release ship time the count is 1; reading 1/7 is
-// expected and rendered as warn until release ships the remaining 6.
+// — at HADES design ship time the count is 1; reading 1/7 is
+// expected and rendered as warn until HADES design ships the remaining 6.
 package cli
 
 import (
@@ -30,9 +30,9 @@ type CitationProber interface {
 func NewDoctorCitationCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "citation",
-		Short: "Citation system checks (Plan 11; 3 checks per spec §7.4)",
+		Short: "Citation system checks (HADES design; 3 checks per design contract)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Citation system (Plan 11)", runCitationChecks)
+			return runOneSection(cmd, "Citation system (HADES design)", runCitationChecks)
 		},
 	}
 }
@@ -55,7 +55,7 @@ func runCitationChecksWith(ctx context.Context, p CitationProber) []CheckResult 
 		{
 			probe: "renderers",
 			name:  "citation.renderers",
-			hint:  "renderer count <7 (Plan 11 ships markdown_fallback only; Plan 12 ships 6 platform renderers)",
+			hint:  "renderer count <7 (HADES design ships markdown_fallback only; HADES design ships 6 platform renderers)",
 		},
 		{
 			probe: "audit-handler-functional",

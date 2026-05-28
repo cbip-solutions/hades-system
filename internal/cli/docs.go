@@ -2,7 +2,7 @@
 // Package cli — docs.go.
 //
 // `hades docs` is the operator-facing surface for ecosystem-docs corpus
-// management. The release design registers six management subcommands:
+// management. The HADES design design registers six management subcommands:
 //
 // hades docs reindex rebuild/refresh
 // hades docs pin --ecosystem X --version Y set indefinite_retain=true (G-5)
@@ -14,9 +14,9 @@
 // All six talk to the HADES daemon (hades-ctld) over the HTTP API
 // (internal/client.ecosystem_docs_ops.go). The daemon-side handlers land
 // in — until then the endpoints return 503 and the CLI maps that
-// to exit-code 2 (unrecoverable per spec §6.2).
+// to exit-code 2 (unrecoverable per design contract).
 //
-// G-5 evolution from F-6 (operator-confirmed retention per spec §2.9 Q9=A):
+// G-5 evolution from F-6 (operator-confirmed retention per design contract=A):
 // - pin: chunk-id positional → flag-based --ecosystem --version. Sets
 // ecosystem_versions.indefinite_retain=true; daemon path moves from
 // /v1/knowledge/ecosystem/pin to /v1/ecosystem/pin.
@@ -29,7 +29,7 @@
 // owns ecosystem operations and the daemon mediates.
 //
 // History pre-F-6, `hades docs` registered six `notImplementedSubcommand`
-// stubs (show/open/diff/versions/export/recover) targeting release. F-6
+// stubs (show/open/diff/versions/export/recover) targeting HADES design F-6
 // replaced them with the management surface above. G-5 refined the
 // pin/prune semantics from F-6's initial chunk-id-based / dry-run-or-confirm
 // shape to the canonical version-retention contract from the spec.
@@ -100,12 +100,7 @@ func NewDocsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "docs",
 		Short: "Ecosystem documentation corpus management",
-		Long: `Manage the Plan 14 ecosystem-docs corpus that powers the
-RAG-grounded augmentation surface.
-
-Subcommands talk to the HADES daemon (hades-ctld) via the HTTP API; the daemon
-orchestrates ecosystem ingestion, pruning, and the local router classifier
-retrain pipeline.`,
+		Long:  "Manage the HADES design ecosystem-docs corpus that powers the\nRAG-grounded augmentation surface.\n\nSubcommands talk to the HADES daemon (hades-ctld) via the HTTP API; the daemon\norchestrates ecosystem ingestion, pruning, and the local router classifier\nretrain pipeline.",
 	}
 	cmd.AddCommand(NewDocsReindexCmd(productionDocsFactory))
 	cmd.AddCommand(NewDocsPinCmd(productionDocsFactory))

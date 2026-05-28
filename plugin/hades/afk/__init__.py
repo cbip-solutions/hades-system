@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""hades-system AFK richness module — HADES design release track."""
+"""hades-system AFK richness module — HADES design stage."""
 
 from __future__ import annotations
 

@@ -15,11 +15,11 @@
 // any pending changes that the operator has authored but not yet
 // reloaded. --project narrows to a specific project alias.
 //
-// History queries the release eventlog via daemon /v1/doctrine/history;
+// History queries the HADES design eventlog via daemon /v1/doctrine/history;
 // filter values follow spec §6.1 enumeration.
 //
 // Diff invokes daemon-side canonical diff to keep parity with HTTP API
-// consumers (avoids release v1's locally-computed diff that drifts from
+// consumers (avoids HADES design v1's locally-computed diff that drifts from
 // server-side canonicalisation).
 //
 // Validate reads TOML from disk and posts to daemon /v1/doctrine/validate;
@@ -213,13 +213,8 @@ func historyCmd() *cobra.Command {
 		Use:     "history",
 		GroupID: "read",
 		Short:   "Histórico de eventos de doctrina (filtros por categoría)",
-		Long: `Muestra los eventos de doctrina (cargas, recargas, enmiendas,
-reversiones autónomas) con filtros por ventana temporal (--since 24h),
-categoría (--filter category:cost|merge|recovery), o tipo
-(--filter loaded|reloaded|amended|reverted).
+		Long:    "Muestra los eventos de doctrina (cargas, recargas, enmiendas,\nreversiones autónomas) con filtros por ventana temporal (--since 24h),\ncategoría (--filter category:cost|merge|recovery), o tipo\n(--filter loaded|reloaded|amended|reverted).\n\nLos eventos vienen del eventlog de HADES design (audit_events_raw); ver §2.4\ndel spec para la taxonomía completa de los 17 tipos nuevos.",
 
-Los eventos vienen del eventlog de Plan 5 (audit_events_raw); ver §2.4
-del spec para la taxonomía completa de los 17 tipos nuevos.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if err := format.ValidateExclusive(cmd); err != nil {
 				return err
@@ -339,12 +334,8 @@ func validateCmd() *cobra.Command {
 		Use:     "validate <ruta>",
 		GroupID: "read",
 		Short:   "Valida un archivo TOML contra el esquema actual",
-		Long: `Lee un archivo TOML local y lo valida contra el esquema actual
-del daemon. Con --against-baseline <doctrina>, valida también que el
-archivo sea tighten-only respecto a la doctrina baseline (inv-hades-136).
+		Long:    "Lee un archivo TOML local y lo valida contra el esquema actual\ndel daemon. Con --against-baseline <doctrina>, valida también que el\narchivo sea tighten-only respecto a la doctrina baseline (invariant).\n\nÚtil antes de copiar a ~/.config/hades-system/doctrines/ para evitar que\nel watcher rechace la recarga.",
 
-Útil antes de copiar a ~/.config/hades-system/doctrines/ para evitar que
-el watcher rechace la recarga.`,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return fmt.Errorf("validate requiere exactamente un argumento <ruta-toml>")

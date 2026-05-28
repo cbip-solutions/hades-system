@@ -1,9 +1,9 @@
 -- internal/research/ecosystem/migrations/007_ecosystem_chunks_fts.sql
 --
--- HADES design release track Task A-9. Per spec §3.4.
+-- HADES design stage task. per design contract
 --
 -- FTS5 virtual table over the chunks' searchable text columns. HADES design
--- release track dispatcher fan-out runs an FTS5 BM25 query in parallel with
+-- stage dispatcher fan-out runs an FTS5 BM25 query in parallel with
 -- the binary-256d Hamming-distance vector query, then RRF-fuses.
 --
 -- tokenize=unicode61 matches the HADES design D aggregator FTS pattern.

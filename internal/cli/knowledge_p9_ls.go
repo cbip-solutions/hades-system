@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — knowledge_p9_ls.go.
 //
-// `hades knowledge-p9 ls` — list notes from the release aggregator.
+// `hades knowledge-p9 ls` — list notes from the HADES design aggregator.
 //
 // Wire method: KnowledgeListP9(ctx, projectID, pinnedOnly) → ([]KnowledgeNote, error).
 // KnowledgeNote fields: NoteID, ProjectID, Path, Pinned, UpdatedAt (no Title).
@@ -28,11 +28,8 @@ func knowledge9LsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ls",
 		Short: "List notes from the aggregator (per-project or pinned-only)",
-		Long: `List notes tracked by the Plan 9 knowledge aggregator. Without flags,
-lists all notes across all projects. Filter to a single project with --project;
-filter to pinned notes with --pinned-only.
+		Long:  "List notes tracked by the HADES design knowledge aggregator. Without flags,\nlists all notes across all projects. Filter to a single project with --project;\nfilter to pinned notes with --pinned-only.\n\nOutput columns: NOTE_ID / PROJECT / PATH / PINNED / UPDATED",
 
-Output columns: NOTE_ID / PROJECT / PATH / PINNED / UPDATED`,
 		Example: " # All notes\n  hades knowledge-p9 ls\n\n # One project\n  hades knowledge-p9 ls --project internal-platform-x\n\n # Pinned-only across all projects\n  hades knowledge-p9 ls --pinned-only",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {

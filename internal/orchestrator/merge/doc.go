@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
 // Package merge implements hades-system's cross-worker MergeEngine: the
-// test-driven 3-way merge layer. release shipped MergeEngine as
-// an interface in internal/orchestrator/apply/; release ships the real
-// implementation here (Q1 B package boundary; ADR-0030).
+// test-driven 3-way merge layer. HADES design shipped MergeEngine as
+// an interface in internal/orchestrator/apply/; HADES design ships the real
+// implementation here (design choice B package boundary; ADR-0030).
 //
-// # Architecture (Q1 B)
+// # Architecture (design choice B)
 //
 // merge/ is split by responsibility:
 //
 // - doc.go package overview + invariants (this file)
-// - mode.go Mode enum + per-mode config (Q7 B)
-// - events.go EventType + AnomalyType enums + Event value type + EventEmitter interface (Q10 C)
+// - mode.go Mode enum + per-mode config (design choice B)
+// - events.go EventType + AnomalyType enums + Event value type + EventEmitter interface (design choice C)
 // - git.go gitClient subprocess wrappers + version check
-// - validate.go pre-flight validation per Q9 D
-// - cache.go content-addressable cache (Q5 A) []
+// - validate.go pre-flight validation per design choice D
+// - cache.go content-addressable cache (design choice A) []
 // - baseline.go regression baseline runner []
 // - candidate.go candidate runner (apply + tests + flake) []
-// - scoring.go two-stage scoring (Q4 B) []
-// - anomaly.go anomaly detector + thresholds (Q11 D) []
+// - scoring.go two-stage scoring (design choice B) []
+// - anomaly.go anomaly detector + thresholds (design choice D) []
 // - runner.go parallel-candidate goroutine supervisor []
 // - engine.go Merge() pipeline orchestration []
 //

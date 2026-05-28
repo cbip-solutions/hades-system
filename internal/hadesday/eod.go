@@ -3,7 +3,7 @@
 //
 // GenerateEODDigest is the user-facing entry point invoked by both the
 // cron firing and the operator-pull
-// (`bin/hades day --eod`). Per spec §1 Q15 C: the EOD digest composes
+// (`bin/hades day --eod`). per design contract: the EOD digest composes
 // per-project status sections from `HandoffPosted` events read from the
 // per-project event-log + aggregator cache, with per-project opt-out
 // via `hadessystem.toml [project] hades_day_eod_summary = false` (default
@@ -72,7 +72,7 @@ type EODDeps struct {
 
 // HandoffPostedPayload mirrors eventlog.HandoffPostedEvent's wire shape
 // locally so hadesday does not import eventlog (avoids the circular-
-// import concern with release; keeps invariant boundary discipline as
+// import concern with HADES design; keeps invariant boundary discipline as
 // hadesday → eventlog only via the EventReader interface).
 //
 // JSON tags MUST match eventlog.HandoffPostedEvent exactly so the

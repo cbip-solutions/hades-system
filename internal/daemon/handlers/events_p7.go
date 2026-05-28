@@ -53,7 +53,7 @@
 // draft of this file declared its own `HandoffPostedEvent` struct with
 // a "// TODO sync with when it lands" marker. That violated
 // the no-defer doctrine; ships the canonical type before any
-// phase needs it; the current file uses a Go type alias
+// stage needs it; the current file uses a Go type alias
 // (`type HandoffPostedEvent = eventlog.HandoffPostedEvent`) so the wire
 // schema, validation, and downstream digest all consume the same
 // struct definition with no possibility of silent drift.
@@ -92,7 +92,7 @@ var hexRe = regexp.MustCompile(`^[0-9a-f]{64}$`)
 var aliasRe = regexp.MustCompile(`^[a-z0-9-]{1,64}$`)
 
 // validStates is the canonical 4-value autonomous-state enum
-// (spec §3 Q3 + feedback_eventlog_handoff_event.md). MUST stay in sync
+// (spec §3 design choice + feedback_eventlog_handoff_event.md). MUST stay in sync
 // with internal/orchestrator/eventlog AutonomousState constants
 // (active|paused|idle|complete) — drift would let a malformed value
 // reach the eventlog.HandoffPostedEvent unmarshal path and either
@@ -183,7 +183,7 @@ func HandoffPosted(s HandoffEmitterCtx) http.HandlerFunc {
 
 			RenderError(r.Context(), w, http.StatusServiceUnavailable,
 				"emitter_unavailable",
-				"event log emitter not yet wired (daemon boot in progress)")
+				"event log emitter unavailable (daemon boot in progress)")
 			return
 		}
 		eventID, err := emitter.Emit(r.Context(), ev)

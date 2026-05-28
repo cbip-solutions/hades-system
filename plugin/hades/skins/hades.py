@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""HADES skin module — HADES design release track."""
+"""HADES skin module — HADES design stage."""
 
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ def _load_palette() -> dict[str, Any]:
 
 
 def _palette_to_hermes_colors(palette: dict[str, Any]) -> dict[str, str]:
-    """Map spec §Q2 palette keys to Hermes' color schema.
+    """Map spec §design choice palette keys to Hermes' color schema.
 
     Hermes' ``SkinConfig`` carries ~30 color keys (see
     ``hermes_cli/skin_engine.py:14-49``). The 8 spec keys fan out across
@@ -198,8 +198,8 @@ def _user_skins_dir() -> Path:
 def _maybe_activate_hades(*_args: Any, **_kwargs: Any) -> None:
     """Hermes ``on_session_start`` hook: activate HADES skin when env requests it.
 
-    Triggered by ``HERMES_SKIN=hades`` env (set by the release track wrapper). The
-    release track amendment documents WHY this hook is needed (Hermes' own
+    Triggered by ``HERMES_SKIN=hades`` env (set by the stage wrapper). The
+    stage amendment documents WHY this hook is needed (Hermes' own
     ``skin_engine`` does NOT consume the env var).
 
     Idempotent: skips activation if the active skin is already ``hades``.

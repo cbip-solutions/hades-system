@@ -4,7 +4,7 @@ package hadesday
 import "errors"
 
 var ErrHadesDayCap7Anchor = errors.New(
-	"hadesday: 7-item hard cap invariant anchor (inv-hades-126); MaxBriefItems = 7",
+	"hadesday: 7-item hard cap invariant anchor (invariant); MaxBriefItems = 7",
 )
 
 func zenDayCap7Sentinel() error {
@@ -16,7 +16,7 @@ func Cap7SentinelForTest() error {
 }
 
 var ErrHadesDayLeverageSortAnchor = errors.New(
-	"hadesday: canonical leverage rank invariant anchor (inv-hades-127); LeverageRank 1..7",
+	"hadesday: canonical leverage rank invariant anchor (invariant); LeverageRank 1..7",
 )
 
 func zenDayLeverageSortSentinel() error {

@@ -3,7 +3,7 @@
 //
 // hades-mcp-budget — budget MCP binary.
 //
-// Invoked by OpenCode plugin via stdio transport (Q9 B: stdio canonical).
+// Invoked by OpenCode plugin via stdio transport (design choice B: stdio canonical).
 // Reads daemon socket path, auth-token-path from flags. On missing or
 // invalid config, exits non-zero with a human-readable error (never panics).
 //

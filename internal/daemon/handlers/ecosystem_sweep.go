@@ -10,14 +10,14 @@
 // POST /v1/ecosystem/sweep/fingerprints — chunk fingerprint sweep
 // POST /v1/ecosystem/sweep/change-nodes — Change-node graph sweep
 // POST /v1/ecosystem/sweep/rebuild-symbol-index — symbol index rebuild
-// POST /v1/ecosystem/sweep/cas-gc — release F CAS garbage collect
+// POST /v1/ecosystem/sweep/cas-gc — HADES design F CAS garbage collect
 //
 // Status codes (shared across all four):
 //
 // 204 No Content — sweep completed successfully (or zero work).
 // 400 Bad Request — invalid JSON body, unknown ecosystem (per-eco sweeps only).
 // 500 Internal Server Error — sweep failure (chunk count mismatch, etc).
-// 503 Service Unavailable — EcosystemHandler not wired.
+// 503 Service Unavailable — EcosystemHandler unavailable.
 //
 // Wire mirror per endpoint:
 //

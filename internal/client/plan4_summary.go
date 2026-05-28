@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package client — release_summary.go.
+// Package client — HADES component.go.
 //
 // Typed daemon-API helpers for the GET /v1/{workforce,research,audit,
-// budget,sshexec}/summary and GET /v1/health/release endpoints. The
+// budget,sshexec}/summary and GET /v1/health/HADES component endpoints. The
 // morning-brief renderer (`hades day`) calls these to populate the
 //
 // Each helper consults daemon over the canonical UDS dialer (or the

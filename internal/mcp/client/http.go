@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-var ErrHostNotAllowed = errors.New("mcp/client: outbound host not in allowedHosts whitelist (inv-hades-085)")
+var ErrHostNotAllowed = errors.New("mcp/client: outbound host not in allowedHosts whitelist (invariant)")
 
 const defaultSocketPath = "/var/run/hades-system/hades-system.sock"
 

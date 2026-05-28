@@ -6,7 +6,7 @@
 // Package cache — tier.go
 //
 // Body storage tier decision: inline (≤InlineThresholdBytes) vs CAS
-// (>InlineThresholdBytes). release
+// (>InlineThresholdBytes). HADES design
 //
 // # Design
 //

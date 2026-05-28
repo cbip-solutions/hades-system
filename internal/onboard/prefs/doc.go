@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package prefs persists the operator's prior onboarding answers to
 // $XDG_CONFIG_HOME/hades-system/onboard-prefs.toml so the hybrid wizard's
-// Reuse path (Q3=D Path 2) can short-circuit follow-up Qs on the next
+// Reuse path (design choice Path 2) can short-circuit follow-up Qs on the next
 // `hades config init` / `hades new` / `hades init`.
 //
-// # Cross-phase canonical (C3 reconciliation 2026-05-14)
+// # Cross-stage canonical (C3 reconciliation 2026-05-14)
 //
 // (`hades config init`) and (`hades new` / `hades init`)
 // invoke prefs.Load(prefs.Path()) at engine entry and prefs.Save when
@@ -24,7 +24,7 @@
 // types. Exporting FromAnswers from this side keeps the dependency
 // one-way (prefs → onboard) and is safe.
 //
-// # Schema versioning (ADR-0050 + spec §2.12 Q12=D)
+// # Schema versioning (ADR-0050 + spec §2.12 design choice)
 //
 // - CurrentSchemaVersion ("1.0") is stamped by every Save regardless
 // of the input value.
@@ -70,7 +70,7 @@
 //
 // # File mode
 //
-// Save persists with mode 0600 (operator-private). Mirrors release +
+// Save persists with mode 0600 (operator-private). Mirrors HADES design +
 // hints or provider URLs leaking on a shared host.
 //
 // # Boundary discipline (invariant)

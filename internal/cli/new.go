@@ -3,7 +3,7 @@
 //
 // Surface greenfield scaffold from embedded or pluggable template. Consumes
 // onboard.Wizard with WizardKindGreenfield discriminator +
-// preflight + release audit emit (via daemon HTTP audit client per
+// preflight + HADES design audit emit (via daemon HTTP audit client per
 // invariant — internal/cli MUST NOT import internal/store) +
 // D1/D2/D3 templates+hooks.
 //
@@ -190,7 +190,7 @@ func runNew(ctx context.Context, cmd *cobra.Command, args newArgs) error {
 	}
 
 	if present, _, _ := preflight.CCDetect(); present {
-		fmt.Fprintln(stdout, "Detected ~/.claude/ — consider running `hades migrate claude-code` first")
+		fmt.Fprintln(stdout, "Detected ~/local agent config/ — consider running `hades migrate claude-code` first")
 		fmt.Fprintln(stdout, "to import your existing config + skills + commands into Hermes plugin format.")
 		fmt.Fprintln(stdout, "(Continuing with greenfield scaffold; pass --yes to suppress this hint.)")
 	}

@@ -1,6 +1,6 @@
 -- schemaVersion: 19
--- HADES design release track — research cache table.
--- Research MCP (release track) reads/writes via daemon /v1/research/cache/*.
+-- HADES design stage — research cache table.
+-- Research MCP (stage) reads/writes via daemon /v1/research/cache/*.
 -- TTL enforced by handler (ttl_unix comparison) + background eviction goroutine in
 -- daemon (every 1h, DELETE WHERE ttl_unix < unixepoch()).
 -- Eviction goroutine wired in internal/daemon/research_cache_evictor.go;

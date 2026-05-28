@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// engine. Gate.Check is the function the release dispatcher MUST call
+// engine. Gate.Check is the function the HADES design dispatcher MUST call
 // before any backend.Forward(...) — that is invariant's call-site
 // contract. The Decision struct returned by Check carries:
 //
@@ -57,7 +57,7 @@ type Gate struct {
 
 func NewGate(store BudgetStore) *Gate {
 	if store == nil {
-		panic("NewGate: store is nil — inv-hades-076 requires a real BudgetStore")
+		panic("NewGate: store is nil — invariant requires a real BudgetStore")
 	}
 	return &Gate{store: store, rollupWindow: 30 * 24 * time.Hour}
 }

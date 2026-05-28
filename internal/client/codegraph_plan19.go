@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package client — codegraph_plan19.go.
 //
-// Thin pass-throughs for the daemon's release caronte REST sub-routes:
+// Thin pass-throughs for the daemon's HADES design caronte REST sub-routes:
 // /v1/mcpgateway/{why,risk,cochange,impl}. The daemon side ( Task
 // K-5, handlers/mcpgateway_rest.go) translates each into a JSON-RPC
 // tools/call against the now-native Caronte engine ( backed the

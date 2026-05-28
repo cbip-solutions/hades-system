@@ -189,7 +189,7 @@ func (s *Server) toolSpecs() []toolSpec {
 		},
 		{
 			name:        "synthesize",
-			description: "Synthesize findings via Plan 3 dispatcher (LLM call).",
+			description: "Synthesize findings via HADES design dispatcher (LLM call).",
 			inputSchema: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
@@ -215,7 +215,7 @@ func (s *Server) toolSpecs() []toolSpec {
 		},
 		{
 			name:        "agentic_deep",
-			description: "Iterative deep-research wrapper (Q4 C). Doctrine-tunable max-iter.",
+			description: "Iterative deep-research wrapper (design choice C). Doctrine-tunable max-iter.",
 			inputSchema: map[string]any{
 				"type": "object",
 				"properties": map[string]any{

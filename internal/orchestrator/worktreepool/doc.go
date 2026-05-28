@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-// Package worktreepool — release git-worktree subprocess pool.
+// Package worktreepool — HADES design git-worktree subprocess pool.
 //
-// Supplies isolated working directories to every release subsystem needing
+// Supplies isolated working directories to every HADES design subsystem needing
 // off-trunk filesystem isolation: HRA voting (Functional Majority Voting
-// per Q8 B), ApplyEngine live-correction (Q1 D), and future release cross-
+// per design choice B), ApplyEngine live-correction (design choice D), and future HADES design cross-
 // worker integration via test-driven merge.
 //
-// Backend is `git worktree` invoked via os/exec (Q3 A: every public agent
+// Backend is `git worktree` invoked via os/exec (design choice A: every public agent
 // runner uses subprocess; libgit2/cgo eliminated by GOOS=linux cross-
 // compile gate; go-git eliminated by open perf gaps in #1956 and unmerged
 // PR #1749).
 //
-// The pool is doctrine-tuned (Q4 C):
+// The pool is doctrine-tuned (design choice C):
 // - max-scope: Floor=8, ElasticMax=32
 // - default: Floor=3, ElasticMax=12
 // - capa-firewall: Floor=5, ElasticMax=15

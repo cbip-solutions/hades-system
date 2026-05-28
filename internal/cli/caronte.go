@@ -22,11 +22,9 @@ import (
 func NewCaronteCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "caronte",
-		Short: "Caronte code-graph engine operator surface (Plan 19; in-daemon, Apache-2.0)",
-		Long: `Operator-facing entry point for the in-daemon Caronte engine
-(Plan 19 sovereign code-graph). Subcommands bypass the mcpgateway and
-route directly to the daemon's /v1/caronte/* endpoints — useful for
-` + "`hades doctor caronte`" + ` follow-ups (e.g. operator-triggered reindex)
+		Short: "Caronte code-graph engine operator surface (HADES design; in-daemon, Apache-2.0)",
+		Long: "Operator-facing entry point for the in-daemon Caronte engine\n(HADES design sovereign code-graph). Subcommands bypass the mcpgateway and\nroute directly to the daemon's /v1/caronte/* endpoints — useful for\n" +
+			"`hades doctor caronte`" + ` follow-ups (e.g. operator-triggered reindex)
 without a running Hermes session.
 
 Subcommands:

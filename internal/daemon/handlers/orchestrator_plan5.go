@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — orchestrator_plan5.go.
 //
-// HTTP handler for the new release routes the daemon exposes:
+// HTTP handler for the new HADES design routes the daemon exposes:
 //
 // GET /v1/orchestrator/state
 // GET /v1/orchestrator/pool
@@ -33,7 +33,7 @@
 // GET /v1/orchestrator/health/adapters_clean
 // GET /v1/orchestrator/health/last_session_clean
 //
-// The handler accepts a service interface (releaseOrchestratorService)
+// The handler accepts a service interface (HADES component)
 // that wires to the live orchestrator at daemon-init time. Tests
 // substitute fakes. The HTTP layer never touches store/eventlog/
 // safetynet directly — every cross-boundary call goes via the service

@@ -1,4 +1,4 @@
--- Conversation WAL — one row per orchestrator turn (HADES design release track).
+-- Conversation WAL — one row per orchestrator turn (HADES design stage).
 --
 -- Each request through the bypass path appends a row in 'pending' state
 -- BEFORE the upstream HTTP call leaves the daemon. CompleteTurn (or

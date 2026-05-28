@@ -16,7 +16,7 @@
 //
 // Two endpoints consumed by /hades:status already exist:
 //
-// - GET /v1/health — handlers/health.go (release; extended in releasec
+// - GET /v1/health — handlers/health.go (HADES design; extended in HADES design
 // to include pid, uds_path, active_model)
 // - GET /v1/bypass/status — handlers/bypass.go
 //
@@ -39,7 +39,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/providers"
 )
 
-// statusEndpointAccessor narrows the daemon to the releasec
+// statusEndpointAccessor narrows the daemon to the HADES design
 // status endpoints surface. *daemon.Server satisfies this structurally.
 //
 // Each method returns nil / zero until main.go has finished wiring;

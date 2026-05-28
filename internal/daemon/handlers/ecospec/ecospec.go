@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package ecospec declares the wire-side contracts for the release
+// Package ecospec declares the wire-side contracts for the HADES design
 // ecosystem HTTP surface — the EcosystemHandler interface that the
 // daemon's per-route handlers consult, the PrunePreviewResult shape
 // returned by PrunePreview, and the three sentinel errors handlers

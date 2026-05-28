@@ -8,12 +8,12 @@
 //
 // PkgGoDevSource implements the ecosystem.Source interface (master plan
 // §3.3) for the Go ecosystem covering stdlib + the top-5000 packages by
-// import count (per spec §2.1 Q1=D corpus matrix).
+// import count (per design contract=D corpus matrix).
 //
 // All HTTP egress routes via a narrow FetchClient interface that wraps
 // cache.Revalidator.Fetch (invariant + invariant — single egress
 // point for the research data plane; no direct net/http imports in this
-// package). The narrow-interface pattern mirrors release B-6 and B-2
+// package). The narrow-interface pattern mirrors HADES design B-6 and B-2
 // chunker contextual-prefix wiring: production wires *cache.Revalidator;
 // tests wire a stub that pre-populates url→body and url→err maps.
 //

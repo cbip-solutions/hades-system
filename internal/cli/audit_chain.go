@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain.go.
 //
-// `hades audit-chain` is the release umbrella for chain-integrity, backup,
+// `hades audit-chain` is the HADES design umbrella for chain-integrity, backup,
 // witness, and recovery operations. Distinct's `hades audit`
 // event-emit/query surface (which lives in audit.go and serves the
 // audit_events_raw row-level read API).
 //
 // Spec §6.1 enumerates 7 direct subcommands; cobra registers them here:
 // - verify-chain: walk the tile-log Merkle + record_hash + witness sig [I-2]
-// - history: query release eventlog with chain proofs [I-2]
+// - history: query HADES design eventlog with chain proofs [I-2]
 // - recover: interactive recovery (Litestream + cold archive + verify) [I-2]
-// - checkpoint: capa-firewall manual checkpoint (invariant §1 Q4 B) [I-3]
+// - checkpoint: capa-firewall manual checkpoint (invariant §1 design choice B) [I-3]
 // - cold-archive: nested group → ls | restore [I-3]
 // - configure-s3: interactive Keychain-integrated S3 credential setup [I-4]
 // - witness: nested group → rotate | pubkey [I-4]
@@ -48,16 +48,10 @@ import (
 func NewAuditChainCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "audit-chain",
-		Short: "Audit chain integrity, backup, witness, recovery (Plan 9)",
-		Long: `Plan 9 operator surface for the per-project tile-log + Litestream +
-cold archive + ECDSA witness substrate. Use this group to verify chain
-integrity, browse historical events with chain proofs, recover from
-tamper events interactively, manually checkpoint capa-firewall projects,
-manage Tessera cold archives, configure per-project S3 backup
-credentials, and rotate the daemon witness key.
-
-Plan 4's ` + "`hades audit`" + ` group remains for raw event emit/query.
-Plan 9's ` + "`hades audit-chain`" + ` group is for chain operations.`,
+		Short: "Audit chain integrity, backup, witness, recovery (HADES design)",
+		Long: "HADES design operator surface for the per-project tile-log + Litestream +\ncold archive + ECDSA witness substrate. Use this group to verify chain\nintegrity, browse historical events with chain proofs, recover from\ntamper events interactively, manually checkpoint capa-firewall projects,\nmanage Tessera cold archives, configure per-project S3 backup\ncredentials, and rotate the daemon witness key.\n\nHADES design " +
+			"`hades audit`" + " group remains for raw event emit/query.\nHADES design " +
+			"`hades audit-chain`" + ` group is for chain operations.`,
 		Example: " # Verify integrity for one project\n  hades audit-chain verify-chain --project hades-system\n\n # Manually checkpoint capa-firewall project before sensitive batch\n  hades audit-chain checkpoint --reason \"pre-merge audit anchor for v0.9.0\"\n\n # Recover from detected tamper interactively\n  hades audit-chain recover --project hades-system --from 2026-05-06T08:00:00Z\n\n # Rotate the daemon-level ECDSA witness key\n  hades audit-chain witness rotate --reason \"scheduled 90d rotation\"",
 	}
 	format.AttachFlags(cmd)
@@ -73,7 +67,7 @@ Plan 9's ` + "`hades audit-chain`" + ` group is for chain operations.`,
 
 func notWiredYet(taskRef string) func(cmd *cobra.Command, args []string) error {
 	return func(cmd *cobra.Command, args []string) error {
-		return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("phase I task %s: leaf not yet wired (see plan-9-phase-I-cli.md)", taskRef))
+		return ierrors.Wrap(ierrors.Code("internal-uncaught"), fmt.Errorf("stage I task %s: leaf unavailable (see HADES design)", taskRef))
 	}
 }
 

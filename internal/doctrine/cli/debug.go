@@ -5,7 +5,7 @@
 // no state mutation.
 //
 // reinforce previews the reinforcement template that worker subprocesses
-// receive when spawned for a given (task_kind, project, stage, phase,
+// receive when spawned for a given (task_kind, project, stage, stage,
 // plan_id) tuple. Useful for debugging unexpected worker behaviour and
 // reviewing doctrine changes before they hit production task dispatch.
 package cli
@@ -25,20 +25,8 @@ func reinforceCmd() *cobra.Command {
 		Use:     "reinforce <task-kind>",
 		GroupID: "debug",
 		Short:   "Renderiza el bloque de refuerzo que recibirá un worker (preview)",
-		Long: `Imprime el bloque de refuerzo que un worker recibiría dado un
-task_kind y opcionalmente: --project, --stage, --phase, --plan-id.
+		Long:    "Imprime el bloque de refuerzo que un worker recibiría dado un\ntask_kind y opcionalmente: --project, --stage, --stage, --plan-id.\n\nEl renderizado pasa por el daemon (no localmente) para garantizar paridad\ncon lo que reciben los workers reales — la resolución de doctrina activa\nper-project ocurre server-side.\n\nVariables disponibles en plantillas (per design contract):\n  DoctrineName, ProjectAlias, ProjectID, CurrentStage, CurrentPhase,\n  TaskKind (orchestrator|team_lead|worker|reviewer_*), TaskComplexityTier,\n  PlanID, TransverseAxioms.\n\ntask_kind values: orchestrator, team_lead, worker, reviewer_tactical,\nreviewer_strategic, reviewer_architectural.",
 
-El renderizado pasa por el daemon (no localmente) para garantizar paridad
-con lo que reciben los workers reales — la resolución de doctrina activa
-per-project ocurre server-side.
-
-Variables disponibles en plantillas (per spec §1 Q12):
-  DoctrineName, ProjectAlias, ProjectID, CurrentStage, CurrentPhase,
-  TaskKind (orchestrator|team_lead|worker|reviewer_*), TaskComplexityTier,
-  PlanID, TransverseAxioms.
-
-task_kind values: orchestrator, team_lead, worker, reviewer_tactical,
-reviewer_strategic, reviewer_architectural.`,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return fmt.Errorf("reinforce requiere exactamente un argumento <task-kind>")
@@ -51,7 +39,7 @@ reviewer_strategic, reviewer_architectural.`,
 			}
 			project, _ := cmd.Flags().GetString("project")
 			stage, _ := cmd.Flags().GetString("stage")
-			phase, _ := cmd.Flags().GetString("phase")
+			phase, _ := cmd.Flags().GetString("stage")
 			planID, _ := cmd.Flags().GetString("plan-id")
 			ctx, cancel := context.WithTimeout(cmd.Context(), 5*time.Second)
 			defer cancel()
@@ -79,7 +67,7 @@ reviewer_strategic, reviewer_architectural.`,
 					fmt.Fprintf(out, "# Stage: %s\n", stage)
 				}
 				if phase != "" {
-					fmt.Fprintf(out, "# Phase: %s\n", phase)
+					fmt.Fprintf(out, "# stage: %s\n", phase)
 				}
 				if planID != "" {
 					fmt.Fprintf(out, "# PlanID: %s\n", planID)
@@ -92,7 +80,7 @@ reviewer_strategic, reviewer_architectural.`,
 	}
 	cmd.Flags().String("project", "", "Alias del proyecto (resuelve doctrina activa per-project)")
 	cmd.Flags().String("stage", "", "Stage actual (variable de plantilla)")
-	cmd.Flags().String("phase", "", "Phase actual (variable de plantilla)")
+	cmd.Flags().String("stage", "", "stage actual (variable de plantilla)")
 	cmd.Flags().String("plan-id", "", "Plan ID actual (variable de plantilla)")
 	return cmd
 }

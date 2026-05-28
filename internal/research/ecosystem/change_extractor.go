@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — change_extractor.go implements ChangeExtractor:
-// (1) explicit Changelog parser (4 formats; Task E-3 — THIS file's surface)
-// (2) DeepDiff implicit Change node generator (Task E-4 extends this file)
-// (3) Haiku-description fallback for ambiguous diffs (Task E-5 extends this file;
+// (1) explicit Changelog parser (4 formats; task — THIS file's surface)
+// (2) DeepDiff implicit Change node generator (task extends this file)
+// (3) Haiku-description fallback for ambiguous diffs (task extends this file;
 //
 // LLMJudgeEnabled-gated)
 //
@@ -15,9 +15,9 @@
 //
 // SourceExtracted contract:
 //
-// "explicit_changelog" — emitted by THIS file's ParseChangelog (Task E-3)
-// "implicit_deepdiff" — emitted by Task E-4 DeepDiff
-// "haiku_inferred" — emitted by Task E-5 Haiku enrichment
+// "explicit_changelog" — emitted by THIS file's ParseChangelog (task)
+// "implicit_deepdiff" — emitted by task DeepDiff
+// "haiku_inferred" — emitted by task Haiku enrichment
 //
 // Boundary invariant: this file MAY import only stdlib + types
 // (PackageRef, Changelog, ChangeNode, ChangeType, DoctrineProfile). It MUST
@@ -38,7 +38,7 @@ const SourceExplicitChangelog = "explicit_changelog"
 const SourceImplicitDeepDiff = "implicit_deepdiff"
 
 // SourceImplicitHaiku is the SourceExtracted tag emitted by
-// ChangeExtractor.EnrichWithHaiku (Task E-5) for nodes whose deterministic
+// ChangeExtractor.EnrichWithHaiku (task) for nodes whose deterministic
 // template Description was replaced by a Haiku-generated 30-50-token
 // natural-language description.
 //
@@ -399,7 +399,7 @@ func (ce *ChangeExtractor) extractSymbolPathFromText(text string) string {
 //
 // Descriptions auto-generated via deterministic templates
 // (deterministic{Added,Removed}Description). No LLM call in E-4 — LLM
-// enrichment is the Task E-5 EnrichWithHaiku path gated on
+// enrichment is the task EnrichWithHaiku path gated on
 // LLMJudgeEnabled+HaikuDescriber.
 //
 // Nil handling (defense-in-depth, invariant boundary):
@@ -664,10 +664,10 @@ func (ce *ChangeExtractor) WriteChangeNodes(ctx context.Context, db *sql.DB, pkg
 			return err
 		}
 		if err := ce.assertVersionExists(ctx, db, pkg.ID, pair.from); err != nil {
-			return fmt.Errorf("research/ecosystem: WriteChangeNodes inv-hades-193: version_from %q: %w", pair.from, err)
+			return fmt.Errorf("research/ecosystem: WriteChangeNodes invariant: version_from %q: %w", pair.from, err)
 		}
 		if err := ce.assertVersionExists(ctx, db, pkg.ID, pair.to); err != nil {
-			return fmt.Errorf("research/ecosystem: WriteChangeNodes inv-hades-193: version_to %q: %w", pair.to, err)
+			return fmt.Errorf("research/ecosystem: WriteChangeNodes invariant: version_to %q: %w", pair.to, err)
 		}
 	}
 
@@ -763,7 +763,7 @@ func (ce *ChangeExtractor) SweepChangeNodes(ctx context.Context, db *sql.DB) err
 		return fmt.Errorf("research/ecosystem: SweepChangeNodes rows: %w", err)
 	}
 	if len(orphans) > 0 {
-		return fmt.Errorf("inv-hades-193 violation: %d orphaned ecosystem_changes rows: %v", len(orphans), orphans)
+		return fmt.Errorf("invariant violation: %d orphaned ecosystem_changes rows: %v", len(orphans), orphans)
 	}
 	return nil
 }

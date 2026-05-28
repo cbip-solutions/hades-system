@@ -115,18 +115,8 @@ func migrateCmd() *cobra.Command {
 		Use:     "migrate <ruta>",
 		GroupID: "write",
 		Short:   "Migra un TOML al esquema actual (operator-explicit; backup .vN.bak)",
-		Long: `Lee un archivo TOML local, lo envía al daemon para migración
-in-memory al esquema actual, y muestra el resultado.
+		Long:    "Lee un archivo TOML local, lo envía al daemon para migración\nin-memory al esquema actual, y muestra el resultado.\n\nSin --confirm: dry-run; el archivo no se modifica.\nCon --confirm: el archivo se reescribe con la versión migrada y el\noriginal se preserva como <ruta>.v<MAJOR>.bak (donde <MAJOR> es la\ncomponente major del schema_version FROM).\n\nEl daemon NUNCA reescribe archivos automáticamente (invariant); este\ncomando es la única ruta sancionada para persistir migraciones.\n\nWorkflow B en spec §6.5 (Schema migration).",
 
-Sin --confirm: dry-run; el archivo no se modifica.
-Con --confirm: el archivo se reescribe con la versión migrada y el
-original se preserva como <ruta>.v<MAJOR>.bak (donde <MAJOR> es la
-componente major del schema_version FROM).
-
-El daemon NUNCA reescribe archivos automáticamente (inv-hades-137); este
-comando es la única ruta sancionada para persistir migraciones.
-
-Workflow B en spec §6.5 (Schema migration).`,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
 				return fmt.Errorf("migrate requiere exactamente un argumento <ruta-toml>")
@@ -167,7 +157,7 @@ Workflow B en spec §6.5 (Schema migration).`,
 
 			if compareSemver(resp.ToSchemaVersion, fromVersion) < 0 {
 				return fmt.Errorf(
-					"doctrine cli: rechazo de downgrade (inv-hades-142): destino %q es menor que origen %q",
+					"doctrine cli: rechazo de downgrade (invariant): destino %q es menor que origen %q",
 					resp.ToSchemaVersion, fromVersion)
 			}
 			if !confirm {
@@ -285,12 +275,7 @@ func overrideCmd() *cobra.Command {
 		Use:     "override",
 		GroupID: "write",
 		Short:   "Edita el override per-proyecto en .hades/doctrine-override.toml",
-		Long: `Gestiona el archivo de override per-proyecto. La doctrina del proyecto
-es la doctrina baseline + ajustes tighten-only en este archivo (inv-hades-136).
-
-Subcomandos:
-  edit   abre $EDITOR sobre <proyecto>/.hades/doctrine-override.toml
-         (creando el archivo con un stub si no existe)`,
+		Long:    "Gestiona el archivo de override per-proyecto. La doctrina del proyecto\nes la doctrina baseline + ajustes tighten-only en este archivo (invariant).\n\nSubcomandos:\n  edit   abre $EDITOR sobre <proyecto>/.hades/doctrine-override.toml\n         (creando el archivo con un stub si no existe)",
 	}
 	cmd.AddCommand(overrideEditCmd())
 	return cmd
@@ -300,15 +285,8 @@ func overrideEditCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Abre $EDITOR sobre el archivo de override del proyecto",
-		Long: `Resuelve la ruta del proyecto:
-  1. --path <ruta>   sobreescribe la resolución
-  2. --project <ali> resuelve el alias en ~/.config/hades-system/projects.toml
-                     (Plan 7; fallback a --path si no está disponible)
-  3. cwd             asume que es la raíz del proyecto
+		Long:  "Resuelve la ruta del proyecto:\n  1. --path <ruta>   sobreescribe la resolución\n  2. --project <ali> resuelve el alias en ~/.config/hades-system/projects.toml\n                     (HADES design; fallback a --path si no está disponible)\n  3. cwd             asume que es la raíz del proyecto\n\nSi el archivo no existe, lo crea con un stub que recuerda la regla\ntighten-only (invariant). Tras editar, valida el contenido contra\nel daemon (saltable con --no-validate).",
 
-Si el archivo no existe, lo crea con un stub que recuerda la regla
-tighten-only (inv-hades-136). Tras editar, valida el contenido contra
-el daemon (saltable con --no-validate).`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			path, _ := cmd.Flags().GetString("path")
 			project, _ := cmd.Flags().GetString("project")
@@ -382,7 +360,7 @@ func resolveProjectRoot(path, project string) (string, error) {
 		return abs, nil
 	}
 	if project != "" {
-		return "", fmt.Errorf("doctrine cli: --project requiere Plan 7 alias resolver; use --path mientras tanto")
+		return "", fmt.Errorf("doctrine cli: --project requiere HADES design alias resolver; use --path mientras tanto")
 	}
 	cwd, err := os.Getwd()
 	if err != nil {

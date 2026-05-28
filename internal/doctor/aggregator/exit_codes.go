@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator — exit_codes.go ships the release bitmask
-// exit-code computation per Q5=C+ + spec §5.2.
+// Package aggregator — exit_codes.go ships the HADES design bitmask
+// exit-code computation per design choice+ + spec §5.2.
 //
 // - bit 0 (1) = any warn
 // - bit 1 (2) = any fail

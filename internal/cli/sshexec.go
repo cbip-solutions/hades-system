@@ -45,7 +45,7 @@ import (
 func NewSSHExecCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ssh-exec",
-		Short: "Security-grade SSH command execution (Plan 4)",
+		Short: "Security-grade SSH command execution (HADES design)",
 	}
 	format.AttachFlags(cmd)
 	cmd.AddCommand(sshExecValidateCmd())

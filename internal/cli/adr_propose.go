@@ -38,8 +38,8 @@ status defaults to proposed; plan auto-detected from active branch.
 The operator's $EDITOR (or $VISUAL or vi) opens the draft. On save the
 content is ready for review. Use 'hades adr accept <id> --reason <X>' to
 formally accept or 'hades adr reject <id> --reason <X>' to reject.`,
-		Example: `  hades adr propose tessera-batch-cadence-tuning
-  hades adr propose multi-tenant-auth --plan plan-9`,
+		Example: "  hades adr propose tessera-batch-cadence-tuning\n  hades adr propose multi-tenant-auth --plan HADES design",
+
 		RunE: func(cmd *cobra.Command, args []string) error {
 			topic := args[0]
 			ctx, cancel := context.WithTimeout(cmd.Context(), 10*time.Second)
@@ -110,6 +110,6 @@ title: %s
 			return nil
 		},
 	}
-	cmd.Flags().StringVar(&plan, "plan", "", "Plan tag hint (e.g. plan-9)")
+	cmd.Flags().StringVar(&plan, "plan", "", "Plan tag hint (e.g. HADES design)")
 	return cmd
 }

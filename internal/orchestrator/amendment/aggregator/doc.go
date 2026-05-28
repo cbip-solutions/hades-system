@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package aggregator implements the release Q13 C per-rule
+// Package aggregator implements the HADES design design choice C per-rule
 // SIGNAL with shared sliding-window machinery + 3 generic event-
 // categories (cost / merge / recovery).
 //
-// Each aggregator subscribes to a bounded set of release eventlog
+// Each aggregator subscribes to a bounded set of HADES design eventlog
 // PayloadEncoder values (typed event payloads), maps each event onto a
 // (rule_path, anomalous bool) tuple via per-rule registration, and
 // maintains a per-rule WindowState (bounded slice of SessionRecord +
@@ -13,16 +13,16 @@
 //
 // Design pivot vs. the master plan:
 //
-// - release ships `eventlog.PayloadEncoder` (typed-event interface) +
+// - HADES design ships `eventlog.PayloadEncoder` (typed-event interface) +
 // `EventType` enum. aggregators operate at PayloadEncoder
 // level: callers pass the typed value (e.g.
 // eventlog.BudgetDegradationApplied{...}) and the aggregator dispatches
 // by EventType + optional payload predicate.
 //
-// - release events live in internal/orchestrator/merge as a separate
+// - HADES design events live in internal/orchestrator/merge as a separate
 // package-local enum. avoids cross-importing merge directly
 // (boundary invariant) by accepting any PayloadEncoder
-// implementation. Bridge code at the release N adapter layer translates
+// implementation. Bridge code at the HADES design N adapter layer translates
 // merge.Event → eventlog.PayloadEncoder if the merge aggregator needs
 // to subscribe to anomaly events outside the eventlog package's own
 // constants.

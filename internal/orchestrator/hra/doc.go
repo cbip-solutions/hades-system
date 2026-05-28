@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package hra implements the 4-layer Hierarchical Reviewer Assembly
 // coordinator. The coordinator drives the
-// continuous-async cadence per spec §5.4.6 doctrine matrix and turns
+// continuous-async cadence per design contract
 // isolated reviewer findings into doctrine-shaped signal flowing up
 // the L1 → L2 → L3 → L4 chain.
 //
@@ -22,16 +22,16 @@
 //
 // doctrine T (tactical) S (strategic) A (architectural)
 // max-scope 3 min 10 min 30 min
-// default 5 min 0 (skip) 0 (phase boundary)
+// default 5 min 0 (skip) 0 (stage boundary)
 // capa-firewall 0 (manual) 0 (manual) 0 (manual)
 //
 // A zero duration means the cadence goroutine is NOT auto-started for
-// that layer; the layer is driven by explicit Tick() / phase-boundary
+// that layer; the layer is driven by explicit Tick() / stage-boundary
 // triggers (wired in H-2..H-4 + H-8). The capa-firewall row is
-// manual-only per Pulido §3.5 claim-strength tier — release wires the
+// manual-only per Pulido §3.5 claim-strength tier — HADES design wires the
 // checklist runner that issues the Tick calls.
 //
-// # Subscriber pattern (spec §1 Q5 C)
+// # Subscriber pattern (spec §1 design choice C)
 //
 // On Run, the coordinator registers three Subscriptions against the
 // eventlog. Each Subscription is filtered by ProjectID
@@ -50,14 +50,14 @@
 // interface declared in this package. It also never imports
 // internal/workforce/queue (substrate separation).
 //
-// Time access routes exclusively through clock.Clock (Q14 C) so the
+// Time access routes exclusively through clock.Clock (design choice C) so the
 // time-accelerated test tier drives cadence deterministically;
 // direct calls to time.Now / time.NewTicker are forbidden inside this
 // package and a vet-style lint enforces.
 //
 // # References
 //
-// - Spec §1 Q5 C / Q6 D / Q14 C
+// - Spec §1 design choice C / design choice D / design choice C
 // - Spec §5.4.6 (doctrine cadence matrix)
 // - ADR-0005 (HRA cadence definition)
 //
@@ -69,5 +69,5 @@
 // strategic / architectural).
 // H-5 — aggregation.WindowOf + 3 aggregators.
 // H-6..H-7 — escalation rules + L3 deadlock detection.
-// H-8 — phase-boundary trigger OnPhaseBoundary.
+// H-8 — stage-boundary trigger OnPhaseBoundary.
 package hra

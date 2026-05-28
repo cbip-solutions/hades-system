@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package knowledge — prober.go
 //
-// Task J-3 adapter: exposes a slim Prober implementation that the
+// task adapter: exposes a slim Prober implementation that the
 // cli/doctor_knowledge.go layer consumes (cli.KnowledgeProber). The split
 // keeps invariant clean (internal/cli imports internal/knowledge; this
 // package does NOT import internal/store; the daemon assembles the
@@ -45,7 +45,7 @@ type HeartbeatFn func() time.Time
 
 // BudgetSnapshotFn returns (used, warn, fail) for the indexer CPU budget,
 // resolved against the active doctrine at call time. If the budget
-// tracker is not yet wired returns
+// tracker is unavailable returns
 // (0, 0, 0, nil) which RunKnowledgeProbe interprets as ProbeOK with a
 // passive "no budget tracker" message — the absent tracker is a
 // degraded-mode signal, not a failure.

@@ -42,10 +42,10 @@ func doctorCaronteCmd() *cobra.Command {
 	var projectFlag string
 	cmd := &cobra.Command{
 		Use:   "caronte",
-		Short: "caronte code-graph engine health (Plan 19; in-daemon, Apache-2.0)",
+		Short: "caronte code-graph engine health (HADES design; in-daemon, Apache-2.0)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			explicit := resolveCaronteProjectAlias(projectFlag)
-			return runOneSection(cmd, "Caronte (Plan 19)", func(ctx context.Context, c *client.Client) []CheckResult {
+			return runOneSection(cmd, "Caronte (HADES design)", func(ctx context.Context, c *client.Client) []CheckResult {
 
 				if explicit != "" {
 					return runCaronteChecksWithAlias(ctx, c, explicit)

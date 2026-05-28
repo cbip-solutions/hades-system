@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package echo is the release Go labstack/echo router extractor namespace
+// Package echo is the HADES design Go labstack/echo router extractor namespace
 // (Language: LangGo, framework: "echo"). Concrete RouteExtractor lands in
 // (master row D, wave W3) as echo.go. The (LangGo, "echo") tuple is
 // reserved for this package by daemon-time Register() call.

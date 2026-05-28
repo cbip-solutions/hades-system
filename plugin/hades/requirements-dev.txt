@@ -10,7 +10,7 @@
 # runtime without needing pip-installed packages from this list. They only
 # back the pytest test runner used by H'-2..H'-14.
 #
-# release track will wire ``make test-plugin`` to create the venv + install +
+# stage will wire ``make test-plugin`` to create the venv + install +
 # run pytest automatically. For now, this file documents the dependency so
 # operator can ``pip install -r requirements-dev.txt`` reproducibly.
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/allowlist.go
 //
-// Task L-4 — allowlist resolution.
+// task — allowlist resolution.
 //
 // Merges doctrine SSHExecAxis with per-project hadessystem.toml
 // [ssh_exec.allowlist] under the rule:

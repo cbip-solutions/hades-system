@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package client — budget.go.
 //
-// Typed wrappers for the release budget HTTP surface ( handlers in
+// Typed wrappers for the HADES design budget HTTP surface ( handlers in
 // internal/daemon/handlers/budget_plan4.go). The CLI in
 // internal/cli/budget.go uses these to expose:
 //
 // rollup, caps {show, set}, anomalies, pause, resume,
 // events, axes, pause-modes
 //
-// read-only spend-rollup over CostCounters; release retains the call site
+// read-only spend-rollup over CostCounters; HADES design retains the call site
 // because hades day + hades doctor still consume it.
 package client
 
@@ -26,7 +26,7 @@ import (
 // requiring a flag.
 //
 // reused that name for the morning-brief summary endpoint
-// (release_summary.go), so this release read-rollup has been renamed to
+// (HADES component.go), so this HADES design read-rollup has been renamed to
 // `BudgetSummaryRollup` to keep both surfaces compilable. The wire
 // path (`GET /v1/budget?range=`) is unchanged. Callers: hades doctor
 // orchestrator checks.
@@ -191,7 +191,7 @@ func (c *Client) BudgetResumeCall(ctx context.Context, req BudgetResumeReq) (*Bu
 // accepts these three canonical strings, so the CLI surface MUST match.
 //
 // `Default: true` is set on `descriptive` because that is the
-// max-scope-builtin choice (the OOTB default per spec §0.2).
+// max-scope-builtin choice (the OOTB default per design contract).
 //
 // Plan I may surface a daemon route if the doctrine schema gains
 // additional modes; until then this CLI-side list is the source of truth

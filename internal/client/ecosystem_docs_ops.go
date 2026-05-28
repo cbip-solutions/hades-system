@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package client — ecosystem_docs_ops.go (release Task F-6 +
+// Package client — ecosystem_docs_ops.go (HADES design task +
 //
 // Typed client methods for the ecosystem docs management endpoints:
 //
@@ -9,7 +9,7 @@
 // GET /v1/knowledge/ecosystem/sources — DocsSources
 // POST /v1/knowledge/ecosystem/router/retrain — DocsRouterRetrain
 //
-// G-5 surface (operator-confirmed retention; spec §2.9 Q9=A):
+// G-5 surface (operator-confirmed retention; spec §2.9 design choice):
 // POST /v1/ecosystem/pin — EcosystemPin
 // GET /v1/ecosystem/prune-preview — EcosystemPrunePreview
 // DELETE /v1/ecosystem/version — EcosystemPrune
@@ -27,7 +27,7 @@
 // classifies that as unrecoverable (exit 2).
 //
 // Boundary stdlib only. No internal/research/ecosystem import (invariant);
-// the daemon-side handler is responsible for invoking the trainer (Q15-Q20
+// the daemon-side handler is responsible for invoking the trainer (design choice-design choice
 // orchestrator-enforced — see ADR-0067) and for ingester/pruner orchestration.
 //
 // Wire shapes are the single source of truth for handler authors —
@@ -144,7 +144,7 @@ func (c *Client) EcosystemPrunePreview(ctx context.Context, ecosystem, version s
 	return &resp, nil
 }
 
-// EcosystemPrune calls DELETE /v1/ecosystem/version (G-5; spec §2.9 Q9=A).
+// EcosystemPrune calls DELETE /v1/ecosystem/version (G-5; spec §2.9 design choice).
 //
 // Hard-removes the (ecosystem, version) row and cascades to chunks,
 // chunks_fp32, symbols, changes, and FTS5 entries. Pinned versions are
@@ -155,7 +155,7 @@ func (c *Client) EcosystemPrunePreview(ctx context.Context, ecosystem, version s
 // the gate.
 //
 // SUPERSEDES F-6 POST /v1/knowledge/ecosystem/prune (retired DryRun-based
-// flow). The release G-5 contract splits preview (GET prune-preview) from
+// flow). The HADES design G-5 contract splits preview (GET prune-preview) from
 // commit (DELETE version) so the operator-confirmation gate is naturally
 // staged: preview → prompt → commit.
 func (c *Client) EcosystemPrune(ctx context.Context, ecosystem, version string) error {

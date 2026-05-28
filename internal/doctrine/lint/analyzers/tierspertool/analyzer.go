@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package tierspertool ships the release doctrine lint
+// Package tierspertool ships the HADES design doctrine lint
 // analyzer validating [capa_firewall.tiers] per-tool granularity per
-// Q10=D + invariant.
+// design choice + invariant.
 //
 // Validation rules:
 //
@@ -12,7 +12,7 @@
 // catalog = skip the catalog check; tests can omit it).
 // - Empty key components rejected (e.g., ".toolName" or "mcp.").
 //
-// Analyzer is consumed by hades-doctrine-lint (existing release lint stack
+// Analyzer is consumed by hades-doctrine-lint (existing HADES design lint stack
 // loader) which loads TOML doctrine bundles + invokes ValidateDoctrineFile
 // per file. Returns []Issue surfaced to operator output.
 package tierspertool
@@ -122,7 +122,7 @@ func (v *Validator) ValidateDoctrineFile(path string, body []byte) ([]Issue, err
 				Severity: SeverityError,
 				Path:     path,
 				Key:      key,
-				Reason:   fmt.Sprintf("unknown MCP name %q; not in curated catalog", mcpName),
+				Reason:   fmt.Sprintf("unknown MCP name %q; not in reviewed catalog", mcpName),
 			})
 			continue
 		}
@@ -141,7 +141,7 @@ func (v *Validator) ValidateDoctrineFile(path string, body []byte) ([]Issue, err
 
 var Analyzer = &goanalysis.Analyzer{
 	Name: "tierspertool",
-	Doc:  "validates [capa_firewall.tiers] per-tool granularity per inv-hades-182",
+	Doc:  "validates [capa_firewall.tiers] per-tool granularity per invariant",
 	Run:  runAnalyzer,
 }
 
@@ -177,7 +177,7 @@ func runAnalyzer(pass *goanalysis.Pass) (any, error) {
 			}
 			pass.Report(goanalysis.Diagnostic{
 				Pos:     pass.Files[0].Pos(),
-				Message: fmt.Sprintf("inv-hades-182 [%s key %q]: %s", iss.Path, iss.Key, iss.Reason),
+				Message: fmt.Sprintf("invariant [%s key %q]: %s", iss.Path, iss.Key, iss.Reason),
 			})
 		}
 	}

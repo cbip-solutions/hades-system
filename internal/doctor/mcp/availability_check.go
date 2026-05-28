@@ -2,7 +2,7 @@
 // Package mcp (internal/doctor/mcp) ships the `reviewed-MCP-availability`
 // doctor check (invariant MCP risk tiers + reviewed catalog availability).
 //
-// Per Q7=D 4-tier reviewed MCP set, the check probes per-MCP availability
+// Per design choice 4-tier reviewed MCP set, the check probes per-MCP availability
 // via the package-manager-specific seam (npm / pip / binary).
 // catalog (`internal/onboard/mcp/catalog.go`) is the source-of-truth for
 // the reviewed entries; this check is a consumer (a translation adapter
@@ -67,12 +67,12 @@ func NewAvailabilityCheck(cfg AvailabilityCheckConfig) *AvailabilityCheck {
 	}
 }
 
-func (c *AvailabilityCheck) Name() string { return "mcp.curated-availability" }
+func (c *AvailabilityCheck) Name() string { return "mcp.reviewed-availability" }
 
 func (c *AvailabilityCheck) Category() check.Category { return check.CategoryConfiguration }
 
 func (c *AvailabilityCheck) Description() string {
-	return "Curated MCP catalog per-MCP availability + version pin (inv-hades-181)"
+	return "Reviewed MCP catalog per-MCP availability + version pin (invariant)"
 }
 
 func (c *AvailabilityCheck) IsDestructive() bool { return false }
@@ -111,12 +111,12 @@ func (c *AvailabilityCheck) Run(ctx context.Context) check.DiagnosticResult {
 	d := check.DiagnosticResult{Name: c.Name()}
 	if len(c.specs) == 0 {
 		d.Status = check.StatusSkip
-		d.Message = "MCP catalog empty (Phase A catalog not initialised)"
+		d.Message = "MCP catalog empty (stage catalog not initialised)"
 		return d
 	}
 	if c.prober == nil {
 		d.Status = check.StatusSkip
-		d.Message = "MCP prober not wired"
+		d.Message = "MCP prober unavailable"
 		return d
 	}
 
@@ -162,7 +162,7 @@ func (c *AvailabilityCheck) Run(ctx context.Context) check.DiagnosticResult {
 		}
 	}
 	d.Status = worst
-	d.Message = fmt.Sprintf("%d curated MCPs probed", len(c.specs))
+	d.Message = fmt.Sprintf("%d reviewed MCPs probed", len(c.specs))
 	d.Detail = strings.Join(detailLines, "\n")
 	if hasIssue {
 		d.Hint = "review per-MCP detail; install via `hades mcp add <name>` or run `hades doctor full --fix` for guided remediation"

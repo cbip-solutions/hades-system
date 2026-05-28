@@ -19,7 +19,7 @@ license: Apache-2.0
 agentskills_version: 1.0
 metadata:
   conditional_activation:
-    # repo path stays per spec §Q3 BORDERLINE (project filesystem path);
+    # repo path stays per design contract(project filesystem path);
     # operators may relocate the repo. The hint uses a generic placeholder
     # to avoid leaking operator identity into the release tree;
     # individual operators override via ~/.hermes config if needed.
@@ -41,7 +41,7 @@ HADES (formerly hades-system) is a multi-project agentic development
 orchestrator. Go-based daemon + CLI + Hermes plugin (this package).
 Privacy-by-default, max-scope doctrine, single-egress-point for LLM
 traffic. Released as repository at `github.com/cbip-solutions/hades-system`
-(repo URL preserved per spec §Q3 BORDERLINE).
+(repo URL preserved per design contract).
 
 ## Doctrine (load-bearing)
 
@@ -60,7 +60,7 @@ to defer.
 - **Never limit by budget or time** — scope decisions are doctrine-driven
 - **No defer** — fix coverage gaps and untested behaviour before next task
 - **No technical debt** — every gap surfaced today compounds tomorrow
-- **Hard parts are where value lives** — when phase looks hard, that's the
+- **Hard parts are where value lives** — when stage looks hard, that's the
   signal the work is load-bearing
 - **Tests are the floor, not the ceiling** — coverage targets ≥85% / ≥90% are
   minimums; goal is 100% on documented behaviour + edge + adversarial paths
@@ -68,7 +68,7 @@ to defer.
 ## Workflow patterns
 
 Pipeline per plan: **brainstorm → design sections → spec → write-plan →
-self-review (release stage reality-check + release stage grep + release stage code-reviewer)
+self-review (stage reality-check + stage grep + stage code-reviewer)
 → execute-plan → release**.
 
 Canonical methodology: `docs/METHODOLOGY.md` in the repo. Quick reference

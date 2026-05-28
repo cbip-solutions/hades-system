@@ -8,6 +8,6 @@
 // git-trailer (invariant; spec §10). Only emitted when
 // -loretrailer.enabled=true (default false — adoption-gated, spec §21).
 //
-// (internal design record)
+// (design records design)
 // owns the full implementation.
 package loretrailer

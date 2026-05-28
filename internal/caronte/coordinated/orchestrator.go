@@ -56,7 +56,7 @@
 // ContractFixAutonomyOracle interface — NOT
 // hra/merge/confirmation_policy)
 // - github.com/cbip-solutions/hades-system/internal/orchestrator/worktreepool
-// (Pool interface — the SOLE release/6 bridge per invariant's
+// (Pool interface — the SOLE HADES design bridge per invariant's
 // capability-detect carve-out)
 // It does NOT import internal/orchestrator/hra,
 // internal/orchestrator/merge, internal/orchestrator/confirmation_policy
@@ -86,7 +86,7 @@ const DefaultRecentDispatchCap = 50
 // composition root MUST prevent. Dispatch returns this error rather
 // than treating nil as ModeSurface (a nil oracle is a wiring bug, not
 // a degradation case).
-var ErrCoordinatorNoOracle = errors.New("coordinated: Autonomy oracle not wired")
+var ErrCoordinatorNoOracle = errors.New("coordinated: Autonomy oracle unavailable")
 
 // ErrCoordinatorNoAudit indicates the Coordinator was constructed
 // without an Audit adapter. Dispatch returns this error before any side
@@ -97,11 +97,11 @@ var ErrCoordinatorNoOracle = errors.New("coordinated: Autonomy oracle not wired"
 // Note federation.EmitAudit gracefully degrades on a nil adapter
 // (returns ("", nil) for the bootstrap window). stricter
 // stance — refusing nil up-front — is deliberate: by the time the L10
-// Coordinator runs, release wiring MUST be live; the Coordinator
+// Coordinator runs, HADES design wiring MUST be live; the Coordinator
 // never dispatches in the bootstrap window.
-var ErrCoordinatorNoAudit = errors.New("coordinated: Audit adapter not wired")
+var ErrCoordinatorNoAudit = errors.New("coordinated: Audit adapter unavailable")
 
-var ErrCoordinatorNoWorkspace = errors.New("coordinated: ContractBreakage.Workspace not wired")
+var ErrCoordinatorNoWorkspace = errors.New("coordinated: ContractBreakage.Workspace unavailable")
 
 var emitAuditFn = federation.EmitAudit
 

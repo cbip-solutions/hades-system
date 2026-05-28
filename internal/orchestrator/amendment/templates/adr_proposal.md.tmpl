@@ -1,5 +1,5 @@
 {{/* Go text/template ADR proposal template. Canonical 10 sections per
-   HADES design spec §1 Q10 C + §6.3 invariant. Fields available:
+   HADES design spec §1 design choice C + §6.3 invariant. Fields available:
      .ADRID, .Date, .Title, .Doctrine, .TriggerClass, .Pattern,
      .WindowHours, .Count, .Threshold, .ProjectID,
      .ContextNarrative, .DecisionStatement, .Alternatives, .SOTARefs,
@@ -41,7 +41,7 @@
 ## Doctrine alignment
 
 This proposal targets doctrine `{{.Doctrine}}`. The change is
-operator-gated (Q10 C); the amendment NEVER auto-applies. The cooldown
+operator-gated (design choice C); the amendment NEVER auto-applies. The cooldown
 window suppresses re-proposal of the same trigger pattern for the
 doctrine's `proposal_cooldown_hours`.
 
@@ -58,7 +58,7 @@ doctrine's `proposal_cooldown_hours`.
 
 Affects HADES design doctrine TOML schema (no code change required if the
 amendment only re-tunes thresholds). If the amendment introduces new
-TOML fields, HADES design release track schema must be amended in coordination
+TOML fields, HADES design stage schema must be amended in coordination
 (per `docs/operations/parallel-execution-coordination.md`).
 
 ## Related ADRs

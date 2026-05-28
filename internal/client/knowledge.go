@@ -24,8 +24,8 @@
 // invariant boundary: this file imports stdlib + context + encoding/json
 // only — never net/http directly (the *Client transport handles it).
 // `--remote` and `--audit-chain` are intercepted at the CLI BEFORE this
-// layer runs, so neither flag ever reaches a wire payload (per spec §1
-// Q17 + the G-12/G-13 sentinel-anchor contract).
+// layer runs, so neither flag ever reaches a wire payload (per design contract
+// design choice + the G-12/G-13 sentinel-anchor contract).
 package client
 
 import (

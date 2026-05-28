@@ -6,9 +6,9 @@ Port from CC-format plugin/hades/commands/openspec-archive.md workflow logic.
 
 from __future__ import annotations
 
-_PROMPT = """# HADES /openspec-archive — Archive phase for {feature_name}
+_PROMPT = """# HADES /openspec-archive — Archive stage for {feature_name}
 
-Per spec §3.3 (Modo C híbrido) via HADES:
+per design contract(Modo C híbrido) via HADES:
 
 ## 1. Trigger archive via daemon
 
@@ -17,7 +17,7 @@ SWARM_ID=$(curl --unix-socket /tmp/hades-system.sock -s \\
                 "http://unix/v1/swarms?feature={feature_name}" \\
                 | jq -r '.swarms[0].id')
 
-# pending endpoint registration: swarm archive (POST) per spec §3.3 archive phase awaits hades migrate
+# pending endpoint registration: swarm archive (POST) per design contract
 curl --unix-socket /tmp/hades-system.sock \\
      -X POST \\
      "http://unix/v1/swarms/$SWARM_ID/archive"
@@ -85,15 +85,15 @@ Per cleanup-policy.toml.
 
 ## Cross-references
 
-- spec §3.3 archive phase
+- spec §3.3 archive stage
 - invariant NO Claude attribution
-- HADES design MergeEngine (winner selection per spec §4.4)
+- HADES design MergeEngine (winner selection per design contract)
 - /hades:openspec-apply (precedent step)
 """
 
 _PROMPT_NO_FEATURE = """HADES: feature name required for openspec-archive
   /hades:openspec-archive requires a feature name to identify the swarm to archive.
-  → Run /hades:openspec-apply <feature-name> first to complete the apply phase, then invoke /hades:openspec-archive <feature-name>
+  → Run /hades:openspec-apply <feature-name> first to complete the apply stage, then invoke /hades:openspec-archive <feature-name>
 """
 
 

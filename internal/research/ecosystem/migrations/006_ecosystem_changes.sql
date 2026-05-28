@@ -1,21 +1,21 @@
 -- internal/research/ecosystem/migrations/006_ecosystem_changes.sql
 --
--- HADES design release track Task A-9. Per spec §3.4.
+-- HADES design stage task. per design contract
 --
--- VersionRAG Change nodes (per spec §2.5 Q5=A). release track change_extractor
+-- VersionRAG Change nodes (per design contract). stage change_extractor
 -- writes one row per (package, version_from, version_to, symbol_path)
 -- tuple. source_extracted distinguishes explicit_changelog vs
--- implicit_deepdiff per spec §3.3 ChangeNode field set.
+-- implicit_deepdiff per design contract
 --
 -- invariant: Change-node graph consistency — every row's
 -- (version_from, version_to) MUST correspond to ecosystem_versions rows
--- via FK chain (enforced by trigger; declared at release track E-7).
+-- via FK chain (enforced by trigger; declared at stage E-7).
 --
 -- CHECK constraints enforce domain enums at the SQL layer per project
 -- doctrine "domain invariants load-bearing in 3 places (code +
 -- invariants.sql + CHECK constraints)". The Go-side enums in types.go
 -- (ChangeType + the source_extracted string-set) are the first place;
--- this CHECK is the second; invariants.sql (release track) is the third.
+-- this CHECK is the second; invariants.sql (stage) is the third.
 
 CREATE TABLE IF NOT EXISTS ecosystem_changes (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,

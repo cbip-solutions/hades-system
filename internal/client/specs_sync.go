@@ -14,8 +14,8 @@
 //
 // Error mapping at the CLI layer (see classifySpecsError in internal/cli/
 // specs_sync.go):
-// - 404 → ErrRecoverable (route not yet wired in ; transient
-// operator-recoverable state — phase F can ship before lands
+// - 404 → ErrRecoverable (route unavailable in ; transient
+// operator-recoverable state — stage F can ship before lands
 // the handler).
 // - 422 → ErrRecoverable (daemon rejected operator input).
 // - 5xx / transport / decode → bare err (exit 2 unrecoverable).

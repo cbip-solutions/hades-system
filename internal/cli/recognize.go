@@ -2,7 +2,7 @@
 // Package cli — recognize.go.
 //
 // `hades recognize` thin wrapper consuming internal/recognize public API.
-// Surface per spec §7.4:
+// Surface per design contract:
 //
 // hades recognize [PATH] [--json] [--no-audit]
 //

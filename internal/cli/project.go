@@ -14,7 +14,7 @@
 // rm <alias> --yes # hard-delete (cascades path_history)
 // priority --boost|--reset|--ls # Layer 3 WFQ override
 //
-// Exit-code mapping (per spec §6.2):
+// Exit-code mapping (per design contract):
 //
 // 0 — healthy / OK
 // 1 — alias not found OR mv-detection pending OR --yes omitted
@@ -48,7 +48,7 @@ import (
 // ErrRecoverable is the sentinel root any operator-recoverable error in
 // the CLI MUST wrap (via fmt.Errorf("%w:...", ErrRecoverable)). The
 // process entry point (cmd/hades/main.go) maps these to exit code 1, all
-// other non-nil errors to exit code 2 — per spec §6.2 :
+// other non-nil errors to exit code 2 — per design contract:
 //
 // 0 — success / healthy
 // 1 — operator-recoverable (mv-detected, alias-missing, --yes omitted)
@@ -70,7 +70,7 @@ import (
 var ErrRecoverable = errors.New("operator-recoverable")
 
 // ErrPreflightFailure is the sentinel root any preflight-gate failure
-// (release `hades config init`: Hermes not installed, plugin
+// (HADES design `hades config init`: Hermes not installed, plugin
 // format remnant detected) MUST wrap. The process entry point
 // (cmd/hades/main.go) maps this category to exit code 3 — distinct from
 // generic recoverable errors (exit 1) and unrecoverable errors (exit 2)
@@ -115,16 +115,8 @@ func NewProjectCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "project",
 		Short: "Project identity lifecycle (doctor / archive / rm)",
-		Long: `Manage per-project identity in the daemon's project registry.
-All actions resolve aliases via projectctxadapter (sha256 canonical
-identity + alias UX) so cwd-rooted invocations agree with explicit
-alias invocations.
+		Long:  "Manage per-project identity in the daemon's project registry.\nAll actions resolve aliases via projectctxadapter (sha256 canonical\nidentity + alias UX) so cwd-rooted invocations agree with explicit\nalias invocations.\n\nSubcommands:\n  doctor    diagnose project identity (cwd-based or by alias)\n  archive   soft-delete an alias (excluded from default ls)\n  rm        hard-delete an alias (cascades path_history; --yes required)\n  priority  Layer-3 WFQ override (boost / reset / list; spec §1 design choice)",
 
-Subcommands:
-  doctor    diagnose project identity (cwd-based or by alias)
-  archive   soft-delete an alias (excluded from default ls)
-  rm        hard-delete an alias (cascades path_history; --yes required)
-  priority  Layer-3 WFQ override (boost / reset / list; spec §1 Q10)`,
 		Example: " # Diagnose the project anchored at the current cwd\n  hades project doctor\n\n # Archive the \"internal-platform-x\" alias (reversible)\n  hades project archive internal-platform-x\n\n # Permanently remove an alias and its path_history rows\n  hades project rm old-prototype --yes\n\n # Boost the \"internal-platform-x\" alias for 4 hours\n  hades project priority --boost internal-platform-x --duration 4h --reason \"release prep\"",
 	}
 	cmd.AddCommand(projectDoctorCmd())
@@ -141,7 +133,7 @@ func projectDoctorCmd() *cobra.Command {
 		Short: "Diagnose project identity (cwd-based or by alias)",
 		Long:  "Run a project-identity health probe against the daemon's project\nregistry. With no argument the CLI captures cwd; the daemon walks up\nto find hadessystem.toml or .git via projectctx.FindProjectRoot. With an\nalias argument the daemon resolves directly without filesystem walking.\n\nOutput reports:\n * resolved alias + sha256 (truncated to 8 chars for table use)\n * canonical path the registry agrees on\n * full path_history (every path the project has lived at, with\n    first-seen and last-seen timestamps)\n * MV-DETECTED block when the daemon notices the cwd's sha256 does\n    not match any registered project (operator moved the directory\n    or the alias-on-disk drifted)\n\nExit codes (spec §6.2):\n  0  healthy\n  1  mv-detection pending OR alias not found OR daemon healthy:false\n  2  unrecoverable: transport, decode, daemon 5xx",
 
-		Example: " # Probe the project anchored at cwd\n  hades project doctor\n\n # Probe a specific project by alias\n  hades project doctor internal-platform-x\n\n # : rebind the alias to cwd's sha256 after a directory move\n  hades project doctor --rebind",
+		Example: " # Probe the project anchored at cwd\n  hades project doctor\n\n # Probe a specific project by alias\n  hades project doctor internal-platform-x\n\n # stage: rebind the alias to cwd's sha256 after a directory move\n  hades project doctor --rebind",
 
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -156,7 +148,7 @@ func projectDoctorCmd() *cobra.Command {
 			return runProjectDoctor(ctx, cli, alias, rebind, cmd.OutOrStdout())
 		},
 	}
-	c.Flags().Bool("rebind", false, "(Phase B/J) rebind alias to current cwd's sha256 after mv-detection")
+	c.Flags().Bool("rebind", false, "(stage) rebind alias to current cwd's sha256 after mv-detection")
 	return c
 }
 
@@ -167,18 +159,8 @@ func projectArchiveCmd() *cobra.Command {
 		Long: `Soft-delete a project alias by setting autonomous_state="complete"
 in the daemon's project registry. The alias is preserved (so historical
 references in audit / inbox / knowledge tables remain navigable) but
-hidden from the default surface — ` + "`hades projects ls`" + ` shows archived
-rows under a STATE=archived marker so operator can spot dead aliases.
+hidden from the default surface — ` + "`hades projects ls`" + " shows archived\nrows under a STATE=archived marker so operator can spot dead aliases.\n\nReversible: a future HADES design stage restore-flow will resurrect archived\naliases. In HADES design v0.7.0 the only un-archive path is the daemon's\ndirect registry edit; CLI exposes archive (forward), rm (forward),\nrestore comes in stage\n\nExit codes (spec §6.2):\n  0  archived\n  1  alias not found (operator typo or already archived/removed)\n  2  unrecoverable: transport, decode, daemon 5xx",
 
-Reversible: a future Plan 7 Phase J restore-flow will resurrect archived
-aliases. In Plan 7 v0.7.0 the only un-archive path is the daemon's
-direct registry edit; CLI exposes archive (forward), rm (forward),
-restore comes in Phase J.
-
-Exit codes (spec §6.2):
-  0  archived
-  1  alias not found (operator typo or already archived/removed)
-  2  unrecoverable: transport, decode, daemon 5xx`,
 		Example: " # Archive a deprecated project\n  hades project archive old-prototype\n\n # Inspect after archiving (archived rows show with STATE=archived)\n  hades projects ls",
 
 		Args: cobra.ExactArgs(1),

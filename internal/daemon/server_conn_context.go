@@ -1,6 +1,6 @@
 // Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
-// Package daemon — server_conn_context.go (release fix-cycle
+// Package daemon — server_conn_context.go (HADES design fix-cycle
 // re-review pre-existing-gap fix).
 //
 // connContextWithPeerCred is the http.Server.ConnContext callback wired

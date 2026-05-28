@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — citation.go
 //
-// Grammar-constrained citation enforcement per spec §2.7 Q7=A Layer 1 +
+// Grammar-constrained citation enforcement per design contract=A Layer 1 +
 // §4.2 step 10 + invariant (citation grammar tokens validated before
 // answer emission).
 //
@@ -83,7 +83,7 @@ type CitationConfig struct {
 }
 
 // AnswerGenerator is the abstraction over the LLM call that produces an
-// answer. The production implementation wraps the release dispatcher
+// answer. The production implementation wraps the HADES design dispatcher
 // (Haiku / DeepSeek / Ollama backend with grammar-mask where supported).
 // Tests inject a fake returning canned outputs. Generate MUST honor
 // ctx cancellation; the reprompt string is "" on the first attempt and

@@ -3,14 +3,14 @@
 // .
 //
 // Spec reference:
-// - internal design record
-// §"Task G-9" lines 3144-3348 (ColdRebuild — full index rebuild)
-// §"Task G-10" lines 3349-3437 (IncrementalUpdate — single-file).
+// - design records design
+// §"task" lines 3144-3348 (ColdRebuild — full index rebuild)
+// §"task" lines 3349-3437 (IncrementalUpdate — single-file).
 //
 // `ColdRebuild` runs at daemon boot (and on operator request via
 // `hades knowledge reindex --full` once the CLI lands in ). It
 // idempotently re-populates the index from the given sources by
-// chaining Scanner → Parser → Indexer. Per spec §4.5 the function
+// chaining Scanner → Parser → Indexer. per design contract
 // honors `ctx.Deadline()` and returns `context.DeadlineExceeded`
 // cleanly when the operator-configured 30 min cap is exceeded.
 //
@@ -70,14 +70,14 @@ func (re ReindexError) Unwrap() error { return re.Err }
 // ctx err — the partially-rebuilt index is still consistent
 // because IndexDoc uses a per-file transaction.
 //
-// Per spec §4.5, the function MUST honor ctx.Deadline(); the per-file
+// per design contract, the function MUST honor ctx.Deadline(); the per-file
 // loop checks ctx.Err() before each Parse so the operator-configured
 // 30 min cap is respected with at most one file's worth of overrun.
 //
 // Per invariant: ColdRebuild does not directly touch
 // audit_chain_anchor / ecosystem_join_keys / caronte_symbol_refs —
 // it delegates to IndexDoc, which is already invariant-compliant
-// (G-5 enforces). Future release / release / Caronte writers fill those
+// (G-5 enforces). Future HADES design / HADES design / Caronte writers fill those
 // columns at materialization time without rebuild churn.
 //
 // Goroutine-safety: SQLite WAL mode allows concurrent readers during
@@ -140,12 +140,12 @@ func ColdRebuild(ctx context.Context, db *sql.DB, sources []ScannerSource) ([]Re
 // leak even if the watcher's debounce window emits a rare double event.
 //
 // Boundary composes Parse + IndexDoc. No scanner walk. No fs traversal
-// beyond the single ReadFile inside Parse. The caller (daemon glue, Phase
+// beyond the single ReadFile inside Parse. The caller (daemon glue, stage
 // I) is responsible for deciding which paths to dispatch —
 // IncrementalUpdate trusts sf.Kind / sf.ProjectID / sf.ProjectAlias
 // verbatim.
 //
-// Inv-hades-130: composition with Parse + IndexDoc inherits the
+// invariant: composition with Parse + IndexDoc inherits the
 // NULL-discipline for audit_chain_anchor / ecosystem_join_keys /
 // caronte_symbol_refs. A frontmatter blob with keys named like the
 // extension hooks does NOT populate those columns (Parse leaves them

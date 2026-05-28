@@ -2,12 +2,12 @@
 // Package ecosystem — router.go
 //
 // Local query classifier + heuristic token-presence pre-pass for cross-ecosystem
-// fan-out routing per spec §2.6 Q6=A. Output: RoutingDecision determining
+// fan-out routing per design contract=A. Output: RoutingDecision determining
 // which of EcoGo/EcoPython/EcoTypeScript/EcoRust databases to query.
 //
 // # Why no LLM in router
 //
-// Per Q6=A: a Haiku-class router would add 200-400ms p95 RTT, breaking the
+// Per design choice: a Haiku-class router would add 200-400ms p95 RTT, breaking the
 // P50 ≤350ms / P95 ≤700ms budget for the ENTIRE query path. RAGRoute
 // (EuroMLSys 2025; arXiv 2502.19280) demonstrates that local classifiers reach
 // 85-90% routing accuracy at sub-ms inference cost. We achieve this by:
@@ -82,7 +82,7 @@ type HeuristicRule struct {
 // goroutine-safe per invariant; classifier is a hot-path member).
 type QueryClassifier interface {
 	// ScoreSoftmax returns a softmax distribution over the 4 ecosystems given
-	// a 1536-d FP32 query embedding (from jina-code-embeddings-1.5B per Q4=A).
+	// a 1536-d FP32 query embedding (from jina-code-embeddings-1.5B per design choice).
 	// Sum of returned values is 1.0 ± 1e-3. Implementations MUST return one
 	// entry per canonical Ecosystem in AllEcosystems; missing or extra entries
 	// are rejected by the Router as invariant violations.
@@ -304,7 +304,7 @@ func validateSoftmax(s map[Ecosystem]float64) error {
 	return nil
 }
 
-// defaultHeuristics returns the canonical 4-ecosystem token table per spec §2.6.
+// defaultHeuristics returns the canonical 4-ecosystem token table per design contract
 //
 // Each ecosystem has ~8-10 high-precision tokens. Tokens are lowercased; the
 // scanner matches case-insensitively (query is lowercased pre-scan).
@@ -357,12 +357,12 @@ func defaultHeuristics() []HeuristicRule {
 // =============================================================================
 //
 // Multinomial logistic regression over a frozen 1536-d query embedding from
-// jina-code-embeddings-1.5B (per Q4=A). 4-way softmax over Ecosystems with
+// jina-code-embeddings-1.5B (per design choice). 4-way softmax over Ecosystems with
 // cross-entropy loss + L2 weight regularization, trained via mini-batch SGD.
 //
 // # Why this shape
 //
-// Spec §2.6 Q6=A: a Haiku-class LLM router would add 200-400ms p95 RTT,
+// Spec §2.6 design choice: a Haiku-class LLM router would add 200-400ms p95 RTT,
 // breaking the P50 ≤350ms / P95 ≤700ms budget for the entire query path.
 // RAGRoute (EuroMLSys 2025; arXiv 2502.19280) shows local linear classifiers
 // reach 85-90% routing accuracy at sub-ms inference cost over frozen query

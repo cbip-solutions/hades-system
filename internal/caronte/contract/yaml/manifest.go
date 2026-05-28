@@ -36,10 +36,10 @@ func (m *Manifest) AddPatternService(pattern, targetRepo string) error {
 
 // Service is one base-URL reference → target_repo mapping. Exactly one of
 // BaseURL / BaseURLEnv / BaseURLPattern MUST be set (validateBaseURLExclusive
-// in Task F-3 enforces this with ErrMultipleBaseURLVariants).
+// in task enforces this with ErrMultipleBaseURLVariants).
 //
 // - BaseURL: literal URL prefix the client hardcodes (e.g., `http://billing-svc`).
-// Matched against api_calls.base_url_ref EXACTLY (release resolve.go treats
+// Matched against api_calls.base_url_ref EXACTLY (HADES design resolve.go treats
 // base_url_ref as the prefix the extractor saw in the source code).
 // - BaseURLEnv: env var NAME the client reads at runtime (e.g., `AUTH_SVC_URL`
 // for a `os.Getenv("AUTH_SVC_URL")` call). The runtime env VALUE is

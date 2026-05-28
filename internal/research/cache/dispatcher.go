@@ -5,7 +5,7 @@
 
 // Package cache — dispatcher.go
 //
-// Dispatcher is the cache-aware research MCP integration layer (release
+// Dispatcher is the cache-aware research MCP integration layer (HADES design
 // ). It composes the exact lookup (F-5), semantic lookup (F-6),
 // HEAD revalidation (F-7), and fresh MCP dispatch into the canonical
 // LookupOrDispatch flow defined in spec §3.5.

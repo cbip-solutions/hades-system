@@ -20,7 +20,7 @@ import (
 // reachable is a *bool → NULL when nil (CHA/SCIP, not pruned), else 1/0.
 func (s *Store) UpsertEdge(ctx context.Context, e Edge) error {
 	if !e.Confidence.Valid() {
-		return fmt.Errorf("caronte/store: UpsertEdge: invalid confidence %q (inv-hades-233)", e.Confidence)
+		return fmt.Errorf("caronte/store: UpsertEdge: invalid confidence %q (invariant)", e.Confidence)
 	}
 	var reachable sql.NullInt64
 	if e.Reachable != nil {

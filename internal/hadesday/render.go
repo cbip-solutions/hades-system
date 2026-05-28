@@ -13,11 +13,11 @@ import (
 func Render(doc BriefDoc) string {
 	if len(doc.Items) > MaxBriefItems {
 		panic(fmt.Sprintf(
-			"hadesday.Render: inv-hades-126 violation: len(items)=%d > MaxBriefItems=%d",
+			"hadesday.Render: invariant violation: len(items)=%d > MaxBriefItems=%d",
 			len(doc.Items), MaxBriefItems))
 	}
 	if !IsSorted(doc.Items) {
-		panic("hadesday.Render: inv-hades-127 violation: IsSorted(items) = false")
+		panic("hadesday.Render: invariant violation: IsSorted(items) = false")
 	}
 
 	var out string
@@ -164,7 +164,7 @@ func renderAugmentation(s *AugmentationSection) string {
 		return ""
 	}
 	var b strings.Builder
-	b.WriteString("\n## Augmentation\n\n")
+	b.WriteString("\n## Augmentation (HADES design)\n\n")
 	fmt.Fprintf(&b, "- total_cost: $%.2f USD\n", s.TotalCostUSD)
 	fmt.Fprintf(&b, "- tokens_consumed: %s / %s",
 		formatThousands(s.TokensConsumed), formatThousands(s.TokensCeiling))
@@ -190,7 +190,7 @@ func renderKnowledge(s *KnowledgeSection) string {
 		return ""
 	}
 	var b strings.Builder
-	b.WriteString("\n## Knowledge\n\n")
+	b.WriteString("\n## Knowledge (HADES design)\n\n")
 	line := fmt.Sprintf("- fts5_docs: %s", formatThousands(s.FTS5Docs))
 	if s.FTS5DocsDeltaSinceYesterday != 0 {
 		line += fmt.Sprintf(" (+%d since yesterday)", s.FTS5DocsDeltaSinceYesterday)
@@ -218,7 +218,7 @@ func renderNotifications(s *NotificationsSection) string {
 		return ""
 	}
 	var b strings.Builder
-	b.WriteString("\n## Notifications\n\n")
+	b.WriteString("\n## Notifications (HADES design — Hermes-routed)\n\n")
 	if len(s.RoutesActive) > 0 {
 		fmt.Fprintf(&b, "- routes_active: %s\n", strings.Join(s.RoutesActive, ", "))
 	} else {

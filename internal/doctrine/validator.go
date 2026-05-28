@@ -29,7 +29,7 @@ type ValidationResult struct {
 	Violations []string
 }
 
-var adrPathPattern = regexp.MustCompile(`docs/decisions/\d{4}-doctrine-schema-[a-z0-9_-]+\.md`)
+var adrPathPattern = regexp.MustCompile("architecture records")
 
 var schemaFilePattern = regexp.MustCompile(`(?m)^diff --git a/internal/doctrine/schema\.go b/internal/doctrine/schema\.go`)
 
@@ -58,7 +58,7 @@ func ValidateAdditive(diff, commitBody string) (ValidationResult, error) {
 	violations := make([]string, 0, len(removed))
 	for _, tag := range removed {
 		violations = append(violations,
-			fmt.Sprintf("toml tag %q removed/renamed without ADR ref docs/decisions/NNNN-doctrine-schema-*.md", tag))
+			fmt.Sprintf("toml tag %q removed/renamed without ADR ref architecture records", tag))
 	}
 	return ValidationResult{OK: false, Violations: violations}, nil
 }

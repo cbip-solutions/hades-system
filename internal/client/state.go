@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package client — state.go.
 //
-// 5 typed wrappers for the release system-state endpoints declared in
+// 5 typed wrappers for the HADES design system-state endpoints declared in
 // internal/daemon/handlers/state.go. Wire types mirror the handler declarations;
 // duplication is intentional (client compiles standalone without importing
-// internal/daemon — release N convention).
+// internal/daemon — HADES design N convention).
 //
 // GET /v1/state/show — StateShow
 // POST /v1/state/regenerate — StateRegenerate

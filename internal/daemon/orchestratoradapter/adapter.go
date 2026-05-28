@@ -31,8 +31,8 @@
 // - worktreepool.LeaseStore — there is NO such interface;
 // leases are in-memory only (warm slice + leased map).
 //
-// Inv-hades-102 cost-ledger isolation: this adapter MUST NOT write the
-// cost_ledger table directly. All cost-ledger writes flow through release
+// invariant cost-ledger isolation: this adapter MUST NOT write the
+// cost_ledger table directly. All cost-ledger writes flow through HADES design
 // dispatcher → internal/daemon/dispatcheradapter. Compliance test in
 // tests/compliance/inv_hades_102_cost_ledger_isolation_test.go.
 //

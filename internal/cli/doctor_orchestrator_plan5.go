@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_orchestrator_plan5.go.
 //
-// 9 orchestrator-engine doctor checks per spec §6.2. Distinct from the
-// 4 dispatcher-tier checks shipped in release K-6's
+// 9 orchestrator-engine doctor checks per design contract
+// 4 dispatcher-tier checks shipped in HADES design K-6's
 // doctor_orchestrator_checks.go (different names, different probes,
 // different responsibilities).
 //
@@ -10,13 +10,13 @@
 //
 // 1. orchestrator.daemon_up — daemon process responding on UDS
 // 2. orchestrator.event_log_writable — audit_events_raw writable + corruption < 5
-// 3. orchestrator.worktree_pool_healthy — pool floor reached + 0 leaked + GC ran (Q3+Q4)
+// 3. orchestrator.worktree_pool_healthy — pool floor reached + 0 leaked + GC ran (design choice+design choice)
 // 4. orchestrator.research_mcp_up — research MCP reachable (invariant hard tier)
-// 5. orchestrator.caronte_up — caronte engine up + index currency ≤ 24h (Q13 D)
+// 5. orchestrator.caronte_up — caronte engine up + index currency ≤ 24h (design choice D)
 // 6. orchestrator.adapters_clean — orchestratoradapter Close() succeeded last shutdown
 // 7. orchestrator.background_goroutines — exactly 11 expected (spec §3.3)
-// 8. orchestrator.last_session_clean — last session terminated cleanly (Q7 D)
-// 9. orchestrator.substrate_health — substrate pass rate ≥ 95% (Q2 C + Q12 C)
+// 8. orchestrator.last_session_clean — last session terminated cleanly (design choice D)
+// 9. orchestrator.substrate_health — substrate pass rate ≥ 95% (design choice C + design choice C)
 //
 // Each check has a happy + at least one failure path covered by the
 // adjacent _test.go file.
@@ -87,7 +87,7 @@ func newOrchestratorPlan5DoctorChecks(baseURL string) []orchestratorCheckP5 {
 				return DoctorResultP5{Pass: false, Detail: "audit_events_raw not writable"}
 			}
 			if resp.CorruptionCount >= 5 {
-				return DoctorResultP5{Pass: false, Detail: fmt.Sprintf("corruption_count=%d (>=5 -> HARD_PAUSE imminent per inv-hades-095)", resp.CorruptionCount)}
+				return DoctorResultP5{Pass: false, Detail: fmt.Sprintf("corruption_count=%d (>=5 -> HARD_PAUSE imminent per invariant)", resp.CorruptionCount)}
 			}
 			return DoctorResultP5{Pass: true, Detail: fmt.Sprintf("writable; corruption=%d", resp.CorruptionCount)}
 		}},
@@ -114,7 +114,7 @@ func newOrchestratorPlan5DoctorChecks(baseURL string) []orchestratorCheckP5 {
 				return DoctorResultP5{Pass: false, Detail: err.Error()}
 			}
 			if !resp.Up {
-				return DoctorResultP5{Pass: false, Detail: "research MCP unreachable (inv-hades-101 hard tier - orchestrator will refuse to start)"}
+				return DoctorResultP5{Pass: false, Detail: "research MCP unreachable (invariant hard tier - orchestrator will refuse to start)"}
 			}
 			return DoctorResultP5{Pass: true, Detail: "research MCP up"}
 		}},
@@ -131,7 +131,7 @@ func newOrchestratorPlan5DoctorChecks(baseURL string) []orchestratorCheckP5 {
 				return DoctorResultP5{Pass: false, Detail: "caronte engine down"}
 			}
 			if resp.IndexCurrencyHours > 24 {
-				return DoctorResultP5{Pass: false, Detail: fmt.Sprintf("index currency %dh > 24h (Q13 D hard tier)", resp.IndexCurrencyHours)}
+				return DoctorResultP5{Pass: false, Detail: fmt.Sprintf("index currency %dh > 24h (design choice D hard tier)", resp.IndexCurrencyHours)}
 			}
 			return DoctorResultP5{Pass: true, Detail: fmt.Sprintf("up; index_currency=%dh", resp.IndexCurrencyHours)}
 		}},
@@ -144,7 +144,7 @@ func newOrchestratorPlan5DoctorChecks(baseURL string) []orchestratorCheckP5 {
 				return DoctorResultP5{Pass: false, Detail: err.Error()}
 			}
 			if !resp.Clean {
-				return DoctorResultP5{Pass: false, Detail: "orchestratoradapter.Close() failed at last shutdown (inv-hades-089 boundary at risk)"}
+				return DoctorResultP5{Pass: false, Detail: "orchestratoradapter.Close() failed at last shutdown (invariant boundary at risk)"}
 			}
 			return DoctorResultP5{Pass: true, Detail: "adapters Close() clean; goleak verified"}
 		}},
@@ -168,7 +168,7 @@ func newOrchestratorPlan5DoctorChecks(baseURL string) []orchestratorCheckP5 {
 				return DoctorResultP5{Pass: false, Detail: err.Error()}
 			}
 			if !resp.Clean {
-				return DoctorResultP5{Pass: false, Detail: "last session lacked OrchestratorStopped event - possible crash/replay needed (Q7 D)"}
+				return DoctorResultP5{Pass: false, Detail: "last session lacked OrchestratorStopped event - possible crash/replay needed (design choice D)"}
 			}
 			return DoctorResultP5{Pass: true, Detail: "last session terminated cleanly"}
 		}},
@@ -179,7 +179,7 @@ func newOrchestratorPlan5DoctorChecks(baseURL string) []orchestratorCheckP5 {
 				return DoctorResultP5{Pass: false, Detail: err.Error()}
 			}
 			if s.SubstratePassRate7d < substrateHealth7dThreshold {
-				return DoctorResultP5{Pass: false, Detail: fmt.Sprintf("substrate 7d pass rate %.1f%% < %.0f%% threshold (Q12 C graduation)", s.SubstratePassRate7d*100, substrateHealth7dThreshold*100)}
+				return DoctorResultP5{Pass: false, Detail: fmt.Sprintf("substrate 7d pass rate %.1f%% < %.0f%% threshold (design choice C graduation)", s.SubstratePassRate7d*100, substrateHealth7dThreshold*100)}
 			}
 			if s.DriftIncidents24h > 0 {
 				return DoctorResultP5{Pass: false, Warning: true, Detail: fmt.Sprintf("%d drift incidents in last 24h", s.DriftIncidents24h)}

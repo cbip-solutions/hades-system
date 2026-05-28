@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package tmuxlife — release + K public consumption surface.
+// Package tmuxlife — HADES design + K public consumption surface.
 //
 // This file extends the C-1..C-13 production API with aliases and
 // alias-typed convenience wrappers consumed by:

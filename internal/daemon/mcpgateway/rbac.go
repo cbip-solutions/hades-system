@@ -19,7 +19,7 @@
 //
 // Layer 3 — Concurrency gate:
 //
-// per-doctrine ceiling (Q8=C; max-scope=20, default=10, capa-firewall=5;
+// per-doctrine ceiling (design choice; max-scope=20, default=10, capa-firewall=5;
 // queue depth 50). sync.Cond signals queued waiters on release.
 //
 // The release function returned by Check MUST be called exactly once. The

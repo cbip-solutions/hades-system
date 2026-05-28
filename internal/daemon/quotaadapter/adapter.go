@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package quotaadapter bridges *store.Store to internal/quota's
 // OverrideStore interface (Layer 3 operator override spec
-// §1 Q10).
+// §1 design choice).
 //
 // invariant boundary: internal/quota MUST NOT import internal/store.
 // This adapter is the only package permitted to translate between
@@ -14,7 +14,7 @@
 //
 // invariant audit hook: every Set / Reset emits an event row in the
 // shared events table inside the SAME transaction as the
-// priority_overrides change. Atomicity is load-bearing — release hash-
+// priority_overrides change. Atomicity is load-bearing — HADES design hash-
 // chain integrity depends on event-row presence whenever the
 // priority_overrides row mutates. The transaction commits only after
 // BOTH the row write AND the audit event row write succeed; a failure

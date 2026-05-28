@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — knowledge_aggregator.go.
 //
-// Five HTTP handler functions for the release knowledge aggregator surface:
+// Five HTTP handler functions for the HADES design knowledge aggregator surface:
 //
 // POST /v1/knowledge/aggregator/query — FTS + structured filter via
 // Aggregator.QueryFTS
@@ -10,10 +10,10 @@
 // GET /v1/knowledge/aggregator/list — list pinned notes
 // POST /v1/knowledge/aggregator/rebuild — enqueue async re-embed
 //
-// These are DISTINCT from the release knowledge handler factory functions
+// These are DISTINCT from the HADES design knowledge handler factory functions
 // (KnowledgeQueryHandler, KnowledgeReindexHandler, KnowledgeStatsHandler in
 // knowledge.go) which back the legacy /v1/knowledge/{query,reindex,stats}
-// routes. Both surfaces coexist; the release aggregator routes delegate to an
+// routes. Both surfaces coexist; the HADES design aggregator routes delegate to an
 // AggregatorService interface (structural typing) to avoid importing
 // internal/knowledge/aggregator directly in the handlers package.
 //
@@ -150,11 +150,11 @@ type AggregatorService interface {
 }
 
 var ErrAggPromoteReasonRequired = errors.New(
-	"handler: promote/unpromote reason required (inv-hades-146)",
+	"handler: promote/unpromote reason required (invariant)",
 )
 
 var ErrAggWorkerNotStarted = errors.New(
-	"handler: embed_worker not started (Phase J forward-compat seam)",
+	"handler: embed_worker not started (stage forward-compat seam)",
 )
 
 func isPromoteReasonRequired(err error) bool {
@@ -162,7 +162,7 @@ func isPromoteReasonRequired(err error) bool {
 		return true
 	}
 
-	return err != nil && strings.Contains(err.Error(), "inv-hades-146")
+	return err != nil && strings.Contains(err.Error(), "invariant")
 }
 
 func isWorkerNotStarted(err error) bool {

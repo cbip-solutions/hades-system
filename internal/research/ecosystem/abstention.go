@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — abstention.go
 //
-// Bayesian abstention policy per spec §2.7 Q7=A Layer 3.
+// Bayesian abstention policy per design contract=A Layer 3.
 //
 // # Algorithm
 //
@@ -70,7 +70,7 @@
 // Re-tuned post-corpus-rebuild on the adversarial held-out set per
 // ships the calibration protocol in tests/adversarial/ecosystem/.
 //
-// Spec internal design record §2.7 Q7=A Layer 3.
+// Spec design records design §2.7 design choice Layer 3.
 // Master invariant: invariant.
 package ecosystem
 

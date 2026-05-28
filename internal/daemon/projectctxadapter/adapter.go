@@ -18,7 +18,7 @@
 // ripple into the projectctx package — the adapter absorbs them.
 //
 // Time precision: the projects_alias / path_history schema (migration
-// 057) stores INTEGER unix-MILLISECONDS (UnixMilli), matching the release
+// 057) stores INTEGER unix-MILLISECONDS (UnixMilli), matching the HADES design
 // cost_ledger pattern. The adapter translates time.Time ↔ int64 ms via
 // time.UnixMilli / t.UnixMilli(). Sub-millisecond precision is not
 // preserved on the wire (operator-facing project lifecycle does not need
@@ -32,7 +32,7 @@
 // HTTP handlers consume this shape). nil = active; non-nil = archived.
 //
 // Context cancellation: store-package functions take *sql.DB rather
-// than (ctx, *sql.DB) — they predate release ctx-aware refactor. To
+// than (ctx, *sql.DB) — they predate HADES design ctx-aware refactor. To
 // honor the projectctx.ProjectStore contract that every method respect
 // ctx.Done(), each adapter method does a defensive ctx.Err() check at
 // entry and returns early with the cancellation error before touching
@@ -45,7 +45,7 @@
 // "github.com/cbip-solutions/hades-system/internal/store". This is the ONLY
 // permissible co-location of those two imports anywhere in the codebase.
 // The compliance test in tests/compliance/inv_hades_122_inv_hades_031_plan7_packages_test.go
-// (Task A-9) enforces this at test time.
+// (task) enforces this at test time.
 package projectctxadapter
 
 import (

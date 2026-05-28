@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — notify.go.
 //
-// notification ledger. release will widen this surface to multi-channel
+// notification ledger. HADES design will widen this surface to multi-channel
 // routing (mute, rules, history per-channel).
 package cli
 
@@ -19,7 +19,7 @@ import (
 func NewNotifyCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "notify",
-		Short: "Notification controls (Plan 2: bypass events; Plan 11: full router)",
+		Short: "Notification controls (HADES design: bypass events; HADES design: full router)",
 	}
 	cmd.AddCommand(notifyListCmd())
 	cmd.AddCommand(notifyAckCmd())

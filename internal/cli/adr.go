@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — adr.go.
 //
-// `hades adr` is the release operator surface for the ADR machine-readable
-// index (spec §6.1 Q7 A). Ten leaves cover the full ADR lifecycle:
+// `hades adr` is the HADES design operator surface for the ADR machine-readable
+// index (spec §6.1 design choice A). Ten leaves cover the full ADR lifecycle:
 //
 // propose <topic> — draft + $EDITOR + daemon commit [I-6]
 // show <id> — frontmatter table + body [I-6]
@@ -30,29 +30,10 @@ import "github.com/spf13/cobra"
 func NewAdrCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "adr",
-		Short: "ADR machine-readable index (Plan 9)",
-		Long: `Plan 9 ADR surface. Structured MADR YAML frontmatter + JSON Schema
-validator + dual JSON manifest emitter (_index.json + _graph.json).
-Transitions (accept | reject | supersede) require --reason (inv-hades-146)
-and emit Plan 8 events anchored on Plan 9 chain.
+		Short: "ADR machine-readable index (HADES design)",
+		Long:  "HADES design ADR surface. Structured MADR YAML frontmatter + JSON Schema\nvalidator + dual JSON manifest emitter (_index.json + _graph.json).\nTransitions (accept | reject | supersede) require --reason (invariant)\nand emit HADES design events anchored on HADES design chain.\n\nTen leaves:\n  propose    Interactive draft (auto-assigns next id; opens $EDITOR)\n  show       Frontmatter table + markdown body\n  ls         Filter list by status / plan / risk-level\n  graph      Supersede chain ASCII tree\n  history    Transition log for one ADR\n  accept     Mark accepted (--reason mandatory; invariant)\n  reject     Mark rejected (--reason mandatory; invariant)\n  supersede  Link old→new chain (--reason mandatory; invariant)\n  migrate    One-time: parse 39 legacy headers → MADR frontmatter\n  index      Regenerate dual manifest; --check for CI gate",
 
-Ten leaves:
-  propose    Interactive draft (auto-assigns next id; opens $EDITOR)
-  show       Frontmatter table + markdown body
-  ls         Filter list by status / plan / risk-level
-  graph      Supersede chain ASCII tree
-  history    Transition log for one ADR
-  accept     Mark accepted (--reason mandatory; inv-hades-146)
-  reject     Mark rejected (--reason mandatory; inv-hades-146)
-  supersede  Link old→new chain (--reason mandatory; inv-hades-146)
-  migrate    One-time: parse 39 legacy headers → MADR frontmatter
-  index      Regenerate dual manifest; --check for CI gate`,
-		Example: `  hades adr propose tessera-batch-cadence-tuning
-  hades adr show ADR-0042
-  hades adr ls --status proposed --plan plan-9
-  hades adr graph --from ADR-0001 --depth 3
-  hades adr accept ADR-0070 --reason "Q4 B approved"
-  hades adr index --check`,
+		Example: "  hades adr propose tessera-batch-cadence-tuning\n  hades adr show ADR-0042\n  hades adr ls --status proposed --plan HADES design\n  hades adr graph --from ADR-0001 --depth 3\n  hades adr accept ADR-0070 --reason \"design choice B approved\"\n  hades adr index --check",
 	}
 	cmd.AddCommand(adrProposeCmd())
 	cmd.AddCommand(adrShowCmd())

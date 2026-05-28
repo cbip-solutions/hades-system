@@ -13,8 +13,8 @@
 // hades audit criteria list
 //
 // Option A adaptation: the plan-doc enumerated `review --diff <p>` which
-// requires the audit MCP wiring landed in release (the audit MCP
-// is the release deliverable, not ). delivers
+// requires the audit MCP wiring landed in HADES design (the audit MCP
+// is the HADES design deliverable, not ). delivers
 // the read/catalog surface complete + real-round-tripped; the
 // `review --diff` proxy command will land additively in a future plan
 // (deferred to a future plan) without changing this surface.
@@ -38,7 +38,7 @@ import (
 func NewAuditCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "audit",
-		Short: "Audit emit + query + family-disjoint pool catalog (Plan 4)",
+		Short: "Audit emit + query + family-disjoint pool catalog (HADES design)",
 	}
 	format.AttachFlags(cmd)
 	cmd.AddCommand(auditEmitCmd())
@@ -200,7 +200,7 @@ func auditTypesCmd() *cobra.Command {
 func auditFamiliesCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "families",
-		Short: "Family-disjoint reviewer pool catalog (inv-hades-080)",
+		Short: "Family-disjoint reviewer pool catalog (invariant)",
 	}
 	cmd.AddCommand(&cobra.Command{
 		Use:   "show",
@@ -219,7 +219,7 @@ func auditFamiliesCmd() *cobra.Command {
 			opts := format.OptionsFromFlags(cmd)
 			out := cmd.OutOrStdout()
 			if opts.Format == "table" {
-				fmt.Fprintf(out, "Family-disjoint reviewer pool (inv-hades-080) — active doctrine: %s\n", activeName)
+				fmt.Fprintf(out, "Family-disjoint reviewer pool (invariant) — active doctrine: %s\n", activeName)
 				fmt.Fprintf(out, "  - reviewer family != generator family\n")
 				fmt.Fprintf(out, "  - |pool| >= 2 enforced by doctrine validator\n\n")
 			}

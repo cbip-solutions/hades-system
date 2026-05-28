@@ -1,4 +1,4 @@
--- Migration 040: persistent cost ledger (HADES design release track, Q4 C, invariant).
+-- Migration 040: persistent cost ledger (HADES design stage, design choice C, invariant).
 -- Append-only; one row per LLM request with cost_usd already computed
 -- by the provider's RateCard. idempotency_key UNIQUE → no double-charge
 -- (Go layer translates the SQL constraint failure into

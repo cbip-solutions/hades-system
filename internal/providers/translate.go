@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/providers/translate.go
 //
-// Canonical ↔ provider wire-format translation for the release backends
+// Canonical ↔ provider wire-format translation for the HADES design backends
 // that do NOT speak the Anthropic Messages API natively.
 //
 // The CANONICAL format is the Anthropic /v1/messages JSON shape — it is

@@ -7,11 +7,11 @@
 // the validate-then-swap pipeline (parser.ParseStrict → schema.Validate →
 // schema.ValidateTighten if per-project → atomic swap via active.Set*). Validation
 // failures keep the previously-loaded schema active (last-good fallback) and emit
-// DoctrineReloadFailed via the release eventlog. Repeated failures (5+ within a
+// DoctrineReloadFailed via the HADES design eventlog. Repeated failures (5+ within a
 // 60-second window) trigger a per-path 1-minute cooldown to protect the daemon
 // from a wedged file.
 //
-// Reuses release Q16 + Qx-2 D file-watcher infrastructure (fsnotify wrapper +
+// Reuses HADES design design choice + Qx-2 D file-watcher infrastructure (fsnotify wrapper +
 // 25% CPU pool + debounce reset-on-event pattern); zero new infra.
 //
 // Boundary (invariant / invariant): zero imports of internal/store;
@@ -58,7 +58,7 @@ type ParserClient interface {
 
 // WatcherOpts carries Watcher constructor configuration. The three required
 // clients (EventlogClient, ActiveAccessor, Parser) MUST be non-nil; the
-// duration / threshold fields default to spec §1 Q10 values when zero.
+// duration / threshold fields default to spec §1 design choice values when zero.
 type WatcherOpts struct {
 	EventlogClient   EventlogClient
 	ActiveAccessor   ActiveAccessor

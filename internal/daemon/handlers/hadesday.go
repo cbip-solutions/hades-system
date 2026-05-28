@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — hadesday.go.
 //
-// Three routes for the release hades day operator surface:
+// Three routes for the HADES design hades day operator surface:
 //
 // POST /v1/hades-day/morning — generate (or re-render via force) today's morning brief
 // POST /v1/hades-day/eod — generate (or re-render via force) today's EOD digest
@@ -16,18 +16,18 @@
 //
 // Status-code mapping (mirrors the projects_p7 + inbox_p7 patterns):
 //
-// 503 — DayGenerator() not yet wired (cmd/hades-ctld registers
+// 503 — DayGenerator() unavailable (cmd/hades-ctld registers
 // the generator at boot; tests inject fakes via SetDayGenerator).
 // 400 — invalid JSON body.
 // 409 — today's brief already generated and force=false (idempotency
-// per spec §1 Q13 C; CLI surfaces as ErrRecoverable so the
+// per design contract; CLI surfaces as ErrRecoverable so the
 // operator sees exit 1 + a hint to re-run with --force).
 // 500 — opaque collection / disk / emit errors.
 // 200 — success; body is the rendered BriefDoc JSON (handler decides
 // to return the doc rather than the markdown so the CLI can
 // Render with the canonical hadesday.Render template; this keeps
 // the rendering logic in ONE place — the hadesday package — and
-// the wire shape is the typed BriefDoc per spec §1 Q15 alias).
+// the wire shape is the typed BriefDoc per design contract).
 //
 // invariant boundary: this handler imports internal/hadesday value
 // types only (BriefDoc / Generator / sentinel errors). No internal/store

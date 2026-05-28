@@ -1,11 +1,11 @@
 -- internal/research/ecosystem/migrations/008_ecosystem_audit_chain.sql
 --
--- HADES design release track Task A-9. Per spec §3.4 + §4.6.
+-- HADES design stage task. per design contract§4.6.
 --
 -- HADES design RAG audit chain (per ADR-0062 option C: per-event leaf +
--- monthly partition seal hybrid). release track dispatcher writes 8 EventType
+-- monthly partition seal hybrid). stage dispatcher writes 8 EventType
 -- rows per Query/Ingest cycle (slots 92..99, EvtRAGQuery..EvtRAGIngestJoinKey).
--- partition_id = yyyy-mm; weekly Sunday 03:00 sweep (release track) seals the
+-- partition_id = yyyy-mm; weekly Sunday 03:00 sweep (stage) seals the
 -- prior month's partition.
 --
 -- invariant: seq is monotonic, APPEND-ONLY, no reuse. Enforced by
@@ -13,7 +13,7 @@
 -- deletion in this design).
 --
 -- parent_hash + self_hash = sha256(seq || event_type || payload_json || parent_hash)
--- per spec §4.6.
+-- per design contract
 --
 -- CHECK (event_type BETWEEN 92 AND 99) is the load-bearing backstop for
 -- the Go-side EvtRAG* constants in internal/orchestrator/eventlog/events.go;

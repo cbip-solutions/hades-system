@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package orchestrator confirmation_handler — release Tasks F-2 + F-3.
+// Package orchestrator confirmation_handler — HADES design Tasks F-2 + F-3.
 //
 // ConfirmationHandler is the stateful coordinator wiring
 // ConfirmationPolicy (F-1) + StateMachine + eventlog
-// + release OperatorGate. RequestConfirmation evaluates the policy, and
+// + HADES design OperatorGate. RequestConfirmation evaluates the policy, and
 // on a mandatory or optional pause verdict transitions
 // RUNNING → WAITING_FOR_CONFIRMATION, locks the operator gate
 // (PauseDescriptive), and emits an EvtConfirmationRequested event so
-// downstream operator UI + release hash-chain replay can observe the
+// downstream operator UI + HADES design hash-chain replay can observe the
 // pause.
 //
 // Race-safety (invariant spirit): all three side effects (state
@@ -17,7 +17,7 @@
 // receive the existing RequestSeq + EventID without producing duplicate
 // state mutations or events. The full ack/deny race-safety surface
 // (RequestSeq + EventID match validation, ErrConfirmationStale) lands in
-// Task F-3.
+// task
 //
 // Partial-failure rollback: each side effect is paired with a deferred
 // reverse operation so a leaked Pause cannot hang the orchestrator if

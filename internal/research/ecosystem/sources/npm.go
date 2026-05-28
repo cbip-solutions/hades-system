@@ -32,8 +32,8 @@
 // Changelog with FormatDetected = "not-available" (NOT an error — npm
 // packages routinely lack changelogs).
 //
-// The npm ecosystem maps to ONE release ecosystem (`typescript`) per
-// master §0.2: TS + JS packages share the npm registry and release's
+// The npm ecosystem maps to ONE HADES design ecosystem (`typescript`) per
+// master §0.2: TS + JS packages share the npm registry and HADES design's
 // chunker uses TypeScript grammar for both. Ecosystem() returns
 // EcoTypeScript; the KeywordFilter knob lets the ingester run two
 // keyword-filtered passes if desired without changing the source code.

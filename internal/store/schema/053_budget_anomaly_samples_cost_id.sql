@@ -1,5 +1,5 @@
 -- Migration 053: cost_id column + UNIQUE constraint on
--- budget_anomaly_samples (HADES design release track post-review C-2).
+-- budget_anomaly_samples (HADES design stage post-review C-2).
 --
 -- C-2 (post-review): PostCallWithCost orchestration was non-atomic;
 -- anomaly samples double-counted under retry. AppendAnomalySample was
@@ -21,7 +21,7 @@
 -- SQLite ALTER TABLE limitations: we use the standard 12-step recreate
 -- pattern (rename → create new → copy → drop → rename back → recreate
 -- indexes). The new column is appended with a default of 0 so existing
--- rows (none on production yet — HADES design release track is the introducing
+-- rows (none on production yet — HADES design stage is the introducing
 -- plan) round-trip cleanly.
 
 -- 1. Rename existing table.

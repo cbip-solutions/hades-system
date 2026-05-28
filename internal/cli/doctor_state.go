@@ -40,8 +40,8 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunSystemStateProbe orchestrates the system-state doctor check (release
-// Task J-2, spec §6.2).
+// RunSystemStateProbe orchestrates the system-state doctor check (HADES design
+// task, spec §6.2).
 //
 // Delegates to DoctorDeps.StateProber.Probe(ctx) and returns the resulting
 // ProbeResult slice unchanged. Returns a non-nil error if StateProber is nil
@@ -69,17 +69,9 @@ func RunSystemStateProbe(ctx context.Context, deps DoctorDeps) ([]ProbeResult, e
 func NewDoctorStateCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "state-system",
-		Short: "System state health (Plan 9: regenerate age + manual fields + missing sources per inv-hades-149)",
-		Long: `Run 3 system-state checks (spec §6.2):
+		Short: "System state health (HADES design: regenerate age + manual fields + missing sources per invariant)",
+		Long:  "Run 3 system-state checks (spec §6.2):\n\n  state.last_regenerate_age    OK if <doctrine threshold (max-scope=24h, default=168h, capa-firewall=24h);\n                               WARN 1×-2×; FAIL >2× — flags stale TOML per invariant\n  state.manual_field_count     informational; reports count + names of x-manual-field: true fields\n  state.missing_source_count   OK if 0; WARN if 1-2; FAIL if 3+ — flags broken auto-derive walker\n\nExit codes:\n  0  every check OK (or only WARNs without --strict)\n  1  any check FAIL OR (any WARN AND --strict)",
 
-  state.last_regenerate_age    OK if <doctrine threshold (max-scope=24h, default=168h, capa-firewall=24h);
-                               WARN 1×-2×; FAIL >2× — flags stale TOML per inv-hades-149
-  state.manual_field_count     informational; reports count + names of x-manual-field: true fields
-  state.missing_source_count   OK if 0; WARN if 1-2; FAIL if 3+ — flags broken auto-derive walker
-
-Exit codes:
-  0  every check OK (or only WARNs without --strict)
-  1  any check FAIL OR (any WARN AND --strict)`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			udsPath, strict := resolveDoctorFlags(cmd)
 			deps, err := buildDoctorDepsFunc(udsPath, strict)

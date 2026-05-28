@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package tessera implements the release transparency-log audit substrate.
+// Package tessera implements the HADES design transparency-log audit substrate.
 //
-// Per spec §0 + §1 Q1 D: release ships RFC 9162 tile-based transparency
+// per design contract§1 design choice D: HADES design ships RFC 9162 tile-based transparency
 // logs (Tessera) as the audit substrate cross-eje desde día 1. Naive
-// sha256 hash chains were rejected en Q1 D as future tech debt vs the
+// sha256 hash chains were rejected en design choice D as future tech debt vs the
 // RFC 9162 SOTA (RFC 6962 EOL feb 2026 per Let's Encrypt 2025-08-14).
 //
-// Per spec §1 Q2 A: each project owns a private Tessera tile-log
+// per design contract: each project owns a private Tessera tile-log
 // (POSIX backend) en ~/.local/share/hades-system/projects/<id>/audit/
 // tessera/. Daemon-global witness co-signature (ECDSA P-256, Keychain
 // backed) → daemon_global_checkpoint_log (separate Tessera tile-log
@@ -15,7 +15,7 @@
 // never leaks across project boundaries (only tree heads + signatures
 // reach the daemon-global log; opaque to observers).
 //
-// Per spec §1 Q4 B: batch cadence (BatchMaxAge + BatchMaxSize) is
+// per design contract: batch cadence (BatchMaxAge + BatchMaxSize) is
 // doctrine-tunable. wires the configuration knob;
 // binds the doctrine bundle. Defaults align with `default` doctrine
 // (30s / 1000) so config-less callers operate with a coherent posture.

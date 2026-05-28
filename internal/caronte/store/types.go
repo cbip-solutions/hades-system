@@ -197,7 +197,7 @@ type APICall struct {
 	ExtractorID string
 }
 
-// BreakingChange is the CGO-agnostic value type for the release
+// BreakingChange is the CGO-agnostic value type for the HADES design
 // breaking-change event. Mirrors
 // federation.BreakingChange columns exactly so federation can adapt freely
 // (federation.ToStoreBreakingChange is the cgo-tagged adapter that produces
@@ -210,7 +210,7 @@ type APICall struct {
 // JSON payloads through this byte-typed surface.
 //
 // Lives in this file rather than a fresh types.go (per
-// drift report: this file pre-exists with the release C confidence /
+// drift report: this file pre-exists with the HADES design C confidence /
 // node-kind set + APIEndpoint/APICall above; FIX-3 appends
 // additively so existing tests stay green).
 type BreakingChange struct {

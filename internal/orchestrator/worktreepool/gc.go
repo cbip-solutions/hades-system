@@ -13,7 +13,7 @@ import (
 
 // gcLoop runs Layer-A `git worktree prune` on the cadence cfg.GCCadence.
 //
-// Layer model (Q4 C, defense-in-depth):
+// Layer model (design choice C, defense-in-depth):
 //
 // - Layer A — `git worktree prune`: removes.git/worktrees/{name} admin
 // entries that no longer reference an existing directory on disk.
@@ -25,7 +25,7 @@ import (
 // gcLoop drives Layer A every tick. Layer B is invoked synchronously from
 // PruneOrphans (operator-driven via `hades doctor worktree-pool prune` →
 // orchestrator adapter, ). On a Layer-A failure, gcLoop emits
-// EvtWorktreePoolDegraded with reason=gc-prune-failed so HRA Q8
+// EvtWorktreePoolDegraded with reason=gc-prune-failed so HRA design choice
 // cost-pressure downgrade can react. Success is silent (the norm).
 //
 // Concurrency contract:
@@ -39,7 +39,7 @@ import (
 // - On p.gcCtx.Done observation, the loop returns cleanly. defer
 // close(p.gcDone) signals the Close path to stop waiting.
 //
-// Clock seam (Q14 C, IMP-2): the ticker is built via
+// Clock seam (design choice C, IMP-2): the ticker is built via
 // p.clk.NewTicker so tests inject *clock.Fake to drive cadence
 // deterministically (no wall-clock sleeps in test mode).
 func (p *concretePool) gcLoop() {
@@ -80,7 +80,7 @@ func (p *concretePool) runLayerA(ctx context.Context) error {
 // absent from the git-known set AND not in the pool's leased + warm
 // membership maps, then `rm -rf` them.
 //
-// Safety guards (defense-in-depth Q4 C):
+// Safety guards (defense-in-depth design choice C):
 //
 // - Pool-prefix filter: only dirs named `{PoolID}-...` or
 // `hades-pool-{PoolID}-...` are candidates. WorktreeDir may legitimately

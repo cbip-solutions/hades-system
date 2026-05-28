@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package budget provides the daemon-side budget engine.
 //
-// rows. release layers four engines on top:
+// rows. HADES design layers four engines on top:
 //
 // - axes: multi-axis attribution (project x doctrine x stage x task + operation + worker_id) via cost_axis_tags
 // - enforce: hierarchical hard-pause cap check across 4 scopes (project / doctrine / stage / worker_id), most-restrictive wins
@@ -70,7 +70,7 @@ type AxisTagger struct {
 
 func NewAxisTagger(store BudgetStore) *AxisTagger {
 	if store == nil {
-		panic("NewAxisTagger: store is nil — inv-hades-077 requires a real BudgetStore")
+		panic("NewAxisTagger: store is nil — invariant requires a real BudgetStore")
 	}
 	return &AxisTagger{store: store}
 }

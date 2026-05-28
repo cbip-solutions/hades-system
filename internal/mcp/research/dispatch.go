@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// dispatch.go — fan-out parallel research dispatch (Q4 C deterministic
+// dispatch.go — fan-out parallel research dispatch (design choice C deterministic
 // core) + aggregator URL-keyed dedup + min-source threshold +
 // citation-verification gate.
 //

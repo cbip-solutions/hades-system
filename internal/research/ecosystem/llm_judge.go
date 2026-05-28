@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — llm_judge.go
 //
-// LLM-judge re-pass for max-scope + capa-firewall doctrine per spec §2.7
-// Q7=A Layer 5 + §4.2 step 13.
+// LLM-judge re-pass for max-scope + capa-firewall doctrine per design contract
+// design choice Layer 5 + §4.2 step 13.
 //
 // # Doctrine gating
 //
 // This file ships the judge implementation; gating itself is performed by
-// the dispatcher (Task D-9, spec §4.2 step 13): the dispatcher consults
+// the dispatcher (task, spec §4.2 step 13): the dispatcher consults
 // the resolved DoctrineProfile.LLMJudgeEnabled and SKIPS the judge call
 // entirely when false. Default doctrine therefore never reaches this
 // code path; max-scope + capa-firewall do.
@@ -20,15 +20,15 @@
 //
 // # Backend routing
 //
-// Production release dispatcher → Claude Haiku (`claude-haiku-4-6` per
-// spec §22.7 model table; release ratecard ships pricing for this model
+// Production HADES design dispatcher → Claude Haiku (`claude-haiku-4-6` per
+// spec §22.7 model table; HADES design ratecard ships pricing for this model
 // at internal/providers/ratecard_test.go:400). Backend abstracted via
 // the small JudgeBackend interface so this package does NOT import the
 // daemon dispatcher (which would create an import cycle: research/ecosystem
 // is consumed BY the daemon, not the other way around). Daemon wiring
 // at builds a tiny adapter that translates JudgeBackend.Complete
 // calls into providers.Dispatcher.Forward calls with the appropriate
-// TierRequest body. Same narrow-interface seam pattern used by Task D-4
+// TierRequest body. Same narrow-interface seam pattern used by task
 // (CohereRerankV4) and router (VoyageCode3).
 //
 // # Prompt design
@@ -61,12 +61,12 @@
 // MaxLatencyMs (default 800ms) applied via context.WithTimeout. The
 // resulting deadline is respected dispatcher HTTP client.
 // Well within the doctrine-max-scope query latency envelope (~700-1000ms
-// P50 per spec §4.7).
+// P50 per design contract).
 //
 // # Observability
 //
 // CountJudgements increments via atomic.Uint64 on every successful
-// judgement. Errored calls do NOT increment (per spec §2.7 audit:
+// judgement. Errored calls do NOT increment (per design contract:
 // successful judgements are the count we report; errors are surfaced
 // through the dispatcher's audit chain via EvtRAGAbstain on reject or
 // upstream error propagation).
@@ -246,7 +246,7 @@ func buildJudgePrompt(query, answer string, chunks []QueryChunk, citations []Cit
 // generateNonce returns a hex-encoded 16-byte (128-bit) random nonce used
 // to bind prompt-injection envelopes in buildJudgePrompt.
 //
-// crypto/rand.Read is documented to never error on the platforms release
+// crypto/rand.Read is documented to never error on the platforms HADES design
 // targets (Linux, macOS, BSD) post-init; the error-handling branch is
 // defensive and falls back to a time-derived nonce so the function is
 // infallible. Even the fallback path is non-trivial to guess by an

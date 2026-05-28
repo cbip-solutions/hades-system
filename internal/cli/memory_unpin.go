@@ -31,14 +31,8 @@ func newMemoryUnpinCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "unpin <note-id>",
 		Short: "Reverse a pin/promote — remove a note from the global pin index",
-		Long: `unpin removes a note from the global aggregator pin index. The
-operator's reason is anchored on the Plan 9 audit chain so the removal is
-traceable.
+		Long:  "unpin removes a note from the global aggregator pin index. The\noperator's reason is anchored on the HADES design audit chain so the removal is\ntraceable.\n\ninvariant (daemon-side): the aggregator unpromote endpoint may reject\nempty reasons. The CLI does NOT cobra-force --reason for unpin (some\noperator workflows un-pin programmatically without rationale) — pass\n--reason explicitly when audit clarity matters.",
 
-inv-hades-146 (daemon-side): the aggregator unpromote endpoint may reject
-empty reasons. The CLI does NOT cobra-force --reason for unpin (some
-operator workflows un-pin programmatically without rationale) — pass
---reason explicitly when audit clarity matters.`,
 		Example: `  hades memory unpin internal-platform-x/M0-doctrine \
     --reason "superseded by N0-revision-2026-05"`,
 		Args: cobra.ExactArgs(1),

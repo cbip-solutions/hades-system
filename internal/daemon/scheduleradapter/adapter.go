@@ -5,7 +5,7 @@ package scheduleradapter
 // Bridges *store.Store CRUD primitives (internal/store/schedules.go)
 // for the schedules + schedule_history tables (migration 063) to the
 // scheduler subsystem. ships the adapter operating directly
-// on store.ScheduleRow / store.ScheduleHistoryRow value types; Phase
+// on store.ScheduleRow / store.ScheduleHistoryRow value types; stage
 // D-2 lands the internal/scheduler package with its own Schedule +
 // HistoryEntry types and adds a thin translation layer on top.
 //

@@ -3,12 +3,12 @@
 //
 // Operator migration tooling for legacy /hades-system:* slash command
 // references in operator home-directory surfaces. Subcommand
-// `hades migrate release --from-hades-system-aliases` (or `hades migrate release...`
+// `hades migrate HADES design --from-hades-system-aliases` (or `hades migrate HADES design...`
 // via the wrapper). Idempotent + dry-run-by-default + allowlist-scoped +
 // atomic per-file writes + backup directory.
 //
-// Spec ref: internal design record §Q4
-// Plan ref: internal design record
+// Spec ref: design records design §design choice
+// Plan ref: design records design
 //
 // Catalog codes consumed:
 // - migrate.allowlist-violation
@@ -100,9 +100,9 @@ var allowlistEntries = []allowlistEntry{
 
 	{Glob: ".hermes/plugins/hades-system/**"},
 
-	{Glob: ".claude/CLAUDE.md"},
-	{Glob: ".claude/settings.json"},
-	{Glob: ".claude/keybindings.json"},
+	{Glob: "local agent config/project instructions"},
+	{Glob: "local agent config/settings.json"},
+	{Glob: "local agent config/keybindings.json"},
 }
 
 var denylistRoots = []string{".git", ".ssh", ".gnupg"}
@@ -507,7 +507,7 @@ func applyMigrations(home string, result *migratePlan18Result, opts MigratePlan1
 				nil,
 			)
 		}
-		backupRoot = filepath.Join(udsHome, ".local", "share", "hades-system", "migrate-plan-18-backup")
+		backupRoot = filepath.Join(udsHome, ".local", "share", "hades-system", "migrate-HADES design")
 	}
 	if err := os.MkdirAll(backupRoot, 0o755); err != nil {
 		return zerrors.New(
@@ -725,33 +725,10 @@ func RunMigratePlan18(opts MigratePlan18Opts) error {
 func newMigratePlan18Command() *cobra.Command {
 	f := &migrateP18Flags{}
 	cmd := &cobra.Command{
-		Use:   "plan-18",
+		Use:   "HADES design",
 		Short: "Migrate legacy /hades-system:* slash command references to /hades:*",
-		Long: `Migrate legacy /hades-system:* slash command references in operator home-dir
-surfaces to /hades:* per spec §Q4. Scope:
+		Long:  "Migrate legacy /hades-system:* slash command references in operator home-dir\nsurfaces to /hades:* per design contract:\n\n  ~/.zshrc, ~/.bashrc, ~/.zprofile, ~/.bash_profile\n  ~/.config/hades-system/**     (any file under)\n  ~/.hades/**                  (any file under)\n  ~/.hermes/plugins/hades-system/**  (legacy plugin dir; pre-18b artifacts)\n  ~/local agent config/project instructions\n  ~/local agent config/settings.json\n  ~/local agent config/keybindings.json\n\nNEVER touches .git/, .ssh/, .gnupg/, or anything outside the allowlist.\n\nSafety: dry-run-by-default; per-file atomic write + backup under\n~/.local/share/hades-system/migrate-HADES design<ISO-timestamp>/ on --apply.\nIdempotent: second invocation against an already-migrated home dir exits 0\nwith <no changes; already migrated> message.\n\nExamples:\n  hades migrate HADES design --from-hades-system-aliases               # dry-run, default\n  hades migrate HADES design --from-hades-system-aliases --apply       # mutate files\n  hades migrate HADES design --from-hades-system-aliases --include-aliases   # broader scope\n\nSee docs/operations/hades-entry-point.md §\"Migration tooling\" for the full\noperator workflow.",
 
-  ~/.zshrc, ~/.bashrc, ~/.zprofile, ~/.bash_profile
-  ~/.config/hades-system/**     (any file under)
-  ~/.hades/**                  (any file under)
-  ~/.hermes/plugins/hades-system/**  (legacy plugin dir; pre-18b artifacts)
-  ~/.claude/CLAUDE.md
-  ~/.claude/settings.json
-  ~/.claude/keybindings.json
-
-NEVER touches .git/, .ssh/, .gnupg/, or anything outside the allowlist.
-
-Safety: dry-run-by-default; per-file atomic write + backup under
-~/.local/share/hades-system/migrate-plan-18-backup/<ISO-timestamp>/ on --apply.
-Idempotent: second invocation against an already-migrated home dir exits 0
-with <no changes; already migrated> message.
-
-Examples:
-  hades migrate plan-18 --from-hades-system-aliases               # dry-run, default
-  hades migrate plan-18 --from-hades-system-aliases --apply       # mutate files
-  hades migrate plan-18 --from-hades-system-aliases --include-aliases   # broader scope
-
-See docs/operations/hades-entry-point.md §"Migration tooling" for the full
-operator workflow.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			dryRunExplicit := cmd.Flags().Changed("dry-run")
 			if err := validateMigrateP18FlagsWithChanged(f, dryRunExplicit); err != nil {
@@ -770,7 +747,7 @@ operator workflow.`,
 		},
 	}
 	cmd.Flags().BoolVar(&f.fromHadesSystemAliases, "from-hades-system-aliases", false,
-		"REQUIRED: operator-explicit acknowledgement (spec §Q4 contract)")
+		"REQUIRED: operator-explicit acknowledgement (spec §design choice contract)")
 	cmd.Flags().BoolVar(&f.dryRun, "dry-run", true,
 		"Print diffs; no filesystem mutation (default true)")
 	cmd.Flags().BoolVar(&f.apply, "apply", false,
@@ -778,7 +755,7 @@ operator workflow.`,
 	cmd.Flags().BoolVar(&f.includeAliases, "include-aliases", false,
 		"Broader replacement scope: hades-system in shell alias declarations")
 	cmd.Flags().StringVar(&f.backupRoot, "backup-root", "",
-		"Backup destination root (default ~/.local/share/hades-system/migrate-plan-18-backup/)")
+		"Backup destination root (default ~/.local/share/hades-system/migrate-HADES design)")
 	cmd.Flags().StringVar(&f.homeOverride, "home", "",
 		"Override home dir (testing; default $HOME)")
 	if err := cmd.MarkFlagRequired("from-hades-system-aliases"); err != nil {
@@ -789,7 +766,7 @@ operator workflow.`,
 
 func validateMigrateP18FlagsWithChanged(f *migrateP18Flags, dryRunExplicit bool) error {
 	if !f.fromHadesSystemAliases {
-		return fmt.Errorf("--from-hades-system-aliases is required (spec §Q4 operator-explicit contract)")
+		return fmt.Errorf("--from-hades-system-aliases is required (spec §design choice operator-explicit contract)")
 	}
 	if f.apply && dryRunExplicit && f.dryRun {
 		return fmt.Errorf("--apply and --dry-run are mutually exclusive (drop one)")

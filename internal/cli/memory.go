@@ -2,8 +2,8 @@
 // Package cli — memory.go.
 //
 // `hades memory` is the operator-facing entry point for cross-corpus memory
-// retrieval over the release D aggregator (per-project + global pin index)
-// and the release ecosystem RAG (Go/Python/TypeScript/Rust docs corpus).
+// retrieval over the HADES design D aggregator (per-project + global pin index)
+// and the HADES design ecosystem RAG (Go/Python/TypeScript/Rust docs corpus).
 //
 // Five leaves under one root:
 //
@@ -15,8 +15,8 @@
 //
 // # Semantics
 //
-// - query: cross-corpus search. With --remote, fans out to BOTH the release
-// aggregator AND the release ecosystem RAG dispatcher in parallel, then
+// - query: cross-corpus search. With --remote, fans out to BOTH the HADES design
+// aggregator AND the HADES design ecosystem RAG dispatcher in parallel, then
 // fuses results via RRF k=60.
 // Without --remote, queries the aggregator only. Soft-fails when ONE
 // source errors (renders the other); hard-fails only when BOTH error.
@@ -24,7 +24,7 @@
 // - list: enumerate pinned notes from the aggregator's global pin index.
 //
 // - pin / promote: alias pair (pin is the operator-ergonomics term, promote
-// the release D term). Both call MemoryPromote (POST /v1/knowledge/aggregator/promote).
+// the HADES design D term). Both call MemoryPromote (POST /v1/knowledge/aggregator/promote).
 // invariant: --reason MANDATORY (cobra MarkFlagRequired + RunE TrimSpace check).
 //
 // - unpin: reverse promote (POST /v1/knowledge/aggregator/unpromote).
@@ -38,7 +38,7 @@
 // internal/research/ecosystem import (invariant). Cross-corpus calls go
 // through the daemon via the client; CLI never talks to dispatcher directly.
 //
-// Exit-code mapping (per spec §6.2; ErrRecoverable contract):
+// Exit-code mapping (per design contract; ErrRecoverable contract):
 // - 0 success
 // - 1 operator-recoverable: empty free-text, empty --reason, daemon 422
 // - 2 unrecoverable: transport, decode, daemon 5xx
@@ -117,24 +117,10 @@ const memoryMutateTimeout = 30 * time.Second
 func NewMemoryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "memory",
-		Short: "Cross-corpus memory tooling (Plan 9 aggregator + Plan 14 ecosystem)",
-		Long: `hades memory groups the operator-facing tools for cross-corpus memory
-retrieval. The Plan 9 D aggregator (per-project + global pin index, FTS5
-+ sqlite-vec + wikilink graph) joins with the Plan 14 ecosystem RAG
-dispatcher (Go/Python/TypeScript/Rust docs corpus) when --remote is
-active on the query subcommand. RRF k=60 fuses the two streams.
-
-Five leaves:
-  query     Cross-corpus search (aggregator + optional ecosystem)
-  list      List pinned notes from the global pin index
-  pin       Pin a note (alias for promote at the CLI surface)
-  unpin     Reverse a prior pin/promote
-  promote   Pin a note to the global pin index (Plan 9 term)
-
-inv-hades-146: pin / promote / unpin all REQUIRE a non-empty --reason.
-The reason is anchored on the Plan 9 audit chain and surfaces via
-` + "`hades audit-chain history`" + `.`,
-		Example: " # Cross-corpus query\n  hades memory query \"context cancellation\"\n\n # Cross-corpus with release ecosystem RAG fusion\n  hades memory query \"context cancellation\" --remote\n\n # List pinned notes\n  hades memory list\n\n # Pin a note (invariant: --reason required)\n  hades memory pin internal-platform-x/M0-doctrine --reason \"load-bearing for max-scope\"\n\n # Unpin a note\n  hades memory unpin internal-platform-x/M0-doctrine --reason \"superseded by N0\"",
+		Short: "Cross-corpus memory tooling (HADES design aggregator + HADES design ecosystem)",
+		Long: "hades memory groups the operator-facing tools for cross-corpus memory\nretrieval. The HADES design D aggregator (per-project + global pin index, FTS5\n+ sqlite-vec + wikilink graph) joins with the HADES design ecosystem RAG\ndispatcher (Go/Python/TypeScript/Rust docs corpus) when --remote is\nactive on the query subcommand. RRF k=60 fuses the two streams.\n\nFive leaves:\n  query     Cross-corpus search (aggregator + optional ecosystem)\n  list      List pinned notes from the global pin index\n  pin       Pin a note (alias for promote at the CLI surface)\n  unpin     Reverse a prior pin/promote\n  promote   Pin a note to the global pin index (HADES design term)\n\ninvariant: pin / promote / unpin all REQUIRE a non-empty --reason.\nThe reason is anchored on the HADES design audit chain and surfaces via\n" +
+			"`hades audit-chain history`" + `.`,
+		Example: " # Cross-corpus query (HADES design aggregator only)\n  hades memory query \"context cancellation\"\n\n # Cross-corpus with HADES design ecosystem RAG fusion\n  hades memory query \"context cancellation\" --remote\n\n # List pinned notes\n  hades memory list\n\n # Pin a note (invariant: --reason required)\n  hades memory pin internal-platform-x/M0-doctrine --reason \"load-bearing for max-scope\"\n\n # Unpin a note\n  hades memory unpin internal-platform-x/M0-doctrine --reason \"superseded by N0\"",
 	}
 	cmd.AddCommand(newMemoryQueryCmd())
 	cmd.AddCommand(newMemoryListCmd())

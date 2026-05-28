@@ -2,7 +2,7 @@
 // Package cli — safetynet_regression.go.
 //
 // `hades safetynet regression {show,query}` reads the substrate_health
-// table via the daemon (Q2 C element 3 — regression-by-self detector
+// table via the daemon (design choice C element 3 — regression-by-self detector
 // from the Apr 23 substrate-regression incident). The adapter at
 // internal/daemon/orchestratoradapter is the persistence
 // boundary; safetynet.Recent on the orchestrator side is the consumer
@@ -20,7 +20,7 @@ import (
 func safetynetRegressionCmd() *cobra.Command {
 	reg := &cobra.Command{
 		Use:   "regression",
-		Short: "Regression-by-self metric (Q2 C element 3)",
+		Short: "Regression-by-self metric (design choice C element 3)",
 	}
 	reg.AddCommand(safetynetRegressionShowCmd())
 	reg.AddCommand(safetynetRegressionQueryCmd())

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-// Package cli — release_client.go.
+// Package cli — HADES component.go.
 //
 // Centralised client builder sub-commands. All CLI
-// constructors call releaseClientFromCmd(cmd) to obtain a *client.Client
+// constructors call HADES component(cmd) to obtain a *client.Client
 // bound to either the production UDS path (--uds persistent flag) or
 // a hidden --daemon-url test seam.
 //
 // The seam is registered once per cobra root via attachPlan5Flags so
-// every release namespace inherits the same flag without each constructor
+// every HADES design namespace inherits the same flag without each constructor
 // re-declaring it. Production callers leave the flag empty.
 package cli
 

@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package check — status.go ships the Status + FixMode enums declared in
-// the release spec §3.3.
+// the HADES design spec §3.3.
 //
-// Status (4 levels per Q5=C+):
+// Status (4 levels per design choice+):
 // - StatusPass (0) — check satisfied; nothing to remediate
 // - StatusWarn (1) — check soft-failed; degraded operation; operator-actionable
 // - StatusFail (2) — check hard-failed; blocking; remediation required
 // - StatusSkip (3) — check unable to run (precondition missing; ctx cancelled;
 // subsystem opt-out — bypass-config not extracted)
 //
-// FixMode (4 levels per Q5=C+):
+// FixMode (4 levels per design choice+):
 // - FixModeReadOnly — print fix suggestion (default behavior; no execution)
 // - FixModeInteractive — execute with per-check `[y/N]` prompt
 // - FixModeAutoSafe — execute idempotent ops only (skip destructive)

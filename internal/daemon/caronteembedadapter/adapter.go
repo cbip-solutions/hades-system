@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package caronteembedadapter bridges the caronte intent layer's narrow
-// CodeEmbedder + Reranker seams to the real release ecosystem implementations
+// CodeEmbedder + Reranker seams to the real HADES design ecosystem implementations
 // (JinaCodeEmbeddings + BGEReRankerV2M3). It lives in internal/daemon (the
 // composition-root layer) because internal/caronte must NOT import
 // internal/research/ecosystem — invariant (the embed path is a local

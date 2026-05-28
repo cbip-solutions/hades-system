@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/daemon/mcpgateway/caronte_proxy.go
 //
-// CaronteProxy — gateway facade over the in-daemon Caronte engine (release
+// CaronteProxy — gateway facade over the in-daemon Caronte engine (HADES design
 // + L). The SOLE code-graph proxy: deleted the old gitnexus
 // subprocess proxy + the gitnexus subprocess client; this proxy fronts the
 // in-process engine under the "caronte" wire segment. The proxy:
@@ -11,15 +11,15 @@
 // importing internal/caronte's constructor (invariant; the package does
 // import caronte's result/return VALUE types — a one-way lower-layer
 // import, fine). The engine satisfies CaronteEngine + research.GitnexusClient
-// (the research interface name is the stable drop-in contract — DECISION L-3).
+// (the research interface name is the stable drop-in contract — decision L-3).
 // 2. Exposes the 11 C-8 tools (query·context·impact·wiki·get_risk·get_why·
 // get_health·trace_call_path·get_cochange·get_implementations·
 // get_architecture) — all under the "caronte" subsystem segment
-// (release renamed the segment gitnexus->caronte; the REST adapter,
+// (HADES design renamed the segment gitnexus->caronte; the REST adapter,
 // RBAC, and augment lanes all dispatch the caronte_* wire names).
-// query/context/impact are GENUINELY DISTINCT real ops (DECISION 6), not
+// query/context/impact are GENUINELY DISTINCT real ops (policy), not
 // aliases.
-// 3. PRESERVES the per-mode escalate() semantics (Q7=B): autonomy →
+// 3. PRESERVES the per-mode escalate() semantics (design choice): autonomy →
 // WAITING_FOR_CONFIRMATION, afk → cached_summary, interactive →
 // doctor_warning.
 // 4. Bootstrap-required: a nil engine → EnsureReachable returns
@@ -220,7 +220,7 @@ func (p *CaronteProxy) CallByTool(ctx context.Context, req CallRequest) (CallRes
 
 // escalate wraps err with a mode-aware hint string — keyword-stable so callers
 // grep for autonomy/interactive/afk rather than parsing free-text. The three
-// mappings are the Q7=B contract. Mode values outside the closed enum fall
+// mappings are the design choice contract. Mode values outside the closed enum fall
 // through to interactive (operator-visible doctor warning).
 func (p *CaronteProxy) escalate(mode Mode, err error) error {
 	switch mode {

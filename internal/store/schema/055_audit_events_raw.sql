@@ -1,5 +1,5 @@
 -- schemaVersion: 20
--- HADES design release track — audit events raw table.
+-- HADES design stage — audit events raw table.
 -- All MCP and handler audit emit calls write here.
 -- HADES design wraps this table with a hash-chain + OTel export pipeline
 -- WITHOUT schema migration (HADES design note: add computed columns via ALTER TABLE

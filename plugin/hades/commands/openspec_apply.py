@@ -8,9 +8,9 @@ per spike §3 verification).
 
 from __future__ import annotations
 
-_PROMPT = """# HADES /openspec-apply — Apply phase for {feature_name}
+_PROMPT = """# HADES /openspec-apply — Apply stage for {feature_name}
 
-You are starting the apply phase for `{feature_name}` via HADES. Per spec §3.2:
+You are starting the apply stage for `{feature_name}` via HADES. per design contract:
 
 ## 1. Read tasks file
 
@@ -57,10 +57,10 @@ Per invariant + project project instructions "Hard rules" #1: every commit messa
 
 ## 6. Cross-references
 
-- spec §3.2 apply phase
+- spec §3.2 apply stage
 - HADES design routing.toml + HADES design dispatcher
 - HADES design worktree manager
-- HADES design archive phase (next step)
+- HADES design archive stage (next step)
 - /hades:openspec-resume (resume mid-flight)
 - /hades:openspec-archive (post-implementation merge)
 """

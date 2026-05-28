@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_web_in_aggregator.go
 //
-// Task J-7: custom go vet analyzer enforcing invariant +
+// task: custom go vet analyzer enforcing invariant +
 // invariant at compile time.
 //
 // invariant: aggregator NEVER queries web.
@@ -10,7 +10,7 @@
 // never dispatches against ecosystem corpus.
 //
 // Allowlist `internal/research/cache/revalidator.go` may call
-// http.Head/Do for HEAD revalidation per Q8 A.
+// http.Head/Do for HEAD revalidation per design choice A.
 // `internal/research/cache/revalidator_fetch.go` for the Fetch +
 // FetchPOST URL-fetch primitives consumed ingester sources.
 //
@@ -29,19 +29,18 @@ import (
 
 var NoWebInAggregatorAnalyzer = &analysis.Analyzer{
 	Name: "noWebInAggregator",
-	Doc: `Enforces inv-hades-129 + inv-hades-152: aggregator and research cache
-NEVER query web (Plan 14 territory). Allowlist: revalidator.go HEAD
-revalidation per Q8 A.`,
+	Doc:  "Enforces invariant + invariant: aggregator and research cache\nNEVER query web (HADES design territory). Allowlist: revalidator.go HEAD\nrevalidation per design choice A.",
+
 	Run: runNoWebInAggregator,
 }
 
 func isForbiddenPkg(pkgPath string) (tag string, forbidden bool) {
 
 	if strings.Contains(pkgPath, "internal/knowledge/aggregator") {
-		return "inv-hades-129", true
+		return "invariant", true
 	}
 	if strings.Contains(pkgPath, "internal/research/cache") {
-		return "inv-hades-152", true
+		return "invariant", true
 	}
 
 	switch {
@@ -49,12 +48,12 @@ func isForbiddenPkg(pkgPath string) (tag string, forbidden bool) {
 		strings.HasSuffix(pkgPath, "/aggregator_clean") ||
 		pkgPath == "aggregator_violation" ||
 		pkgPath == "aggregator_clean":
-		return "inv-hades-129", true
+		return "invariant", true
 	case strings.HasSuffix(pkgPath, "/cache_violation") ||
 		strings.HasSuffix(pkgPath, "/cache_revalidator") ||
 		pkgPath == "cache_violation" ||
 		pkgPath == "cache_revalidator":
-		return "inv-hades-152", true
+		return "invariant", true
 	}
 	return "", false
 }
@@ -80,7 +79,7 @@ func runNoWebInAggregator(pass *analysis.Pass) (any, error) {
 		for _, imp := range file.Imports {
 			path := strings.Trim(imp.Path.Value, `"`)
 			if path == "net/http" {
-				if invariantTag == "inv-hades-129" {
+				if invariantTag == "invariant" {
 					pass.Reportf(imp.Pos(), "%s: net/http import in aggregator package forbidden", invariantTag)
 				} else {
 					pass.Reportf(imp.Pos(), "%s: net/http import in cache package outside revalidator.go forbidden", invariantTag)
@@ -102,10 +101,10 @@ func runNoWebInAggregator(pass *analysis.Pass) (any, error) {
 			}
 			methodName := sel.Sel.Name
 			if isForbiddenHTTPMethod(methodName) {
-				if invariantTag == "inv-hades-129" {
-					pass.Reportf(call.Pos(), "%s: aggregator NEVER queries web - Plan 14 territory", invariantTag)
+				if invariantTag == "invariant" {
+					pass.Reportf(call.Pos(), "%s: aggregator NEVER queries web - HADES design territory", invariantTag)
 				} else {
-					pass.Reportf(call.Pos(), "%s: research cache NEVER dispatches against ecosystem corpus - Plan 14 territory", invariantTag)
+					pass.Reportf(call.Pos(), "%s: research cache NEVER dispatches against ecosystem corpus - HADES design territory", invariantTag)
 				}
 			}
 			return true

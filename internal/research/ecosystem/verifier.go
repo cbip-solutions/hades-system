@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — verifier.go
 //
-// 3-stage symbol existence verifier per spec §2.7 Q7=A Layer 2 (release
+// 3-stage symbol existence verifier per design contract=A Layer 2 (HADES design
 // task D-5).
 //
 // Stages (sequential; first hit wins):
@@ -13,7 +13,7 @@
 // B — 24h LRU cache: in-process LRU keyed by (ecosystem, version,
 // symbol_path). Records live-cmd outputs for symbols that miss
 // the index (typically third-party packages not yet indexed).
-// TTL aligns with Q9=A 24h revalidation cadence; TTL exceeded →
+// TTL aligns with design choice 24h revalidation cadence; TTL exceeded →
 // eviction-on-read, fall to C. Negative results are also cached
 // so we don't re-shell-out on every hallucinated symbol.
 //

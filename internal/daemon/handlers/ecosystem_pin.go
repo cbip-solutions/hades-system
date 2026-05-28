@@ -5,7 +5,7 @@
 //
 // Sets ecosystem_versions.indefinite_retain=true for the (ecosystem,
 // version) tuple. Pinned versions are excluded from the 2-prior-stable
-// retention window governed by the Q9=A cron sweep and rejected by
+// retention window governed by the design choice cron sweep and rejected by
 // DELETE /v1/ecosystem/version with 409 Conflict.
 //
 // Status codes:
@@ -15,7 +15,7 @@
 // 404 Not Found — unknown (ecosystem, version) tuple.
 // 409 Conflict — already pinned (idempotent failure; CLI maps to recoverable).
 // 500 Internal Server Error — opaque seam failure.
-// 503 Service Unavailable — EcosystemHandler not wired.
+// 503 Service Unavailable — EcosystemHandler unavailable.
 //
 // Wire mirror: matches client.EcosystemPin(eco, ver) → POST body
 // {"ecosystem": "<X>", "version": "<Y>"} → 204 on success.

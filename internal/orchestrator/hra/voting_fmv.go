@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Functional Majority Voting (FMV) on fix proposals — spec §3.2 step 4 +
-// §1 Q8 B (arXiv:2604.15618). FMV is the runtime-test-driven sibling of
+// §1 design choice B (arXiv:2604.15618). FMV is the runtime-test-driven sibling of
 // Plurality (voting.go): rather than voting on the textual classification
 // label, each candidate fix is APPLIED in an isolated worktree and the
 // project's test suite is run; the candidate with the highest pass count
 // wins. This is voting on observed behaviour, not on review summaries —
-// per Q8 B, a stronger signal than agreement among review prose.
+// per design choice B, a stronger signal than agreement among review prose.
 //
 // # Algorithm
 //
@@ -137,7 +137,7 @@ type FMVResult struct {
 	Trace []FMVTrace
 
 	// Degraded is true when the algorithm fell back to plurality on
-	// SupportingReviewers (release I-5: pool-exhausted; I-7: cost-
+	// SupportingReviewers (HADES design I-5: pool-exhausted; I-7: cost-
 	// pressure). False on the happy / tie / all-failed paths. Callers
 	// that observe Degraded==true MUST consume Reason for the
 	// degradation cause — the audit-event emission is bound to the
@@ -329,7 +329,7 @@ func (f *FMV) emitAllFailed(ctx context.Context, candidateCount, testFailures in
 }
 
 // degradeMidRun is invoked when a Pool.Lease call mid-FMV returns
-// ErrPoolExhausted. Per spec §1 Q8 A × Q8 B + spec §3.2, the
+// ErrPoolExhausted. per design contract× design choice B + spec §3.2, the
 // orchestrator falls back to plurality voting on the proposers'
 // SupportingReviewers counts: highest agreement wins. A tie on
 // agreement at the top of the ranking → ErrFMVTie (caller escalates

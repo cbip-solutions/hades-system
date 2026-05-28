@@ -4,8 +4,8 @@
 // Daemon-bearer + per-routine bearer validators using
 // crypto/subtle.ConstantTimeCompare for timing-safe comparison
 // (invariant). Per-routine mismatch emits a
-// ScheduleHttpTriggerAuthFailed audit event for the release audit
-// pipeline to escalate to action-needed (5+ in 1h per spec §4.3).
+// ScheduleHttpTriggerAuthFailed audit event for the HADES design audit
+// pipeline to escalate to action-needed (5+ in 1h per design contract).
 package auth
 
 import (

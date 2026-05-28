@@ -1,14 +1,14 @@
 # SPDX-License-Identifier: MIT
-"""/hades:execute-plan handler — subagent-driven execution of phase plan.
+"""/hades:execute-plan handler — subagent-driven execution of stage plan.
 
-raw_args: plan_path (required) — the phase plan file to execute.
+raw_args: plan_path (required) — the stage plan file to execute.
 """
 
 from __future__ import annotations
 
-_PROMPT = """# /execute-plan — Implement phase plan via subagent dispatch
+_PROMPT = """# /execute-plan — Implement stage plan via subagent dispatch
 
-You are executing a phase plan for HADES. Execution is task-by-task subagent dispatch with review gates.
+You are executing a stage plan for HADES. Execution is task-by-task subagent dispatch with review gates.
 
 ## 1. Load the executing-plans + subagent-driven-development skills
 
@@ -17,12 +17,12 @@ skill_load("superpowers:executing-plans")
 skill_load("superpowers:subagent-driven-development")
 ```
 
-## 2. Pre-flight release stage reality-check (BEFORE first dispatch)
+## 2. Pre-flight stage reality-check (BEFORE first dispatch)
 
-Per `feedback_methodology_and_conventions.md` §13 release stage + memoria `feedback_plan_template_drift.md`:
+Per `feedback_methodology_and_conventions.md` §13 stage + memoria `feedback_plan_template_drift.md`:
 
 ```bash
-# Extract every package.Symbol reference from the phase plan-file:
+# Extract every package.Symbol reference from the stage plan-file:
 grep -ohE '[a-z][a-z_]+\\.[A-Z][a-zA-Z]+' \\
   {plan_path} \\
   | sort -u > /tmp/plan-symbols.txt
@@ -37,12 +37,12 @@ done < /tmp/plan-symbols.txt
 
 Decision tree:
 - 0-2 missing: include "verify against codebase; adapt with deviation note" in implementer prompt
-- 3-5 missing: inline-edit plan-file in main session (one `docs(plan-N): ...` commit) THEN dispatch
+- 3-5 missing: inline-edit plan-file in main session (one `docs(release item): ...` commit) THEN dispatch
 - ≥6 missing OR fundamental shape mismatch: dispatch dedicated doc-revision Opus subagent; halt implementer
 
 ## 3. Per-task execution loop
 
-For each task in phase file:
+For each task in stage file:
 
 1. Mark task in_progress (TaskUpdate)
 2. Dispatch implementer subagent (general-purpose; model per master plan dispatch matrix)
@@ -54,7 +54,7 @@ For each task in phase file:
 8. Dispatch code quality reviewer (`superpowers:code-reviewer`)
 9. If CHANGES_REQUESTED: dispatch fix subagent → re-review
 10. Mark task complete (TaskUpdate)
-11. Next task or next phase
+11. Next task or next stage
 
 **Run all in foreground** (NOT background). Background only for plan-writing.
 
@@ -64,7 +64,7 @@ Per project project instructions + memoria `feedback_no_tech_debt.md` + `feedbac
 
 - Reviewer "Minor" tag is severity, NOT permission to skip
 - Every Minor surfacing real coverage gap / missing test for documented behavior / uncovered branch on existing code MUST be fixed before next task
-- Only skip: forward-looking design notes that depend on future phase's input; plan-verbatim style preferences; cosmetic-only changes
+- Only skip: forward-looking design notes that depend on future stage's input; plan-verbatim style preferences; cosmetic-only changes
 
 ## 5. Hard gates per task commit
 
@@ -74,7 +74,7 @@ go test -race ./... -count=2
 GOOS=linux go build ./...
 ```
 
-For HADES design release track Python plugin code:
+For HADES design stage Python plugin code:
 ```bash
 ruff check plugin/hades/
 mypy plugin/hades/
@@ -91,7 +91,7 @@ Every commit message: `feat(scope): subject` (imperative, lowercase, no trailing
 
 - docs/METHODOLOGY.md §4 plan-execution
 - feedback_methodology_and_conventions.md §4
-- feedback_plan_template_drift.md (release stage reality-check)
+- feedback_plan_template_drift.md (stage reality-check)
 """
 
 
@@ -101,6 +101,6 @@ def execute_plan_handler(raw_args: str) -> str | None:
     if not plan_path:
         return (
             "ERROR: /hades:execute-plan requires a plan_path argument.\n"
-            "Usage: /hades:execute-plan <path-to-phase-plan>"
+            "Usage: /hades:execute-plan <path-to-stage-plan>"
         )
     return _PROMPT.format(plan_path=plan_path)

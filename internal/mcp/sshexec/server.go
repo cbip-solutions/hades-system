@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/server.go
 //
-// Task L-9 — go-sdk stdio MCP server, three tools.
+// task — go-sdk stdio MCP server, three tools.
 //
 // The server is constructed via NewServer(cfg) and started by the
 // binary cmd/hades-mcp-sshexec/main.go. For
 // we ship Server with InvokeForTest / InvokeExecForTest helpers
 // so unit tests can dispatch tools without a real go-sdk transport.
 //
-// Tool surface (Q8 C):
+// Tool surface (design choice C):
 // - validate(cmd, project) → ValidationResult JSON
 // - exec(host, cmd, cwd, timeout, project) → streaming chunks + ExecResult
 // - list_allowed(project) → ListAllowedResult JSON

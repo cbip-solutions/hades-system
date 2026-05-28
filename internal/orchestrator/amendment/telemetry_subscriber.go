@@ -68,7 +68,7 @@ func NewTelemetrySubscriber(cfg TelemetrySubscriberConfig) *TelemetrySubscriber 
 // pct_passing < revert_threshold_pct, (c) lastApplied != ""
 // (invariant), (d) project is NOT bound to capa-firewall
 // (invariant), and (e) per-rule cooldown is satisfied (invariant,
-// Task H-8).
+// task).
 //
 // Returns the count of AutoRevert calls dispatched (useful for
 // observability / test assertions). Errors during dispatch are

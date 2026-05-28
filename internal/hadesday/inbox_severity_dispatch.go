@@ -3,10 +3,10 @@
 //
 // translation (spec §6.4).
 //
-// DispatchInboxSeverity maps a release event-type string to the canonical
+// DispatchInboxSeverity maps a HADES design event-type string to the canonical
 // via the caller-supplied InboxNotifier.
 //
-// Severity routing per spec §6.4:
+// Severity routing per design contract:
 //
 // URGENT (SeverityUrgent):
 // audit.tamper_detected, daemon.witness_key_compromised,
@@ -200,7 +200,7 @@ func buildInboxEventTitle(eventType string, payload []byte) string {
 }
 
 func buildInboxEventBody(eventType string, payload []byte) string {
-	return fmt.Sprintf("Plan 9 event: %s\nPayload: %s\nInvestigate: hades audit history --filter %s",
+	return fmt.Sprintf("HADES design event: %s\nPayload: %s\nInvestigate: hades audit history --filter %s",
 		eventType,
 		string(payload),
 		eventType,

@@ -3,10 +3,10 @@
 //
 // DoctrineProfile + DoctrineResolver.
 //
-// Wraps release *active.Accessor (which carries the canonical doctrine
-// pointer via *v1.Schema) and maps the schema to a release
-// DoctrineProfile via the frozen `builtinProfiles` table per spec §2.7
-// Q7=A doctrine table.
+// Wraps HADES design *active.Accessor (which carries the canonical doctrine
+// pointer via *v1.Schema) and maps the schema to a HADES design
+// DoctrineProfile via the frozen `builtinProfiles` table per design contract
+// design choice doctrine table.
 //
 // Plan-template drift reconciliation:
 // the original plan-file assumed `v1.Schema` carried a `Name string`
@@ -16,7 +16,7 @@
 //
 // Reference precedent (`internal/daemon/server_doctrine.go`
 // `doctrineNameForSchema`): the daemon reverses the lookup via
-// pointer-equality scan over `builtin.LoadAll()`. release follows the
+// pointer-equality scan over `builtin.LoadAll()`. HADES design follows the
 // same pattern but takes the registry by injection (not via
 // `builtin.LoadAll()`) so test seeding is decoupled from the production
 // embed loader and resolver construction has no I/O dependency.

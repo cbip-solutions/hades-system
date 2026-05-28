@@ -20,12 +20,8 @@ func newBypassExtractCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "extract-config",
 		Short: "Extract bypass-config.json v1.0 by capturing CC traffic via mitmproxy",
-		Long: `Capture Claude Code's HTTPS traffic to api.anthropic.com via
-mitmproxy, parse the captured flows, and emit bypass-config.json v1.0
-(CalVer). Implements spec §2 Q10-B+b. Two-step flow: (1) capture launches
-mitmproxy and prompts the operator to run CC with HTTPS_PROXY pointing
-at the listener; (2) extract parses the captured flows and emits the
-config. With --capture-only the second step is skipped (debugging).`,
+		Long:  "Capture Claude Code's HTTPS traffic to api.anthropic.com via\nmitmproxy, parse the captured flows, and emit bypass-config.json v1.0\n(CalVer). Implements spec §2 design choice-B+b. Two-step flow: (1) capture launches\nmitmproxy and prompts the operator to run CC with HTTPS_PROXY pointing\nat the listener; (2) extract parses the captured flows and emits the\nconfig. With --capture-only the second step is skipped (debugging).",
+
 		RunE: func(cmd *cobra.Command, args []string) error {
 			flowsPath := filepath.Join(filepath.Dir(outPath), "flows.json")
 			if err := runToolBinary("capture", "-out", flowsPath, "-listen", listenAddr, "-cc-binary", ccBinary); err != nil {

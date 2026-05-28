@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package dispatcheradapter is the bridge from the release dispatcher to
-// the release budget engine. It is the SINGLE import-edge between
+// Package dispatcheradapter is the bridge from the HADES design dispatcher to
+// the HADES design budget engine. It is the SINGLE import-edge between
 // internal/daemon/dispatcher/ and internal/budget/, satisfying invariant:
 // internal/budget/ never imports internal/store/ directly; this package
 // imports both.
 //
-// # release surface
+// # HADES design surface
 //
 // BudgetAdapter implements budget.BudgetStore against
 // *store.Store and exposes:
@@ -28,7 +28,7 @@
 // directly (already known at the call site without needing to
 // re-query cost_ledger). This is structurally cleaner than the
 // plan's read-after-write JOIN approach.
-// - RolledUSDByAxis returns (0, nil). After release F-1 merges, a
+// - RolledUSDByAxis returns (0, nil). After HADES design F-1 merges, a
 // follow-up task will replace the body with the JOIN against
 // cost_ledger; tests assert the (0, nil) contract today.
 //
@@ -125,7 +125,7 @@ func (a *BudgetAdapter) AppendAnomalySample(ctx context.Context, scope, scopeVal
 // appendAnomalySampleFn is a test seam: production calls
 // store.AppendAnomalySample; tests may override to inject errors.
 //
-// NOTE(release): tests using this seam MUST NOT call t.Parallel() — the seam is
+// NOTE(HADES design): tests using this seam MUST NOT call t.Parallel() — the seam is
 // process-global and concurrent overrides race. Same applies to
 // appendAnomalySampleByCostIDFn below.
 var appendAnomalySampleFn = func(s *store.Store, scope, scopeValue string, sampleUSD float64, sampledAtMs int64) error {
@@ -139,7 +139,7 @@ func (a *BudgetAdapter) AppendAnomalySampleByCostID(ctx context.Context, scope, 
 // appendAnomalySampleByCostIDFn is a test seam: production calls
 // store.AppendAnomalySampleByCostID; tests may override to inject errors.
 //
-// NOTE(release): tests using this seam MUST NOT call t.Parallel() — the seam is
+// NOTE(HADES design): tests using this seam MUST NOT call t.Parallel() — the seam is
 // process-global and concurrent overrides race.
 var appendAnomalySampleByCostIDFn = func(s *store.Store, scope, scopeValue string, costID int64, sampleUSD float64, sampledAtMs int64) error {
 	return store.AppendAnomalySampleByCostID(s.DB(), scope, scopeValue, costID, sampleUSD, sampledAtMs)

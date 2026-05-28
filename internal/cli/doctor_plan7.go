@@ -83,15 +83,8 @@ func NewDoctorKnowledgeCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "knowledge",
 		Short: "Diagnose knowledge subsystem (FTS5 index, indexer, watcher)",
-		Long: `Run a 5-aspect probe of the knowledge subsystem (per spec §6.7):
-
-  knowledge.index.integrity            PRAGMA integrity_check on the FTS5 db
-  knowledge.index.last_indexed         staleness vs last fsnotify-driven write
-  knowledge.indexer.cpu_budget         indexer CPU usage vs doctrine warn/fail
-  knowledge.watcher.status             fsnotify watcher heartbeat freshness
-  knowledge.extension_hooks.null_default Plan 9/14 hook columns NULL-by-default
-
-Output uses the legacy ` + "`flutter doctor`" + ` glyph layout. The --strict
+		Long: "Run a 5-aspect probe of the knowledge subsystem (per design contract):\n\n  knowledge.index.integrity            PRAGMA integrity_check on the FTS5 db\n  knowledge.index.last_indexed         staleness vs last fsnotify-driven write\n  knowledge.indexer.cpu_budget         indexer CPU usage vs doctrine warn/fail\n  knowledge.watcher.status             fsnotify watcher heartbeat freshness\n  knowledge.extension_hooks.null_default HADES design hook columns NULL-by-default\n\nOutput uses the legacy " +
+			"`flutter doctor`" + ` glyph layout. The --strict
 parent flag escalates Warn rows to non-zero exit so CI gates can fail
 on early-warning thresholds.
 
@@ -128,21 +121,8 @@ func NewDoctorSchedulerCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "scheduler",
 		Short: "Diagnose scheduler subsystem (queue, missed fires, WFQ)",
-		Long: `Run a 4-aspect probe of the scheduler subsystem (per spec §6.7):
+		Long:  "Run a 4-aspect probe of the scheduler subsystem (per design contract):\n\n  scheduler.queue.depth           pending fires across daemon\n  scheduler.missed_fires.recent   MissedFire events in last 24h\n  scheduler.wfq.saturation        max WFQ saturation across active queues\n  scheduler.dispatcher.bound      HADES design dispatcher reachable (invariant,\n                                  invariant)\n\nThe --strict parent flag escalates Warn rows to non-zero exit so CI\ngates can fail on early-warning thresholds.\n\nExit codes:\n  0  every aspect OK (or only Warns without --strict)\n  1  any aspect Fail OR (any Warn AND --strict)\n  2  unrecoverable: prober wiring, transport",
 
-  scheduler.queue.depth           pending fires across daemon
-  scheduler.missed_fires.recent   MissedFire events in last 24h
-  scheduler.wfq.saturation        max WFQ saturation across active queues
-  scheduler.dispatcher.bound      Plan 3 dispatcher reachable (inv-hades-080,
-                                  inv-hades-123)
-
-The --strict parent flag escalates Warn rows to non-zero exit so CI
-gates can fail on early-warning thresholds.
-
-Exit codes:
-  0  every aspect OK (or only Warns without --strict)
-  1  any aspect Fail OR (any Warn AND --strict)
-  2  unrecoverable: prober wiring, transport`,
 		Example: " # Probe the scheduler subsystem\n  hades doctor scheduler\n\n # CI gate: fail on Warn rows too\n  hades doctor scheduler --strict",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -172,23 +152,8 @@ func NewDoctorInboxCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "inbox",
 		Short: "Diagnose inbox subsystem (aggregator cache, outbox, dedup)",
-		Long: `Run a 4-aspect probe of the inbox subsystem (per spec §6.7):
+		Long:  "Run a 4-aspect probe of the inbox subsystem (per design contract):\n\n  inbox.aggregator.cache.consistent   per-project counts == aggregator cache\n                                      (invariant)\n  inbox.outbox.queue.depth            undelivered notifications in outbox\n  inbox.dedup.window.health           UNIQUE constraint violations (should be 0)\n  inbox.severity.distribution         24h breakdown across the 4-tier enum\n                                      (urgent / action-needed / info-immediate /\n                                      info-digest; invariant)\n\nThe --strict parent flag escalates Warn rows to non-zero exit so CI\ngates can fail on early-warning thresholds.\n\nExit codes:\n  0  every aspect OK (or only Warns without --strict)\n  1  any aspect Fail OR (any Warn AND --strict)\n  2  unrecoverable: prober wiring, transport",
 
-  inbox.aggregator.cache.consistent   per-project counts == aggregator cache
-                                      (inv-hades-113)
-  inbox.outbox.queue.depth            undelivered notifications in outbox
-  inbox.dedup.window.health           UNIQUE constraint violations (should be 0)
-  inbox.severity.distribution         24h breakdown across the 4-tier enum
-                                      (urgent / action-needed / info-immediate /
-                                      info-digest; inv-hades-124)
-
-The --strict parent flag escalates Warn rows to non-zero exit so CI
-gates can fail on early-warning thresholds.
-
-Exit codes:
-  0  every aspect OK (or only Warns without --strict)
-  1  any aspect Fail OR (any Warn AND --strict)
-  2  unrecoverable: prober wiring, transport`,
 		Example: " # Probe the inbox subsystem\n  hades doctor inbox\n\n # CI gate: fail on Warn rows too\n  hades doctor inbox --strict",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -218,26 +183,8 @@ func NewDoctorTmuxCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "tmux",
 		Short: "Diagnose tmux subsystem (binary, server, sessions, drift)",
-		Long: `Run a 5-aspect probe of the tmux subsystem (per spec §6.7):
+		Long:  "Run a 5-aspect probe of the tmux subsystem (per design contract):\n\n  tmux.binary.installed     tmux on PATH + version ≥ 3.4 (spec §1 design choice)\n  tmux.server.reachable     /tmp/hades-system.sock responsive (invariant)\n  tmux.session.count        active sessions in daemon.db\n  tmux.drift.count          orphaned sessions (db says active but tmux disagrees)\n  tmux.socket.permissions   /tmp/hades-system.sock mode == 0600 (spec §7.3)\n\ninvariant anchor: the prober delegates to the live tmux adapter which\nenforces the dedicated -S socket flag (forbids the default\n/tmp/tmux-<uid>) so the probe never races operator's personal tmux\nserver.\n\nThe --strict parent flag escalates Warn rows to non-zero exit so CI\ngates can fail on early-warning thresholds.\n\nExit codes:\n  0  every aspect OK (or only Warns without --strict)\n  1  any aspect Fail OR (any Warn AND --strict)\n  2  unrecoverable: prober wiring, transport",
 
-  tmux.binary.installed     tmux on PATH + version ≥ 3.4 (spec §1 Q5)
-  tmux.server.reachable     /tmp/hades-system.sock responsive (inv-hades-117)
-  tmux.session.count        active sessions in daemon.db
-  tmux.drift.count          orphaned sessions (db says active but tmux disagrees)
-  tmux.socket.permissions   /tmp/hades-system.sock mode == 0600 (spec §7.3)
-
-Inv-hades-117 anchor: the prober delegates to the live tmux adapter which
-enforces the dedicated -S socket flag (forbids the default
-/tmp/tmux-<uid>) so the probe never races operator's personal tmux
-server.
-
-The --strict parent flag escalates Warn rows to non-zero exit so CI
-gates can fail on early-warning thresholds.
-
-Exit codes:
-  0  every aspect OK (or only Warns without --strict)
-  1  any aspect Fail OR (any Warn AND --strict)
-  2  unrecoverable: prober wiring, transport`,
 		Example: " # Probe the tmux subsystem\n  hades doctor tmux\n\n # CI gate: fail on Warn rows too\n  hades doctor tmux --strict",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {

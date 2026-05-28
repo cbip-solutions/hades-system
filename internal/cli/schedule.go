@@ -2,7 +2,7 @@
 // Package cli — schedule.go.
 //
 // `hades schedule <subcommand>` is the operator-facing entry point for
-// the 3-tier scheduler (Routine / Task / Loop) per spec §1 Q8 D + §6.2.
+// the 3-tier scheduler (Routine / Task / Loop) per design contract§6.2.
 //
 // Cobra layout (8 leaves under 1 root):
 //
@@ -19,11 +19,11 @@
 // queue
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
-// newClientFromCmd (mirrors the release C-12 attach/sessions/layout
+// newClientFromCmd (mirrors the HADES design C-12 attach/sessions/layout
 // pattern). Tests inject a fake client via TestOnlyClientFactory at
 // the package level + a per-test ScheduleClient interface.
 //
-// Exit-code mapping (per spec §6.2; ErrRecoverable contract from
+// Exit-code mapping (per design contract; ErrRecoverable contract from
 // ):
 // - 0 success
 // - 1 operator-recoverable: validation reject (missing flag, bogus
@@ -35,7 +35,7 @@
 //
 // gap: until the daemon mounts the Run dispatch substrate in
 // , `hades schedule routine run <id>` surfaces 503 → exit 2
-// (infra-issue, not operator-typo). Mirrors the release /v1/messages
+// (infra-issue, not operator-typo). Mirrors the HADES design /v1/messages
 // graceful-degradation pattern.
 package cli
 
@@ -148,18 +148,8 @@ func newScheduleRoutineCmd(factory ScheduleClientFactory) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "routine",
 		Short: "Manage durable scheduled routines (cron / http / git-poll)",
-		Long: `Manage durable routines — schedules that survive daemon restart
-and fire repeatedly per their trigger. Three trigger types:
+		Long:  "Manage durable routines — schedules that survive daemon restart\nand fire repeatedly per their trigger. Three trigger types:\n\n  cron      5-field vixie expression (e.g. \"0 8 * * 1-5\")\n  http      bearer-token-gated POST /v1/schedules/{id}/fire\n  git-poll  local 'gh' CLI poll of repo/branch (privacy-by-default)\n\nSubcommands:\n  create   define a new routine + (for http) print the bearer token ONCE\n  list     filter by --project or --all\n  delete   soft-delete (Disabled then DELETE)\n  run      manually trigger a routine (stage substrate)",
 
-  cron      5-field vixie expression (e.g. "0 8 * * 1-5")
-  http      bearer-token-gated POST /v1/schedules/{id}/fire
-  git-poll  local 'gh' CLI poll of repo/branch (privacy-by-default)
-
-Subcommands:
-  create   define a new routine + (for http) print the bearer token ONCE
-  list     filter by --project or --all
-  delete   soft-delete (Disabled then DELETE)
-  run      manually trigger a routine (Phase I substrate)`,
 		Example: " # Daily 8am cron routine\n  hades schedule routine create --project internal-platform-x --action morning-brief \\\n      --trigger cron --cron \"0 8 * * 1-5\"\n\n # List routines for one project\n  hades schedule routine list --project internal-platform-x\n\n # Delete a routine by id\n  hades schedule routine delete <id>",
 	}
 	root.AddCommand(newScheduleRoutineCreateCmd(factory))
@@ -303,7 +293,7 @@ func newScheduleRoutineDeleteCmd(factory ScheduleClientFactory) *cobra.Command {
 func newScheduleRoutineRunCmd(factory ScheduleClientFactory) *cobra.Command {
 	return &cobra.Command{
 		Use:   "run <id>",
-		Short: "Manually trigger a schedule (Phase I substrate)",
+		Short: "Manually trigger a schedule (stage substrate)",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			id := strings.TrimSpace(args[0])

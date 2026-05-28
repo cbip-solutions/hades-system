@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// config_init.go — release — `hades config init` global wizard.
+// config_init.go — HADES design — `hades config init` global wizard.
 //
 // Thin Cobra subcommand that calls internal/onboard/qna/Wizard.Run with
 // WizardKindGlobal, persists outputs (config.toml + doctrine clone + plugin
@@ -48,25 +48,7 @@ func NewConfigInitCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "Run the global setup wizard (LLM provider + doctrine + Hermes plugin)",
-		Long: `hades config init walks through the global setup wizard.
-
-It configures:
-  - LLM provider (anthropic-bypass, anthropic-paygo, local-ollama, custom)
-  - Active doctrine (~/.config/hades-system/doctrines/)
-  - Hermes plugin install location (per Q13=D project-scope resolution; skip via --no-plugin)
-
-On success, writes:
-  ~/.config/hades-system/config.toml   (schema_version="1.0"; inv-hades-188)
-  ~/.config/hades-system/doctrines/<selected>.toml
-  ~/.hermes/plugins/hades-system/      (or project-scope path if spike confirmed)
-
-EXIT CODES:
-  0  success (incl. operator CTRL-C during wizard)
-  1  operator-recoverable error (e.g., --provider=custom requires --custom-url)
-  2  unrecoverable error (transport, JSON, daemon 5xx, --non-interactive gate)
-  3  preflight failure (Hermes not installed, plugin format remnant detected)
-
-Curated MCP selection (Q7=D) lands in Phase F (hades mcp curated apply).`,
+		Long:  "hades config init walks through the global setup wizard.\n\nIt configures:\n  - LLM provider (anthropic-bypass, anthropic-paygo, local-ollama, custom)\n  - Active doctrine (~/.config/hades-system/doctrines/)\n  - Hermes plugin install location (per design choice project-scope resolution; skip via --no-plugin)\n\nOn success, writes:\n  ~/.config/hades-system/config.toml   (schema_version=\"1.0\"; invariant)\n  ~/.config/hades-system/doctrines/<selected>.toml\n  ~/.hermes/plugins/hades-system/      (or project-scope path if spike confirmed)\n\nEXIT CODES:\n  0  success (incl. operator CTRL-C during wizard)\n  1  operator-recoverable error (e.g., --provider=custom requires --custom-url)\n  2  unrecoverable error (transport, JSON, daemon 5xx, --non-interactive gate)\n  3  preflight failure (Hermes not installed, plugin format remnant detected)\n\nReviewed MCP selection (design choice) lands in stage (hades mcp reviewed apply).",
 
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := validateConfigInitFlags(flags); err != nil {
@@ -129,12 +111,12 @@ func runConfigInit(cmd *cobra.Command, flags configInitFlags) error {
 			cmd.Printf("warning: cc detection: %v; proceeding without gate\n", ccErr)
 		} else if present {
 			if flags.nonInteractive {
-				return errors.New("detected ~/.claude/; run 'hades migrate claude-code' first or pass --yes to skip this check")
+				return errors.New("detected local agent memory/; run 'hades migrate claude-code' first or pass --yes to skip this check")
 			}
 			confirmed, promptErr := configInitPromptYesNo(
 				cmd.OutOrStdout(),
 				cmd.InOrStdin(),
-				"Detected ~/.claude/. Run `hades migrate claude-code` first to import your existing install. Continue anyway? [y/N]",
+				"Detected ~/local agent config/. Run `hades migrate claude-code` first to import your existing install. Continue anyway? [y/N]",
 				false,
 			)
 			if promptErr != nil {

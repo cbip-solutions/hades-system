@@ -19,7 +19,7 @@ package store
 // expose tx-scoped variants (UpsertPriorityOverrideTx /
 // DeletePriorityOverrideTx / InsertEventTx) so the adapter can compose
 // the multi-statement atomic write. A failure mid-transaction rolls back
-// BOTH the priority_overrides change AND the audit event row — release
+// BOTH the priority_overrides change AND the audit event row — HADES design
 // hash-chain integrity depends on this atomicity.
 
 import (

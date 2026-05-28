@@ -9,7 +9,7 @@
 // the daemon today. adapts: ship the cache admin surface as
 // the operator-reachable research subset, deliver real CLI commands
 // with real round-trips. Dispatch/agentic-deep land in a follow-up
-// phase WITHOUT changing this client wrapper (additive only).
+// stage WITHOUT changing this client wrapper (additive only).
 package client
 
 import (

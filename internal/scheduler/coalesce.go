@@ -10,7 +10,7 @@ import (
 // ComputeMissed quantifies how many ticks a Schedule missed between
 // its LastRunAt and `now`, clamped to MissLookback.
 //
-// Algorithm (spec §1 Q9 C):
+// Algorithm (spec §1 design choice C):
 //
 // 1. If LastRunAt.IsZero() → no prior fire; missed = 0. We do not
 // back-fill the period preceding INSERT — that would conflate
@@ -52,7 +52,7 @@ import (
 // Boundary (invariant): stdlib + internal/doctrine only. No
 // internal/store, internal/providers, or private-tier1-module.
 //
-// Inv-hades-121 contract.
+// invariant contract.
 func ComputeMissed(s *Schedule, now time.Time) MissedFire {
 	out := MissedFire{ScheduleID: s.ID}
 	if s.LastRunAt.IsZero() {
@@ -139,7 +139,7 @@ func ComputeMissed(s *Schedule, now time.Time) MissedFire {
 // Boundary (invariant): stdlib only at this site (Schedule and
 // MissedFire are in-package types).
 //
-// Inv-hades-121 contract.
+// invariant contract.
 func Coalesce(s *Schedule, missed MissedFire) (BackfillWindow, bool) {
 	if s == nil || s.MissPolicy != MissPolicyCoalesce {
 		return BackfillWindow{}, false

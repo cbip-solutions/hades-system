@@ -3,7 +3,7 @@
 //
 // `hades audit-chain recover --project <id> --from <ts>` is the spec §6.5
 // interactive tamper-recovery flow. It calls the single POST
-// /v1/audit-chain/recover endpoint twice (H-7 two-phase semantics):
+// /v1/audit-chain/recover endpoint twice (H-7 two-stage semantics):
 //
 // Pass 1: confirm=false → preview AuditRecoverPlan (no destructive action)
 // Pass 2: confirm=true → execute the plan; returns AuditRecoverResult
@@ -15,7 +15,7 @@
 // using the actual H-7 wire contract.
 //
 // Two operator-confirmation checkpoints (privacy-by-default + max-scope
-// HALT-per-project per Q10 D):
+// HALT-per-project per design choice D):
 //
 // Checkpoint 1: After plan display → "Continue? [y/N]"
 // Checkpoint 2: After execution → "Resume audit appends for project <X>? [y/N]"

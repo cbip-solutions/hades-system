@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package quota implements hades-system's 3-layer quota system
-// design spec §1 Q4 + §1 Q10:
+// design spec §1 design choice + §1 design choice:
 //
 // Layer 1 — Hierarchical budgets (per-project + global daemon + per-tier)
 // Layer 2 — Weighted Fair Queueing (token bucket per project)
@@ -102,7 +102,7 @@ func DoctrineDefaults(d doctrine.Name) Thresholds {
 	}
 }
 
-var ErrDoctrineMatrixAnchor = errors.New("quota: doctrine matrix anchor (inv-hades-115)")
+var ErrDoctrineMatrixAnchor = errors.New("quota: doctrine matrix anchor (invariant)")
 
 type ProjectQuotaOverride struct {
 	SoftCapPct int
@@ -147,7 +147,7 @@ func ResolveThresholds(projectAlias string, d doctrine.Name, override *ProjectQu
 }
 
 // CapStatus is the 4-state result of ClassifyUsage. The four states
-// are load-bearing per spec §1 Q4: max-scope MUST never silently deny
+// are load-bearing per design contract: max-scope MUST never silently deny
 // (operator self-throttles), so HardLogOnly is distinct from
 // HardDeny. Dispatcher reads CapStatus + Mode together to decide
 // runtime action.
@@ -207,7 +207,7 @@ func (s CapStatus) String() string {
 // SoftWarn). This means a cap with SoftCapPct=80 fires SoftWarn at
 // exactly 80% — matches operator intuition ("at 80% I get a warning").
 //
-// The 4-state distinction is load-bearing per spec §1 Q4: max-scope
+// The 4-state distinction is load-bearing per design contract: max-scope
 // MUST never silently deny (operator is the gating authority), so even
 // at 100%+ the status is HardLogOnly, not HardDeny. Default and
 // capa-firewall both deny, but capa-firewall denies earlier (95% vs

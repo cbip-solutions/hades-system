@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package knowledge — `Index` façade.
 //
-// Spec reference: internal design record
-// §"Task G-17" lines 4295–4368 (canonical) — method-bound aggregator
+// Spec reference: design records design
+// §"task" lines 4295–4368 (canonical) — method-bound aggregator
 // over the G-1..G-16 free-function entry points (Open, Init, IndexDoc,
 // Delete, Execute, ColdRebuild, IncrementalUpdate,...). The façade
 // exists so HTTP handlers and the CLI surface (G-11) can hold

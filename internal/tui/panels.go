@@ -8,7 +8,7 @@
 // (cadence effectively pauses while the panel is hidden, restarting
 // at the operator's next F-key press).
 //
-// Cadence assignment (per spec §7.3 + project doctrine
+// Cadence assignment (per design contract
 // "calm-by-default"):
 //
 // Panel | Key | Cadence | Rationale
@@ -27,7 +27,7 @@
 // Inbox | F12 | 2s | warm — notifications inbox
 //
 // These thresholds are doctrine-tunable post-ship via
-// ~/.config/hades-system/tui.toml; release ships
+// ~/.config/hades-system/tui.toml; HADES design ships
 // fixed defaults.
 package tui
 

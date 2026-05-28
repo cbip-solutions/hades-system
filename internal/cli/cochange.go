@@ -44,11 +44,8 @@ func NewCochangeCmd(factory func(cmd *cobra.Command) CaronteCochangeClient) *cob
 	cmd := &cobra.Command{
 		Use:   "cochange <file>",
 		Short: "Files historically co-changed with <file> (invisible-coupling guard)",
-		Long: `List files that change together with <file> across git history
-(code-maat coupling_degree). High coupling means editing one likely needs the
-other — surfaced before the compiler catches the break (spec §8). Below the
-cold-start gate (insufficient history) the engine returns no peers. Routes via
-the daemon (single-egress, inv-hades-088).`,
+		Long:  "List files that change together with <file> across git history\n(code-maat coupling_degree). High coupling means editing one likely needs the\nother — surfaced before the compiler catches the break (spec §8). Below the\ncold-start gate (insufficient history) the engine returns no peers. Routes via\nthe daemon (single-egress, invariant).",
+
 		Example: `  hades cochange internal/orchestrator/merge/engine.go
   hades cochange internal/daemon/server.go --format json`,
 		Args: cobra.MaximumNArgs(1),

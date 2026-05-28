@@ -2,7 +2,7 @@
 // Package client — orchestrator.go.
 //
 // Typed helper methods for /v1/orchestrator/* endpoints exercised by the
-// `hades orchestrator` CLI subcommands. Replaces the release stub set
+// `hades orchestrator` CLI subcommands. Replaces the HADES design stub set
 // (OrchestratorStatus + OrchestratorPin/Unpin against /switch) with a
 // six-method surface backed by the +C+D+E components.
 package client

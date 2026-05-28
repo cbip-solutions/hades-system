@@ -16,7 +16,7 @@
 // 3. Schedules new-version chunk/symbol/change-node ingestion.
 //
 // The handler returns once dispatch is scheduled; actual ingestion runs
-// async on the daemon side per spec §4.4 (cron worker tolerates partial
+// async on the daemon side per design contract(cron worker tolerates partial
 // failure — errors per ecosystem are surfaced via errors.Join in the
 // cron worker's PollUpstream aggregator).
 //
@@ -25,7 +25,7 @@
 // 204 No Content — delta-ingest scheduled successfully.
 // 400 Bad Request — invalid JSON body or unknown ecosystem.
 // 500 Internal Server Error — dispatch failure.
-// 503 Service Unavailable — EcosystemHandler not wired.
+// 503 Service Unavailable — EcosystemHandler unavailable.
 //
 // Wire mirror: matches daemonCronClient.IngestDelta(ctx, eco) →
 // POST /v1/ecosystem/ingest-delta + JSON body

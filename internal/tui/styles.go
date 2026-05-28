@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package tui implements the hades-system dashboard TUI.
 //
-// Per spec §7.1 (k9s shape, calm-by-default) and R5 verification:
+// per design contract(k9s shape, calm-by-default) and R5 verification:
 // - Use lipgloss WithStandardStyleName("dark") — never WithAutoStyle
 // inside bubbletea (Glamour issue #405).
 // - Hybrid render: Glamour for prose, custom lipgloss for tables /
 // ASCII art (Glamour issues #109, #177, #486).
 // - Strip YAML frontmatter pre-render (Glamour issue #205).
 //
-// Palette is spec §Q2 charcoal-monochrome-with-crimson. Color constants
+// Palette is spec §design choice charcoal-monochrome-with-crimson. Color constants
 // are delegated to the leaf internal/tui/palette package to avoid
 // import cycles: components/ and views/ both import palette directly;
 // the tui parent re-exports them here for backward compatibility with

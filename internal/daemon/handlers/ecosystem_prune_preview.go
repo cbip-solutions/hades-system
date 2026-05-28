@@ -20,7 +20,7 @@
 // 400 Bad Request — missing/invalid query param.
 // 404 Not Found — unknown (ecosystem, version) tuple.
 // 500 Internal Server Error — opaque seam failure.
-// 503 Service Unavailable — EcosystemHandler not wired.
+// 503 Service Unavailable — EcosystemHandler unavailable.
 //
 // Wire mirror: matches client.EcosystemPrunePreview(ctx, eco, ver) →
 // GET /v1/ecosystem/prune-preview?ecosystem=<X>&version=<Y> →

@@ -33,7 +33,7 @@
 // seam-for-future — neither consuming flow is daemon-active
 // (handlers.NewMergeHandler runs with NIL engine per main.go:460
 // comment "F.7 wires"; HRA + NewConfirmationPolicy never constructed
-// at runtime). release's L10 therefore implements its OWN orchestrator
+// at runtime). HADES design's L10 therefore implements its OWN orchestrator
 // subsystem (internal/caronte/coordinated/), INDEPENDENT of F.7
 // wiring. The autonomy oracle is the seam that lets the daemon supply
 // the doctrine-driven policy WITHOUT pulling
@@ -100,5 +100,5 @@ import "github.com/cbip-solutions/hades-system/internal/caronte/coordinated"
 // The alias signature is reflect-pinned by the sister-test
 // TestContractFixAutonomyOracleMethodSet — adding/removing/renaming a
 // method on the underlying coordinated.AutonomyOracle is a deliberate
-// cross-phase contract change that breaks the test.
+// cross-stage contract change that breaks the test.
 type ContractFixAutonomyOracle = coordinated.AutonomyOracle

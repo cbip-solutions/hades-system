@@ -2,7 +2,7 @@
 // pluggable/cache.go — LRU 7-day cache at
 // ~/.cache/hades-system/templates/<sha256-of-url-plus-ref>/.
 //
-// Per Q12=D persistence policy (spec §2.12): cache directories with
+// Per design choice persistence policy (spec §2.12): cache directories with
 // retention 7 days, eviction LRU on access. The cache is operator-
 // readable (mode 0755 dirs, 0644 files) — operators can inspect
 // fetched templates for trust verification.

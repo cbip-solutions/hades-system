@@ -11,10 +11,10 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/migrate/mapping"
 )
 
-var ErrUnknownPermissionStrict = errors.New("doctrine_toml: unmappable permission in strict mode (inv-hades-183 no silent drop)")
+var ErrUnknownPermissionStrict = errors.New("doctrine_toml: unmappable permission in strict mode (invariant no silent drop)")
 
 // writeDoctrineTOML emits ~/.config/hades-system/doctrines/imported-from-claude-code.toml
-// per spec §2.10 doctrine TOML schema. 1:1 preservation of allow/deny per
+// per design contract:1 preservation of allow/deny per
 // invariant: every input permission entry MUST appear verbatim in the
 // output [capa_firewall] block.
 func writeDoctrineTOML(path string, e mapping.PlanEntry) error {
@@ -116,7 +116,7 @@ func renderDoctrineTOML(allow, deny []string, tiers map[string]string, env map[s
 	sb.WriteString("schema_version = \"1.0\"\n")
 	sb.WriteString("name = \"imported-from-claude-code\"\n")
 	sb.WriteString("inherits_from = \"max-scope\"\n")
-	sb.WriteString("description = \"Imported from ~/.claude/settings.json permissions.\"\n\n")
+	sb.WriteString("description = \"Imported from ~/local agent config/settings.json permissions.\"\n\n")
 	sb.WriteString("[capa_firewall]\n")
 	sb.WriteString("allow = [\n")
 	for _, p := range allow {

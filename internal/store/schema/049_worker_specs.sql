@@ -1,5 +1,5 @@
 --
--- Migration 049: worker specs persistence (HADES design release track Task D-8).
+-- Migration 049: worker specs persistence (HADES design stage task).
 -- schemaVersion bumps 12 → 13.
 --
 -- Three tables for the three workforce variants. Separate tables (vs
@@ -7,12 +7,12 @@
 -- explicit and let HADES design + HADES design add variant-specific columns
 -- without conditional checks at the call site.
 --
--- All three carry project_id (spec §7.1 logical isolation; release track
+-- All three carry project_id (spec §7.1 logical isolation; stage
 -- queues already enforce this on every row).
 --
 -- invariant boundary preserved: internal/workforce/worker MUST NOT
--- import internal/store. The daemon adapter (release track) will wire the
--- read/write surface; release track ships only the schema so HADES design
+-- import internal/store. The daemon adapter (stage) will wire the
+-- read/write surface; stage ships only the schema so HADES design
 -- orchestrator persistence is unblocked.
 --
 -- IF NOT EXISTS aligns with prior migrations (032..048) and lets the

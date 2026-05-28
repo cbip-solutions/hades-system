@@ -4,7 +4,7 @@
 // JSON-serializable payload types for the 8 RAG audit events
 // (EventType slots 92-99, declared in internal/orchestrator/eventlog/events.go).
 //
-// (Task A-7) shipped the EventType constants + RAGAuditEmitter
+// (task) shipped the EventType constants + RAGAuditEmitter
 // skeleton (audit_emitter.go) + the in-memory test chain (mock_chain.go).
 // the emitter marshals on every Emit call, bound 1:1 to each EventType slot.
 //
@@ -32,7 +32,7 @@
 // the gate; D-12 ONLY supplies the payload schemas.
 //
 // - invariant boundary: this file imports internal/orchestrator/eventlog
-// for the EventType alias + slot constants. It does NOT import release
+// for the EventType alias + slot constants. It does NOT import HADES design
 // budget primitives (the RAGAuditChainEmitter interface in
 // audit_emitter.go is the boundary-respecting indirection).
 //

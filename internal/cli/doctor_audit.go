@@ -16,7 +16,7 @@ func doctorAuditCmd() *cobra.Command {
 		Use:   "audit",
 		Short: "Audit pipeline health (events, family-disjoint pool, criteria)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Audit (Plan 4)", runAuditChecks)
+			return runOneSection(cmd, "Audit (HADES design)", runAuditChecks)
 		},
 	}
 }
@@ -58,11 +58,11 @@ func checkAuditFamilyDisjointSize(ctx context.Context, c *client.Client) CheckRe
 	}
 	if defaults < 2 {
 		return CheckResult{Name: "audit.family_disjoint.size", Status: "fail",
-			Detail: fmt.Sprintf("active family pool size = %d; inv-hades-080 requires ≥2", defaults),
+			Detail: fmt.Sprintf("active family pool size = %d; invariant requires ≥2", defaults),
 			Hint:   "review doctrine.reviewer.family_disjoint_pool config"}
 	}
 	return CheckResult{Name: "audit.family_disjoint.size", Status: "ok",
-		Detail: fmt.Sprintf("active pool size = %d (inv-hades-080)", defaults)}
+		Detail: fmt.Sprintf("active pool size = %d (invariant)", defaults)}
 }
 
 func checkAuditCriteriaLoaded(_ context.Context, _ *client.Client) CheckResult {

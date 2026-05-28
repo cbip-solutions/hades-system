@@ -11,7 +11,7 @@
 // Method-name reconciliation note (drift from spec): the spec named the
 // per-alias doctor wrapper `ProjectDoctor`. That symbol already exists in
 // project.go with a different signature (POST /v1/projects/doctor with
-// alias+cwd+rebind from Task A-8). Renaming the existing method
+// alias+cwd+rebind from task). Renaming the existing method
 // would break contract; instead we use `ProjectDoctorReport`
 // for the GET-based aggregate-doctor wrapper introduced here. Same
 // rationale for `ProjectsListAll` (avoids confusion with handler-side

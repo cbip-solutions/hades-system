@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor.go
 //
-// Task L-3 added the Bypass section (10 checks per spec §8.5)
-// to the existing release environment + daemon report.
+// task added the Bypass section (10 checks per design contract)
+// to the existing HADES design environment + daemon report.
 //
 // research, budget, audit, sshexec, doctrine, mcps, caronte) plus
 // preserves the aggregate `hades doctor` invocation that runs ALL
@@ -10,7 +10,7 @@
 //
 // Review I-2: the doctor namespace now wires
 // format.AttachFlags so `--json`, `--yaml`, `--quiet`, `--verbose`,
-// `--filter` work the same as every other release namespace. Output
+// `--filter` work the same as every other HADES design namespace. Output
 // switches to a structured `[]CheckResult` slice when --format != table
 // so operators automating `hades doctor --json | jq` get the same
 // machine-parseable shape every namespace ships.
@@ -36,7 +36,7 @@ import (
 func NewDoctorCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "doctor",
-		Short: "Diagnose daemon, environment, bypass, Plan 4-6 subsystems, and Plan 7 substrates",
+		Short: "Diagnose daemon, environment, bypass, HADES design subsystems, and HADES design substrates",
 		RunE:  doctorAggregateRunE,
 	}
 
@@ -100,8 +100,8 @@ func buildDoctorFullConfig() doctorfull.Config {
 
 func buildPlan13FixAppliers() map[string]fix.Applier {
 	return map[string]fix.Applier{
-		"hermes.install":           &fix.HermesInstallFix{},
-		"mcp.curated-availability": &fix.CuratedMCPFix{},
+		"hermes.install":            &fix.HermesInstallFix{},
+		"mcp.reviewed-availability": &fix.CuratedMCPFix{},
 		"hermes.plugin-format": fix.NewPluginFormatFix(fix.PluginFormatFixConfig{
 
 			PluginPath: "",
@@ -113,7 +113,7 @@ func buildPlan13FixAppliers() map[string]fix.Applier {
 func doctorMergeCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "merge",
-		Short: "Plan 6 merge subsystem checks (4 checks per spec §6.2)",
+		Short: "HADES design merge subsystem checks (4 checks per design contract)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
@@ -141,7 +141,7 @@ func doctorMergeCmd() *cobra.Command {
 func doctorOrchestratorPlan5Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "orchestrator-plan5",
-		Short: "Plan 5 orchestrator engine checks (9 checks per spec §6.2)",
+		Short: "HADES design orchestrator engine checks (9 checks per design contract)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
@@ -211,7 +211,7 @@ func doctorAggregateRunE(cmd *cobra.Command, _ []string) error {
 		bctx, bcancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer bcancel()
 		for _, r := range runBypassChecks(bctx, c) {
-			r.Section = "Bypass (Plan 2)"
+			r.Section = "Bypass (HADES design)"
 			allResults = append(allResults, r)
 		}
 
@@ -220,14 +220,14 @@ func doctorAggregateRunE(cmd *cobra.Command, _ []string) error {
 			fn    func(ctx context.Context, c *client.Client) []CheckResult
 		}
 		sections := []section{
-			{"Workforce (Plan 4)", runWorkforceChecks},
-			{"Research (Plan 4)", runResearchChecks},
-			{"Budget (Plan 4)", runBudgetChecks},
-			{"Audit (Plan 4)", runAuditChecks},
-			{"SSH-Exec (Plan 4)", runSSHExecChecks},
-			{"Doctrine (Plan 4)", runDoctrineChecks},
-			{"MCPs (Plan 4)", runMCPsChecks},
-			{"Caronte (Plan 19)", runCaronteChecks},
+			{"Workforce (HADES design)", runWorkforceChecks},
+			{"Research (HADES design)", runResearchChecks},
+			{"Budget (HADES design)", runBudgetChecks},
+			{"Audit (HADES design)", runAuditChecks},
+			{"SSH-Exec (HADES design)", runSSHExecChecks},
+			{"Doctrine (HADES design)", runDoctrineChecks},
+			{"MCPs (HADES design)", runMCPsChecks},
+			{"Caronte (HADES design)", runCaronteChecks},
 		}
 		results := make([][]CheckResult, len(sections))
 		var wg sync.WaitGroup
@@ -251,7 +251,7 @@ func doctorAggregateRunE(cmd *cobra.Command, _ []string) error {
 		ctx3, cancel3 := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel3()
 		for _, r := range runOrchestratorChecks(ctx3, c) {
-			r.Section = "Orchestrator (Plan 3)"
+			r.Section = "Orchestrator (HADES design)"
 			allResults = append(allResults, r)
 		}
 
@@ -259,7 +259,7 @@ func doctorAggregateRunE(cmd *cobra.Command, _ []string) error {
 		defer cancel5()
 		baseURL := plan5BaseURLFromCmd(cmd)
 		for _, r := range runOrchestratorPlan5ChecksAt(ctx5, baseURL) {
-			r.Section = "Orchestrator engine (Plan 5)"
+			r.Section = "Orchestrator engine (HADES design)"
 			allResults = append(allResults, r)
 		}
 
@@ -267,35 +267,35 @@ func doctorAggregateRunE(cmd *cobra.Command, _ []string) error {
 		defer cancel6()
 		mergeClient := client.NewMergeClient(c.HTTPClient(), c.BaseURL())
 		for _, r := range runMergeChecks(ctx6, mergeClient) {
-			r.Section = "Merge (Plan 6)"
+			r.Section = "Merge (HADES design)"
 			allResults = append(allResults, r)
 		}
 
 		ctx11h, cancel11h := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel11h()
 		for _, r := range runHermesChecks(ctx11h, c) {
-			r.Section = "Hermes integration (Plan 11)"
+			r.Section = "Hermes integration (HADES design)"
 			allResults = append(allResults, r)
 		}
 
 		ctx11a, cancel11a := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel11a()
 		for _, r := range runAugmentChecks(ctx11a, c) {
-			r.Section = "Augmentation (Plan 11)"
+			r.Section = "Augmentation (HADES design)"
 			allResults = append(allResults, r)
 		}
 
 		ctx11c, cancel11c := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel11c()
 		for _, r := range runCitationChecks(ctx11c, c) {
-			r.Section = "Citation system (Plan 11)"
+			r.Section = "Citation system (HADES design)"
 			allResults = append(allResults, r)
 		}
 
 		ctx11co, cancel11co := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel11co()
 		for _, r := range runCoordinationChecks(ctx11co, c) {
-			r.Section = "Coordination (Plan 11)"
+			r.Section = "Coordination (HADES design)"
 			allResults = append(allResults, r)
 		}
 	}
@@ -352,7 +352,7 @@ func doctorAggregateRunE(cmd *cobra.Command, _ []string) error {
 	if !opts.Quiet {
 		fmt.Fprintln(out)
 
-		fmt.Fprintln(out, "Implementation status: post v0.20.0 (Caronte operational closure); Plan 15 v1.0 release in flight")
+		fmt.Fprintln(out, "Implementation status: post v0.20.0 (Caronte operational closure); HADES design v1.0 release in flight")
 	}
 	if anyFail {
 		return wrapDoctorExit(daemonReachable)

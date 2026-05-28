@@ -12,7 +12,7 @@
 // in the paired EvtWorkerRedispatched row).
 // 2. Invoke RecoveryEngine.HandleWorkerDeath with the canonical
 // sentinel ErrHeartbeatTimeout (classified as TRANSIENT_INFRA per
-// Task E-1 Classify rule 2). The engine applies the per-doctrine
+// task Classify rule 2). The engine applies the per-doctrine
 // retry budget and emits the WorkerRedispatched row.
 //
 // The two-event pair (Death + Redispatched) is the load-bearing
@@ -48,8 +48,8 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/orchestrator/eventlog"
 )
 
-// HeartbeatProbe is the read-only liveness view of release worker (and
-// future reviewer) subprocesses. The real implementation in release
+// HeartbeatProbe is the read-only liveness view of HADES design worker (and
+// future reviewer) subprocesses. The real implementation in HADES design
 // queries worker.SubprocessManager for the in-memory last-beat
 // timestamp map; tests inject deterministic fakes (see fakeProbe).
 //

@@ -12,7 +12,7 @@ import (
 
 // Migrator is a registered V→V+1 converter for doctrine schema migration.
 //
-// Per Q15 A + invariant: every Migrator MUST return *v1.Schema only.
+// Per design choice A + invariant: every Migrator MUST return *v1.Schema only.
 // No Migrator may write to disk; persistent write-back is operator-explicit
 // via the CLI (`hades doctrine migrate <path> --confirm`).
 //
@@ -81,7 +81,7 @@ func MigrateChain(data []byte, fromVersion string) (*v1.Schema, error) {
 // migration work required". It parses the TOML into *v1.Schema and returns it
 // verbatim. Registered in the chain at CurrentSchemaVersion.
 //
-// Per Q15 A: even passthrough returns *v1.Schema only — never writes.
+// Per design choice A: even passthrough returns *v1.Schema only — never writes.
 //
 // Trust-tier note: passthrough invokes parser.ParseStrict with
 // AllowTransverseDeclaration=true because the migrate package's Migrator

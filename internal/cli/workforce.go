@@ -85,7 +85,7 @@ func isVerboseSet(cmd *cobra.Command) bool {
 func NewWorkforceCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "workforce",
-		Short: "Inspect and control the in-flight workforce (Plan 4)",
+		Short: "Inspect and control the in-flight workforce (HADES design)",
 		Long: `Operator surface for workforce primitives:
 
   status         aggregated counts + gate state
@@ -196,12 +196,8 @@ func workforceGatePauseCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "pause",
 		Short: "Pause workforce activity (security-grade; --mode required)",
-		Long: `Halts new worker dispatch. Idempotent (already-paused state returns 200).
+		Long:  "Halts new worker dispatch. Idempotent (already-paused state returns 200).\n\nModes:\n  paused_descriptive   visible pause; emits notification\n  paused_quiet         silent pause; no notification (automated test windows)\n  paused_after_apply   pause kicks in after current HADES design apply commits",
 
-Modes:
-  paused_descriptive   visible pause; emits notification
-  paused_quiet         silent pause; no notification (automated test windows)
-  paused_after_apply   pause kicks in after current Plan 5 apply commits`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if err := format.ValidateExclusive(cmd); err != nil {
 				return err

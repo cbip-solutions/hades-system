@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — ecosystem.go.
 //
-// EcosystemHandler interface + 8 HTTP handlers for the release ecosystem
+// EcosystemHandler interface + 8 HTTP handlers for the HADES design ecosystem
 // docs operator surface. Referenced server-side by:
 //
 // POST /v1/ecosystem/pin — pin a version
@@ -16,16 +16,16 @@
 //
 // Routes registered in registerRoutes() consult the EcosystemHandler()
 // accessor on *daemon.Server. When nil (production wiring deferred until a
-// later phase composes the *internal/research/ecosystem.Dispatcher +
+// later stage composes the *internal/research/ecosystem.Dispatcher +
 // verifier + symbol_index façade and calls SetEcosystemHandler), every
 // path returns 503 Service Unavailable so the operator/cron worker sees
 // "feature not configured" rather than a silent 404 from an unmounted
-// route. Mirrors the release KnowledgeIndex pattern + the
+// route. Mirrors the HADES design KnowledgeIndex pattern + the
 // HandoffEmitter / DayGenerator nil-safety contracts.
 //
 // Status-code mapping (mirrors knowledge_p7 + day_p7 patterns):
 //
-// 503 — EcosystemHandler() not yet wired (later-phase bootstrap will
+// 503 — EcosystemHandler() unavailable (later-stage bootstrap will
 // register the façade at boot; tests inject fakes via
 // SetEcosystemHandler).
 // 400 — invalid JSON body, missing required field, malformed path param.

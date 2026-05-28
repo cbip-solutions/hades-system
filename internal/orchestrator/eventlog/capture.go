@@ -6,13 +6,13 @@
 // by default (privacy-by-default per project instructions hard rule + spec §7.4);
 // callers explicitly opt-out via CaptureOptions.Redact = &false.
 //
-// The on-disk envelope is frozen at version=1 (Task O-1):
+// The on-disk envelope is frozen at version=1 (task):
 //
 // line 1 {"kind":"header", version, session_id, captured_at, redacted, metadata_sha256}
 // line 2-N {"kind":"event", event_id, timestamp, event_type, payload}
 // line N+1 {"kind":"footer", event_count, first_event_id, last_event_id}
 //
-// Replay (Task O-2) recomputes metadata_sha256 from header/footer fields
+// Replay (task) recomputes metadata_sha256 from header/footer fields
 // and rejects fixtures with mismatching signatures (ErrCorruptedFixture).
 //
 // Invariant flow:
@@ -25,7 +25,7 @@
 // Record type and a Querier. It is independent of (and
 // complementary to) internal/daemon/orchestrator_plan5_service.go's
 // Capture method, which writes a per-row JSON envelope used by the
-// daemon's HTTP API. Task O-1 ships the canonical fixture
+// daemon's HTTP API. task ships the canonical fixture
 // format used by the replay tier.
 package eventlog
 

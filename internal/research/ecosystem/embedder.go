@@ -30,7 +30,7 @@ type Embedder interface {
 
 	EmbedFP32_1536d(ctx context.Context, text string) ([]float32, error)
 
-	// EmbedBoth is a convenience returning both shapes in one call. Phase
+	// EmbedBoth is a convenience returning both shapes in one call. stage
 	// B chunker MUST call this (not separate Binary + FP32 calls) — the
 	// jina-code impl computes FP32 once + derives binary via single
 	// quantization pass, avoiding 2× compute.
@@ -56,7 +56,7 @@ type EmbedderConfig struct {
 //
 // Returns zero-valued embeddings of the correct shape (32 bytes / 1536 floats).
 // Production wiring of Dispatcher MUST NOT receive NoopEmbedder —
-// Task D-9 asserts the Embedder is non-noop at NewDispatcher time. This
+// task asserts the Embedder is non-noop at NewDispatcher time. This
 // type exists for tests that exercise non-embedder logic (router /
 // abstention / citation / verifier) in isolation.
 // =============================================================================
@@ -104,7 +104,7 @@ func (NoopEmbedder) Close() error { return nil }
 // without an explicit test-mode override. Tests that exercise
 // non-embedder logic MUST set Options.AllowNoopEmbedder = true (or use
 // the test-only `newTestDispatcher` helper at ).
-var ErrEmbedderNoopInProduction = fmt.Errorf("research/ecosystem: NoopEmbedder used in production wiring (Phase D D-9 guard)")
+var ErrEmbedderNoopInProduction = fmt.Errorf("research/ecosystem: NoopEmbedder used in production wiring (stage D-9 guard)")
 
 type JinaCodeEmbeddings struct {
 	opts   JinaCodeEmbeddingsOptions
@@ -399,11 +399,11 @@ func quantizeBinary256(fp32 []float32) []byte {
 }
 
 // =============================================================================
-// VoyageCode3 — operator-opt-in API fallback embedder (Task C-2).
+// VoyageCode3 — operator-opt-in API fallback embedder (task).
 //
-// Spec §2.4 Q4=A alternative path: voyage-code-3 hosted API (Anthropic-blessed
-// per docs.voyageai.com). Routes ALL HTTP egress through release dispatcher via
-// the narrow Forwarder interface declared below (release B-6 narrow-interface
+// Spec §2.4 design choice alternative path: voyage-code-3 hosted API (Anthropic-blessed
+// per docs.voyageai.com). Routes ALL HTTP egress through HADES design dispatcher via
+// the narrow Forwarder interface declared below (HADES design B-6 narrow-interface
 // pattern). Tokens come from macOS Keychain at (service="voyage-api-token",
 // account="hades-system") by default — never accept tokens via struct field or
 // env var (defense-in-depth: prevents accidental token leakage through logs
@@ -443,7 +443,7 @@ type Forwarder interface {
 	// Forward sends the marshalled Voyage request body and returns the
 	// raw response body. The Forwarder is responsible for: URL routing
 	// (api.voyageai.com/v1/embeddings), bearer-token auth header
-	// injection, HTTP transport, and per-release single-egress audit
+	// injection, HTTP transport, and per-HADES design single-egress audit
 	// logging. Returns either:
 	// - (body, nil) on 2xx
 	// - (nil, *VoyageHTTPError) on a Voyage HTTP non-2xx response, so
@@ -546,7 +546,7 @@ type voyageResponse struct {
 // - 429 (rate-limit) + 5xx: retried with exponential backoff
 // - 401 (auth) + other 4xx: NOT retried (permanent until creds change)
 //
-// EXPORTED so the real release dispatcher (in internal/providers, a
+// EXPORTED so the real HADES design dispatcher (in internal/providers, a
 // separate package wired by the daemon orchestrator) can construct this
 // type when an upstream HTTP error reaches it. The narrow Forwarder
 // interface contract is: "non-2xx HTTP responses MUST be returned as

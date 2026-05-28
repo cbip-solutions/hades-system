@@ -53,7 +53,7 @@ const vecDimensions = 384
 // - SQLite connection pool is sized for SINGLE-WRITER WAL discipline
 // (MaxOpenConns=1, MaxIdleConns=1). Two writers + WAL is a known
 // SQLite footgun (busy-loop unless busy_timeout > inter-writer
-// gap). The single-writer model matches release's auditadapter
+// gap). The single-writer model matches HADES design's auditadapter
 // posture; aggregator inherits it for consistency + simplicity.
 // - Ping verifies the file is openable AND the DSN PRAGMAs were
 // accepted (an invalid PRAGMA name produces a Ping error with the
@@ -75,7 +75,7 @@ func Open(ctx context.Context, dbPath string) (*sql.DB, error) {
 	// path above already registers sqlite-vec at the C level — no
 	// per-connection DSN flag is required.
 	//
-	// NOTE(release) on temp_store: mattn 1.14.44 does NOT support `_temp_store=`
+	// NOTE(HADES design) on temp_store: mattn 1.14.44 does NOT support `_temp_store=`
 	// as a DSN key (verified by reading sqlite3.go source 2026-05-09).
 	// We apply it via a manual PRAGMA exec in Init below — the value
 	// then persists for the lifetime of every connection in the pool

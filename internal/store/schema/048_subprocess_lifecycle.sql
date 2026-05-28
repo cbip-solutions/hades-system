@@ -1,4 +1,4 @@
--- Subprocess lifecycle persistence (HADES design release track Task C-5, spec §11
+-- Subprocess lifecycle persistence (HADES design stage task, spec §11
 -- migration 048 -> schemaVersion bump).
 --
 -- subprocess_sessions records LIVE persistent TeamLead + Reviewer L3/L4

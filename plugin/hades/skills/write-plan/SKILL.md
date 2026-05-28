@@ -1,8 +1,8 @@
 ---
 name: write-plan
 description: |
-  HADES TDD-task-decomposed plan writing: master + phase files pattern,
-  parallel phase-writer dispatch, watchdog mitigation, two-stage self-review.
+  HADES TDD-task-decomposed plan writing: master + stage files pattern,
+  parallel stage-writer dispatch, watchdog mitigation, two-stage self-review.
   Use when operator invokes /hades:write-plan or after design spec is frozen.
 license: Proprietary
 agentskills_version: 1.0
@@ -39,10 +39,10 @@ skill_load("superpowers:writing-plans")
 Verify at least 6 design sections approved + Q&A complete per
 `feedback_spec_hierarchy_and_plan_types.md`.
 
-### 3. Master + phase files pattern
+### 3. Master + stage files pattern
 
-- Master: `design records` (~150-200 lines)
-- Phase files: `design records` (~700-3000 lines each)
+- Master: `design records item-<topic>-master.md` (~150-200 lines)
+- stage files: `design records item-stage-X-<scope>.md` (~700-3000 lines each)
 
 ### 4. Watchdog mitigation (CRITICAL)
 
@@ -54,8 +54,8 @@ Background subagents have 600s stream watchdog. Use incremental Write+Edit per
 
 ### 5. Two-stage self-review (mandatory for ≥4 parallel writers)
 
-release stage — Mechanical greps (placeholder/attribution/uniqueness/module-path/invariant coverage).
-release stage — Code-reviewer subagent dispatch (MANDATORY; catches cross-phase signature drift).
+stage — Mechanical greps (placeholder/attribution/uniqueness/module-path/invariant coverage).
+stage — Code-reviewer subagent dispatch (MANDATORY; catches cross-stage signature drift).
 
 ## Cross-references
 

@@ -2,7 +2,7 @@
 // Package cli — docs_router_retrain.go.
 //
 // `hades docs router-retrain` invokes the daemon endpoint that retrains
-// the router's local logistic classifier (per spec §2.6 Q6=A; D-2
+// the router's local logistic classifier (per design contract=A; D-2
 // scaffold in cmd/hades/docs/router_retrain.go).
 //
 // The daemon-side handler wires the D-2 trainer pipeline:
@@ -17,7 +17,7 @@
 // elapsed wall-clock. This is the same shape used by other one-shot
 // daemon operations (hades audit verify, hades knowledge promote).
 //
-// Exit codes (per spec §6.2):
+// Exit codes (per design contract):
 //
 // 0 success
 // 1 recoverable: daemon 404 / 422

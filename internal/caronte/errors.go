@@ -13,7 +13,7 @@
 // embedder + BGE reranker, the audit emitter, the doctrine accessors). The
 // engine references the seam types from their OWNING caronte subpackages
 // (semantic.CaronteDispatcher, intent.CodeEmbedder, intent.Reranker) — it does
-// NOT re-declare them (DECISION 7).
+// NOT re-declare them (policy).
 //
 // Drop-in (invariant): *Engine satisfies research.GitnexusClient
 // (CodeGraph + Close); the compile anchor in engine.go binds it. The daemon

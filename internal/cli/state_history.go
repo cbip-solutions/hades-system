@@ -2,7 +2,7 @@
 // Package cli — state_history.go.
 //
 // `hades state history [--field <name>]` calls GET /v1/state/history and
-// renders manual field change events from the release chain as a table.
+// renders manual field change events from the HADES design chain as a table.
 // Optional --field scopes output to one field name.
 //
 // Wire type: client.StateChange (Field, OldValue, NewValue, Reason, At, OperatorID).
@@ -20,7 +20,7 @@ import (
 func newStateHistoryCmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "history",
-		Short: "Walk Plan 9 chain showing manual field changes",
+		Short: "Walk HADES design chain showing manual field changes",
 		Long: `history calls GET /v1/state/history and renders state.manual_field_changed
 events in chronological order. Use --field to scope output to one field.
 

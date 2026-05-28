@@ -3,8 +3,8 @@
 //
 // `hades attach <alias> [--window <name>]` is the operator-facing entry
 // point for re-entering a per-project tmux session. If the session is
-// Idle/Archived, the daemon spawns lazy (Q7 D TriggerExplicitAttach).
-// Default window: orch (per spec §6.3).
+// Idle/Archived, the daemon spawns lazy (design choice D TriggerExplicitAttach).
+// Default window: orch (per design contract).
 //
 // # Lifecycle
 //
@@ -30,9 +30,9 @@
 //
 // gap: until the daemon ships POST /v1/sessions/{alias}/attach
 // in, the route returns 503. The CLI surfaces 503 as exit 2
-// (infra-issue, not operator-typo). This mirrors the release
+// (infra-issue, not operator-typo). This mirrors the HADES design
 // /v1/messages graceful-degradation pattern: client method shipped
-// early, daemon route added in a follow-up phase.
+// early, daemon route added in a follow-up stage.
 package cli
 
 import (
@@ -70,14 +70,8 @@ func NewAttachCmd(factory AttachClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "attach <alias>",
 		Short: "Attach to a project's tmux session",
-		Long: `Attach to the per-project tmux session named "hades-<alias>-<sha8>".
-
-If the session is in Idle or Archived state, the daemon will lazily spawn
-(or restore from snapshot) a fresh session. The default window is "orch";
-override with --window. Valid windows: orch, leads, workers, hra, logs,
-scratch (operator-owned per Q6 D + inv-hades-118).
-
-The CLI execs ` + "`tmux attach-session`" + ` directly so the operator's terminal
+		Long: "Attach to the per-project tmux session named \"hades-<alias>-<sha8>\".\n\nIf the session is in Idle or Archived state, the daemon will lazily spawn\n(or restore from snapshot) a fresh session. The default window is \"orch\";\noverride with --window. Valid windows: orch, leads, workers, hra, logs,\nscratch (operator-owned per design choice D + invariant).\n\nThe CLI execs " +
+			"`tmux attach-session`" + ` directly so the operator's terminal
 takes over the tmux foreground. Inside the test harness (HADES_TEST_MODE=1)
 the command echoes the resolved tmux invocation instead of execing so
 unit tests can assert without taking over the test process.

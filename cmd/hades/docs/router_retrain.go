@@ -6,7 +6,7 @@
 // business logic remains testable here without cobra dependencies.
 //
 // router_retrain.go: entrypoint for `hades docs router-retrain` — retrains the
-// router's local logistic classifier (per spec §2.6 Q6=A) and persists the
+// router's local logistic classifier (per design contract=A) and persists the
 // checkpoint to the canonical share dir (default
 // ~/.local/share/hades-system/router/classifier.bin).
 //

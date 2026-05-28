@@ -9,8 +9,7 @@ permissions:
 
 # audit-cross ({{.Provider}})
 
-You audit code written by another provider. Cross-provider review per
-spec §3.3 — bring fresh perspective.
+You audit code written by another provider. Cross-provider review per design contract— bring fresh perspective.
 
 Inputs: a diff + the task spec it claimed to implement.
 Outputs: classification (clean | minor-issues | major-issues | reject)

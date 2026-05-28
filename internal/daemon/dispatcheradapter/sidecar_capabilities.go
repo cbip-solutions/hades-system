@@ -9,7 +9,7 @@
 // The daemon reads + feature-flags downstream behaviour accordingly.
 //
 // Forward-compat property (invariant-B7 placeholder; concrete invariant-NNN
-// allocated at release merge-time renumber reconciliation):
+// allocated at HADES design merge-time renumber reconciliation):
 //
 // - New sidecar releases announce new behaviour by adding entries to
 // `supported_features[]`. Older daemons see the unknown flags as
@@ -21,7 +21,7 @@
 //
 // Graceful degradation (invariant): every error path returns a
 // typed error so the daemon can continue without sidecar feature flags
-// — the release cascade is the natural fallback when the sidecar is
+// — the HADES design cascade is the natural fallback when the sidecar is
 // unreachable / degraded / malformed.
 //
 // invariant boundary: this file imports stdlib only (net/http,

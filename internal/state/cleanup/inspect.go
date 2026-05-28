@@ -2,7 +2,7 @@
 // Package cleanup — inspect.go ships JSON serialization for
 // `hades state list`.
 //
-// Schema version follows release's aggregator + recognize JSON pattern:
+// Schema version follows HADES design's aggregator + recognize JSON pattern:
 // schemaVersion="1.0" with additive growth. Operators MAY parse via
 // `jq '.entries[] | select(.subsystem == "doctor-backups")'` etc.
 package cleanup

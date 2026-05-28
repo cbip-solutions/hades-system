@@ -45,10 +45,8 @@ func NewWhyCmd(factory func(cmd *cobra.Command) CaronteWhyClient) *cobra.Command
 	cmd := &cobra.Command{
 		Use:   "why <symbol>",
 		Short: "Architect's intent for a symbol: linked ADRs (+stale), passages, Lore-trailers",
-		Long: `Surface WHY a symbol exists before you change it. Caronte links the
-symbol to ADRs (explicit refs + coverage manifest + semantic similarity),
-flags stale links (the code changed since the ADR), and shows Lore-trailers
-from its commit history. Routes via the daemon (single-egress, inv-hades-088).`,
+		Long:  "Surface WHY a symbol exists before you change it. Caronte links the\nsymbol to ADRs (explicit refs + coverage manifest + semantic similarity),\nflags stale links (the code changed since the ADR), and shows Lore-trailers\nfrom its commit history. Routes via the daemon (single-egress, invariant).",
+
 		Example: `  hades why MergeEngine
   hades why internal/orchestrator/merge.Engine --format json`,
 		Args: cobra.MaximumNArgs(1),

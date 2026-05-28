@@ -20,7 +20,7 @@
 // "project_id on every row"). UNIQUE on workforce_tasks is on
 // (project_id, task_id) — the same task_id is legal across projects.
 //
-// Production callers (orchestrator, SubprocessManager, reviewers in Plans 5+)
+// Production callers (orchestrator, SubprocessManager, reviewers in HADES design)
 // MUST scope every queue operation to a single projectID by calling
 // ScopedTo(projectID) on the *Impl. The returned wrapper injects
 // project_id = ? into every WHERE clause, eliminating cross-project leaks

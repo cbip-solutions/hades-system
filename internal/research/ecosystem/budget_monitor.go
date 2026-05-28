@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — budget_monitor.go
 //
-// Inv-hades-199: ingest budget ≤60 GB ceiling enforced; ≥ceiling → block all
+// invariant: ingest budget ≤60 GB ceiling enforced; ≥ceiling → block all
 // writes. State machine:
 //
 // BudgetGreen < 80% target (< 32 GB default) — no action
@@ -18,7 +18,7 @@
 // emission. Production wiring injects DBSizer + a thin
 // adapter over RAGAuditChainEmitter.
 //
-// Inv-hades-199 three-place triple:
+// invariant three-place triple:
 //
 // (1) Runtime: BudgetMonitor.Check() returns BudgetStatus.BlockAllWrites at
 // Overflow; ClassifyBudgetState() is the single-source-of-truth for the
@@ -70,7 +70,7 @@ func (s BudgetState) String() string {
 // BudgetStatus is the result of a BudgetMonitor.Check() call.
 //
 // Consumers MUST honour BlockNewIngest / BlockAllWrites before writing.
-// Inv-hades-199 enforcement lives at the consumer site, not inside BudgetMonitor.
+// invariant enforcement lives at the consumer site, not inside BudgetMonitor.
 type BudgetStatus struct {
 	State BudgetState
 
@@ -132,7 +132,7 @@ func NewBudgetMonitor(cfg BudgetMonitorConfig) *BudgetMonitor {
 // Check queries the sizer (respecting CacheTTL), classifies the new BudgetState,
 // emits a chain-anchored audit event on state transition, and returns BudgetStatus.
 //
-// Inv-hades-199 enforcement: callers MUST honour BudgetStatus.BlockAllWrites /
+// invariant enforcement: callers MUST honour BudgetStatus.BlockAllWrites /
 // BlockNewIngest before proceeding with any write operation. The monitor does
 // not intercept writes — it returns status for callers to gate on.
 //

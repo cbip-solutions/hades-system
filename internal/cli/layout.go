@@ -7,7 +7,7 @@
 // operator-owned scratch window per invariant.
 //
 // Use case: after `hades day` surfaces a TmuxLayoutDriftDetected event
-// (the drift poller's read-only forensic side-channel — Q6 D), the
+// (the drift poller's read-only forensic side-channel — design choice D), the
 // operator can manually trigger a re-paint to converge the live tmux
 // server back to the daemon's expected layout.
 //
@@ -16,7 +16,7 @@
 // hades layout
 // repaint <alias> re-construct daemon-owned windows
 //
-// Exit-code mapping (per spec §6.2):
+// Exit-code mapping (per design contract):
 // - 0 success
 // - 1 operator-recoverable: daemon 404 (alias not found / archived)
 // - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503 gap
@@ -49,11 +49,8 @@ func NewLayoutCmd(factory LayoutClientFactory) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "layout",
 		Short: "Recover tmux layout (after drift)",
-		Long: `Operate on per-project tmux layout.
-
-Currently only "repaint" is registered; the namespace is reserved for
-future Plan 7+ recovery primitives (e.g. snapshot, kill-orphaned). The
-canonical workflow is: ` + "`hades day`" + ` surfaces a TmuxLayoutDriftDetected
+		Long: "Operate on per-project tmux layout.\n\nCurrently only \"repaint\" is registered; the namespace is reserved for\nfuture HADES design+ recovery primitives (e.g. snapshot, kill-orphaned). The\ncanonical workflow is: " +
+			"`hades day`" + ` surfaces a TmuxLayoutDriftDetected
 event in the inbox, operator runs ` + "`hades layout repaint <alias>`" + ` to
 re-construct the daemon-owned windows in place.`,
 		Example: " # Repaint the daemon-owned windows for a specific session\n  hades layout repaint internal-platform-x",
@@ -72,11 +69,8 @@ func newLayoutRepaintCmd(factory LayoutClientFactory) *cobra.Command {
 	return &cobra.Command{
 		Use:   "repaint <alias>",
 		Short: "Re-construct daemon-owned windows for a session",
-		Long: `Re-construct the 5 daemon-owned windows (orch, leads, workers, hra,
-logs) for the per-project tmux session bound to <alias>. Preserves the
-operator-owned scratch window (Q6 D + inv-hades-118).
-
-Use this after ` + "`hades day`" + ` surfaces a TmuxLayoutDriftDetected event,
+		Long: "Re-construct the 5 daemon-owned windows (orch, leads, workers, hra,\nlogs) for the per-project tmux session bound to <alias>. Preserves the\noperator-owned scratch window (design choice D + invariant).\n\nUse this after " +
+			"`hades day`" + ` surfaces a TmuxLayoutDriftDetected event,
 or whenever ` + "`hades sessions ls`" + ` shows a row whose WINDOWS count is
 below the expected 5. The repaint is idempotent: running it on a
 session whose layout is already correct is a no-op.

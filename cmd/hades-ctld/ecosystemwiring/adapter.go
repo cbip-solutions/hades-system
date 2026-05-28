@@ -4,10 +4,10 @@
 // SPDX-License-Identifier: MIT
 
 // Package ecosystemwiring assembles the production-side
-// handlers.EcosystemHandler adapter for the release daemon HTTP surface.
+// handlers.EcosystemHandler adapter for the HADES design daemon HTTP surface.
 //
 // Adapter satisfies handlers.EcosystemHandler by composing per-ecosystem
-// *sql.DB handles + the release substrate primitives (*Ingester,
+// *sql.DB handles + the HADES design substrate primitives (*Ingester,
 // *ChangeExtractor, *SymbolIndex, per-ecosystem Source maps).
 //
 // G-7 fix-cycle shipped the daemon-side EcosystemHandler interface

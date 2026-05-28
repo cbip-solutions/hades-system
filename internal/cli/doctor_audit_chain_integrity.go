@@ -4,7 +4,7 @@
 // surface.
 //
 // Reports per-project chain-integrity history (last verify-chain age +
-// 7d tamper event count) per spec §1 Q10 line 657. Status escalation
+// 7d tamper event count) per design contract
 // logic lives in
 // internal/audit/recovery/doctor.go::RunDoctorAuditChainIntegrity so
 // it can be unit-tested under -race -count=2 against stub ChainStatus
@@ -14,7 +14,7 @@
 // internal/client.AuditDoctorChainIntegrity; wires the
 // daemon-side handler that invokes RunDoctorAuditChainIntegrity with
 // the production ChainStatus adapter (in-memory verify-cache populated
-// by tamper.scheduler + release eventlog tamper-count query).
+// by tamper.scheduler + HADES design eventlog tamper-count query).
 package cli
 
 import (
@@ -29,7 +29,7 @@ func doctorAuditChainIntegrityCmd() *cobra.Command {
 		Use:   "audit.chain-integrity",
 		Short: "audit chain integrity health (last verify-chain + tamper history)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Audit chain integrity (Plan 9)", runAuditChainIntegrityChecks)
+			return runOneSection(cmd, "Audit chain integrity (HADES design)", runAuditChainIntegrityChecks)
 		},
 	}
 }

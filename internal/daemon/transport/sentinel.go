@@ -18,7 +18,7 @@ import (
 // Its message is stable and grep-targeted by the compliance test; do not
 // rephrase without updating tests/compliance/inv_hades_164_*_test.go.
 var errSingleEgressAnchor = errors.New(
-	"transport: single-egress anchor (inv-hades-164) — HadesSystemTransport routes all Hermes LLM via daemon /v1/messages",
+	"transport: single-egress anchor (invariant) — HadesSystemTransport routes all Hermes LLM via daemon /v1/messages",
 )
 
 func SingleEgressSentinel() error { return errSingleEgressAnchor }

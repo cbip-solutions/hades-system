@@ -19,7 +19,7 @@
 // and the RRF fusion contract in D-5.
 //
 // 3. sanitizeFTSQuery is conservative: it strips FTS5 operator characters
-// (`+ - " ( ) * :`) rather than escaping them. release does not expose
+// (`+ - " ( ) * :`) rather than escaping them. HADES design does not expose
 // advanced FTS5 syntax (prefix queries, NEAR, column filters) to the
 // operator; stripping keeps the implementation simple and correct.
 // is a separate package decision.

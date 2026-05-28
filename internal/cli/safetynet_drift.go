@@ -16,7 +16,7 @@ import (
 func safetynetDriftCmd() *cobra.Command {
 	drift := &cobra.Command{
 		Use:   "drift",
-		Short: "Doctrine-drift detector (Q2 C element 4)",
+		Short: "Doctrine-drift detector (design choice C element 4)",
 	}
 	drift.AddCommand(safetynetDriftRunCmd())
 	drift.AddCommand(safetynetDriftHistoryCmd())

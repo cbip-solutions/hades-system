@@ -57,21 +57,15 @@ func auditChainWitnessRotateCmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "rotate",
 		Short: "Rotate the daemon ECDSA P-256 witness key (overlap signature window)",
-		Long: `Rotate the daemon-level ECDSA P-256 witness key with overlap semantics:
-the outgoing key signs the new key's first Tessera tree-head so external
-auditors can verify key continuity without a trust anchor reset.
-
---reason is MANDATORY (inv-hades-146): the operator's rationale is anchored on
-the Plan 9 chain. An empty --reason is also rejected (cobra MarkFlagRequired
-checks presence; RunE checks non-empty). Rotation events are visible via
-` + "`hades audit-chain history`" + `.`,
+		Long: "Rotate the daemon-level ECDSA P-256 witness key with overlap semantics:\nthe outgoing key signs the new key's first Tessera tree-head so external\nauditors can verify key continuity without a trust anchor reset.\n\n--reason is MANDATORY (invariant): the operator's rationale is anchored on\nthe HADES design chain. An empty --reason is also rejected (cobra MarkFlagRequired\nchecks presence; RunE checks non-empty). Rotation events are visible via\n" +
+			"`hades audit-chain history`" + `.`,
 		Example: `  hades audit-chain witness rotate --reason "scheduled 90d max-scope rotation"
   hades audit-chain witness rotate --reason "incident response — suspected key exposure #123"`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			reason, _ := cmd.Flags().GetString("reason")
 			if strings.TrimSpace(reason) == "" {
 
-				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason required and must be non-empty (inv-hades-146)"))
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason required and must be non-empty (invariant)"))
 			}
 
 			ctx, cancel := context.WithTimeout(cmd.Context(), 60*time.Second)
@@ -87,11 +81,11 @@ checks presence; RunE checks non-empty). Rotation events are visible via
 			fmt.Fprintf(out, "  Old fingerprint: %s\n", resp.OldKeyFingerprint)
 			fmt.Fprintf(out, "  New fingerprint: %s\n", resp.NewKeyFingerprint)
 			fmt.Fprintf(out, "  Rotated at:      %s\n", client.FormatUnix(resp.RotatedAt))
-			fmt.Fprintln(out, "  daemon.witness_rotated event anchored on Plan 9 chain.")
+			fmt.Fprintln(out, "  daemon.witness_rotated event anchored on HADES design chain.")
 			return nil
 		},
 	}
-	c.Flags().String("reason", "", "Operator rationale (required, inv-hades-146)")
+	c.Flags().String("reason", "", "Operator rationale (required, invariant)")
 	_ = c.MarkFlagRequired("reason")
 	return c
 }

@@ -6,7 +6,7 @@
 // tuple via daemon POST /v1/ecosystem/pin. Pinned versions are:
 //
 // - Never archived (excluded from the 2-prior-stable retention window
-// governed by the Q9=A cron sweep).
+// governed by the design choice cron sweep).
 // - Never auto-pruned by background storage-budget enforcement.
 // - Only hard-removable via explicit `hades docs unpin` followed by
 // `hades docs prune --confirm`; the daemon refuses to prune pinned
@@ -20,12 +20,12 @@
 // prompt is shown before the daemon call; blank input aborts.
 //
 // G-5 SUPERSEDES F-6: F-6 shipped `hades docs pin <chunk-id>` (positional,
-// chunk granularity). G-5 evolves to version granularity per spec §2.9
-// Q9=A (retention operates on ecosystem_versions rows, not chunks).
+// chunk granularity). G-5 evolves to version granularity per design contract
+// design choice (retention operates on ecosystem_versions rows, not chunks).
 // History NewDocsPinCmd previously took a factory + ExactArgs(1) chunk
 // id; now takes a factory + flag-based ecosystem/version with promptYN.
 //
-// Exit codes (per spec §6.2):
+// Exit codes (per design contract):
 //
 // 0 success (pin committed by daemon, or operator aborted at prompt)
 // 1 recoverable: missing/invalid --ecosystem, missing --version, daemon

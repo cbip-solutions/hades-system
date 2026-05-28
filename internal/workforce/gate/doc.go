@@ -11,7 +11,7 @@
 // paused_quiet — silent pause; triggered by z-score anomaly or
 // automatic budget enforcement; same blocking as
 // descriptive but no operator-visible notification.
-// paused_after_apply — pause scheduled for after the current apply phase
+// paused_after_apply — pause scheduled for after the current apply stage
 // completes; only blocks new Worker dispatch.
 //
 // Transitions are accepted only from daemon HTTP API callers that present
@@ -47,7 +47,7 @@
 //
 // IsPaused is scope-aware (I-7 fix): paused_after_apply returns true
 // ONLY for ScopeWorkerDispatch; the LLMPreCall and AfterCommit scopes
-// pass through so the in-flight apply phase finishes naturally.
+// pass through so the in-flight apply stage finishes naturally.
 //
 // # Persist-first invariant
 //

@@ -13,7 +13,7 @@
 // events emit via internal/audit/chain/. Filesystem mutations only happen in
 // writer/; source/ and mapping/ are pure functions.
 //
-// Invariants implemented in this phase:
+// Invariants implemented in this stage:
 // - invariant (backup-before-modify; writer/backup.go)
 // - invariant (CC permissions 1:1 preservation; writer/doctrine_toml.go)
 // - invariant (hades migrate --help grouped;../cli/migrate.go)

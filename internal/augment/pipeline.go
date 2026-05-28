@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package augment — Pipeline.Run is the central augmentation orchestrator.
 //
-// Sequence (per spec §4.1 augmentation request lifecycle):
+// Sequence (per design contract):
 // 1. Validate request
 // 2. DoctrineGate.Check (capa-firewall / disabled / max_tokens=0 -> skip)
 // 3. BudgetGate.Check (over-cap -> skip)
@@ -16,14 +16,14 @@
 // 12. Audit AugmentationCompleted (or Truncated/Skipped) leaf
 // 13. Return AugmentResponse
 //
-// Concurrency budget (Q8=C):
+// Concurrency budget (design choice):
 // - PerLaneTimeout: doctrine-tunable (max-scope=2s / default=1s / capa-firewall=500ms)
 // - ConcurrencyBudget: in-flight lane goroutines
 // - QueueDepth: queued Pipeline.Run calls beyond ConcurrencyBudget
 //
 // Partial-failure tolerance: errored lanes contribute empty TopK; pipeline continues.
 //
-// Inv-hades-088: ZERO direct LLM calls from this file.
+// invariant: ZERO direct LLM calls from this file.
 
 package augment
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/emit.go
 //
-// Task L-8 — sshexec audit emitter.
+// task — sshexec audit emitter.
 //
 // Wraps the *client.EmitClient with sshexec-specific event types
 // and structured payload schema. Implements the AuditEmitter interface

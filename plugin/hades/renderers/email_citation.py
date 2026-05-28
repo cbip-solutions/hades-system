@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/email_citation.py
-"""HTML email renderer for citation envelopes (HADES design release track Task A-6)."""
+"""HTML email renderer for citation envelopes (HADES design stage task)."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ class EmailCitationRenderer(Renderer):
         """``web_fallback_audit_url``: substitute ``hades://audit/<id>`` with https form.
 
         ``audit_web_base_url``: base URL for the fallback (default
-        ``https://hades.local`` per HADES design phase D brand pass).
+        ``https://hades.local`` per HADES design stage D brand pass).
         Operator configures via hades-side config
         (``~/.hermes/config.yaml`` operator section or daemon env
         var) when daemon exposes a public audit web UI (HADES design+).

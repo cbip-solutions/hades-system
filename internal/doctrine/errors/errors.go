@@ -19,7 +19,7 @@ var (
 
 	ErrSchemaVersionTooOld = errors.New("doctrine: schema version older than N-1; manual migration required")
 
-	ErrTightenViolation = errors.New("doctrine: per-project override attempts to loosen baseline (inv-hades-136)")
+	ErrTightenViolation = errors.New("doctrine: per-project override attempts to loosen baseline (invariant)")
 
 	ErrParseFailed = errors.New("doctrine: TOML parse failed")
 
@@ -41,7 +41,7 @@ var (
 
 	ErrSchemaVersionDowngradeRejected = errors.New("doctrine: refusing to downgrade schema version")
 
-	ErrTransverseOverrideAttempted = errors.New("doctrine: transverse axiom override attempt rejected (inv-hades-135 hardcoded operator-only)")
+	ErrTransverseOverrideAttempted = errors.New("doctrine: transverse axiom override attempt rejected (invariant hardcoded operator-only)")
 )
 
 type TransverseOverrideAttempt struct {
@@ -52,10 +52,10 @@ type TransverseOverrideAttempt struct {
 
 func (e *TransverseOverrideAttempt) Error() string {
 	if len(e.Fields) > 0 {
-		return fmt.Sprintf("doctrine: source=%s section=%s attempted to override transverse fields [%s] (inv-hades-135 hardcoded operator-only)",
+		return fmt.Sprintf("doctrine: source=%s section=%s attempted to override transverse fields [%s] (invariant hardcoded operator-only)",
 			e.Source, e.Section, strings.Join(e.Fields, ","))
 	}
-	return fmt.Sprintf("doctrine: source=%s section=%s attempted to override transverse axioms (inv-hades-135 hardcoded operator-only)",
+	return fmt.Sprintf("doctrine: source=%s section=%s attempted to override transverse axioms (invariant hardcoded operator-only)",
 		e.Source, e.Section)
 }
 

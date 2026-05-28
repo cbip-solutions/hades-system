@@ -1,16 +1,15 @@
 ---
 name: openspec:propose
-description: Begin the propose phase for a new feature (Modo C híbrido)
+description: Begin the propose stage for a new feature (Modo C híbrido)
 arguments:
   - name: feature_name
     type: string
     required: true
 ---
 
-# Propose phase for: {{feature_name}}
+# Propose stage for: {{feature_name}}
 
-You are starting the propose phase for feature `{{feature_name}}`. Per
-spec §3.1 + invariant, follow this flow:
+You are starting the propose stage for feature `{{feature_name}}`. per design contract, follow this flow:
 
 1. **Load the brainstorming skill** explicitly:
    ```

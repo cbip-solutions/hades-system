@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — merge.go.
 //
-// `hades merge` exposes 8 operator subcommands surfacing the release
+// `hades merge` exposes 8 operator subcommands surfacing the HADES design
 // merge.MergeEngine (Phases A-E) into the CLI:
 //
 // hades merge inspect <generation_id|request_hash> # outcome + scoring + events
@@ -72,10 +72,8 @@ type MergeClient = client.MergeClient
 func NewMergeCmd(client MergeClient, out io.Writer) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "merge",
-		Short: "Merge engine inspection + management (Plan 6)",
-		Long: `Operate the Plan 6 merge engine: inspect outcomes, replay sessions,
-explain scoring, view baselines, manage cache, show effective config,
-and list rolling-window anomaly events.`,
+		Short: "Merge engine inspection + management (HADES design)",
+		Long:  "Operate the HADES design merge engine: inspect outcomes, replay sessions,\nexplain scoring, view baselines, manage cache, show effective config,\nand list rolling-window anomaly events.",
 	}
 
 	clientFactory := func(_ *cobra.Command) MergeClient { return client }
@@ -93,10 +91,8 @@ and list rolling-window anomaly events.`,
 func NewMergeCmdProd() *cobra.Command {
 	root := &cobra.Command{
 		Use:   "merge",
-		Short: "Merge engine inspection + management (Plan 6)",
-		Long: `Operate the Plan 6 merge engine: inspect outcomes, replay sessions,
-explain scoring, view baselines, manage cache, show effective config,
-and list rolling-window anomaly events.`,
+		Short: "Merge engine inspection + management (HADES design)",
+		Long:  "Operate the HADES design merge engine: inspect outcomes, replay sessions,\nexplain scoring, view baselines, manage cache, show effective config,\nand list rolling-window anomaly events.",
 	}
 
 	clientFactory := func(cmd *cobra.Command) MergeClient {

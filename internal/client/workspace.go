@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package client — workspace.go.
 //
-// Thin pass-throughs for the daemon's release workspace REST sub-routes:
+// Thin pass-throughs for the daemon's HADES design workspace REST sub-routes:
 // /v1/mcpgateway/workspace/{init,list,members,link,remove,policy/get,policy/set}.
 // 7 methods total — the operator-facing federation lifecycle surface.
 //

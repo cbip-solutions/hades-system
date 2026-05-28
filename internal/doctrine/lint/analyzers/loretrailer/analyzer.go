@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package loretrailer implements the Lore-enforcement go-vet analyzer for
-// hades-system release Caronte (spec §10; invariant). WHEN ENABLED
-// (-loretrailer.enabled=true; default false, adoption-gated per spec §21), it
+// hades-system HADES design Caronte (spec §10; invariant). WHEN ENABLED
+// (-loretrailer.enabled=true; default false, adoption-gated per design contract), it
 // scans branch-local commit BODIES and flags any commit that touches a
 // high-risk file (the -loretrailer.high-risk-files glob set, supplied by the
 // daemon from caronte coreness/blast-radius) without a Lore-Constraint:
@@ -70,7 +70,7 @@ var Analyzer = &analysis.Analyzer{
 	Name: "loretrailer",
 	Doc: "When -loretrailer.enabled=true (default false), flags branch-local commits that touch a " +
 		"high-risk file (-loretrailer.high-risk-files glob set) without a Lore-Constraint: git-trailer " +
-		"(spec §10; inv-hades-238). Default OFF = no-op (adoption-gated, spec §21). Scan range: " +
+		"(spec §10; invariant). Default OFF = no-op (adoption-gated, spec §21). Scan range: " +
 		"-loretrailer.base-ref=<ref> (branch-local) or -loretrailer.depth=N (last N commits).",
 	Flags: flagSetOnce,
 	Run:   run,
@@ -145,7 +145,7 @@ func RunWithGitDir(gitDir string, opts Options) ([]Diagnostic, error) {
 		diags = append(diags, Diagnostic{
 			CommitHash: c.hash, Subject: c.subject,
 			Message: "lore-missing-constraint: commit touches a high-risk node but carries no " +
-				"Lore-Constraint: trailer (inv-hades-238; spec §10). Add a Lore-Constraint trailer " +
+				"Lore-Constraint: trailer (invariant; spec §10). Add a Lore-Constraint trailer " +
 				"recording the architectural invariant the change must preserve, or lower the node's risk.",
 		})
 	}

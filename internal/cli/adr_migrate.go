@@ -29,22 +29,10 @@ func adrMigrateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "migrate",
 		Short: "One-time legacy ADR migration tool (markdown headers → MADR YAML)",
-		Long: `migrate is a ONE-TIME operator tool. Walks docs/decisions/*.md,
-parses each existing markdown header (status, plan, etc.), and emits
-Structured MADR YAML frontmatter at top of file. Idempotent — running
-again on already-migrated ADRs is a no-op (skipped).
+		Long:  "migrate is a ONE-TIME operator tool. Walks architecture records\nparses each existing markdown header (status, plan, etc.), and emits\nStructured MADR YAML frontmatter at top of file. Idempotent — running\nagain on already-migrated ADRs is a no-op (skipped).\n\nMigration runs entirely on local files (no daemon round-trip). Run from\nany directory inside the hades-system repo. Use --dry-run first to preview\nper-file results before committing the bulk migration.\n\nOutput per file:\n  success <path>   — migrated and written\n  skipped <path>   — already has frontmatter; not modified\n  failed  <path>   — parse or write error (see error line below)",
 
-Migration runs entirely on local files (no daemon round-trip). Run from
-any directory inside the hades-system repo. Use --dry-run first to preview
-per-file results before committing the bulk migration.
+		Example: "  hades adr migrate --dry-run          # preview without writing\n  hades adr migrate --plan HADES design      # supply default plan tag for ADRs missing **Plan**: header\n  hades adr migrate                    # migrate all legacy ADRs in architecture records",
 
-Output per file:
-  success <path>   — migrated and written
-  skipped <path>   — already has frontmatter; not modified
-  failed  <path>   — parse or write error (see error line below)`,
-		Example: `  hades adr migrate --dry-run          # preview without writing
-  hades adr migrate --plan plan-1      # supply default plan tag for ADRs missing **Plan**: header
-  hades adr migrate                    # migrate all legacy ADRs in docs/decisions/`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			root, err := findRepoRoot()
 			if err != nil {
@@ -70,7 +58,7 @@ Output per file:
 		},
 	}
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false, "preview migration without writing files")
-	cmd.Flags().StringVar(&planRange, "plan", "", "default plan range for ADRs without **Plan** header (e.g. plan-1)")
+	cmd.Flags().StringVar(&planRange, "plan", "", "default plan range for ADRs without **Plan** header (e.g. HADES design)")
 	return cmd
 }
 

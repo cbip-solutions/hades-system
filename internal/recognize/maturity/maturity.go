@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package maturity probes git + CI signals to surface project-maturity hints
-// per spec §4.2. Used by B6 orchestrator to enrich recognize.Result.
+// per design contract
 //
 // Strategy shell out to git for commit count + last-commit timestamp;
 // glob filesystem for CI files. Graceful zero-value on probe failure (not a

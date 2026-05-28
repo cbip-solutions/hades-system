@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package mcpgateway implements the hades-ctld single HTTP MCP endpoint
-// (Q1=B gateway aggregator pattern, spec §1). Hermes consumes ONE MCP
+// (design choice gateway aggregator pattern, spec §1). Hermes consumes ONE MCP
 // endpoint URL; this gateway multiplexes internal Go MCPs (research /
 // budget / audit / sshexec / codegen / caronte in-process engine).
 // Industry-converged pattern — MetaMCP, ContextForge, Stacklok ToolHive
-// (Q1 SOTA Report).
+// (design choice SOTA Report).
 //
 // Boundaries (lint + compliance enforced):
 //
@@ -37,15 +37,15 @@
 // RBAC layers (in evaluation order, ALL must allow):
 // 1. Active doctrine filter (capa-firewall denies a configurable set)
 // 2. Per-tool ACL (default-deny on unknown tool names)
-// 3. Concurrency gate (Q8=C doctrine-tunable; max-scope=20, default=10,
+// 3. Concurrency gate (design choice doctrine-tunable; max-scope=20, default=10,
 // capa-firewall=5; queue depth 50)
 //
-// Failure handling (Q7=B robust):
+// Failure handling (design choice robust):
 // - caronte engine error → per-mode escalation (degraded with doctor warning)
 // - per-mode escalation (autonomy → WAITING_FOR_CONFIRMATION;
 // interactive → degraded with doctor warning)
 // - tool dispatch panic → recover + audit emit; HTTP 500 to caller
-// - downstream MCP not yet wired → 503 + Retry-After header
+// - downstream MCP unavailable → 503 + Retry-After header
 //
 // The sentinel.go file carries compile-time anchors that, if accidentally
 // removed by a future contributor, cause the invariant / invariant

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — mcpgateway_rest_plan20.go.
 //
-// REST sub-route adapters for the release federation surface:
+// REST sub-route adapters for the HADES design federation surface:
 //
 // POST /v1/mcpgateway/contract → caronte get_contract
 // POST /v1/mcpgateway/contract/validate → caronte.yaml validator
@@ -20,7 +20,7 @@
 // to the caronte engine tools via callGatewayRaw. Contract validation and
 // all 7 workspace lifecycle routes are direct daemon-federation calls so
 // workspace register/list/members/link/remove/policy state is read from the
-// same substrate that persists the mutations and emits release audit leaves.
+// same substrate that persists the mutations and emits HADES design audit leaves.
 //
 // wiring registers each route on the daemon mux. may
 // refactor the lifecycle routes once the engine method bodies grow real
@@ -249,7 +249,7 @@ func ContractWhyREST(ctx MCPGatewayCtx) http.HandlerFunc {
 // The workspace lifecycle routes write directly to the daemon's federation
 // substrate. They intentionally do not
 // proxy through the MCP gateway because they mutate the daemon-owned
-// workspace ledger and, for policy changes, the store emits the release audit
+// workspace ledger and, for policy changes, the store emits the HADES design audit
 // leaf through its federation audit emitter.
 
 type WorkspaceRESTRow struct {

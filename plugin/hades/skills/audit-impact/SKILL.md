@@ -58,7 +58,7 @@ Operator can recurse: `/hades:audit-impact <prior_event_id>` to navigate the cha
 
 - spec §4.2 slash command flow
 - spec §4.6 audit chain integration
-- spec §1 Q9 citation envelope structure
+- spec §1 design choice citation envelope structure
 - invariant privacy boundary
 - invariant hades://audit URL handler auth check
 - /hades:audit-impact slash command handler

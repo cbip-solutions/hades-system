@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Migration 064: cost_ledger per-provider attribution (HADES design release track; C9;
+-- Migration 064: cost_ledger per-provider attribution (HADES design stage; C9;
 -- invariant).
 -- ==============================================================================
 --

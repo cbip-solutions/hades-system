@@ -4,7 +4,7 @@
 // GET /v1/citation/probe?check=<name> — diagnostic probe surface for
 // the `hades doctor citation` CLI section.
 //
-// Background — release substrate gap closure (mirrors hermes_probe.go):
+// Background — HADES design substrate gap closure (mirrors hermes_probe.go):
 //
 // (internal/client/citation.go::CitationProbe) + CLI dispatch in
 // internal/cli/doctor_citation.go, but never registered the daemon-side
@@ -14,8 +14,8 @@
 //
 // Probe checks (closed enum on ?check=):
 // - "audit-handler-functional" — self-introspection that the
-// /v1/audit/event/* route family is wired (release audit
-// chain + release D-5 audit-event resolver). Checked via
+// /v1/audit/event/* route family is wired (HADES design audit
+// chain + HADES design D-5 audit-event resolver). Checked via
 // CitationProbeCtx.HasAuditEventRoute() — non-nil auditWriter
 // implies the startAuditInfra boot succeeded and the route is
 // registered (registerRoutes line 782).

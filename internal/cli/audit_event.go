@@ -14,7 +14,7 @@
 // aware filtering. The CLI is a transparent surface — recoverable
 // vs unrecoverable error mapping mirrors knowledge/inbox patterns.
 //
-// Exit-code mapping (per spec §6.2; ErrRecoverable contract):
+// Exit-code mapping (per design contract; ErrRecoverable contract):
 //
 // - 0 success
 // - 1 operator-recoverable: empty ID, daemon 404 (event missing),
@@ -64,15 +64,8 @@ func NewAuditEventCmd(factory AuditEventClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "event <id>",
 		Short: "Resolve hades://audit/<id> deep-link to the structured audit event",
-		Long: `Resolve a Plan 9 Tessera-anchored audit event by ID. Accepts both
-bare event-IDs ("evt-abc123") and hades://audit URL form
-("hades://audit/evt-abc123"); the URL prefix is stripped client-side.
+		Long:  "Resolve a HADES design Tessera-anchored audit event by ID. Accepts both\nbare event-IDs (\"evt-abc123\") and hades://audit URL form\n(\"hades://audit/evt-abc123\"); the URL prefix is stripped client-side.\n\nThe daemon enforces invariant: auth check + doctrine-aware filtering.\n\nOutput formats:\n  text  human-readable summary (default)\n  json  structured JSON for jq pipelines",
 
-The daemon enforces inv-hades-172: auth check + doctrine-aware filtering.
-
-Output formats:
-  text  human-readable summary (default)
-  json  structured JSON for jq pipelines`,
 		Example: " # Bare ID\n  hades audit event evt-abc123\n\n # hades:// URL form (e.g. paste from a Hermes citation)\n  hades audit event \"hades://audit/evt-abc123\"\n\n # JSON for tooling\n  hades audit event evt-abc123 --format json | jq '.detail.tokens_used'",
 
 		Args: cobra.MaximumNArgs(1),

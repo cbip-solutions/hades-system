@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package migrate dispatches schema-version migrations for doctrine TOML payloads.
 //
-// Per Q15 A (in-memory only schema migration with operator-confirmed write-back),
+// Per design choice A (in-memory only schema migration with operator-confirmed write-back),
 // the migrate package OPERATES ON RAW BYTES + RETURNS *v1.Schema ONLY. It NEVER
 // writes to the filesystem. Operator-explicit write-back lives in the CLI
 // (`hades doctrine migrate <path> --confirm`), which calls MigrateChain THEN performs
@@ -33,7 +33,7 @@
 //
 // - MigrateChain dispatcher + chain registry + passthrough Migrator
 // - V1→V2 placeholder (deliberate ErrMigrationNotImplemented; first real
-// migration ships when schema bumps in release+)
+// migration ships when schema bumps in HADES design)
 //
 // Trust-tier delegation note:
 // The passthrough Migrator parses with parser.ParseOpts{AllowTransverseDeclaration:
@@ -50,6 +50,6 @@
 // reload path; the alternative (threading opts through MigrateChain) bloats
 // every Migrator's signature for a concern that lives at the parser layer.
 //
-// References spec §1 Q15 A; §2.1 migrate package perimeter; §3.7 schema migration
+// References spec §1 design choice A; §2.1 migrate package perimeter; §3.7 schema migration
 // flow; §4.3 sentinel error inventory; §7.2 invariant + invariant.
 package migrate

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// activation.go — release : orchestration entry point.
+// activation.go — HADES design : orchestration entry point.
 //
-// Activate is the load-bearing function every release+ caller consumes
-// for project-identity bootstrap. Per spec §3.1, it resolves the
+// Activate is the load-bearing function every HADES design caller consumes
+// for project-identity bootstrap. per design contract, it resolves the
 // canonical project_id from canonicalPath, looks up the alias in the
 // store, detects mv if applicable, and INSERTs or UPDATEs as needed.
 //

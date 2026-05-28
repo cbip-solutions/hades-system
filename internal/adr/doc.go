@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package adr implements the Structured MADR (Markdown Architecture
-// Decision Record) machine-readable index spec §1 Q7 A.
+// Decision Record) machine-readable index spec §1 design choice A.
 //
 // The package owns the ADR frontmatter contract (defined in
 // architecture records — JSON Schema Draft-07), parses YAML
@@ -17,7 +17,7 @@
 //
 // This package MUST NOT import internal/store directly. Chain
 // integration flows through the EventSink interface declared here +
-// the adapter implementation in internal/daemon/auditadapter/ (Phase
+// the adapter implementation in internal/daemon/auditadapter/ (stage
 // B). The bridge translates adr.* event values into the canonical
 // eventlog.* typed payloads and calls eventlog.Append.
 //

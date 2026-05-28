@@ -10,5 +10,5 @@
 // - nostub-todo : // TODO implement later comment
 // - nostub-empty-method : empty method body on concrete type
 //
-// Task L-2 owns the full implementation.
+// task owns the full implementation.
 package nostub

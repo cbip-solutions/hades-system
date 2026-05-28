@@ -2,7 +2,7 @@
 // Package cli — memory_promote.go.
 //
 // `hades memory promote <note-id>` pins a note to the global aggregator pin
-// index. promote is the release D canonical term; `hades memory pin` is the
+// index. promote is the HADES design D canonical term; `hades memory pin` is the
 // CLI-ergonomic alias for the same daemon endpoint.
 //
 // invariant gates (same as pin):
@@ -32,17 +32,9 @@ func newMemoryPromoteCmd() *cobra.Command {
 	flags := MemoryPromoteFlags{}
 	cmd := &cobra.Command{
 		Use:   "promote <note-id>",
-		Short: "Promote a note to the global pin index (Plan 9 D canonical term)",
-		Long: `promote copies a per-project note to the global aggregator pin index.
-The note's frontmatter receives promoted-at, promoted-by, and reason fields.
-
-promote and pin are aliases at the CLI surface; both call the same daemon
-endpoint (POST /v1/knowledge/aggregator/promote). promote is the Plan 9 D
-term; pin is the operator-ergonomics shorthand.
-
-inv-hades-146: --reason MANDATORY. Empty or whitespace-only reasons are rejected
-before any network call. The promotion event is anchored on the Plan 9 audit
-chain and visible via ` + "`hades audit-chain history`" + `.`,
+		Short: "Promote a note to the global pin index (HADES design D canonical term)",
+		Long: "promote copies a per-project note to the global aggregator pin index.\nThe note's frontmatter receives promoted-at, promoted-by, and reason fields.\n\npromote and pin are aliases at the CLI surface; both call the same daemon\nendpoint (POST /v1/knowledge/aggregator/promote). promote is the HADES design D\nterm; pin is the operator-ergonomics shorthand.\n\ninvariant: --reason MANDATORY. Empty or whitespace-only reasons are rejected\nbefore any network call. The promotion event is anchored on the HADES design audit\nchain and visible via " +
+			"`hades audit-chain history`" + `.`,
 		Example: `  hades memory promote internal-platform-x/M0-doctrine \
     --reason "applies to all max-scope projects"`,
 		Args: cobra.ExactArgs(1),
@@ -54,7 +46,7 @@ chain and visible via ` + "`hades audit-chain history`" + `.`,
 			return RunMemoryPromote(ctx, c, flags, cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&flags.Reason, "reason", "", "operator rationale (required; inv-hades-146)")
+	cmd.Flags().StringVar(&flags.Reason, "reason", "", "operator rationale (required; invariant)")
 	cmd.Flags().StringVar(&flags.OperatorID, "operator", "", "operator identifier (default: daemon-resolved)")
 	_ = cmd.MarkFlagRequired("reason")
 	return cmd
@@ -65,7 +57,7 @@ func RunMemoryPromote(ctx context.Context, c MemoryClient, flags MemoryPromoteFl
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory promote: <note-id> is required"))
 	}
 	if strings.TrimSpace(flags.Reason) == "" {
-		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory promote: --reason required (inv-hades-146)"))
+		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory promote: --reason required (invariant)"))
 	}
 	req := client.AggPromoteRequest{
 		NoteID:     flags.NoteID,

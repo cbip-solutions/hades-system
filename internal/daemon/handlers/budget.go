@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — budget.go.
 //
-// Replaces the release stub trio (BudgetAll/Project/Raise → 501). K-4
+// Replaces the HADES design stub trio (BudgetAll/Project/Raise → 501). K-4
 // retains ONE real route: GET /v1/budget?range=<window>, a read-only
 // per-(project, profile, tier) spend rollup backed by CostCounters.
 //
-// The release+ wire path (BudgetProject + BudgetRaise) stays at 501
+// The HADES design wire path (BudgetProject + BudgetRaise) stays at 501
 // pending (ProfileResolver) + cost_cap_changes table. Mutations
 // require a write path that does not exist post-rescope; deferring is
 // load-bearing per max-scope-meta doctrine — building a stub today
@@ -77,14 +77,14 @@ func parseRange(s string) (time.Duration, error) {
 // CostCounters constant simultaneously).
 //
 // Returns the duration unchanged on success; an error otherwise. The
-// allowed set is intentionally small: release ships 24h + 30d; future
+// allowed set is intentionally small: HADES design ships 24h + 30d; future
 // plans MUST add ledger-side support before exposing more windows.
 func supportedBudgetWindow(d time.Duration) error {
 	switch d {
 	case 24 * time.Hour, 30 * 24 * time.Hour:
 		return nil
 	}
-	return fmt.Errorf("unsupported range %v: only 24h and 30d are registered (Plan 3 v0.3.0)", d)
+	return fmt.Errorf("unsupported range %v: only 24h and 30d are registered (HADES design v0.3.0)", d)
 }
 
 func BudgetSummary(s any) http.HandlerFunc {

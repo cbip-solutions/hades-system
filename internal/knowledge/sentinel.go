@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Package knowledge owns the cross-project knowledge aggregator: a SQLite +
 // FTS5 hybrid index over per-project Obsidian-style memory dirs, ADRs,
-// specs, plans, .hades/session.md, and the global research cache. release
-// (spec internal design record
-// §1 Q16 + Q17 D + §3.5 + §3.6 + §4.5 + §6.6 + §7.2 invariant +
+// specs, plans, .hades/session.md, and the global research cache. HADES design
+// (spec design records design
+// §1 design choice + design choice D + §3.5 + §3.6 + §4.5 + §6.6 + §7.2 invariant +
 // invariant).
 //
 // Boundary note (invariant exception, documented in
@@ -13,13 +13,13 @@
 // distinct from the daemon's daemon.db and per-project state.db; the
 // daemon's internal/store/ boundary applies to the OpenClaude-substrate
 // state DBs only. The knowledge index is rebuildable from sources
-// (per spec §7.4 privacy + §3.7 cross-cutting concerns), so weaker
+// (per design contract§3.7 cross-cutting concerns), so weaker
 // durability semantics are correct — coupling the two would force every
 // re-index into the daemon's hot fsync path.
 //
 // Imports in this package are intentionally limited to stdlib +
 // database/sql + the SQLite driver (ncruces/go-sqlite3, pure-Go via
-// WASM, no CGO; preserves release invariant compatibility for
+// WASM, no CGO; preserves HADES design invariant compatibility for
 // this package's own state). Specifically: no net/http (invariant
 // no remote queries), no internal/store (separate-DB boundary), no
 // internal/projectctx (knowledge runs cross-project; receives ProjectID
@@ -35,9 +35,9 @@ var _ = knowledgeFTS5SchemaSentinel()
 // this anchor is invocable, proving the canonical schema is the one
 // actually used at runtime.
 //
-// invariant (per spec §7.2): the three extension-hook columns
+// invariant (per design contract): the three extension-hook columns
 // (audit_chain_anchor, ecosystem_join_keys, caronte_symbol_refs) ship
-// NULL by default in release; INSERT statements MUST NOT populate them.
+// NULL by default in HADES design; INSERT statements MUST NOT populate them.
 //
 // The sentinel pattern (a no-op function called by Init) is the
 // standard hades-system anchor for "this code path is reachable from

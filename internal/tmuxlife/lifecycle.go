@@ -33,7 +33,7 @@ type IdleTTL int
 
 // DoctrineIdleTTL returns the idle TTL in hours for the given doctrine.
 //
-// Mapping (invariant, spec §1 Q7 D):
+// Mapping (invariant, spec §1 design choice D):
 //
 // max-scope → IdleTTLInfinity (-1)
 // default → 24
@@ -105,7 +105,7 @@ func (t Trigger) String() string {
 
 // IsValidTrigger returns true iff t is one of the four declared values.
 //
-// Centralised gate so callers (HandleTrigger panic guard, future Phase
+// Centralised gate so callers (HandleTrigger panic guard, future stage
 // I HTTP handler request-body validators, CLI flag parsers) consume one
 // predicate. Mirrors doctrine.IsValid pattern for the same reason —
 // validation of untrusted Trigger values from request bodies / TOML /

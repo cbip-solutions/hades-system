@@ -2,7 +2,7 @@
 // Package daemon is the hades-ctld HTTP server.
 //
 // The API contract is versioned at /v1/ (invariant) and stays stable
-// across plans 1-15. Handlers for endpoints whose behaviour is filled in
+// across HADES design Handlers for endpoints whose behaviour is filled in
 // by later plans return 501 Not Implemented with an X-HADES-Plan header
 // indicating which plan implements them. Every endpoint that exists in
 // the final product exists from day 1.
@@ -417,18 +417,18 @@ func (s *Server) registerRoutes() {
 	s.mux.HandleFunc("POST /v1/inbox/ack", handlers.InboxAckHandler(s))
 	s.mux.HandleFunc("POST /v1/inbox/snooze", handlers.InboxSnoozeHandler(s))
 
-	// ----- release Task I-2: HandoffPosted event ingestion ---
+	// ----- HADES design task: HandoffPosted event ingestion ---
 	// POST /v1/events/handoff_posted — plugin-emitted HandoffPostedEvent
 	// consumed by EOD digest.
 	// Wrapped under requireDaemonBearer so the bearer middleware
-	// (Task I-1) gates the route at the invariant boundary; when
+	// (task) gates the route at the invariant boundary; when
 	// daemonBearer is unset (test bring-up path) the helper falls
 	// open with a logged warning (production main.go enforces ordering).
 	//
 	// The functional handler factory + HandoffEmitter() accessor pattern
 	// makes the emitter-readiness gate at request-time (not
 	// registration-time), so cmd/hades-ctld can wire the emitter
-	// AFTER s.New runs — mirrors the release accessor gate
+	// AFTER s.New runs — mirrors the HADES design accessor gate
 	// pattern.
 	s.mux.Handle("POST /v1/events/handoff_posted",
 		s.requireDaemonBearer(handlers.HandoffPosted(s)))
@@ -501,7 +501,7 @@ func (s *Server) registerPlan5OrchestratorRoutes() {
 		svc := s.plan5OrchSvc
 		s.mu.Unlock()
 		if svc == nil {
-			http.Error(w, "Plan 5 orchestrator service not configured", http.StatusServiceUnavailable)
+			http.Error(w, "HADES design orchestrator service not configured", http.StatusServiceUnavailable)
 			return
 		}
 		handlers.NewPlan5OrchestratorHandler(svc).ServeHTTP(w, r)
@@ -528,7 +528,7 @@ func (s *Server) registerMergeRoutes() {
 		h := s.mergeHandler
 		s.mu.Unlock()
 		if h == nil {
-			http.Error(w, "Plan 6 merge handler not configured", http.StatusServiceUnavailable)
+			http.Error(w, "HADES design merge handler not configured", http.StatusServiceUnavailable)
 			return
 		}
 
@@ -610,7 +610,7 @@ func (s *Server) Bypass() any {
 	return s.bypassFwd
 }
 
-// SetCostCounters injects the in-memory cost counters cache (release Phase
+// SetCostCounters injects the in-memory cost counters cache (HADES design stage
 // C F-7). Called once at daemon boot in cmd/hades-ctld AFTER
 // buildOrchestrator has returned the dispatcheradapter.Adapter and the
 // caller has rebuilt counters from the ledger (RebuildFromLedger) +
@@ -760,8 +760,8 @@ func (s *Server) PaygSafety() *orchestrator.PaygSafety {
 	return s.paygSafety
 }
 
-// SetCircuitBreaker injects the per-provider circuit breaker (release
-// K-3 / release re-key). Called once at daemon boot in
+// SetCircuitBreaker injects the per-provider circuit breaker (HADES design
+// K-3 / HADES design re-key). Called once at daemon boot in
 // cmd/hades-ctld AFTER buildOrchestrator has constructed and wired
 // the breaker into the dispatcher. The breaker decides at
 // Backend.Name() granularity (NOT the broad providers.Tier enum), so
@@ -1039,7 +1039,7 @@ func (s *Server) SetContractFederation(f ContractFederationForDaemon) {
 // ContractFederation returns the injected federation DB or nil. Callers
 // MUST guard for nil and degrade gracefully (the TUI subview returns
 // empty roster section + the REST handler returns 503-style "federation
-// not configured" — release nil-gate posture).
+// not configured" — HADES design nil-gate posture).
 func (s *Server) ContractFederation() ContractFederationForDaemon {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -1305,7 +1305,7 @@ func (s *Server) EcosystemHandler() handlers.EcosystemHandler {
 // requireDaemonBearer-wrapped route then falls open with a logged
 // warning. This deterministic "boot race" posture matters for
 // integration tests + handler-level unit tests that don't want to
-// drag in the release audit pipeline. Production main.go MUST call
+// drag in the HADES design audit pipeline. Production main.go MUST call
 // SetDaemonBearer BEFORE Start() per invariant; production paths
 // fail-closed at daemon-startup (see cmd/hades-ctld/main.go).
 //
@@ -1330,11 +1330,11 @@ func (s *Server) SetDaemonBearer(b *auth.DaemonBearer, emitter auth.AuditEmitter
 //
 // invariant contract: production main.go MUST call SetDaemonBearer
 // BEFORE Start. The fall-open path exists ONLY for the test fixture
-// shape (httptest harnesses that don't want to construct a release
+// shape (httptest harnesses that don't want to construct a HADES design
 // audit pipeline) and emits a single-line stderr warning so accidental
 // production deployment is loud, not silent.
 //
-// Inv-hades-031 boundary preserved: this helper imports
+// invariant boundary preserved: this helper imports
 // internal/daemon/auth which itself imports only
 // stdlib + golang.org/x/sys/unix; no internal/store import.
 func (s *Server) requireDaemonBearer(next http.Handler) http.Handler {

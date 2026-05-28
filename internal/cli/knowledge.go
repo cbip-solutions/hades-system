@@ -20,17 +20,17 @@
 // path so the G-16 compliance test asserts production-reachability.
 //
 // invariant boundary (symmetric): --audit-chain SHORT-CIRCUITS at
-// this CLI layer with a release deferred-message pointer. Same anchor
+// this CLI layer with a HADES design deferred-message pointer. Same anchor
 // pattern via knowledge.NoAuditChainSentinel().
 //
 // All subcommands lazily resolve a daemon HTTP client at RunE time via
-// newClientFromCmd (mirrors the release C-12 attach/sessions/layout +
+// newClientFromCmd (mirrors the HADES design C-12 attach/sessions/layout +
 // D-13 schedule + E-12 inbox + F-10 hades-day patterns). Tests inject a
 // fake client via the KnowledgeClientFactory parameter to NewKnowledgeCmd;
 // production wires through NewKnowledgeCmdProd which adapts *client.Client
 // → KnowledgeClient.
 //
-// Exit-code mapping (per spec §6.2; ErrRecoverable contract from
+// Exit-code mapping (per design contract; ErrRecoverable contract from
 // ):
 // - 0 success
 // - 1 operator-recoverable: invalid --since, malformed --type,
@@ -122,19 +122,8 @@ func NewKnowledgeCmd(factory KnowledgeClientFactory) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "knowledge",
 		Short: "Cross-project knowledge aggregator (FTS5 + structured filters)",
-		Long: `Hybrid full-text + structured filter query over per-project
-memory dirs, ADRs, specs/plans, HANDOFF, and the global research cache.
+		Long:  "Hybrid full-text + structured filter query over per-project\nmemory dirs, ADRs, specs/plans, HANDOFF, and the global research cache.\n\nThree subcommands:\n  query     run a hybrid FTS5 + structured filter query\n  reindex   cold-rebuild the index from sources\n  stats     print index statistics\n\nPrivacy boundary (invariant): the aggregator NEVER queries web\nsources directly. The --remote flag is reserved for HADES design ecosystem\nRAG and short-circuits with a deferred-message pointer until then.\nThe --audit-chain flag is reserved for HADES design hash-chain output and\nshort-circuits identically.",
 
-Three subcommands:
-  query     run a hybrid FTS5 + structured filter query
-  reindex   cold-rebuild the index from sources
-  stats     print index statistics
-
-Privacy boundary (inv-hades-129): the aggregator NEVER queries web
-sources directly. The --remote flag is reserved for Plan 14 ecosystem
-RAG and short-circuits with a deferred-message pointer until then.
-The --audit-chain flag is reserved for Plan 9 hash-chain output and
-short-circuits identically.`,
 		Example: " # Search for a string across all indexed docs\n  hades knowledge query \"WFQ saturation\"\n\n # Refresh the index after a doc edit (full rebuild)\n  hades knowledge reindex\n\n # Inspect index health\n  hades knowledge stats",
 	}
 	root.AddCommand(newKnowledgeQueryCmd(factory))
@@ -189,22 +178,8 @@ func newKnowledgeQueryCmd(factory KnowledgeClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "query [<free-text>]",
 		Short: "Run a hybrid FTS5 + structured filter query",
-		Long: `Search the knowledge index. Free-text is FTS5 MATCH; flags
-narrow by project/type/since/code-symbol. Output as text (default),
-json, or md.
+		Long:  "Search the knowledge index. Free-text is FTS5 MATCH; flags\nnarrow by project/type/since/code-symbol. Output as text (default),\njson, or md.\n\nFlags:\n  --since <duration>   Only docs modified within the window (e.g. 7d, 24h).\n  --project <alias>    Filter by project alias (repeatable).\n  --type <kind>        Filter by file type: memory|research|adr|spec|plan|handoff.\n  --limit <n>          Cap result count (default 10).\n  --format <fmt>       Output: text|json|md (default text).\n  --code-symbol <sym>  Filter by caronte_symbol_refs (queries the\n                       Caronte reverse-link index populated by the\n                       Caronte indexer per HADES design; HADES design baseline\n                       returns 0 results until Caronte populates).\n  --remote             HADES design ecosystem RAG (not yet shipped; see roadmap).\n  --audit-chain        HADES design hash-chain (not yet shipped; see roadmap).",
 
-Flags:
-  --since <duration>   Only docs modified within the window (e.g. 7d, 24h).
-  --project <alias>    Filter by project alias (repeatable).
-  --type <kind>        Filter by file type: memory|research|adr|spec|plan|handoff.
-  --limit <n>          Cap result count (default 10).
-  --format <fmt>       Output: text|json|md (default text).
-  --code-symbol <sym>  Filter by caronte_symbol_refs (queries the
-                       Caronte reverse-link index populated by the
-                       Caronte indexer per Plan 19; Plan 7 baseline
-                       returns 0 results until Caronte populates).
-  --remote             Plan 14 ecosystem RAG (not yet shipped; see roadmap).
-  --audit-chain        Plan 9 hash-chain (not yet shipped; see roadmap).`,
 		Example: " # Free-text search across the whole index\n  hades knowledge query \"tmux drift\"\n\n # Limit to memory + adr files in internal-platform-x\n  hades knowledge query \"max scope\" --project internal-platform-x --type memory --type adr\n\n # JSON output for jq pipelines\n  hades knowledge query \"WFQ\" --format json | jq '.[].Title'\n\n # Recent edits only\n  hades knowledge query \"scheduler\" --since 7d",
 
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -220,24 +195,24 @@ Flags:
 	cmd.Flags().StringSliceVar(&flags.Types, "type", nil, "filter: file type (memory|research|adr|spec|plan|handoff)")
 	cmd.Flags().IntVar(&flags.Limit, "limit", 0, "result limit (default 10)")
 	cmd.Flags().StringVar(&flags.Format, "format", "text", "output format: text|json|md")
-	cmd.Flags().BoolVar(&flags.Remote, "remote", false, "(Plan 14) ecosystem RAG over the ingested package corpus")
-	cmd.Flags().BoolVar(&flags.AuditChain, "audit-chain", false, "(Plan 9) hash-chain; not yet shipped")
+	cmd.Flags().BoolVar(&flags.Remote, "remote", false, "(HADES design) ecosystem RAG over the ingested package corpus")
+	cmd.Flags().BoolVar(&flags.AuditChain, "audit-chain", false, "(HADES design) hash-chain; not yet shipped")
 
 	cmd.Flags().StringVar(&flags.Ecosystem, "ecosystem", "",
-		"(Plan 14, --remote only) filter ecosystem: go|python|typescript|rust (empty = router decides)")
+		"(HADES design, --remote only) filter ecosystem: go|python|typescript|rust (empty = router decides)")
 	cmd.Flags().StringVar(&flags.Version, "version", "",
-		"(Plan 14, --remote only) version context (empty = 5-layer detection cascade)")
+		"(HADES design, --remote only) version context (empty = 5-layer detection cascade)")
 	cmd.Flags().StringVar(&flags.Doctrine, "doctrine", "",
-		"(Plan 14, --remote only) doctrine profile: max-scope|default|capa-firewall")
+		"(HADES design, --remote only) doctrine profile: max-scope|default|capa-firewall")
 	cmd.Flags().IntVar(&flags.RemoteMaxResults, "max-results", 0,
-		"(Plan 14, --remote only) ceiling on results (0 = default 10)")
+		"(HADES design, --remote only) ceiling on results (0 = default 10)")
 	cmd.Flags().StringVar(&flags.RemoteFormat, "remote-format", "",
-		"(Plan 14, --remote only) output format: json|human (default human; takes precedence over --format on --remote)")
-	cmd.Flags().StringVar(&flags.CodeSymbol, "code-symbol", "", "filter by caronte_symbol_refs (Caronte indexer populates per Plan 19)")
+		"(HADES design, --remote only) output format: json|human (default human; takes precedence over --format on --remote)")
+	cmd.Flags().StringVar(&flags.CodeSymbol, "code-symbol", "", "filter by caronte_symbol_refs (Caronte indexer populates per HADES design)")
 	cmd.Flags().BoolVar(&flags.Realtime, "realtime", false,
 		"live federation: bypass aggregator.db cache; route via daemon /v1/knowledge/query?realtime=true")
 	cmd.Flags().BoolVar(&flags.CrossProject, "cross-project", false,
-		"include results from other projects (doctrine-gated: capa-firewall=forbidden; default+max-scope=opt-in per spec §3.4)")
+		"include results from other projects (doctrine-gated: capa-firewall=forbidden; default+max-scope=opt-in per design contract)")
 	return cmd
 }
 
@@ -248,8 +223,8 @@ func RunKnowledgeQuery(ctx context.Context, c KnowledgeClient, flags KnowledgeQu
 	if flags.AuditChain {
 		_ = knowledge.NoAuditChainSentinel()
 		fmt.Fprintln(w,
-			"--audit-chain: Plan 9 hash-chain not yet shipped (Plan 9 deliverable). "+
-				"See docs/superpowers/specs/2026-04-30-hades-system-system-design.md §12 "+
+			"--audit-chain: HADES design hash-chain not yet shipped (HADES design deliverable). "+
+				"See design records §12 "+
 				"for roadmap.")
 		return nil
 	}
@@ -354,16 +329,8 @@ func newKnowledgeReindexCmd(factory KnowledgeClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "reindex",
 		Short: "Cold-rebuild the knowledge index from sources",
-		Long: `Run a cold rebuild of the knowledge index. Default is full
-rebuild; pass --project <alias> to refresh a single project. The daemon
-walks the configured source roots (per-project memory dirs, global
-research cache, ADRs, specs, plans, HANDOFF.md) and re-indexes each
-discovered file.
+		Long:  "Run a cold rebuild of the knowledge index. Default is full\nrebuild; pass --project <alias> to refresh a single project. The daemon\nwalks the configured source roots (per-project memory dirs, global\nresearch cache, ADRs, specs, plans, .hades/session.md) and re-indexes each\ndiscovered file.\n\nUse this after manually editing docs that the fsnotify watcher missed,\nor after a daemon migration that touched the index schema. Output\nreports rows indexed + per-row error count; non-zero error count is\nnot a failure (some files may be invalid markdown).",
 
-Use this after manually editing docs that the fsnotify watcher missed,
-or after a daemon migration that touched the index schema. Output
-reports rows indexed + per-row error count; non-zero error count is
-not a failure (some files may be invalid markdown).`,
 		Example: " # Full rebuild across all projects\n  hades knowledge reindex\n\n # Single-project rebuild\n  hades knowledge reindex --project internal-platform-x\n\n # Explicit full flag (same as bare invocation)\n  hades knowledge reindex --full",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -405,13 +372,8 @@ func newKnowledgeStatsCmd(factory KnowledgeClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "stats",
 		Short: "Print index statistics",
-		Long: `Print knowledge-index statistics: total document count,
-per-type breakdown, last-indexed timestamp.
+		Long:  "Print knowledge-index statistics: total document count,\nper-type breakdown, last-indexed timestamp.\n\nWith --schema, also prints the migration-061 SQL filename for the\nextension-hook columns (audit_chain_anchor, ecosystem_join_keys,\ncaronte_symbol_refs). Useful when verifying that a recent migration\nlanded before debugging HADES design / HADES design hook wiring.",
 
-With --schema, also prints the migration-061 SQL filename for the
-extension-hook columns (audit_chain_anchor, ecosystem_join_keys,
-caronte_symbol_refs). Useful when verifying that a recent migration
-landed before debugging Plan 9 / Plan 14 hook wiring.`,
 		Example: " # Default stats output\n  hades knowledge stats\n\n # Include the schema migration filename\n  hades knowledge stats --schema",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -462,14 +424,8 @@ func newKnowledgePromoteCmd(factory KnowledgeClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "promote <id>",
 		Short: "Promote a knowledge entry to global memory (cross-project visible per doctrine)",
-		Long: `Promote one knowledge entry by ID from project-local to global
-scope. Doctrine governs cross-project visibility (per spec §3.4
-[doctrine.knowledge.cross_project]):
-  - max-scope + default: visible to peers in same set
-  - capa-firewall: hidden from all others (daemon returns 422)
-
-The Plan 9 D aggregator persists the promoted row in the global memory
-table; subsequent ` + "`hades knowledge query --cross-project`" + ` calls from
+		Long: "Promote one knowledge entry by ID from project-local to global\nscope. Doctrine governs cross-project visibility (per design contract\n[doctrine.knowledge.cross_project]):\n  - max-scope + default: visible to peers in same set\n  - capa-firewall: hidden from all others (daemon returns 422)\n\nThe HADES design D aggregator persists the promoted row in the global memory\ntable; subsequent " +
+			"`hades knowledge query --cross-project`" + ` calls from
 peer projects can match it.`,
 		Example: `  hades knowledge promote internal-platform-x:memory:reference_session_continuity
   hades knowledge promote <id> --global`,
@@ -515,14 +471,9 @@ func newKnowledgeSyncCmd(factory KnowledgeClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sync",
 		Short: "Manual aggregator.db rebuild — sweep all sources and rewrite the index",
-		Long: `Force a full rebuild of the per-project aggregator.db (Plan 9 D
-substrate). Use after a fsnotify watcher gap or a schema migration.
-Without --project sweeps every configured project; with --project
-rebuilds one only.
+		Long: "Force a full rebuild of the per-project aggregator.db (HADES design D\nsubstrate). Use after a fsnotify watcher gap or a schema migration.\nWithout --project sweeps every configured project; with --project\nrebuilds one only.\n\n" +
+			"`hades knowledge sync`" + ` differs from ` + "`hades knowledge reindex`" + ": reindex\noperates against the FTS5 knowledge index (HADES design), sync operates against\nthe HADES design D aggregator.db (vector + FTS + graph + audit-chain anchors).",
 
-` + "`hades knowledge sync`" + ` differs from ` + "`hades knowledge reindex`" + `: reindex
-operates against the FTS5 knowledge index (Plan 7), sync operates against
-the Plan 9 D aggregator.db (vector + FTS + graph + audit-chain anchors).`,
 		Example: `  hades knowledge sync
   hades knowledge sync --project internal-platform-x
   hades knowledge sync --verify`,

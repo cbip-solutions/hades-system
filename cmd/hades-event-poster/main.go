@@ -222,7 +222,7 @@ func evaluatePreToolCall(in hookPayload) (int, string) {
 
 	normalized := strings.ReplaceAll(msg, `\n`, " ")
 	if commitMsgForbiddenPattern.MatchString(normalized) || commitMsgForbiddenPattern.MatchString(msg) {
-		return 2, "hades-system: commit message contains AI attribution per inv-hades-004. " +
+		return 2, "hades-system: commit message contains AI attribution per invariant. " +
 			"Remove mention of Claude/Anthropic/AI generation."
 	}
 	return 0, ""
@@ -252,7 +252,7 @@ func run(args []string, stdin io.Reader, socket string) int {
 		if code, errmsg := evaluatePreToolCall(in); code != 0 {
 			fmt.Fprintln(os.Stderr, errmsg)
 
-			in.Reason = "inv-hades-004"
+			in.Reason = "invariant"
 			_ = postEvent(socket, "pre_tool_call.blocked", in)
 			return code
 		}

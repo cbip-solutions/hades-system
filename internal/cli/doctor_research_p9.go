@@ -2,7 +2,7 @@
 // Package cli — doctor_research_p9.go
 //
 // Filename uses _p9 suffix because doctor_research.go already ships from
-// reachability and size checks). This file adds the release RunResearchCacheProbe
+// reachability and size checks). This file adds the HADES design RunResearchCacheProbe
 // orchestrator and `hades doctor research cache` subcommand.
 //
 // `hades doctor research cache` delegates to ResearchCacheProber declared
@@ -39,8 +39,8 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunResearchCacheProbe orchestrates the research.cache doctor check (release
-// Task J-2, spec §6.2).
+// RunResearchCacheProbe orchestrates the research.cache doctor check (HADES design
+// task, spec §6.2).
 //
 // Delegates to DoctorDeps.ResearchCacheProber.Probe(ctx) and returns the
 // resulting ProbeResult slice unchanged. Returns a non-nil error if
@@ -64,7 +64,7 @@ func RunResearchCacheProbe(ctx context.Context, deps DoctorDeps) ([]ProbeResult,
 func NewDoctorResearchCacheCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "cache",
-		Short: "Research cache health (Plan 9: hit rate + volume + freshness lag + revalidation queue + stuck queries)",
+		Short: "Research cache health (HADES design: hit rate + volume + freshness lag + revalidation queue + stuck queries)",
 		Long: `Run 5 research cache checks (spec §6.2):
 
   research.cache.hit_rate                rolling 24h; OK >50%; WARN 25-50%; FAIL <25% (broken cache)

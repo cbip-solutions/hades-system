@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // internal/orchestrator/apply/apply_engine.go
 //
-// ApplyEngine — Q1 D live correction. See doc.go for the
-// package-level Q1 D split rationale + invariant/097 statements.
+// ApplyEngine — design choice D live correction. See doc.go for the
+// package-level design choice D split rationale + invariant/097 statements.
 package apply
 
 import (
@@ -77,8 +77,8 @@ type Result struct {
 	Reverted bool
 }
 
-// ApplyEngine is the Q1 D contract: live correction at a worker branch's
-// commit boundary, sequential, single-branch. release owns cross-worker
+// ApplyEngine is the design choice D contract: live correction at a worker branch's
+// commit boundary, sequential, single-branch. HADES design owns cross-worker
 // integration via MergeEngine (declared in merge_engine.go).
 //
 // Implementations MUST:

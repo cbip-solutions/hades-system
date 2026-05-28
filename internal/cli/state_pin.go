@@ -24,24 +24,19 @@ import (
 func newStatePinCmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "pin <field> <value>",
-		Short: "Set a manual field in system-state.toml (inv-hades-146; emits plan-9-chain event)",
+		Short: "Set a manual field in system-state.toml (invariant; emits HADES design event)",
 		Args:  cobra.ExactArgs(2),
-		Long: `pin sets a manual field in docs/system-state.toml and emits
-state.manual_field_changed on the Plan 9 audit chain. The field MUST be
-tagged x-manual-field in docs/system-state.schema.json (daemon rejects
-unrecognised fields with 400).
-
---reason is mandatory (inv-hades-146): it records the operator's rationale
-in the audit chain event and is visible in ` + "`hades state history`" + `.
+		Long: "pin sets a manual field in docs/system-state.toml and emits\nstate.manual_field_changed on the HADES design audit chain. The field MUST be\ntagged x-manual-field in docs/system-state.schema.json (daemon rejects\nunrecognised fields with 400).\n\n--reason is mandatory (invariant): it records the operator's rationale\nin the audit chain event and is visible in " +
+			"`hades state history`" + `.
 
 A confirmation prompt is shown before the daemon call.
 Blank input or anything other than "y"/"yes" aborts without error.`,
-		Example: `  hades state pin substrate_min_version 0.7.1 --reason "OpenClaude 0.7.0 has CVE-2026-X"
-  hades state pin schema_version 24 --reason "plan-9 schema bump"`,
+		Example: "  hades state pin substrate_min_version 0.7.1 --reason \"OpenClaude 0.7.0 has CVE-2026-X\"\n  hades state pin schema_version 24 --reason \"HADES design schema bump\"",
+
 		RunE: func(cmd *cobra.Command, args []string) error {
 			reason, _ := cmd.Flags().GetString("reason")
 			if strings.TrimSpace(reason) == "" {
-				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason required and must be non-empty (inv-hades-146)"))
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason required and must be non-empty (invariant)"))
 			}
 			out := cmd.OutOrStdout()
 			fmt.Fprintf(out, "About to pin manual field %q = %q in docs/system-state.toml\n", args[0], args[1])
@@ -67,7 +62,7 @@ Blank input or anything other than "y"/"yes" aborts without error.`,
 			return nil
 		},
 	}
-	c.Flags().String("reason", "", "Operator rationale for the pin (required, inv-hades-146)")
+	c.Flags().String("reason", "", "Operator rationale for the pin (required, invariant)")
 	_ = c.MarkFlagRequired("reason")
 	return c
 }

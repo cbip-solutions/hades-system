@@ -12,7 +12,7 @@ import (
 	"golang.org/x/tools/go/ssa"
 )
 
-// canonicalNodeID maps a go/types object to the REPO-RELATIVE node_id Phase
+// canonicalNodeID maps a go/types object to the REPO-RELATIVE node_id stage
 // B's parser wrote into graph_nodes (spec §4.2 + lang_go.go
 // `qualifiedNodeID`): "<dir>.[Type.]Symbol", where <dir> is the package's
 // directory RELATIVE TO THE REPO ROOT (the Go import-path tail). This is THE

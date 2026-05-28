@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package cleanup ships the release state-retention policy
-// enforcement per Q12=D + spec §2.12 + §4.6 + invariant.
+// Package cleanup ships the HADES design state-retention policy
+// enforcement per design choice + spec §2.12 + §4.6 + invariant.
 //
-// Default retention per spec §2.12 table:
+// Default retention per design contract:
 //
 // doctor-backups 30d
 // migrate-backups 30d
 // spike-artifacts indefinite
 // cache 7d LRU
 //
-// Override doctrine TOML `[state.backup_retention]` (release
-// F7 extends the release schema with the override section
+// Override doctrine TOML `[state.backup_retention]` (HADES design
+// F7 extends the HADES design schema with the override section
 // shape). The override merges field-by-field via Policy.MergeOverride.
 //
 // Boundary (invariant): cleanup consumes ONLY stdlib + caller-injected

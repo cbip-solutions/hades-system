@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package reinforcement implements the doctrine reinforcement template engine
-// design spec §1 Q12 C and §7.1 T5.
+// design spec §1 design choice C and §7.1 T5.
 //
 // The engine renders role-aware system-prompt blocks for LLM worker subprocesses,
 // sourcing Go text/template content from a closed //go:embed embed/*.md.tmpl set
@@ -88,7 +88,7 @@ func (e *Engine) Render(s *v1.Schema, vars *Vars) (string, error) {
 }
 
 // loadTemplate resolves + parses + caches the template for doctrineName.
-// Resolution order is operator-override-first then embedded, per spec §1 Q12 C.
+// Resolution order is operator-override-first then embedded, per design contract
 //
 // loadTemplate is exported via lowercase-package-internal name only; callers
 // MUST go through Render. reload extends loadTemplate's caller surface

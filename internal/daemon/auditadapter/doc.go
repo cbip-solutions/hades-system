@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package auditadapter bridges *store.Store to the release chain layer
+// Package auditadapter bridges *store.Store to the HADES design chain layer
 // (internal/audit/chain). Pattern matches bypassadapter,
 // dispatcheradapter, orchestratoradapter,
 // projectctxadapter.
@@ -35,7 +35,7 @@
 // 2. auditadapter.New(store) constructs the chain compute coordinator
 // 3. chain.Backfill runs synchronously (cmd/hades-ctld/main.go
 // bootBackfillChain helper) — chain-links any historical
-// audit_events_raw rows from pre- sessions (release/8 events
+// audit_events_raw rows from pre- sessions (HADES design events
 // that landed with empty chain columns)
 // 4. wires Adapter.OnEmitRaw into the orchestratoradapter
 // audit emit hot path — new rows are chain-linked at insert time
@@ -51,7 +51,7 @@
 // (orchestratoradapter OnEmitRaw integration). Until lands,
 // new audit_events_raw rows persist with empty chain columns; the next
 // daemon restart chain-links them via Backfill and
-// the release doctor surface (audit.chain-integrity) reports the
+// the HADES design doctor surface (audit.chain-integrity) reports the
 // transient gap until reboot.
 //
 // CANONICAL Adapter struct shape (FINAL at B-9 per review

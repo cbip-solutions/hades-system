@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 // internal/mcp/sshexec/validator.go
 //
-// Task L-2 — Go port of the release Python _validate_command.
+// task — Go port of the HADES design Python _validate_command.
 //
 // Strict-prefix-match + forbidden-chars scan. Returns ValidationResult
 // (typed; never a bare bool). The exec layer's Run signature requires a
 // ValidationResult value with OK=true; a missing validation step is a
-// compile error (Task L-5 anchor for invariant).
+// compile error (task anchor for invariant).
 //
 // Invariant invariant — allowlist enforcement: forbidden chars +
 // non-prefix-match commands MUST be rejected. Test corpus

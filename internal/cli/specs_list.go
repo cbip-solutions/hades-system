@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// specs_list.go — release Task F-5 subcommand `hades specs list`.
+// specs_list.go — HADES design task subcommand `hades specs list`.
 //
 // Pure filesystem read of openspec/specs/ — no daemon call. Walks the
 // directory for *.md files, extracts the first non-empty title-line,
 // renders as text (tabwriter) or json.
 //
-// Read-only boundary per spec §0.2: specs are read-only at the CLI
-// surface in release. Write-back deferred to post-v0.14.0.
+// Read-only boundary per design contract: specs are read-only at the CLI
+// surface in HADES design Write-back deferred to post-v0.14.0.
 package cli
 
 import (
@@ -118,11 +118,8 @@ func newSpecsListCmd(getDir specsDirResolver) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List specs from openspec/specs/",
-		Long: `Walk openspec/specs/ and render the spec ID + first-line title.
+		Long:  "Walk openspec/specs/ and render the spec ID + first-line title.\n\nPure filesystem read — no daemon call (read-only boundary per design contract).\nMissing directory prints \"(no specs directory found)\" without error so\nthe command is safe to run on a fresh repo.",
 
-Pure filesystem read — no daemon call (read-only boundary per spec §0.2).
-Missing directory prints "(no specs directory found)" without error so
-the command is safe to run on a fresh repo.`,
 		Example: `  hades specs list
   hades specs list --format json | jq '.[].id'`,
 		RunE: func(cmd *cobra.Command, _ []string) error {

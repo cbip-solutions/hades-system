@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — research_cache_ls.go.
 //
-// NEW release leaf: `hades research cache ls` — browse cache entries with release
+// NEW HADES design leaf: `hades research cache ls` — browse cache entries with HADES design
 // filters (--source URL prefix, --project). Distinct's
 // `cache list` which is project-agnostic and pagination-oriented.
 //
@@ -13,7 +13,7 @@
 //
 // Renders a table with HASH (truncated), SOURCE_URL, PROJECT, BYTES, EXPIRES.
 // The route called is GET /v1/research/cache/list but
-// with release query params; the ls command is the CLI-side alias per spec §6.5.
+// with HADES design query params; the ls command is the CLI-side alias per design contract
 package cli
 
 import (
@@ -29,12 +29,9 @@ import (
 func researchCacheLsCmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "ls",
-		Short: "Browse cache entries (Plan 9 filters: --source, --project)",
-		Long: `ls returns cache entries with Plan 9-specific filtering by source
-URL prefix or project. Distinct from Plan 4's cache list (which uses
-limit/offset pagination); ls uses Plan 9 semantic filters.
+		Short: "Browse cache entries (HADES design filters: --source, --project)",
+		Long:  "ls returns cache entries with HADES design filtering by source\nURL prefix or project. Distinct from HADES design cache list (which uses\nlimit/offset pagination); ls uses HADES design semantic filters.\n\nRoute: GET /v1/research/cache/list with project_id and source query params.",
 
-Route: GET /v1/research/cache/list with project_id and source query params.`,
 		Example: `  hades research cache ls
   hades research cache ls --project hades-system
   hades research cache ls --source https://arxiv.org/

@@ -2,7 +2,7 @@
 // Package cli — orchestrator_replay.go.
 //
 // `hades orchestrator replay <FILE>` re-runs a captured fixture against
-// an in-memory orchestrator and reports any divergence (Q14 C tier).
+// an in-memory orchestrator and reports any divergence (design choice C tier).
 package cli
 
 import (
@@ -18,7 +18,7 @@ import (
 func orchReplayCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "replay <FILE>",
-		Short: "Replay a captured fixture and report divergence (Q14 C)",
+		Short: "Replay a captured fixture and report divergence (design choice C)",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)

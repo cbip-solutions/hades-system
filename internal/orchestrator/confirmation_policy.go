@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package orchestrator provides the autonomous-build supervisor.
 //
-// confirmation_policy.go implements Q6 D's per-doctrine threshold engine.
+// confirmation_policy.go implements design choice D's per-doctrine threshold engine.
 // It is stateless and side-effect free: callers (confirmation_handler.go)
 // translate ConfirmationAction values into state-machine transitions and event-log
 // appends. The threshold map is loaded from doctrine TOML by

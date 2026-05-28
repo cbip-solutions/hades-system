@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_scheduler.go
 //
-// Task J-4: scheduler subsystem doctor probe. Four aspects per
+// task: scheduler subsystem doctor probe. Four aspects per
 // spec §6.7 (queue.depth, missed_fires.recent, wfq.saturation,
 // dispatcher.bound). RunSchedulerProbe is delegate-only; impl in
 // internal/scheduler/prober.go.
 //
 // invariant + invariant anchor: the dispatcher.bound aspect probes
-// that the scheduler can reach the release dispatcher at runtime — a
+// that the scheduler can reach the HADES design dispatcher at runtime — a
 // non-nil "scheduler.fire dispatched directly" path would surface here.
 package cli
 
@@ -135,11 +135,11 @@ func runSchedulerDispatcherBound(ctx context.Context, p SchedulerProber) ProbeRe
 		r.Status = ProbeFail
 		r.Message = "dispatcher unreachable"
 		r.Detail = err.Error()
-		r.Hint = "inv-hades-080 + inv-hades-123: scheduler.fire MUST dispatch via Plan 3 dispatcher. Check: hades orchestrator status; restart daemon if dispatcher process died"
+		r.Hint = "invariant + invariant: scheduler.fire MUST dispatch via HADES design dispatcher. Check: hades orchestrator status; restart daemon if dispatcher process died"
 		return r
 	}
 	r.Status = ProbeOK
-	r.Message = "Plan 3 dispatcher reachable"
+	r.Message = "HADES design dispatcher reachable"
 	return r
 }
 

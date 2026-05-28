@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades-system/hooks/llm_handlers.py
-"""Hermes pre_llm_call callback for hades-system (release track' baseline + HADES design"""
+"""Hermes pre_llm_call callback for hades-system (stage' baseline + HADES design"""
 
 from __future__ import annotations
 
@@ -77,7 +77,7 @@ def pre_llm_call(
           Anthropic prompt-cache prefix across turns).
     """
     # ------------------------------------------------------------------
-    # release track' baseline: emit event (audit-visible) FIRST so we record
+    # stage' baseline: emit event (audit-visible) FIRST so we record
     # the call even if the augmentation path 204s or fails.
     # ------------------------------------------------------------------
     payload: dict[str, Any] = {

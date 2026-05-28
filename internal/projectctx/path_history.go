@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// path_history.go — release : mv-detection logic per spec §1 Q3.
+// path_history.go — HADES design : mv-detection logic per design contract
 //
 // PathHistoryEntry mirrors a row in the daemon-stored path_history table
 // (translated by projectctxadapter at the boundary). MvDetection is the

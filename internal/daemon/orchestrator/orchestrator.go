@@ -2,7 +2,7 @@
 // internal/daemon/orchestrator/orchestrator.go
 //
 // Orchestrator is the public entry point for LLM traffic from hades-system-side
-// consumers (anthropic_proxy handler in release/3, release MCPs, release workforce
+// consumers (anthropic_proxy handler in HADES design, HADES design MCPs, HADES design workforce
 // orchestrator subagents). It accepts a high-level Call, resolves the routing
 // profile (explicit on the call OR daemon default), injects context-keyed
 // X-HADES-Project / X-HADES-Session / X-HADES-Profile headers, and forwards to the
@@ -12,17 +12,17 @@
 // orchestrator talks to a Forwarder interface (satisfied by *dispatcher.Dispatcher
 // in production wiring); the dispatcher itself bridges to the store via
 // dispatcheradapter. Keeping the orchestrator persistence-agnostic
-// is what makes the release architecture testable end-to-end with in-memory
+// is what makes the HADES design architecture testable end-to-end with in-memory
 // fakes.
 //
 // Concurrency Orchestrator holds no mutable state after construction
 // (forwarder + defaultProfile are read-only). Forward is therefore safe for
 // concurrent invocation from arbitrarily many goroutines as long as the
-// supplied Forwarder is. The release dispatcher documents this guarantee at
+// supplied Forwarder is. The HADES design dispatcher documents this guarantee at
 // its package level.
 //
-// Phase scope (B-6): profile resolution + dispatcher invocation.
-// adds a budget pre-check that consults the release budget MCP `cap_status`
+// stage scope (B-6): profile resolution + dispatcher invocation.
+// adds a budget pre-check that consults the HADES design budget MCP `cap_status`
 // before dispatch; that integration replaces the no-op pre-check stub here
 // without changing the public surface.
 
@@ -40,7 +40,7 @@ import (
 // satisfies it without an adapter; tests substitute an in-memory fake.
 //
 // Implementations MUST be safe for concurrent invocation (the orchestrator
-// fans out one Forward per inbound HTTP request). The release dispatcher
+// fans out one Forward per inbound HTTP request). The HADES design dispatcher
 // documents this guarantee at its package level.
 type Forwarder interface {
 	Forward(ctx context.Context, req providers.TierRequest) (*providers.TierResponse, error)

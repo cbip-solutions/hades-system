@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — augment.go (release Task B-4 endpoint shell;
+// Package handlers — augment.go (HADES design task endpoint shell;
 // extends with the 5-lane RRF pipeline).
 //
 // /v1/augment is the daemon-side endpoint the Python
@@ -7,7 +7,7 @@
 // calls before each LLM
 // completion. The endpoint:
 //
-// 1. Reads the active doctrine's augmentation config (release doctrine
+// 1. Reads the active doctrine's augmentation config (HADES design doctrine
 // schema § [doctrine.augmentation]).
 // 2. When enable = false (capa-firewall default per invariant), returns
 // 204 No Content. Hermes treats this as "proceed unaugmented".
@@ -29,7 +29,7 @@
 // - Anthropic prompt cache static/volatile split
 // - Privacy filter at retrieval boundary (cross-project doctrine respect)
 // - Token budget gate
-// - release Tessera audit anchor for AugmentationStarted/Completed events
+// - HADES design Tessera audit anchor for AugmentationStarted/Completed events
 //
 // Returning an empty envelope is the production behaviour when no
 // retrieval has been performed; replaces it with the populated
@@ -146,7 +146,7 @@ const maxAugmentBodyBytes = 4 << 20
 // populated by pipeline).
 //
 // The handler does NOT log prompt content (operator privacy: prompts may
-// carry sensitive context). release audit anchor for the request itself
+// carry sensitive context). HADES design audit anchor for the request itself
 // uses PromptHash, never raw Prompt.
 func Augment(dr DoctrineReader) http.HandlerFunc {
 	if dr == nil {

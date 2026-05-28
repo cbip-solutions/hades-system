@@ -1,16 +1,16 @@
 ---
 name: execute-plan
 description: |
-  HADES subagent-driven plan execution: release stage reality-check, per-task
+  HADES subagent-driven plan execution: stage reality-check, per-task
   dispatch loop with review gates, no-tech-debt doctrine, hard gates per commit.
-  Use when operator invokes /hades:execute-plan or when implementing a phase plan.
+  Use when operator invokes /hades:execute-plan or when implementing a stage plan.
 license: Proprietary
 agentskills_version: 1.0
 keywords:
   - execute-plan
   - subagent-dispatch
   - review-gates
-  - release stage
+  - stage
   - no-tech-debt
   - hades
 ---
@@ -24,7 +24,7 @@ This skill provides HADES's plan execution methodology. Triggered by the
 ## When to use
 
 - Operator invokes `/hades:execute-plan <plan-path>`
-- When implementing a phase plan via subagent dispatch
+- When implementing a stage plan via subagent dispatch
 
 ## Workflow
 
@@ -35,7 +35,7 @@ skill_load("superpowers:executing-plans")
 skill_load("superpowers:subagent-driven-development")
 ```
 
-### 2. release stage reality-check (BEFORE first dispatch)
+### 2. stage reality-check (BEFORE first dispatch)
 
 Per `feedback_plan_template_drift.md`:
 - Extract package.Symbol references from plan-file
@@ -69,6 +69,6 @@ GOOS=linux go build ./...
 ## Cross-references
 
 - docs/METHODOLOGY.md §4 plan-execution
-- feedback_plan_template_drift.md (release stage reality-check)
+- feedback_plan_template_drift.md (stage reality-check)
 - feedback_no_tech_debt.md
 - /hades:execute-plan slash command handler

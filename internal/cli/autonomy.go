@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Package cli — autonomy.go.
 //
-// `hades autonomy` exposes the 3-layer autonomy resolution (Q11 C) and
-// the Q13 D pre-flight check matrix:
+// `hades autonomy` exposes the 3-layer autonomy resolution (design choice C) and
+// the design choice D pre-flight check matrix:
 //
 // hades autonomy show — effective mode + chain
-// hades autonomy --check [--verbose] — Q13 D check matrix
+// hades autonomy --check [--verbose] — design choice D check matrix
 // hades autonomy --check --allow-soft-warnings — proceed past soft fails
 // hades autonomy mode <manual|semi|full> — write override
 // hades autonomy mode --reset — clear override
@@ -37,7 +37,7 @@ func NewAutonomyCmd() *cobra.Command {
 	)
 	cmd := &cobra.Command{
 		Use:   "autonomy",
-		Short: "Inspect and configure orchestrator autonomy mode (Q11 C / Q13 D)",
+		Short: "Inspect and configure orchestrator autonomy mode (design choice C / design choice D)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if !runCheck {
 				return cmd.Help()
@@ -46,7 +46,7 @@ func NewAutonomyCmd() *cobra.Command {
 		},
 	}
 	attachPlan5DaemonURLFlag(cmd)
-	cmd.Flags().BoolVar(&runCheck, "check", false, "run pre-flight check matrix (Q13 D)")
+	cmd.Flags().BoolVar(&runCheck, "check", false, "run pre-flight check matrix (design choice D)")
 	cmd.Flags().BoolVar(&allowSoftWarning, "allow-soft-warnings", false, "proceed past soft-tier failures (operator explicit consent)")
 	cmd.Flags().BoolVar(&verbose, "verbose", false, "include passing rows in output")
 

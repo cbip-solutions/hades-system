@@ -1,8 +1,8 @@
 -- internal/research/ecosystem/migrations/001_ecosystem_packages.sql
 --
--- HADES design release track Task A-9. Per spec §3.4.
+-- HADES design stage task. per design contract
 --
--- One row per (ecosystem, name) tuple. Updated by release track ingester's
+-- One row per (ecosystem, name) tuple. Updated by stage ingester's
 -- last_indexed_at / last_upstream_check / latest_stable_version fields
 -- on every poll cycle.
 --
@@ -12,7 +12,7 @@
 --   types.go A-3 declared `PackageRef.Ecosystem Ecosystem` (string enum:
 --   go|python|typescript|rust) with EcoGo/EcoPython/EcoTypeScript/EcoRust
 --   constants. The frozen Go contract wins: column = `ecosystem` and
---   UNIQUE = (ecosystem, name). release track indexer-writer code reads from
+--   UNIQUE = (ecosystem, name). stage indexer-writer code reads from
 --   PackageRef.Ecosystem and writes here directly without translation.
 --
 --   invariant unaffected (this package does not import internal/store);

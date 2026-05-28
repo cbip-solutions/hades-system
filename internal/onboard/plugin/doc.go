@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package plugin implements release's Hermes plugin location
+// Package plugin implements HADES design's Hermes plugin location
 // resolution + installation primitives.
 //
-// Per spec §2.13 Q13=D + §4.5 spike re-verify + §8.6
+// per design contract=D + §4.5 spike re-verify + §8.6
 // invariant: the plugin install location depends on the 13-A0
 // spike outcome.
 //
@@ -11,10 +11,10 @@
 //
 // spike FAIL → user-scope per-project fallback:
 // ~/.hermes/plugins/hades-system-<slug>/
-// (ADR-0086 documents fallback rationale; releaseb conditional
+// (ADR-0086 documents fallback rationale; HADES design conditional
 // sibling work triggered)
 //
-// Per spec §8.6 invariant: XDG-canonical path convention; macOS
+// per design contract: XDG-canonical path convention; macOS
 // precedence operator-config. Helpers in xdg.go honor $XDG_CONFIG_HOME
 // / $XDG_STATE_HOME / $XDG_CACHE_HOME / $XDG_DATA_HOME with $HOME-based
 // fallback.
@@ -24,7 +24,7 @@
 // # Surface
 //
 // The package exposes the following load-bearing symbols (Master plan
-// §"Cross-phase type sharing"):
+// §"Cross-stage type sharing"):
 //
 // - Location (struct{Path,Kind}) + LocationKind enum (with Stringer)
 // - ResolveLocation(spikeOutcome bool) (Location, error)

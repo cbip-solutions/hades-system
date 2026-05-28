@@ -3,7 +3,7 @@
 //
 // GenerateMorningBrief is the user-facing entry point invoked by both
 // the cron firing and the operator-
-// pull (`bin/hades day`). Per spec §1 Q13 C: idempotent — skips regen
+// pull (`bin/hades day`). per design contract: idempotent — skips regen
 // when today's archive `~/.config/hades-system/hades-day-YYYY-MM-DD.md`
 // already exists, unless `force == true`.
 //
@@ -70,7 +70,7 @@ type MorningDeps struct {
 
 // MorningBriefReadyPayload mirrors eventlog.MorningBriefReadyEvent's
 // wire shape locally so hadesday does not import eventlog (avoids the
-// circular-import concern when is composed before release lands;
+// circular-import concern when is composed before HADES design lands;
 // keeps invariant boundary discipline as hadesday → eventlog only via
 // the EventEmitter interface).
 //

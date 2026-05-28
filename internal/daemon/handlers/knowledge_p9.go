@@ -2,7 +2,7 @@
 // Package handlers — knowledge_p9.go.
 //
 // 5 NEW operator-facing knowledge aggregator endpoints surfacing
-// substrate (federated query + opt-in promote per Q6 C) over
+// substrate (federated query + opt-in promote per design choice C) over
 // /v1/knowledge/*. invariant + invariant: handlers consume the
 // KnowledgeAdapterP9 interface and never import internal/knowledge/*
 // directly. invariant: promote/unpromote require non-empty, non-whitespace
@@ -16,7 +16,7 @@
 //
 // Graceful degradation: any nil KnowledgeAdapterP9 passed
 // to a constructor returns an http.HandlerFunc that immediately responds
-// 503 {"error":"feature not configured","code":"release_knowledge_unavailable"}.
+// 503 {"error":"feature not configured","code":"HADES component"}.
 // wires *daemon.Server to satisfy KnowledgeAdapterP9 once the
 // adapter is available; during development the 503 makes intent
 // explicit.
@@ -151,7 +151,7 @@ func KnowledgeP9Promote(s KnowledgeAdapterP9) http.HandlerFunc {
 		}
 		if strings.TrimSpace(req.Reason) == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{
-				"error": "reason required (inv-hades-146; auto-promote forbidden)",
+				"error": "reason required (invariant; auto-promote forbidden)",
 			})
 			return
 		}
@@ -191,7 +191,7 @@ func KnowledgeP9Unpromote(s KnowledgeAdapterP9) http.HandlerFunc {
 		}
 		if strings.TrimSpace(req.Reason) == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{
-				"error": "reason required (inv-hades-146; auto-unpromote forbidden)",
+				"error": "reason required (invariant; auto-unpromote forbidden)",
 			})
 			return
 		}

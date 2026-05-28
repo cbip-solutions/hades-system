@@ -66,7 +66,7 @@ func (m *Manager) CreateWindows(ctx context.Context, sessionName string) error {
 
 	// Step 2: create the remaining 5 windows in canonical order. scratch
 	// MUST come last so it lands at the highest tmux index, simplifying
-	// tmux-resurrect's exclusion script (Q6 D + invariant).
+	// tmux-resurrect's exclusion script (design choice D + invariant).
 	rest := []WindowName{
 		WindowLeads, WindowWorkers, WindowHRA, WindowLogs, WindowScratch,
 	}

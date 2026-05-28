@@ -4,7 +4,7 @@
 // The defaults are sufficient for end-to-end testing (handlers
 // return shape-correct JSON) but are intentionally minimal — they do
 // NOT call into the eventual production subsystems. Each method carries
-// the PHASE_G_DEFAULT marker plus a reference to the Phase that wires
+// the PHASE_G_DEFAULT marker plus a reference to the stage that wires
 // the real engine, so a `grep PHASE_G_DEFAULT` enumerates every place
 // the daemon still holds a placeholder.
 //

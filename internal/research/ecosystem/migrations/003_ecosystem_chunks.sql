@@ -1,9 +1,9 @@
 -- internal/research/ecosystem/migrations/003_ecosystem_chunks.sql
 --
--- HADES design release track Task A-9. Per spec §3.4.
+-- HADES design stage task. per design contract
 --
--- The core chunk table. release track chunker emits these via indexer.WriteChunks;
--- release track embedder fills embedding_binary_256d in the same write transaction.
+-- The core chunk table. stage chunker emits these via indexer.WriteChunks;
+-- stage embedder fills embedding_binary_256d in the same write transaction.
 -- chunk_fingerprint = sha256(content_text); cross-version dedup hot path.
 -- parent_chunk_id links leaf chunks (~512 tokens) to parent chunks (~2048
 -- tokens) for the LlamaIndex HierarchicalNodeParser auto-merging pattern.
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS ecosystem_chunks (
     kind                  TEXT,
     source_url            TEXT NOT NULL,
     embedding_binary_256d BLOB,
-    -- release stage amendment 2026-05-15: tracks cAST chunker boundary-preservation
+    -- stage amendment 2026-05-15: tracks cAST chunker boundary-preservation
     -- overflows. 1 = chunk exceeded maxLeafTokens to preserve a tree-sitter
     -- node boundary; weekly sweep query targets oversized=1 for re-chunking.
     oversized             INTEGER NOT NULL DEFAULT 0,

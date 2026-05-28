@@ -1,4 +1,4 @@
-# plugin/hades/pyproject.toml — HADES design release track coverage + lint anchor.
+# plugin/hades/pyproject.toml — HADES design stage coverage + lint anchor.
 #
 # This file does NOT replace the parent ``plugin/pyproject.toml``
 # (which sets pytest rootdir for the entire plugin tree). It is a
@@ -50,7 +50,7 @@ exclude_lines = [
 [tool.ruff]
 line-length = 90
 target-version = "py311"
-# HADES design release track I-3 scope expansion: hooks/ + commands/ are now lint
+# HADES design stage I-3 scope expansion: hooks/ + commands/ are now lint
 # targets alongside renderers/ + afk/. providers/ + transports/ remain
 # excluded (pre-HADES design typing/lint debt that the legacy modules
 # carry; HADES design 'hades migrate' owns the rewrite + lint widening).

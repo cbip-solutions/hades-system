@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 // internal/research/ecosystem/audit_emitter.go
 //
-// RAGAuditEmitter + RAGAuditChainEmitter interface (release
-// Task A-7; master §3.6).
+// RAGAuditEmitter + RAGAuditChainEmitter interface (HADES design
+// task; master §3.6).
 //
-// Wraps release internal/audit/chain/ primitives indirectly via a
-// narrow release-owned RAGAuditChainEmitter interface (release B-6
-// pattern). release does NOT import internal/daemon/budget; declaring
-// the interface HERE lets release honour invariant boundary while
-// still leveraging the same release chain hashing/sealing primitives.
+// Wraps HADES design internal/audit/chain/ primitives indirectly via a
+// narrow HADES design RAGAuditChainEmitter interface (HADES design B-6
+// pattern). HADES design does NOT import internal/daemon/budget; declaring
+// the interface HERE lets HADES design honour invariant boundary while
+// still leveraging the same HADES design chain hashing/sealing primitives.
 //
-// Production implementation lands at Task D-12 — a thin
+// Production implementation lands at task — a thin
 // wrapper that constructs the chain row + delegates parent_hash /
-// self_hash computation to release chain primitives. ships the
+// self_hash computation to HADES design chain primitives. ships the
 // interface declaration + RAGAuditEmitter struct + InMemoryRAGAuditChain
 // test impl (mock_chain.go) that exercises the SAME chain-link hashing
 // logic locally so wiring is verifiable in isolation.
@@ -35,12 +35,12 @@ import (
 
 type RAGAuditChainEmitter interface {
 	// Append assigns a new monotonically-increasing seq, computes the
-	// chain-link hashes (parent_hash + self_hash per spec §4.6), and
+	// chain-link hashes (parent_hash + self_hash per design contract), and
 	// persists the record. Returns the assigned seq.
 	//
 	// Concurrency implementations MUST serialize seq assignment + hash
 	// computation atomically (typically mutex-protected;
-	// production wraps release chain.Append which uses SQLite txn).
+	// production wraps HADES design chain.Append which uses SQLite txn).
 	Append(ctx context.Context, evt eventlog.EventType, payload []byte, doctrine string) (seq int64, err error)
 
 	LastHash(ctx context.Context) (parentHash string, err error)

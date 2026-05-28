@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_auto_promote.go
 //
-// Task J-8: custom go vet analyzer enforcing invariant
+// task: custom go vet analyzer enforcing invariant
 // (knowledge promote operator-gated; no auto-promote code path).
 //
 // Scans all packages for callsites of Promote() on receiver types named
 // Adapter (or aggregator package) lacking a non-empty reason string arg.
 //
-// Heuristics (per spec §7.3 + invariant):
+// Heuristics (per design contract):
 // 1. Empty string literal `""` as last arg → REJECT.
 // 2. Wrong arity (<3 args) → REJECT (signature violation).
 // 3. Non-string-literal reason → WARN (runtime panic Layer 2 active).
@@ -27,9 +27,8 @@ import (
 
 var NoAutoPromoteAnalyzer = &analysis.Analyzer{
 	Name: "noAutoPromote",
-	Doc: `Enforces inv-hades-146: aggregator.Promote() callsites MUST supply
-a non-empty operator-controlled reason string. Empty literal "" or
-missing arg is rejected; non-literal reason triggers a warning.`,
+	Doc:  "Enforces invariant: aggregator.Promote() callsites MUST supply\na non-empty operator-controlled reason string. Empty literal \"\" or\nmissing arg is rejected; non-literal reason triggers a warning.",
+
 	Run: runNoAutoPromote,
 }
 
@@ -46,7 +45,7 @@ func runNoAutoPromote(pass *analysis.Pass) (any, error) {
 
 			if len(call.Args) < 3 {
 				pass.Reportf(call.Pos(),
-					"inv-hades-146: Promote() called with %d args (expected ≥3); reason MUST be non-empty operator-supplied string",
+					"invariant: Promote() called with %d args (expected ≥3); reason MUST be non-empty operator-supplied string",
 					len(call.Args))
 				return true
 			}
@@ -54,13 +53,13 @@ func runNoAutoPromote(pass *analysis.Pass) (any, error) {
 			lastArg := call.Args[len(call.Args)-1]
 			if isEmptyStringLit(lastArg) {
 				pass.Reportf(call.Pos(),
-					"inv-hades-146: Promote() reason MUST be non-empty operator-supplied string")
+					"invariant: Promote() reason MUST be non-empty operator-supplied string")
 				return true
 			}
 			if !isStringLit(lastArg) {
 
 				pass.Reportf(call.Pos(),
-					"inv-hades-146: Promote() reason is non-literal; operator review must verify non-empty (defense-in-depth runtime check active)")
+					"invariant: Promote() reason is non-literal; operator review must verify non-empty (defense-in-depth runtime check active)")
 			}
 			return true
 		})

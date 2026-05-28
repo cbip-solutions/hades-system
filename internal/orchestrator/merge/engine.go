@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package merge — Task D-7 (engine pipeline complete).
+// Package merge — task (engine pipeline complete).
 //
 // engine.go ships the MergeEngine SURFACE + the full pipeline body:
 //
@@ -11,7 +11,7 @@
 // returns (MergeOutcome, nil) on the success path; no placeholder
 // tail remains (per project instructions doctrine §"no stubs / código completo").
 //
-// Per release master plan §"Cross-phase interface vs struct collisions",
+// Per HADES design master plan §"Cross-stage interface vs struct collisions",
 // the lowercase narrow consumer interfaces (cacheClient, anomalyClient)
 // live HERE — engine.go is the only consumer in this package, so the
 // interface definitions sit beside the struct that consumes them.
@@ -20,7 +20,7 @@
 // impl site.
 //
 // Boundary note (invariant / invariant): nothing in this file
-// imports internal/store. talks to release only via the
+// imports internal/store. talks to HADES design only via the
 // EventEmitter interface declared in events.go.
 
 package merge
@@ -74,13 +74,13 @@ type EngineConfig struct {
 // - deps — collaborator wiring (immutable after NewEngine).
 // - gen — per-engine generation counter (atomic.Int64-backed)
 // producing strictly monotonic event GenerationIDs across
-// all Merge() invocations — release amendment.proposer
+// all Merge() invocations — HADES design amendment.proposer
 // relies on the monotonic property when reconstructing
-// causal chains across replay (Q9 D).
+// causal chains across replay (design choice D).
 // - targetMu — sync.Map[string]*sync.Mutex providing
 // per-TargetBranch serialization. Two concurrent
 // Merge() calls against the same TargetBranch must
-// run in declared order (spec §4.6 + Q8 D); concurrent
+// run in declared order (spec §4.6 + design choice D); concurrent
 // calls against DIFFERENT targets MUST run in parallel
 // (no global lock). sync.Map's LoadOrStore is the
 // canonical lock-free init path.

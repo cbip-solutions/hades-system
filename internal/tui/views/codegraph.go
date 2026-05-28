@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package views — codegraph.go.
 //
-// F7 Code Graph panel per spec §7.3. Surfaces caronte-derived
+// F7 Code Graph panel per design contract
 // structural insight for the operator's currently-edited file:
 //
 // - symbols defined in current file
@@ -11,7 +11,7 @@
 // - blast radius score
 // - last KG index timestamp
 //
-// Key bindings (Task C-3):
+// Key bindings (task):
 //
 // [Q] cypher-style free-text query
 // [I] pre-merge impact preview
@@ -21,7 +21,7 @@
 // Live data wiring routes via internal/client typed methods (Task
 // C-4) — never net/http directly (invariant).
 //
-// C-1 ships skeleton, C-2 adds full layout per spec §7.3 example,
+// C-1 ships skeleton, C-2 adds full layout per design contract,
 // C-3 adds key handling + sub-panel state machine.
 package views
 

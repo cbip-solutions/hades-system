@@ -3,8 +3,8 @@
 //
 // audit-event daemon endpoints shipped by (audit_event handler).
 // only needs the audit-event resolver here; the structured
-// citation rendering lives behind the daemon-side renderer set (release
-// ships the 6 platform renderers; release ships only the
+// citation rendering lives behind the daemon-side renderer set (HADES design
+// ships the 6 platform renderers; HADES design ships only the
 // markdown_fallback).
 package client
 

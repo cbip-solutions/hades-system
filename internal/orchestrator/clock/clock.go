@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package clock provides an injectable wall-clock + timer abstraction
-// (Q14 C). Production code uses Real{}; tests inject *Fake to drive
+// (design choice C). Production code uses Real{}; tests inject *Fake to drive
 // deterministic time advancement for HRA cadence, recovery
 // heartbeat, amendment cooldown, and the
 // time-accelerated test tier.

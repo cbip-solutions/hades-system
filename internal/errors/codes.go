@@ -2,8 +2,8 @@
 // Package errors centralises sentinel error values and the typed
 // error-code catalog used across hades-system.
 //
-// This file (codes.go) ships the releasec error catalog: a
-// typed table of 31 user-visible error codes per spec §Q6, each with
+// This file (codes.go) ships the HADES design error catalog: a
+// typed table of 31 user-visible error codes per design contract, each with
 // a stable identifier (Code), a short title, a body template, a
 // recovery hint (concrete shell command or doc link — NEVER
 // platitudes), a Severity (driving exit-code mapping), and a Category.
@@ -13,7 +13,7 @@
 //
 // # Catalog composition (31 entries)
 //
-// - 24 enumerated codes spanning 8 categories per spec §Q6:
+// - 24 enumerated codes spanning 8 categories per design contract:
 // daemon (4) + provider (5) + bypass (3) + wizard (3) +
 // plugin (3) + tui (2) + cli (2) + skin (2)
 // - 1 internal-uncaught defense-in-depth catch-all (severity
@@ -29,7 +29,7 @@
 // # → contract
 //
 // exports the following types + functions which are FROZEN
-// once ships (per releasec master plan §"Cross-phase type
+// once ships (per HADES design master plan §"Cross-stage type
 // discipline"):
 //
 // - Code (string type alias) — stable identifier; never renamed
@@ -73,15 +73,15 @@
 //
 // # Companion file
 //
-// errors.go preserves the legacy NotImplementedError family + release..
-// release sentinels (additive composition — does NOT modify
+// errors.go preserves the legacy NotImplementedError family + HADES component..
+// HADES component sentinels (additive composition — does NOT modify
 // errors.go).
 //
 // # Spec references
 //
-// - internal design record §Q6
-// - internal design record §" — Error catalog"
-// - internal design record (this file's parent)
+// - design records design §design choice
+// - design records design §" — Error catalog"
+// - design records design (this file's parent)
 package errors
 
 import (
@@ -190,10 +190,10 @@ type CatalogEntry struct {
 }
 
 // catalog is the package-level map of every shipped error code to its
-// CatalogEntry. Populated at package init (Go static-var init). Phase
+// CatalogEntry. Populated at package init (Go static-var init). stage
 // A ships 31 entries:
 //
-// - 24 enumerated codes (8 categories × 2-5 codes each per spec §Q6)
+// - 24 enumerated codes (8 categories × 2-5 codes each per design contract)
 // → daemon(4) + provider(5) + bypass(3) + wizard(3) + plugin(3)
 // - tui(2) + cli(2) + skin(2) = 24
 // - 1 internal-uncaught defense-in-depth entry
@@ -246,7 +246,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         CodeEndpointNotFound,
 		Title:        "HADES daemon endpoint not found.",
 		BodyTemplate: "The daemon returned HTTP 404 for the requested path. The daemon process is reachable and responding, but the endpoint may have moved (route renamed across releases) or been deprecated. Common cause: the installed daemon binary is older than the CLI and predates the route.",
-		RecoveryHint: "verify CLI / daemon versions match: hades --version && hades doctor --component=daemon; if a recent upgrade moved the route (e.g. Plan 19 moved /v1/caronte/* to /v1/mcpgateway/*), reinstall both via the same release: make install (from this repo). Do NOT delete /tmp/hades-system.sock — that is the wrong remedy for endpoint-404 (the daemon is reachable).",
+		RecoveryHint: "verify CLI / daemon versions match: hades --version && hades doctor --component=daemon; if a recent upgrade moved the route (e.g. HADES design moved /v1/caronte/* to /v1/mcpgateway/*), reinstall both via the same release: make install (from this repo). Do NOT delete /tmp/hades-system.sock — that is the wrong remedy for endpoint-404 (the daemon is reachable).",
 		Severity:     SeverityError,
 		Category:     CategoryDaemon,
 	},
@@ -353,8 +353,8 @@ var catalog = map[Code]*CatalogEntry{
 	"wizard.migrate-incomplete": {
 		Code:         "wizard.migrate-incomplete",
 		Title:        "Migration step did not complete cleanly.",
-		BodyTemplate: "The wizard's migrate step (e.g., importing ~/.claude/ artifacts) returned a partial-success status. Some artifacts were imported; some were skipped due to schema mismatch or permission issues.",
-		RecoveryHint: "review skipped items: hades migrate plan-18 --dry-run (lists what would still change); to retry, run: hades migrate plan-18 --apply (idempotent — safe to invoke multiple times); see docs/operations/hades-entry-point.md §migration-tooling for the per-source allowlist",
+		BodyTemplate: "The wizard's migrate step (e.g., importing ~/local agent config/ artifacts) returned a partial-success status. Some artifacts were imported; some were skipped due to schema mismatch or permission issues.",
+		RecoveryHint: "review skipped items: hades migrate HADES design --dry-run (lists what would still change); to retry, run: hades migrate HADES design --apply (idempotent — safe to invoke multiple times); see docs/operations/hades-entry-point.md §migration-tooling for the per-source allowlist",
 		Severity:     SeverityWarn,
 		Category:     CategoryWizard,
 	},
@@ -389,8 +389,8 @@ var catalog = map[Code]*CatalogEntry{
 	"plugin.mcp-handshake-fail": {
 		Code:         "plugin.mcp-handshake-fail",
 		Title:        "MCP handshake with Hermes plugin failed.",
-		BodyTemplate: "The HADES plugin tried to register MCP servers with Hermes' MCP host, but the handshake failed (protocol version mismatch, transport error, or the writer's mcp_servers translator emitted a malformed manifest — see inv-hades-217 for the writer constraint).",
-		RecoveryHint: "diagnose: hades doctor --component=mcp (probes each MCP transport with verbose output); reinstall MCPs: hades plugin install-mcps (re-emits the manifests via the inv-hades-217-compliant writer); see docs/operations/mcps.md §handshake-protocol and ADR-0094 + ADR-0095 for the transport contract",
+		BodyTemplate: "The HADES plugin tried to register MCP servers with Hermes' MCP host, but the handshake failed (protocol version mismatch, transport error, or the writer's mcp_servers translator emitted a malformed manifest — see invariant for the writer constraint).",
+		RecoveryHint: "diagnose: hades doctor --component=mcp (probes each MCP transport with verbose output); reinstall MCPs: hades plugin install-mcps (re-emits the manifests via the invariant-compliant writer); see docs/operations/mcps.md §handshake-protocol and ADR-0094 + ADR-0095 for the transport contract",
 		Severity:     SeverityError,
 		Category:     CategoryPlugin,
 	},
@@ -417,7 +417,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:  "cli.unknown-subcommand",
 		Title: "Unknown subcommand.",
 
-		BodyTemplate: "{{suggestion_line}}The HADES CLI does not recognize the subcommand. It may be a typo, a deprecated command, or a Plan 18+ command that has not landed yet.",
+		BodyTemplate: "{{suggestion_line}}The HADES CLI does not recognize the subcommand. It may be a typo, a deprecated command, or a command that is unavailable in this release.",
 		RecoveryHint: "list valid subcommands: hades --help (top-level command tree); to find a specific subcommand by keyword: hades --help | grep -i <keyword>; the legacy `hades` subcommand surface is still available — see docs/operations/hades-entry-point.md §legacy-cli-passthrough for the full alias map",
 		Severity:     SeverityError,
 		Category:     CategoryCLI,
@@ -436,7 +436,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "skin.skin-not-registered",
 		Title:        "HADES skin not registered with Hermes.",
 		BodyTemplate: "Hermes did not find a skin manifest at ~/.hermes/skins/hades.toml. The `hades` wrapper sets HERMES_SKIN=hades but Hermes loaded its default skin instead because the manifest is missing or unreadable.",
-		RecoveryHint: "verify: ls -la ~/.hermes/skins/hades.toml (expected: regular file, readable by current user); reinstall the skin: hades --install-skin (re-deploys from binary); see docs/operations/hades-entry-point.md §skin-engine and ADR-0094 for the skin module closure contract (inv-hades-218)",
+		RecoveryHint: "verify: ls -la ~/.hermes/skins/hades.toml (expected: regular file, readable by current user); reinstall the skin: hades --install-skin (re-deploys from binary); see docs/operations/hades-entry-point.md §skin-engine and ADR-0094 for the skin module closure contract (invariant)",
 		Severity:     SeverityError,
 		Category:     CategorySkin,
 	},
@@ -462,8 +462,8 @@ var catalog = map[Code]*CatalogEntry{
 	"reserved.slot-1": {
 		Code:         "reserved.slot-1",
 		Title:        "Reserved overflow slot 1 (catalog capacity).",
-		BodyTemplate: "This code is reserved capacity per the Plan 18c max-scope doctrine. If you are seeing this in production output, a downstream consumer is referencing a reserved slot — verify the consumer's intent or upgrade to a release that has consumed the slot with a real code.",
-		RecoveryHint: "see: docs/superpowers/plans/2026-05-20-plan-18c-polish-master.md §\"Doctrine applied\" §\"No tech debt\" (reserved-capacity contract); to file a request for slot-1 consumption, open an issue referencing reserved.slot-1 and the real code that would land there",
+		BodyTemplate: "This code is reserved capacity per the HADES design max-scope doctrine. If you are seeing this in production output, a downstream consumer is referencing a reserved slot — verify the consumer's intent or upgrade to a release that has consumed the slot with a real code.",
+		RecoveryHint: "see: design records release design §\"Doctrine applied\" §\"No tech debt\" (reserved-capacity contract); to file a request for slot-1 consumption, open an issue referencing reserved.slot-1 and the real code that would land there",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -471,8 +471,8 @@ var catalog = map[Code]*CatalogEntry{
 	"reserved.slot-2": {
 		Code:         "reserved.slot-2",
 		Title:        "Reserved overflow slot 2 (catalog capacity).",
-		BodyTemplate: "This code is reserved capacity per the Plan 18c max-scope doctrine. Future point-releases consume slots in-place; the slot becomes a real surface (with full title/body/recovery) at that time. Phase A ships 6 reserved slots; this is slot 2.",
-		RecoveryHint: "see: docs/superpowers/specs/2026-05-20-hades-system-plan-18-hades-system-unified-ux-design.md §Q6 (catalog enumeration + reserved-capacity rationale); the Plan 18c master plan §\"Doctrine applied\" documents the reserve > scarcity contract",
+		BodyTemplate: "This code is reserved capacity per the HADES design max-scope doctrine. Future point-releases consume slots in-place; the slot becomes a real surface (with full title/body/recovery) at that time. stage ships 6 reserved slots; this is slot 2.",
+		RecoveryHint: "see: design records release design §design choice (catalog enumeration + reserved-capacity rationale); the HADES design master plan §\"Doctrine applied\" documents the reserve > scarcity contract",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -480,8 +480,8 @@ var catalog = map[Code]*CatalogEntry{
 	"reserved.slot-3": {
 		Code:         "reserved.slot-3",
 		Title:        "Reserved overflow slot 3 (catalog capacity).",
-		BodyTemplate: "This code is reserved capacity per the Plan 18c max-scope doctrine. Reserved slots are NOT stubs — they are production-shape catalog entries that happen to be reserved for future consumption. Phase A ships 6 reserved slots; this is slot 3.",
-		RecoveryHint: "see: Plan 18c master plan §\"Doctrine applied\" — the reserved-capacity contract; consult docs/superpowers/specs/2026-05-20-hades-system-plan-18-hades-system-unified-ux-design.md §Q6 for the catalog schema",
+		BodyTemplate: "This code is reserved capacity per the HADES design max-scope doctrine. Reserved slots are NOT stubs — they are production-shape catalog entries that happen to be reserved for future consumption. stage ships 6 reserved slots; this is slot 3.",
+		RecoveryHint: "see: HADES design master plan §\"Doctrine applied\" — the reserved-capacity contract; consult design records release design §design choice for the catalog schema",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -489,8 +489,8 @@ var catalog = map[Code]*CatalogEntry{
 	"reserved.slot-4": {
 		Code:         "reserved.slot-4",
 		Title:        "Reserved overflow slot 4 (catalog capacity).",
-		BodyTemplate: "This code is reserved capacity per the Plan 18c max-scope doctrine. Phase A ships 6 reserved slots; this is slot 4. The slot will be renamed to a real code at the point a future plan needs additional catalog headroom.",
-		RecoveryHint: "see: docs/superpowers/plans/2026-05-20-plan-18c-polish-master.md §\"Doctrine applied\" §\"No stubs, código completo\" (reserved-slot definition); spec §Q6 (full catalog enumeration including this slot)",
+		BodyTemplate: "This code is reserved capacity per the HADES design max-scope doctrine. stage ships 6 reserved slots; this is slot 4. The slot will be renamed to a real code at the point a future plan needs additional catalog headroom.",
+		RecoveryHint: "see: design records release design §\"Doctrine applied\" §\"No stubs, código completo\" (reserved-slot definition); spec §design choice (full catalog enumeration including this slot)",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -498,8 +498,8 @@ var catalog = map[Code]*CatalogEntry{
 	"reserved.slot-5": {
 		Code:         "reserved.slot-5",
 		Title:        "Reserved overflow slot 5 (catalog capacity).",
-		BodyTemplate: "This code is reserved capacity per the Plan 18c max-scope doctrine. The 6 reserved slots are a load-bearing application of the doctrine: future plans inherit catalog headroom without a schema migration. Phase A ships 6 reserved slots; this is slot 5.",
-		RecoveryHint: "see: Plan 18c master plan §\"Doctrine applied\" (full reserved-capacity rationale); spec §Q6 (per-slot ID assignment); consult ~/.claude/projects/-path-to-projects-hades-system/memory/feedback_no_stubs_complete_code.md for the doctrine reference",
+		BodyTemplate: "This code is reserved capacity per the HADES design max-scope doctrine. The 6 reserved slots are a load-bearing application of the doctrine: future plans inherit catalog headroom without a schema migration. stage ships 6 reserved slots; this is slot 5.",
+		RecoveryHint: "see: HADES design master plan §\"Doctrine applied\" (full reserved-capacity rationale); spec §design choice (per-slot ID assignment); consult ~/local agent config/projects/-path-to-projects-hades-system/memory/feedback_no_stubs_complete_code.md for the doctrine reference",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -507,8 +507,8 @@ var catalog = map[Code]*CatalogEntry{
 	"reserved.slot-6": {
 		Code:         "reserved.slot-6",
 		Title:        "Reserved overflow slot 6 (catalog capacity).",
-		BodyTemplate: "This code is reserved capacity per the Plan 18c max-scope doctrine. Phase A ships 6 reserved slots; this is the last slot (slot 6). If all 6 slots are consumed and a new code is needed, the catalog grows by adding new struct literals (additive expansion); no schema change required.",
-		RecoveryHint: "see: docs/superpowers/plans/2026-05-20-plan-18c-polish-master.md §\"Doctrine applied\" + §\"No tech debt\" (reserved-capacity is doctrine-compliant, NOT tech debt); the doctrine memory at ~/.claude/projects/-path-to-projects-hades-system/memory/feedback_no_stubs_complete_code.md is the load-bearing reference",
+		BodyTemplate: "This code is reserved capacity per the HADES design max-scope doctrine. stage ships 6 reserved slots; this is the last slot (slot 6). If all 6 slots are consumed and a new code is needed, the catalog grows by adding new struct literals (additive expansion); no schema change required.",
+		RecoveryHint: "see: design records release design §\"Doctrine applied\" + §\"No tech debt\" (reserved-capacity is doctrine-compliant, NOT tech debt); the doctrine memory at ~/local agent config/projects/-path-to-projects-hades-system/memory/feedback_no_stubs_complete_code.md is the load-bearing reference",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -517,7 +517,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "cli.no-op",
 		Title:        "No changes needed.",
 		BodyTemplate: "The operation found no pending changes in the scanned surfaces. Either the migration has already been applied, or no matching references were present in the allowlisted paths.",
-		RecoveryHint: "verify: re-run with --dry-run to confirm there is truly nothing to do (output will show <no changes; already migrated>); if you expected changes, check --home points to the correct home dir and the target files are within the allowlist scope (see hades migrate plan-18 --help)",
+		RecoveryHint: "verify: re-run with --dry-run to confirm there is truly nothing to do (output will show <no changes; already migrated>); if you expected changes, check --home points to the correct home dir and the target files are within the allowlist scope (see hades migrate HADES design --help)",
 		Severity:     SeverityInfo,
 		Category:     CategoryCLI,
 	},
@@ -525,8 +525,8 @@ var catalog = map[Code]*CatalogEntry{
 	"migrate.allowlist-violation": {
 		Code:         "migrate.allowlist-violation",
 		Title:        "File is outside the migration allowlist.",
-		BodyTemplate: "The path {{.rel}} is not in the set of operator home-dir surfaces that `hades migrate plan-18` is allowed to read or write. The tool NEVER touches files outside the allowlist (shell RC files, ~/.config/hades-system/, ~/.hades/, ~/.hermes/plugins/hades-system/, specific ~/.claude/ files).",
-		RecoveryHint: "verify the file path is within the allowlist: hades migrate plan-18 --help (prints the full scope); if you believe the path should be in scope, open an issue at https://github.com/cbip-solutions/hades-system/issues/new referencing migrate.allowlist-violation + the rejected path",
+		BodyTemplate: "The path {{.rel}} is not in the set of operator home-dir surfaces that `hades migrate HADES design` is allowed to read or write. The tool NEVER touches files outside the allowlist (shell RC files, ~/.config/hades-system/, ~/.hades/, ~/.hermes/plugins/hades-system/, specific ~/local agent config/ files).",
+		RecoveryHint: "verify the file path is within the allowlist: hades migrate HADES design --help (prints the full scope); if you believe the path should be in scope, open an issue at https://github.com/cbip-solutions/hades-system/issues/new referencing migrate.allowlist-violation + the rejected path",
 		Severity:     SeverityError,
 		Category:     CategoryMigrate,
 	},
@@ -544,7 +544,7 @@ var catalog = map[Code]*CatalogEntry{
 		Code:         "migrate.write-failed",
 		Title:        "Migration atomic write failed.",
 		BodyTemplate: "The atomic write (temp + fsync + rename) for {{.path}} failed. The file was NOT modified; the backup (if created) is intact at the timestamped subdir. Common causes: disk full, permission denied on the parent directory, or a concurrent migration invocation holding the backup-dir lock.",
-		RecoveryHint: "diagnose: ls -la {{.path}} && df -h {{.path}} (check permissions + disk space); verify no concurrent migration is running: ls ~/.local/share/hades-system/migrate-plan-18-backup/lock (if present + stale, remove it manually); then re-run: hades migrate plan-18 --from-hades-system-aliases --apply (idempotent — already-migrated files skipped)",
+		RecoveryHint: "diagnose: ls -la {{.path}} && df -h {{.path}} (check permissions + disk space); verify no concurrent migration is running: ls ~/.local/share/hades-system/migrate-HADES design (if present + stale, remove it manually); then re-run: hades migrate HADES design --from-hades-system-aliases --apply (idempotent — already-migrated files skipped)",
 		Severity:     SeverityError,
 		Category:     CategoryMigrate,
 	},
@@ -552,8 +552,8 @@ var catalog = map[Code]*CatalogEntry{
 	"migrate.dry-run-required": {
 		Code:         "migrate.dry-run-required",
 		Title:        "Migration requires explicit --apply flag.",
-		BodyTemplate: "The migration tool is dry-run-by-default. No files were modified. To perform the actual migration, pass --apply explicitly (this is the operator-explicit safety gate per spec §Q4 — the tool refuses to mutate files without an affirmative --apply flag).",
-		RecoveryHint: "re-run with the apply flag: hades migrate plan-18 --from-hades-system-aliases --apply (this will perform the atomic per-file writes + create a timestamped backup under ~/.local/share/hades-system/migrate-plan-18-backup/); review the dry-run diff first if you haven't: hades migrate plan-18 --from-hades-system-aliases (no --apply = dry-run)",
+		BodyTemplate: "The migration tool is dry-run-by-default. No files were modified. To perform the actual migration, pass --apply explicitly (this is the operator-explicit safety gate per design contract— the tool refuses to mutate files without an affirmative --apply flag).",
+		RecoveryHint: "re-run with the apply flag: hades migrate HADES design --from-hades-system-aliases --apply (this will perform the atomic per-file writes + create a timestamped backup under ~/.local/share/hades-system/migrate-HADES design); review the dry-run diff first if you haven't: hades migrate HADES design --from-hades-system-aliases (no --apply = dry-run)",
 		Severity:     SeverityWarn,
 		Category:     CategoryMigrate,
 	},

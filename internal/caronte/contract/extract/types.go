@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package extract is the release cross-language API-contract extractor seam:
+// Package extract is the HADES design cross-language API-contract extractor seam:
 // the registry of per-(Language, framework) RouteExtractor impls that turn
 // source files into store.APIEndpoint + store.APICall rows. This package OWNS
 // the contract surface (master C-4) — the RouteExtractor interface, the
@@ -9,7 +9,7 @@
 // and land in (W3 Go-stack) + (W3 Python/TS-stack).
 //
 // Boundary: this package and its
-// subpackages NEVER import internal/store; bridge only via the release
+// subpackages NEVER import internal/store; bridge only via the HADES design
 // internal/caronte/store package (where added the APIEndpoint +
 // APICall types). The federation store (internal/caronte/store/federation)
 // and the Coordinator (internal/caronte/coordinated) are downstream;
@@ -38,7 +38,7 @@ const (
 // StubArtifacts() to surface the generated-stub import linking the client repo
 // to the server's.proto package. Each field is a string identifier — together
 // they uniquely identify the RPC the client is calling, enabling the
-// highest-confidence cross-repo link tier (exact_proto_import per spec §6 +
+// highest-confidence cross-repo link tier (exact_proto_import per design contract
 // master C-5). A zero value (all-empty fields) means "no stub import found at
 // this site"; downstream consumers check the individual fields
 // rather than the value's address.

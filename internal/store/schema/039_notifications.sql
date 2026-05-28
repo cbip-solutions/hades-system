@@ -1,4 +1,4 @@
--- Bypass notifications ledger (HADES design release track Task L-4, spec §8.4)
+-- Bypass notifications ledger (HADES design stage task, spec §8.4)
 --
 -- Distinct from notifications_queue (HADES design). This table holds bypass-
 -- module events specifically: tier switches, refresh failures, cert pin

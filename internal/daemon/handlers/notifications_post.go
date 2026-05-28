@@ -11,7 +11,7 @@
 // (OnTierSwitch / OnRefreshPermanentFail / OnCertPinFailure /
 // OnAnomalyThreshold living on the bypass Client + Validator) now
 // HTTP-post to this endpoint instead. The endpoint's request shape
-// matches the wire-schema documented in the release spec §B-8:
+// matches the wire-schema documented in the HADES design spec §B-8:
 //
 // {"severity": "info"|"warn"|"error",
 // "source": "bypass-sidecar",
@@ -147,7 +147,7 @@ func NotificationsPost(s NotificationsPostCtx) http.HandlerFunc {
 
 			RenderError(r.Context(), w, http.StatusServiceUnavailable,
 				"store_unavailable",
-				"notifications store not yet wired (daemon boot in progress)")
+				"notifications store unavailable (daemon boot in progress)")
 			return
 		}
 

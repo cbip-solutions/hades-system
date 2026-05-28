@@ -3,7 +3,7 @@
 //
 // standalone research MCP through the daemon's sovereign caronte engine via
 // POST /v1/mcpgateway/codegraph. Replaces the NoOpGitnexus placeholder
-// (DECISION L-3: the GitnexusClient interface name is retained as the stable
+// (decision L-3: the GitnexusClient interface name is retained as the stable
 // drop-in contract — do NOT rename it).
 //
 // Boundary (invariant): this file imports ONLY internal/mcp/client.

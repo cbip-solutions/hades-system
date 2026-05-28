@@ -17,7 +17,7 @@ func doctorSSHExecCmd() *cobra.Command {
 		Use:   "sshexec",
 		Short: "ssh-exec MCP health (allowlist, audit pipeline)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "SSH-Exec (Plan 4)", runSSHExecChecks)
+			return runOneSection(cmd, "SSH-Exec (HADES design)", runSSHExecChecks)
 		},
 	}
 }

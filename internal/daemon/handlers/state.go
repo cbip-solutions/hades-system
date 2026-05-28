@@ -2,7 +2,7 @@
 // Package handlers — state.go.
 //
 // 5 NEW operator-facing system-state endpoints surfacing
-// substrate (docs/system-state.toml auto-derived + manual per Q9 E)
+// substrate (docs/system-state.toml auto-derived + manual per design choice E)
 // over /v1/state/*. Boundary constraints:
 //
 // - invariant: handler never imports internal/state/manifest directly.
@@ -14,7 +14,7 @@
 //
 // Graceful degradation: any nil StateService passed to a
 // constructor returns an http.HandlerFunc that immediately responds with
-// HTTP 503 {"error":"feature not configured","code":"release_state_unavailable"}.
+// HTTP 503 {"error":"feature not configured","code":"HADES component"}.
 //
 // # Endpoints
 //
@@ -69,7 +69,7 @@ type StateService interface {
 	Verify(ctx context.Context) (StateDiffP9, error)
 
 	// Pin sets a manual field value and emits state.manual_field_changed into
-	// the release chain. reason MUST be non-empty (invariant); callers
+	// the HADES design chain. reason MUST be non-empty (invariant); callers
 	// validate before calling Pin.
 	// Returns error when the field is not flagged x-manual-field=true in the
 	// schema (rejected fields must not be silently accepted).
@@ -170,7 +170,7 @@ func StatePin(s StateService) http.HandlerFunc {
 		}
 		if strings.TrimSpace(req.Reason) == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{
-				"error": "reason required (inv-hades-146; auto-pin forbidden)",
+				"error": "reason required (invariant; auto-pin forbidden)",
 			})
 			return
 		}

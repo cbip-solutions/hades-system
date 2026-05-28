@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package merge: — Task C-3.
+// Package merge: — task
 //
 // anomaly.go ships the Severity enum + AnomalyDetector struct + the
 // AnomalyDetectedPayload shape + the OnEvent dispatch shell. Per-type
@@ -12,7 +12,7 @@
 // Drift-D structural enforcement (re-stated to keep it visible at the
 // file level): there is exactly ONE EventType for anomaly emission —
 // EvtMergeAnomalyDetected — and the AnomalyType discriminator lives in
-// the payload (AnomalyDetectedPayload.Type). release amendment.proposer
+// the payload (AnomalyDetectedPayload.Type). HADES design amendment.proposer
 // subscribes to EvtMergeAnomalyDetected, decodes the payload, and
 // switches on payload.Type for per-template ADR dispatch.
 
@@ -359,7 +359,7 @@ func (d *AnomalyDetector) evalFlakeRate(ctx context.Context, evt Event) error {
 //
 // On pct > ModeDegradationPctThreshold, emits AnomalyModeDegradationPersistent
 // with SeverityWarning + Evidence{degraded_pct, window_sessions, degraded_count}.
-// Severity is Warning (not High) per spec §7: degradation pattern → suggested
+// Severity is Warning (not High) per design contract: degradation pattern → suggested
 // cost-budget tightening, not immediate operator action.
 func (d *AnomalyDetector) evalModeDegradation(ctx context.Context, evt Event) error {
 	var p MergeStartedWithModePayload
@@ -433,9 +433,9 @@ func (d *AnomalyDetector) emit(ctx context.Context, anomalyType AnomalyType, sev
 	})
 }
 
-// releaseADRRangeStart is the first ADR ID reserved anomaly proposals.
-// invariant: every ADR proposed in response to a release EvtMergeAnomalyDetected
-// event MUST allocate its ID from [releaseADRRangeStart, releaseADRRangeEnd]. release
+// HADES component is the first ADR ID reserved anomaly proposals.
+// invariant: every ADR proposed in response to a HADES design EvtMergeAnomalyDetected
+// event MUST allocate its ID from [HADES component, HADES component]. HADES design
 // amendment.proposer enforces at allocation time ( cross-branch
 // amendment); the compliance test verifies the reserved range constants are
 // present + correct here at the merge package surface.

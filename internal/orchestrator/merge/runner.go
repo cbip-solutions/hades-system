@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package merge — Task D-1.
+// Package merge — task
 //
 // runner.go ships the Runner type's PUBLIC SURFACE — interface + Deps +
 // Config + sentinel + DefaultStragglerKillGracePeriod constant + the
@@ -14,7 +14,7 @@
 //
 // Layout note: Runner is the per-candidate fanout coordinator that
 // engine.go consumes via the lowercase narrow runnerClient interface
-// (master plan §"Cross-phase interface vs struct collisions").
+// (master plan §"Cross-stage interface vs struct collisions").
 // engine constructs from this concrete; tests inject fakes.
 
 package merge
@@ -96,10 +96,10 @@ func NewRunner(deps RunnerDeps, cfg RunnerConfig) (Runner, error) {
 // sibling failures DO NOT abort sibling work), and aggregates an all-fail
 // terminal event + sentinel-wrapped error when no survivors remain.
 //
-// Contract details (Q6 C + Q8 D):
+// Contract details (design choice C + design choice D):
 //
-// - Empty input: returns (nil, error). Caller bug; phase D engine.go
-// pre-validates 1..5 candidates per spec §4.1, this is defense-in-depth.
+// - Empty input: returns (nil, error). Caller bug; stage D engine.go
+// pre-validates 1..5 candidates per design contract, this is defense-in-depth.
 // - outcomes preserve input order (outcomes[i] aligns with candidates[i])
 // so scoring can correlate by index against MergeRequest.Candidates.
 // - Per-candidate context.WithCancel(ctx) gives the D-3 supervisor a
@@ -132,7 +132,7 @@ func (r *runner) RunCandidates(ctx context.Context, candidates []MergeCandidate,
 		wg.Add(1)
 		go func(idx int, cand MergeCandidate) {
 			defer wg.Done()
-			// Sibling isolation (invariant / Q8 D): a panic in this
+			// Sibling isolation (invariant / design choice D): a panic in this
 			// goroutine MUST surface as a HardRejected outcome rather
 			// than crashing the runner or aborting siblings.
 			defer func() {

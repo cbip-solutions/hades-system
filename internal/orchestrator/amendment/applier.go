@@ -171,7 +171,7 @@ func (a *AmendmentApplier) Apply(ctx context.Context, adrID int, operator string
 	commitMsg := fmt.Sprintf(
 		"doctrine(amendment): apply ADR-%04d (operator=%s)\n\nADR=%s\npre_toml_sha256=%s",
 		adrID, operator, filepath.Base(acceptedPath), preHash)
-	if err := a.cfg.Git.Run(ctx, a.cfg.RepoRoot, "add", "hadessystem.toml", "docs/decisions"); err != nil {
+	if err := a.cfg.Git.Run(ctx, a.cfg.RepoRoot, "add", "hadessystem.toml", "architecture records"); err != nil {
 		_ = os.WriteFile(tomlPath, pre, 0o644)
 		_ = os.Rename(acceptedPath, proposed)
 		return fmt.Errorf("git add: %w", err)
@@ -234,7 +234,7 @@ func (a *AmendmentApplier) ApplyTransacted(ctx context.Context, adrID int, opera
 	commitMsg := fmt.Sprintf(
 		"doctrine(amendment): apply ADR-%04d (operator=%s)\n\nADR=%s\npre_toml_sha256=%s",
 		adrID, operator, filepath.Base(acceptedPath), preHash)
-	if err := a.cfg.Git.Run(ctx, a.cfg.RepoRoot, "add", "hadessystem.toml", "docs/decisions"); err != nil {
+	if err := a.cfg.Git.Run(ctx, a.cfg.RepoRoot, "add", "hadessystem.toml", "architecture records"); err != nil {
 		_ = os.WriteFile(tomlPath, pre, 0o644)
 		_ = os.Rename(acceptedPath, proposed)
 		return fmt.Errorf("git add: %w", err)

@@ -2,7 +2,7 @@
 // internal/research/ecosystem/dispatcher_fallback.go
 //
 //
-// Live fallback path per spec §4.3 + invariant.
+// Live fallback path per design contract
 //
 // # When invoked
 //
@@ -26,7 +26,7 @@
 // This bypasses TTL + ETag conditionals (cache.revalidator §5).
 // 3. If pkg in manifest: FetchPackageDoc + IndexerDeltaWriter.WriteDelta
 // (so the next query hits the corpus normally).
-// 4. Else: research-MCP synthesis. Cache finding in release F
+// 4. Else: research-MCP synthesis. Cache finding in HADES design F
 // research_findings table with cache_hit_reason='fresh_dispatch'.
 // 5. Return QueryResult{Provenance.FreshDispatch=true} in either branch.
 //
@@ -61,7 +61,7 @@ type LiveFallbackRequest struct {
 	ProjectPath string
 }
 
-// ResearchMCPSynthesizer abstracts the release research MCP. The daemon wires
+// ResearchMCPSynthesizer abstracts the HADES design research MCP. The daemon wires
 // the concrete impl at startup; tests inject a fake.
 //
 // Contract Synthesize returns the rendered answer text on success. ctx
@@ -70,7 +70,7 @@ type ResearchMCPSynthesizer interface {
 	Synthesize(ctx context.Context, query string, eco Ecosystem) (string, error)
 }
 
-// FindingsCache abstracts the release F research_findings table writer.
+// FindingsCache abstracts the HADES design F research_findings table writer.
 //
 // Contract Cache writes a row keyed by (key, query, answer, eco, reason).
 // The dispatcher always passes reason="fresh_dispatch" from this path.
@@ -114,7 +114,7 @@ func (d *Dispatcher) LiveFallback(ctx context.Context, req LiveFallbackRequest) 
 		return nil, err
 	}
 	if d.auditEmitter == nil {
-		return nil, errors.New("dispatcher fallback: auditEmitter not wired (caller must set AuditChain in Options or assign d.auditEmitter before LiveFallback)")
+		return nil, errors.New("dispatcher fallback: auditEmitter unavailable (caller must set AuditChain in Options or assign d.auditEmitter before LiveFallback)")
 	}
 
 	doctrineName := "default"
@@ -175,7 +175,7 @@ func (d *Dispatcher) LiveFallback(ctx context.Context, req LiveFallbackRequest) 
 	}
 
 	if d.researchMCP == nil {
-		return nil, errors.New("dispatcher fallback: research MCP not wired (Phase F daemon-init must assign d.researchMCP before LiveFallback synthesis path)")
+		return nil, errors.New("dispatcher fallback: research MCP unavailable (stage daemon-init must assign d.researchMCP before LiveFallback synthesis path)")
 	}
 	answer, err := d.researchMCP.Synthesize(ctx, req.Query, req.Ecosystem)
 	if err != nil {

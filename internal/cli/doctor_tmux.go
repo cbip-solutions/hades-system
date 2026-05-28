@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_tmux.go
 //
-// Task J-6: tmux subsystem doctor probe. Five aspects per
+// task: tmux subsystem doctor probe. Five aspects per
 // spec §6.7 (binary.installed, server.reachable, session.count,
 // drift.count, socket.permissions).
 //
@@ -57,7 +57,7 @@ func runTmuxBinary(ctx context.Context, p TmuxProber) ProbeResult {
 	if !meetsMin {
 		r.Status = ProbeFail
 		r.Message = fmt.Sprintf("tmux %s installed; min required 3.4", v)
-		r.Hint = "upgrade tmux: brew upgrade tmux (macOS); spec §1 Q5 requires ≥3.4 for nested-session window-rename feature"
+		r.Hint = "upgrade tmux: brew upgrade tmux (macOS); spec §1 design choice requires ≥3.4 for nested-session window-rename feature"
 		return r
 	}
 	r.Status = ProbeOK
@@ -109,7 +109,7 @@ func runTmuxDrift(ctx context.Context, p TmuxProber) ProbeResult {
 		r.Hint = "chronic drift suggests drift-poller goroutine wedged; restart daemon: hades daemon restart"
 	case n >= tmuxDriftWarnAt:
 		r.Status = ProbeWarn
-		r.Hint = "drift recovers on next activation per spec §4.1; if persistent: hades sessions ls"
+		r.Hint = "drift recovers on next activation per design contract; if persistent: hades sessions ls"
 	default:
 		r.Status = ProbeOK
 	}

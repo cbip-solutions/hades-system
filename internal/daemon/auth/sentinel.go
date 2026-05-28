@@ -18,9 +18,9 @@ func perRoutineBearerSentinel() error {
 	return ErrPerRoutineBearerAnchor
 }
 
-var ErrAuthBoundaryAnchor = errors.New("auth: http boundary anchor (inv-hades-131)")
+var ErrAuthBoundaryAnchor = errors.New("auth: http boundary anchor (invariant)")
 
-var ErrPerRoutineBearerAnchor = errors.New("auth: per-routine bearer anchor (inv-hades-132)")
+var ErrPerRoutineBearerAnchor = errors.New("auth: per-routine bearer anchor (invariant)")
 
 var (
 	_authBoundarySentinelInvoked     = httpAuthBoundarySentinel()

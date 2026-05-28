@@ -17,7 +17,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/caronte/intent"
 )
 
-var ErrEcosystemMCPProbeNotWired = errors.New("caronte/semantic: ecosystem-mcp http probe not wired (composition-root injection required for http endpoints)")
+var ErrEcosystemMCPProbeNotWired = errors.New("caronte/semantic: ecosystem-mcp http probe unavailable (composition-root injection required for http endpoints)")
 
 // Selector chooses the embedder per fallback chain at NewEngine time.
 // Implementations MUST be deterministic for the same EmbedderConfig +
@@ -148,7 +148,7 @@ func newEcosystemMCPEmbedder(endpoint string) intent.CodeEmbedder {
 
 func (e *ecosystemMCPEmbedder) Embed(_ context.Context, _ string) ([]float32, error) {
 
-	return nil, fmt.Errorf("caronte/semantic: ecosystem-mcp placeholder (endpoint=%s) — daemon adapter not wired: %w", e.endpoint, ErrEmbedderUnavailable)
+	return nil, fmt.Errorf("caronte/semantic: ecosystem-mcp placeholder (endpoint=%s) — daemon adapter unavailable: %w", e.endpoint, ErrEmbedderUnavailable)
 }
 
 func (e *ecosystemMCPEmbedder) Dimensions() int { return 1536 }

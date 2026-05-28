@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/providers/sidecar_backend.go
 //
-// SidecarBackend is the release Tier 1 HTTP TierBackend that talks
+// SidecarBackend is the HADES design Tier 1 HTTP TierBackend that talks
 // to the private hades-bypass-tier1 sidecar process running on loopback.
 //
 // Substrate split: the in-process bypass.Client
@@ -15,7 +15,7 @@
 // name-based cascade (invariant frozen contract C8): "bypass-sidecar"
 // is the first entry in the operator's profiles.toml cascade, and a
 // missing/unhealthy sidecar surfaces as ErrSidecarUnavailable →
-// cascade proceeds to the release direct backends (Anthropic paygo,
+// cascade proceeds to the HADES design direct backends (Anthropic paygo,
 // Gemini, OpenRouter, etc. per ADR-0093 + reference_provider_roster).
 //
 // HTTP contract:

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package scheduler — prober.go
 //
-// Task J-4 adapter: exposes a slim Prober implementation that
+// task adapter: exposes a slim Prober implementation that
 // the cli/doctor_scheduler.go layer consumes (cli.SchedulerProber). The
 // split keeps invariant clean (internal/cli imports internal/scheduler;
 // internal/scheduler does NOT import internal/store).
@@ -47,7 +47,7 @@ type MissedFiresFn func(ctx context.Context, since time.Time) (total int, byProj
 // MUST be safe for concurrent use.
 type WfqStatusFn func(ctx context.Context) (maxPct int, maxAlias string, err error)
 
-// DispatcherPingFn verifies the release dispatcher is bound + reachable
+// DispatcherPingFn verifies the HADES design dispatcher is bound + reachable
 // at the daemon's HTTP level. Returns nil if reachable; error otherwise.
 // Wired by the daemon over the dispatcheradapter health probe.
 //

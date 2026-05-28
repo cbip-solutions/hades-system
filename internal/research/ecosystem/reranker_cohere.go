@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — reranker_cohere.go
 //
-// Cohere Rerank v4 API fallback (release Task D-4 per spec §2.6 Q6=A
+// Cohere Rerank v4 API fallback (HADES design task per design contract=A
 // alternative C). Operator opt-in only.
 //
 // # Why opt-in
@@ -18,7 +18,7 @@
 //
 // This file does NOT import net/http directly. HTTP egress routes through
 // the narrow CohereForwarder interface, which the daemon orchestrator wires
-// to a concrete *providers.Dispatcher at surface (release B-6
+// to a concrete *providers.Dispatcher at surface (HADES design B-6
 // narrow-interface pattern). The dispatcher owns:
 //
 // - URL routing → https://api.cohere.ai/v2/rerank
@@ -52,7 +52,7 @@
 //
 // Rerank is safe for concurrent invocation. token-cache mutex prevents
 // duplicate Keychain consultation; subsequent calls hit the fast path.
-// The Forwarder MUST itself be goroutine-safe (release dispatcher guarantees
+// The Forwarder MUST itself be goroutine-safe (HADES design dispatcher guarantees
 // this; daemon orchestrator wires it once at startup).
 //
 // # Latency budget
@@ -108,10 +108,10 @@ func (e *CohereHTTPError) Error() string {
 	return fmt.Sprintf("cohere http %d: %s", e.StatusCode, string(body))
 }
 
-// CohereForwarder is the release-narrow interface dispatcher.
+// CohereForwarder is the HADES design interface dispatcher.
 // The daemon orchestrator wires a concrete *providers.Dispatcher at runtime
 // (which owns URL routing → api.cohere.ai/v2/rerank, bearer-token auth
-// header injection, HTTP transport, and per-release audit logging); tests
+// header injection, HTTP transport, and per-HADES design audit logging); tests
 // wire fakeCohereForwarder. This keeps the ecosystem package free of any
 // net/http import (invariant) and internal/providers import (invariant).
 //

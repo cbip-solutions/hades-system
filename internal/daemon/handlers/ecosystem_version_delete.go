@@ -20,7 +20,7 @@
 // 404 Not Found — unknown (ecosystem, version) tuple.
 // 409 Conflict — version is pinned (operator must unpin first).
 // 500 Internal Server Error — opaque seam failure.
-// 503 Service Unavailable — EcosystemHandler not wired.
+// 503 Service Unavailable — EcosystemHandler unavailable.
 //
 // Wire mirror: matches client.EcosystemPrune(ctx, eco, ver) →
 // DELETE /v1/ecosystem/version + JSON body

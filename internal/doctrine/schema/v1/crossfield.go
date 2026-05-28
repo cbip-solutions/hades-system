@@ -94,7 +94,7 @@ func validateCrossField(s *Schema) []error {
 	if s.WFQ.OvercommitPolicy == "reject" && s.Quota.MaxConcurrentTasks > 256 {
 		errs = append(errs, &CrossFieldViolation{
 			InvariantID: "RejectOvercommitImpliesBoundedQuota",
-			Detail:      fmt.Sprintf("WFQ.OvercommitPolicy=reject but Quota.MaxConcurrentTasks=%d > 256 (Plan 7 ceiling)", s.Quota.MaxConcurrentTasks),
+			Detail:      fmt.Sprintf("WFQ.OvercommitPolicy=reject but Quota.MaxConcurrentTasks=%d > 256 (HADES design ceiling)", s.Quota.MaxConcurrentTasks),
 		})
 	}
 

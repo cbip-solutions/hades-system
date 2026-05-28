@@ -7,7 +7,7 @@
 // regenerate — rebuild manifest from authoritative sources
 // verify — regenerate-and-diff CI gate
 // pin — set a manual field with --reason
-// history — walk release chain showing manual field changes
+// history — walk HADES design chain showing manual field changes
 // list — enumerate XDG state entries
 // cleanup — apply retention policy to XDG state
 //
@@ -26,20 +26,9 @@ import "github.com/spf13/cobra"
 func NewStateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "state",
-		Short: "Persistence state surface (Plan 9 manifest + Plan 13 XDG retention)",
-		Long: `hades state — persistence state model surface.
+		Short: "Persistence state surface (HADES design manifest + HADES design XDG retention)",
+		Long:  "hades state — persistence state model surface.\n\nHADES design leaves (system-state.toml manifest, spec §6.1 design choice E):\n  show       — render manifest table (TomlContent + metadata)\n  regenerate — rebuild manifest from authoritative sources (--dry-run)\n  verify     — regenerate-and-diff CI gate (non-zero exit on drift;\n               integrated with make verify-invariants)\n  pin        — set a manual field with --reason (invariant)\n  history    — walk HADES design chain showing manual field changes\n\nHADES design stage leaves (XDG-backup retention per design choice + invariant):\n  list       — enumerate state dirs (sizes + ages + paths) [--json]\n  cleanup    — apply retention policy [--dry-run] [--keep=ID]",
 
-Plan 9 leaves (system-state.toml manifest, spec §6.1 Q9 E):
-  show       — render manifest table (TomlContent + metadata)
-  regenerate — rebuild manifest from authoritative sources (--dry-run)
-  verify     — regenerate-and-diff CI gate (non-zero exit on drift;
-               integrated with make verify-invariants)
-  pin        — set a manual field with --reason (inv-hades-146)
-  history    — walk Plan 9 chain showing manual field changes
-
-Plan 13 Phase F7 leaves (XDG-backup retention per Q12=D + inv-hades-187):
-  list       — enumerate state dirs (sizes + ages + paths) [--json]
-  cleanup    — apply retention policy [--dry-run] [--keep=ID]`,
 		Example: `  hades state show
   hades state regenerate --dry-run
   hades state verify

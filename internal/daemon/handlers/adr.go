@@ -2,7 +2,7 @@
 // Package handlers — adr.go.
 //
 // 9 NEW operator-facing ADR endpoints surfacing substrate
-// (Structured MADR machine-readable index per Q7 A) over /v1/adr/*.
+// (Structured MADR machine-readable index per design choice A) over /v1/adr/*.
 // invariant: write endpoints (accept/reject/supersede) require non-empty
 // reason — 400 on violation. invariant: handler never imports
 // internal/store. Wire types (ADRDoc, ADRListFilter, ADRGraph, ADRTransition,
@@ -10,7 +10,7 @@
 // from internal/adr — wires *daemon.Server to satisfy ADRIndex
 // via the production adr.Index implementation.
 //
-// POST /v1/adr/propose — draft + auto-assigned ID (non-interactive; CLI phase I prompts $EDITOR)
+// POST /v1/adr/propose — draft + auto-assigned ID (non-interactive; CLI stage I prompts $EDITOR)
 // GET /v1/adr/show — render frontmatter + body
 // GET /v1/adr/list — filter by status/plan/risk_level
 // GET /v1/adr/graph — supersede chain DAG (nodes + edges)
@@ -22,7 +22,7 @@
 //
 // Graceful degradation: any nil ADRIndex passed to a
 // constructor returns an http.HandlerFunc that immediately responds with
-// HTTP 503 {"error":"feature not configured","code":"release_adr_unavailable"}.
+// HTTP 503 {"error":"feature not configured","code":"HADES component"}.
 // wires *daemon.Server once the adr.Index adapter is
 // available; during development the 503 makes intent explicit.
 //
@@ -272,7 +272,7 @@ func adrTransition(fn func(context.Context, string, string) error) http.HandlerF
 		}
 		if req.ID == "" || req.Reason == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{
-				"error": "id and reason required (inv-hades-146)",
+				"error": "id and reason required (invariant)",
 			})
 			return
 		}
@@ -301,7 +301,7 @@ func ADRSupersede(s ADRCtx) http.HandlerFunc {
 		}
 		if req.OldID == "" || req.NewID == "" || req.Reason == "" {
 			writeJSON(w, http.StatusBadRequest, map[string]string{
-				"error": "old_id, new_id and reason required (inv-hades-146)",
+				"error": "old_id, new_id and reason required (invariant)",
 			})
 			return
 		}

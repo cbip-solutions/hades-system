@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package inbox — prober.go
 //
-// Task J-5 adapter: exposes a slim Prober implementation that
+// task adapter: exposes a slim Prober implementation that
 // the cli/doctor_inbox.go layer consumes (cli.InboxProber). The split
 // keeps invariant clean (internal/cli imports internal/inbox; this
 // package does NOT import internal/store).
@@ -9,13 +9,13 @@
 // The Prober is read-only: it queries the daemon-level
 // inbox_aggregator_cache table directly via *sql.DB plus a closure
 // that opens per-project state.db handles for the cache-consistency
-// reconciliation. Per spec §3.3 the aggregator cache is denormalized
+// reconciliation. per design contract
 // from per-project authoritative `inbox` tables — the consistency
 // probe sums per-project COUNT(*) and compares to cache COUNT(*) per
 // project_alias.
 //
 // invariant anchor: drift > tolerance signals write-fanout failure
-// (outbox replay missed; per spec §3.3 the aggregator is rebuildable
+// (outbox replay missed; per design contract
 // from per-project sources via Aggregator.Rebuild).
 //
 // invariant anchor: severity column is enforced at SQL CHECK level on

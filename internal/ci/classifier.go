@@ -39,7 +39,7 @@ type CommitStatus struct {
 	Date   time.Time `json:"Date"`
 }
 
-// FlakeQuarantine is the parsed form of scripts/release-gates/flake-
+// FlakeQuarantine is the parsed form of scripts/release checks/flake-
 // quarantine.txt. Consumed by Classify (via the simple
 // []string list of test-name regexes) AND by the validator
 // script + compliance tests.
@@ -164,7 +164,7 @@ func LoadFlakeQuarantine(path string) (*FlakeQuarantine, error) {
 		}
 		age := now.Sub(ts)
 		if age >= FlakeQuarantineMaxAge {
-			return nil, fmt.Errorf("ci: quarantine %s line %d: entry %q is %v old (≥ %v cap; auto-expire policy inv-hades-313)", path, lineNo, toks[0], age.Round(time.Hour), FlakeQuarantineMaxAge)
+			return nil, fmt.Errorf("ci: quarantine %s line %d: entry %q is %v old (≥ %v cap; auto-expire policy invariant)", path, lineNo, toks[0], age.Round(time.Hour), FlakeQuarantineMaxAge)
 		}
 
 		reason := strings.Join(toks[2:], " ")

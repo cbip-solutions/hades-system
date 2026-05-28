@@ -2,7 +2,7 @@
 // Package hadesday — `RegisterDefaultRoutines` cron registration helper +
 // `~/.config/hades-system/hades-day.toml` operator override.
 //
-// Per spec §1 Q13, hades day owns two default schedules:
+// per design contract, hades day owns two default schedules:
 //
 // - Morning brief: `0 8 * * 1-5` (Mon-Fri 08:00 local) with a 2h
 // `if_within` catch-up window (MissPolicyCatchUpBounded).
@@ -21,14 +21,14 @@
 // satisfies via `internal/daemon/scheduleradapter.Adapter`. hadesday
 // never imports `internal/store`.
 //
-// Idempotency contract (Q13 verbatim Clawpilot): RegisterDefaultRoutines
+// Idempotency contract (design choice verbatim Clawpilot): RegisterDefaultRoutines
 // runs at every daemon boot. When a row with the same ID + cron
 // expression already exists, the call is a no-op (a single Get + zero
 // mutations). When the operator edits hades-day.toml between boots and
 // the new cron differs, the existing row is dropped + re-inserted with
 // the new expression. This avoids partial-update edge cases (e.g.
 // stale NextRunAt under a freshly edited cron) at the cost of resetting
-// the cron cursor — acceptable for routine briefs whose phase is fixed
+// the cron cursor — acceptable for routine briefs whose stage is fixed
 // to wall-clock 08:00 / 18:00.
 //
 // Operator override file shape (hades-day.toml):

@@ -41,7 +41,7 @@ import "errors"
 // operator's regular tmux namespace with hades-spawned sessions.
 //
 // File permissions are 0600 owner-only after first creation (set by tmux
-// itself; daemon does NOT chmod). release spec §7.3 "Tmux contamination
+// itself; daemon does NOT chmod). HADES design spec §7.3 "Tmux contamination
 // prevention Layer 3" documents the permission model.
 const SocketPath = "/tmp/hades-system.sock"
 
@@ -62,4 +62,4 @@ var ErrTmuxVersionTooOld = errors.New("tmuxlife: tmux version below 3.4; snapsho
 
 var ErrSnapshotCorrupt = errors.New("tmuxlife: snapshot archive corrupt; preserved at *.corrupted-<ts>; spawn fresh session")
 
-var ErrScratchExclusionViolated = errors.New("tmuxlife: scratch window content detected in snapshot; inv-hades-118 violated; aborted")
+var ErrScratchExclusionViolated = errors.New("tmuxlife: scratch window content detected in snapshot; invariant violated; aborted")

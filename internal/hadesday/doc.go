@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Package hadesday composes release's operator daily flow loop:
+// Package hadesday composes HADES design's operator daily flow loop:
 // morning brief at 0 8 * * 1-5, EOD digest at 0 18 * * 1-5, plus
-// operator-pull `bin/hades day` invocation. Per spec §1 Q13/Q14/Q15:
+// operator-pull `bin/hades day` invocation. per design contract:
 //
 // - Cron-default + if_within: 2h catch-up + operator-pull idempotent
-// (Q13 C verbatim Clawpilot)
-// - Hard cap 7 items, leverage-sorted canonical 1..7 (Q14 B), with
+// (design choice C verbatim Clawpilot)
+// - Hard cap 7 items, leverage-sorted canonical 1..7 (design choice B), with
 // truncation marker `+ N more in hades inbox`
 // - EOD digest composed from per-project HandoffPosted events from
-// event-log + aggregator cache (Q15 C structured-data path)
+// event-log + aggregator cache (design choice C structured-data path)
 //
 // Architecture hadesday.Collect fans out across N parallel sources (inbox
 // cache, scheduler queue, gh CLI poll, autonomous state, cost ledger,
@@ -21,7 +21,7 @@
 // dispatcheradapter.CostStore, eventlog.Reader, AutonomyStateReader,
 // GitCli. Production wire-up is done in cmd/hades-ctld via
 //
-// invariant: this package never directly invokes the release dispatcher.
+// invariant: this package never directly invokes the HADES design dispatcher.
 // CollectDeps exposes only read-only views (cost ledger counters, event
 // log).
 //

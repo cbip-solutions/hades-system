@@ -80,7 +80,7 @@ func (c *Hermes) Run(ctx context.Context) Result {
 			Name:            c.Name(),
 			Status:          StatusFail,
 			Summary:         "Hermes Agent binary not found in PATH",
-			Details:         "inv-hades-175 requires Hermes Agent >=" + HermesMinVersion + ". The binary `" + HermesBinary + "` was not found in $PATH.",
+			Details:         "invariant requires Hermes Agent >=" + HermesMinVersion + ". The binary `" + HermesBinary + "` was not found in $PATH.",
 			RemediationHint: "Install Hermes Agent: `brew install hermes-agent` (macOS) or follow https://hermes-agent.dev/install (other platforms). Then re-run.",
 			ExitCode:        3,
 		}
@@ -120,7 +120,7 @@ func (c *Hermes) Run(ctx context.Context) Result {
 			Name:            c.Name(),
 			Status:          StatusFail,
 			Summary:         fmt.Sprintf("Hermes Agent %s < required %s", got, HermesMinVersion),
-			Details:         "inv-hades-175 enforces Hermes Agent >=" + HermesMinVersion + ". Found older version.",
+			Details:         "invariant enforces Hermes Agent >=" + HermesMinVersion + ". Found older version.",
 			RemediationHint: "Upgrade Hermes Agent: `brew upgrade hermes-agent` (macOS) or follow https://hermes-agent.dev/install.",
 			ExitCode:        3,
 		}

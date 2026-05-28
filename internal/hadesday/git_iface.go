@@ -3,7 +3,7 @@
 //
 // All non-hadesday source dependencies live behind thin local interfaces.
 // Production wiring adapts the canonical concrete types from
-// internal/{inbox,scheduler,eventlog} + release dispatcheradapter; tests
+// internal/{inbox,scheduler,eventlog} + HADES design dispatcheradapter; tests
 // substitute fakes (per invariant, hadesday/ never imports
 // internal/store).
 package hadesday

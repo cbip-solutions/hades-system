@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_knowledge_p9.go
 //
-// Adds `hades doctor knowledge aggregator` subcommand — a leaf under the release
+// Adds `hades doctor knowledge aggregator` subcommand — a leaf under the HADES design
 // `hades doctor knowledge` group. RunKnowledgeAggregatorProbe delegates to
 // AggregatorProber declared in probe.go; 4 results:
 //
@@ -25,7 +25,7 @@
 // # Naming
 //
 // File suffix _p9 because doctor_knowledge.go already ships
-// ( Task J-3: 5-aspect KnowledgeProber for the per-project knowledge
+// ( task: 5-aspect KnowledgeProber for the per-project knowledge
 // index). This file extends the same `hades doctor knowledge` group with the
 package cli
 
@@ -67,7 +67,7 @@ func RunKnowledgeAggregatorProbe(ctx context.Context, deps DoctorDeps) ([]ProbeR
 func NewDoctorKnowledgeAggregatorCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "aggregator",
-		Short: "Knowledge aggregator health (Plan 9: sqlite-vec + embedding model + FTS5 index + pinned notes)",
+		Short: "Knowledge aggregator health (HADES design: sqlite-vec + embedding model + FTS5 index + pinned notes)",
 		Long: `Run 4 knowledge aggregator checks (spec §6.2):
 
   knowledge.aggregator.sqlite_vec_loaded      OK if extension loaded at daemon start; FAIL otherwise

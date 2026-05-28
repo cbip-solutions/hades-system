@@ -17,7 +17,7 @@
 // CI gates; JSON output is intentionally deferred until surfaces
 // progress streaming.
 //
-// Exit codes (per spec §6.2):
+// Exit codes (per design contract):
 //
 // 0 success
 // 1 operator-recoverable: 404 (unknown ecosystem) / 422 (validation)

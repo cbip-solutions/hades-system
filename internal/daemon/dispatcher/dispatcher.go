@@ -50,7 +50,7 @@ type CostEvent struct {
 	Profile string
 
 	// Provider is the registry name of the backend that handled (or
-	// attempted) this request — Backend.Name(). Added in release
+	// attempted) this request — Backend.Name(). Added in HADES design
 	// (frozen contract C8): the dispatcher cascade iterates named
 	// providers and the circuit breaker decides at Name granularity, so
 	// cost MUST be attributable per-provider. Always populated, even on

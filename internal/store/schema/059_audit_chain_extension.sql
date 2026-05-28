@@ -1,5 +1,5 @@
 -- schemaVersion: 29
--- HADES design release track — audit_events_raw chain integration (Q3 C decision).
+-- HADES design stage — audit_events_raw chain integration (design choice C decision).
 --
 -- Adds four chain columns + REFUSE triggers + monthly partition view +
 -- audit_partition_seals CRUD table. Chain hashes are computed in

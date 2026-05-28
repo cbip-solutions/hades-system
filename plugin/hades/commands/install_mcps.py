@@ -24,7 +24,7 @@ SNIPPET_PATH = Path(__file__).resolve().parent.parent / "hermes-config-snippet.y
 PROVIDER_PLUGIN_SRC = Path(__file__).resolve().parent.parent / "providers"
 
 # Hermes config keys we manage. Listed for verifiability + auditability.
-# PROVIDER_NAME stays as "hades-system" per spec §Q3 BORDERLINE — keychain
+# PROVIDER_NAME stays as "hades-system" per design contract— keychain
 # service prefix + provider-registration name preserved for operator
 # re-provisioning friction; full borderline migration deferred to HADES design+N.
 PROVIDER_NAME = "hades-system"
@@ -115,7 +115,7 @@ def _run_hermes_mcp_add(name: str, entry: dict) -> tuple[bool, str]:
 
 
 # ---------------------------------------------------------------------------
-# release track extension (2026-05-15): provider plugin symlink + config.yaml wiring
+# stage extension (2026-05-15): provider plugin symlink + config.yaml wiring
 # ---------------------------------------------------------------------------
 
 
@@ -140,7 +140,7 @@ def _install_provider_plugin_symlink(hermes_home: Path) -> tuple[bool, str]:
 
     Creates (or replaces) ``<hermes_home>/plugins/model-providers/hades-system
     -> <repo>/plugin/hades/providers``. Target name stays as ``hades-system``
-    per spec §Q3 BORDERLINE (keychain/provider-name preservation; see the
+    per design contract(keychain/provider-name preservation; see the
     constant PROVIDER_NAME above). Refuses to clobber a real (non-symlink)
     directory at that path — operator-managed installs (e.g. ``make
     plugin-install`` copy mode) win.
@@ -364,7 +364,7 @@ def handle_install_mcps(raw_args: str) -> str | None:
             any_failed = True
     out.append("")
 
-    # release track extension (2026-05-15): wire the ProviderProfile end-to-end.
+    # stage extension (2026-05-15): wire the ProviderProfile end-to-end.
     # This makes Hermes' anthropic.Anthropic SDK POST native Anthropic JSON
     # to hades-ctld's /v1/messages on next start. Closes invariant.
     hermes_home = _resolve_hermes_home()

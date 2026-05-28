@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// findroot.go — release Task A-8 helper.
+// findroot.go — HADES design task helper.
 //
 // FindProjectRoot walks up the filesystem from `start` looking for an
 // ancestor directory that contains EITHER `hadessystem.toml` OR a `.git`
@@ -7,7 +7,7 @@
 // ancestor that matches, or an error if neither marker is found before
 // reaching the filesystem root.
 //
-// Used by the CLI doctor subcommand (Task A-8) when the operator runs
+// Used by the CLI doctor subcommand (task) when the operator runs
 // `hades project doctor` (no alias arg) from a subdirectory of a project:
 // the daemon needs the project root to compute the canonical sha256
 // project_id consistently regardless of which subdirectory the operator

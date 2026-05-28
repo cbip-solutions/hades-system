@@ -2,7 +2,7 @@
 // Package cli — doctor_audit_backup.go
 //
 // Reports per-project backup-substrate health (litestream replica age,
-// Tessera rsync age, cold archive age, S3 reachability) per spec §6.2
+// Tessera rsync age, cold archive age, S3 reachability) per design contract
 // lines 1527-1540. Status escalation logic lives in
 // internal/audit/recovery/doctor.go::RunDoctorAuditBackup so it can be
 // unit-tested under -race -count=2 against stub BackupStatus
@@ -32,7 +32,7 @@ func doctorAuditBackupCmd() *cobra.Command {
 		Use:   "audit.backup",
 		Short: "audit backup substrate health (litestream + tessera rsync + cold archive)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Audit backup (Plan 9)", runAuditBackupChecks)
+			return runOneSection(cmd, "Audit backup (HADES design)", runAuditBackupChecks)
 		},
 	}
 }

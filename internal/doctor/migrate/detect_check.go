@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package migrate (internal/doctor/migrate) ships the
 // `claude-code-install-detected` doctor check (info-level hint). This is
-// the release surface-migration auto-detection per SOTA-2 "surface
-// migration when state detected" pattern (Q1=C rationale).
+// the HADES design surface-migration auto-detection per SOTA-2 "surface
+// migration when state detected" pattern (design choice rationale).
 //
 // Boundary (invariant): migrate doctor sub-package consumes ONLY
 // internal/doctor/check; MUST NOT import internal/store. The check is
@@ -45,7 +45,7 @@ func (c *DetectCheck) Name() string { return "claude-code.install-detected" }
 func (c *DetectCheck) Category() check.Category { return check.CategoryHints }
 
 func (c *DetectCheck) Description() string {
-	return "Claude Code install detected at ~/.claude/ (auto-surface migrate hint per SOTA-2)"
+	return "Claude Code install detected at ~/local agent config/ (auto-surface migrate hint per SOTA-2)"
 }
 
 func (c *DetectCheck) IsDestructive() bool { return false }
@@ -65,10 +65,10 @@ func (c *DetectCheck) Run(_ context.Context) check.DiagnosticResult {
 		d.Message = "no $HOME resolvable; skipping"
 		return d
 	}
-	claudeDir := filepath.Join(c.homeDir, ".claude")
+	claudeDir := filepath.Join(c.homeDir, "local agent config")
 	info, err := os.Stat(claudeDir)
 	if err != nil || !info.IsDir() {
-		d.Message = "no ~/.claude/ detected"
+		d.Message = "no ~/local agent config/ detected"
 		return d
 	}
 
@@ -80,10 +80,10 @@ func (c *DetectCheck) Run(_ context.Context) check.DiagnosticResult {
 		}
 	}
 	if len(found) == 0 {
-		d.Message = "~/.claude/ exists but no migration markers detected"
+		d.Message = "local agent memory/ exists but no migration markers detected"
 		return d
 	}
-	d.Message = fmt.Sprintf("~/.claude/ detected with %d marker(s); migration available", len(found))
+	d.Message = fmt.Sprintf("local agent memory/ detected with %d marker(s); migration available", len(found))
 	d.Hint = "run `hades migrate claude-code --dry-run` to preview migration plan"
 	return d
 }

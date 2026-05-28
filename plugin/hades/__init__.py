@@ -42,7 +42,7 @@ def get_renderer_registry() -> RendererRegistry:
     builder, slash command handlers) to dispatch citation envelopes
     through the 6 platform renderers + markdown fallback.
 
-    release track this returns a registry pre-populated with the 6 default
+    stage this returns a registry pre-populated with the 6 default
     platform renderers (Ink/Telegram/Slack/Email/Voice/Web) and the
     universal markdown fallback (registry-internal)."""
     return _RENDERER_REGISTRY
@@ -62,7 +62,7 @@ def register(ctx: Any) -> None:
       brainstorm, write-plan, execute-plan, doctrine, amendment,
       impact-pre-merge, audit-impact, doctrine-drift-check, knowledge-query,
       knowledge-promote
-    - 25 slash commands under ``hades:`` namespace per spec §Q4 hard cutover:
+    - 25 slash commands under ``hades:`` namespace per design contract:
       /hades:start, /hades:handoff, /hades:install-mcps, /hades:brainstorm,
       /hades:write-plan, /hades:execute-plan, /hades:doctrine,
       /hades:amendment-{list,show,ack,deny}, /hades:impact-pre-merge,
@@ -78,12 +78,12 @@ def register(ctx: Any) -> None:
     ctx.register_hook("post_tool_call", post_tool_call)
     ctx.register_hook("pre_llm_call", pre_llm_call)
 
-    # --- HADES skin (HADES design release track) ---------------------------------------
+    # --- HADES skin (HADES design stage) ---------------------------------------
     # Deploy hades.yaml to ~/.hermes/skins/ at register-time so Hermes can
     # discover the skin via its standard user-skin loader. Activation is
-    # gated by HERMES_SKIN=hades env (set by the release track `hades` wrapper)
+    # gated by HERMES_SKIN=hades env (set by the stage `hades` wrapper)
     # and handled in the _maybe_activate_hades on_session_start hook below.
-    # Per HADES design release track B-1 amendment: Hermes v0.13.0 does not expose a
+    # Per HADES design stage B-1 amendment: Hermes v0.13.0 does not expose a
     # register_skin() Python API; YAML deployment + env-driven activation
     # is the supported plugin-contributed-skin extension path.
     try:
@@ -98,7 +98,7 @@ def register(ctx: Any) -> None:
         )
     ctx.register_hook("on_session_start", _maybe_activate_hades)
 
-    # --- HADES design release track: wizard auto-launch hook ---------------------------
+    # --- HADES design stage: wizard auto-launch hook ---------------------------
     # Third on_session_start hook. Detects first-run condition by checking
     # ~/.config/hades-system/config.toml presence + HADES_NO_WIZARD=1 escape.
     # Spawns `hades config init` subprocess (HADES design wizard surface) on trigger.
@@ -123,7 +123,7 @@ def register(ctx: Any) -> None:
         description="Snapshot hades session state to .hades/session.md, commit, optionally push.",
     )
 
-    # --- HADES design release track Task B-9: 10 NEW skills -----------------------------
+    # --- HADES design stage task: 10 NEW skills -----------------------------
     ctx.register_skill(
         "brainstorm",
         _SKILLS_DIR / "brainstorm" / "SKILL.md",
@@ -132,12 +132,12 @@ def register(ctx: Any) -> None:
     ctx.register_skill(
         "write-plan",
         _SKILLS_DIR / "write-plan" / "SKILL.md",
-        description="hades TDD-task-decomposed plan writing (master+phase files, watchdog mitigation, two-stage review)",
+        description="hades TDD-task-decomposed plan writing (master+stage files, watchdog mitigation, two-stage review)",
     )
     ctx.register_skill(
         "execute-plan",
         _SKILLS_DIR / "execute-plan" / "SKILL.md",
-        description="hades subagent-driven plan execution (release stage reality-check, per-task dispatch, review gates)",
+        description="hades subagent-driven plan execution (stage reality-check, per-task dispatch, review gates)",
     )
     ctx.register_skill(
         "doctrine",
@@ -179,7 +179,7 @@ def register(ctx: Any) -> None:
     # Note: Hermes lowercases + strips leading slash; the registered name
     # becomes ``hades:start`` after normalization (we pass the full
     # qualified form so the slash command surfaces as ``/hades:start``).
-    # release track (HADES design) completed the rebrand from the legacy namespace.
+    # stage (HADES design) completed the rebrand from the legacy namespace.
     ctx.register_command(
         "hades:start",
         handler=handle_start,
@@ -202,7 +202,7 @@ def register(ctx: Any) -> None:
         args_hint="[--json]",
     )
 
-    # --- HADES design release track Task B-3: Workflow commands -------------------------
+    # --- HADES design stage task: Workflow commands -------------------------
     from .commands.brainstorm import brainstorm_handler
     from .commands.write_plan import write_plan_handler
     from .commands.execute_plan import execute_plan_handler
@@ -222,11 +222,11 @@ def register(ctx: Any) -> None:
     ctx.register_command(
         "hades:execute-plan",
         handler=execute_plan_handler,
-        description="Execute phase plan via subagent dispatch with review gates",
+        description="Execute stage plan via subagent dispatch with review gates",
         args_hint="<plan-path>",
     )
 
-    # --- HADES design release track Task B-4: Doctrine + amendment commands -------------
+    # --- HADES design stage task: Doctrine + amendment commands -------------
     from .commands.doctrine import doctrine_handler
     from .commands.amendment_list import amendment_list_handler
     from .commands.amendment_show import amendment_show_handler
@@ -264,7 +264,7 @@ def register(ctx: Any) -> None:
         args_hint="<amendment-id> <reason>",
     )
 
-    # --- HADES design release track Task B-5: hades-specific KG commands ------------------
+    # --- HADES design stage task: hades-specific KG commands ------------------
     from .commands.impact_pre_merge import impact_pre_merge_handler
     from .commands.audit_impact import audit_impact_handler
     from .commands.doctrine_drift_check import doctrine_drift_check_handler
@@ -272,7 +272,7 @@ def register(ctx: Any) -> None:
     ctx.register_command(
         "hades:impact-pre-merge",
         handler=impact_pre_merge_handler,
-        description="Analyze blast radius of pending merge (hades-specific KG augmentation per spec §4.4)",
+        description="Analyze blast radius of pending merge (hades-specific KG augmentation per design contract)",
         args_hint="<branch>",
     )
     ctx.register_command(
@@ -288,7 +288,7 @@ def register(ctx: Any) -> None:
         args_hint="[project]",
     )
 
-    # --- HADES design release track Task B-6: Knowledge commands ------------------------
+    # --- HADES design stage task: Knowledge commands ------------------------
     from .commands.knowledge_query import knowledge_query_handler
     from .commands.knowledge_promote import knowledge_promote_handler
 
@@ -305,24 +305,24 @@ def register(ctx: Any) -> None:
         args_hint="<item-id> <reason>",
     )
 
-    # --- HADES design release track Task B-7: AFK commands ------------------------------
+    # --- HADES design stage task: AFK commands ------------------------------
     from .commands.full import full_handler
     from .commands.voice import voice_handler
 
     ctx.register_command(
         "hades:full",
         handler=full_handler,
-        description="Expand a mobile-format citation summary to full content (Q6=B AFK comprehensive)",
+        description="Expand a mobile-format citation summary to full content (design choice AFK comprehensive)",
         args_hint="<citation-id>",
     )
     ctx.register_command(
         "hades:voice",
         handler=voice_handler,
-        description="Voice memo input flow (sync if estimated <10s; async beyond) — Q6=B AFK",
+        description="Voice memo input flow (sync if estimated <10s; async beyond) — design choice AFK",
         args_hint="[query]",
     )
 
-    # --- HADES design release track Task B-8: OpenSpec commands -------------------------
+    # --- HADES design stage task: OpenSpec commands -------------------------
     from .commands.openspec_apply import openspec_apply_handler
     from .commands.openspec_archive import openspec_archive_handler
     from .commands.openspec_propose import openspec_propose_handler
@@ -343,22 +343,22 @@ def register(ctx: Any) -> None:
     ctx.register_command(
         "hades:openspec-propose",
         handler=openspec_propose_handler,
-        description="Begin the propose phase for a new feature (Modo C híbrido)",
+        description="Begin the propose stage for a new feature (Modo C híbrido)",
         args_hint="<feature-name>",
     )
     ctx.register_command(
         "hades:openspec-resume",
         handler=openspec_resume_handler,
-        description="Resume a paused propose/apply/archive phase",
+        description="Resume a paused propose/apply/archive stage",
         args_hint="<feature-name>",
     )
 
-    # --- HADES design release track: TUI dashboard + panel slash commands ---------------
+    # --- HADES design stage: TUI dashboard + panel slash commands ---------------
     # /hades:dashboard — subprocess handoff to TUI dashboard (no panel arg).
     # /hades:panel <name> — subprocess handoff to TUI dashboard with specific
     # panel; validates name against the 12-panel enum; invalid names render the
-    # release track catalog cli.arg-validation-fail block LOCALLY (release stage C-5 operator
-    # policy: no daemon /v1/errors/render roundtrip). Per spec §Q8
+    # stage catalog cli.arg-validation-fail block LOCALLY (stage C-5 operator
+    # policy: no daemon /v1/errors/render roundtrip). per design contract
     # D-pattern + HADES design A A-7 wrapper alias. Extends HADES design B's 22 commands
     # to 24.
     from .commands.dashboard import dashboard_handler
@@ -369,7 +369,7 @@ def register(ctx: Any) -> None:
         handler=dashboard_handler,
         description=(
             "Open the HADES TUI dashboard on the default panel "
-            "(lazygit-style subprocess handoff per spec §Q8 D-pattern)"
+            "(lazygit-style subprocess handoff per design contract)"
         ),
     )
     ctx.register_command(
@@ -394,7 +394,7 @@ def register(ctx: Any) -> None:
 
         ctx.register_status_provider(status_segments)
 
-    # --- Citation renderers (HADES design release track) --------------------------------
+    # --- Citation renderers (HADES design stage) --------------------------------
     # Populates the module-global RendererRegistry with the 6 default
     # platform renderers (Ink/Telegram/Slack/Email/Voice/Web). hades-side
     # callbacks consume the registry via ``get_renderer_registry()`` when

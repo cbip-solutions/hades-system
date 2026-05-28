@@ -12,7 +12,7 @@
 // all Color* constants.
 //
 // Constant NAMES are stable (e.g., ColorOK, ColorTitle, ColorBorder)
-// and their VALUES bind to spec §Q2 charcoal-monochrome-with-crimson.
+// and their VALUES bind to spec §design choice charcoal-monochrome-with-crimson.
 package palette
 
 import "github.com/charmbracelet/lipgloss"

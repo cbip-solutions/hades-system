@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // HadesSystemTransport is the daemon-side counterpart of the Python
-// ProviderTransport ABC implementation. It exposes the release dispatcher
+// ProviderTransport ABC implementation. It exposes the HADES design dispatcher
 // chain as a providers.TierBackend so the compile-anchor proves the Go
 // side honours the same contract the Python side enforces at the Hermes
 // boundary.
@@ -10,7 +10,7 @@
 // directly. HadesSystemTransport.Forward exists so daemon-internal callers
 // (future MCP-internal LLM dispatch) can route through the same single-
 // egress chokepoint without instantiating the dispatcher directly. This is
-// the same defence-in-depth pattern release uses for BypassBackend and the
+// the same defence-in-depth pattern HADES design uses for BypassBackend and the
 // providers.toml cascade backends (concrete types behind the
 // providers.TierBackend interface).
 
@@ -61,7 +61,7 @@ func (t *HadesSystemTransport) Close() error { return nil }
 
 // Name returns the stable registry key for HadesSystemTransport. MUST NOT
 // change across releases (cost_ledger.tier and audit-chain rows persist
-// this string verbatim). release discipline applies.
+// this string verbatim). HADES design discipline applies.
 func (t *HadesSystemTransport) Name() string { return "hadessystem-transport" }
 
 func (t *HadesSystemTransport) Capabilities() providers.TierCapabilities {

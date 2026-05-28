@@ -13,8 +13,8 @@ import (
 // "Compliance" suffix specifically so a code-search at review time
 // surfaces any accidental production use). The boundary is documented in
 // the package doc-comment of inv_hades_118_*_test.go and reviewed by the
-// reviewer cross-phase categories (master plan §" reviewer
-// cross-phase categories").
+// reviewer cross-stage categories (master plan §" reviewer
+// cross-stage categories").
 //
 // Why this file exists (max-scope doctrine, not a stub):
 //

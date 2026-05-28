@@ -175,7 +175,7 @@ func (e *Envelope) AuditEventURL() string {
 }
 
 // Renderer is the substrate interface implemented by markdown_fallback.go
-// and 6 platform renderers in release (Ink, Telegram, Slack,
+// and 6 platform renderers in HADES design (Ink, Telegram, Slack,
 // HTML email, voice TTS, web HTML). Render returns the platform-specific
 // rendered string (markdown for fallback; whatever output format for
 // platform-specific). Implementations MUST be deterministic given fixed

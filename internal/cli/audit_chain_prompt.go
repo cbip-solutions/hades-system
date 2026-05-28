@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain_prompt.go.
 //
-// bufio-based interactive prompt helpers used by the release interactive
+// bufio-based interactive prompt helpers used by the HADES design interactive
 // operator flows:
 // - `hades audit-chain recover` (spec §6.5 — blank defaults to N)
 // - `hades audit-chain checkpoint` (operator confirmation before emit)

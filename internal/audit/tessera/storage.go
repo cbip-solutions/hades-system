@@ -22,7 +22,7 @@ var posixDriverFactory = func(ctx context.Context, cfg posix.Config) (tessera.Dr
 // storage layer (without standing up Tessera) AND so future phases can
 // swap the backend (hosted Tessera, etc.) without touching Adapter.
 //
-// Per spec §7.4 the backing directory MUST have perms 0o700; we re-stat
+// per design contract; we re-stat
 // at Open time and refuse looser perms (defense in depth on top of the
 // 0o700 dir creation NewProjectAdapter performs).
 //

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // auto-resume scheduler. The four legitimate scopes are
-// project / doctrine / stage / worker_id (per spec §2.2). Any other
+// project / doctrine / stage / worker_id (per design contract). Any other
 // scope name is rejected; the storage layer is free-text but the
 // engine guards.
 //

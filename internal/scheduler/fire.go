@@ -27,7 +27,7 @@ type FireDeps struct {
 }
 
 // Fire orchestrates one fire attempt for s. The orchestration pipeline
-// (spec §3.2 / Task D-12):
+// (spec §3.2 / task):
 //
 // 1. Resolve EffectiveMissPolicy(s, doctrine) — invariant.
 // 2. Compute MissedFire via ComputeMissed(s, now).
@@ -69,7 +69,7 @@ type FireDeps struct {
 // locked, network error from quota adapter). Callers MUST use
 // errors.Is on the sentinels.
 //
-// Inv-hades-080 / invariant / invariant contract.
+// invariant / invariant / invariant contract.
 func Fire(ctx context.Context, s *Schedule, deps FireDeps) error {
 
 	_ = jitterDeterministicSentinel

@@ -4,7 +4,7 @@
 // Doctrine TOML loader extension for the merge engine.
 //
 // This file extends the existing doctrine TOML schema with the [merge.*]
-// sub-tree per spec §2.5 (hades-system-release-merge-engine-design). It supports:
+// sub-tree per design contract(hades-system-HADES design). It supports:
 //
 // - Loading a [merge] block from a TOML blob (LoadMergeDoctrineFromTOML).
 // - Per-project TIGHTEN-only overrides (ApplyOverride):
@@ -21,7 +21,7 @@
 //
 // invariant: TIGHTEN-only doctrine override on per-project overrides.
 // invariant: ADR range — see architecture records for the substantive
-// + reservation ADRs covering release doctrine-tunable surfaces.
+// + reservation ADRs covering HADES design doctrine-tunable surfaces.
 package config
 
 import (

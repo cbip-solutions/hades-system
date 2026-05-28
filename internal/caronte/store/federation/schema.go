@@ -4,29 +4,7 @@ package federation
 func schemaStatements() []string {
 	return []string{
 
-		`CREATE TABLE IF NOT EXISTS caronte_workspaces (
-  workspace_id    TEXT PRIMARY KEY,
-  owning_project  TEXT NOT NULL,
-  policy_locked   INTEGER NOT NULL,
-  created_at      INTEGER NOT NULL,
-  schema_version  INTEGER NOT NULL,
-  -- policy_text: operator-mutable policy carrier (JSON-encoded doctrine
-  --             snapshot). Distinct from policy_locked (which is the
-  --             registration-time snapshot, immutable). SetWorkspacePolicy
-  --             writes here; GetWorkspacePolicy reads here. NULLABLE so a
-  --             workspace registered before a policy is set has no row drift.
-  policy_text     TEXT,
-  -- enable_graphql_node_fallback: Plan 20 Phase G inv-hades-272 opt-in flag.
-  --              When 1, the bcdetect graphql detector MAY shell out to
-  --              node graphql-inspector when the Go path returns
-  --              SevInsufficient AND the workspace consents. When 0
-  --              (default), the graphql detector returns SevInsufficient
-  --              verbatim and the operator sees the unclassified rule
-  --              surfaced. The bcdetect package consults this via the
-  --              workspace seam; Phase I hades workspace policy set surfaces
-  --              the operator-facing knob.
-  enable_graphql_node_fallback INTEGER NOT NULL DEFAULT 0
-)`,
+		"CREATE TABLE IF NOT EXISTS caronte_workspaces (\n  workspace_id    TEXT PRIMARY KEY,\n  owning_project  TEXT NOT NULL,\n  policy_locked   INTEGER NOT NULL,\n  created_at      INTEGER NOT NULL,\n  schema_version  INTEGER NOT NULL,\n  -- policy_text: operator-mutable policy carrier (JSON-encoded doctrine\n  --             snapshot). Distinct from policy_locked (which is the\n  --             registration-time snapshot, immutable). SetWorkspacePolicy\n  --             writes here; GetWorkspacePolicy reads here. NULLABLE so a\n  --             workspace registered before a policy is set has no row drift.\n  policy_text     TEXT,\n  -- enable_graphql_node_fallback: HADES design stage invariant opt-in flag.\n  --              When 1, the bcdetect graphql detector MAY shell out to\n  --              node graphql-inspector when the Go path returns\n  --              SevInsufficient AND the workspace consents. When 0\n  --              (default), the graphql detector returns SevInsufficient\n  --              verbatim and the operator sees the unclassified rule\n  --              surfaced. The bcdetect package consults this via the\n  --              workspace seam; stage hades workspace policy set surfaces\n  --              the operator-facing knob.\n  enable_graphql_node_fallback INTEGER NOT NULL DEFAULT 0\n)",
 
 		`CREATE TABLE IF NOT EXISTS caronte_workspace_members (
   workspace_id    TEXT NOT NULL,

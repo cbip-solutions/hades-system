@@ -20,11 +20,11 @@ func CorruptPayloadCount() uint64 {
 	return corruptPayloadCount.Load()
 }
 
-// Event is the canonical in-memory shape consumers across release phases
+// Event is the canonical in-memory shape consumers across HADES design phases
 // (B, D, E, F, G, H, K, M) construct + emit. It is the LOAD-BEARING wire
 // shape between orchestrator subsystems.
 //
-// Distinction from Record (the durable wire shape from Task A-3):
+// Distinction from Record (the durable wire shape from task):
 // - Event carries an unmarshaled Payload map for ergonomics; Append
 // marshals to JSON before writing the Record.
 // - Event.Timestamp is time.Time for caller convenience; Record.Timestamp

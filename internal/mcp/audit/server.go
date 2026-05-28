@@ -70,7 +70,7 @@ func NewServer(cfg ServerConfig) (*Server, error) {
 	if len(cfg.ReviewerFamilyPool) < cfg.MinPoolSize+1 {
 		return nil, fmt.Errorf(
 			"audit: ReviewerFamilyPool has %d entries but needs >= %d (MinPoolSize+1=%d) "+
-				"to guarantee inv-hades-080 for any generator family",
+				"to guarantee invariant for any generator family",
 			len(cfg.ReviewerFamilyPool), cfg.MinPoolSize+1, cfg.MinPoolSize+1,
 		)
 	}
@@ -92,7 +92,7 @@ func NewServer(cfg ServerConfig) (*Server, error) {
 
 	mcp.AddTool(sdk, &mcp.Tool{
 		Name:        "audit_review",
-		Description: "Review a diff using a cross-provider family-disjoint reviewer. Returns a structured verdict (classification, concerns, suggestions, reviewer_provider, reviewer_model). Generator provider family is excluded from the reviewer pool (inv-hades-080).",
+		Description: "Review a diff using a cross-provider family-disjoint reviewer. Returns a structured verdict (classification, concerns, suggestions, reviewer_provider, reviewer_model). Generator provider family is excluded from the reviewer pool (invariant).",
 		InputSchema: auditReviewInputSchema(criteria.Names()),
 	}, func(ctx context.Context, _ *mcp.CallToolRequest, args map[string]any) (*mcp.CallToolResult, any, error) {
 		req, err := parseAuditRequestFromParams(args)
@@ -148,7 +148,7 @@ func (s *Server) handleAuditReview(ctx context.Context, req AuditRequest) (Audit
 		case EmptyPoolHardStop:
 			return AuditResponse{}, fmt.Errorf(
 				"audit: hard-stop — disjoint reviewer pool empty for generator %q "+
-					"(inv-hades-080; requires >= %d disjoint families): %w",
+					"(invariant; requires >= %d disjoint families): %w",
 				req.GeneratorProviderFamily, s.cfg.MinPoolSize, err,
 			)
 		case EmptyPoolWarnAndDegrade:
@@ -282,7 +282,7 @@ func auditReviewInputSchema(criteriaNames []string) map[string]any {
 			},
 			"generator_provider_family": map[string]any{
 				"type":        "string",
-				"description": "Provider family that generated the diff (e.g. anthropic, google, deepseek). Excluded from reviewer pool per inv-hades-080.",
+				"description": "Provider family that generated the diff (e.g. anthropic, google, deepseek). Excluded from reviewer pool per invariant.",
 			},
 		},
 		"required":             []string{"diff", "generator_provider_family"},

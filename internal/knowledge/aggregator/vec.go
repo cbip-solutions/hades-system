@@ -11,7 +11,7 @@
 // 1. float32SliceBytes encodes the query vector as little-endian IEEE-754 bytes
 // so it can be bound to the MATCH parameter of the sqlite-vec vec0 virtual
 // table. sqlite-vec accepts raw bytes in this format from Go via the mattn
-// driver (confirmed via D-2 probe and release plan-file §D-4
+// driver (confirmed via D-2 probe and HADES design plan-file §D-4
 // schema check).
 //
 // 2. Threshold filtering (cosine_similarity ≥ threshold) is done in Go after

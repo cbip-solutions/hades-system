@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package lint — no_cross_project_at_tessera.go
 //
-// Task J-9: custom go vet analyzer enforcing invariant
+// task: custom go vet analyzer enforcing invariant
 // (per-project Tessera tile-log isolation; *Adapter exported methods
 // MUST key tile reads by a.projectID).
 //
@@ -27,10 +27,8 @@ import (
 
 var NoCrossProjectAtTesseraAnalyzer = &analysis.Analyzer{
 	Name: "noCrossProjectAtTessera",
-	Doc: `Enforces inv-hades-144: *Adapter exported methods in internal/audit/tessera
-MUST key tile reads by constructor-bound a.projectID. Methods accepting an
-external projectID parameter (otherProjectID, targetProjectID, etc.) are
-forbidden — they enable cross-project blast radius.`,
+	Doc:  "Enforces invariant: *Adapter exported methods in internal/audit/tessera\nMUST key tile reads by constructor-bound a.projectID. Methods accepting an\nexternal projectID parameter (otherProjectID, targetProjectID, etc.) are\nforbidden — they enable cross-project blast radius.",
+
 	Run: runNoCrossProjectAtTessera,
 }
 
@@ -58,7 +56,7 @@ func runNoCrossProjectAtTessera(pass *analysis.Pass) (any, error) {
 			for _, param := range fn.Type.Params.List {
 				if isExternalProjectIDParam(param) {
 					pass.Reportf(fn.Pos(),
-						"inv-hades-144: *Adapter exported method reads tiles NOT keyed by a.projectID; param %s shadows receiver project_id",
+						"invariant: *Adapter exported method reads tiles NOT keyed by a.projectID; param %s shadows receiver project_id",
 						joinParamNames(param))
 					break
 				}

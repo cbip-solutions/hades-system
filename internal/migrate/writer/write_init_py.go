@@ -9,7 +9,7 @@ import (
 
 // renderInitPy generates plugin/hades/__init__.py with a register(ctx)
 // function containing the accumulated ctx.register_skill/command/hook calls
-// per spec §8.5 PluginManifest + Hermes spike §5-6. Deterministic: calls
+// per design contract§5-6. Deterministic: calls
 // are sorted lexicographically before emission; imports auto-derived from
 // any `handler=<X>_handler` references in the calls slice.
 //
@@ -29,7 +29,7 @@ import (
 // `hades:<name>`, `hades-system:<name>` becomes `hades:<name>`, and
 // already-`hades:` names are left unchanged (idempotent).
 // register_skill calls are NOT touched (skill names live in a separate
-// namespace per spec §"Cross-phase type discipline").
+// namespace per spec §"Cross-stage type discipline").
 func renderInitPy(calls []string) []byte {
 
 	calls = normalizeSlashNamespace(calls)

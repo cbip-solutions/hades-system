@@ -23,7 +23,7 @@
 //
 // Naming note:
 //
-// The release doctor_audit.go declares `doctorAuditCmd()` with Use="audit"
+// The HADES design doctor_audit.go declares `doctorAuditCmd()` with Use="audit"
 // . This file
 // exports NewDoctorAuditCmd() as a SEPARATE exportable group builder that
 // callers (cmd/hades) may register under a parent command. The two commands do
@@ -108,19 +108,8 @@ func RunAuditChainIntegrityProbe(ctx context.Context, deps DoctorDeps) ([]ProbeR
 func NewDoctorAuditCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "audit",
-		Short: "Audit substrate health (Plan 9: tessera tile-log + Litestream backup + chain integrity)",
-		Long: `Audit substrate health checks per Plan 9 Phase J spec §6.2.
-
-Sub-commands:
-  tessera         — daemon witness key health + per-project STH age + daemon-global checkpoint freshness
-  backup          — Litestream replication lag + cold archive age + S3 reachability
-  chain-integrity — last verify-chain age + tamper events count + last recovery action
-
-Each check returns OK / WARN / FAIL severity with doctrine-tuned thresholds.
-Use --strict (inherited from parent) to promote WARN to FAIL-equivalent for CI gating.
-
-Prober interfaces are declared in internal/cli/probe.go; production wiring in
-cmd/hades-ctld/main.go. Until wired, invoking a sub-command returns an error.`,
+		Short: "Audit substrate health (HADES design: tessera tile-log + Litestream backup + chain integrity)",
+		Long:  "Audit substrate health checks per HADES design stage spec §6.2.\n\nSub-commands:\n  tessera         — daemon witness key health + per-project STH age + daemon-global checkpoint freshness\n  backup          — Litestream replication lag + cold archive age + S3 reachability\n  chain-integrity — last verify-chain age + tamper events count + last recovery action\n\nEach check returns OK / WARN / FAIL severity with doctrine-tuned thresholds.\nUse --strict (inherited from parent) to promote WARN to FAIL-equivalent for CI gating.\n\nProber interfaces are declared in internal/cli/probe.go; production wiring in\ncmd/hades-ctld/main.go. Until wired, invoking a sub-command returns an error.",
 	}
 	cmd.AddCommand(newDoctorAuditTesseraCmd())
 	cmd.AddCommand(newDoctorAuditBackupCmd())

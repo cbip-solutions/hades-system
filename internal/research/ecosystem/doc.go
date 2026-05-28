@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/research/ecosystem/doc.go
 //
-// Package ecosystem implements release — ecosystem-documentation RAG
+// Package ecosystem implements HADES design — ecosystem-documentation RAG
 // (Layer 4 of the 4-tier knowledge-aggregator boundary; see
 // docs/operations/knowledge-aggregator-boundary.md).
 //
@@ -39,12 +39,12 @@
 //
 // # 15 invariants (invariant..205)
 //
-// See internal design record §5.
+// See design records design §5.
 // Compile-time enforced where applicable ( vet analyzer
 // `no_web_in_ecosystem` for invariant); runtime enforced via property
 // tests; CI enforced via tests/property/ecosystem/ + tests/compliance/.
 //
-// # Phase status (frozen at write time)
+// # stage status (frozen at write time)
 //
 // (foundation): types + interface skeletons + EventType slots 92-99
 // - Revalidator.Fetch primitive + schema migrations + per-source TTL config

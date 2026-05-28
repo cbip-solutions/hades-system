@@ -2,18 +2,18 @@
 // Package cli — state_xdg.go.
 //
 // `hades state list` + `hades state cleanup` are the XDG state-retention
-// surface per Q12=D + invariant. The manifest leaves
+// surface per design choice + invariant. The manifest leaves
 // (show/regenerate/verify/pin/history) live in state.go + sibling
 // files; this file isolates the XDG-state retention leaves.
 //
-// XDG state paths resolved per spec §2.12:
+// XDG state paths resolved per design contract:
 //
 // $XDG_STATE_HOME/hades-system (default ~/.local/state/hades-system)
 // $XDG_CACHE_HOME/hades-system (default ~/.cache/hades-system)
 //
 // Retention defaults: doctor-backups 30d / migrate-backups 30d /
-// spike-artifacts indefinite / cache 7d. release doctrine TOML override
-// at [state.backup_retention] tunes per-subsystem (release+ wiring
+// spike-artifacts indefinite / cache 7d. HADES design doctrine TOML override
+// at [state.backup_retention] tunes per-subsystem (HADES design wiring
 // loads the override from the active doctrine bundle).
 package cli
 
@@ -35,7 +35,7 @@ func newStateListCmd() *cobra.Command {
 	var jsonOutput bool
 	cmd := &cobra.Command{
 		Use:   "list",
-		Short: "Enumerate XDG state dirs with sizes + ages + paths (Plan 13 F7)",
+		Short: "Enumerate XDG state dirs with sizes + ages + paths (HADES design F7)",
 		Long: `List entries under $XDG_STATE_HOME/hades-system + $XDG_CACHE_HOME/hades-system.
 
 Subsystems enumerated:
@@ -69,26 +69,9 @@ func newStateCleanupCmd() *cobra.Command {
 	var keepIDs []string
 	cmd := &cobra.Command{
 		Use:   "cleanup",
-		Short: "Apply retention policy to XDG state dirs (Q12=D + inv-hades-187)",
-		Long: `Apply the retention policy to XDG state dirs (doctor-backups,
-migrate-backups, spike-artifacts, cache).
+		Short: "Apply retention policy to XDG state dirs (design choice + invariant)",
+		Long:  "Apply the retention policy to XDG state dirs (doctor-backups,\nmigrate-backups, spike-artifacts, cache).\n\nDefaults (per design contract):\n  doctor-backups   30d\n  migrate-backups  30d\n  spike-artifacts  indefinite\n  cache            7d LRU\n\nHADES design doctrine TOML [state.backup_retention] tunes per-subsystem (Plan\n14+ wiring will load the override automatically; the current command\napplies the default policy unless --override-* flags are added).\n\nUse --dry-run to preview without deleting. Use --keep=ID (repeatable)\nto except specific backup IDs from expiration.\n\nAudit chain emits evt.state.cleanup.deleted per expired entry (best-effort;\ndaemon-down logs warning + continues — the cleanup itself is the\nauthoritative effect; the audit emit is for forensic trace).",
 
-Defaults (per spec §2.12):
-  doctor-backups   30d
-  migrate-backups  30d
-  spike-artifacts  indefinite
-  cache            7d LRU
-
-Plan 8 doctrine TOML [state.backup_retention] tunes per-subsystem (Plan
-14+ wiring will load the override automatically; the current command
-applies the default policy unless --override-* flags are added).
-
-Use --dry-run to preview without deleting. Use --keep=ID (repeatable)
-to except specific backup IDs from expiration.
-
-Audit chain emits evt.state.cleanup.deleted per expired entry (best-effort;
-daemon-down logs warning + continues — the cleanup itself is the
-authoritative effect; the audit emit is for forensic trace).`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			stateDir, cacheDir := resolveXDGPaths()
 			ctx, cancel := context.WithTimeout(cmd.Context(), 60*time.Second)

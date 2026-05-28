@@ -1,5 +1,5 @@
 -- Migration 052: budget_pauses + budget_anomalies + budget_anomaly_samples
--- (HADES design release track, Q6 C, invariant + invariant).
+-- (HADES design stage, design choice C, invariant + invariant).
 --
 -- budget_pauses: durable 4-scope state machine. (scope, scope_value)
 -- is the natural key; UPSERT replaces the row on Trigger if the same
@@ -7,7 +7,7 @@
 -- pause — second reason replaces first to surface freshest cause).
 -- auto_resume_at = 0 means "indefinite, requires explicit Resume".
 --
--- The four legitimate scopes (per spec §2.2) are project / doctrine /
+-- The four legitimate scopes (per design contract) are project / doctrine /
 -- stage / worker_id. The storage layer is free-text (defensive against
 -- future taxonomy additions); the engine layer (internal/budget/pause.go)
 -- guards via ValidPauseScopes.
@@ -44,7 +44,7 @@ CREATE INDEX IF NOT EXISTS idx_budget_anomalies_scope
 
 -- budget_anomaly_samples: per-scope rolling window of cost-delta samples.
 -- Engine queries this via QueryAnomalyWindow with LIMIT N to feed the
--- z-score computation. Bounded by housekeeping vacuum (HADES design release track
+-- z-score computation. Bounded by housekeeping vacuum (HADES design stage
 -- handler prunes >24h after default 1440 samples = 24h-of-minutes).
 CREATE TABLE IF NOT EXISTS budget_anomaly_samples (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,

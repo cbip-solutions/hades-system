@@ -40,7 +40,7 @@ func (w *WorkspaceFederationDB) DB() *sql.DB { return w.db }
 func federationBoundarySentinel() error { return nil }
 
 // Open creates (or opens) the workspace.db at statePath using the
-// mattn+sqlite-vec single-writer-WAL posture release established
+// mattn+sqlite-vec single-writer-WAL posture HADES design established
 // (matches internal/knowledge/aggregator.Open exactly). Auto-creates the
 // parent directory at 0o700, opens the handle, pings, materializes the
 // C-2 schema via Init, then applies any caller-supplied Options (which

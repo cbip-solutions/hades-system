@@ -61,7 +61,7 @@ func (a *Accessor) Active() *v1.Schema {
 	panic(fmt.Sprintf(
 		"doctrine/active: Accessor.Active() called before SetRegistry "+
 			"or registry missing built-in \"max-scope\" entry; "+
-			"this is an inv-hades-134 init-order violation. Daemon startup "+
+			"this is an invariant init-order violation. Daemon startup "+
 			"MUST call SetRegistry(builtin.LoadAll()) before any consumer "+
 			"reads. registry=%v", a.registry.Load()))
 }
@@ -93,7 +93,7 @@ func SetUserDefault(name string) error {
 
 // SetForProject installs the per-project effective doctrine for
 // projectID. The schema MUST already be merged (baseline + override) by
-// the caller (daemon startup OR reload OR release amendment
+// the caller (daemon startup OR reload OR HADES design amendment
 // applier in ); only stores + retrieves the pointer,
 // never performs merge.
 //
@@ -110,13 +110,13 @@ func SetUserDefault(name string) error {
 //
 // Called by:
 //
-// - daemon startup per spec §3.1 step 4 (one call per project with a
+// - daemon startup per design contract(one call per project with a
 // `<project>/.hades/doctrine-override.toml` file present).
 //
 // - reload after file-watcher detects override file change
 // and the re-merge succeeds + ValidateTighten passes.
 //
-// - release Applier after amendment
+// - HADES design Applier after amendment
 // write succeeds.
 func (a *Accessor) SetForProject(projectID string, schema *v1.Schema) {
 	if schema == nil {
@@ -163,7 +163,7 @@ func (a *Accessor) For(projectID string) *v1.Schema {
 	panic(fmt.Sprintf(
 		"doctrine/active: Accessor.For(%q) called before SetRegistry "+
 			"or registry missing built-in \"max-scope\" entry; "+
-			"this is an inv-hades-134 init-order violation",
+			"this is an invariant init-order violation",
 		projectID))
 }
 
@@ -198,7 +198,7 @@ func ClearForProject(projectID string) {
 //
 // Semantics vs the related Accessor methods:
 //
-// - Active() / For(projectID) — Q7 C hybrid resolution: per-project
+// - Active() / For(projectID) — design choice C hybrid resolution: per-project
 // override → userDefault → registry["max-scope"] fallback. PANICS
 // on init-order violation (invariant guard).
 //

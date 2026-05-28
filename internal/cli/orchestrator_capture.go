@@ -22,7 +22,7 @@ func orchCaptureCmd() *cobra.Command {
 	var sessionID, output string
 	cmd := &cobra.Command{
 		Use:   "capture",
-		Short: "Capture a session's events to a JSONL fixture (Phase O replay)",
+		Short: "Capture a session's events to a JSONL fixture (stage replay)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if sessionID == "" || output == "" {
 				return errors.New("--session-id and --output are required")

@@ -2,7 +2,7 @@
 // Package hadesday — cost ledger contract.
 //
 // The local CostStore interface is the boundary between the hadesday
-// package and release's dispatcheradapter.CostStore. Production wiring
+// package and HADES design's dispatcheradapter.CostStore. Production wiring
 // adapts the dispatcher's concrete cost-ledger reader; tests substitute
 // in-memory fakes (per invariant, hadesday/ never imports
 // internal/store).
@@ -15,8 +15,8 @@ import (
 
 // CostStatus is the snapshot renders as rank-4 cost-cap-warning
 // items. Sourced's cost ledger via dispatcheradapter.CostStore;
-// only projects with PercentUsed ≥ 80 are emitted as items per spec §1
-// Q14 B (max 2 shown after sorting by % desc).
+// only projects with PercentUsed ≥ 80 are emitted as items per design contract
+// design choice B (max 2 shown after sorting by % desc).
 //
 // PercentUsed semantics: 0..100 inclusive; values <80 are filtered out by
 // collectCostLeg before cap is applied. Values >100 are clamped at the

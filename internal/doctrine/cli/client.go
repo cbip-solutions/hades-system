@@ -7,7 +7,7 @@
 //
 // The wrapper intentionally lives under internal/doctrine/cli/ (NOT under
 // internal/client/) so owns its full request/response surface
-// without fighting release v1's existing internal/client/doctrine.go
+// without fighting HADES design v1's existing internal/client/doctrine.go
 // . will collapse
 // the v1+v2 client surfaces; until then they coexist.
 package cli
@@ -133,10 +133,10 @@ func (c *Client) Validate(ctx context.Context, againstBaseline, tomlBody string)
 	return out, err
 }
 
-// AmendmentProposal mirrors the wire format release emits at
+// AmendmentProposal mirrors the wire format HADES design emits at
 // /v1/doctrine/propose-list (defined in internal/client.DoctrineProposal).
 // declares its own typed wrapper here to keep the +K cli
-// package self-contained — the field tags MUST match release's wire bytes
+// package self-contained — the field tags MUST match HADES design's wire bytes
 // exactly. Drift surfaces as Unmarshal failures on integration tests.
 type AmendmentProposal struct {
 	ID                    string `json:"id"`
@@ -250,7 +250,7 @@ func (c *Client) Reinforce(ctx context.Context, req ReinforceReq) (client.Doctri
 		q.Set("stage", req.Stage)
 	}
 	if req.Phase != "" {
-		q.Set("phase", req.Phase)
+		q.Set("stage", req.Phase)
 	}
 	if req.PlanID != "" {
 		q.Set("plan_id", req.PlanID)

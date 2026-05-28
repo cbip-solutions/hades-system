@@ -142,7 +142,7 @@ func (p *DriftPoller) tick(ctx context.Context) error {
 		for _, win := range DaemonOwnedWindows {
 
 			if win == WindowScratch {
-				p.logger.Printf("tmuxlife.DriftPoller: scratch in DaemonOwnedWindows; inv-hades-118 violated")
+				p.logger.Printf("tmuxlife.DriftPoller: scratch in DaemonOwnedWindows; invariant violated")
 				continue
 			}
 			actual, err := p.lister.ListPanes(ctx, s.Name, win)

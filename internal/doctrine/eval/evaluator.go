@@ -8,7 +8,7 @@
 // guarantee is the emit call below; tests assert via recordingEmitter
 // count.
 //
-// Decision matrix per Q10=D + spec §2.10 3-profile baseline:
+// Decision matrix per design choice + spec §2.10 3-profile baseline:
 //
 // profile == "max-scope" → CallAllow regardless of tier
 // profile == "default":

@@ -84,7 +84,7 @@ func extToLanguageLabel(ext string) string {
 //
 // projectID MUST be canonical id_sha256 (64 hex) — the engine consumes the
 // projects_alias resolution upstream ( ProjectsAliasResolver in the
-// HTTP layer) and never sees aliases. Per spec §15, an unknown project
+// HTTP layer) and never sees aliases. per design contract, an unknown project
 // degrades to ErrProjectUnavailable + an IndexReport with ProjectID echoed
 // and Completed=false (NOT a panic).
 //

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — inbox_p7.go.
 //
-// Three routes for the release inbox operator surface:
+// Three routes for the HADES design inbox operator surface:
 //
 // POST /v1/inbox/list — list cached notifications (cross-project)
 // POST /v1/inbox/ack — acknowledge a notification by id (sets AckedAt)
@@ -16,7 +16,7 @@
 //
 // Status-code mapping (mirrors the projects_p7 + schedule_p7 patterns):
 //
-// 503 — InboxStore() not yet wired (cmd/hades-ctld registers
+// 503 — InboxStore() unavailable (cmd/hades-ctld registers
 // the adapter at boot; tests inject fakes via SetInboxStore).
 // 400 — invalid JSON / missing required fields (id, until).
 // 404 — notification id not found (ack/snooze paths surface

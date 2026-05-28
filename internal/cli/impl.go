@@ -44,10 +44,8 @@ func NewImplCmd(factory func(cmd *cobra.Command) CaronteImplClient) *cobra.Comma
 	cmd := &cobra.Command{
 		Use:   "impl <interface>",
 		Short: "Concrete implementations of an interface (VTA/CHA + confidence tier)",
-		Long: `List the concrete types that implement <interface>, resolved by static
-analysis (go/types Implements + VTA/CHA call graph). Each carries a confidence
-tier (exact_vta / exact_cha / scip_impl / heuristic_name) and a reachability
-flag. Routes via the daemon (single-egress, inv-hades-088).`,
+		Long:  "List the concrete types that implement <interface>, resolved by static\nanalysis (go/types Implements + VTA/CHA call graph). Each carries a confidence\ntier (exact_vta / exact_cha / scip_impl / heuristic_name) and a reachability\nflag. Routes via the daemon (single-egress, invariant).",
+
 		Example: `  hades impl io.Writer
   hades impl internal/providers.Backend --format json`,
 		Args: cobra.MaximumNArgs(1),

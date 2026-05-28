@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Package client — audit_p9.go.
 //
-// Typed wrappers for the 10 release audit-chain endpoints declared in
+// Typed wrappers for the 10 HADES design audit-chain endpoints declared in
 // internal/daemon/handlers/audit_p9.go. Wire types mirror the handler
 // declarations; duplication is intentional (client compiles standalone
-// without importing internal/daemon — release N convention).
+// without importing internal/daemon — HADES design N convention).
 //
 // POST /v1/audit-chain/verify-chain AuditVerifyChain
 // GET /v1/audit-chain/history AuditHistory
-// POST /v1/audit-chain/recover AuditRecover (two-phase)
+// POST /v1/audit-chain/recover AuditRecover (two-stage)
 // GET /v1/audit-chain/partition-seals AuditPartitionSeals
 // POST /v1/audit-chain/checkpoint AuditCheckpoint
 // GET /v1/audit-chain/cold-archive/list AuditColdArchiveList
@@ -167,7 +167,7 @@ func (c *Client) AuditHistory(ctx context.Context, filter AuditHistoryFilter) ([
 	return out.Items, nil
 }
 
-// AuditRecover calls POST /v1/audit-chain/recover (two-phase semantics).
+// AuditRecover calls POST /v1/audit-chain/recover (two-stage semantics).
 // confirm=false returns a preview plan only; result is nil. confirm=true
 // executes the recovery and returns both plan and result. Callers MUST
 // check result != nil before dereferencing.

@@ -1,5 +1,5 @@
 -- schemaVersion: 23
--- HADES design release track — Q2 C regression-by-self metric.
+-- HADES design stage — design choice C regression-by-self metric.
 -- Persists per-commit substrate health (test pass rate + doctrine lint outcome)
 -- so the orchestrator can detect "substrate is regressing on its own commits"
 -- — the chicken-and-egg failure mode the Anthropic Apr 23 incident exposed.
@@ -11,7 +11,7 @@
 --
 -- Boundary (invariant): writes from internal/orchestrator/safetynet/regression.go
 -- go through the SubstrateHealthWriter interface (declared in safetynet); the
--- store-side adapter lives in internal/daemon/orchestratoradapter/ (release track).
+-- store-side adapter lives in internal/daemon/orchestratoradapter/ (stage).
 
 CREATE TABLE substrate_health (
   id INTEGER PRIMARY KEY,

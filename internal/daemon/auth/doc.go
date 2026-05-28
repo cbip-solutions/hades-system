@@ -19,7 +19,7 @@
 // hash in daemon.db schedules.bearer_token_hash; cleartext shown
 // once at routine creation time and never
 // re-shown. Mismatch → 401 + ScheduleHttpTriggerAuthFailed audit
-// event (action-needed if 5+ in 1h per spec §4.3).
+// event (action-needed if 5+ in 1h per design contract).
 //
 // All three classes use crypto/subtle.ConstantTimeCompare for token
 // comparison (invariant). The package never imports internal/store

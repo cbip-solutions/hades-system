@@ -2,7 +2,7 @@
 // Package aggregator — audit chain anchor fill + format validation (D-11).
 //
 // parseAnchor validates and splits the canonical anchor string
-// `<partition>:<event_id>:<record_hash>` per the Q3-C format contract.
+// `<partition>:<event_id>:<record_hash>` per the design choice-C format contract.
 // FillAuditChainAnchor is the Aggregator method that validates the anchor
 // and delegates to PerProjectKnowledgeStore.UpdateAuditChainAnchor.
 //
@@ -10,12 +10,12 @@
 // - partitionPattern enforces YYYY_MM (e.g. "2026_05"), matching the monthly
 // audit_events_raw table naming convention from
 // - FillAuditChainAnchor explicitly allows anchor="" (clear semantics) so
-// unpromote and pre-release backfill can clear the column without producing
+// unpromote and pre-HADES design backfill can clear the column without producing
 // a parse error on the empty string.
 // - The boundary (invariant) is respected: no internal/store import.
 // All DB access goes through the PerProjectKnowledgeStore interface.
 //
-// Phase ownership: D-11. will wire a real ChainAnchorComputer at
+// stage ownership: D-11. will wire a real ChainAnchorComputer at
 // daemon-boot time; FillAuditChainAnchor is the write-back seam that closes
 // the audit-trail loop (per-project knowledge_extension.audit_chain_anchor
 // updated after a successful promote + chain.Compute).

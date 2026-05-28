@@ -2,7 +2,7 @@
 // Package cli — orchestrator_pool.go.
 //
 // `hades orchestrator pool {status,prune}` exposes the worktree pool
-// surface from Q3 + Q4 — pool counts, leased / elastic / orphan
+// surface from design choice + design choice — pool counts, leased / elastic / orphan
 // snapshot, and an explicit GC trigger via prune.
 package cli
 

@@ -3,13 +3,13 @@
 //
 // Amendment group commands: propose-list, ack, deny, revert, propose.
 //
-// Per release spec Q11 D, all amendment business logic lives in the release
+// Per HADES design spec design choice D, all amendment business logic lives in the HADES design
 // amendment package (internal/orchestrator/amendment/); the CLI is a pure
 // HTTP client to the daemon's /v1/doctrine/{propose-list,ack,deny,revert,
 // propose} routes. Boundary invariant: zero internal/orchestrator/* or
 // internal/store imports — the CLI talks JSON-only to the daemon.
 //
-// Per spec Q14 C, commands are flat-invocation (hades doctrine ack ADR-0050,
+// Per spec design choice C, commands are flat-invocation (hades doctrine ack ADR-0050,
 // not hades doctrine amendment ack ADR-0050). The cobra.Group{ID: "amendment"}
 // declared by doctrine.go organizes --help output only.
 //
@@ -19,9 +19,9 @@
 //
 // names, same body fields, same exit codes). adds:
 // - propose-list: lists pending ADR proposals from the daemon's filesystem
-// scan (release already exposes /propose-list; adds the CLI
+// scan (HADES design already exposes /propose-list; adds the CLI
 // surface with Spanish-localized table renderer + client-side filters).
-// - propose: NEW release operator-initiated manual amendment entry. release's
+// - propose: NEW HADES design operator-initiated manual amendment entry. HADES design's
 // Proposer originates telemetry-driven proposals only; propose
 // lets the operator inject a manual proposal into the same lifecycle.
 //
@@ -226,19 +226,9 @@ func ackCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "ack <adr_id>",
 		GroupID: "amendment",
-		Short:   "Acepta una enmienda de doctrina propuesta (dispara Plan 5 Applier.ApplyWithValidation)",
-		Long: `Acepta una propuesta de enmienda pendiente. El daemon ejecuta el flujo
-Plan 5 Applier.ApplyWithValidation que (1) valida con ValidateTighten
-para garantizar que el cambio respeta inv-hades-136 (overrides solo
-pueden tensar nunca relajar); (2) escribe la mutación al TOML de
-doctrina; (3) hace commit Git atómico; (4) recarga la doctrina vía
-atomic-swap (Phase G); (5) emite DoctrineAmendmentApplied en el
-eventlog Plan 5.
+		Short:   "Acepta una enmienda de doctrina propuesta (dispara HADES design Applier.ApplyWithValidation)",
+		Long:    "Acepta una propuesta de enmienda pendiente. El daemon ejecuta el flujo\nHADES design Applier.ApplyWithValidation que (1) valida con ValidateTighten\npara garantizar que el cambio respeta invariant (overrides solo\npueden tensar nunca relajar); (2) escribe la mutación al TOML de\ndoctrina; (3) hace commit Git atómico; (4) recarga la doctrina vía\natomic-swap (stage); (5) emite DoctrineAmendmentApplied en el\neventlog HADES design\n\nSi el validador rechaza (HTTP 409 + cuerpo *TightenViolation), la\npropuesta queda como \"proposed\" y el operador puede editar el override\nsubyacente o denegar la propuesta con 'hades doctrine deny ADR-NNNN\n--reason ...'.",
 
-Si el validador rechaza (HTTP 409 + cuerpo *TightenViolation), la
-propuesta queda como "proposed" y el operador puede editar el override
-subyacente o denegar la propuesta con 'hades doctrine deny ADR-NNNN
---reason ...'.`,
 		Example: " # Aceptar sin comentario\n  hades doctrine ack ADR-0050\n\n # Aceptar con justificación (visible en eventlog para auditoría)\n  hades doctrine ack ADR-0050 --reason \"telemetría confirma reducción de falsos positivos\"",
 
 		Args: cobra.MaximumNArgs(1),
@@ -277,7 +267,7 @@ subyacente o denegar la propuesta con 'hades doctrine deny ADR-NNNN
 
 // denyCmd constructs the `hades doctrine deny <adr_id> --reason...` command.
 //
-// Per release K-3 verbatim baseline, --reason is REQUIRED for deny
+// Per HADES design K-3 verbatim baseline, --reason is REQUIRED for deny
 // (operators MUST articulate rejection rationale for the audit trail).
 // The daemon writes DoctrineAmendmentSuppressed{decision="deny", reason}
 // to the eventlog and moves the ADR
@@ -287,16 +277,9 @@ func denyCmd() *cobra.Command {
 		Use:     "deny <adr_id>",
 		GroupID: "amendment",
 		Short:   "Rechaza una enmienda de doctrina propuesta (--reason obligatorio)",
-		Long: `Rechaza una propuesta de enmienda pendiente. El daemon mueve el ADR
-a docs/decisions/rejected/, registra DoctrineAmendmentSuppressed con
-decision=deny + razón en el eventlog Plan 5, e impone una ventana de
-supresión de cooldown (Plan 5 Q10 C). Una vez denegada, el
-TelemetrySubscriber respeta el cooldown antes de re-proponer la
-misma regla.
+		Long:    "Rechaza una propuesta de enmienda pendiente. El daemon mueve el ADR\na architecture records registra DoctrineAmendmentSuppressed con\ndecision=deny + razón en el eventlog HADES design, e impone una ventana de\nsupresión de cooldown (HADES design design choice C). Una vez denegada, el\nTelemetrySubscriber respeta el cooldown antes de re-proponer la\nmisma regla.\n\n--reason es obligatorio: la razón queda registrada para trazabilidad\nhistórica.",
 
---reason es obligatorio: la razón queda registrada para trazabilidad
-histórica.`,
-		Example: `  hades doctrine deny ADR-0050 --reason "propuesta agresiva; revisitar tras Plan 9 cost-degradation"`,
+		Example: "  hades doctrine deny ADR-0050 --reason \"propuesta agresiva; revisitar tras HADES design cost-degradation\"",
 		Args:    cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			adrID := ""
@@ -337,22 +320,9 @@ func revertCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "revert <adr_id>",
 		GroupID: "amendment",
-		Short:   "Revierte una enmienda de doctrina previamente aplicada (dispara Plan 5 Reverter)",
-		Long: `Revierte una enmienda en estado 'accepted'. El daemon ejecuta el
-flujo Plan 5 Reverter.Revert que (1) hace git revert atómico de la
-mutación al TOML; (2) hace rollback del snapshot doctrine.Active()
-vía la atomic-swap de Phase G; (3) emite DoctrineAmendmentReverted en
-el eventlog Plan 5 (NB: telemetry-driven autonomous reverts emiten
-DoctrineAutonomousReverted; mecánica de Phase H AutoRevert).
+		Short:   "Revierte una enmienda de doctrina previamente aplicada (dispara HADES design Reverter)",
+		Long:    "Revierte una enmienda en estado 'accepted'. El daemon ejecuta el\nflujo HADES design Reverter.Revert que (1) hace git revert atómico de la\nmutación al TOML; (2) hace rollback del snapshot doctrine.Active()\nvía la atomic-swap de stage; (3) emite DoctrineAmendmentReverted en\nel eventlog HADES design (NB: telemetry-driven autonomous reverts emiten\nDoctrineAutonomousReverted; mecánica de stage AutoRevert).\n\nSolo enmiendas en estado 'accepted' son revertibles (invariant):\nintentar revertir una propuesta 'rejected' o ya 'reverted' devuelve\nHTTP 409 con un mensaje claro.\n\n--reason es opcional: si se proporciona, queda registrado en el payload\ndel evento DoctrineAmendmentReverted; si se omite, el evento aún se\nemite con reason vacío. Para reverts vinculados a fire-drill (donde\nel contexto del audit trail ya es claro), --reason puede omitirse.",
 
-Solo enmiendas en estado 'accepted' son revertibles (inv-hades-141):
-intentar revertir una propuesta 'rejected' o ya 'reverted' devuelve
-HTTP 409 con un mensaje claro.
-
---reason es opcional: si se proporciona, queda registrado en el payload
-del evento DoctrineAmendmentReverted; si se omite, el evento aún se
-emite con reason vacío. Para reverts vinculados a fire-drill (donde
-el contexto del audit trail ya es claro), --reason puede omitirse.`,
 		Example: " # Revert sin razón (audit trail tiene contexto suficiente)\n  hades doctrine revert ADR-0050\n\n # Revert con justificación (recomendado para no-emergency reverts)\n  hades doctrine revert ADR-0050 --reason \"regresión confirmada en métricas cost-degradation tras 24h\"",
 
 		Args: cobra.MaximumNArgs(1),
@@ -406,26 +376,9 @@ func proposeCmd() *cobra.Command {
 		Use:     "propose <rule_path> <new_value>",
 		GroupID: "amendment",
 		Short:   "Crea una propuesta manual de enmienda de doctrina (entry-point operador)",
-		Long: `Crea una propuesta de enmienda manual. El daemon ejecuta el flujo
-Plan 5 Proposer (mismo path que el TelemetrySubscriber autónomo):
-redacta el ADR markdown en docs/decisions/proposed/NNNN-*.md desde el
-rango ADR-0050..0059 reservado para Plan 8 (inv-hades-103), entra al
-estado 'proposed' y queda visible vía 'hades doctrine propose-list'.
-Desde ahí sigue el ciclo estándar ack/deny/revert.
+		Long:    "Crea una propuesta de enmienda manual. El daemon ejecuta el flujo\nHADES design Proposer (mismo path que el TelemetrySubscriber autónomo):\nredacta el ADR markdown en architecture records desde el\nrango ADR-0050..0059 reservado para HADES design (invariant), entra al\nestado 'proposed' y queda visible vía 'hades doctrine propose-list'.\nDesde ahí sigue el ciclo estándar ack/deny/revert.\n\nReglas de cooldown (HADES design design choice C): cada regla tiene un cooldown\nconfigurable por doctrina (max-scope=24h, default=72h,\ncapa-firewall=1week) tras la última enmienda aplicada. Si la regla\naún está en cooldown, el daemon devuelve 429 con info estructurada\ndel tiempo restante; pasa --cooldown-override para forzar (útil cuando\nel operador conoce contexto que el Proposer autónomo no puede inferir).\n\n--justify es obligatorio (queda como cuerpo del ADR markdown para\nauditoría).\n--category es obligatorio (cost|merge|recovery; HADES design design choice C aggregator\ncategories) — determina qué aggregator monitorea esta regla para\nrevert-attribution (invariant).",
 
-Reglas de cooldown (Plan 5 Q10 C): cada regla tiene un cooldown
-configurable por doctrina (max-scope=24h, default=72h,
-capa-firewall=1week) tras la última enmienda aplicada. Si la regla
-aún está en cooldown, el daemon devuelve 429 con info estructurada
-del tiempo restante; pasa --cooldown-override para forzar (útil cuando
-el operador conoce contexto que el Proposer autónomo no puede inferir).
-
---justify es obligatorio (queda como cuerpo del ADR markdown para
-auditoría).
---category es obligatorio (cost|merge|recovery; Plan 8 Q13 C aggregator
-categories) — determina qué aggregator monitorea esta regla para
-revert-attribution (inv-hades-141).`,
-		Example: " # Propuesta manual con justificación\n  hades doctrine propose amendment.cooldown_hours 12 \\\n      --justify \"Reducir cooldown basado en telemetría P50 operator-ack\" \\\n      --category merge\n\n # Forzar override de cooldown (operador conoce contexto)\n  hades doctrine propose amendment.threshold_pct 0.04 \\\n      --justify \"Tightening preemptivo antes de Plan 9 cost-degradation\" \\\n      --category cost \\\n      --cooldown-override",
+		Example: " # Propuesta manual con justificación\n  hades doctrine propose amendment.cooldown_hours 12 \\\n      --justify \"Reducir cooldown basado en telemetría P50 operator-ack\" \\\n      --category merge\n\n # Forzar override de cooldown (operador conoce contexto)\n  hades doctrine propose amendment.threshold_pct 0.04 \\\n      --justify \"Tightening preemptivo antes de HADES design cost-degradation\" \\\n      --category cost \\\n      --cooldown-override",
 
 		Args: cobra.MaximumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -457,7 +410,7 @@ revert-attribution (inv-hades-141).`,
 				}
 			}
 			if !ok {
-				return fmt.Errorf("categoría inválida %q; valores permitidos: %s (Plan 8 Q13 C aggregator categories)",
+				return fmt.Errorf("categoría inválida %q; valores permitidos: %s (HADES design design choice C aggregator categories)",
 					category, strings.Join(validProposeCategories, ", "))
 			}
 
@@ -495,8 +448,8 @@ revert-attribution (inv-hades-141).`,
 		},
 	}
 	cmd.Flags().String("justify", "", "Justificación operador (obligatorio; queda como cuerpo del ADR markdown)")
-	cmd.Flags().String("category", "", "Categoría aggregator: cost|merge|recovery (obligatorio; Plan 8 Q13 C)")
-	cmd.Flags().Bool("cooldown-override", false, "Forzar override del cooldown per-regla (Plan 5 Q10 C escape hatch)")
+	cmd.Flags().String("category", "", "Categoría aggregator: cost|merge|recovery (obligatorio; HADES design design choice C)")
+	cmd.Flags().Bool("cooldown-override", false, "Forzar override del cooldown per-regla (HADES design design choice C escape hatch)")
 	return cmd
 }
 

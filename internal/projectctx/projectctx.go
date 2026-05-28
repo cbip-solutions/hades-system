@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package projectctx owns project-identity resolution for hades-system.
 //
-// - ProjectID — sha256 hex of canonical path (AIP-2510 canonical id, Q3).
+// - ProjectID — sha256 hex of canonical path (AIP-2510 canonical id, design choice).
 // - Alias — human alias from hadessystem.toml [project] id, with
 // fallback <dirname>-<sha256[:8]>.
 // - Project — the activated project record returned by Activate().

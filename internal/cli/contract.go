@@ -63,11 +63,9 @@ func NewContractCmd(factory func(cmd *cobra.Command) ContractClient) *cobra.Comm
 	flags := ContractFlags{}
 	cmd := &cobra.Command{
 		Use:   "contract <endpoint>",
-		Short: "Fetch an endpoint's contract artifact + extractor metadata (Plan 20 federation)",
-		Long: `Look up a Plan-20 federated endpoint by its endpoint_id. The daemon
-delegates to the Caronte engine; output is the extractor-resolved metadata
-(method/path/handler_node_id + the contract_artifact pointer + the
-extractor_id provenance). Routes via the daemon (single-egress, inv-hades-088).`,
+		Short: "Fetch an endpoint's contract artifact + extractor metadata (HADES design federation)",
+		Long:  "Look up a HADES design federated endpoint by its endpoint_id. The daemon\ndelegates to the Caronte engine; output is the extractor-resolved metadata\n(method/path/handler_node_id + the contract_artifact pointer + the\nextractor_id provenance). Routes via the daemon (single-egress, invariant).",
+
 		Example: `  hades contract repo-a:http:GET:/users/{id}
   hades contract endpoint-1 --workspace ws-1 --format json | jq '.extractor_id'`,
 		Args: cobra.MaximumNArgs(1),
@@ -140,12 +138,9 @@ func NewContractValidateCmd(factory func(cmd *cobra.Command) ContractClient) *co
 	flags := ContractValidateFlags{}
 	cmd := &cobra.Command{
 		Use:   "validate <repo>",
-		Short: "Validate the repo's caronte.yaml against schema v1 (Plan 20 §6)",
-		Long: `Validate the repo's caronte.yaml federation manifest. Refuses on:
-missing schema_version; multiple base_url variants per service entry;
-unknown target_repo; inline secrets (blacklisted field names); regex past
-MaxPatternRunes; regex-DoS pattern; invalid unresolved_policy. Routes via
-the daemon (single-egress, inv-hades-088).`,
+		Short: "Validate the repo's caronte.yaml against schema v1 (HADES design §6)",
+		Long:  "Validate the repo's caronte.yaml federation manifest. Refuses on:\nmissing schema_version; multiple base_url variants per service entry;\nunknown target_repo; inline secrets (blacklisted field names); regex past\nMaxPatternRunes; regex-DoS pattern; invalid unresolved_policy. Routes via\nthe daemon (single-egress, invariant).",
+
 		Example: `  hades contract validate /path/to/projects/backend
   hades contract validate . --workspace ws-1 --format json`,
 		Args: cobra.MaximumNArgs(1),

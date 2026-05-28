@@ -3,7 +3,7 @@
 //
 // `hades knowledge-p9 rebuild` — re-embed + re-index one project's promoted pins.
 //
-// The daemon refreshes the release global pin index synchronously and returns
+// The daemon refreshes the HADES design global pin index synchronously and returns
 // 202 Accepted with a receipt for wire compatibility. --project is required;
 // the daemon returns 400 when omitted.
 //
@@ -27,11 +27,8 @@ func knowledge9RebuildCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "rebuild",
 		Short: "Re-embed + re-index one project's promoted pins",
-		Long: `rebuild refreshes the Plan 9 global pin index for one project. The daemon
-returns 202 Accepted with a receipt after the promoted-pin FTS and vector rows
-have been rewritten.
+		Long:  "rebuild refreshes the HADES design global pin index for one project. The daemon\nreturns 202 Accepted with a receipt after the promoted-pin FTS and vector rows\nhave been rewritten.\n\n--project is required.",
 
---project is required.`,
 		Example: `  hades knowledge-p9 rebuild --project hades-system
   hades knowledge-p9 rebuild --project internal-platform-x`,
 		RunE: func(cmd *cobra.Command, _ []string) error {

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Package nostore implements noStoreImportAnalyzer for hades-system release
-// (spec §1 Q4 B + Q16 D). Subsumes invariant and generalizes to invariant.
+// Package nostore implements noStoreImportAnalyzer for hades-system HADES design
+// (spec §1 design choice B + design choice D). Subsumes invariant and generalizes to invariant.
 //
 // Detects imports of github.com/cbip-solutions/hades-system/internal/store from
 // packages OUTSIDE the bridge-adapter allowlist. The bridge pattern requires
@@ -70,8 +70,8 @@ func newFlagSet() flag.FlagSet {
 var Analyzer = &analysis.Analyzer{
 	Name: "nostore",
 	Doc: "Detects forbidden imports of internal/store from packages outside the " +
-		"bridge-adapter allowlist. Subsumes inv-hades-031 (Q16 D) and enforces " +
-		"inv-hades-133 (internal/doctrine/* ⊥ internal/store). The bridge pattern " +
+		"bridge-adapter allowlist. Subsumes invariant (design choice D) and enforces " +
+		"invariant (internal/doctrine/* ⊥ internal/store). The bridge pattern " +
 		"requires domain packages to depend on interfaces; adapter packages in " +
 		"internal/daemon/* implement those interfaces backed by internal/store.",
 	Flags:    flagSetOnce,
@@ -167,7 +167,7 @@ func run(pass *analysis.Pass) (any, error) {
 				"do NOT import %q directly. Use the bridge pattern: declare an interface "+
 				"in your domain package; implement it in an adapter package under "+
 				"internal/daemon/* (see internal/daemon/bypassadapter for the canonical "+
-				"shape). Enforces inv-hades-031 + inv-hades-133.",
+				"shape). Enforces invariant + invariant.",
 			pkgPath, forbiddenImportPath)
 	})
 

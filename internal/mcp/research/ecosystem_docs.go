@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// ecosystem_docs.go — release SHIPPED; backed by internal/research/ecosystem/Dispatcher.
+// ecosystem_docs.go — HADES design SHIPPED; backed by internal/research/ecosystem/Dispatcher.
 //
-// index, simple name/description/tag scoring). release Task F-1 rewires
+// index, simple name/description/tag scoring). HADES design task rewires
 // to the full corpus Dispatcher (embeddings, FTS5, RRF fusion, BGE reranker,
 // Bayesian abstention, citation grammar validation, symbol verification cascade,
 // LLM-judge re-pass) while preserving the existing Search() surface non-breakingly
@@ -9,7 +9,7 @@
 //
 // Migration strategy:
 // - Search() maps QueryResult.Chunks → []SourceHit (backward-compat shape so
-// existing release callers dispatch.go, server.go and main.go see no API drift).
+// existing HADES design callers dispatch.go, server.go and main.go see no API drift).
 // - Query() delegates directly to Dispatcher.Query() (new full-RAG path,
 // exposes citations, verification, abstention, provenance, audit-chain seq).
 // - When Dispatcher is nil,

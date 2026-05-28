@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package cli — day_autonomy.go.
 //
-// Renders the `[release autonomy]` section of the morning brief per
+// Renders the `[HADES design autonomy]` section of the morning brief per
 // spec §6.3. The renderer is graceful on daemon-down: rather than
 // failing the whole brief, it emits a single "daemon unreachable"
-// line. This matches release day.go pattern (the brief
+// line. This matches HADES design day.go pattern (the brief
 // always renders, even partially).
 //
 // Pulls from 4 daemon endpoints:
@@ -33,7 +33,7 @@ func newMorningBriefAutonomyRenderer(baseURL string) func(ctx context.Context) (
 	httpC, urlBase := plan5DoctorHTTPClient(baseURL)
 	return func(ctx context.Context) (string, error) {
 		var b strings.Builder
-		b.WriteString("[plan-5 autonomy]\n")
+		b.WriteString("[HADES design autonomy]\n")
 
 		var show client.AutonomyShow
 		if err := getJSONP5(ctx, httpC, urlBase+"/v1/autonomy/show", &show); err != nil {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — schedule_p7.go.
 //
-// Six routes for the release scheduler operator surface:
+// Six routes for the HADES design scheduler operator surface:
 //
 // POST /v1/schedules — create routine | task | loop
 // GET /v1/schedules — list (filter via ?alias=)
@@ -19,7 +19,7 @@
 //
 // Status-code mapping (mirrors the projects_p7 + priority patterns):
 //
-// 503 — ScheduleStore() not yet wired (cmd/hades-ctld registers
+// 503 — ScheduleStore() unavailable (cmd/hades-ctld registers
 // the adapter at boot; tests inject fakes via SetScheduleStore).
 // 400 — invalid JSON / missing required fields.
 // 404 — schedule id not found (delete / run / history paths).
@@ -412,7 +412,7 @@ func ScheduleRun(s any) http.HandlerFunc {
 		}
 
 		http.Error(w,
-			"manual run dispatch not yet configured (Phase I wires scheduler.FireDeps)",
+			"manual run dispatch not yet configured (stage wires scheduler.FireDeps)",
 			http.StatusServiceUnavailable)
 	}
 }

@@ -3,19 +3,19 @@
 //
 // Posts an Anthropic-shaped messages request to the daemon's
 // /v1/messages endpoint with X-HADES-Profile=research-synthesize.
-// Today /v1/messages is served by the release
+// Today /v1/messages is served by the HADES design
 // anthropic-bypass route — the X-HADES-Profile header is recorded for
-// audit but does NOT route requests differently per profile. release
+// audit but does NOT route requests differently per profile. HADES design
 // (orchestrator) is the future extension point that will introduce
 // per-profile multi-backend routing; this file's request shape is
 // already compatible with that future change. Doc updated post-review
-// I-2 to reflect actual current behaviour (release not yet merged on
+// I-2 to reflect actual current behaviour (HADES design not yet merged on
 // main).
 //
 // Citation extraction: best-effort scan of fenced JSON code block in
 // the response (`json {"citations":[...]}`) — captures synthesizer-
 // emitted citations for invariant verification downstream. Found
-// citations are returned as RawCitation; the cite verifier (Task I-9)
+// citations are returned as RawCitation; the cite verifier (task)
 // converts them to VerifiedCitation.
 package research
 

@@ -16,7 +16,7 @@ func doctorBudgetCmd() *cobra.Command {
 		Use:   "budget",
 		Short: "Budget engine health (events, anomaly, axes)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Budget (Plan 4)", runBudgetChecks)
+			return runOneSection(cmd, "Budget (HADES design)", runBudgetChecks)
 		},
 	}
 }

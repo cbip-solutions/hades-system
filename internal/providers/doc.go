@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package providers declares the common TierBackend interface, value
-// types, and registry that all release LLM tier backends satisfy.
+// types, and registry that all HADES design LLM tier backends satisfy.
 //
 // of: bypass.Client (Tier 1, declared in private-tier1-module),
 // anthropic-paygo native client (Tier 2), Gemini native client (Tier 3),

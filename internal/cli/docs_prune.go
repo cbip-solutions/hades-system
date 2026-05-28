@@ -6,7 +6,7 @@
 // symbols, changes, and FTS5 entries from ecosystem.db. The deleted data
 // is rebuildable via `hades docs reindex --ecosystem <X> --version <Y>`.
 //
-// Spec §0.2 + §2.9 Q9=A: "Never auto-prune". This command enforces a
+// Spec §0.2 + §2.9 design choice: "Never auto-prune". This command enforces a
 // LOAD-BEARING SAFETY GATE: the command refuses to run unless the
 // operator passes EXACTLY one of --dry-run (preview) or --confirm
 // (execute). Both flags simultaneously → error (mutually exclusive).
@@ -18,7 +18,7 @@
 // Pinned versions cannot be pruned: daemon returns 409 Conflict. The
 // CLI surfaces the operator-guidance "unpin first". The retention-aware
 // behaviour (refusing pinned versions) is daemon-enforced; this CLI
-// surface relies on the daemon's contract per spec §2.9 Q9=A and
+// surface relies on the daemon's contract per design contract=A and
 // classifyDocsError to map 409 → recoverable.
 //
 // G-5 SUPERSEDES F-6: F-6 shipped `hades docs prune --dry-run|--confirm`
@@ -31,7 +31,7 @@
 // Boundary (invariant): does NOT import internal/research/ecosystem.
 // Architecture CLI calls daemon HTTP; daemon owns the cascaded write.
 //
-// Exit codes (per spec §6.2):
+// Exit codes (per design contract):
 //
 // 0 success (dry-run preview OR confirmed delete OR operator-aborted prompt)
 // 1 recoverable: neither --dry-run nor --confirm passed (safety gate),

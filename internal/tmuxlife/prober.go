@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package tmuxlife — prober.go
 //
-// Task J-6 adapter: exposes a Prober implementation that the
+// task adapter: exposes a Prober implementation that the
 // cli/doctor_tmux.go layer consumes (cli.TmuxProber). Read-only.
 //
 // invariant anchor: ALL tmux invocations go through ExecTmux which

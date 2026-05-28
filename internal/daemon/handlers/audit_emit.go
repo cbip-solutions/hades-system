@@ -9,8 +9,8 @@
 // - AuditEmitCtx.AuditEmit() is called synchronously in the handler. The
 // daemon implementation may use a buffered-write goroutine internally
 // (1s/100-events batch); the handler contract is fire-and-accept (202).
-// - release wraps audit_events_raw with hash-chain WITHOUT migration;
-// this file remains unchanged in release.
+// - HADES design wraps audit_events_raw with hash-chain WITHOUT migration;
+// this file remains unchanged in HADES design
 // - invariant: emit no-loss is enforced at the mcp/client layer;
 // the daemon itself returns 202 on successful enqueue.
 // - invariant: Unix socket only — enforced at server.go listener level.

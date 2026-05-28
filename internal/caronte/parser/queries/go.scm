@@ -3,7 +3,7 @@
 ; and struct fields (including embedded). Each definition node is captured as
 ; @definition.<kind>; its identifier is captured as @name.<kind> so the
 ; extractor can read the symbol name from the same match. Reference edges
-; (calls / selectors / imports) are release track E concerns and are NOT in
+; (calls / selectors / imports) are stage E concerns and are NOT in
 ; this defs-only query.
 
 ; Top-level function declarations: func Foo(...) {...}

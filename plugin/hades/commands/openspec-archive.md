@@ -7,9 +7,9 @@ arguments:
     required: true
 ---
 
-# Archive phase for: {{feature_name}}
+# Archive stage for: {{feature_name}}
 
-Per spec §3.3 (Modo C híbrido):
+per design contract(Modo C híbrido):
 
 1. Trigger archive via daemon `/v1/swarms/<id>/archive`. Daemon's
    audit MCP produces archive briefing JSON.

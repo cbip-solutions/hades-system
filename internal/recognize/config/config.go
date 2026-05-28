@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// Package config implements Tier 2 of hades recognize per spec §2.4 Q4=B:
+// Package config implements Tier 2 of hades recognize per design contract=B:
 // framework-config detection (Next/Vite/Nuxt/Astro/Remix/Svelte/Angular/Gatsby).
 //
 // Vite is special-cased: vite.config.{js,mjs,ts} alone is ambiguous — could
 // be powering Vue, React, Svelte, or Astro. Disambiguation reads package.json
-// dependencies + devDependencies for framework signals. Per spec §2.4:
+// dependencies + devDependencies for framework signals. per design contract:
 // - Canonical config file + matching dep: confidence 1.0
 // - Only config file (no matching dep): confidence 0.7
 //

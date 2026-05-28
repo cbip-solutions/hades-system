@@ -16,7 +16,7 @@ import (
 // compile-anchor (the underlying transport.HadesSystemTransport file stays at
 // its canonical path); the boundary package consumes it via this adapter.
 //
-// Per release / policy: the HadesSystemTransport is NOT moved
+// Per HADES design / policy: the HadesSystemTransport is NOT moved
 // (would shatter the invariant grep). Instead, the boundary package
 // wraps it so the consolidation surface (Surface interface) covers the
 // existing single-egress completion path AND adds capability-feature

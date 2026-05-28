@@ -46,7 +46,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/recognize"
 )
 
-const sidecarsExampleAsset = "# Example sidecars.toml — copy to ~/.config/hades/sidecars.toml to enable.\n#\n# [tier1.bypass] declares the optional Tier 1 sidecar for advanced\n# Anthropic Max-subscription integration. policy, the default\n# install path uses the release provider cascade (Anthropic paygo +\n# Gemini + OpenRouter direct backends); this section is only needed for\n# operators who run the private bypass sidecar binary (hades-bypass-tier1).\n#\n# Path resolution:\n# $XDG_CONFIG_HOME/hades/sidecars.toml (when XDG_CONFIG_HOME is set)\n# $HOME/.config/hades/sidecars.toml (default fallback)\n#\n# Validation rules enforced at daemon startup:\n# * url MUST be http://127.0.0.1:PORT or http://localhost:PORT\n# (loopback only; the sidecar binds to loopback, never publicly).\n# * tier MUST equal 1 (the table-name encodes the tier).\n# * health_probe_interval_s MUST be in [5, 3600].\n# * request_timeout_s MUST be in [1, 600].\n# * required is optional (default false; graceful-degrade lets the\n# dispatcher fall through to the release cascade when the sidecar\n# is absent or unhealthy).\n#\n# A missing sidecars.toml is a NORMAL state — the daemon falls through\n# to the release cascade automatically.\n\n[tier1.bypass]\nurl = \"http://127.0.0.1:39823\"\ntier = 1\nhealth_probe_interval_s = 30\nrequest_timeout_s = 30\nrequired = false\n"
+const sidecarsExampleAsset = "# Example sidecars.toml — copy to ~/.config/hades/sidecars.toml to enable.\n#\n# [tier1.bypass] declares the optional Tier 1 sidecar for advanced\n# Anthropic Max-subscription integration. Per policy, the default\n# install path uses the HADES design provider cascade (Anthropic paygo +\n# Gemini + OpenRouter direct backends); this section is only needed for\n# operators who run the private bypass sidecar binary (hades-bypass-tier1).\n#\n# Path resolution:\n# $XDG_CONFIG_HOME/hades/sidecars.toml (when XDG_CONFIG_HOME is set)\n# $HOME/.config/hades/sidecars.toml (default fallback)\n#\n# Validation rules enforced at daemon startup:\n# * url MUST be http://127.0.0.1:PORT or http://localhost:PORT\n# (loopback only; the sidecar binds to loopback, never publicly).\n# * tier MUST equal 1 (the table-name encodes the tier).\n# * health_probe_interval_s MUST be in [5, 3600].\n# * request_timeout_s MUST be in [1, 600].\n# * required is optional (default false; graceful-degrade lets the\n# dispatcher fall through to the HADES design cascade when the sidecar\n# is absent or unhealthy).\n#\n# A missing sidecars.toml is a NORMAL state — the daemon falls through\n# to the HADES design cascade automatically.\n\n[tier1.bypass]\nurl = \"http://127.0.0.1:39823\"\ntier = 1\nhealth_probe_interval_s = 30\nrequest_timeout_s = 30\nrequired = false\n"
 
 func NewInitCmd() *cobra.Command {
 	var (
@@ -61,20 +61,8 @@ func NewInitCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "Attach HADES to an existing project (brownfield)",
-		Long: `Attach HADES + Hermes plugin scaffolding to an existing project.
-
-hades init runs inside an existing project's cwd. It:
-  1. Walks UP to the workspace root (monorepo-aware: pnpm-workspace.yaml,
-     go.work, turbo.json, nx.json, Cargo.toml [workspace], etc.).
-  2. Infers language + framework + monorepo + maturity via three-tier
-     recognize (manifest > config > glob).
-  3. Confirms the inference with the operator (Y/n).
-  4. Writes .hades/config.toml + .hades/scaffold.toml (additive only; never
-     overwrites operator source).
-  5. Optionally symlinks .hermes/plugins/<project-name>/ for project-
-     scope Hermes plugin discovery (Q13=D opt-in).
-
-For greenfield projects (no existing code), use ` + "`hades new`" + `.
+		Long: "Attach HADES + Hermes plugin scaffolding to an existing project.\n\nhades init runs inside an existing project's cwd. It:\n  1. Walks UP to the workspace root (monorepo-aware: pnpm-workspace.yaml,\n     go.work, turbo.json, nx.json, Cargo.toml [workspace], etc.).\n  2. Infers language + framework + monorepo + maturity via three-tier\n     recognize (manifest > config > glob).\n  3. Confirms the inference with the operator (Y/n).\n  4. Writes .hades/config.toml + .hades/scaffold.toml (additive only; never\n     overwrites operator source).\n  5. Optionally symlinks .hermes/plugins/<project-name>/ for project-\n     scope Hermes plugin discovery (design choice opt-in).\n\nFor greenfield projects (no existing code), use " +
+			"`hades new`" + `.
 To import an existing claude-code install, use ` + "`hades migrate claude-code`" + `.
 
 EXIT CODES:
@@ -108,7 +96,7 @@ EXIT CODES:
 	cmd.Flags().BoolVar(&resetPrefs, "reset-preferences", false, "Force customize path; ignore persisted prefs")
 	cmd.Flags().BoolVar(&forceMerge, "force-merge", false, "Merge into existing .hades/config.toml (default: error)")
 	cmd.Flags().BoolVar(&noPluginLink, "no-plugin-link", false, "Skip .hermes/plugins/ symlink (advanced)")
-	cmd.Flags().BoolVar(&withSidecarsExample, "with-sidecars-example", false, "Seed ~/.config/hades/sidecars.toml from the bundled example when absent (Plan 15 Phase B Tier 1 sidecar opt-in)")
+	cmd.Flags().BoolVar(&withSidecarsExample, "with-sidecars-example", false, "Seed ~/.config/hades/sidecars.toml from the bundled example when absent (HADES design stage Tier 1 sidecar opt-in)")
 	return cmd
 }
 

@@ -5,7 +5,7 @@
 // endpoints via the internal/mcp/client typed wrapper. All budget
 // logic — multi-axis accounting, z-score anomaly detection, hierarchical
 // hard-pause state machine — lives in internal/budget/ and is
-// accessed exclusively through the daemon HTTP API (Q9 B: daemon owns shared
+// accessed exclusively through the daemon HTTP API (design choice B: daemon owns shared
 // state).
 //
 // Boundary invariants:

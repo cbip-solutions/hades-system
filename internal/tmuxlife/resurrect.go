@@ -375,7 +375,7 @@ func (m *Manager) Restore(ctx context.Context, alias string) error {
 // the sweep — best-effort cleanup of independent files.
 //
 // Doctrine matrix: max-scope=7, default=7, capa-firewall=3 (per spec
-// §1 Q7 D + §3.6); the caller chooses the value via doctrine config
+// §1 design choice D + §3.6); the caller chooses the value via doctrine config
 // at the daemon-startup wiring layer.
 //
 // This function is package-level (not a Manager method) because it

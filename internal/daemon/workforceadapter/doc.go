@@ -2,14 +2,14 @@
 // Package workforceadapter bridges internal/workforce/queue interfaces
 // (SharedTaskList, CheckpointQueue, FixPromptQueue) to internal/store and
 // the underlying SQLite tables introduced in migration 045 (workforce
-// durable queues, release ).
+// durable queues, HADES design ).
 //
 // # Boundary (invariant)
 //
 // internal/workforce/queue MUST NOT import internal/store. This package
 // is the single bridge: workforceadapter imports both. The boundary is
 // enforced at compile-time by the noStoreImportAnalyzer in
-// internal/doctrine/lint/analyzers/nostore (release Q16 D
+// internal/doctrine/lint/analyzers/nostore (HADES design design choice D
 // migration); analysistest fixtures in
 // internal/doctrine/lint/analysistest/inv_hades_031_test.go pin the
 // enforcement mechanism. The lint wrappers run the analyzer in

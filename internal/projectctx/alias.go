@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// alias.go — release : human alias resolution per spec §1 Q3.
+// alias.go — HADES design : human alias resolution per design contract
 //
 // The alias is read from <canonical-path>/hadessystem.toml [project] id, with
 // fallback <dirname>-<sha256[:8]>. Both forms validate against the same

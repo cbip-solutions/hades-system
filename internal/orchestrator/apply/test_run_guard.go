@@ -38,6 +38,6 @@ func mustBeTestRun() {
 
 func mustBeTestRunWith(isTestRun bool) {
 	if !isTestRun {
-		panic("apply: NewMergeEngineFake invoked outside `go test` (inv-hades-097)")
+		panic("apply: NewMergeEngineFake invoked outside `go test` (invariant)")
 	}
 }

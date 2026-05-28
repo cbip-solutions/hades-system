@@ -21,15 +21,14 @@ func adrSupersedeCmd() *cobra.Command {
 	var reason string
 	cmd := &cobra.Command{
 		Use:   "supersede <old-id> <new-id>",
-		Short: "Link old→new supersede chain (--reason mandatory; inv-hades-146)",
+		Short: "Link old→new supersede chain (--reason mandatory; invariant)",
 		Args:  cobra.ExactArgs(2),
-		Long: `supersede transitions oldID from accepted → superseded and links
-it to newID. Emits an adr.superseded event anchored on the Plan 9 audit
-chain. Both IDs and --reason are mandatory per inv-hades-146.`,
-		Example: `  hades adr supersede ADR-0042 ADR-0070 --reason "design drift post Plan 9"`,
+		Long:  "supersede transitions oldID from accepted → superseded and links\nit to newID. Emits an adr.superseded event anchored on the HADES design audit\nchain. Both IDs and --reason are mandatory per invariant.",
+
+		Example: "  hades adr supersede ADR-0042 ADR-0070 --reason \"design drift post HADES design\"",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if strings.TrimSpace(reason) == "" {
-				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason must not be empty (inv-hades-146)"))
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason must not be empty (invariant)"))
 			}
 			oldID, newID := args[0], args[1]
 			ctx, cancel := context.WithTimeout(cmd.Context(), 10*time.Second)
@@ -42,7 +41,7 @@ chain. Both IDs and --reason are mandatory per inv-hades-146.`,
 			return nil
 		},
 	}
-	cmd.Flags().StringVar(&reason, "reason", "", "Rationale for supersession (mandatory; inv-hades-146)")
+	cmd.Flags().StringVar(&reason, "reason", "", "Rationale for supersession (mandatory; invariant)")
 	_ = cmd.MarkFlagRequired("reason")
 	return cmd
 }

@@ -114,7 +114,7 @@ const (
 	EvtDoctrineAccessorAuditPassed EventType = 70
 
 	// invariant: canonical ordering; numbers MUST NOT change post-declaration.
-	// See internal design record §4.6.
+	// See design records design §4.6.
 	EvtRAGQuery         EventType = 92
 	EvtRAGRetrieval     EventType = 93
 	EvtRAGCitation      EventType = 94
@@ -457,8 +457,8 @@ func (e OrchestratorRestarting) Payload() ([]byte, error) { return json.Marshal(
 // emits via ReconstructInFlight when a replay-resume scan
 // completes — successful or HardPause-aborted. originally
 // declared the struct with {SessionID, RecoveryMs, EventsReplayed,
-// EventsCorrupted}; Task E-6 extends it with structured replay-result
-// fields so downstream audit consumers + release hash-chain replay can
+// EventsCorrupted}; task extends it with structured replay-result
+// fields so downstream audit consumers + HADES design hash-chain replay can
 // observe the recovered task count and HardPause flag without re-
 // scanning the eventlog.
 //
@@ -536,7 +536,7 @@ func (e WorkerDeath) Payload() ([]byte, error) { return json.Marshal(e) }
 // emits it. (replay) reads it.
 //
 // Field set is the FROZEN integration contract between recovery
-// engine and downstream replay + audit consumers (release
+// engine and downstream replay + audit consumers (HADES design
 // hash-chain). Adding fields is non-breaking; renaming or removing
 // requires schema-version coordination.
 //
@@ -873,11 +873,11 @@ func (e ReplayCorruptionDetected) Payload() ([]byte, error) { return json.Marsha
 // BudgetSnapshotError is the audit-trail event the cost-gating evaluator
 // emits when BudgetSnapshotReader.Snapshot
 // returns a non-nil error during a poll cycle. Run continues to the
-// next tick; this event is the diagnostic seam for transient release
+// next tick; this event is the diagnostic seam for transient HADES design
 // budget-engine read failures.
 //
 // Privacy contract (IMP-3 carry-forward): Error is the wrapped
-// error.Error() string; callers (release dispatcheradapter Snapshot
+// error.Error() string; callers (HADES design dispatcheradapter Snapshot
 // implementation) MUST ensure the error message never echoes
 // secret-shaped bytes (API tokens, raw URLs with embedded credentials,
 // etc.). The cost-gating engine does NOT redact — it forwards verbatim.
@@ -920,7 +920,7 @@ func (e PhaseBoundaryRecorded) Payload() ([]byte, error) { return json.Marshal(e
 // emits when a mid-run Pool.Lease returns ErrPoolExhausted (or, in I-7,
 // when the orchestrator preemptively skips FMV under cost-pressure)
 // and the algorithm degrades to plurality voting on the candidates'
-// SupportingReviewers axis (Q8 A pattern under Q8 B regime).
+// SupportingReviewers axis (design choice A pattern under design choice B regime).
 //
 // Field semantics:
 // - Reason — degradation cause (closed vocab today: "pool_exhausted";
@@ -1012,18 +1012,18 @@ func (e ADRRangeExhausted) Payload() ([]byte, error) { return json.Marshal(e) }
 
 // HandoffPostedEvent records a project /handoff slash command invocation.
 // 8-field schema frozen master plan §"HandoffPosted event
-// coordination" + spec §1 Q15 + §6.6 + §6.8. invariant enforces
+// coordination" + spec §1 design choice + §6.6 + §6.8. invariant enforces
 // schema integrity (compliance test round-trips Marshal/Unmarshal +
 // asserts field set; extends with fuzz N=100 random payloads).
 //
-// Producer/consumer wiring (cross-phase load-bearing):
+// Producer/consumer wiring (cross-stage load-bearing):
 // - Producer: plugin /handoff slash command emits via daemon
 // HTTP POST /v1/events/handoff_posted. The plugin also
 // continues to write .hades/session.md to disk (existing behaviour
 // preserved); the event is the cross-project signal surface.
 // - Consumer A: `hades day --eod` reads per-project event-log
 // entries to compose ProjectStatusSection blocks in the EOD digest.
-// - Consumer B: release doctrine notification routing + release
+// - Consumer B: HADES design doctrine notification routing + HADES design
 // multi-channel delivery may opt-in for operator-channel surfacing.
 //
 // Field semantics:

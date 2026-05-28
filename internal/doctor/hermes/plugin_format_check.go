@@ -52,7 +52,7 @@ func (c *PluginFormatCheck) Name() string { return "hermes.plugin-format" }
 func (c *PluginFormatCheck) Category() check.Category { return check.CategoryPreflight }
 
 func (c *PluginFormatCheck) Description() string {
-	return "Hermes plugin format match + reject CC/OpenClaude remnants (inv-hades-176 + 190)"
+	return "Hermes plugin format match + reject CC/OpenClaude remnants (invariant + 190)"
 }
 
 func (c *PluginFormatCheck) IsDestructive() bool { return true }
@@ -96,7 +96,7 @@ var remnantMarkers = []string{
 // 6. Canonical file missing → StatusFail + scaffold hint (invariant)
 // 7. All checks pass → StatusPass
 //
-// Context cancellation: per spec §3.3 + check.go:47-48 godoc contract,
+// Context cancellation: per design contract:47-48 godoc contract,
 // Run MUST honour ctx.Done() and emit StatusSkip on cancellation. The
 // inner os.Stat loops perform fast filesystem stat calls (typically <1ms
 // per entry) but the canonicalFiles + remnantMarkers slices can grow;

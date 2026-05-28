@@ -15,7 +15,7 @@ mcp_servers:
     description: |
       HADES budget MCP: 4-axis attribution (caller/project/agent/
       augmentation) + z-score anomaly + hierarchical hard-pause cascade
-      (per HADES design Q6=C).
+      (per HADES design design choice).
     env:
       HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"
 
@@ -25,7 +25,7 @@ mcp_servers:
     description: |
       HADES audit MCP: audit_review with cross-provider family-disjoint
       reviewer enforcement + Tessera-anchored audit chain integration
-      (per HADES design Q7=D, HADES design).
+      (per HADES design design choice, HADES design).
     env:
       HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"
 
@@ -35,6 +35,6 @@ mcp_servers:
     description: |
       HADES ssh-exec MCP: production-grade remote execution with
       per-project allowlist + streaming logs + idempotency token registry
-      (per HADES design Q8=C).
+      (per HADES design design choice).
     env:
       HADES_DAEMON_SOCKET: "${HADES_DAEMON_SOCKET:-/tmp/hades-system.sock}"

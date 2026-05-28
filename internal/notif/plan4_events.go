@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package notif — release Task O-3.
+// Package notif — HADES design task
 //
 // Event-type taxonomy and structured payload schemas emit
-// hooks. release ships the emit-side only; release ships the routing
+// hooks. HADES design ships the emit-side only; HADES design ships the routing
 // chain (Slack/email/webhook/etc). This package has no runtime
 // dependencies beyond the standard library and must NEVER import
 // internal packages that carry secrets or credentials. The PII-free
@@ -12,7 +12,7 @@
 // It is a pure types + constructors package; persistence is the
 // responsibility of internal/daemon/handlers/audit_emit.go.
 //
-// Callers (each Phase that emits a payload of this type):
+// Callers (each stage that emits a payload of this type):
 //
 // - internal/workforce/subprocess: SubprocessCrashChain, SubprocessTTLEvicted
 // - internal/budget/anomaly: BudgetAnomalyZScore, BudgetCapExhausted
@@ -31,7 +31,7 @@ import (
 	"time"
 )
 
-// Severity mirrors the release notifications-table severity column,
+// Severity mirrors the HADES design notifications-table severity column,
 // extended with SeveritySecurityAlert for security-grade always-notify
 // events that bypass any rate-limiting or batching layer.
 type Severity string
@@ -44,7 +44,7 @@ const (
 	SeverityCritical Severity = "CRITICAL"
 	// SeveritySecurityAlert is the highest severity, reserved for
 	// security-grade events that must always reach the operator regardless
-	// of doctrine-tunable aggregation. release routes these BEFORE any
+	// of doctrine-tunable aggregation. HADES design routes these BEFORE any
 	// rate-limiting or batching layer.
 	SeveritySecurityAlert Severity = "SECURITY_ALERT"
 )
@@ -137,7 +137,7 @@ func (et EventType) DefaultSeverity() Severity {
 
 // IsAlwaysNotify returns true if this event type is security-grade and
 // must always be surfaced to the operator regardless of doctrine
-// aggregation settings. release consults this flag before applying
+// aggregation settings. HADES design consults this flag before applying
 // any rate-limiting or batching.
 func (et EventType) IsAlwaysNotify() bool {
 	return alwaysNotifySet[et]

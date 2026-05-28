@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/voice_citation.py
-"""TTS-ready voice renderer for citation envelopes (HADES design release track Task A-7)."""
+"""TTS-ready voice renderer for citation envelopes (HADES design stage task)."""
 
 from __future__ import annotations
 
@@ -193,7 +193,7 @@ class VoiceCitationRenderer(Renderer):
         )
 
     def _build_sentence(self, citation: Envelope, word_budget: int) -> str:
-        """Build one TTS-ready sentence per spec §1 Q9 example pattern."""
+        """Build one TTS-ready sentence per design contract"""
         payload_words = sanitize_for_tts(citation.payload).split()
         # Take first ~6 payload words; preserves identity without
         # overrunning budget.

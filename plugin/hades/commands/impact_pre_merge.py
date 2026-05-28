@@ -5,7 +5,7 @@ from __future__ import annotations
 
 _PROMPT = """# /hades:impact-pre-merge — Pre-merge blast radius analysis
 
-You are analyzing the blast radius of merging **{branch}** into the active HADES project's main branch. This wraps HADES design augmentation pipeline (`/v1/augment` mode=preflight per spec §4.3) with pre-merge specifics.
+You are analyzing the blast radius of merging **{branch}** into the active HADES project's main branch. This wraps HADES design augmentation pipeline (`/v1/augment` mode=preflight per design contract) with pre-merge specifics.
 
 ## 1. Identify diff scope
 
@@ -66,7 +66,7 @@ Per HADES design doctrine.preflight.impact_thresholds.high:
 
 ## 4. Doctrine integration
 
-Per spec §4.3 + HADES design doctrine schema `[doctrine.preflight]`:
+per design contract`[doctrine.preflight]`:
 - `impact_timeout_ms` per-doctrine (max-scope=2000, default=500, capa-firewall=5000)
 - `impact_thresholds.high/medium` per-doctrine cutoffs
 - `on_timeout = "warn-proceed"` (constant)
@@ -83,7 +83,7 @@ Audit chain: hades://audit/<aggregate_event_id>
 
 ## 6. HADES design integration (MergeEngine)
 
-Per spec §4.4, HADES design winner selection extends with:
+per design contract, HADES design winner selection extends with:
 ```
 winner = max(test_pass) + max(reviewer_agreement) + min(unintended_blast_radius)
 ```

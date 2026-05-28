@@ -8,7 +8,7 @@
 // a provider-family-disjoint LLM reviewer.
 //
 // This package does NOT write to any database. It is an outbound HTTP client
-// to the release dispatcher.
+// to the HADES design dispatcher.
 //
 // # Invariant invariant
 //
@@ -20,8 +20,8 @@
 // This is a hard rule. Any code path that calls pool.Choose() without
 // first constructing Pool via NewPool() is a violation of invariant.
 //
-// # release boundary
+// # HADES design boundary
 //
 // NO imports of internal/store. NO SQL. NO hash-chain logic. NO OTel emit.
-// Those belong to release.
+// Those belong to HADES design
 package audit

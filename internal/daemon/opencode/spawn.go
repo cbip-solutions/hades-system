@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package opencode wraps the OpenCode CLI for daemon-side spawning of
 // subagents. Verified R1: `opencode run` and `opencode serve --port=N`
-// are the supported entry points. release implements; release declares
+// are the supported entry points. HADES design implements; HADES design declares
 // types + signatures.
 package opencode
 

@@ -1,4 +1,4 @@
--- Migration v3 — bypass_anomaly_observations (HADES design release track, invariant)
+-- Migration v3 — bypass_anomaly_observations (HADES design stage, invariant)
 --
 -- Per-event observation table for the rolling-window numerator. The v2
 -- bypass_anomalies table aggregates by field_path and stores a lifetime
@@ -22,10 +22,10 @@
 --     window → 24h retention; operators may extend).
 --
 -- The FK uses ON DELETE CASCADE so acknowledging-and-deleting an
--- anomaly row also drops its observations (HADES design release track wires the
--- delete path; release track only writes ack=1 without deleting).
+-- anomaly row also drops its observations (HADES design stage wires the
+-- delete path; stage only writes ack=1 without deleting).
 --
--- Refs: spec HADES design §2 Q6-C, §5 row "Shape unknown field", §7
+-- Refs: spec HADES design §2 design choice-C, §5 row "Shape unknown field", §7
 -- invariant.
 
 CREATE TABLE IF NOT EXISTS bypass_anomaly_observations (

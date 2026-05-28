@@ -4,7 +4,7 @@
 // GET /v1/coordination/probe?check=<name> — diagnostic probe surface for
 // the `hades doctor coordination` CLI section.
 //
-// Background — release substrate gap closure (mirrors hermes_probe.go):
+// Background — HADES design substrate gap closure (mirrors hermes_probe.go):
 //
 // - CLI dispatch in internal/cli/doctor_coordination.go for the two
 // coordination checks below.
@@ -17,20 +17,20 @@
 // surfaces 404 → "fail" for both checks. This file closes the gap.
 //
 // Probe checks (closed enum on ?check=):
-// - "release-d-substrate" — repo-level file presence check that
+// - "HADES design" — repo-level file presence check that
 // internal/knowledge/aggregator/aggregator.go exists at the resolved
-// repo root. Surfaces the release aggregator-substrate
+// repo root. Surfaces the HADES design aggregator-substrate
 // installation step; absence implies an incomplete checkout or
 // misconfigured HADES_SYSTEM_REPO_ROOT.
 //
-// RETIRED (v0.20.7, invariant): "release-h-prime-executed" probe was
+// RETIRED (v0.20.7, invariant): "HADES design" probe was
 // retired because the underlying landing test (presence of
 // plugin/hades-system/plugin.yaml + Hermes markers) is obsolete per ADR-0080.
 // replaced that path with the Hermes plugin at plugin/hades/ (different
 // canonical location + format). The probe-target plugin/hades-system/plugin.yaml
 // never existed at HEAD and always reported "fail" — a misleading active
-// signal in `hades doctor coordination` output. Q1 substrate decision +
-// ADR-0080 supersede release H'; no Claude-Code-plugin conversion is
+// signal in `hades doctor coordination` output. design choice substrate decision +
+// ADR-0080 supersede HADES design H'; no Claude-Code-plugin conversion is
 // planned, so the probe has no underlying behaviour to assert.
 //
 // Unknown probe names return status=ok with a hint string — same posture
@@ -74,7 +74,7 @@ func CoordinationProbeHandler() http.HandlerFunc {
 		}
 
 		switch check {
-		case "plan-9-d-substrate":
+		case "HADES design":
 
 			p := filepath.Join(repoRoot, "internal", "knowledge", "aggregator", "aggregator.go")
 			if _, err := os.Stat(p); err != nil {
@@ -84,9 +84,9 @@ func CoordinationProbeHandler() http.HandlerFunc {
 				resp.Detail = "aggregator substrate present at " + p
 			}
 		case "":
-			resp.Detail = "no check specified; pass ?check=plan-9-d-substrate"
+			resp.Detail = "no check specified; pass ?check=HADES design"
 		default:
-			resp.Detail = "unknown check name; pass ?check=plan-9-d-substrate"
+			resp.Detail = "unknown check name; pass ?check=HADES design"
 		}
 		writeJSON(w, http.StatusOK, resp)
 	}

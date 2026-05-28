@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// specs_diff.go — release Task F-5 subcommand `hades specs diff <id>`.
+// specs_diff.go — HADES design task subcommand `hades specs diff <id>`.
 //
 // Renders OpenSpec deltas for a change directory. In OpenSpec's canonical
 // layout (openspec/changes/<id>/), the deltas/ subdirectory IS the diff —
@@ -14,7 +14,7 @@
 // surface reserves the flag for a future revision that taps git history;
 // until then, passing --v returns ErrRecoverable with a roadmap pointer.
 //
-// Read-only boundary per spec §0.2.
+// Read-only boundary per design contract
 package cli
 
 import (

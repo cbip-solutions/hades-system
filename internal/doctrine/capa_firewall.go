@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 package doctrine
 
-// CapaFirewall per spec §4.4: Pulido tesis doctrine. Subagents WRITE
+// CapaFirewall per design contract: Pulido tesis doctrine. Subagents WRITE
 // but do NOT commit; commits flow through @agente-ejecutor only.
 // Privacy-locked: providers restricted to local + deepseek; memory
 // never cross-elevates. Templates require claim-strength tier per

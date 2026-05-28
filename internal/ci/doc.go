@@ -2,7 +2,7 @@
 // Package ci provides the GitHub Actions CI status lookup + classification
 // + rolling-window evaluation A-5 (30-CI-green gate).
 //
-// Per spec §1.4 C6 fix: this library is delivered COMPLETE in
+// per design contract: this library is delivered COMPLETE in
 // . refines only ancillary surfaces
 // (Rulesets + flake quarantine governance + cross-workflow freshness).
 //

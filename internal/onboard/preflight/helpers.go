@@ -76,7 +76,7 @@ func CCDetect() (present bool, configRoot string, err error) {
 	if home == "" {
 		return false, "", errors.New("CCDetect: HOME unset and os.UserHomeDir empty")
 	}
-	p := filepath.Join(home, ".claude")
+	p := filepath.Join(home, "local agent config")
 	info, statErr := os.Stat(p)
 	if statErr != nil {
 		if os.IsNotExist(statErr) {

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // internal/providers/bypass_backend.go
 //
-// BypassBackend wraps release's bypass.Client (private-tier1-module) as a
+// BypassBackend wraps HADES design's bypass.Client (private-tier1-module) as a
 // TierBackend so the dispatcher can select between Tier 1 (bypass,
 // this file) and the providers.toml cascade uniformly.
 //
-// Substrate decision (ADR-0008 release-rescope):
+// Substrate decision (ADR-0008 HADES design):
 // - Tier 1 (TierInHouse) = bypass.Client, which speaks directly to Anthropic
 // via Max-subscription OAuth. It authenticates, cert-pins, and manages
 // concurrency + idempotency internally.

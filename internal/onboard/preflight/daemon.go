@@ -46,7 +46,7 @@ func (c *DaemonCheck) Run(ctx context.Context) Result {
 			Name:    c.Name(),
 			Status:  StatusSkip,
 			Summary: "hades-ctld daemon not running (auto-starts on first need)",
-			Details: "Q5=C+ severity matrix treats absent daemon as skip; Phase A onboarding works daemon-less. The CLI auto-starts the daemon when needed (Plan 1).",
+			Details: "design choice+ severity matrix treats absent daemon as skip; stage onboarding works daemon-less. The CLI auto-starts the daemon when needed (HADES design).",
 		}
 	}
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Package onboard implements release's shared onboarding infrastructure.
+// Package onboard implements HADES design's shared onboarding infrastructure.
 //
-// Per spec §0.1 + §3.3: `hades config init` (WizardKindGlobal),
+// per design contract§3.3: `hades config init` (WizardKindGlobal),
 // `hades new` (WizardKindGreenfield), and `hades init` (WizardKindBrownfield)
 // all consume the same Wizard engine (internal/onboard/qna/) +
 // defaults (internal/onboard/defaults.go) + persisted prefs
@@ -10,11 +10,11 @@
 // (internal/onboard/mcp/) + Hermes plugin location resolver
 // (internal/onboard/plugin/).
 //
-// Per spec §3.4 + invariant: this package and its subpackages NEVER
+// per design contract: this package and its subpackages NEVER
 // import internal/store. Audit emits via internal/audit/chain/ (no
 // store dep) or daemon HTTP POST /v1/events.
 //
-// Per spec §2.3 Q3=D hybrid wizard UX: Q0 three-way prompt at engine
+// per design contract=D hybrid wizard UX: design choice three-way prompt at engine
 // entry (Recommended / Reuse / Customize); Path 1 + Path 2 ask 0
 // follow-up Qs; Path 3 uses sequential narrowing (gh auth login
 // pattern per SOTA-2 #8) via bubbletea router-model.

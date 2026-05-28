@@ -10,7 +10,7 @@ import (
 // ToolRelay routes a tool_use event from the OpenClaude subprocess to
 // the corresponding MCP backend (research, ssh_exec, audit_review,
 // budget). ships this interface + the unavailableRelay default;
-// Plans 4 Phases I/J/K/L wire concrete implementations.
+// HADES design Phases I/J/K/L wire concrete implementations.
 //
 // Concurrency implementations MUST be safe for concurrent Dispatch calls
 // from a single Worker. Multi-worker concurrency is the relay's

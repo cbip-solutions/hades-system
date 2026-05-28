@@ -39,7 +39,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
    - What was accomplished (1-3 sentences for TL;DR)
    - Last commit hash + subject
    - Branch name + any uncommitted changes
-   - Active plan/phase (if executing a plan)
+   - Active plan/stage (if executing a plan)
    - Background subagents in flight (CRITICAL: non-recoverable across
      session ends — list them so operator can re-dispatch in next session)
    - Pending operator actions (e.g., "operator must run `bin/hades bypass
@@ -70,7 +70,7 @@ actual git commit (typically via Hermes' Bash tool in the same session).
 
    ## Active plan status
 
-   <release item release track — <status>; or "no active plan">
+   <release item stage — <status>; or "no active plan">
 
    ## Pending dispatches
 

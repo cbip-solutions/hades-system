@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package aggregator — output_human.go ships the streaming-style
 // human-readable renderer with `--spotlight` (hide pass rows) +
-// `--ascii` (non-emoji fallback) flags per Q5=C+ orthogonal-flag set.
+// `--ascii` (non-emoji fallback) flags per design choice+ orthogonal-flag set.
 //
 // ships the post-Run batched variant (renders the fully-populated
 // Report); wires the channel-based streaming variant when the

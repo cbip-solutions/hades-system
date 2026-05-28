@@ -102,7 +102,7 @@ func (s *Plan5OrchestratorService) DoctrineDeny(req client.DoctrineDecision) err
 
 func (s *Plan5OrchestratorService) DoctrineRevert(req client.DoctrineDecision) error {
 	if s.reverter == nil {
-		return errors.New("doctrine revert: RepoRoot not configured (Plan 5 N-cleanup-1 graceful-degradation)")
+		return errors.New("doctrine revert: RepoRoot not configured (HADES design N-cleanup-1 graceful-degradation)")
 	}
 	adrID, err := parseADRID(req.ID)
 	if err != nil {
@@ -227,7 +227,7 @@ func (s *Plan5OrchestratorService) DoctrinePropose(req client.DoctrineProposeReq
 		}
 	}
 	if allocated == 0 {
-		return client.DoctrineProposeResponse{}, fmt.Errorf("invalid_rule_path: Plan 8 ADR range %04d-%04d exhausted (inv-hades-103); operator should triage existing proposals before allocating new",
+		return client.DoctrineProposeResponse{}, fmt.Errorf("invalid_rule_path: HADES design ADR range %04d-%04d exhausted (invariant); operator should triage existing proposals before allocating new",
 			plan8ADRRangeMin, plan8ADRRangeMax)
 	}
 
@@ -244,33 +244,8 @@ func (s *Plan5OrchestratorService) DoctrinePropose(req client.DoctrineProposeReq
 	}
 	absPath := filepath.Join(proposedDir, filename)
 	now := s.cfg.Clock.Now().UTC()
-	body := fmt.Sprintf(`# ADR-%04d — Operator manual amendment proposal
+	body := fmt.Sprintf("# ADR-%04d — Operator manual amendment proposal\n\n- **Status**: proposed\n- **Source**: operator (/v1/doctrine/propose; HADES design K-4)\n- **Rule path**: %s\n- **New value**: %s\n- **Category**: %s\n- **Cooldown override**: %v\n- **Proposed at**: %s\n\n## Justification\n\n%s\n\n## Lifecycle\n\nThis proposal entered the doctrine amendment lifecycle (proposed → applied\n| denied → reverted) via 'hades doctrine propose'. Use 'hades doctrine ack\nADR-%04d' to accept or 'hades doctrine deny ADR-%04d --reason ...' to reject.\nOn accept, HADES design Applier (extended by HADES design stage ApplyWithValidation\nhook) validates tighten-only direction (invariant) before mutating the\non-disk doctrine TOML.\n\ninvariant: this ADR ID is allocated from HADES design reserved range\n(0050-0059) for operator-initiated manual proposals. Telemetry-driven\nproposals from HADES design TelemetrySubscriber use range 0020-0029.\n",
 
-- **Status**: proposed
-- **Source**: operator (/v1/doctrine/propose; Plan 8 K-4)
-- **Rule path**: %s
-- **New value**: %s
-- **Category**: %s
-- **Cooldown override**: %v
-- **Proposed at**: %s
-
-## Justification
-
-%s
-
-## Lifecycle
-
-This proposal entered the doctrine amendment lifecycle (proposed → applied
-| denied → reverted) via 'hades doctrine propose'. Use 'hades doctrine ack
-ADR-%04d' to accept or 'hades doctrine deny ADR-%04d --reason ...' to reject.
-On accept, Plan 5 Applier (extended by Plan 8 Phase H ApplyWithValidation
-hook) validates tighten-only direction (inv-hades-140) before mutating the
-on-disk doctrine TOML.
-
-inv-hades-103: this ADR ID is allocated from Plan 8's reserved range
-(0050-0059) for operator-initiated manual proposals. Telemetry-driven
-proposals from Plan 5's TelemetrySubscriber use range 0020-0029.
-`,
 		allocated, req.RulePath, req.NewValue, req.Category, req.CooldownOverride,
 		now.Format(time.RFC3339), strings.TrimSpace(req.Justification),
 		allocated, allocated)

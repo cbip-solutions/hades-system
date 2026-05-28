@@ -23,10 +23,10 @@ _HERMES_SKIN_ENV = "HERMES_SKIN"
 _XDG_CONFIG_ENV = "XDG_CONFIG_HOME"
 _HADES_SKIN_NAME = "hades"
 
-# The 3 wizard.* catalog codes from HADES design release track
+# The 3 wizard.* catalog codes from HADES design stage
 # (internal/errors/codes.go). The hook does NOT directly route through
 # Render (the Go wrapper at the subprocess boundary owns rendering); it
-# logs these code names for operator traceability + release track invariant
+# logs these code names for operator traceability + stage invariant
 # compliance grep.
 _WIZARD_CATALOG_CODES = (
     "wizard.config-corrupt",
@@ -34,7 +34,7 @@ _WIZARD_CATALOG_CODES = (
     "wizard.mcp-spawn-fail",
 )
 
-# The reserved defense-in-depth fallback code from HADES design release track
+# The reserved defense-in-depth fallback code from HADES design stage
 # A-6 (catalog row "internal-uncaught"). Used when the subprocess
 # machinery itself fails before the wizard could emit its own error.
 _INTERNAL_UNCAUGHT_CODE = "internal-uncaught"
@@ -61,7 +61,7 @@ def _config_path() -> Path:
 def _should_launch_wizard() -> bool:
     """Return True iff first-run conditions are met.
 
-    Conditions (per spec §5.1 + amendment 2026-05-21):
+    Conditions (per design contract):
     1. ~/.config/hades-system/config.toml does NOT exist
     2. HADES_NO_WIZARD env is NOT set to "1" (the escape hatch)
 
@@ -197,7 +197,7 @@ def _maybe_launch_wizard(
         )
         return
 
-    # Subprocess args: `hades config init` (HADES design release track global wizard).
+    # Subprocess args: `hades config init` (HADES design stage global wizard).
     # Stdio handoff: inherit from this process so the bubbletea TUI drives
     # the operator's terminal directly. Lazygit-pattern terminal handoff —
     # bubbletea handles its own alt-screen so the post-subprocess return
@@ -244,7 +244,7 @@ def _maybe_launch_wizard(
     else:
         # Non-cancel non-zero exit = wizard-internal error. The Go
         # wrapper has ALREADY routed through Render at its own RunE
-        # boundary (HADES design release track contract); the operator-visible
+        # boundary (HADES design stage contract); the operator-visible
         # HADES error block is already on stderr. The hook logs a
         # structured trace entry referencing the candidate wizard.*
         # catalog codes for operator traceability + invariant

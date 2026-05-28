@@ -9,7 +9,7 @@
 // §6.2 lines 1527-1540.
 // - audit.chain-integrity reports per-project chain integrity history
 // (last verify-chain age + 7d tamper event count)
-// per spec §1 Q10 line 657.
+// per design contract
 //
 // The doctor LOGIC lives here in package recovery so it can be unit-
 // tested via stubbed BackupStatus / ChainStatus interfaces; the cobra

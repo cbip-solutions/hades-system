@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package cli — audit_chain_history.go.
 //
-// `hades audit-chain history` queries release audit_events_raw augmented with
-// the release chain extension columns via GET /v1/audit-chain/history:
+// `hades audit-chain history` queries HADES design audit_events_raw augmented with
+// the HADES design chain extension columns via GET /v1/audit-chain/history:
 //
 // PrevHash — previous record's hash (chain linkage)
 // RecordHash — SHA-256 of this event's canonical bytes
@@ -10,7 +10,7 @@
 // PartitionID — monthly partition tag (e.g. "2026_05")
 //
 // Output table (default) or json/yaml (--format flag). Table adds three
-// chain-proof columns beyond the release `hades audit events` surface:
+// chain-proof columns beyond the HADES design `hades audit events` surface:
 //
 // REC_HASH (truncated 16 chars) TESSERA_LEAF PARTITION
 //
@@ -35,13 +35,9 @@ import (
 func newAuditChainHistoryCmd() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "history",
-		Short: "Query Plan 5 eventlog with chain proofs",
-		Long: `Stream audit events from the Plan 5 event log enriched with chain
-proofs: each row includes the Tessera Merkle path + witness signature cover
-so the operator can verify event authenticity without re-running verify-chain.
-Supports time-bound and event-type prefix filters.
-
-Chain-proof columns added vs ` + "`hades audit events`" + `:
+		Short: "Query HADES design eventlog with chain proofs",
+		Long: "Stream audit events from the HADES design event log enriched with chain\nproofs: each row includes the Tessera Merkle path + witness signature cover\nso the operator can verify event authenticity without re-running verify-chain.\nSupports time-bound and event-type prefix filters.\n\nChain-proof columns added vs " +
+			"`hades audit events`" + `:
   REC_HASH     — first 16 chars of record_hash (full in --format json)
   TESSERA_LEAF — leaf index in the Tessera tile-log (nil = not yet tiled)
   PARTITION    — monthly partition tag (e.g. 2026_05)`,

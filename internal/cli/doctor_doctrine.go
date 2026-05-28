@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-// Package cli — doctor_doctrine.go (release Task N-1; replaces
+// Package cli — doctor_doctrine.go (HADES design task; replaces
 // spec §6.2 doctor template).
 //
-// PLAN 4 BASELINE (preserved by name):
+// HADES design BASELINE (preserved by name):
 // - doctrine.active.resolves
 // - doctrine.builtins.load
 //
-// PLAN 8 EXTENDS to 11 checks (9 new + 2 extended):
+// HADES design EXTENDS to 11 checks (9 new + 2 extended):
 // - doctrine.active.resolves (extended; per-project chain)
 // - doctrine.builtins.load (extended; schema_version=1.0)
 // - doctrine.overrides.per-project.healthy (NEW)
@@ -67,7 +67,7 @@ func doctorDoctrineCmd() *cobra.Command {
 		Use:   "doctrine",
 		Short: "Doctrine subsystem health (active, builtins, overrides, watcher, telemetry, lint, schema, reinforce, amendments, events, transverse)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Doctrine (Plan 8)", runDoctrineChecks)
+			return runOneSection(cmd, "Doctrine (HADES design)", runDoctrineChecks)
 		},
 	}
 }
@@ -132,7 +132,7 @@ func checkDoctrineBuiltinsLoad(_ context.Context, _ *client.Client) CheckResult 
 		return CheckResult{
 			Name: "doctrine.builtins.load", Status: "fail",
 			Detail: "builtin.Names() returned empty",
-			Hint:   "Phase D embed.FS load failed at init; check make verify-doctrine-builtin",
+			Hint:   "stage embed.FS load failed at init; check make verify-doctrine-builtin",
 		}
 	}
 	registry, err := builtinpkg.LoadAll()
@@ -140,7 +140,7 @@ func checkDoctrineBuiltinsLoad(_ context.Context, _ *client.Client) CheckResult 
 		return CheckResult{
 			Name: "doctrine.builtins.load", Status: "fail",
 			Detail: fmt.Sprintf("builtin.LoadAll() failed: %v", err),
-			Hint:   "Phase D embed.FS load failed; check make verify-doctrine-builtin",
+			Hint:   "stage embed.FS load failed; check make verify-doctrine-builtin",
 		}
 	}
 	for _, name := range names {
@@ -156,7 +156,7 @@ func checkDoctrineBuiltinsLoad(_ context.Context, _ *client.Client) CheckResult 
 				Name: "doctrine.builtins.load", Status: "fail",
 				Detail: fmt.Sprintf("builtin %q has schema_version=%s; want %s",
 					name, s.SchemaVersion, schema.CurrentSchemaVersion),
-				Hint: "Plan 8 baseline schema_version=1.0; rebuild after Phase A schema change",
+				Hint: "HADES design baseline schema_version=1.0; rebuild after stage schema change",
 			}
 		}
 	}
@@ -197,7 +197,7 @@ func checkDoctrineOverridesPerProjectHealthy(ctx context.Context, c *client.Clie
 	}
 	return CheckResult{
 		Name: "doctrine.overrides.per-project.healthy", Status: "ok",
-		Detail: fmt.Sprintf("%d project overrides (Phase J ships embed source only in v0.8.0)",
+		Detail: fmt.Sprintf("%d project overrides (stage ships embed source only in v0.8.0)",
 			projectCount),
 	}
 }
@@ -208,7 +208,7 @@ func checkDoctrineReloadWatcherHealthy(ctx context.Context, c *client.Client) Ch
 		return CheckResult{
 			Name: "doctrine.reload.watcher.healthy", Status: "fail",
 			Detail: err.Error(),
-			Hint:   "daemon /v1/doctrine/status unreachable; check Phase J wiring",
+			Hint:   "daemon /v1/doctrine/status unreachable; check stage wiring",
 		}
 	}
 	if !resp.WatcherHealthy {
@@ -242,7 +242,7 @@ func checkDoctrineTelemetrySubscriberHealthy(ctx context.Context, c *client.Clie
 		return CheckResult{
 			Name: "doctrine.telemetry.subscriber.healthy", Status: "fail",
 			Detail: err.Error(),
-			Hint:   "daemon /v1/doctrine/history unreachable; check Phase J + Phase H wiring",
+			Hint:   "daemon /v1/doctrine/history unreachable; check stage + stage wiring",
 		}
 	}
 	var reverts int
@@ -288,7 +288,7 @@ func checkDoctrineLintAnalyzersRegistered(_ context.Context, _ *client.Client) C
 			Name: "doctrine.lint.analyzers.registered", Status: "fail",
 			Detail: fmt.Sprintf("%d analyzers missing Name: %s",
 				len(missing), strings.Join(missing, ", ")),
-			Hint: "rebuild cmd/hades-doctrine-lint; check Phase L analyzer registration",
+			Hint: "rebuild cmd/hades-doctrine-lint; check stage analyzer registration",
 		}
 	}
 	return CheckResult{
@@ -303,7 +303,7 @@ func checkDoctrineSchemaMigrationStatus(ctx context.Context, c *client.Client) C
 		return CheckResult{
 			Name: "doctrine.schema.migration.status", Status: "fail",
 			Detail: err.Error(),
-			Hint:   "daemon /v1/doctrine/list unreachable; check Phase J wiring",
+			Hint:   "daemon /v1/doctrine/list unreachable; check stage wiring",
 		}
 	}
 	var pending []string
@@ -354,7 +354,7 @@ func checkDoctrineReinforcementTemplatesParse(_ context.Context, _ *client.Clien
 			CurrentPhase:       "A",
 			TaskKind:           "worker",
 			TaskComplexityTier: "moderate",
-			PlanID:             "plan-8",
+			PlanID:             "HADES design",
 			TransverseAxioms:   axioms,
 		}
 		if _, err := engine.Render(s, stubVars); err != nil {
@@ -377,7 +377,7 @@ func checkDoctrineAmendmentsPending(ctx context.Context, c *client.Client) Check
 		return CheckResult{
 			Name: "doctrine.amendments.pending", Status: "fail",
 			Detail: err.Error(),
-			Hint:   "daemon /v1/doctrine/propose-list unreachable; check Plan 5 + Phase K wiring",
+			Hint:   "daemon /v1/doctrine/propose-list unreachable; check HADES design + stage wiring",
 		}
 	}
 	var pending []string
@@ -405,7 +405,7 @@ func checkDoctrineEventsRecent(ctx context.Context, c *client.Client) CheckResul
 		return CheckResult{
 			Name: "doctrine.events.recent", Status: "fail",
 			Detail: err.Error(),
-			Hint:   "daemon /v1/doctrine/history unreachable; check Phase J wiring",
+			Hint:   "daemon /v1/doctrine/history unreachable; check stage wiring",
 		}
 	}
 	if len(resp.Events) == 0 {
@@ -450,12 +450,12 @@ func checkDoctrineTransverseAxiomsHardcoded(_ context.Context, _ *client.Client)
 			Name: "doctrine.transverse.axioms.hardcoded", Status: "fail",
 			Detail: fmt.Sprintf("%d axioms missing: %s",
 				len(missing), strings.Join(missing, ", ")),
-			Hint: "Phase A transverse.go regression; check inv-hades-135 enforcement",
+			Hint: "stage transverse.go regression; check invariant enforcement",
 		}
 	}
 
 	return CheckResult{
 		Name: "doctrine.transverse.axioms.hardcoded", Status: "ok",
-		Detail: fmt.Sprintf("4 axioms hardcoded operator-only: no_tech_debt, no_stubs, build_final_product, no_defer (per inv-hades-135)"),
+		Detail: fmt.Sprintf("4 axioms hardcoded operator-only: no_tech_debt, no_stubs, build_final_product, no_defer (per invariant)"),
 	}
 }

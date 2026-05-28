@@ -4,8 +4,8 @@
 // `cmd/hades-ctld/main.go` invokes Server.SubsystemProbe every 5
 // minutes per subsystem ("knowledge", "scheduler", "inbox", "tmux") and
 // emits a structured slog line with the per-status counts. The output
-// timeline is the substrate release hash-chain extension hooks anchor
-// against (per Q17 D); the slog output lands in stderr /
+// timeline is the substrate HADES design hash-chain extension hooks anchor
+// against (per design choice D); the slog output lands in stderr /
 // the launchd log file.
 //
 // J-7 ships the dispatcher contract + a no-op fallback that returns an
@@ -16,7 +16,7 @@
 // all zero — operationally inert but observable.
 //
 // invariant boundary: this file lives in internal/daemon (which already
-// imports internal/store + every release subsystem package indirectly via
+// imports internal/store + every HADES design subsystem package indirectly via
 // the adapters). The per-subsystem prober concrete types do not violate
 // the boundary because they are dependency-injected (SetXxxProber); the
 // Server treats them as opaque interfaces.

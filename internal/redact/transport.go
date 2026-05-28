@@ -19,7 +19,7 @@ import (
 // 3. Provides SafeDumpRequest / SafeDumpResponse helpers that callers
 // MUST use instead of httputil.DumpRequest{,Out}.
 //
-// Inv-hades-052 (compile-checked): every HTTP path in
+// invariant (compile-checked): every HTTP path in
 // private-tier1-module that issues outbound requests must use a
 // client whose Transport is a *RedactingTransport. The compile-check
 // symbol in compile_check.go enforces this by referencing the

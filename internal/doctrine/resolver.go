@@ -9,7 +9,7 @@
 // later layers shadow earlier ones (last-writer-wins per field).
 //
 // Project-level overrides are clamped to doctrine ceilings for budget
-// caps (per spec §2.2 Capa 2 loader item 3); clamps appear in the
+// caps (per design contract); clamps appear in the
 // provenance map with the "clamped:" prefix.
 
 package doctrine

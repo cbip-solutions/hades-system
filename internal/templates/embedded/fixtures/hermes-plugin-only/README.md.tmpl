@@ -11,7 +11,7 @@ Hermes plugin scaffolded by [hades-system](https://github.com/cbip-solutions/had
 # Install into user-scope Hermes plugin tree:
 ln -s "$(pwd)" ~/.hermes/plugins/{{.ProjectName}}
 
-# Or use project-scope (Q13=D opt-in):
+# Or use project-scope (design choice opt-in):
 mkdir -p .hermes/plugins
 ln -s "$(pwd)" .hermes/plugins/{{.ProjectName}}
 ```

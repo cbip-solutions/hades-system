@@ -22,7 +22,7 @@ const ReplayCorruptionBudget = 5
 // . Replay
 // returns the partial ReplayState alongside this error so the caller
 // can audit how far reconstruction progressed before halting.
-var ErrCorruptionBudgetExceeded = errors.New("eventlog: replay corruption budget exceeded (inv-hades-095)")
+var ErrCorruptionBudgetExceeded = errors.New("eventlog: replay corruption budget exceeded (invariant)")
 
 type ReplayState struct {
 	SessionID       string
@@ -50,7 +50,7 @@ type ReplayState struct {
 // reconstructs ReplayState by folding each decoded event into the
 // state accumulator.
 //
-// Inv-hades-095 contract: at most ReplayCorruptionBudget corrupted events
+// invariant contract: at most ReplayCorruptionBudget corrupted events
 // are tolerated. Each skip is itself audited via a ReplayCorruptionDetected
 // event re-appended to the log (best-effort; emit failures during the
 // audit-of-corruption do NOT abort replay because the corruption signal
@@ -70,8 +70,8 @@ type ReplayState struct {
 // error string as untrusted by construction.
 //
 // IMP-2 IsValid guard (carry-forward from A-2): rows whose event_type
-// is not in AllEventTypes() — i.e., out-of-range values not yet wired
-// by a Plan phase — fall through Decode's default branch and are
+// is not in AllEventTypes() — i.e., out-of-range values unavailable
+// by a Plan stage — fall through Decode's default branch and are
 // counted as corruption. This is the load-bearing closed-set
 // invariant: a row that the eventlog package does not recognize is
 // indistinguishable from a corrupted row at the recovery layer. (Plan

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package knowledge — hybrid query API Task G-6.
+// Package knowledge — hybrid query API task
 //
-// Spec reference: internal design record
-// §"Task G-6" lines 2056–2616. Per spec §3.5 the query flow is:
+// Spec reference: design records design
+// §"task" lines 2056–2616. per design contract:
 //
 // parse query → apply structured filters first (uses indexes)
 // → FTS5 MATCH on filtered subset
@@ -13,19 +13,19 @@
 // "Filter first" matters: filtering by project_alias + file_type +
 // last_modified on indexed columns reduces the candidate set BEFORE FTS5
 // runs, keeping query latency O(log N) on the indexed prefix even when
-// the corpus grows to 5k+ docs (per spec §6.6 expected ceiling).
+// the corpus grows to 5k+ docs (per design contract).
 //
 // invariant (spec §7.2): aggregator NEVER queries web sources directly.
 // Query.Remote=true short-circuits to ErrRemoteNotShipped; the CLI layer
-// (G-12) translates the sentinel to the deferred-message UX. release
+// (G-12) translates the sentinel to the deferred-message UX. HADES design
 // owns the eventual --remote ecosystem RAG implementation.
 //
 // invariant (spec §7.2): the three extension-hook columns
 // (audit_chain_anchor, ecosystem_join_keys, caronte_symbol_refs) ship
-// NULL by default in release. The --code-symbol path uses a JSON-LIKE
-// filter on caronte_symbol_refs; in the release baseline the column is
+// NULL by default in HADES design The --code-symbol path uses a JSON-LIKE
+// filter on caronte_symbol_refs; in the HADES design baseline the column is
 // NULL for all rows so the filter matches zero rows. The path is
-// preserved so Caronte can populate rows post-release without
+// preserved so Caronte can populate rows post-HADES design without
 // retrofit migration.
 //
 // Boundary (invariant documented exception): this file imports only
@@ -59,11 +59,11 @@ const DefaultLimit = 10
 const MaxLimit = 1000
 
 var ErrRemoteNotShipped = errors.New(
-	"knowledge: --remote ecosystem RAG not yet shipped (Plan 14 deliverable)",
+	"knowledge: --remote ecosystem RAG not yet shipped (HADES design deliverable)",
 )
 
 var ErrAuditChainNotShipped = errors.New(
-	"knowledge: --audit-chain hash-chain not yet shipped (Plan 9 deliverable)",
+	"knowledge: --audit-chain hash-chain not yet shipped (HADES design deliverable)",
 )
 
 type Query struct {

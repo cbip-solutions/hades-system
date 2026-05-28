@@ -26,7 +26,7 @@
 //
 // Concurrency model:
 // - One sync.Mutex (cb.mu) protects the cb.breakers map and every tierState.
-// - AttemptRecovery uses a two-phase lock pattern: it acquires the lock
+// - AttemptRecovery uses a two-stage lock pattern: it acquires the lock
 // to read state and decide whether to probe, releases the lock so the
 // probe (potentially slow network round-trip) does not block other
 // providers, then re-acquires the lock to commit the post-probe state.
@@ -187,7 +187,7 @@ func (cb *CircuitBreaker) RecordRateLimited(name string, retryAfter time.Duratio
 //
 // Concurrency the probe runs OUTSIDE the breaker's lock. A slow probe
 // MUST NOT block other providers' RecordSuccess / RecordFailure / Permit
-// calls. The two-phase lock pattern is load-bearing.
+// calls. The two-stage lock pattern is load-bearing.
 func (cb *CircuitBreaker) AttemptRecovery(ctx context.Context, backend providers.TierBackend) bool {
 	name := backend.Name()
 

@@ -4,7 +4,7 @@
 // hades-mcp-sshexec) to communicate with the hades-ctld daemon over a
 // Unix domain socket.
 //
-// Decision Q9 B: MCPs are stdio-canonical processes. They do NOT run an HTTP
+// Decision design choice B: MCPs are stdio-canonical processes. They do NOT run an HTTP
 // server. All shared daemon state (research cache, audit events, budget data)
 // is accessed by the MCPs as outbound HTTP clients calling daemon /v1/*
 // endpoints. This package is the single implementation of that outbound

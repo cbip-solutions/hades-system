@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package hadesday — audit_section.go
 //
-// Extends release hadesday with a NEW collector that walks per-project release
+// Extends HADES design hadesday with a NEW collector that walks per-project HADES design
 // substrate health (chain integrity + backup status + ADR transitions today
 // + research cache hit rate + state freshness) and produces BriefItem per
 // project. LeverageRank assigned per worst-substrate-status:
@@ -109,7 +109,7 @@ func buildAuditProjectItem(p AuditProjectStatus, now time.Time) BriefItem {
 		EventType: "plan9.audit",
 		Message:   body,
 		Action:    auditProjectAction(worst, p.Alias),
-		Source:    "plan-9-audit",
+		Source:    "HADES design",
 		CreatedAt: now,
 	}
 }
@@ -346,7 +346,7 @@ func auditHumanDuration(d time.Duration) string {
 
 func RenderAuditSection(items []BriefItem, now time.Time) string {
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf("## [release audit + persistence] — %s\n\n",
+	b.WriteString(fmt.Sprintf("## [HADES design audit + persistence] — %s\n\n",
 		now.Format("2006-01-02")))
 	for _, it := range items {
 		glyph := auditRankGlyph(it.Rank)

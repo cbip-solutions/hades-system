@@ -12,13 +12,13 @@ import httpx
 from .types import VoiceFlow, VoiceFlowMode
 
 # Threshold for sync vs async classification (milliseconds).
-# Per spec §1 Q6=B: "sync if estimated <10s; async with notification beyond".
+# per design contract: "sync if estimated <10s; async with notification beyond".
 SYNC_THRESHOLD_MS = 10_000
 
-# Estimator rule constants — sourced from spec §1 Q8 aggressive
-# performance budgets. Empirical calibration (release track spike + HADES design D
+# Estimator rule constants — sourced from spec §1 design choice aggressive
+# performance budgets. Empirical calibration (stage spike + HADES design D
 # production) tunes these post-ship via doctrine amendment lifecycle
-# (HADES design + HADES design) per §1 Q8 footnote.
+# (HADES design + HADES design) per §1 design choice footnote.
 _BASE_RRF_MS = 2_000
 _CROSS_PROJECT_BASELINE_MS = 8_000
 _PER_EXTRA_PROJECT_MS = 1_500
@@ -43,7 +43,7 @@ def estimate_latency_ms(
 ) -> int:
     """Estimate query latency in milliseconds via rule-based heuristics.
 
-    Per spec §1 Q8: empirical calibration via release track spike + production
+    per design contract: empirical calibration via stage spike + production
     measurement; this function captures the calibrated baseline at
     plan-write time. Doctrine amendment lifecycle re-tunes constants as
     production data accumulates.
@@ -51,7 +51,7 @@ def estimate_latency_ms(
     Args:
         query: The voice query text (operator's spoken intent).
         cross_project: True when the operator asked across project
-            boundaries (release track ``/voice`` slash parser sets this when
+            boundaries (stage ``/voice`` slash parser sets this when
             ``--cross-project`` flag present OR query mentions multiple
             project ids).
         project_count: Number of projects spanned (used only when
@@ -93,7 +93,7 @@ async def dispatch_voice_query(
     audit_emitter: Callable[..., Awaitable[None]],
     inbox_poster: Callable[..., Awaitable[dict[str, Any]]],
 ) -> VoiceFlow:
-    """Dispatch a voice query via sync or async path per Q6=B decision tree.
+    """Dispatch a voice query via sync or async path per design choice decision tree.
 
     Args:
         query: The voice query text.

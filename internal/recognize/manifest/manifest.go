@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Package manifest implements Tier 1 of hades recognize per spec §2.4 Q4=B:
+// Package manifest implements Tier 1 of hades recognize per design contract=B:
 // per-ecosystem manifest detection with highest confidence (~0 false positive).
 //
 // Each detector implements the Detector interface; the package-level Detect()
-// aggregates evidence across all 15 detectors. Pure-Go zero-CGO; see Q4 spec
+// aggregates evidence across all 15 detectors. Pure-Go zero-CGO; see design choice spec
 // anti-pattern (NO AST/tree-sitter).
 //
 // Evidence values feed B6 orchestrator (recognize.go) which applies

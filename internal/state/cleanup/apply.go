@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package cleanup — apply.go ships the retention-policy enforcement per
-// Q12=D + invariant. One audit event evt.state.cleanup.deleted per
+// design choice + invariant. One audit event evt.state.cleanup.deleted per
 // expired path (spec §3.7).
 //
 // Apply is idempotent: re-running with the same policy + state produces

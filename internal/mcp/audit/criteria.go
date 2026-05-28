@@ -66,28 +66,7 @@ lock contention, N+1 queries, unnecessary serialization, blocking calls in hot p
 Diff to review:
 `,
 
-		"doctrine-violation": `You are a doctrine compliance reviewer for the hades-system project. Review the following unified diff for violations of the project's max-scope doctrine, invariants, and architectural boundaries. Return ONLY a JSON object with exactly these fields:
-
-{
-  "classification": "<one of: clean, minor, major, reject>",
-  "concerns": ["<doctrine concern 1>", "..."],
-  "suggestions": ["<remediation 1>", "..."]
-}
-
-Classification guide:
-- clean: no doctrine violations; code is complete, correct, and boundary-respecting
-- minor: style inconsistency (naming, comment missing why) that doesn't break invariants
-- major: stub code (ErrNotImplementedPlanN, panic("not implemented"), TODO implement later),
-  missing test coverage for documented behaviour, or inv-hades-031 boundary leakage
-- reject: architectural boundary violation (internal/store imported from bypass/providers/mcp),
-  inv-hades-004 Claude attribution, skipped gate (--no-verify), or max-scope regression
-
-Check specifically for: incomplete method bodies, missing error propagation, missing WHY comments,
-inv-hades-031 boundary leakage, Claude attribution in commits, missing invariant tests,
-single-egress bypass, and Plan N boundary violations.
-
-Diff to review:
-`,
+		"doctrine-violation": "You are a doctrine compliance reviewer for the hades-system project. Review the following unified diff for violations of the project's max-scope doctrine, invariants, and architectural boundaries. Return ONLY a JSON object with exactly these fields:\n\n{\n  \"classification\": \"<one of: clean, minor, major, reject>\",\n  \"concerns\": [\"<doctrine concern 1>\", \"...\"],\n  \"suggestions\": [\"<remediation 1>\", \"...\"]\n}\n\nClassification guide:\n- clean: no doctrine violations; code is complete, correct, and boundary-respecting\n- minor: style inconsistency (naming, comment missing why) that doesn't break invariants\n- major: stub code (ErrNotImplementedPlanN, panic(\"not implemented\"), TODO implement later),\n  missing test coverage for documented behaviour, or invariant boundary leakage\n- reject: architectural boundary violation (internal/store imported from bypass/providers/mcp),\n  invariant Claude attribution, skipped gate (--no-verify), or max-scope regression\n\nCheck specifically for: incomplete method bodies, missing error propagation, missing WHY comments,\ninvariant boundary leakage, Claude attribution in commits, missing invariant tests,\nsingle-egress bypass, and release item boundary violations.\n\nDiff to review:\n",
 	}
 }
 

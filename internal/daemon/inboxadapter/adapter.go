@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package inboxadapter is the invariant boundary between the
-// internal/inbox domain layer and internal/store SQL persistence (release
-// Task E-10).
+// internal/inbox domain layer and internal/store SQL persistence (HADES design
+// task).
 //
 // Adapter satisfies inbox.Store directly (per-project authoritative
 // writes) and exposes an inbox.AggregatorCacheStore via Cache() (daemon-

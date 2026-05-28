@@ -26,7 +26,7 @@ func TryWire(
 	_, _ string,
 ) (*Adapter, func() error) {
 	if logger != nil {
-		logger.Info("Plan 14 ecosystem handler: NOT WIRED (CGO disabled)",
+		logger.Info("HADES design ecosystem handler: unavailable (CGO disabled)",
 			"effect", "/v1/ecosystem/* returns 503; rebuild daemon with CGO_ENABLED=1 to enable",
 		)
 	}

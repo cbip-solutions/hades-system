@@ -104,7 +104,7 @@ func (r *RecoveryEngine) ReconstructInFlight(ctx context.Context, sessionID stri
 
 	if corruptCount > corruptionBudget {
 		plan.HardPause = true
-		plan.Reason = fmt.Sprintf("inv-hades-095 corruption budget breached: %d decode failures", corruptCount)
+		plan.Reason = fmt.Sprintf("invariant corruption budget breached: %d decode failures", corruptCount)
 		r.emitRestoreFromReplay(ctx, plan, len(records), corruptCount)
 		return plan, nil
 	}
@@ -276,7 +276,7 @@ func (r *RecoveryEngine) emitRestoreFromReplay(ctx context.Context, plan Reconst
 		Timestamp: r.clk.Now(),
 		// Map keys MUST match eventlog.OrchestratorRestoreFromReplay
 		// json tags so the typed Decode round-trip yields all fields
-		// populated (release hash-chain replay + audit-consumer
+		// populated (HADES design hash-chain replay + audit-consumer
 		// contract).
 		Payload: map[string]any{
 			"session_id":           plan.SessionID,

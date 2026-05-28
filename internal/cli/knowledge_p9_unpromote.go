@@ -8,8 +8,8 @@
 // 2. strings.TrimSpace check in RunE — rejects whitespace-only values.
 //
 // Wire method: KnowledgeUnpromoteP9(ctx, noteID, reason) → error (204 No Content).
-// The daemon emits a vault.note_unpromoted_from_global release audit event
-// anchored on the release chain.
+// The daemon emits a vault.note_unpromoted_from_global HADES design audit event
+// anchored on the HADES design chain.
 package cli
 
 import (
@@ -29,19 +29,16 @@ func knowledge9UnpromoteCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "unpromote <note-id>",
-		Short: "Reverse a prior promote (operator-gated; inv-hades-146)",
+		Short: "Reverse a prior promote (operator-gated; invariant)",
 		Args:  cobra.ExactArgs(1),
-		Long: `unpromote removes a note from the global aggregator pin index.
-Operator-gated parallel of promote; same inv-hades-146 mandatory reason.
-
-The unpromote event is anchored on the Plan 9 chain and visible via
-` + "`hades audit-chain history`" + `.`,
+		Long: "unpromote removes a note from the global aggregator pin index.\nOperator-gated parallel of promote; same invariant mandatory reason.\n\nThe unpromote event is anchored on the HADES design chain and visible via\n" +
+			"`hades audit-chain history`" + `.`,
 		Example: `  hades knowledge-p9 unpromote internal-platform-x/old-pattern \
     --reason "superseded by ADR-0072"`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if strings.TrimSpace(reason) == "" {
-				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason required and must be non-empty (inv-hades-146)"))
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason required and must be non-empty (invariant)"))
 			}
 
 			noteID := args[0]
@@ -57,7 +54,7 @@ The unpromote event is anchored on the Plan 9 chain and visible via
 		},
 	}
 
-	cmd.Flags().StringVar(&reason, "reason", "", "Operator rationale (required; inv-hades-146)")
+	cmd.Flags().StringVar(&reason, "reason", "", "Operator rationale (required; invariant)")
 	cmd.Flags().StringVar(&project, "project", "", "Source project ID when note_id is not globally unique")
 
 	_ = cmd.MarkFlagRequired("reason")

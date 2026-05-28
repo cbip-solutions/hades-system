@@ -307,7 +307,7 @@ type plan5BudgetSnapshotReader struct {
 
 func (r plan5BudgetSnapshotReader) Snapshot(context.Context) (core.BudgetSnapshot, error) {
 	if r.counters == nil {
-		return core.BudgetSnapshot{}, fmt.Errorf("daemon/plan5 budget reader: cost counters not wired")
+		return core.BudgetSnapshot{}, fmt.Errorf("daemon/plan5 budget reader: cost counters unavailable")
 	}
 	projectID := r.projectID
 	if projectID == "" {
@@ -466,7 +466,7 @@ func (p *plan5EventLogHeartbeatProbe) LastBeats(ctx context.Context) (map[string
 		return nil, fmt.Errorf("daemon/plan5 heartbeat probe: nil probe")
 	}
 	if p.log == nil {
-		return nil, fmt.Errorf("daemon/plan5 heartbeat probe: event log not wired")
+		return nil, fmt.Errorf("daemon/plan5 heartbeat probe: event log unavailable")
 	}
 	p.mu.Lock()
 	defer p.mu.Unlock()

@@ -9,7 +9,7 @@
 // private-tier1-module, internal/redact. Verified by close-out
 // `go list -deps`.
 //
-// Versioning (per design spec §1 Q5 B): SchemaVersion governs file shape;
+// Versioning (per design spec §1 design choice B): SchemaVersion governs file shape;
 // DoctrineVersion governs rule content. AutoUpgrade declares per-project
 // auto-upgrade policy; capa-firewall hardcodes auto_upgrade="none" per
 // invariant (enforced at named-doctrine layer in internal/doctrine/builtin

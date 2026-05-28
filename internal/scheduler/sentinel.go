@@ -19,7 +19,7 @@ import (
 // that ComputeJitter exists and matches its declared signature. Removing
 // or renaming ComputeJitter breaks the build at this site.
 func jitterDeterministicSentinel() bool {
-	return ComputeJitter("inv-hades-120-anchor", time.Hour) <= jitterRecurringCap
+	return ComputeJitter("invariant-anchor", time.Hour) <= jitterRecurringCap
 }
 
 // missPolicyDoctrineSentinel anchors invariant: Per-doctrine miss

@@ -10,7 +10,7 @@ Show full detail for amendment **{amendment_id}**.
 ## 1. Query daemon
 
 ```bash
-# pending endpoint registration: amendment detail (GET) per spec §7.2
+# pending endpoint registration: amendment detail (GET) per design contract
 curl --unix-socket /tmp/hades-system.sock -s \\
      "http://unix/v1/amendment/{amendment_id}" \\
      | jq '.'

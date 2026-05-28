@@ -2,7 +2,7 @@
 // Package client is the typed HTTP client for talking to hades-ctld
 // over its UDS socket. Used by the hades CLI and TUI.
 //
-// Task L-2 extends this surface with /v1/bypass/* helpers in
+// task extends this surface with /v1/bypass/* helpers in
 // bypass.go and a base-URL constructor for tests.
 package client
 

@@ -8,7 +8,7 @@
 // 2. How many action-needed / urgent items have arrived since the
 // last successful brief?
 //
-// Per spec §6.1 mid-day operator pull example: the CLI invokes
+// per design contract: the CLI invokes
 // `hades day --check-pending`; the daemon HTTP handler invokes the same
 // composer via the (*Generator).CheckPending façade. Output is
 // ephemeral — there is no archive write; callers Render the doc

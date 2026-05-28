@@ -320,27 +320,27 @@ func buildAugmentation(deps augmentationDeps) (http.Handler, error) {
 		logger = slog.Default()
 	}
 	if deps.knowledgeIndex == nil || deps.embedder == nil {
-		logger.Warn("augmentation NOT WIRED: Plan 9 D knowledge index / embedder absent",
+		logger.Warn("augmentation unavailable: HADES design D knowledge index / embedder absent",
 			"effect", "POST /v1/augment returns 503; pre-LLM hook proceeds unaugmented",
 			"resolution", "operator runs `hades knowledge init` to materialize the vault DB; a build-tag-gated helper wires aggregator + aggregatoradapter (the CGO mattn driver they pull is incompatible with the daemon's primary ncruces driver) and threads the resulting KnowledgeIndex + Embedder through this slot; daemon restart picks up the wired substrate")
 		return nil, nil
 	}
 	if deps.mcpDispatcher == nil {
-		logger.Warn("augmentation NOT WIRED: mcpgateway dispatcher absent",
+		logger.Warn("augmentation unavailable: mcpgateway dispatcher absent",
 			"effect", "POST /v1/augment returns 503",
-			"resolution", "fix caronte engine bootstrap (Q5=A; inv-hades-206 generalised)")
+			"resolution", "fix caronte engine bootstrap (design choice; invariant generalised)")
 		return nil, nil
 	}
 	if deps.auditAdapter == nil {
-		logger.Warn("augmentation NOT WIRED: audit adapter absent",
+		logger.Warn("augmentation unavailable: audit adapter absent",
 			"effect", "POST /v1/augment returns 503",
-			"resolution", "fix Plan 9 chain bootstrap")
+			"resolution", "fix HADES design chain bootstrap")
 		return nil, nil
 	}
 	if deps.budgetAdapter == nil {
-		logger.Warn("augmentation NOT WIRED: budget adapter absent",
+		logger.Warn("augmentation unavailable: budget adapter absent",
 			"effect", "POST /v1/augment returns 503",
-			"resolution", "fix Plan 4 budget wiring")
+			"resolution", "fix HADES design budget wiring")
 		return nil, nil
 	}
 
@@ -399,7 +399,7 @@ func buildAugmentation(deps augmentationDeps) (http.Handler, error) {
 	}
 
 	handler := handlers.AugmentWithPipeline(augmentDoctrineReader{}, runner)
-	logger.Info("Plan 11 augmentation pipeline live",
+	logger.Info("HADES design augmentation pipeline live",
 		"route", "POST /v1/augment",
 		"lanes", "caronte.query + aggregator.fts + caronte.context + aggregator.vec + temporal",
 		"concurrency", 10,

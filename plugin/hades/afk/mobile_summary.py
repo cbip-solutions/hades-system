@@ -26,7 +26,7 @@ def render_short(envelope: dict[str, Any]) -> MobileSummaryCard:
 
     Drops ``top_fields`` beyond the first 3 (``MobileSummaryCard``'s
     invariant). Preserves ``cache_state`` + ``audit_event_id`` +
-    ``project_id`` verbatim — these fields drive release track renderer
+    ``project_id`` verbatim — these fields drive stage renderer
     dispatch and HADES design audit chain anchor.
 
     Args:
@@ -38,7 +38,7 @@ def render_short(envelope: dict[str, Any]) -> MobileSummaryCard:
         A ``MobileSummaryCard`` with at most 3 ``top_fields``. Any extra
         fields in ``envelope["top_fields"]`` are silently dropped
         (citation envelope's structured fields are pre-ranked by Plan
-        11 — first 3 = highest signal per spec §7.4).
+        11 — first 3 = highest signal per design contract).
 
     Raises:
         ValueError: if the envelope is malformed (missing required keys).
@@ -60,7 +60,7 @@ def render_short(envelope: dict[str, Any]) -> MobileSummaryCard:
 def voice_short_phrase(envelope: dict[str, Any]) -> str:
     """Render the citation envelope's top finding as a TTS-friendly phrase.
 
-    Per spec §1 Q9=C+ voice format: verbal description, no special
+    per design contract: verbal description, no special
     chars, explicit audit-event-id reference for traceability ("Citing
     audit event evt-1234abcd, blast radius 12 callers, community
     daemon-bootstrap.").
@@ -86,9 +86,8 @@ async def expand(
 ) -> dict[str, Any]:
     """Resolve a citation envelope's full payload via daemon HTTP round-trip.
 
-    Implements the ``/expand <citation-id>`` slash command flow per spec
-    §1 Q6=B. Operator on AFK platform issues ``/expand evt-1234abcd``;
-    Hermes' slash command parser (release track registers the command; this
+    Implements the ``/expand <citation-id>`` slash command flow per design contract``/expand evt-1234abcd``;
+    Hermes' slash command parser (stage registers the command; this
     function executes it) invokes this coroutine. The daemon's
     ``GET /v1/audit/event/<id>`` endpoint (HADES design substrate shipped per
     ``internal/daemon/handlers/audit_event.go``) returns the full

@@ -21,7 +21,7 @@ type InvariantsWalker struct {
 
 func NewInvariantsWalker(root string) *InvariantsWalker { return &InvariantsWalker{root: root} }
 
-var invHadesRE = regexp.MustCompile(`inv-hades-([0-9]+)`)
+var invHadesRE = regexp.MustCompile("invariant-([0-9]+)")
 
 func (w *InvariantsWalker) Walk(_ context.Context) (InvariantsResult, error) {
 	res := InvariantsResult{}

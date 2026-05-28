@@ -9,7 +9,7 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/caronte/store"
 )
 
-// RouteExtractor is the release cross-language API-extraction contract (master
+// RouteExtractor is the HADES design cross-language API-extraction contract (master
 // C-4, FROZEN). Each concrete extractor lives in a per-framework subpackage
 // under internal/caronte/contract/extract/ and is added to a Registry at
 // daemon composition time. The registry's Resolve(file, content) capability-

@@ -8,20 +8,20 @@
 // introspection preview; --force overrides today's-archive
 // idempotency.
 //
-// Pre-release history: this file previously hosted the release-6
+// Pre-HADES design history: this file previously hosted the HADES design
 // morning-brief composer that issued multiple GET /v1/*/summary calls
-// from the CLI side and stitched the markdown locally. release
+// from the CLI side and stitched the markdown locally. HADES design
 // consolidates the brief into a single daemon-side composer
 // (hadesday.Generator, F-7..F-9) so the CLI is now a thin dispatcher:
-// one POST round-trip + Render. The release-6 sections (workforce,
+// one POST round-trip + Render. The HADES design sections (workforce,
 // research, audit, budget, sshexec, health, autonomy, merge,
 // notifications, bypass) are now sourced server-side via
 // hadesday.Collect's parallel fan-out.
 //
 // --include-bypass is preserved as a no-op flag (with a stderr
 // deprecation notice) for backward compat with operators who scripted
-// the release form. The deprecation message points at the new behaviour
-// — the brief always consolidates every source as of release — so
+// the HADES design form. The deprecation message points at the new behaviour
+// — the brief always consolidates every source as of HADES design — so
 // removing the flag in the next major can happen without surprise.
 //
 // Exit-code contract via cmd.RunE / IsRecoverable:
@@ -100,21 +100,8 @@ func NewDayCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "day",
 		Short: "Show today's hades day brief (morning), EOD digest, or check-pending preview",
-		Long: `hades day composes today's morning brief, EOD digest, or check-pending
-introspection per spec §1 Q13/Q14/Q15. Default invocation is the
-morning brief. --eod runs the EOD digest; --check-pending shows
-next-fire + pending-since-last counts. --force overrides today's-
-archive idempotency for morning / eod (no effect on check-pending).
+		Long:  "hades day composes today's morning brief, EOD digest, or check-pending\nintrospection per design contract\nmorning brief. --eod runs the EOD digest; --check-pending shows\nnext-fire + pending-since-last counts. --force overrides today's-\narchive idempotency for morning / eod (no effect on check-pending).\n\nThe brief honours the 7-item hard cap (invariant) and canonical\nleverage rank order (invariant). Truncation marker\n\"+ N more in hades inbox --since 24h\" appears when more items exist\nthan the cap allows.\n\n--include-bypass is a legacy HADES design flag preserved as a no-op for\nbackward compat with scripted callers; the brief now consolidates\nall sources (bypass health is rendered alongside the other sections\nby the daemon-side composer).",
 
-The brief honours the 7-item hard cap (inv-hades-126) and canonical
-leverage rank order (inv-hades-127). Truncation marker
-"+ N more in hades inbox --since 24h" appears when more items exist
-than the cap allows.
-
---include-bypass is a legacy Plan 2 flag preserved as a no-op for
-backward compat with scripted callers; the brief now consolidates
-all sources (bypass health is rendered alongside the other sections
-by the daemon-side composer).`,
 		Example: " # Default: today's morning brief (idempotent)\n  hades day\n\n # Force regeneration even if today's brief is already archived\n  hades day --force\n\n # End-of-day digest\n  hades day --eod\n\n # Check what would fire next + pending-since-last counts (read-only)\n  hades day --check-pending",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -123,7 +110,7 @@ by the daemon-side composer).`,
 
 			if includeBypass {
 				fmt.Fprintln(cmd.ErrOrStderr(),
-					"warn: --include-bypass is a legacy Plan 2 no-op; the brief now consolidates every source")
+					"warn: --include-bypass is a legacy HADES design no-op; the brief now consolidates every source")
 			}
 
 			c := dayClientFromHTTP(newClientFromCmd(cmd))
@@ -136,7 +123,7 @@ by the daemon-side composer).`,
 	cmd.Flags().BoolVar(&checkPending, "check-pending", false,
 		"show next-fire + pending-since-last counts (read-only introspection)")
 	cmd.Flags().BoolVar(&includeBypass, "include-bypass", false,
-		"legacy Plan 2 no-op flag; the brief always consolidates every source")
+		"legacy HADES design no-op flag; the brief always consolidates every source")
 	return cmd
 }
 

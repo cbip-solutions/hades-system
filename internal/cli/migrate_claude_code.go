@@ -22,9 +22,9 @@ import (
 	"github.com/cbip-solutions/hades-system/internal/migrate/writer"
 )
 
-const MigrateClaudeCodeAuditEventType = "evt.migrate.claude_code.run"
+const MigrateClaudeCodeAuditEventType = "evt.migratelocal agent config_code.run"
 
-const MigrateClaudeCodePermissionUnmappedEventType = "evt.migrate.claude_code.permission.unmapped"
+const MigrateClaudeCodePermissionUnmappedEventType = "evt.migratelocal agent config_code.permission.unmapped"
 
 type claudeCodeFlags struct {
 	source         string
@@ -47,29 +47,9 @@ func newMigrateClaudeCodeCommand() *cobra.Command {
 	f := &claudeCodeFlags{}
 	cmd := &cobra.Command{
 		Use:   "claude-code",
-		Short: "Import a Claude Code installation (~/.claude/) into Hermes plugin format + hades doctrine",
-		Long: `Imports an existing Claude Code installation (~/.claude/ + project-local
-.claude/) into HADES's Hermes substrate format. Spec §2.4 mapping table.
+		Short: "Import a Claude Code installation (local agent memory/) into Hermes plugin format + hades doctrine",
+		Long:  "Imports an existing Claude Code installation (local agent memory/ + project-local\nlocal agent config/) into HADES's Hermes substrate format. Spec §2.4 mapping table.\n\nModes:\n  --dry-run                  Print plan only; no filesystem changes.\n  --plan-output PATH         Write JSON plan to PATH (deterministic).\n  --apply-plan PATH          Apply a previously generated plan.\n  --preset {strict|lenient}  Strict halts on unmapped surfaces; lenient skips + warns.\n  --force                    Overwrite existing target files.\n  --backup-target            Create tar.gz backup before mutating (invariant).\n  --json                     Emit structured JSON summary.\n\n  (--verify lands in stage when \"hades doctor hermes\" integrates.)\n\nSurfaces imported (spec §2.4 mapping table):\n  local agent memory/skills/<name>/SKILL.md           → plugin/hades-system/skills/<name>/SKILL.md\n  local agent memory/commands/<name>.md               → plugin/hades-system/commands/<name>.py\n  local agent memory/hooks/<event>.{sh,py}            → plugin/hades-system/hooks/<hermes-event>.py\n  local agent memory/settings.json#permissions        → doctrines/imported-from-claude-code.toml\n  local agent memory/settings.json#model+mcpServers   → config.yaml\n  local agent memory/projects/<slug>/memory/*.md      → projects/<slug>/memory/*.md\n  local agent memory/.mcp.json#mcpServers             → config.yaml#mcp_servers",
 
-Modes:
-  --dry-run                  Print plan only; no filesystem changes.
-  --plan-output PATH         Write JSON plan to PATH (deterministic).
-  --apply-plan PATH          Apply a previously generated plan.
-  --preset {strict|lenient}  Strict halts on unmapped surfaces; lenient skips + warns.
-  --force                    Overwrite existing target files.
-  --backup-target            Create tar.gz backup before mutating (inv-hades-177).
-  --json                     Emit structured JSON summary.
-
-  (--verify lands in Phase F when "hades doctor hermes" integrates.)
-
-Surfaces imported (spec §2.4 mapping table):
-  ~/.claude/skills/<name>/SKILL.md           → plugin/hades-system/skills/<name>/SKILL.md
-  ~/.claude/commands/<name>.md               → plugin/hades-system/commands/<name>.py
-  ~/.claude/hooks/<event>.{sh,py}            → plugin/hades-system/hooks/<hermes-event>.py
-  ~/.claude/settings.json#permissions        → doctrines/imported-from-claude-code.toml
-  ~/.claude/settings.json#model+mcpServers   → config.yaml
-  ~/.claude/projects/<slug>/memory/*.md      → projects/<slug>/memory/*.md
-  ~/.claude/.mcp.json#mcpServers             → config.yaml#mcp_servers`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runMigrateClaudeCode(cmd, f)
 		},
@@ -85,9 +65,9 @@ Surfaces imported (spec §2.4 mapping table):
 	cmd.Flags().StringVar(&f.planOutput, "plan-output", "", "Write JSON migration plan to PATH")
 	cmd.Flags().StringVar(&f.applyPlan, "apply-plan", "", "Apply previously generated plan from PATH")
 	cmd.Flags().BoolVar(&f.force, "force", false, "Overwrite existing target files")
-	cmd.Flags().BoolVar(&f.backupTarget, "backup-target", false, "Tar target dirs before write (inv-hades-177)")
+	cmd.Flags().BoolVar(&f.backupTarget, "backup-target", false, "Tar target dirs before write (invariant)")
 
-	cmd.Flags().BoolVar(&f.verify, "verify", false, "(reserved for Phase F)")
+	cmd.Flags().BoolVar(&f.verify, "verify", false, "(reserved for stage)")
 	if err := cmd.Flags().MarkHidden("verify"); err != nil {
 
 		fmt.Fprintf(cmd.ErrOrStderr(), "warning: failed to hide --verify: %v\n", err)
@@ -99,9 +79,9 @@ Surfaces imported (spec §2.4 mapping table):
 func defaultSource() string {
 	home, _ := os.UserHomeDir()
 	if home == "" {
-		return ".claude"
+		return "local agent config"
 	}
-	return filepath.Join(home, ".claude")
+	return filepath.Join(home, "local agent config")
 }
 
 func defaultTargetHermes() string {
@@ -182,7 +162,7 @@ func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
 	if plan.Preset != mapping.PresetStrict {
 		for _, perm := range unmappedPermissionsFromPlan(plan) {
 			plan.Warnings = append(plan.Warnings, fmt.Sprintf(
-				"settings.json: permission %q has no risk-tier classifier (lenient: classified as medium; emit evt.migrate.claude_code.permission.unmapped)", perm))
+				"settings.json: permission %q has no risk-tier classifier (lenient: classified as medium; emit evt.migratelocal agent config_code.permission.unmapped)", perm))
 		}
 	}
 
@@ -204,7 +184,7 @@ func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
 	if err := w.Apply(plan); err != nil {
 		return err
 	}
-	// evt.migratelocal agent config_code.permission.unmapped per spec §3.7 +
+	// evt.migratelocal agent config_code.permission.unmapped per design contract
 	// §5979-5982 + CHANGELOG.md:38. Best-effort: daemon-down does not block
 	// the apply itself (the writer already succeeded). Surface warning so
 	// operators know forensic trace failed.
@@ -228,7 +208,7 @@ func runMigrateClaudeCode(cmd *cobra.Command, f *claudeCodeFlags) error {
 	}
 	if f.verify {
 
-		fmt.Fprintln(cmd.OutOrStdout(), "Verify: deferred to Phase F (run `hades doctor hermes` after Phase F lands).")
+		fmt.Fprintln(cmd.OutOrStdout(), "Verify: deferred to stage (run `hades doctor hermes` after stage lands).")
 	}
 	return nil
 }
@@ -277,7 +257,7 @@ func rehydrateBodyBytes(plan *mapping.Plan, inv *source.Inventory) error {
 	return nil
 }
 
-var ErrPlanHashMismatch = errors.New("migrate: plan hash mismatch (source file tampered between plan and apply; TOCTOU guard inv-hades-183)")
+var ErrPlanHashMismatch = errors.New("migrate: plan hash mismatch (source file tampered between plan and apply; TOCTOU guard invariant)")
 
 func verifyPlanHashes(plan *mapping.Plan) error {
 	for _, e := range plan.Entries {
@@ -388,7 +368,7 @@ func parseCSV(s string) map[string]bool {
 	return out
 }
 
-// emitMigrateClaudeCodeAudit fires the canonical release audit events for
+// emitMigrateClaudeCodeAudit fires the canonical HADES design audit events for
 // a successful `hades migrate claude-code` apply: one
 // evt.migratelocal agent config_code.run summarising the migration + one
 // evt.migratelocal agent config_code.permission.unmapped per unrecognised permission

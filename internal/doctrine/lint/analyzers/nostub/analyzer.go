@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package nostub implements noStubAnalyzer for hades-system release (spec §1 Q4 B).
+// Package nostub implements noStubAnalyzer for hades-system HADES design (spec §1 design choice B).
 //
 // Detects production-code stubs that violate project instructions project doctrine
 // "No stubs, código completo":
@@ -50,7 +50,7 @@ var Analyzer = &analysis.Analyzer{
 	Name: "nostub",
 	Doc: "Detects production-code stubs (panic-not-implemented, ErrNotImplementedPlanN, " +
 		"// TODO implement later, empty method bodies on concrete types). Enforces " +
-		"CLAUDE.md \"No stubs, código completo\" doctrine. Subsumes manual stub-grep.",
+		"project instructions \"No stubs, código completo\" doctrine. Subsumes manual stub-grep.",
 	Flags:    flagSetOnce,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 	Run:      run,
@@ -82,7 +82,7 @@ func run(pass *analysis.Pass) (any, error) {
 		}
 		if stubPanicRegex.MatchString(lit.Value) {
 			pass.Reportf(ce.Pos(),
-				"nostub-panic: %s is a stub marker per CLAUDE.md \"No stubs, código completo\" doctrine; replace with real implementation",
+				"nostub-panic: %s is a stub marker per project instructions \"No stubs, código completo\" doctrine; replace with real implementation",
 				lit.Value)
 		}
 	})
@@ -136,7 +136,7 @@ func run(pass *analysis.Pass) (any, error) {
 				if stubTodoCommentRegex.MatchString(c.Text) {
 					pass.Reportf(c.Pos(),
 						"nostub-todo: %q at start of %s body is a stub marker; "+
-							"replace with real implementation per CLAUDE.md \"No stubs\" doctrine",
+							"replace with real implementation per project instructions \"No stubs\" doctrine",
 						c.Text, fd.Name.Name)
 				}
 			}
@@ -164,7 +164,7 @@ func run(pass *analysis.Pass) (any, error) {
 		pass.Reportf(fd.Pos(),
 			"nostub-empty-method: method %s on concrete type has empty body but non-trivial signature; "+
 				"either implement OR add documented no-op rationale (zero params + zero returns) "+
-				"per CLAUDE.md \"No stubs\" doctrine",
+				"per project instructions \"No stubs\" doctrine",
 			fd.Name.Name)
 	})
 

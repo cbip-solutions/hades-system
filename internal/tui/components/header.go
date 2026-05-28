@@ -7,7 +7,7 @@
 // Glamour for the cases where it works well.
 //
 // All color literals delegate to the shared palette constants in
-// internal/tui/palette per spec §Q2 charcoal-monochrome-with-crimson.
+// internal/tui/palette per design contract
 // The HADES corner glyph (BidentCornerGlyph) lives in this file.
 package components
 

@@ -1,35 +1,35 @@
--- Migration 063: schedules + schedule_history (HADES design release track Task D-1).
+-- Migration 063: schedules + schedule_history (HADES design stage task).
 --
 -- Hosts the durable scheduler substrate: Routine + Task + Loop schedules
--- (3-tier per spec §1 Q8 D) plus the per-fire outcome ledger driving
--- `hades schedule history`. release track ships only the schema (this file) and
+-- (3-tier per design contract) plus the per-fire outcome ledger driving
+-- `hades schedule history`. stage ships only the schema (this file) and
 -- the Go-side CRUD primitives (internal/store/schedules.go); the
 -- internal/scheduler/ package and its scheduleradapter bridge land in
 -- D-2..D-12.
 --
--- Drift note (HADES design release track):
+-- Drift note (HADES design stage):
 --   The original master plan §"Migration numbering coordination"
---   reserved slot 059 for release track schedules table under an
+--   reserved slot 059 for stage schedules table under an
 --   execution-order sequence A→C→B→D→E. Reality at HEAD on 2026-05-07:
---     - 057 taken by release track (projects_alias + path_history)
---     - 060 taken by release track (priority_overrides; joint payload split)
---     - 062 taken by release track (tmux_session_state)
---     - schemaVersion = 26 entering release track
---   release track therefore picks 063 — the next free number on the
---   daemon.db schema chain. Slot 059 is reserved for release track inbox
---   storage, slot 061 is reserved for release track knowledge-index DB
+--     - 057 taken by stage (projects_alias + path_history)
+--     - 060 taken by stage (priority_overrides; joint payload split)
+--     - 062 taken by stage (tmux_session_state)
+--     - schemaVersion = 26 entering stage
+--   stage therefore picks 063 — the next free number on the
+--   daemon.db schema chain. Slot 059 is reserved for stage inbox
+--   storage, slot 061 is reserved for stage knowledge-index DB
 --   (separate SQLite file, no daemon.db schemaVersion bump).
---   schemaVersion bump path: 26 (release track) → 27 (this migration).
+--   schemaVersion bump path: 26 (stage) → 27 (this migration).
 --
--- Boundary (invariant release track slice):
+-- Boundary (invariant stage slice):
 --   internal/scheduler/* MUST NEVER import internal/store; the daemon
 --   adapter (internal/daemon/scheduleradapter/) is the ONLY package
 --   permitted to bridge scheduler value types to *store.Store via the
---   CRUD primitives in internal/store/schedules.go. release track
+--   CRUD primitives in internal/store/schedules.go. stage
 --   inv_hades_122 compliance test extends to enforce this on HADES design
 --   packages.
 --
--- Boundary (invariant / invariant release track slice):
+-- Boundary (invariant / invariant stage slice):
 --   The schedules table itself stores no LLM-call surface; it is the
 --   trigger substrate. scheduler.Fire orchestrates dispatch via the
 --   dispatcher.Client interface so this table is single-egress-aligned
@@ -66,13 +66,13 @@
 --
 --   - tier INTEGER NOT NULL CHECK (tier IN (0,1,2)):
 --                          0=Routine, 1=Task, 2=Loop. The three-tier
---                          taxonomy is load-bearing per spec §1 Q8 D.
+--                          taxonomy is load-bearing per design contract
 --                          The Go-side validateScheduleTier rejects
 --                          out-of-range values BEFORE the SQL CHECK
 --                          fires (better error message + faster
 --                          short-circuit).
 --
---   - project_alias TEXT NOT NULL: release track projectctx alias. Plain text
+--   - project_alias TEXT NOT NULL: stage projectctx alias. Plain text
 --                          — NOT a FK to projects_alias.alias.
 --                          Schedules are forensic-relevant beyond
 --                          project lifecycle (`hades day` digest reads
@@ -90,7 +90,7 @@
 --   - trigger_type INTEGER NOT NULL CHECK (trigger_type IN (0,1,2)):
 --                          0=Cron, 1=HTTP, 2=GitPoll. Three trigger
 --                          types verbatim Anthropic Routines per spec
---                          §1 Q8.
+--                          §1 design choice.
 --
 --   - trigger_config TEXT NOT NULL: JSON blob.
 --                          trigger_type=Cron → {"cron_expr":"0 8 * * 1-5"}
@@ -153,7 +153,7 @@
 --     scan path.
 --
 --   - idx_schedules_due (status, next_run_at_unix) WHERE status = 0:
---     the scheduler tick (release track) runs every 10s per spec §3.6;
+--     the scheduler tick (stage) runs every 10s per design contract;
 --     the partial index keeps the scan in-index without touching
 --     disabled or failed rows, accelerating the common case (most
 --     rows enabled, a few due at any time).
@@ -196,7 +196,7 @@ CREATE INDEX IF NOT EXISTS idx_schedules_project_alias
 -- queries by schedule_id + time range; idx_schedule_history_lookup
 -- supports both predicates with one composite index.
 --
--- Retention: release track ships unbounded growth; the per-spec retention
+-- Retention: stage ships unbounded growth; the per-spec retention
 -- policy is deferred to HADES design quality (operator-driven vacuum). No FK
 -- back to schedules.id (history outlives the schedule — `hades day`
 -- digest must surface fires for since-deleted routines).
@@ -212,7 +212,7 @@ CREATE INDEX IF NOT EXISTS idx_schedules_project_alias
 --                          Skipped covers miss-policy=Skip + capa-firewall
 --                          NotifyOnly paths; RateLimited covers
 --                          token-bucket exhaustion (1 fire / 30s /
---                          project per Q9 C).
+--                          project per design choice C).
 --   - reason TEXT NOT NULL DEFAULT '': human-readable failure / skip
 --                          reason; empty for Success.
 --   - cost_usd REAL NOT NULL DEFAULT 0: cost emitted from cost_ledger

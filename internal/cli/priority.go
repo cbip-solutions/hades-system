@@ -2,7 +2,7 @@
 // Package cli — priority.go.
 //
 // `hades project priority --boost / --reset / --ls` is the operator surface
-// for Layer 3 WFQ priority overrides per spec §1 Q10 + §6.2.
+// for Layer 3 WFQ priority overrides per design contract§6.2.
 //
 // Cobra layout (single subcommand, three mutually-exclusive flag actions):
 //
@@ -74,25 +74,8 @@ func NewPriorityCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "priority",
 		Short: "Manage per-project WFQ priority overrides (boost/reset/list)",
-		Long: `Manage per-project WFQ priority overrides per Plan 7 spec §1 Q10.
+		Long:  "Manage per-project WFQ priority overrides per HADES design spec §1 design choice.\n\nThe Layer-3 weighted-fair-queue arbitrates LLM dispatch across\nprojects; an operator-issued boost temporarily raises a project's\nweight so its scheduled fires win arbitration during the boost\nwindow. Reset removes the override; list inspects what's active.\n\nThe boost multiplier defaults to 3.0; provide --multiplier to override.\nMultiplier must be in (0, 100]; duration in [1s, 168h] (1 week max).\nA --reason string is mandatory on --boost — the daemon audit-logs the\nreason for post-hoc traceability.\n\nMutually exclusive: pass exactly one of --boost / --reset / --ls.\n\nExit codes (spec §6.2):\n  0 success\n  1 operator-recoverable (validation reject, alias not found, daemon\n    422 quota.ErrInvalidOverride)\n  2 unrecoverable (transport / decode / daemon 5xx)",
 
-The Layer-3 weighted-fair-queue arbitrates LLM dispatch across
-projects; an operator-issued boost temporarily raises a project's
-weight so its scheduled fires win arbitration during the boost
-window. Reset removes the override; list inspects what's active.
-
-The boost multiplier defaults to 3.0; provide --multiplier to override.
-Multiplier must be in (0, 100]; duration in [1s, 168h] (1 week max).
-A --reason string is mandatory on --boost — the daemon audit-logs the
-reason for post-hoc traceability.
-
-Mutually exclusive: pass exactly one of --boost / --reset / --ls.
-
-Exit codes (spec §6.2):
-  0 success
-  1 operator-recoverable (validation reject, alias not found, daemon
-    422 quota.ErrInvalidOverride)
-  2 unrecoverable (transport / decode / daemon 5xx)`,
 		Example: " # Boost a project for 4 hours with a documented reason (audit-logged)\n  hades project priority --boost internal-platform-x --duration 4h --reason \"release prep\"\n\n # Specify a non-default multiplier (5x weight)\n  hades project priority --boost internal-platform-x --duration 1h --reason \"demo\" --multiplier 5\n\n # Reset (remove) an existing override\n  hades project priority --reset internal-platform-x\n\n # List active overrides\n  hades project priority --ls",
 
 		RunE: func(cmd *cobra.Command, _ []string) error {

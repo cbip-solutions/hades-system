@@ -4,7 +4,7 @@
 // concrete implementation), TeamLead (persistent variant with composition
 // over child Workers), and Reviewer (L2/L3/L4 variants).
 //
-// Per spec §2.2 (Capa 1 workforce primitives) + §3.1 (Flow 1 Worker
+// per design contract(Capa 1 workforce primitives) + §3.1 (Flow 1 Worker
 // dispatch + execution), this package wires queues +
 // subprocess + doctrine into a single executable surface that
 // the AutonomousOrchestrator composes without modification.
@@ -163,8 +163,8 @@ func ParseRecoveryPolicy(s string) (RecoveryPolicy, error) {
 
 // Quota bounds resource use for a single Worker.Run call.
 //
-// Per spec §2.2 Capa 1 worker/spec.go fields. All three fields MUST be
-// positive — zero means "unbounded", which release explicitly rejects under
+// per design contract
+// positive — zero means "unbounded", which HADES design explicitly rejects under
 // the max-scope doctrine (cost runaway prevention is load-bearing).
 type Quota struct {
 	MaxTokens int

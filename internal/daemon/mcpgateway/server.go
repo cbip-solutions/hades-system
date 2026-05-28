@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // internal/daemon/mcpgateway/server.go
 //
-// Server — HTTP MCP endpoint Hermes consumes (Q1=B single endpoint).
+// Server — HTTP MCP endpoint Hermes consumes (design choice single endpoint).
 // Wire format: JSON-RPC 2.0 over HTTP per MCP 2024-11-05 Streamable HTTP
 // transport. is request/response only (no SSE streaming).
 //
@@ -15,7 +15,7 @@
 // tools/list — returns Dispatcher.ListTools as MCP-spec tools array
 // tools/call — routes to Dispatcher.Dispatch and re-encodes response
 //
-// Header conventions (Hermes side forwards via HadesSystemTransport, release
+// Header conventions (Hermes side forwards via HadesSystemTransport, HADES design
 // ):
 //
 // X-HADES-Doctrine — active doctrine slug (max-scope / default / capa-firewall)
@@ -60,7 +60,7 @@ var ErrInvalidDoctrine = errors.New("mcpgateway: invalid X-HADES-Doctrine header
 // X-HADES-Project-ID value is forwarded AS-IS to CallRequest.ProjectID.
 // Production daemons MUST call SetAliasResolver at boot; the nil
 // fallback exists so that a partially-wired daemon does not crash on
-// tools/call (defensive operator-recovery posture per spec §22.4
+// tools/call (defensive operator-recovery posture per design contract
 // graceful degradation).
 //
 // invariant (project_id dual-source), invariant (alias resolution).

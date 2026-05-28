@@ -71,9 +71,8 @@ func NewCodegraphCmd(factory CodegraphClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "codegraph <query>",
 		Short: "Direct caronte code-graph query (bypasses Hermes; routes via daemon → mcpgateway → caronte)",
-		Long: `Query the caronte code-graph directly. Single-egress preserved
-via daemon /v1/mcpgateway/codegraph route (inv-hades-088); the daemon
-proxies to the in-process caronte engine.`,
+		Long:  "Query the caronte code-graph directly. Single-egress preserved\nvia daemon /v1/mcpgateway/codegraph route (invariant); the daemon\nproxies to the in-process caronte engine.",
+
 		Example: `  hades codegraph MergeEngine
   hades codegraph "RRF.*" --project internal-platform-x --format json | jq '.hits[].file'`,
 		Args: cobra.MaximumNArgs(1),

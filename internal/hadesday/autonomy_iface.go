@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package hadesday — autonomous-mode state contract.
 //
-// AutonomyStateReader is the boundary between hadesday and release's
+// AutonomyStateReader is the boundary between hadesday and HADES design's
 // orchestrator-state reader. Production wiring adapts the orchestrator
 // snapshot; tests substitute fakes (per invariant, hadesday/ never
 // imports internal/store).

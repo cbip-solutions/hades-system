@@ -36,10 +36,10 @@ func DefaultSchemaParser() SchemaParser {
 }
 
 // ApplyWithValidation is tighten-validating entry point that
-// wraps release's existing Apply per invariant. Sequence:
+// wraps HADES design's existing Apply per invariant. Sequence:
 //
 // 1. Locate proposed ADR + extract toml diff (delegated via
-// extractTOMLDiff helper that release ships).
+// extractTOMLDiff helper that HADES design ships).
 // 2. Read pre-Apply hadessystem.toml; build candidate by appending diff +
 // parsing the merged blob via SchemaParser.
 // 3. Load baseline via BaselineLoader.
@@ -50,7 +50,7 @@ func DefaultSchemaParser() SchemaParser {
 // DoctrineAmendmentSuppressed audit-trail consistency +
 // return ErrTightenViolation. Filesystem MUST remain byte-identical
 // to pre-Apply (defense in depth — we have not yet invoked Apply).
-// 5. Delegate to release's existing Apply (or ApplyTransacted when a
+// 5. Delegate to HADES design's existing Apply (or ApplyTransacted when a
 // Reverter is wired) for the atomic git commit + file write +
 // reload signal.
 //
@@ -83,11 +83,11 @@ func DefaultSchemaParser() SchemaParser {
 //
 // When ReloadAwaiter is nil, ApplyWithValidation falls through to the
 // existing fire-and-forget ReloadSignal.Reload(ctx) path inside the
-// inner Apply ( semantics preserved; release's existing contract
+// inner Apply ( semantics preserved; HADES design's existing contract
 // untouched).
 //
 // Cross-reference: invariant (atomic reload via reload.Watcher
-// singleton) + release §3.4 / §4.1 F13 reload-wait flow + release Phase
+// singleton) + HADES design §3.4 / §4.1 F13 reload-wait flow + HADES design stage
 // J pre-flight PF-1..PF-5.
 func (a *AmendmentApplier) ApplyWithValidation(ctx context.Context, adrID int, operator string, baselineFn BaselineLoader, schemaParser SchemaParser) error {
 	if baselineFn == nil {

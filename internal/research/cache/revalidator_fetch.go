@@ -64,8 +64,8 @@ type fetchIndexEntry struct {
 }
 
 // ErrCASUnset is returned by Fetch when the Revalidator was constructed
-// without a CAS. release ingester MUST provide CAS at NewRevalidator.
-var ErrCASUnset = errors.New("research_cache: Fetch requires non-nil CAS in ValidateOpts (Plan 14 Phase A Task A-2)")
+// without a CAS. HADES design ingester MUST provide CAS at NewRevalidator.
+var ErrCASUnset = errors.New("research_cache: Fetch requires non-nil CAS in ValidateOpts (HADES design stage task)")
 
 func (rv *Revalidator) Fetch(ctx context.Context, urlStr string, opts FetchOptions) (*FetchResult, error) {
 	if urlStr == "" {

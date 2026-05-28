@@ -5,7 +5,7 @@
 // `~/.config/hades-system/hades-day-*.md` (and `-eod.md`) within the
 // supplied duration window and concatenates them into a single
 // chronological view. Useful for catching up after a vacation or
-// audit lookback per spec §6.1.
+// audit lookback per design contract
 //
 // Recap is filesystem-only: no daemon dependency, no network, no
 // HTTP transport. The command stands on its own so an operator can

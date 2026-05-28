@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// Package handlers — mcpgateway_rest.go (release MAJOR-2 fix; release
-// Task J-11 distinct-ops repoint).
+// Package handlers — mcpgateway_rest.go (HADES design MAJOR-2 fix; HADES design
+// task distinct-ops repoint).
 //
 // REST sub-route adapters for /v1/mcpgateway/{codegraph,impact,context,wiki}.
 //
-// Background — release substrate gap closure:
+// Background — HADES design substrate gap closure:
 //
-// (Q1=B "single HTTP MCP endpoint"). release Task E-3 then shipped
+// (design choice "single HTTP MCP endpoint"). HADES design task then shipped
 // the client wrappers (internal/client/codegraph.go::CodegraphQuery / Impact /
 // Context360 / Wiki) which call REST sub-routes — /v1/mcpgateway/codegraph,
 // /v1/mcpgateway/impact, /v1/mcpgateway/context, /v1/mcpgateway/wiki — that
-// the daemon never registered. release built the TUI F7 panel on
+// the daemon never registered. HADES design built the TUI F7 panel on
 // top of those client wrappers (CodegraphFile composes three of the four
 // sub-routes into one round-trip). In production every F7 [Q]/[I]/[W]/[C]
 // subpanel returned 404; the gap was masked because the client tests use
@@ -24,13 +24,13 @@
 // audit emission, doctrine + mode header propagation, panic recovery, and
 // caronte per-mode escalation all flow through unchanged.
 //
-// Cherry-pick narrative: this file completes the release substrate gap
+// Cherry-pick narrative: this file completes the HADES design substrate gap
 // inherited; if a backport branch is ever needed, the
-// commit can be cherry-picked to a release.1 follow-up release.
+// commit can be cherry-picked to a HADES design follow-up release.
 //
-// With the CaronteProxy registered under the "caronte" slot (release
+// With the CaronteProxy registered under the "caronte" slot (HADES design
 // renamed the segment gitnexus->caronte), the `context`, `impact`, and `wiki`
-// tools return GENUINELY DISTINCT payload shapes (DECISION 6) — no longer the
+// tools return GENUINELY DISTINCT payload shapes (policy) — no longer the
 // collapsed {hits} alias.
 //
 // - context → ContextResult JSON (Symbol/Callers/Callees/Neighbors/Community)
@@ -46,7 +46,7 @@
 // internal/caronte or internal/daemon/mcpgateway — the payload structs are
 // local anonymous types parsed from the JSON the gateway returns. The gateway
 // is consumed via the http.Handler interface threaded through
-// MCPGatewayCtx.MCPGateway() — same pattern used N + release
+// MCPGatewayCtx.MCPGateway() — same pattern used N + HADES design
 // merge gates.
 package handlers
 

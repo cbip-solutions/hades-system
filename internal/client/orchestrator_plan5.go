@@ -6,7 +6,7 @@
 // orchestrator additions land in this file so the original contract
 // stays untouched.
 //
-// Type categories grouped by phase-N task:
+// Type categories grouped by stage-N task:
 //
 // N-2 orchestrator state / pool / depth / capture / replay
 // N-3 autonomy show / check / mode

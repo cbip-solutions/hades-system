@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/__init__.py
-"""HADES citation renderers — 6 platform-specific (HADES design release track) +"""
+"""HADES citation renderers — 6 platform-specific (HADES design stage) +"""
 
 from __future__ import annotations
 
@@ -42,7 +42,7 @@ _log = logging.getLogger(__name__)
 # constant here). Source-of-truth: ``internal/daemon/server.go:737``
 # registers ``POST /v1/audit/emit`` and
 # ``internal/daemon/handlers/audit_emit.go`` accepts the
-# ``AuditEventIn{ProjectID, Type, Payload}`` wire shape. The release track
+# ``AuditEventIn{ProjectID, Type, Payload}`` wire shape. The stage
 # AFK module (``plugin/hades/afk/audit.py``) already conforms; the
 # C-1 fix-cycle ports the renderers' ``audit_anchor`` to the same
 # canonical contract so invariant (Tessera anchor chain unbroken) is
@@ -70,18 +70,18 @@ def _derive_audit_endpoint(daemon_url: str | None) -> str:
 
     Drift note: pre-C-1 fix-cycle this composed a legacy anchor-style
     path that the daemon never registered (``internal/daemon/server.go:737``
-    binds the canonical ``AUDIT_EMIT_PATH`` only). release stage cross-phase
+    binds the canonical ``AUDIT_EMIT_PATH`` only). stage cross-stage
     code reviewer surfaced the drift; this helper now matches the
-    release track AFK contract (``plugin/hades/afk/audit.py``).
+    stage AFK contract (``plugin/hades/afk/audit.py``).
     """
     if not daemon_url:
         return DEFAULT_AUDIT_ENDPOINT
     return f"{daemon_url.rstrip('/')}{AUDIT_EMIT_PATH}"
 
 
-# Doctrine-aware enable/disable matrix per spec §3.4 doctrine schema extension.
+# Doctrine-aware enable/disable matrix per design contract
 #
-# Source-of-truth (HADES design release track M-5 fix): the canonical matrix now lives
+# Source-of-truth (HADES design stage M-5 fix): the canonical matrix now lives
 # in the Go doctrine schema ``RenderersConfig`` (
 # ``internal/doctrine/schema/v1/schema.go``) and is populated from the
 # ``[renderers]`` block in each builtin TOML
@@ -223,7 +223,7 @@ class Renderer(ABC):
         ``kg_token_count``, ``emitted_at`` (RFC 3339 string), and
         ``citation_count``. Renderers that previously emitted a subset
         now emit the full set — strictly additive, so downstream
-        consumers (TUI panels, AFK card, release track AFK richness builder)
+        consumers (TUI panels, AFK card, stage AFK richness builder)
         gain context, never lose it.
 
         ``include_cache_key=True`` adds ``cache_key_hash``. Ink uses this
@@ -288,8 +288,7 @@ class Renderer(ABC):
         ----------
         citation:
             The rendered ``Envelope``. ``project_id`` comes from the
-            envelope (load-bearing — the audit row is project-scoped per
-            spec §3.1) and ``audit_event_link`` from
+            envelope (load-bearing — the audit row is project-scoped per design contract) and ``audit_event_link`` from
             ``citation.audit_event_url()`` (the ``hades://audit/<id>``
             deep-link form, NOT the raw event id).
         doctrine:
@@ -520,7 +519,7 @@ def register_default_renderers(
     *,
     daemon_url: str | None = None,
 ) -> None:
-    """Register the 6 platform-specific renderers shipped en HADES design release track.
+    """Register the 6 platform-specific renderers shipped en HADES design stage.
 
     Called from the plugin's ``__init__.py register(ctx)`` function on
     plugin load. Imports are deferred to avoid circular dependencies

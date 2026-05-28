@@ -2,7 +2,7 @@
 // Package cli implements the hades CLI commands.
 //
 // All subcommands talk to hades-ctld via internal/client.
-// scaffolds all ~25 commands; real implementations land in Plans 2-15.
+// scaffolds all ~25 commands; real implementations land in HADES design
 package cli
 
 import (
@@ -18,7 +18,7 @@ func notImplementedCmd(use, short string, plan int, planRef string) *cobra.Comma
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fmt.Printf("hades %s: command available; implementation pending Plan %d\n", use, plan)
 			fmt.Printf("  ref: %s\n", planRef)
-			fmt.Printf("  see: docs/superpowers/plans/2026-04-29-plan-%d-*.md\n", plan)
+			fmt.Printf("  see: design records %d\n", plan)
 			return nil
 		},
 	}

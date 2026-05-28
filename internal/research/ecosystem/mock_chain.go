@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // internal/research/ecosystem/mock_chain.go
 //
-// InMemoryRAGAuditChain — production-visible test utility (release
-// Task A-7).
+// InMemoryRAGAuditChain — production-visible test utility (HADES design
+// task).
 //
-// The production wrapper (D-12) targets release chain primitives
+// The production wrapper (D-12) targets HADES design chain primitives
 // via SQLite. Phases B/C/E/F/G/H/I need to drive the RAGAuditEmitter in
-// isolation (unit + integration tests) WITHOUT a release SQLite chain
+// isolation (unit + integration tests) WITHOUT a HADES design SQLite chain
 // instance — that is what InMemoryRAGAuditChain provides.
 //
 // Implements the SAME chain-link hash semantics as the
 // production wrapper: sha256(seq || evt_int || payload || parent_hash)
-// per spec §4.6 canonical chain-link formula.
+// per design contract
 //
 // NOT a stub per project doctrine `feedback_no_stubs_complete_code.md`
 // — fully implemented chain hashing with race-safe Append/Get/LastHash/
@@ -141,7 +141,7 @@ func (c *InMemoryRAGAuditChain) Seals() map[string]time.Time {
 }
 
 // chainHashFormula computes sha256(seq || evt || payload || parent)
-// per spec §4.6 canonical chain-link.
+// per design contract
 //
 // Encoding "seq|evt_int|" prefix + raw payload bytes + "|parent" suffix
 // before sha256. Stable across implementations; production

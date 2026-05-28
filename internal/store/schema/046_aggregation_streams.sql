@@ -1,4 +1,4 @@
--- aggregation_windows + aggregation_events — HADES design release track.
+-- aggregation_windows + aggregation_events — HADES design stage.
 --
 -- AggregationStream uses these tables to survive daemon restart:
 --   1. On window open:  INSERT INTO aggregation_windows (status='open').

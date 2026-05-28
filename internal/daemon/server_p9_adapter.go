@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package daemon — server_p9_adapter.go.
 //
-// releaseAdapters is the dependency bundle every handler consumes.
+// HADES component is the dependency bundle every handler consumes.
 // SetPlan9Adapters wires the bundle once at daemon boot; nil bundle
-// means release features are disabled (each route returns 503 with
-// stable error code "release_<group>_unavailable").
+// means HADES design features are disabled (each route returns 503 with
+// stable error code "HADES component<group>_unavailable").
 //
 // Pattern matches:
-// - release N: SetPlan4Adapters (workforce + budget + audit_emit)
-// - release N: SetPlan5OrchestratorService (orchestrator engine)
-// - release I: SetPlan7Adapters (projectctx + quota + tmuxlife +...)
+// - HADES design N: SetPlan4Adapters (workforce + budget + audit_emit)
+// - HADES design N: SetPlan5OrchestratorService (orchestrator engine)
+// - HADES design I: SetPlan7Adapters (projectctx + quota + tmuxlife +...)
 //
 // invariant: this file imports internal/daemon/handlers only; it never
 // imports internal/audit/*, internal/knowledge/*, internal/adr,

@@ -4,7 +4,7 @@
 //
 // Lives in its own sub-package to avoid an import cycle: internal/cli →
 // internal/doctor/aggregator → internal/doctor/check → internal/cli
-// (the release adapter shims import the cli ProbeResult/
+// (the HADES design adapter shims import the cli ProbeResult/
 // ProbeStatus types). By isolating the wiring code here, the cycle is
 // broken — doctorfull imports aggregator + check, but cli imports
 // doctorfull (one-way).
@@ -19,11 +19,11 @@
 // - internal/doctor/migrate (F2) — DetectCheck (claude-code presence)
 // - internal/doctor/mcp (F2) — AvailabilityCheck (reviewed catalog)
 //
-// Q5=C+ flag set: --fix, --auto-safe, --yes, --non-interactive, --quick,
+// design choice+ flag set: --fix, --auto-safe, --yes, --non-interactive, --quick,
 // --spotlight, --ascii, --format, --check-timeout, --no-color,
 // --strict-skip.
 //
-// Bitmask exit codes per spec §5.2 (per aggregator.ExitCode):
+// Bitmask exit codes per design contract(per aggregator.ExitCode):
 //
 // 0 = all pass (incl. skip when --strict-skip is false)
 // 1 = any warn (OR'd)
@@ -34,10 +34,10 @@
 // avoidance).
 //
 // Catalog scope:
-// The 4 NEW release checks are wired by default. release-9
+// The 4 NEW HADES design checks are wired by default. HADES design
 // per-flag checks are adapter-wrappable via internal/doctor/check/cliadapter.NewCLIProbeAdapter
-// — wiring those into this catalog is forward-additive (release+
-// orthogonal scope per spec §1.3); the doctor surface remains stable
+// — wiring those into this catalog is forward-additive (HADES design
+// orthogonal scope per design contract); the doctor surface remains stable
 // because consumers only ever iterate Report.Diagnostics.
 package doctorfull
 
@@ -87,45 +87,15 @@ func NewDoctorFullCmd(cfg Config) *cobra.Command {
 	)
 	cmd := &cobra.Command{
 		Use:   "full",
-		Short: "Run the full Plan 13 doctor aggregator (4 Plan-13 checks + adapter-wrapped Plan 1-9)",
-		Long: `hades doctor full
-
-Runs the Plan 13 composing aggregator over the 4 NEW Plan 13 checks
-(hermes-install, plugin-format, claude-code-install-detected,
-curated-MCP-availability) plus any Plan 1-9 checks registered via
-internal/doctor/check/cliadapter.NewCLIProbeAdapter (forward-additive).
-
-Severity levels (4-level per Q5=C+):
-
-  pass / warn / fail / skip   (` + "`--ascii`" + ` swaps glyphs for legacy terminals)
+		Short: "Run the full HADES design doctor aggregator (4 HADES design checks + adapter-wrapped HADES design)",
+		Long: "hades doctor full\n\nRuns the HADES design composing aggregator over the 4 NEW HADES design checks\n(hermes-install, plugin-format, claude-code-install-detected,\nreviewed-MCP-availability) plus any HADES design checks registered via\ninternal/doctor/check/cliadapter.NewCLIProbeAdapter (forward-additive).\n\nSeverity levels (4-level per design choice+):\n\n  pass / warn / fail / skip   (" +
+			"`--ascii`" + ` swaps glyphs for legacy terminals)
 
 Use --spotlight to hide pass rows. Use --format json for machine-
 parseable output (schemaVersion=1.0). Use --quick to reuse cached
-last-run output ≤5min old (` + "`--fix`" + ` invalidates cache).
-
-EXIT CODES (bitmask, OR'd per spec §5.2):
-
-  0 = all pass (incl. skip-only when --strict-skip is false)
-  1 = any warn
-  2 = any fail
-  4 = any skip-unable-to-check (promoted to 2 if --strict-skip)
-
-  Combinations: 3 = warn+fail, 5 = warn+skip, 6 = fail+skip,
-                7 = all-three.
-
---fix interactive auto-remediation: per-check confirmation [y/N]; halts
-if any fix fails. --auto-safe restricts to non-destructive ops only.
---yes skips all prompts (requires explicit operator authorization for
-CI). --non-interactive errors loudly if a prompt would arise.
-
-Cache: ` + "`~/.cache/hades-system/doctor/last-run.json`" + ` per-project; --quick
-re-uses cached output ≤5min old; --fix invalidates cache.
-
-Audit chain emits evt.doctor.full.run per invocation (Tessera-anchored
-via Plan 9 substrate). evt.doctor.full.fix.applied per fix when --fix
-is used.
-
-See ` + "`docs/operations/doctor-full.md`" + ` for the full checks catalog +
+last-run output ≤5min old (` + "`--fix`" + " invalidates cache).\n\nEXIT CODES (bitmask, OR'd per design contract):\n\n  0 = all pass (incl. skip-only when --strict-skip is false)\n  1 = any warn\n  2 = any fail\n  4 = any skip-unable-to-check (promoted to 2 if --strict-skip)\n\n  Combinations: 3 = warn+fail, 5 = warn+skip, 6 = fail+skip,\n                7 = all-three.\n\n--fix interactive auto-remediation: per-check confirmation [y/N]; halts\nif any fix fails. --auto-safe restricts to non-destructive ops only.\n--yes skips all prompts (requires explicit operator authorization for\nCI). --non-interactive errors loudly if a prompt would arise.\n\nCache: " +
+			"`~/.cache/hades-system/doctor/last-run.json`" + " per-project; --quick\nre-uses cached output ≤5min old; --fix invalidates cache.\n\nAudit chain emits evt.doctor.full.run per invocation (Tessera-anchored\nvia HADES design substrate). evt.doctor.full.fix.applied per fix when --fix\nis used.\n\nSee " +
+			"`docs/operations/doctor-full.md`" + ` for the full checks catalog +
 fix semantics + backup/restore handbook.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 
@@ -226,7 +196,7 @@ func buildDoctorFullCatalog(cfg Config) []check.Check {
 	if cfg.Plan13FixAppliers != nil {
 		installApplier = cfg.Plan13FixAppliers["hermes.install"]
 		pluginFormatApplier = cfg.Plan13FixAppliers["hermes.plugin-format"]
-		mcpAvailApplier = cfg.Plan13FixAppliers["mcp.curated-availability"]
+		mcpAvailApplier = cfg.Plan13FixAppliers["mcp.reviewed-availability"]
 	}
 	plan13Checks := []check.Check{
 		hermes.NewInstallCheck(hermes.InstallCheckConfig{

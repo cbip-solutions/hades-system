@@ -335,7 +335,7 @@ func (l *ADRLinker) linkCoverageManifest(ctx context.Context) error {
 		for _, adrID := range c.ADRs {
 			adrRepoRel, ok := adrPathByID[adrID]
 			if !ok {
-				return fmt.Errorf("caronte/intent: manifest references %s but no docs/decisions/ file matches", adrID)
+				return fmt.Errorf("caronte/intent: manifest references %s but no architecture records file matches", adrID)
 			}
 
 			if err := l.store.UpsertADRLink(ctx, store.ADRLink{

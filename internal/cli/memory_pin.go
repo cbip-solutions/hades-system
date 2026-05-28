@@ -35,10 +35,8 @@ func newMemoryPinCmd() *cobra.Command {
 		Short: "Pin a note to the global pin index (alias for promote)",
 		Long: `pin records that a note is operator-flagged as cross-project relevant
 and copies it to the global aggregator pin index. It is the CLI-ergonomic
-alias for ` + "`hades memory promote`" + ` — both call the same daemon endpoint.
+alias for ` + "`hades memory promote`" + " — both call the same daemon endpoint.\n\ninvariant: --reason MANDATORY. Empty or whitespace-only reasons are rejected\nbefore any network call. The pin event is anchored on the HADES design audit chain.",
 
-inv-hades-146: --reason MANDATORY. Empty or whitespace-only reasons are rejected
-before any network call. The pin event is anchored on the Plan 9 audit chain.`,
 		Example: `  hades memory pin internal-platform-x/M0-doctrine \
     --reason "load-bearing for max-scope across all projects"`,
 		Args: cobra.ExactArgs(1),
@@ -50,7 +48,7 @@ before any network call. The pin event is anchored on the Plan 9 audit chain.`,
 			return RunMemoryPin(ctx, c, flags, cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&flags.Reason, "reason", "", "operator rationale (required; inv-hades-146)")
+	cmd.Flags().StringVar(&flags.Reason, "reason", "", "operator rationale (required; invariant)")
 	cmd.Flags().StringVar(&flags.OperatorID, "operator", "", "operator identifier (default: daemon-resolved)")
 	_ = cmd.MarkFlagRequired("reason")
 	return cmd
@@ -61,7 +59,7 @@ func RunMemoryPin(ctx context.Context, c MemoryClient, flags MemoryPinFlags, w i
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory pin: <note-id> is required"))
 	}
 	if strings.TrimSpace(flags.Reason) == "" {
-		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory pin: --reason required (inv-hades-146)"))
+		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverable("memory pin: --reason required (invariant)"))
 	}
 	req := client.AggPromoteRequest{
 		NoteID:     flags.NoteID,

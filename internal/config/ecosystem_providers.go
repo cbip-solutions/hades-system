@@ -2,7 +2,7 @@
 // internal/config/ecosystem_providers.go
 //
 // TOML schema types + Load/Validate/default helpers for the 5 ecosystem
-// provider config files release ingester + retrieval pipeline consume at
+// provider config files HADES design ingester + retrieval pipeline consume at
 // daemon startup.
 //
 // Files live at ~/.config/hades-system/providers/ (operator home) — NOT in
@@ -234,7 +234,7 @@ func ValidateEcosystemRerankerConfig(cfg *EcosystemRerankerConfig) error {
 	}
 	for eco, lambda := range cfg.Abstention.Lambda {
 		if lambda < 0 {
-			return fmt.Errorf("ecosystem-reranker: abstention.lambda[%q] = %v must be non-negative (inv-hades-196)", eco, lambda)
+			return fmt.Errorf("ecosystem-reranker: abstention.lambda[%q] = %v must be non-negative (invariant)", eco, lambda)
 		}
 	}
 	return nil

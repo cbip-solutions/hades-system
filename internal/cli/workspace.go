@@ -2,8 +2,8 @@
 // Package cli — workspace.go.
 //
 // `hades workspace {init,list,members,link,remove,policy {get,set}}` — 7 verbs
-// total. The DECISION-5 policy-set flow is the load-bearing core:
-// 1. CLI emits the release audit row `policy_change_requested` FIRST
+// total. The decision-5 policy-set flow is the load-bearing core:
+// 1. CLI emits the HADES design audit row `policy_change_requested` FIRST
 // (records operator intent regardless of prompt outcome);
 // 2. interactive confirmation prompt via cmd.InOrStdin() + bufio reader;
 // 3a. on confirm + daemon-OK: daemon API call performs the change + emits
@@ -95,7 +95,7 @@ func (p *productionWorkspaceClient) EmitAudit(ctx context.Context, eventType str
 func NewWorkspaceCmdProd() *cobra.Command {
 	root := &cobra.Command{
 		Use:   "workspace",
-		Short: "Plan 20 federation workspace lifecycle",
+		Short: "HADES design federation workspace lifecycle",
 		Long:  `Manage cross-repo API-contract federation workspaces: init/list/members/link/remove + policy get/set.`,
 	}
 	root.AddCommand(NewWorkspaceInitCmdProd())
@@ -106,7 +106,7 @@ func NewWorkspaceCmdProd() *cobra.Command {
 
 	policy := &cobra.Command{
 		Use:   "policy",
-		Short: "workspace privacy policy get/set (DECISION 5: audit-then-prompt)",
+		Short: "workspace privacy policy get/set (policy: audit-then-prompt)",
 	}
 	policy.AddCommand(NewWorkspacePolicyGetCmdProd())
 	policy.AddCommand(NewWorkspacePolicySetCmdProd())
@@ -126,7 +126,7 @@ func NewWorkspaceInitCmd(factory func(cmd *cobra.Command) WorkspaceClient) *cobr
 	flags := WorkspaceInitFlags{}
 	cmd := &cobra.Command{
 		Use:   "init <workspace_id>",
-		Short: "Create a new Plan-20 federation workspace",
+		Short: "Create a new HADES design federation workspace",
 		Long:  `Register a new workspace with an owning project + optional member roster + initial policy lock.`,
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -486,13 +486,9 @@ func NewWorkspacePolicySetCmd(factory func(cmd *cobra.Command) WorkspaceClient) 
 	flags := WorkspacePolicySetFlags{}
 	cmd := &cobra.Command{
 		Use:   "set <workspace_id> <policy>",
-		Short: "Set the workspace's privacy policy (audit-then-prompt; DECISION 5)",
-		Long: `Mutate the workspace's operator-mutable privacy policy. Emits a
-plan-14 audit row BEFORE prompting (records operator intent regardless of
-prompt outcome), then prompts in interactive mode; on confirm/abort emits a
-SECOND audit row encoding the outcome. --yes bypasses the prompt for
-scripted runs (but BOTH audit rows still emit). Non-interactive without
---yes is rejected (destructive-default-no).`,
+		Short: "Set the workspace's privacy policy (audit-then-prompt; policy)",
+		Long:  "Mutate the workspace's operator-mutable privacy policy. Emits a\nHADES design audit row BEFORE prompting (records operator intent regardless of\nprompt outcome), then prompts in interactive mode; on confirm/abort emits a\nSECOND audit row encoding the outcome. --yes bypasses the prompt for\nscripted runs (but BOTH audit rows still emit). Non-interactive without\n--yes is rejected (destructive-default-no).",
+
 		Example: `  hades workspace policy set ws-1 locked
   hades workspace policy set ws-1 permissive --yes`,
 		Args: cobra.MaximumNArgs(2),

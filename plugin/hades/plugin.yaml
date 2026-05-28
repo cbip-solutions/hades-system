@@ -7,7 +7,7 @@ description: |
   hooks (on_session_start/on_session_end/pre_tool_call/post_tool_call/
   pre_llm_call), 13 skills (hades, start, handoff + 10 HADES design workflow/
   doctrine/KG/knowledge skills), and 22 slash commands ALL registered under
-  the ``hades:`` namespace per spec §Q4 (recovery + workflow + doctrine +
+  the ``hades:`` namespace per design contract(recovery + workflow + doctrine +
   amendment + KG + knowledge + AFK + OpenSpec). See ADR-0080 for substrate
   pivot rationale and HADES design spec for the HADES rebrand.
 

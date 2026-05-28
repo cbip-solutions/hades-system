@@ -7,9 +7,9 @@ arguments:
     required: true
 ---
 
-# Apply phase for: {{feature_name}}
+# Apply stage for: {{feature_name}}
 
-You are starting the apply phase for `{{feature_name}}`. Per spec §3.2:
+You are starting the apply stage for `{{feature_name}}`. per design contract:
 
 1. Read `openspec/changes/{{feature_name}}/tasks.md`.
 2. POST to daemon `/v1/swarms` with project + feature + tasks JSON.

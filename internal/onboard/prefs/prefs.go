@@ -38,7 +38,7 @@ func mustParseMajor(v string) int {
 // reconciliation 2026-05-14): mirrors the persistable subset of
 // onboard.WizardAnswers — per-kind fields are zero when irrelevant.
 //
-// Per Q3=D Path 2 (Reuse): the wizard reads Prefs at start and uses
+// Per design choice Path 2 (Reuse): the wizard reads Prefs at start and uses
 // each non-zero field as a default; the operator opts out via
 // --reset-preferences (forces Path 3 Customize).
 //
@@ -126,7 +126,7 @@ func Save(path string, p *Prefs) error {
 	}
 
 	// Atomic write per SOTA-2 #6 crash-only: WriteFile to <path>.tmp
-	// (mode 0600 — operator-private; mirrors release + release doctrine
+	// (mode 0600 — operator-private; mirrors HADES design + HADES design doctrine
 	// TOML pattern) then Rename. The rename is the atomicity
 	// invariant; a crash mid-rename leaves the previous prefs file
 	// intact, a crash mid-write leaves the.tmp staging file which

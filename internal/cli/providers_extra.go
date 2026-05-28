@@ -154,7 +154,7 @@ func newProvidersAddCmd(dir configDirFunc) *cobra.Command {
 	cmd.Flags().StringVar(&typ, "type", "", "provider type (anthropic-paygo|gemini|ollama|openai-compat)")
 	cmd.Flags().StringVar(&endpoint, "endpoint", "", "http(s) base URL")
 	cmd.Flags().StringVar(&model, "model", "", "model name")
-	cmd.Flags().StringVar(&family, "family", "", "family key (inv-hades-080)")
+	cmd.Flags().StringVar(&family, "family", "", "family key (invariant)")
 	cmd.Flags().StringVar(&kcRef, "keychain", "", "Keychain service ref (hades-system/<provider>)")
 	return cmd
 }

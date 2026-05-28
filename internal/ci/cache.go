@@ -18,7 +18,7 @@
 //
 // Cache path migration: pre- location was ~/.cache/hades-system/ci/
 // (legacy "hades-system" project name). policy + master §2.6 C4
-// fix: renamed to ~/.cache/hades/ci/ during release No
+// fix: renamed to ~/.cache/hades/ci/ during HADES design No
 // migration script needed — operators with stale entries will get a
 // cold cache on first run (gracefully repopulates).
 package ci

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_inbox.go
 //
-// Task J-5: inbox subsystem doctor probe. Four aspects per
+// task: inbox subsystem doctor probe. Four aspects per
 // spec §6.7 (aggregator.cache.consistent, outbox.queue.depth,
 // dedup.window.health, severity.distribution).
 //
@@ -77,7 +77,7 @@ func runInboxAggregator(ctx context.Context, p InboxProber) ProbeResult {
 	switch {
 	case drift >= inboxCacheDriftFailRows:
 		r.Status = ProbeFail
-		r.Hint = "rebuild aggregator cache: hades inbox rebuild-cache (Plan 7 spec §3.3 — cache is rebuildable from per-project authoritative)"
+		r.Hint = "rebuild aggregator cache: hades inbox rebuild-cache (HADES design spec §3.3 — cache is rebuildable from per-project authoritative)"
 	case drift >= inboxCacheDriftWarnRows:
 		r.Status = ProbeWarn
 		r.Hint = "minor drift may be in-flight write; if persistent: hades inbox rebuild-cache"
@@ -101,7 +101,7 @@ func runInboxOutbox(ctx context.Context, p InboxProber) ProbeResult {
 	switch {
 	case depth >= inboxOutboxFailDepth:
 		r.Status = ProbeFail
-		r.Hint = "delivery saturated; check Plan 11 channel adapters or osascript availability; flush via: hades inbox flush"
+		r.Hint = "delivery saturated; check HADES design channel adapters or osascript availability; flush via: hades inbox flush"
 	case depth >= inboxOutboxWarnDepth:
 		r.Status = ProbeWarn
 		r.Hint = "delivery is backing up; spec §6.5 expects steady-state ≤50"

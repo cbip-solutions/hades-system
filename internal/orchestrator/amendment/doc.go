@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package amendment implements the Q10 C doctrine-amendment flow:
+// Package amendment implements the design choice C doctrine-amendment flow:
 // Proposer (pattern detection + ADR draft) + Applier (validate + atomic
 // commit + reload) + Reverter (operator-initiated git revert + reload) +
 // CooldownRegistry (per-doctrine suppression) + range.NextAvailableID
@@ -49,7 +49,7 @@
 // doctrine.ValidateAdditive on the proposed diff BEFORE any git
 // operation; failure aborts + emits DoctrineAmendmentSuppressed
 // {reason:"validate_failed"}.
-// - invariant — ADR range reservation. release reserves
+// - invariant — ADR range reservation. HADES design reserves
 // decisions/0020..0029 (10 slots); range.NextAvailableID returns
 // ErrADRRangeExhausted + emits ADRRangeExhausted on overflow.
 //

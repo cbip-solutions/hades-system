@@ -43,7 +43,7 @@ Per ADR-0006 + memoria `feedback_research_first_brainstorm.md`:
 - Identify 3-5 SOTA topics relevant to brainstorm scope
 - Dispatch parallel research subagents (research-cheap profile)
 - Each returns compact digest with citations
-- Aggregate findings + present BEFORE Q1
+- Aggregate findings + present BEFORE design choice
 - Acknowledge time-sensitivity per category
 
 ### 3. Q&A (one question per message)
@@ -67,7 +67,7 @@ Per `feedback_methodology_and_conventions.md` §2:
 ### 5. Output
 
 Write spec to `design records`.
-(filename convention preserved per spec §Q3 BORDERLINE)
+(filename convention preserved per design contract)
 
 ## Cross-references
 

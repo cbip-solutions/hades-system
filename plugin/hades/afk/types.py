@@ -12,10 +12,10 @@ from typing import Any
 
 
 class AFKPlatform(str, Enum):
-    """The six AFK platforms per spec §3.1 Layer 5.
+    """The six AFK platforms per design contract
 
     Values match Hermes' multi-platform gateway platform-id taxonomy
-    (verified Spike-4 release track cross-platform parity).
+    (verified Spike-4 stage cross-platform parity).
     """
 
     TELEGRAM = "telegram"
@@ -27,7 +27,7 @@ class AFKPlatform(str, Enum):
 
 
 class VoiceFlowMode(str, Enum):
-    """Voice query dispatch mode per spec §1 Q6=B.
+    """Voice query dispatch mode per design contract
 
     SYNC: estimated latency < 10s; operator hears response inline.
     ASYNC: estimated latency >= 10s; operator hears "results ready in
@@ -50,7 +50,7 @@ _TopFieldInput = list[list[str]] | list[tuple[str, str]] | tuple[tuple[str, str]
 class MobileSummaryCard:
     """Short citation render for AFK mobile platforms (Telegram/Slack/etc).
 
-    Per spec §7.4 example layout: top 3 fields shown by default. Operator
+    per design contract: top 3 fields shown by default. Operator
     may request full payload via ``/expand <citation-id>`` slash command
     (D-2 implements the round-trip through daemon
     ``GET /v1/audit/event/<id>``).
@@ -61,7 +61,7 @@ class MobileSummaryCard:
       consequences drop extras silently in source citation envelope;
       this guard catches programming errors at construction time.
     - ``cache_state`` is one of ``{"fresh", "stale", "offline"}``. In the
-      canonical HADES design release track ``citation.Envelope`` schema this
+      canonical HADES design stage ``citation.Envelope`` schema this
       surfaces via ``platform_renders["mobile"]["cache_state"]`` (no
       top-level field on the envelope itself). The ``MobileSummaryCard``
       projects that hint into this typed field for downstream renderers.
@@ -125,7 +125,7 @@ class MobileSummaryCard:
 class VoiceFlow:
     """Metadata for a voice query in flight (sync vs async dispatch).
 
-    Per spec §1 Q6=B: ``estimated_latency_ms < 10000`` → ``SYNC``;
+    per design contract: ``estimated_latency_ms < 10000`` → ``SYNC``;
     otherwise ``ASYNC`` + HADES design inbox notification. Operator may force
     per-query via ``explicit_override`` (D-3 honours the request mode
     regardless of estimate when the flag is set).
@@ -202,7 +202,7 @@ class OfflineCacheEntry:
         )
 
 
-# Doctrine-tunable cache capacities per spec §1 Q6=B.
+# Doctrine-tunable cache capacities per design contract
 _DOCTRINE_CAPACITIES: dict[str, int] = {
     "max-scope": 100,
     "default": 50,
@@ -213,7 +213,7 @@ _DOCTRINE_CAPACITIES: dict[str, int] = {
 class KGOfflineCache:
     """Doctrine-tunable LRU cache for AFK offline KG queries.
 
-    Per spec §1 Q6=B:
+    per design contract:
 
     - ``max-scope``: 100 entries cached
     - ``default``: 50 entries cached
@@ -232,7 +232,7 @@ class KGOfflineCache:
       ``aggregator_consumer.hydrate_from_aggregator_query`` wires the
       population path.
 
-    Single-declaration anchor per master plan §"Cross-phase type
+    Single-declaration anchor per master plan §"Cross-stage type
     discipline": method bodies live HERE. ``kg_offline_cache.py``
     exposes only the ``_privacy_filter_passes`` swap point (D-4 ships
     permissive baseline; D-5 replaces with capa-firewall isolation).
@@ -317,7 +317,7 @@ class KGOfflineCache:
         # without re-touching this declaration.
         if not _impl._privacy_filter_passes(self, entry, project_id):
             # Treated as a miss for audit purposes (no leak of even
-            # hit-existence across project boundaries per spec §8.3
+            # hit-existence across project boundaries per design contract
             # defense-in-depth layer 4).
             self._miss_count += 1
             return None

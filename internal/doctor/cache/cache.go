@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Package cache ships the release doctor freshness cache layer
-// per Q5=C+ + Q12=D state model. Last-run JSON output is persisted at
+// Package cache ships the HADES design doctor freshness cache layer
+// per design choice+ + design choice state model. Last-run JSON output is persisted at
 // `$XDG_CACHE_HOME/hades-system/doctor/last-run.json` (default
 // `~/.cache/hades-system/doctor/last-run.json`). Per-operator freshness ≤5min
 // TTL.

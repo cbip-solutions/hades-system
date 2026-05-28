@@ -47,7 +47,7 @@ var catalog = []Entry{
 	{
 		Name:        "hades-ctld",
 		Tier:        TierMandatory,
-		Description: "HADES daemon gateway (hades-ctld) — Q1=B aggregator",
+		Description: "HADES daemon gateway (hades-ctld) — design choice aggregator",
 		RiskTier:    "low",
 		Package:     "local",
 	},
@@ -175,13 +175,13 @@ func assertAllTiered(entries []Entry) {
 			panic("mcp.AssertAllTiered: catalog entry has empty Name; programmer error")
 		}
 		if e.Tier == TierUnknown {
-			panic("mcp.AssertAllTiered: MCP " + e.Name + " has Tier=0 (TierUnknown); programmer error (inv-hades-181 substrate)")
+			panic("mcp.AssertAllTiered: MCP " + e.Name + " has Tier=0 (TierUnknown); programmer error (invariant substrate)")
 		}
 		if e.Tier < TierMandatory || e.Tier > TierCatalog {
-			panic("mcp.AssertAllTiered: MCP " + e.Name + " has out-of-range Tier; programmer error (inv-hades-181 substrate)")
+			panic("mcp.AssertAllTiered: MCP " + e.Name + " has out-of-range Tier; programmer error (invariant substrate)")
 		}
 		if e.RiskTier == "" {
-			panic("mcp.AssertAllTiered: MCP " + e.Name + " has empty RiskTier; Q10=D doctrine eval requires populated")
+			panic("mcp.AssertAllTiered: MCP " + e.Name + " has empty RiskTier; design choice doctrine eval requires populated")
 		}
 	}
 }

@@ -36,7 +36,7 @@ import (
 func NewBypassCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bypass",
-		Short: "In-house bypass module controls (spec §22, Plan 2)",
+		Short: "In-house bypass module controls (spec §22, HADES design)",
 	}
 	cmd.AddCommand(
 		bypassStatusCmd(),
@@ -148,7 +148,7 @@ func bypassUpdateConfigCmd() *cobra.Command {
 	var diff, check bool
 	c := &cobra.Command{
 		Use:   "update-config",
-		Short: "Fetch + diff + smoke-probe + apply bypass-config (Q8 B+a)",
+		Short: "Fetch + diff + smoke-probe + apply bypass-config (design choice B+a)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 			defer cancel()

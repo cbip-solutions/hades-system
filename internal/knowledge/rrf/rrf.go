@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Package rrf implements Reciprocal Rank Fusion (RRF) per Cormack et al. 2009.
 //
-// Extracted from internal/knowledge/aggregator/rrf.go (release D, commit
+// Extracted from internal/knowledge/aggregator/rrf.go (HADES design D, commit
 // 8d8f8b03 originally) to a CGO-free sub-package so consumers that cannot
 // link the aggregator's CGO-bound sqlite3 driver (compliance tests using
 // ncruces/go-sqlite3 + internal/augment's compliance fixtures) can reuse
 // the canonical Fuse implementation without inlining a copy.
 //
-// Pre-fix state: release C-5 (aggregator_consumer.go) inlined 135
+// Pre-fix state: HADES design C-5 (aggregator_consumer.go) inlined 135
 // LOC of RRF to avoid sqlite-driver "Register called twice" panic when
 // the augment package was imported alongside the compliance test driver.
 // This package replaces the inline copy with a shared, CGO-free

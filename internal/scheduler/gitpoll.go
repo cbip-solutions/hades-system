@@ -126,7 +126,7 @@ func GitPollOnce(ctx context.Context, s *Schedule, poller GitPoller) (bool, erro
 	if previous == "" {
 		// First poll: establish cursor; do not fire. Otherwise every
 		// freshly created git-poll routine would fire on its first cycle
-		// (semantics from spec §1 Q8: fire on a NEW commit since
+		// (semantics from spec §1 design choice: fire on a NEW commit since
 		// registration, not on whatever was HEAD at registration time).
 		return false, nil
 	}

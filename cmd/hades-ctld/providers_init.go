@@ -2,7 +2,7 @@
 // cmd/hades-ctld/providers_init.go
 //
 // BuildProviderRegistry constructs the providers.Registry from
-// providers.toml — completing release's never-shipped registry
+// providers.toml — completing HADES design's never-shipped registry
 // build. It is the cross-package wiring point (orchestrator_wiring.go's
 // sibling) that:
 //

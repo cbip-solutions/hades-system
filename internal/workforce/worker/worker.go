@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrNilWorktreePath = errors.New("worker: worktreePath must be non-empty (inv-hades-087: Plan 5 WorktreePool owns allocation; Plan 4 is consumer-only)")
+	ErrNilWorktreePath = errors.New("worker: worktreePath must be non-empty (invariant: HADES design WorktreePool owns allocation; HADES design is consumer-only)")
 
 	// ErrNilSession is returned (and panicked) by Worker constructors when
 	// the subprocess.Session is nil. SubprocessManager.SpawnEphemeral
@@ -17,11 +17,11 @@ var (
 	// constructing the Worker.
 	ErrNilSession = errors.New("worker: subprocess.Session must be non-nil (acquire via subprocess.Manager)")
 
-	ErrNilQueues = errors.New("worker: SharedTaskList + CheckpointQueue + FixPromptQueue must all be non-nil (Phase B)")
+	ErrNilQueues = errors.New("worker: SharedTaskList + CheckpointQueue + FixPromptQueue must all be non-nil (stage)")
 
-	ErrNilDoctrineConfig = errors.New("worker: DoctrineConfig must be non-nil (Phase A)")
+	ErrNilDoctrineConfig = errors.New("worker: DoctrineConfig must be non-nil (stage)")
 
-	ErrNilToolRelay = errors.New("worker: ToolRelay must be non-nil (Phase D ships unavailableRelay default)")
+	ErrNilToolRelay = errors.New("worker: ToolRelay must be non-nil (stage ships unavailableRelay default)")
 
 	ErrTaskNotFound = errors.New("worker: task not found in SharedTaskList")
 

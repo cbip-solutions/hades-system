@@ -13,5 +13,5 @@
 // - github.com/cbip-solutions/hades-system/internal/daemon/doctrineadapter
 // - github.com/cbip-solutions/hades-system/internal/daemon/workforceadapter
 //
-// Task L-3 owns the full implementation.
+// task owns the full implementation.
 package nostore

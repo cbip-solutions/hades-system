@@ -14,7 +14,7 @@
 // internal/store; it operates over the *store.Store (whose *sql.DB
 // is opened only by internal/daemon/caronteadapter). It declares three
 // narrow seams — CodeEmbedder (master C-6), Reranker, GitProber — and the
-// daemon wires the real release embedder/reranker + an os/exec git prober at
+// daemon wires the real HADES design embedder/reranker + an os/exec git prober at
 // the composition root; tests inject deterministic fakes.
 //
 // invariant: the embed path makes NO web calls. The CodeEmbedder interface

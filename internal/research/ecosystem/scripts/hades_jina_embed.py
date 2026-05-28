@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
 """
-hades_jina_embed.py — HADES design release track JinaCodeEmbeddings subprocess.
+hades_jina_embed.py — HADES design stage JinaCodeEmbeddings subprocess.
 
 Hosts jinaai/jina-code-embeddings-1.5b via sentence-transformers on M4 MPS
 (falls back to CPU on non-Apple platforms). Reads JSON-line requests from

@@ -2,7 +2,7 @@
 // Package errors centralises sentinel error values used across hades-system.
 //
 // The most important export is the family of ErrNotImplementedPlanN
-// constants — every stub created during release (and replaced by subsequent
+// constants — every stub created during HADES design (and replaced by subsequent
 // plans) returns one of these. This lets `hades doctor --verbose` count
 // references and report implementation progress.
 //
@@ -41,7 +41,7 @@ func IsNotImplemented(err error) bool {
 	return stderrors.As(err, &nie)
 }
 
-// Predeclared sentinels for Plans 2-15. Each plan's stubs return its sentinel.
+// Predeclared sentinels for HADES design Each plan's stubs return its sentinel.
 //
 // The ErrNotImplementedPlanN sentinels below are declared as `var`
 // (not `const`) because Go does not permit struct or pointer literals
@@ -64,7 +64,7 @@ var (
 		Plan: 4, PlanRef: "Workforce + MCPs implementations",
 	}
 	ErrNotImplementedPlan5 = &NotImplementedError{
-		Plan: 5, PlanRef: "Worktree + opencode spawn + apply phase",
+		Plan: 5, PlanRef: "Worktree + opencode spawn + apply stage",
 	}
 	ErrNotImplementedPlan6 = &NotImplementedError{
 		Plan: 6, PlanRef: "Archive + delta application",
@@ -94,6 +94,6 @@ var (
 		Plan: 14, PlanRef: "Documentation system + RAG hybrid",
 	}
 	ErrNotImplementedPlan15 = &NotImplementedError{
-		Plan: 15, PlanRef: "Migration tooling + brew release polish",
+		Plan: 15, PlanRef: "Migration tooling + distribution tooling",
 	}
 )

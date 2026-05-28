@@ -18,7 +18,7 @@
 // 200 OK — JSON body {"versions": ["1.23.0",...]} (Versions non-nil; may be []).
 // 400 Bad Request — missing/unknown ecosystem path param.
 // 500 Internal Server Error — upstream fetch failure.
-// 503 Service Unavailable — EcosystemHandler not wired.
+// 503 Service Unavailable — EcosystemHandler unavailable.
 //
 // Wire mirror: matches daemonCronClient.DetectNewVersions(ctx, eco) →
 // GET /v1/ecosystem/new-versions/<eco> → 200 + JSON body. Note: the

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package recognize — orchestrator.
 //
-// Implements the three-tier cascade per spec §2.4 Q4=B:
+// Implements the three-tier cascade per design contract=B:
 // - Tier 1: manifest detection (highest confidence)
 // - Tier 2: framework config detection (deps-disambiguated)
 // - Tier 3: glob byte-ranking (linguist-filtered)
@@ -463,7 +463,7 @@ func inferDoctrine(root fs.FS) string {
 		}
 	}
 
-	if buf, ok := readCappedFile(root, "CLAUDE.md", doctrineSignalCap); ok {
+	if buf, ok := readCappedFile(root, "project instructions", doctrineSignalCap); ok {
 		return findCanonicalDoctrineName(buf)
 	}
 	return ""

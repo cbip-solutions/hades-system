@@ -13,7 +13,7 @@
 //
 // # Revalidator
 //
-// Revalidator implements the HEAD-based revalidation protocol per spec §7.4
+// Revalidator implements the HEAD-based revalidation protocol per design contract
 // (T5 mitigation). Given a Finding with a SourceURL and ContentHash, it:
 //
 // 1. Issues a HEAD request to SourceURL with If-None-Match + If-Modified-Since
@@ -55,7 +55,7 @@ import (
 
 const defaultRevalidatorTimeout = 5 * time.Second
 
-var ErrSourceURLRequired = errors.New("research_cache: finding.URL is required for revalidation (inv-hades-152)")
+var ErrSourceURLRequired = errors.New("research_cache: finding.URL is required for revalidation (invariant)")
 
 type ValidateOpts struct {
 	Client *http.Client

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package mcp implements release's 4-tier reviewed MCP set + Q7=D
+// Package mcp implements HADES design's 4-tier reviewed MCP set + design choice
 // smart-default detection.
 //
-// Per spec §2.7 + §3.7 + Q7=D:
+// per design contract§3.7 + design choice:
 //
 // Tier 1 (Mandatory) — cannot uncheck: hades-ctld
 // Tier 2 (Universal) — default-yes for all kinds: playwright,
@@ -14,10 +14,10 @@
 // sqlite, graphql, mysql, openapi
 //
 // Each entry carries a RiskTier (low/medium/high) consumed by
-// doctrine eval (Q10=D); the field is populated NOW so has no
+// doctrine eval (design choice); the field is populated NOW so has no
 // retrofit work to do.
 //
-// Per spec §8.6 invariant: smart-default Detected fns enforce a
+// per design contract: smart-default Detected fns enforce a
 // confidence ≥0.6 threshold; below that, even positive signals do not
 // enable the MCP. The threshold is centralized in
 // SmartDefaultConfidenceThreshold + confidenceGate() (defense-in-depth:
@@ -31,7 +31,7 @@
 // recognize.Result is output, consumed directly by
 // smart_default.go (C7 reconciliation 2026-05-14: no shim package).
 // scaffolds the Result type at internal/recognize/result.go so
-// the cross-phase compile dependency closes; extends the
+// the cross-stage compile dependency closes; extends the
 // recognize package with detection logic (manifest/, config/, etc.)
 // without redefining Result.
 //

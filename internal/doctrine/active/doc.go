@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package active is THE single public accessor for runtime doctrine reads
-// in hades-system release (invariant). It is the runtime read substrate
+// in hades-system HADES design (invariant). It is the runtime read substrate
 // behind both the per-process default (Active) and the per-project
 // effective doctrine (For).
 //
-// Consumers (release worker.Spawn, release orchestrator, release merge engine,
+// Consumers (HADES design worker.Spawn, HADES design orchestrator, HADES design merge engine,
 // active.Active() or active.For(projectID) rather than calling
 // internal/doctrine/parser.Parse() directly. Direct parser calls are
 // allowed ONLY at daemon startup init paths and CLI one-shot invocations.
 // noDirectParserOutsideInitAnalyzer enforces this at compile
 // time.
 //
-// # Concurrency model (per spec §4.5 + Q10 C)
+// # Concurrency model (per design contract)
 //
 // - Reads (Active() / For(projectID)) are the hot path: lock-free
 // atomic.Pointer.Load (~10ns per call). invariant atomicity
@@ -23,7 +23,7 @@
 // observable (invariant). sync.Map is used for the per-project
 // map so concurrent Insert/Delete avoids coarse-lock contention.
 //
-// # Resolution chain for For(projectID) (Q7 C hybrid override layout)
+// # Resolution chain for For(projectID) (design choice C hybrid override layout)
 //
 // 1. If projectID has a registered per-project schema (override merged
 // with baseline at daemon startup OR at reload time) → return it.
@@ -40,7 +40,7 @@
 //
 // Active() uses the same chain skipping the per-project arm.
 //
-// # release phases that consume / extend this package
+// # HADES design phases that consume / extend this package
 //
 // - (builtin) provides the initial registry via
 // builtin.LoadAll() called at daemon startup; daemon then calls

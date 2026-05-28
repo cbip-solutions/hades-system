@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/web_citation.py
-"""Web HTML5 + SVG renderer for citation envelopes (HADES design release track Task A-8)."""
+"""Web HTML5 + SVG renderer for citation envelopes (HADES design stage task)."""
 
 from __future__ import annotations
 

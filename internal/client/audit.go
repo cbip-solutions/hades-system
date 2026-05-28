@@ -236,6 +236,6 @@ func AuditCriteria() []AuditCriterion {
 		{Name: "default", Description: "Comprehensive review (correctness + style + tests).", Source: "builtin"},
 		{Name: "security", Description: "Security-grade audit (auth, crypto, input validation, secret leak, RCE).", Source: "builtin"},
 		{Name: "performance", Description: "Performance + scalability review (algorithmic complexity, allocations, leaks).", Source: "builtin"},
-		{Name: "doctrine-violation", Description: "Doctrine compliance check (max-scope/no-stub/no-defer; inv-hades-* boundary leakage).", Source: "builtin"},
+		{Name: "doctrine-violation", Description: "Doctrine compliance check (max-scope/no-stub/no-defer; invariant-* boundary leakage).", Source: "builtin"},
 	}
 }

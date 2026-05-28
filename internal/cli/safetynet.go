@@ -2,7 +2,7 @@
 // Package cli — safetynet.go.
 //
 // `hades safetynet` exposes the 4 self-hosting safety-net elements from
-// Q2 C (Anthropic Apr 23 substrate-regression evidence):
+// design choice C (Anthropic Apr 23 substrate-regression evidence):
 //
 // hades safetynet status # 4-element overview
 // hades safetynet prev {install,show,exec <argv>} # bin/hades-prev mgmt
@@ -25,7 +25,7 @@ import (
 func NewSafetynetCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "safetynet",
-		Short: "Self-hosting safety-net (Q2 C — Apr 23 substrate-regression evidence)",
+		Short: "Self-hosting safety-net (design choice C — Apr 23 substrate-regression evidence)",
 	}
 	attachPlan5DaemonURLFlag(cmd)
 	cmd.AddCommand(safetynetStatusCmd())

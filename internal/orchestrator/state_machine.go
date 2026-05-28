@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package orchestrator state machine — release
+// Package orchestrator state machine — HADES design
 //
 // Defines the 9 supervisor states and the canonical TransitionTable of
-// 28 valid transitions per spec §1 Q6 D. invariant enforces that
+// 28 valid transitions per design contract
 // every runtime transition is in this table; illegal transitions return
 // ErrIllegalTransition without mutating state and without emitting an
 // event. Concurrent callers serialize through the embedded mutex.
@@ -119,7 +119,7 @@ type StateTransition struct {
 }
 
 // TransitionTable is the canonical set of 28 valid transitions per
-// spec §1 Q6 D invariant. The compliance test re-derives this set
+// spec §1 design choice D invariant. The compliance test re-derives this set
 // from the spec; do NOT add a transition without first amending the
 // spec.
 //

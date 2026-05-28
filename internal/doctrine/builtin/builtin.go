@@ -3,7 +3,7 @@
 // (max-scope.toml, default.toml, capa-firewall.toml) into the daemon
 // binary via //go:embed and exposes them as immutable *v1.Schema values.
 //
-// # Q9 B — Embedded TOML files via //go:embed
+// # design choice B — Embedded TOML files via //go:embed
 //
 // Each built-in doctrine ships as a physical TOML file in this package
 // directory. //go:embed compiles them into the binary at build time.
@@ -16,7 +16,7 @@
 // panics on non-nil err because the only way to reach that
 // branch is to ship a corrupted binary.
 //
-// # Q3 C Tier 1 — Transverse axioms hardcoded operator-only
+// # design choice C Tier 1 — Transverse axioms hardcoded operator-only
 //
 // The four transverse axioms (no_tech_debt, no_stubs, build_final_product,
 // no_defer) are declared TRUE in every built-in TOML's
@@ -37,7 +37,7 @@
 //
 // # invariant — Sole accessor
 //
-// External callers (release worker, release orchestrator, release merge,
+// External callers (HADES design worker, HADES design orchestrator, HADES design merge,
 // , NOT through this package's per-doctrine accessors directly.
 // The per-doctrine accessors (MaxScope/Default/CapaFirewall) exist for
 // init-path callers and for the CLI debug
@@ -121,7 +121,7 @@ var (
 // In the happy path, err is nil and registry contains exactly the
 // canonicalNames entries. In the catastrophic path (corrupted binary —
 // embedded TOML fails to parse or validate), the daemon init code is
-// expected to panic per spec §4.1 F1+F4+F11. Consumers that want
+// expected to panic per design contract
 // per-stage attribution can errors.As() the joined error to extract
 // individual *LoadError values (each carries Source + Stage + Wrapped).
 //

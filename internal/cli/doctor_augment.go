@@ -31,9 +31,9 @@ type AugmentProber interface {
 func NewDoctorAugmentCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "augment",
-		Short: "Augmentation pipeline checks (Plan 11; 6 checks per spec §7.4)",
+		Short: "Augmentation pipeline checks (HADES design; 6 checks per design contract)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Augmentation (Plan 11)", runAugmentChecks)
+			return runOneSection(cmd, "Augmentation (HADES design)", runAugmentChecks)
 		},
 	}
 }

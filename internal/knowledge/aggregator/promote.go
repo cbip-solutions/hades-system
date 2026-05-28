@@ -42,7 +42,7 @@ import (
 )
 
 var ErrPromoteReasonRequired = errors.New(
-	"aggregator: Promote: reason required (inv-hades-146)",
+	"aggregator: Promote: reason required (invariant)",
 )
 
 type PromoteResult struct {

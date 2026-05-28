@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — priority.go.
 //
-// Three routes for the release Layer 3 operator override surface:
+// Three routes for the HADES design Layer 3 operator override surface:
 //
 // POST /v1/priority/boost — install or replace an override
 // POST /v1/priority/reset — remove the override (idempotent)
@@ -14,7 +14,7 @@
 //
 // Status-code mapping (mirrors the projects_p7 + budget_plan4 patterns):
 //
-// 503 — OverrideStore() not yet wired (cmd/hades-ctld registers
+// 503 — OverrideStore() unavailable (cmd/hades-ctld registers
 // the adapter at boot; tests inject fakes via SetOverrideStore).
 // 400 — invalid JSON / required fields missing.
 // 422 — quota.ErrInvalidOverride: validation rejected the input

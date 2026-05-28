@@ -5,7 +5,7 @@
 //
 // # Invariant
 //
-// invariant: release ingester / ecosystem code NEVER imports net/http
+// invariant: HADES design ingester / ecosystem code NEVER imports net/http
 // (or crypto/tls). ALL outbound egress goes via
 // internal/research/cache/Revalidator.Fetch (the sole legal HTTP callsite
 // per invariant + ADR-0087 amendment). The boundary is enforced both
@@ -41,10 +41,10 @@
 //
 // # Pattern
 //
-// Mirrors the release Task J-7 `noWebInAggregator` analyzer in
+// Mirrors the HADES design task `noWebInAggregator` analyzer in
 // shape (`golang.org/x/tools/go/analysis.Analyzer`) for consistency.
-// Registered in `cmd/hades-doctrine-lint/release_extension.go` alongside
-// the release extension surface.
+// Registered in `cmd/hades-doctrine-lint/HADES component.go` alongside
+// the HADES design extension surface.
 //
 // # Known-uncaught callsite shape (acknowledged limitation)
 //
@@ -62,10 +62,10 @@
 // allowlist (invariant runtime side).
 //
 // References
-// - Spec §7.3 release ingester invariants
+// - Spec §7.3 HADES design ingester invariants
 // - ADR-0087 Revalidator.Fetch single-egress amendment
-// - release Task H-1 spec (internal design record)
-// - release J-7 `noWebInAggregator` precedent
+// - HADES design task spec (design records design)
+// - HADES design J-7 `noWebInAggregator` precedent
 package lint
 
 import (
@@ -78,11 +78,8 @@ import (
 
 var NoWebInEcosystemAnalyzer = &analysis.Analyzer{
 	Name: "noWebInEcosystem",
-	Doc: `Enforces inv-hades-191: internal/research/ecosystem/... NEVER imports
-net/http or crypto/tls. All HTTP egress MUST go via
-internal/research/cache/Revalidator.Fetch (inv-hades-152 + ADR-0087). There
-is no allowlist — no file in the ecosystem package tree legitimately
-needs direct web-stack access.`,
+	Doc:  "Enforces invariant: internal/research/ecosystem/... NEVER imports\nnet/http or crypto/tls. All HTTP egress MUST go via\ninternal/research/cache/Revalidator.Fetch (invariant + ADR-0087). There\nis no allowlist — no file in the ecosystem package tree legitimately\nneeds direct web-stack access.",
+
 	Run: runNoWebInEcosystem,
 }
 
@@ -109,9 +106,9 @@ func isEcosystemPkg(pkgPath string) bool {
 func isForbiddenWebImport(path string) (msg string, forbidden bool) {
 	switch path {
 	case "net/http":
-		return "inv-hades-191: net/http import in ecosystem package forbidden — use Revalidator.Fetch", true
+		return "invariant: net/http import in ecosystem package forbidden — use Revalidator.Fetch", true
 	case "crypto/tls":
-		return "inv-hades-191: crypto/tls import in ecosystem package forbidden — use Revalidator.Fetch", true
+		return "invariant: crypto/tls import in ecosystem package forbidden — use Revalidator.Fetch", true
 	}
 	return "", false
 }
@@ -147,7 +144,7 @@ func runNoWebInEcosystem(pass *analysis.Pass) (any, error) {
 			if pkgName, ok := webPkgIdent(pass, sel.X); ok {
 				if isForbiddenWebMethod(pkgName, sel.Sel.Name) {
 					pass.Reportf(call.Pos(),
-						"inv-hades-191: ecosystem NEVER queries web directly — use Revalidator.Fetch")
+						"invariant: ecosystem NEVER queries web directly — use Revalidator.Fetch")
 				}
 			}
 			return true

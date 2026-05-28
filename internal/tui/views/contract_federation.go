@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package views — contract_federation.go.
 //
-// F7 Code Graph panel "Contract Federation" sub-panel per spec §10.3
-// + master C-14. Renders three sections sourced from the release
+// F7 Code Graph panel "Contract Federation" sub-panel per design contract
+// + master C-14. Renders three sections sourced from the HADES design
 // workspace federation substrate,
 // breaking-change events, and L10 dispatch
 // decisions:
@@ -22,7 +22,7 @@
 // extended for via federation_recent.go + a new daemon REST
 // handler); tests inject fakes directly. Refetch() runs one
 // round-trip and delivers contractFederationDataMsg; Update applies
-// it; View renders. lastErr fallback per spec §15 graceful
+// it; View renders. lastErr fallback per design contract
 // degradation.
 //
 // Privacy / invariant / invariant: this file consumes the daemon

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # plugin/hades/renderers/types.py
-"""Python type stubs mirroring HADES design release track Go envelope substrate."""
+"""Python type stubs mirroring HADES design stage Go envelope substrate."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from typing import Any, ClassVar
 
 # Opaque ID type aliases — runtime form is ``str`` but type-checked
 # distinctively at API boundaries.
-CitationID = str  # opaque ID assigned by HADES design release track augment/pipeline.go
+CitationID = str  # opaque ID assigned by HADES design stage augment/pipeline.go
 SessionID = str  # Hermes session ID (opaque)
 RequestID = str  # daemon request ID (opaque)
 AuditEventID = str  # HADES design Tessera event ID (opaque, format "evt-<hex>")
@@ -24,7 +24,7 @@ ALLOWED_DOCTRINES: frozenset[str] = frozenset({"max-scope", "default", "capa-fir
 class CitationType(str, Enum):
     """Citation type discriminating payload semantics.
 
-    Mirrors HADES design release track ``internal/citation/types.go`` ``CitationType`` Go
+    Mirrors HADES design stage ``internal/citation/types.go`` ``CitationType`` Go
     enum. Adding a value here REQUIRES adding to Go source first
     (cross-language source-of-truth: Go).
     """
@@ -41,8 +41,8 @@ class CitationType(str, Enum):
 class CitationSource(str, Enum):
     """Originating retrieval surface for a citation.
 
-    Mirrors HADES design release track ``internal/citation/types.go`` ``CitationSource``.
-    HADES design release track renamed the code-graph sources gitnexus_* → caronte_*;
+    Mirrors HADES design stage ``internal/citation/types.go`` ``CitationSource``.
+    HADES design stage renamed the code-graph sources gitnexus_* → caronte_*;
     the old values are kept as backward-compat aliases so pre-HADES design audit
     rows (wire value ``gitnexus_query`` / ``gitnexus_context``) still round-trip
     without error — mirrors Go ``ParseCitationSource`` alias table.
@@ -65,7 +65,7 @@ class CitationSource(str, Enum):
 class RetrievalLane(str, Enum):
     """RRF lane that surfaced a citation.
 
-    Mirrors HADES design release track ``internal/citation/types.go`` ``RetrievalLane``.
+    Mirrors HADES design stage ``internal/citation/types.go`` ``RetrievalLane``.
     """
 
     SEMANTIC = "semantic"
@@ -78,7 +78,7 @@ class RetrievalLane(str, Enum):
 class Platform(str, Enum):
     """Render target.
 
-    6 platform-specific renderers (HADES design release track) + 1 fallback (HADES design
+    6 platform-specific renderers (HADES design stage) + 1 fallback (HADES design
     substrate ``internal/citation/markdown_fallback.go``).
     """
 
@@ -227,7 +227,7 @@ class Envelope:
 
 @dataclass(frozen=True, slots=True)
 class AugmentationResult:
-    """Wrapper type for HADES design release track augmentation pipeline output.
+    """Wrapper type for HADES design stage augmentation pipeline output.
 
     Round-trips with HADES design Go ``internal/augment/types.go``
     ``AugmentationResult`` struct byte-exact via JSON tags.

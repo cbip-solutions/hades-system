@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Package knowledge — ranker for the hybrid query pipeline (release
-// Task G-7).
+// Package knowledge — ranker for the hybrid query pipeline (HADES design
+// task).
 //
 // Three components combine into a single deterministic score:
 //
@@ -26,7 +26,7 @@
 // passes it on every row so all rows inside one Execute() see the same
 // reference instant.
 //
-// Per spec §1 Q16: "ranking = BM25 base + recency boost (exponential
+// per design contract: "ranking = BM25 base + recency boost (exponential
 // decay) + project-match boost". Coefficients are constants here;
 // spec §6.6 reserves operator-tunable knobs for a future
 // config-file extension.

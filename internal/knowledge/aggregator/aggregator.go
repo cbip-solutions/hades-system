@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package aggregator — Aggregator struct + New constructor + DI seams.
 //
-// The Aggregator is the Q6 C cross-project knowledge index: it owns
+// The Aggregator is the design choice C cross-project knowledge index: it owns
 // aggregator.db (knowledge_pin_index + FTS5 + vec0 + wikilinks) and
 // orchestrates promote / list / search operations across the operator's
 // authorised projects.
@@ -19,7 +19,7 @@
 // legitimately imports both internal/store AND this aggregator
 // package. Compliance test in tests/compliance/inv_hades_031_*.go enforces.
 //
-// Phase ownership:
+// stage ownership:
 // - D-2 (this file): struct + constructor + DI seams + sentinels
 // - D-3..D-7: Promote / Search / Embed / wikilink resolver methods
 // - D-8: PerProjectKnowledgeStore real implementation in
@@ -109,7 +109,7 @@ func (a *Aggregator) Close() error {
 }
 
 // DB returns the underlying *sql.DB if Options.DB was supplied at
-// construction; otherwise returns nil. release C-9 amendment
+// construction; otherwise returns nil. HADES design C-9 amendment
 // :
 //
 // this directly for the cross-ecosystem query surface (BinaryTop200 +
@@ -119,8 +119,8 @@ func (a *Aggregator) Close() error {
 //
 // Why additive (vs constructor-time injection): the aggregator is the
 // canonical owner of the *sql.DB lifecycle for the aggregator.db
-// . release's per-ecosystem.db handles live in a DIFFERENT
-// SQLite file (one per ecosystem per spec §2.2 Q2=A), so the aggregator
+// . HADES design's per-ecosystem.db handles live in a DIFFERENT
+// SQLite file (one per ecosystem per design contract=A), so the aggregator
 // DOES NOT own the Indexer's *sql.DB — only its own. The DB() accessor
 // surfaces the read-only handle for daemon glue to wire into
 // per-ecosystem Indexer constructors. The accessor is additive: it does
@@ -129,7 +129,7 @@ func (a *Aggregator) Close() error {
 // did.
 //
 // Boundary note (invariant spirit): this exposes the read-side
-// handle intentionally; release Indexer is the SOLE intended caller.
+// handle intentionally; HADES design Indexer is the SOLE intended caller.
 // A compliance test (tests/compliance/) enforces that no other
 // importer reads DB() without an explicit allowlist entry. The
 // aggregator package itself remains the canonical owner of writes.
@@ -179,7 +179,7 @@ func (noopChainAnchorComputer) ComputeAnchor(
 	createdAt time.Time,
 ) (string, error) {
 	partition := createdAt.UTC().Format("2006_01")
-	return fmt.Sprintf("%s:%s:noop-pre-phase-b", partition, eventID), nil
+	return fmt.Sprintf("%s:%s:noop-pre-stage-b", partition, eventID), nil
 }
 
 type Clock interface {

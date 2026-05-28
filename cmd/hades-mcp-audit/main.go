@@ -3,7 +3,7 @@
 //
 // hades-mcp-audit — audit MCP binary.
 //
-// Invoked by OpenCode plugin via stdio transport (Q9 B: stdio canonical).
+// Invoked by OpenCode plugin via stdio transport (design choice B: stdio canonical).
 // Reads daemon socket path, auth-token-path, reviewer pool, and min pool size
 // from flags. On missing or invalid config, exits non-zero with a human-
 // readable error (never panics).
@@ -124,7 +124,7 @@ func run() error {
 	daemonURL := fs.String("daemon-url", "", "daemon HTTP base URL (overrides --socket; used in tests)")
 	authTokenPath := fs.String("auth-token-path", "", "path to daemon auth-token file (required)")
 	reviewerPool := fs.String("reviewer-pool", "", "comma-separated reviewer family pool (default: anthropic,google,deepseek,local-qwen,openai)")
-	minPoolSize := fs.Int("min-pool-size", 2, "minimum disjoint reviewer pool size (inv-hades-080)")
+	minPoolSize := fs.Int("min-pool-size", 2, "minimum disjoint reviewer pool size (invariant)")
 	defaultModel := fs.String("default-model", "gemini-2.6-pro", "default reviewer model hint")
 	doctrine := fs.String("doctrine", "default", "doctrine mode: max-scope | default | capa-firewall")
 

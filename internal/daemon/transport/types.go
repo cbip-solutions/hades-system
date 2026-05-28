@@ -8,7 +8,7 @@
 // Internal contracts:
 // - MessagesHandler: concrete handler tied to the daemon dispatcher
 // - Dispatcher: abstract dispatcher dependency
-// - AuditAnchor: abstract release Tessera audit hook
+// - AuditAnchor: abstract HADES design Tessera audit hook
 package transport
 
 import (

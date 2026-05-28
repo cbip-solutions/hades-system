@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package chain implements the release audit_events_raw chain
+// Package chain implements the HADES design audit_events_raw chain
 // integrity layer: per-record sha256 hash chain (prev_hash → record_hash)
 // over the existing audit_events_raw table, plus monthly partition seal
 // computation, plus a chain walker for verify-chain semantics, plus a
@@ -8,11 +8,11 @@
 // This package is the pure-Go domain layer for chain integrity. It
 // NEVER imports internal/store — boundary invariant enforced. All
 // store-side I/O goes through the EventStore interface (store.go),
-// which is satisfied by internal/daemon/auditadapter (the release
+// which is satisfied by internal/daemon/auditadapter (the HADES design
 // equivalent of bypassadapter / dispatcheradapter / orchestratoradapter
 // from earlier plans).
 //
-// Chain hash algorithm (Q3 C, spec §1.Q3 + §2.4 migration 059):
+// Chain hash algorithm (design choice C, spec §1.design choice + §2.4 migration 059):
 //
 // record_hash = sha256(
 // prev_hash || "|" || event_type || "|" || payload || "|" || ts
@@ -26,7 +26,7 @@
 // - "|" (byte 0x7C) is a deterministic field separator (see compute.go
 // for adversarial-construction rationale)
 //
-// Partition derivation (spec §1.Q3 line 199):
+// Partition derivation (spec §1.design choice line 199):
 //
 // partition_id = strftime("%Y_%m", emitted_at, "unixepoch")
 //
@@ -40,7 +40,7 @@
 // for batched leaf storage. The tessera_leaf_id column is updated
 // post-batch-flush via store.UpdateTesseraLeafID (auditadapter).
 //
-// Per-partition seal (Q3 C hybrid): SealPartition computes the partition
+// Per-partition seal (design choice C hybrid): SealPartition computes the partition
 // final_record_hash + appends a seal-typed Tessera leaf + records
 // daemon witness signature in audit_partition_seals. Called by the
 // monthly partition.seal_worker goroutine (auditadapter, wires

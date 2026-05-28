@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package glob — gitattributes parser.
 //
-// Honors linguist-* overrides per spec §2.4 Q4=B. Subset implementation:
+// Honors linguist-* overrides per design contract=B. Subset implementation:
 // recognizes pattern lines of the form
 //
 // <glob> linguist-language=<X>

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// agentic.go — Q4 C agentic_deep wrapper.
+// agentic.go — design choice C agentic_deep wrapper.
 //
 // The agentic_deep wrapper iterates the deterministic dispatch
-// (Q4 C core) with LLM-driven gap detection between rounds:
+// (design choice C core) with LLM-driven gap detection between rounds:
 //
 // 1. Run dispatch(query) → raw findings + verified citations.
 // 2. Pass findings to Synthesizer with profile=research-gap-detection

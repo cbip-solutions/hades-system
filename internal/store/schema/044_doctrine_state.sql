@@ -1,9 +1,9 @@
--- HADES design release track — singleton row holding the last-loaded doctrine
+-- HADES design stage — singleton row holding the last-loaded doctrine
 -- snapshot. Daemon reads on startup so HADES design workers dispatched
 -- before a restart see consistent doctrine values across the restart
 -- boundary (no layer-flicker due to mid-flight ~/.config/ changes).
 --
--- release track wires /v1/doctrine/state endpoint that reads here.
+-- stage wires /v1/doctrine/state endpoint that reads here.
 -- Singleton enforced by CHECK(id = 1).
 --
 -- IF NOT EXISTS (defense-in-depth, I-2 fix): aligns with migrations

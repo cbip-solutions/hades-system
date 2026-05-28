@@ -3,17 +3,17 @@
 //
 // declared TamperDispatcher (tamper_dispatcher.go) with doctrine-name
 // routing ("max-scope" / "default" / "capa-firewall"). ACTIVATES the
-// dispatcher by binding it to the release [audit.tamper_response] mode read
+// dispatcher by binding it to the HADES design [audit.tamper_response] mode read
 // per-project from the active doctrine bundle at Dispatch() call time (hot —
-// respects release doctrine reload mid-flight Q10 C atomic-swap).
+// respects HADES design doctrine reload mid-flight design choice C atomic-swap).
 //
 // DoctrineDispatcher is a NEW struct
-// that carries the three release dependencies and its own halt state. Its
+// that carries the three HADES design dependencies and its own halt state. Its
 // Dispatch() method routes per [audit.tamper_response] mode:
 //
-// halt-per-project: HALT P only; emit audit.tamper_detected + release inbox URGENT;
+// halt-per-project: HALT P only; emit audit.tamper_detected + HADES design inbox URGENT;
 // emit audit.recovery_initiated (operator-gated recovery next step).
-// log-continue: NO halt; emit audit.tamper_detected + release inbox URGENT;
+// log-continue: NO halt; emit audit.tamper_detected + HADES design inbox URGENT;
 // CONTINUE new appends.
 // cascade-halt-all: HALT P + HALT ALL other known projects; emit per-project
 // audit.tamper_detected (one per affected project); emit
@@ -23,7 +23,7 @@
 // Per-project blast radius preserved unless mode=cascade-halt-all (capa-firewall
 // opt-in only).
 //
-// Recursive chain anchor: every event emitted flows into release eventlog →
+// Recursive chain anchor: every event emitted flows into HADES design eventlog →
 // forensically anchored, not just the original tamper detection. Dispatcher
 // MUST emit events synchronously to ensure ordering:
 // detection → tamper_detected → recovery_initiated (if applicable).
@@ -68,7 +68,7 @@ type DoctrineDispatcher struct {
 
 func NewDoctrineDispatcher(active DoctrineActive, evlog EventAppender, ibx InboxNotifier) (*DoctrineDispatcher, error) {
 	if active == nil {
-		return nil, errors.New("recovery.NewDoctrineDispatcher: nil DoctrineActive (inv-hades-150: doctrine mode required for routing)")
+		return nil, errors.New("recovery.NewDoctrineDispatcher: nil DoctrineActive (invariant: doctrine mode required for routing)")
 	}
 	if evlog == nil {
 		return nil, errors.New("recovery.NewDoctrineDispatcher: nil EventAppender (chain-anchor events must not be dropped)")
@@ -86,7 +86,7 @@ func NewDoctrineDispatcher(active DoctrineActive, evlog EventAppender, ibx Inbox
 
 func (d *DoctrineDispatcher) Dispatch(ctx context.Context, ev TamperEvent) error {
 	if ev.ProjectID == "" {
-		return errors.New("recovery.DoctrineDispatcher.Dispatch: empty project_id (inv-hades-150)")
+		return errors.New("recovery.DoctrineDispatcher.Dispatch: empty project_id (invariant)")
 	}
 	if ev.Timestamp.IsZero() {
 		ev.Timestamp = time.Now()

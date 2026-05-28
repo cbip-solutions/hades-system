@@ -38,7 +38,7 @@ import (
 func NewResearchCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "research",
-		Short: "Research cache admin + sources catalog (Plan 4 + Plan 9)",
+		Short: "Research cache admin + sources catalog (HADES design + HADES design)",
 	}
 	format.AttachFlags(cmd)
 	cmd.AddCommand(researchCacheCmd())

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package client — contract.go.
 //
-// Thin pass-throughs for the daemon's release caronte REST sub-routes:
+// Thin pass-throughs for the daemon's HADES design caronte REST sub-routes:
 // /v1/mcpgateway/contract{,/validate,/why}. Contract reads proxy through the
 // native Caronte engine; manifest validation uses the daemon-wired federation
 // validator. CLI is operator-side; LLM traffic is not involved (these are

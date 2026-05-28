@@ -12,7 +12,7 @@ import (
 //
 // bypass_anomaly_observations (per-event rolling-window numerator).
 //
-// - v4: conversation_id column on bypass_audit (Q7 D)
+// - v4: conversation_id column on bypass_audit (design choice D)
 //
 // - v5: bypass_audit_bodies (encrypted bodies, invariant)
 //
@@ -27,7 +27,7 @@ import (
 // - v10: cost_ledger (one row per LLM request, USD-converted, idempotency
 // UNIQUE for invariant no-double-charge guarantee)
 //
-// - v11: pin_overrides (Q8 D pin hierarchy with optional TTL, invariant)
+// - v11: pin_overrides (design choice D pin hierarchy with optional TTL, invariant)
 //
 // - v12: doctrine_state singleton (last-loaded Resolved.Schema +
 // Provenance JSON snapshot; daemon reads on startup so
@@ -38,14 +38,14 @@ import (
 // project_id on every row for logical isolation (spec §7.1).
 //
 // - v14: subprocess_sessions — persistent TeamLead + Reviewer L3/L4
-// subprocess registry for crash recovery (Q3 C lifecycle).
+// subprocess registry for crash recovery (design choice C lifecycle).
 // Idempotency key (spec_id, doctrine_name); ttl_seconds drives the
 // invariant TTL evictor.
 //
 // - v15: worker_specs / team_lead_specs / reviewer_specs — three tables
 // holding the immutable WorkerSpec snapshots persisted by the daemon
 // adapter. ships the
-// schema so release orchestrator persistence is unblocked.
+// schema so HADES design orchestrator persistence is unblocked.
 //
 // - v16: aggregation_windows + aggregation_events — AggregationStream
 // SQLite-durability layer. Window open/close/event records survive
@@ -59,7 +59,7 @@ import (
 // - v18: cost_axis_tags + axis_tag_loss_events — 4-axis attribution
 // store (project × doctrine × stage × task; +operation +worker_id
 // optional). UNIQUE (cost_id, axis_name) + INSERT OR IGNORE for
-// PostCall idempotency. cost_ledger now exists on main (release
+// PostCall idempotency. cost_ledger now exists on main (HADES design
 // F-1 merged), so a future migration may add the FK; current
 // migration ships without FK to keep the diff minimal.
 //
@@ -81,13 +81,13 @@ import (
 // . TTL enforced by handler; background eviction goroutine 1h.
 //
 // - v22: audit_events_raw — daemon-owned audit event ledger. All MCPs and
-// handlers emit here via POST /v1/audit/emit. release wraps with hash-chain
+// handlers emit here via POST /v1/audit/emit. HADES design wraps with hash-chain
 // OTel export WITHOUT schema migration (additive ALTER TABLE only).
 //
 // - v23: substrate_health — per-commit test pass-rate + doctrine-lint
 // outcome. The regression-by-self detector queries this table to spot
 // "substrate is regressing on its own commits" (Apr 23 chicken-and-egg
-// failure mode). release extends additively (history queries, time-series,
+// failure mode). HADES design extends additively (history queries, time-series,
 // adversarial corpus). invariant boundary: writes go through the
 // SubstrateHealthWriter interface declared in safetynet/regression.go;
 // adapter wired in (internal/daemon/orchestratoradapter/).
@@ -123,7 +123,7 @@ import (
 // primitives.
 //
 // - v27: schedules + schedule_history — durable scheduler substrate
-// for Routine + Task + Loop schedules (3-tier per spec §1 Q8 D)
+// for Routine + Task + Loop schedules (3-tier per design contract)
 // plus per-fire outcome ledger driving `hades schedule history`.
 // Five CHECK-constrained enums (tier, trigger_type, miss_policy,
 // status, outcome) plus three indexes (idx_schedules_due partial
@@ -142,7 +142,7 @@ import (
 // schemaVersion bump).
 //
 // - v28: per-project `inbox` table + daemon.db `inbox_aggregator_cache`.
-// Q11 C hybrid storage substrate. Per-project authoritative inbox
+// design choice C hybrid storage substrate. Per-project authoritative inbox
 // carries severity 4-tier CHECK (invariant), 5min sliding-window
 // dedup UNIQUE on (event_type, content_hash, created_at_bucket),
 // and partial unacked index for the hot render path. Daemon-level
@@ -158,7 +158,7 @@ import (
 // internal/daemon/inboxadapter is the only legitimate
 // bridge. invariant: aggregator cache rows carry source-DB
 // project_id (no cross-project leak).
-// Drift note: spec-frozen release-phase-E projected migrationV27
+// Drift note: spec-frozen HADES design projected migrationV27
 // under the original A→C→B→D→E execution sequence (
 // would land 059 instead of 063). Reality at HEAD on 2026-05-07
 // has already at v27, so picks v28 — the next
@@ -176,12 +176,12 @@ import (
 // path: 28 → 29 (this migration).
 const schemaVersion = 31
 
-// migrationV21 adds research_cache — release Task G-1, Q9 B.
+// migrationV21 adds research_cache — HADES design task, design choice B.
 //
 //go:embed schema/054_research_cache.sql
 var migrationV21 string
 
-// migrationV22 adds audit_events_raw — release Task G-2, Q9 B.
+// migrationV22 adds audit_events_raw — HADES design task, design choice B.
 //
 //go:embed schema/055_audit_events_raw.sql
 var migrationV22 string
@@ -202,7 +202,7 @@ var migrationV2 string
 var migrationV3 string
 
 // migrationV4 adds conversation_id to bypass_audit so can group
-// audit rows by upstream conversation (invariant / Q7 D pin registry).
+// audit rows by upstream conversation (invariant / design choice D pin registry).
 //
 //go:embed schema/034_bypass_audit.sql
 var migrationV4 string
@@ -214,7 +214,7 @@ var migrationV4 string
 var migrationV5 string
 
 // migrationV6 adds bypass_audit_pins — the operator pin registry that
-// exempts marked conversations from the nightly retention purge (Q7 D).
+// exempts marked conversations from the nightly retention purge (design choice D).
 //
 //go:embed schema/036_bypass_audit_pins.sql
 var migrationV6 string
@@ -227,7 +227,7 @@ var migrationV6 string
 //go:embed schema/037_conversation_wal.sql
 var migrationV7 string
 
-// migrationV8 adds idempotency_keys — TTL 24h replay cache (release
+// migrationV8 adds idempotency_keys — TTL 24h replay cache (HADES design
 // ). MarkPending persists BEFORE upstream call; MarkCompleted
 // stores the full response so a restart in the upstream-response →
 // orchestrator-delivery gap replays without a second upstream charge
@@ -236,8 +236,8 @@ var migrationV7 string
 //go:embed schema/038_idempotency.sql
 var migrationV8 string
 
-// migrationV9 adds notifications — bypass-event ledger (release,
-// Task L-4, spec §8.4). Severity ∈ {INFO,WARN,CRITICAL}; CRITICAL rows
+// migrationV9 adds notifications — bypass-event ledger (HADES design,
+// task, spec §8.4). Severity ∈ {INFO,WARN,CRITICAL}; CRITICAL rows
 // re-fire macOS osascript every 1h until acknowledged. Distinct from
 // notifications_queue.
 //
@@ -255,8 +255,8 @@ var migrationV9 string
 var migrationV10 string
 
 // migrationV11 adds pin_overrides — operator-set tier pins at three scope
-// levels (session, project, global) with optional TTL (release,
-// Task I-1, invariant). UNIQUE(scope, scope_id) with scope_id=” for
+// levels (session, project, global) with optional TTL (HADES design,
+// task, invariant). UNIQUE(scope, scope_id) with scope_id=” for
 // global (SQLite NULL-distinctness workaround). expires_at is INTEGER unix
 // seconds; NULL means permanent. The 5-min sweep runs PurgeExpiredPins.
 //
@@ -264,15 +264,15 @@ var migrationV10 string
 var migrationV11 string
 
 // migrationV12 adds doctrine_state — singleton row holding the last-
-// loaded Resolved.Schema + Provenance JSON snapshot (release,
-// task A-6). Daemon reads on startup so release workers dispatched
+// loaded Resolved.Schema + Provenance JSON snapshot (HADES design,
+// task A-6). Daemon reads on startup so HADES design workers dispatched
 // before a restart see consistent doctrine values across the restart
 // boundary; wires the /v1/doctrine/state endpoint.
 //
 //go:embed schema/044_doctrine_state.sql
 var migrationV12 string
 
-// migrationV13 adds the three workforce durable queue tables (release
+// migrationV13 adds the three workforce durable queue tables (HADES design
 // ): workforce_tasks (SharedTaskList), workforce_checkpoints
 // (CheckpointQueue), workforce_fix_prompts (FixPromptQueue). All three
 // tables carry project_id for logical isolation (spec §7.1). WAL mode
@@ -283,8 +283,8 @@ var migrationV12 string
 //go:embed schema/045_workforce_queues.sql
 var migrationV13 string
 
-// migrationV14 adds subprocess_sessions — release Task C-5,
-// persistent TeamLead + Reviewer L3/L4 crash recovery (Q3 C lifecycle).
+// migrationV14 adds subprocess_sessions — HADES design task,
+// persistent TeamLead + Reviewer L3/L4 crash recovery (design choice C lifecycle).
 // Ephemeral Worker rows never appear here; only persistent variants.
 // Idempotency key (spec_id, doctrine_name). TTL semantics diverge per
 // doctrine so the same SpecID under two doctrines yields two rows.
@@ -306,7 +306,7 @@ var migrationV14 string
 //go:embed schema/049_worker_specs.sql
 var migrationV15 string
 
-// migrationV16 adds aggregation_windows + aggregation_events — release
+// migrationV16 adds aggregation_windows + aggregation_events — HADES design
 // AggregationStream SQLite-durability layer (invariant boundary:
 // workforce/stream never imports internal/store; bridge via StreamAdapter
 // in workforceadapter). Window open/close/event records survive daemon
@@ -317,7 +317,7 @@ var migrationV15 string
 var migrationV16 string
 
 // migrationV17 adds operator_gate_state — singleton row (id=1 UPSERT)
-// persisting OperatorGate pause/resume state across daemon restarts (release
+// persisting OperatorGate pause/resume state across daemon restarts (HADES design
 // ). CHECK constraint enforces the four-value State enum; LoadState
 // returns StateRunning when row absent (clean boot). invariant: gate/*
 // never imports internal/store; bridge via GateAdapter in workforceadapter.
@@ -325,8 +325,8 @@ var migrationV16 string
 //go:embed schema/047_operator_gate.sql
 var migrationV17 string
 
-// migrationV18 adds cost_axis_tags + axis_tag_loss_events — release
-// Task F-1, Q6 C, invariant. The 4-axis attribution store
+// migrationV18 adds cost_axis_tags + axis_tag_loss_events — HADES design
+// task, design choice C, invariant. The 4-axis attribution store
 // (project × doctrine × stage × task; +operation +worker_id optional).
 // UNIQUE (cost_id, axis_name) + INSERT OR IGNORE in the Go layer keeps
 // PostCall idempotent under retries. axis_tag_loss_events records every
@@ -341,7 +341,7 @@ var migrationV17 string
 var migrationV18 string
 
 // migrationV19 adds budget_pauses + budget_anomalies + budget_anomaly_samples
-// — release Task F-5, Q6 C, invariant + invariant. 4-scope
+// — HADES design task, design choice C, invariant + invariant. 4-scope
 // hierarchical pause state machine (project / doctrine / stage / worker_id),
 // z-score event log, and per-scope rolling sample window. budget_pauses
 // PRIMARY KEY (scope, scope_value) + UPSERT keeps the latest reason on
@@ -353,7 +353,7 @@ var migrationV18 string
 var migrationV19 string
 
 // migrationV20 adds cost_id column + UNIQUE constraint on
-// budget_anomaly_samples — release post-review C-2 fix. The
+// budget_anomaly_samples — HADES design post-review C-2 fix. The
 // PostCallWithCost retry path was non-idempotent: a partial-failure
 // retry double-counted samples in the rolling window, inflating the
 // denominator. Adding cost_id + UNIQUE (scope, scope_value, cost_id)
@@ -365,16 +365,16 @@ var migrationV19 string
 //go:embed schema/053_budget_anomaly_samples_cost_id.sql
 var migrationV20 string
 
-// migrationV23 adds substrate_health — release Task M-1, Q2 C
+// migrationV23 adds substrate_health — HADES design task, design choice C
 // regression-by-self metric. Per-commit test pass-rate + doctrine-lint
-// outcome storage. release extends additively. invariant: safetynet
+// outcome storage. HADES design extends additively. invariant: safetynet
 // writes go through SubstrateHealthWriter interface; adapter in
 //
 //go:embed schema/056_substrate_health.sql
 var migrationV23 string
 
-// migrationV24 introduces projects_alias + path_history — release
-// implements AIP-2510 dual-ID per spec §1 Q3. sha256 canonical + human
+// migrationV24 introduces projects_alias + path_history — HADES design
+// implements AIP-2510 dual-ID per design contract
 // alias separation; path_history tracks every (id_sha256, path) tuple
 // ever observed, enabling mv-detection in projectctx.DetectMv. ON
 // DELETE CASCADE links path_history → projects_alias. invariant.
@@ -382,8 +382,8 @@ var migrationV23 string
 //go:embed migrations/057_projects_alias_path_history.sql
 var migrationV24 string
 
-// migrationV25 introduces priority_overrides — release ships
-// the Layer 3 operator override seam per spec §1 Q10. UNIQUE(project_alias)
+// migrationV25 introduces priority_overrides — HADES design ships
+// the Layer 3 operator override seam per design contract(project_alias)
 // + multiplier > 0 + reason NOT NULL constraints. internal/quota declares
 // the OverrideStore interface; internal/daemon/quotaadapter is the only
 // package permitted to bridge to *store.Store (invariant + invariant).
@@ -393,7 +393,7 @@ var migrationV24 string
 //go:embed migrations/060_priority_overrides.sql
 var migrationV25 string
 
-// migrationV26 introduces tmux_session_state — release ships
+// migrationV26 introduces tmux_session_state — HADES design ships
 // the per-session lifecycle storage row keyed by canonical
 // "hades-<alias>-<sha8>" name. Status four-value enum bounded by SQL CHECK
 // + Go validateTmuxStatus (defense in depth, invariant boundary
@@ -410,9 +410,9 @@ var migrationV25 string
 //go:embed migrations/062_tmux_session_state.sql
 var migrationV26 string
 
-// migrationV27 introduces schedules + schedule_history — release Phase
+// migrationV27 introduces schedules + schedule_history — HADES design stage
 // D-1 ships the durable scheduler substrate. The schedules table hosts
-// Routine + Task + Loop schedules (3-tier per spec §1 Q8 D); the
+// Routine + Task + Loop schedules (3-tier per design contract); the
 // schedule_history table is the append-only fire-attempt outcome
 // ledger driving `hades schedule history`. Five CHECK-constrained enums
 // (tier 0..2, trigger_type 0..2, miss_policy 0..3, status 0..2,
@@ -436,7 +436,7 @@ var migrationV26 string
 var migrationV27 string
 
 // migrationV28 introduces per-project `inbox` + daemon.db
-// `inbox_aggregator_cache` — release Task E-1 ships the Q11 C
+// `inbox_aggregator_cache` — HADES design task ships the design choice C
 // hybrid storage substrate.
 //
 // Per-project authoritative inbox: severity 4-tier CHECK (invariant),
@@ -464,7 +464,7 @@ var migrationV27 string
 // property-based fuzz test in
 // tests/compliance/inv_hades_113_no_cross_project_inbox_leak_test.go.
 //
-// Drift note: spec-frozen release-phase-E projected migrationV27 under
+// Drift note: spec-frozen HADES design projected migrationV27 under
 // the original A→C→B→D→E execution sequence ( would land 059
 // instead of 063). Reality at HEAD on 2026-05-07 has already
 // at v27, so picks v28 — the next free number. The migration
@@ -475,8 +475,8 @@ var migrationV27 string
 //go:embed migrations/058_inbox_aggregator_cache.sql
 var migrationV28 string
 
-// migrationV29 introduces audit_events_raw chain integration — release
-// ships the Q3 C decision: per-event Tessera leaf + per-partition
+// migrationV29 introduces audit_events_raw chain integration — HADES design
+// ships the design choice C decision: per-event Tessera leaf + per-partition
 // seal hybrid granularity. Four chain columns added via additive ALTER
 // TABLE (prev_hash, record_hash, partition_id all TEXT NOT NULL DEFAULT ”;
 // tessera_leaf_id TEXT NULL) plus REFUSE triggers enforcing invariant
@@ -509,17 +509,17 @@ var migrationV28 string
 //go:embed schema/059_audit_chain_extension.sql
 var migrationV29 string
 
-// migrationV30 adds cost_ledger.provider — release Task 9, C9,
+// migrationV30 adds cost_ledger.provider — HADES design Task 9, C9,
 // invariant. Per-provider cost attribution: the dispatcher cascade
 // iterates NAMED backends, so cost must be persisted at Backend.Name()
-// granularity (not just providers.Tier). DEFAULT ” so pre-release rows
+// granularity (not just providers.Tier). DEFAULT ” so pre-HADES design rows
 // decode cleanly. The cost_ledger window index is rebuilt to include
 // provider. schemaVersion bump path: 29 → 30.
 //
 //go:embed migrations/064_cost_ledger_provider.sql
 var migrationV30 string
 
-// migrationV31 adds tier_health_samples — release Task 11, C9,
+// migrationV31 adds tier_health_samples — HADES design Task 11, C9,
 // invariant. Per-provider health observability: one row per backend
 // outcome (dispatcher attempt + RecoveryScheduler probe). provider is
 // Backend.Name() — the per-provider counterpart to the per-Name circuit
@@ -531,247 +531,7 @@ var migrationV31 string
 
 var migrations = []string{
 
-	`
-	-- Schema version tracking ------------------------------------------------
-
-	CREATE TABLE IF NOT EXISTS schema_version (
-		version    INTEGER PRIMARY KEY,
-		applied_at INTEGER NOT NULL
-	);
-
-	-- Core daemon event log (spec §5.3) ---------------------------------------
-
-	CREATE TABLE IF NOT EXISTS events (
-		id           INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts           INTEGER NOT NULL,           -- UTC unix seconds (inv-hades-005)
-		project      TEXT,                       -- empty for daemon-level events
-		session_id   TEXT,
-		swarm_id     TEXT,
-		task_id      TEXT,
-		type         TEXT NOT NULL,              -- e.g. session.created, task.codegen.completed
-		payload_json TEXT
-	);
-	CREATE INDEX IF NOT EXISTS idx_events_ts          ON events(ts);
-	CREATE INDEX IF NOT EXISTS idx_events_project     ON events(project);
-	CREATE INDEX IF NOT EXISTS idx_events_swarm       ON events(swarm_id);
-	CREATE INDEX IF NOT EXISTS idx_events_session     ON events(session_id);
-	CREATE INDEX IF NOT EXISTS idx_events_type        ON events(type);
-
-	-- LLM call accounting (Plan 4 fills) --------------------------------------
-
-	CREATE TABLE IF NOT EXISTS llm_calls (
-		id          INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts          INTEGER NOT NULL,
-		project     TEXT,
-		swarm_id    TEXT,
-		task_id     TEXT,
-		provider    TEXT NOT NULL,
-		model       TEXT NOT NULL,
-		tokens_in   INTEGER NOT NULL,
-		tokens_out  INTEGER NOT NULL,
-		latency_ms  INTEGER,
-		cost_usd    REAL                        -- nullable: $0 marginal under bypass
-	);
-	CREATE INDEX IF NOT EXISTS idx_llm_calls_ts       ON llm_calls(ts);
-	CREATE INDEX IF NOT EXISTS idx_llm_calls_project  ON llm_calls(project);
-	CREATE INDEX IF NOT EXISTS idx_llm_calls_provider ON llm_calls(provider);
-
-	-- Operator + orchestrator decisions (Plan 9) ------------------------------
-
-	CREATE TABLE IF NOT EXISTS decisions (
-		id            INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts            INTEGER NOT NULL,
-		project       TEXT,
-		scope         TEXT NOT NULL,            -- e.g. archive, conflict, override
-		decision      TEXT NOT NULL,
-		justification TEXT,
-		actor         TEXT NOT NULL             -- "operator" | "orchestrator" | "auto"
-	);
-	CREATE INDEX IF NOT EXISTS idx_decisions_ts       ON decisions(ts);
-	CREATE INDEX IF NOT EXISTS idx_decisions_project  ON decisions(project);
-
-	-- Auto-memory writes audit (Plan 9) ---------------------------------------
-
-	CREATE TABLE IF NOT EXISTS memory_writes (
-		id            INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts            INTEGER NOT NULL,
-		project       TEXT NOT NULL,
-		file_path     TEXT NOT NULL,
-		action        TEXT NOT NULL,            -- "create" | "update" | "delete"
-		content_hash  TEXT,
-		runtime       TEXT NOT NULL             -- "hades-system" | "claude-code-vps"
-	);
-	CREATE INDEX IF NOT EXISTS idx_memory_writes_project ON memory_writes(project);
-	CREATE INDEX IF NOT EXISTS idx_memory_writes_ts      ON memory_writes(ts);
-
-	-- Doc versions during wizard (Plan 9) -------------------------------------
-
-	CREATE TABLE IF NOT EXISTS doc_versions (
-		id        INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts        INTEGER NOT NULL,
-		project   TEXT NOT NULL,
-		feature   TEXT NOT NULL,
-		doc_path  TEXT NOT NULL,
-		content   TEXT NOT NULL,
-		author    TEXT NOT NULL                 -- "operator" | "orchestrator"
-	);
-	CREATE INDEX IF NOT EXISTS idx_doc_versions_feature ON doc_versions(project, feature, doc_path);
-
-	-- Postmortems (Plan 11) ---------------------------------------------------
-
-	CREATE TABLE IF NOT EXISTS postmortems (
-		id              INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts              INTEGER NOT NULL,
-		project         TEXT NOT NULL,
-		swarm_id        TEXT NOT NULL,
-		root_cause      TEXT,
-		suggestions_json TEXT,
-		outcome         TEXT NOT NULL            -- "completed-with-intervention" | "aborted"
-	);
-	CREATE INDEX IF NOT EXISTS idx_postmortems_swarm ON postmortems(swarm_id);
-
-	-- Task execution state (Plan 5: provider rotation continuity) -------------
-
-	CREATE TABLE IF NOT EXISTS task_state (
-		id              INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts              INTEGER NOT NULL,
-		task_id         TEXT NOT NULL,
-		swarm_id        TEXT NOT NULL,
-		attempt_n       INTEGER NOT NULL,
-		prior_errors    TEXT,                   -- JSON array of error summaries
-		files_edited    TEXT,                   -- JSON array of file paths
-		current_phase   TEXT NOT NULL,          -- "codegen"|"tests"|"fix-loop"|"commit"
-		approach_avoid  TEXT                    -- JSON array of approaches that failed
-	);
-	CREATE INDEX IF NOT EXISTS idx_task_state_task ON task_state(task_id, attempt_n DESC);
-
-	-- Worktree registry (Plan 5) ----------------------------------------------
-
-	CREATE TABLE IF NOT EXISTS worktrees (
-		id          INTEGER PRIMARY KEY AUTOINCREMENT,
-		project     TEXT NOT NULL,
-		feature     TEXT NOT NULL,
-		task_id     TEXT NOT NULL,
-		path        TEXT NOT NULL UNIQUE,
-		branch      TEXT NOT NULL,
-		status      TEXT NOT NULL,              -- "active"|"completed"|"removed"
-		created_at  INTEGER NOT NULL,
-		removed_at  INTEGER
-	);
-	CREATE INDEX IF NOT EXISTS idx_worktrees_status ON worktrees(status);
-
-	-- Bypass module audit (Plan 2; spec §22 inv-hades-034) ----------------------
-
-	CREATE TABLE IF NOT EXISTS bypass_audit (
-		id             INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts             INTEGER NOT NULL,
-		request_hash   TEXT NOT NULL,           -- SHA-256 of request body
-		response_hash  TEXT NOT NULL,           -- SHA-256 of response body
-		success        INTEGER NOT NULL,        -- 1=ok, 0=fail
-		latency_ms     INTEGER,
-		error_code     TEXT,
-		error_pattern  TEXT,                    -- detected Anthropic patch pattern
-		tier_used      TEXT NOT NULL            -- "in-house"|"community"|"payg"
-	);
-	CREATE INDEX IF NOT EXISTS idx_bypass_audit_ts      ON bypass_audit(ts);
-	CREATE INDEX IF NOT EXISTS idx_bypass_audit_success ON bypass_audit(success);
-
-	-- Bypass config version history (Plan 2) ----------------------------------
-
-	CREATE TABLE IF NOT EXISTS bypass_config_versions (
-		version       TEXT PRIMARY KEY,         -- e.g. "2026.04.29.1"
-		applied_at    INTEGER NOT NULL,
-		diff_summary  TEXT,
-		applied_by    TEXT NOT NULL             -- "operator" or "auto"
-	);
-
-	-- PAYG spend tracking (Plan 5: cost caps) ---------------------------------
-
-	CREATE TABLE IF NOT EXISTS payg_spend (
-		id          INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts          INTEGER NOT NULL,
-		session_id  TEXT,
-		project     TEXT NOT NULL,
-		tokens_in   INTEGER NOT NULL,
-		tokens_out  INTEGER NOT NULL,
-		cost_usd    REAL NOT NULL,
-		capped      INTEGER NOT NULL DEFAULT 0  -- 1 if hit a cap and was rejected
-	);
-	CREATE INDEX IF NOT EXISTS idx_payg_spend_project_ts ON payg_spend(project, ts);
-
-	-- Notifications queue (Plan 11) -------------------------------------------
-
-	CREATE TABLE IF NOT EXISTS notifications_queue (
-		id            INTEGER PRIMARY KEY AUTOINCREMENT,
-		ts            INTEGER NOT NULL,
-		project       TEXT,
-		severity      TEXT NOT NULL,            -- "info"|"warning"|"actionable"|"critical"
-		title         TEXT NOT NULL,
-		body          TEXT,
-		channels      TEXT NOT NULL,            -- JSON array: ["dashboard","bell",...]
-		dedupe_hash   TEXT NOT NULL,
-		dispatched_at INTEGER,                  -- NULL if queued
-		dismissed_at  INTEGER
-	);
-	CREATE INDEX IF NOT EXISTS idx_notifications_dispatched ON notifications_queue(dispatched_at);
-	CREATE INDEX IF NOT EXISTS idx_notifications_dedupe     ON notifications_queue(dedupe_hash);
-
-	-- Projects registered with the daemon (Plan 7) ----------------------------
-
-	CREATE TABLE IF NOT EXISTS projects (
-		id                 TEXT PRIMARY KEY,    -- canonical id e.g. "internal-platform-x"
-		path               TEXT NOT NULL,       -- absolute filesystem path
-		execution          TEXT NOT NULL,       -- "mac" (Architecture II)
-		authoritative_git  TEXT,
-		vps_endpoint       TEXT,                -- ssh host alias if applicable
-		doctrine           TEXT NOT NULL,       -- "max-scope"|"default"|"capa-firewall"
-		budget_monthly_usd REAL,
-		priority_weight    INTEGER NOT NULL DEFAULT 50,
-		registered_at      INTEGER NOT NULL,
-		config_json        TEXT                 -- serialized full config for fast reads
-	);
-
-	-- OpenCode sessions registered by plugin (Plan 7) -------------------------
-
-	CREATE TABLE IF NOT EXISTS sessions (
-		id            TEXT PRIMARY KEY,
-		project       TEXT NOT NULL,
-		runtime       TEXT NOT NULL,            -- "opencode"|"claude-code-vps"
-		started_at    INTEGER NOT NULL,
-		ended_at      INTEGER,
-		FOREIGN KEY (project) REFERENCES projects(id)
-	);
-	CREATE INDEX IF NOT EXISTS idx_sessions_project ON sessions(project);
-
-	-- Swarm runs (Plan 5) -----------------------------------------------------
-
-	CREATE TABLE IF NOT EXISTS swarms (
-		id            TEXT PRIMARY KEY,
-		project       TEXT NOT NULL,
-		feature       TEXT NOT NULL,
-		phase         TEXT NOT NULL,            -- "proposing"|"applying"|"archiving"|"completed"|"aborted"
-		started_at    INTEGER NOT NULL,
-		ended_at      INTEGER,
-		parallelism   INTEGER NOT NULL,
-		FOREIGN KEY (project) REFERENCES projects(id)
-	);
-	CREATE INDEX IF NOT EXISTS idx_swarms_project_phase ON swarms(project, phase);
-
-	-- Tasks within swarms (Plan 5) --------------------------------------------
-
-	CREATE TABLE IF NOT EXISTS tasks (
-		id            TEXT PRIMARY KEY,
-		swarm_id      TEXT NOT NULL,
-		spec_json     TEXT NOT NULL,            -- serialized task spec
-		phase         TEXT NOT NULL,            -- per task_state.current_phase
-		provider      TEXT,                     -- assigned agent profile model
-		started_at    INTEGER NOT NULL,
-		ended_at      INTEGER,
-		outcome       TEXT,                     -- "green"|"failed"|"killed"|"accepted-as-is"
-		FOREIGN KEY (swarm_id) REFERENCES swarms(id)
-	);
-	CREATE INDEX IF NOT EXISTS idx_tasks_swarm ON tasks(swarm_id);
-	`,
+	"\n\t-- Schema version tracking ------------------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS schema_version (\n\t\tversion    INTEGER PRIMARY KEY,\n\t\tapplied_at INTEGER NOT NULL\n\t);\n\n\t-- Core daemon event log (spec §5.3) ---------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS events (\n\t\tid           INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts           INTEGER NOT NULL,           -- UTC unix seconds (invariant)\n\t\tproject      TEXT,                       -- empty for daemon-level events\n\t\tsession_id   TEXT,\n\t\tswarm_id     TEXT,\n\t\ttask_id      TEXT,\n\t\ttype         TEXT NOT NULL,              -- e.g. session.created, task.codegen.completed\n\t\tpayload_json TEXT\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_events_ts          ON events(ts);\n\tCREATE INDEX IF NOT EXISTS idx_events_project     ON events(project);\n\tCREATE INDEX IF NOT EXISTS idx_events_swarm       ON events(swarm_id);\n\tCREATE INDEX IF NOT EXISTS idx_events_session     ON events(session_id);\n\tCREATE INDEX IF NOT EXISTS idx_events_type        ON events(type);\n\n\t-- LLM call accounting (HADES design fills) --------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS llm_calls (\n\t\tid          INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts          INTEGER NOT NULL,\n\t\tproject     TEXT,\n\t\tswarm_id    TEXT,\n\t\ttask_id     TEXT,\n\t\tprovider    TEXT NOT NULL,\n\t\tmodel       TEXT NOT NULL,\n\t\ttokens_in   INTEGER NOT NULL,\n\t\ttokens_out  INTEGER NOT NULL,\n\t\tlatency_ms  INTEGER,\n\t\tcost_usd    REAL                        -- nullable: $0 marginal under bypass\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_llm_calls_ts       ON llm_calls(ts);\n\tCREATE INDEX IF NOT EXISTS idx_llm_calls_project  ON llm_calls(project);\n\tCREATE INDEX IF NOT EXISTS idx_llm_calls_provider ON llm_calls(provider);\n\n\t-- Operator + orchestrator decisions (HADES design) ------------------------------\n\n\tCREATE TABLE IF NOT EXISTS decisions (\n\t\tid            INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts            INTEGER NOT NULL,\n\t\tproject       TEXT,\n\t\tscope         TEXT NOT NULL,            -- e.g. archive, conflict, override\n\t\tdecision      TEXT NOT NULL,\n\t\tjustification TEXT,\n\t\tactor         TEXT NOT NULL             -- \"operator\" | \"orchestrator\" | \"auto\"\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_decisions_ts       ON decisions(ts);\n\tCREATE INDEX IF NOT EXISTS idx_decisions_project  ON decisions(project);\n\n\t-- Auto-memory writes audit (HADES design) ---------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS memory_writes (\n\t\tid            INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts            INTEGER NOT NULL,\n\t\tproject       TEXT NOT NULL,\n\t\tfile_path     TEXT NOT NULL,\n\t\taction        TEXT NOT NULL,            -- \"create\" | \"update\" | \"delete\"\n\t\tcontent_hash  TEXT,\n\t\truntime       TEXT NOT NULL             -- \"hades-system\" | \"claude-code-vps\"\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_memory_writes_project ON memory_writes(project);\n\tCREATE INDEX IF NOT EXISTS idx_memory_writes_ts      ON memory_writes(ts);\n\n\t-- Doc versions during wizard (HADES design) -------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS doc_versions (\n\t\tid        INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts        INTEGER NOT NULL,\n\t\tproject   TEXT NOT NULL,\n\t\tfeature   TEXT NOT NULL,\n\t\tdoc_path  TEXT NOT NULL,\n\t\tcontent   TEXT NOT NULL,\n\t\tauthor    TEXT NOT NULL                 -- \"operator\" | \"orchestrator\"\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_doc_versions_feature ON doc_versions(project, feature, doc_path);\n\n\t-- Postmortems (HADES design) ---------------------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS postmortems (\n\t\tid              INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts              INTEGER NOT NULL,\n\t\tproject         TEXT NOT NULL,\n\t\tswarm_id        TEXT NOT NULL,\n\t\troot_cause      TEXT,\n\t\tsuggestions_json TEXT,\n\t\toutcome         TEXT NOT NULL            -- \"completed-with-intervention\" | \"aborted\"\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_postmortems_swarm ON postmortems(swarm_id);\n\n\t-- Task execution state (HADES design: provider rotation continuity) -------------\n\n\tCREATE TABLE IF NOT EXISTS task_state (\n\t\tid              INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts              INTEGER NOT NULL,\n\t\ttask_id         TEXT NOT NULL,\n\t\tswarm_id        TEXT NOT NULL,\n\t\tattempt_n       INTEGER NOT NULL,\n\t\tprior_errors    TEXT,                   -- JSON array of error summaries\n\t\tfiles_edited    TEXT,                   -- JSON array of file paths\n\t\tcurrent_phase   TEXT NOT NULL,          -- \"codegen\"|\"tests\"|\"fix-loop\"|\"commit\"\n\t\tapproach_avoid  TEXT                    -- JSON array of approaches that failed\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_task_state_task ON task_state(task_id, attempt_n DESC);\n\n\t-- Worktree registry (HADES design) ----------------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS worktrees (\n\t\tid          INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tproject     TEXT NOT NULL,\n\t\tfeature     TEXT NOT NULL,\n\t\ttask_id     TEXT NOT NULL,\n\t\tpath        TEXT NOT NULL UNIQUE,\n\t\tbranch      TEXT NOT NULL,\n\t\tstatus      TEXT NOT NULL,              -- \"active\"|\"completed\"|\"removed\"\n\t\tcreated_at  INTEGER NOT NULL,\n\t\tremoved_at  INTEGER\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_worktrees_status ON worktrees(status);\n\n\t-- Bypass module audit (HADES design; spec §22 invariant) ----------------------\n\n\tCREATE TABLE IF NOT EXISTS bypass_audit (\n\t\tid             INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts             INTEGER NOT NULL,\n\t\trequest_hash   TEXT NOT NULL,           -- SHA-256 of request body\n\t\tresponse_hash  TEXT NOT NULL,           -- SHA-256 of response body\n\t\tsuccess        INTEGER NOT NULL,        -- 1=ok, 0=fail\n\t\tlatency_ms     INTEGER,\n\t\terror_code     TEXT,\n\t\terror_pattern  TEXT,                    -- detected Anthropic patch pattern\n\t\ttier_used      TEXT NOT NULL            -- \"in-house\"|\"community\"|\"payg\"\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_bypass_audit_ts      ON bypass_audit(ts);\n\tCREATE INDEX IF NOT EXISTS idx_bypass_audit_success ON bypass_audit(success);\n\n\t-- Bypass config version history (HADES design) ----------------------------------\n\n\tCREATE TABLE IF NOT EXISTS bypass_config_versions (\n\t\tversion       TEXT PRIMARY KEY,         -- e.g. \"2026.04.29.1\"\n\t\tapplied_at    INTEGER NOT NULL,\n\t\tdiff_summary  TEXT,\n\t\tapplied_by    TEXT NOT NULL             -- \"operator\" or \"auto\"\n\t);\n\n\t-- PAYG spend tracking (HADES design: cost caps) ---------------------------------\n\n\tCREATE TABLE IF NOT EXISTS payg_spend (\n\t\tid          INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts          INTEGER NOT NULL,\n\t\tsession_id  TEXT,\n\t\tproject     TEXT NOT NULL,\n\t\ttokens_in   INTEGER NOT NULL,\n\t\ttokens_out  INTEGER NOT NULL,\n\t\tcost_usd    REAL NOT NULL,\n\t\tcapped      INTEGER NOT NULL DEFAULT 0  -- 1 if hit a cap and was rejected\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_payg_spend_project_ts ON payg_spend(project, ts);\n\n\t-- Notifications queue (HADES design) -------------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS notifications_queue (\n\t\tid            INTEGER PRIMARY KEY AUTOINCREMENT,\n\t\tts            INTEGER NOT NULL,\n\t\tproject       TEXT,\n\t\tseverity      TEXT NOT NULL,            -- \"info\"|\"warning\"|\"actionable\"|\"critical\"\n\t\ttitle         TEXT NOT NULL,\n\t\tbody          TEXT,\n\t\tchannels      TEXT NOT NULL,            -- JSON array: [\"dashboard\",\"bell\",...]\n\t\tdedupe_hash   TEXT NOT NULL,\n\t\tdispatched_at INTEGER,                  -- NULL if queued\n\t\tdismissed_at  INTEGER\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_notifications_dispatched ON notifications_queue(dispatched_at);\n\tCREATE INDEX IF NOT EXISTS idx_notifications_dedupe     ON notifications_queue(dedupe_hash);\n\n\t-- Projects registered with the daemon (HADES design) ----------------------------\n\n\tCREATE TABLE IF NOT EXISTS projects (\n\t\tid                 TEXT PRIMARY KEY,    -- canonical id e.g. \"internal-platform-x\"\n\t\tpath               TEXT NOT NULL,       -- absolute filesystem path\n\t\texecution          TEXT NOT NULL,       -- \"mac\" (Architecture II)\n\t\tauthoritative_git  TEXT,\n\t\tvps_endpoint       TEXT,                -- ssh host alias if applicable\n\t\tdoctrine           TEXT NOT NULL,       -- \"max-scope\"|\"default\"|\"capa-firewall\"\n\t\tbudget_monthly_usd REAL,\n\t\tpriority_weight    INTEGER NOT NULL DEFAULT 50,\n\t\tregistered_at      INTEGER NOT NULL,\n\t\tconfig_json        TEXT                 -- serialized full config for fast reads\n\t);\n\n\t-- OpenCode sessions registered by plugin (HADES design) -------------------------\n\n\tCREATE TABLE IF NOT EXISTS sessions (\n\t\tid            TEXT PRIMARY KEY,\n\t\tproject       TEXT NOT NULL,\n\t\truntime       TEXT NOT NULL,            -- \"opencode\"|\"claude-code-vps\"\n\t\tstarted_at    INTEGER NOT NULL,\n\t\tended_at      INTEGER,\n\t\tFOREIGN KEY (project) REFERENCES projects(id)\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_sessions_project ON sessions(project);\n\n\t-- Swarm runs (HADES design) -----------------------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS swarms (\n\t\tid            TEXT PRIMARY KEY,\n\t\tproject       TEXT NOT NULL,\n\t\tfeature       TEXT NOT NULL,\n\t\tstage         TEXT NOT NULL,            -- \"proposing\"|\"applying\"|\"archiving\"|\"completed\"|\"aborted\"\n\t\tstarted_at    INTEGER NOT NULL,\n\t\tended_at      INTEGER,\n\t\tparallelism   INTEGER NOT NULL,\n\t\tFOREIGN KEY (project) REFERENCES projects(id)\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_swarms_project_phase ON swarms(project, stage);\n\n\t-- Tasks within swarms (HADES design) --------------------------------------------\n\n\tCREATE TABLE IF NOT EXISTS tasks (\n\t\tid            TEXT PRIMARY KEY,\n\t\tswarm_id      TEXT NOT NULL,\n\t\tspec_json     TEXT NOT NULL,            -- serialized task spec\n\t\tstage         TEXT NOT NULL,            -- per task_state.current_phase\n\t\tprovider      TEXT,                     -- assigned agent profile model\n\t\tstarted_at    INTEGER NOT NULL,\n\t\tended_at      INTEGER,\n\t\toutcome       TEXT,                     -- \"green\"|\"failed\"|\"killed\"|\"accepted-as-is\"\n\t\tFOREIGN KEY (swarm_id) REFERENCES swarms(id)\n\t);\n\tCREATE INDEX IF NOT EXISTS idx_tasks_swarm ON tasks(swarm_id);\n\t",
 
 	migrationV2,
 

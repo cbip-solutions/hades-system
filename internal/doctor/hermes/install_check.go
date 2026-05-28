@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package hermes ships release doctor checks for Hermes
+// Package hermes ships HADES design doctor checks for Hermes
 // substrate verification: install + plugin-format. Each check satisfies
 // the internal/doctor/check.Check interface.
 //
@@ -84,7 +84,7 @@ func (c *InstallCheck) Name() string { return "hermes.install" }
 func (c *InstallCheck) Category() check.Category { return check.CategoryPreflight }
 
 func (c *InstallCheck) Description() string {
-	return "Hermes binary presence + version ≥" + MinimumHermesVersion + " (inv-hades-175)"
+	return "Hermes binary presence + version ≥" + MinimumHermesVersion + " (invariant)"
 }
 
 func (c *InstallCheck) IsDestructive() bool { return false }
@@ -129,7 +129,7 @@ func (c *InstallCheck) Run(ctx context.Context) check.DiagnosticResult {
 	if check.CompareVersions(got, want) < 0 {
 		d.Status = check.StatusWarn
 		d.Message = fmt.Sprintf("hermes %s at %s; want ≥%s", version, path, MinimumHermesVersion)
-		d.Hint = "brew upgrade hermes-agent  (Plan 13 requires ≥" + MinimumHermesVersion + " plugin format from Phase H')"
+		d.Hint = "brew upgrade hermes-agent  (HADES design requires ≥" + MinimumHermesVersion + " plugin format from stage)"
 		return d
 	}
 	d.Status = check.StatusPass

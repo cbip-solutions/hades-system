@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 // Package cli — doctor_knowledge.go
 //
-// Task J-3: knowledge subsystem doctor probe. Five aspects
+// task: knowledge subsystem doctor probe. Five aspects
 // (integrity, last_indexed, cpu_budget, watcher_status, extension_hooks)
-// per spec §6.7. Implementation delegates to KnowledgeProber interface;
+// per design contract;
 // fakes in tests, real adapter in internal/knowledge/prober.go.
 //
 // invariant: NEVER issues HTTP request; --remote handling is daemon-side
 // . RunKnowledgeProbe stays local.
 // invariant: probe surface includes a sanity check that extension hook
-// columns are NULL by default in release.
+// columns are NULL by default in HADES design
 package cli
 
 import (
@@ -170,13 +170,13 @@ func runKnowledgeExtensionHooks(ctx context.Context, p KnowledgeProber) ProbeRes
 		r.Message = "no rows yet (NULL-by-default contract trivially satisfied)"
 		return r
 	}
-	r.Message = fmt.Sprintf("%d/%d rows have NULL audit_chain_anchor (Plan 9 hook)", nullCount, total)
+	r.Message = fmt.Sprintf("%d/%d rows have NULL audit_chain_anchor (HADES design hook)", nullCount, total)
 	if nullCount == total {
 		r.Status = ProbeOK
 		return r
 	}
 
 	r.Status = ProbeWarn
-	r.Hint = "Plan 7 ships extension columns NULL by default; non-NULL rows imply Plan 9 (audit hash-chain) or Plan 14 (ecosystem RAG) wired upstream — verify intentional"
+	r.Hint = "HADES design ships extension columns NULL by default; non-NULL rows imply HADES design (audit hash-chain) or HADES design (ecosystem RAG) wired upstream — verify intentional"
 	return r
 }

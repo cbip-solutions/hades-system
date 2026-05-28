@@ -3,10 +3,10 @@
 // API keys, and other credentials from leaking via logs, dumps, panics,
 // or audit rows.
 //
-// Three layers cooperate (decision Q12 D — three-layer redaction —
-// recorded in internal design record
+// Three layers cooperate (decision design choice D — three-layer redaction —
+// recorded in design records design
 // row, and detailed in
-// internal design record):
+// design records design):
 //
 // 1. Secret []byte: a value type whose String, MarshalJSON, MarshalText,
 // Format and GoString implementations all emit "[REDACTED]". The

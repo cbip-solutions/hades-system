@@ -5,7 +5,7 @@
 // a composite risk score (cone + coreness + churn + coupling) graded
 // low|medium|high with the most-affected downstream symbols. Routes via the
 // daemon /v1/mcpgateway/risk route → engine BlastRadius. Variadic args are
-// classified into changed_files (path-like) vs changed_symbols (DECISION K-6);
+// classified into changed_files (path-like) vs changed_symbols (decision K-6);
 // --file/--symbol override the heuristic.
 package cli
 
@@ -48,11 +48,8 @@ func NewRiskCmd(factory func(cmd *cobra.Command) CaronteRiskClient) *cobra.Comma
 	cmd := &cobra.Command{
 		Use:   "risk <symbols-or-files...>",
 		Short: "Blast-radius risk score for a change set (low|medium|high + affected symbols)",
-		Long: `Compute the blast radius of changing one or more symbols/files. Each
-positional arg is classified as a file (path-like) or a symbol; use
---file/--symbol to override. The composite score weights reverse-reachability
-cone + k-core coreness + churn + co-change coupling (spec §9). Routes via the
-daemon (single-egress, inv-hades-088).`,
+		Long:  "Compute the blast radius of changing one or more symbols/files. Each\npositional arg is classified as a file (path-like) or a symbol; use\n--file/--symbol to override. The composite score weights reverse-reachability\ncone + k-core coreness + churn + co-change coupling (spec §9). Routes via the\ndaemon (single-egress, invariant).",
+
 		Example: `  hades risk internal/orchestrator/merge/engine.go
   hades risk MergeEngine.Run transport.Forward --format json`,
 		Args: cobra.ArbitraryArgs,

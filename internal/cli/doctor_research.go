@@ -16,7 +16,7 @@ func doctorResearchCmd() *cobra.Command {
 		Use:   "research",
 		Short: "Research cache + sources health",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Research (Plan 4)", runResearchChecks)
+			return runOneSection(cmd, "Research (HADES design)", runResearchChecks)
 		},
 	}
 }

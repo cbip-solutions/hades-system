@@ -40,14 +40,14 @@ func TryWire(
 	probePath := filepath.Join(configDir, "ecosystem-embedder.toml")
 	if _, err := os.Stat(probePath); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			logger.Info("Plan 14 ecosystem handler: NOT WIRED (no provider configs)",
+			logger.Info("HADES design ecosystem handler: unavailable (no provider configs)",
 				"routes", "/v1/ecosystem/* (pin, prune, prune-preview, ingest-delta, sweep/*, new-versions)",
 				"effect", "503 ecosystem-handler-not-configured; cron worker stops 404ing once configs land",
 				"resolution", "run `hades providers init` (creates ~/.config/hades-system/providers/ecosystem-*.toml) and restart daemon",
 			)
 			return nil, noop
 		}
-		logger.Warn("Plan 14 ecosystem handler: NOT WIRED (config probe failed)",
+		logger.Warn("HADES design ecosystem handler: unavailable (config probe failed)",
 			"err", err,
 			"probe_path", probePath,
 		)
@@ -55,7 +55,7 @@ func TryWire(
 	}
 
 	if _, err := config.LoadEcosystemEmbedderConfig(configDir); err != nil {
-		logger.Warn("Plan 14 ecosystem handler: NOT WIRED (embedder TOML malformed)",
+		logger.Warn("HADES design ecosystem handler: unavailable (embedder TOML malformed)",
 			"err", err,
 			"resolution", "fix ~/.config/hades-system/providers/ecosystem-embedder.toml and restart daemon",
 		)
@@ -72,7 +72,7 @@ func TryWire(
 		{"ecosystem-version-detect.toml", func(d string) error { _, e := config.LoadEcosystemVersionDetectConfig(d); return e }},
 	} {
 		if err := probe.load(configDir); err != nil {
-			logger.Warn("Plan 14 ecosystem handler: NOT WIRED (TOML malformed)",
+			logger.Warn("HADES design ecosystem handler: unavailable (TOML malformed)",
 				"file", probe.name,
 				"err", err,
 				"resolution", fmt.Sprintf("fix ~/.config/hades-system/providers/%s and restart daemon", probe.name),
@@ -86,7 +86,7 @@ func TryWire(
 	for _, eco := range ecosystem.AllEcosystems {
 		dbDir := filepath.Join(dataRoot, "global", "ecosystem", string(eco))
 		if err := os.MkdirAll(dbDir, 0o700); err != nil {
-			logger.Warn("Plan 14 ecosystem handler: mkdir failed",
+			logger.Warn("HADES design ecosystem handler: mkdir failed",
 				"ecosystem", eco,
 				"dir", dbDir,
 				"err", err,
@@ -97,7 +97,7 @@ func TryWire(
 
 		db, err := sql.Open("sqlite3", dbPath+"?_foreign_keys=on&_journal_mode=WAL")
 		if err != nil {
-			logger.Warn("Plan 14 ecosystem handler: sql.Open failed",
+			logger.Warn("HADES design ecosystem handler: sql.Open failed",
 				"ecosystem", eco,
 				"db_path", dbPath,
 				"err", err,
@@ -105,7 +105,7 @@ func TryWire(
 			continue
 		}
 		if err := ecosystem.ApplyMigrations(db); err != nil {
-			logger.Warn("Plan 14 ecosystem handler: ApplyMigrations failed",
+			logger.Warn("HADES design ecosystem handler: ApplyMigrations failed",
 				"ecosystem", eco,
 				"db_path", dbPath,
 				"err", err,
@@ -118,7 +118,7 @@ func TryWire(
 	}
 
 	if len(perEcoDB) == 0 {
-		logger.Warn("Plan 14 ecosystem handler: NOT WIRED (no per-ecosystem DB opened)",
+		logger.Warn("HADES design ecosystem handler: unavailable (no per-ecosystem DB opened)",
 			"resolution", "check filesystem permissions on "+filepath.Join(dataRoot, "global", "ecosystem"),
 		)
 		return nil, noop
@@ -133,7 +133,7 @@ func TryWire(
 		SymbolIndex:     symIdx,
 	})
 	if err != nil {
-		logger.Warn("Plan 14 ecosystem handler: NOT WIRED (constructor failed)",
+		logger.Warn("HADES design ecosystem handler: unavailable (constructor failed)",
 			"err", err,
 		)
 
@@ -154,7 +154,7 @@ func TryWire(
 	}
 
 	srv.SetEcosystemHandler(adapter)
-	logger.Info("Plan 14 ecosystem handler live",
+	logger.Info("HADES design ecosystem handler live",
 		"routes", "/v1/ecosystem/{pin,prune,prune-preview,ingest-delta,sweep/*,new-versions/*}",
 		"ecosystems_wired", len(perEcoDB),
 		"db_paths", openedPaths,

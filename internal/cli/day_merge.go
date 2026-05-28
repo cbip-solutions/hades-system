@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package cli — day_merge.go.
 //
-// renderMergeMorningBrief writes the [release merge] section of the
-// `hades day` morning brief per spec §6.3. Layout:
+// renderMergeMorningBrief writes the [HADES design merge] section of the
+// `hades day` morning brief per design contract:
 //
-// [release merge]
+// [HADES design merge]
 // Cache size=N entries, hit_rate=P%
 // Anomalies pending review: K
 // ├─ [Severity] Type — Detail
@@ -30,7 +30,7 @@ import (
 )
 
 func renderMergeMorningBrief(ctx context.Context, client MergeClient, out io.Writer) {
-	fmt.Fprintln(out, "[plan-6 merge]")
+	fmt.Fprintln(out, "[HADES design merge]")
 
 	cs, err := client.CacheStatus(ctx)
 	if err != nil {

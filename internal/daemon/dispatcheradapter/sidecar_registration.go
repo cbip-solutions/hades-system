@@ -6,7 +6,7 @@
 // registers the SidecarBackend by name into the providers.Registry.
 //
 // Architectural choice — name-based registration (per invariant frozen
-// contract C8): the release → release cascade refactor moved from a
+// contract C8): the HADES design → HADES design cascade refactor moved from a
 // 2-tier hard-wire ("tier1 + tier2") to a name-based ProfileResolver
 // model. RegisterSidecars MUST register backends by name into
 // providers.Registry; the operator's profiles.toml determines which
@@ -15,7 +15,7 @@
 // (an earlier plan version cited one — that is plan-template drift).
 //
 // Graceful-degradation discipline (invariant):
-// - cfg == nil OR cfg.Tier1Bypass == nil → no-op; the release cascade
+// - cfg == nil OR cfg.Tier1Bypass == nil → no-op; the HADES design cascade
 // handles the path. Operators without sidecars.toml are the common
 // case.
 // - /health probe fails (5xx, transport error, ctx cancel) → log a
@@ -86,7 +86,7 @@ func RegisterSidecars(ctx context.Context, reg SidecarRegistry, cfg *config.Side
 
 	if cfg == nil || cfg.Tier1Bypass == nil {
 
-		log.Info("no tier1 bypass sidecar configured; relying on plan 16 cascade")
+		log.Info("no tier1 bypass sidecar configured; relying on HADES design cascade")
 		return
 	}
 

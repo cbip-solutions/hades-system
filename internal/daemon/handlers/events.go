@@ -84,6 +84,6 @@ func notImplemented(w http.ResponseWriter, plan int, planRef string) {
 		"error": "endpoint scaffolded; implementation pending",
 		"plan":  plan,
 		"ref":   planRef,
-		"see":   "docs/superpowers/plans/",
+		"see":   "design records",
 	})
 }

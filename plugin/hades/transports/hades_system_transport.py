@@ -145,7 +145,7 @@ class HadesSystemTransport:
         provider's parsed JSON body, the upstream HTTP status, the
         upstream response headers (with secret-shaped keys stripped by
         the daemon), and the HADES design Tessera ``audit_event_id`` the daemon
-        assigned. release track reviewer I2: the prior return type was just
+        assigned. stage reviewer I2: the prior return type was just
         the inner body dict, which silently discarded ``status``,
         ``headers``, and ``audit_event_id`` — HADES design citation renderers
         consume ``audit_event_id`` for ``hades://audit/<id>`` deep links.
@@ -223,16 +223,16 @@ class HadesSystemTransport:
     ) -> Iterator[CompletedResponse]:
         """Stream a completion.
 
-        release track yields a single :class:`CompletedResponse` wrapping the
+        stage yields a single :class:`CompletedResponse` wrapping the
         full response (semantically equivalent to non-streaming for
-        callers); release track extends to true incremental SSE relay where
+        callers); stage extends to true incremental SSE relay where
         each chunk yields a partial-body CompletedResponse.
 
         Consumers that expect a generator handle single-chunk yields
         gracefully — the on-screen rendering happens after the first chunk
         arrives, which is what ``complete`` provides anyway. SSE incremental
         relay is a UX optimization that lands when the augmentation pipeline
-        (release track) ships SSE-aware response forwarding.
+        (stage) ships SSE-aware response forwarding.
         """
         yield self.complete(messages=messages, model=model, **kwargs)
 

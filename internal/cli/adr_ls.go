@@ -18,11 +18,10 @@ import (
 
 func adrLsCmd() *cobra.Command {
 	c := &cobra.Command{
-		Use:   "ls",
-		Short: "List ADRs filterable by status / plan / risk-level",
-		Example: `  hades adr ls
-  hades adr ls --status proposed
-  hades adr ls --plan plan-9 --risk-level high`,
+		Use:     "ls",
+		Short:   "List ADRs filterable by status / plan / risk-level",
+		Example: "  hades adr ls\n  hades adr ls --status proposed\n  hades adr ls --plan HADES design --risk-level high",
+
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			status, _ := cmd.Flags().GetString("status")
 			plan, _ := cmd.Flags().GetString("plan")
@@ -46,7 +45,7 @@ func adrLsCmd() *cobra.Command {
 		},
 	}
 	c.Flags().String("status", "", "Filter by status (proposed|accepted|rejected|superseded|deprecated)")
-	c.Flags().String("plan", "", "Filter by plan tag (e.g. plan-9)")
+	c.Flags().String("plan", "", "Filter by plan tag (e.g. HADES design)")
 	c.Flags().String("risk-level", "", "Filter by risk level (low|medium|high)")
 	c.Flags().Int("limit", 0, "Max rows (0 = server default 200)")
 	return c

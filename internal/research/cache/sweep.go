@@ -24,7 +24,7 @@
 // 6. On stale: UPDATE research_findings.last_validated_at + content_hash →
 // emit EventResearchCacheRevalidatedStaleRefetched.
 // 7. Errors from Validate do not halt the batch; the validation_log row records
-// them. (Failure mode #11 per spec §7.1 — error per source, not per sweep.)
+// them. (Failure mode #11 per design contract— error per source, not per sweep.)
 //
 // # Cadence and batch size
 //

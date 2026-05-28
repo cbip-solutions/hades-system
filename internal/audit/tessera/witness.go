@@ -12,7 +12,7 @@ import (
 )
 
 // Witness manages the daemon's ECDSA P-256 transparency-log witness
-// keypair. Per spec §1 Q2 A, on darwin the private key resides en
+// keypair. per design contract, on darwin the private key resides en
 // the macOS Keychain (kSecClassGenericPassword); on linux/non-darwin
 // it lives en a 0600 file under ~/.config/hades-system/.
 //

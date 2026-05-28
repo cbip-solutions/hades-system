@@ -3,7 +3,7 @@
 //
 // `hades specs <subcommand>` is the operator-facing entry point for the
 // read-only OpenSpec management surface (spec §0.2). Specs are read-only
-// at the CLI in release; write-back is deferred to post-v0.14.0.
+// at the CLI in HADES design; write-back is deferred to post-v0.14.0.
 //
 // Four leaves under one root:
 //
@@ -42,16 +42,8 @@ func NewSpecsCmd(factory interface{}) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "specs",
 		Short: "OpenSpec read-only management (list, show, diff, sync)",
-		Long: `Operator-facing entry point for OpenSpec contracts (spec §0.2).
+		Long:  "Operator-facing entry point for OpenSpec contracts (spec §0.2).\n\nFour subcommands:\n  list   walk openspec/specs/ and print each spec's ID + title\n  show   render openspec/specs/<id>.md to stdout\n  diff   render openspec/changes/<change-id>/deltas/ (the pending diff)\n  sync   re-index openspec/specs/ into ecosystem.db (calls daemon)\n\nSpecs are read-only at this CLI surface in HADES design Write-back is\ndeferred to post-v0.14.0 per design contract",
 
-Four subcommands:
-  list   walk openspec/specs/ and print each spec's ID + title
-  show   render openspec/specs/<id>.md to stdout
-  diff   render openspec/changes/<change-id>/deltas/ (the pending diff)
-  sync   re-index openspec/specs/ into ecosystem.db (calls daemon)
-
-Specs are read-only at this CLI surface in Plan 14. Write-back is
-deferred to post-v0.14.0 per spec §0.2.`,
 		Example: `  hades specs list
   hades specs show adr-0001
   hades specs diff hades-system-bootstrap

@@ -2,7 +2,7 @@
 // Package handlers — caronte_probe.go.
 //
 // GET /v1/caronte/probe?check=<name> — diagnostic probe surface for the
-// `hades doctor caronte` CLI section (release ; extended
+// `hades doctor caronte` CLI section (HADES design ; extended
 //
 // Background — substrate gap closure (mirrors citation_probe.go +
 // hermes_probe.go):
@@ -70,7 +70,7 @@ func CaronteProbeHandler(s CaronteProbeCtx) http.HandlerFunc {
 			}
 		case "engine.healthy", "index.freshness", "language.coverage", "project-db.status":
 
-			resp.Detail = "probe registered; concrete check pending Phase E rollout"
+			resp.Detail = "probe registered; concrete check pending stage rollout"
 		case "":
 			resp.Detail = "no check specified; pass ?check=<name> where name in {engine.healthy, index.freshness, language.coverage, project-db.status, rerank.available}"
 		default:

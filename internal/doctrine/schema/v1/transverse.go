@@ -39,7 +39,7 @@ var transverseFields = []string{
 
 // TransverseExpected returns the canonical hardcoded value for the transverse
 // axioms — all four MUST be true in shipped doctrines.
-// Task A-3 Validate() asserts the loaded built-ins match this.
+// task Validate() asserts the loaded built-ins match this.
 func TransverseExpected() TransverseConfig {
 	return TransverseConfig{
 		NoTechDebt:        true,

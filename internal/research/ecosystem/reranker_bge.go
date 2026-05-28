@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package ecosystem — reranker_bge.go
 //
-// BGE-reranker-v2-m3 cross-encoder reranker (release Task D-3 per
-// spec §2.6 Q6=A + invariant).
+// BGE-reranker-v2-m3 cross-encoder reranker (HADES design task per
+// spec §2.6 design choice + invariant).
 //
 // # Model
 //

@@ -19,7 +19,7 @@ Expected response:
 - `event_id` — same as input
 - `event_type` — e.g., `AugmentationCompleted`, `KGQueryDispatched`, `MergeWinnerSelected`
 - `payload` — type-specific fields
-- `citations[]` — list of citation envelopes per spec §1 Q9
+- `citations[]` — list of citation envelopes per design contract
 - `tessera_leaf_anchor` — HADES design tile-log leaf hash
 - `prior_events[]` — chained prior events (HADES design audit chain prev-pointer)
 
@@ -88,7 +88,7 @@ Operator can deep-link to any chained event:
 
 - spec §4.2 slash command flow
 - spec §4.6 audit chain integration (event types table)
-- spec §1 Q9 citation envelope structure
+- spec §1 design choice citation envelope structure
 - invariant privacy boundary
 - invariant hades://audit URL handler auth check
 """

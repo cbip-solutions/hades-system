@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Package aggregator — output_json.go ships the batched JSON renderer
-// with schemaVersion="1.0" per Q5=C+ + SOTA-4 anti-pattern #6 avoidance.
+// with schemaVersion="1.0" per design choice+ + SOTA-4 anti-pattern #6 avoidance.
 //
 // The Report struct (aggregator.go) declares JSON struct tags; this file
 // ships the serializer entry point with indented pretty-print for

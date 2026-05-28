@@ -2,7 +2,7 @@
 // Package cli — audit_chain_checkpoint.go.
 //
 // `hades audit-chain checkpoint --reason "<X>"` is the capa-firewall manual
-// checkpoint surface (spec §6.1 Q4 B). Operators trigger an immediate
+// checkpoint surface (spec §6.1 design choice B). Operators trigger an immediate
 // Tessera batch flush + STH co-signature publication before sensitive
 // operations (release tag, doctrine amendment, large migration). The reason
 // string is stored in the chain anchor for forensic traceability.
@@ -35,23 +35,19 @@ func newAuditChainCheckpointCmd() *cobra.Command {
 	var reason, doctrine string
 	c := &cobra.Command{
 		Use:   "checkpoint",
-		Short: "capa-firewall manual checkpoint — Tessera flush + STH co-sign (Q4 B)",
+		Short: "capa-firewall manual checkpoint — Tessera flush + STH co-sign (design choice B)",
 		Long: `Force an immediate Tessera batch flush + STH co-signature publication
 on the daemon-global checkpoint log. Useful on capa-firewall doctrine before
 sensitive operations (release tag, doctrine amendment, large migration) to
 create an explicit chain anchor that ` + "`hades audit-chain verify-chain`" + ` and
-` + "`hades audit-chain history`" + ` can reference for forensic traceability.
+` + "`hades audit-chain history`" + " can reference for forensic traceability.\n\nThe --reason flag is MANDATORY (invariant): the operator's rationale is\nstored in the chain anchor. An empty --reason is also rejected (cobra\nMarkFlagRequired checks presence; RunE checks non-empty).",
 
-The --reason flag is MANDATORY (inv-hades-146): the operator's rationale is
-stored in the chain anchor. An empty --reason is also rejected (cobra
-MarkFlagRequired checks presence; RunE checks non-empty).`,
-		Example: `  hades audit-chain checkpoint --reason "pre-release v0.9.0 audit anchor"
-  hades audit-chain checkpoint --reason "operator decision per Plan 9 brainstorm Q4 B"
-  hades audit-chain checkpoint --reason "pre-migrate anchor" --doctrine capa-firewall`,
+		Example: "  hades audit-chain checkpoint --reason \"pre-release v0.9.0 audit anchor\"\n  hades audit-chain checkpoint --reason \"operator decision per HADES design brainstorm design choice B\"\n  hades audit-chain checkpoint --reason \"pre-migrate anchor\" --doctrine capa-firewall",
+
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if strings.TrimSpace(reason) == "" {
 
-				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason required and must be non-empty (inv-hades-146: auto-checkpoint forbidden)"))
+				return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), fmt.Errorf("--reason required and must be non-empty (invariant: auto-checkpoint forbidden)"))
 			}
 			ctx, cancel := context.WithTimeout(cmd.Context(), 60*time.Second)
 			defer cancel()
@@ -68,7 +64,7 @@ MarkFlagRequired checks presence; RunE checks non-empty).`,
 			return nil
 		},
 	}
-	c.Flags().StringVar(&reason, "reason", "", "Operator rationale (required, inv-hades-146)")
+	c.Flags().StringVar(&reason, "reason", "", "Operator rationale (required, invariant)")
 	c.Flags().StringVar(&doctrine, "doctrine", "", "Doctrine override (capa-firewall|max-scope|default); defaults to active doctrine")
 	_ = c.MarkFlagRequired("reason")
 	return c

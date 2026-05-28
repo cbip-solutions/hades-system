@@ -2,7 +2,7 @@
 // Package main — health_sampler_wiring.go (v0.17.7 A-6).
 //
 // Builds the HealthSampler compute closure and wires it into the
-// releaseOrchestratorService. Responsibility: sample each of the five health
+// HADES component. Responsibility: sample each of the five health
 // dependencies INDIVIDUALLY — never via CheckEngine.RunCheck (the 11-check
 // autonomy matrix) and never via VerifyDocs (autonomy-gate concern).
 //

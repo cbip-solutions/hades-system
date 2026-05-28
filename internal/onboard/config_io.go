@@ -14,7 +14,7 @@ import (
 
 // GlobalConfig is the on-disk shape of $XDG_CONFIG_HOME/hades-system/config.toml,
 // authored by WriteGlobalConfig at the end of `hades config init`. The shape
-// mirrors the release doctrine TOML pattern (schema-versioned per
+// mirrors the HADES design doctrine TOML pattern (schema-versioned per
 // ADR-0050). All non-mandatory fields are `omitempty` so unselected
 // answers do not pollute the file.
 //
@@ -86,7 +86,7 @@ func CloneBuiltinDoctrine(name string) error {
 
 // DefaultsFromFlagsAndPrefs merges CLI flags + persisted prefs + built-in
 // defaults into a WizardDefaults consumable by Path 1 (recommended) or as
-// starting values for Path 3 (customize). Precedence per spec §7.3:
+// starting values for Path 3 (customize). Precedence per design contract:
 //
 // flags > prefs > builtin
 //
@@ -99,8 +99,8 @@ func CloneBuiltinDoctrine(name string) error {
 // loading prefs via `prefs.Load(onboard.OnboardPrefsPath())`.
 //
 // Builtin defaults source: `GetDefaults(WizardKindGlobal)` (single
-// source of truth in defaults.go — spec §7.3 + §2.7 Q7=D Tier 1+2 MCP
-// set). cross-phase review F-2: prior code duplicated those
+// source of truth in defaults.go — spec §7.3 + §2.7 design choice Tier 1+2 MCP
+// set). cross-stage review F-2: prior code duplicated those
 // defaults inline as `globalBuiltinDefaults()` while A-2 was unmerged;
 // post-A-2 the inline copy is dead code and a drift risk.
 func DefaultsFromFlagsAndPrefs(flags map[string]string, p *prefs.Prefs) WizardDefaults {

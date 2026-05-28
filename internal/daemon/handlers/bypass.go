@@ -347,7 +347,7 @@ func BypassCrossValidate(s any) http.HandlerFunc {
 		_ = json.NewDecoder(r.Body).Decode(&body)
 		out := map[string]any{
 			"plugin": body.Plugin,
-			"report": fmt.Sprintf("cross-validation against %q: scaffold (Phase L)", body.Plugin),
+			"report": fmt.Sprintf("cross-validation against %q: scaffold (stage)", body.Plugin),
 		}
 		writeJSON(w, http.StatusOK, out)
 	}

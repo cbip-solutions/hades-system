@@ -5,7 +5,7 @@
 // by projectID. This is a direct SELECT on aggregator.db (a.db) — the
 // cross-project pin index owned by the Aggregator.
 //
-// Phase ownership: D-12 ships the basic SELECT path. extends with
+// stage ownership: D-12 ships the basic SELECT path. extends with
 // pagination (LIMIT + OFFSET) if operator UX reveals the need.
 //
 // Boundary (invariant): this file imports NO internal/store. Direct access
@@ -20,7 +20,7 @@ import (
 )
 
 var ErrEmbedWorkerNotStarted = errors.New(
-	"aggregator: embed_worker not started (Phase J seam; D-12 forward-compat)",
+	"aggregator: embed_worker not started (stage seam; D-12 forward-compat)",
 )
 
 func (a *Aggregator) ListPins(ctx context.Context, projectID string) ([]PinNote, error) {

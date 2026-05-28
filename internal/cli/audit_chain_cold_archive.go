@@ -2,7 +2,7 @@
 // Package cli — audit_chain_cold_archive.go.
 //
 // `hades audit-chain cold-archive` manages the cold storage tier for archived
-// Tessera partitions (spec §6.1 Q5 A). Two leaf commands:
+// Tessera partitions (spec §6.1 design choice A). Two leaf commands:
 //
 // ls List archived partitions (per-project, table by default)
 // restore Pull a partition from cold archive back to local hot tier

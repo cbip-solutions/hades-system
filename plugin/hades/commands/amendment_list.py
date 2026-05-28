@@ -13,7 +13,7 @@ List pending HADES doctrine-amendment proposals awaiting operator decision (ack/
 # pending endpoint registration: /v1/project/active resolves the active project alias
 PROJECT=$(curl --unix-socket /tmp/hades-system.sock -s http://unix/v1/project/active)
 
-# pending endpoint registration: amendment lifecycle (list/show/ack/deny) per spec §7.2
+# pending endpoint registration: amendment lifecycle (list/show/ack/deny) per design contract
 curl --unix-socket /tmp/hades-system.sock -s \\
      "http://unix/v1/amendment/list?project=$PROJECT&status=pending" \\
      | jq '.'

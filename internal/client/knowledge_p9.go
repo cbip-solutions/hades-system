@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 // Package client — knowledge_p9.go.
 //
-// 5 methods on *Client wrapping the release endpoints surfaced at
+// 5 methods on *Client wrapping the HADES design endpoints surfaced at
 // /v1/knowledge/{query,promote,unpromote,list,rebuild}. Wire types mirror
 // internal/daemon/handlers/knowledge_p9.go; the "P9" suffix is dropped on
 // the type names at the client side per the convention established in
 // audit_p9.go (client types are unsuffixed; handler types keep the suffix
-// to coexist with release/7 legacy types inside the daemon package).
+// to coexist with HADES design legacy types inside the daemon package).
 //
-// Method names carry the P9 suffix to disambiguate from the release
+// Method names carry the P9 suffix to disambiguate from the HADES design
 // KnowledgeQuery/KnowledgeReindex/KnowledgeStats methods in knowledge.go
 // which back the legacy /v1/knowledge/{query,reindex,stats} POST routes.
-// The release H-2 routes use GET for query/list and POST for the mutating
+// The HADES design H-2 routes use GET for query/list and POST for the mutating
 // endpoints — the HTTP method alone would not resolve the Go method name
 // collision, hence the explicit P9 suffix.
 //

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package main — subsystem_snapshot.go
 //
-// Every 5 minutes, invoke each release subsystem's prober via
+// Every 5 minutes, invoke each HADES design subsystem's prober via
 // Server.SubsystemProbe and emit a structured slog line with the
 // per-status counts ("ok", "warn", "fail"). The 5-min cadence is the
 // canonical interval declared in spec §J-7 + §6.7; faster cadences burn
@@ -12,9 +12,9 @@
 // via slog.NewTextHandler over os.Stderr). The snapshot logger uses
 // `slog.With("subsystem", name)` to scope each subsystem's log line so
 // operators grepping `subsystem=knowledge` see only knowledge events.
-// This is the release application of the "structured logs are queryable
-// substrate" doctrine — the snapshot timeline is the substrate release
-// hash-chain extension hooks will later anchor (per Q17 D).
+// This is the HADES design application of the "structured logs are queryable
+// substrate" doctrine — the snapshot timeline is the substrate HADES design
+// hash-chain extension hooks will later anchor (per design choice D).
 package main
 
 import (

@@ -1,10 +1,10 @@
 -- ==============================================================================
--- Migration 061: Knowledge index extension hooks (HADES design release track; spec §1 Q17 D)
+-- Migration 061: Knowledge index extension hooks (HADES design stage; spec §1 design choice D)
 -- ==============================================================================
 --
 -- IMPORTANT: This migration is NOT applied via internal/store/schema.go's
 -- migrations slice. The knowledge index lives in a SEPARATE SQLite database
--- at ~/.cache/hades-system/knowledge-index/index.db (per spec §1 Q16 + §2.1 +
+-- at ~/.cache/hades-system/knowledge-index/index.db (per design contract§2.1 +
 -- §2.4 HADES design = migrations 057-061 reservation, §2.4 final entry).
 -- The actual schema is materialized at runtime by internal/knowledge/index.go
 -- Init function. This .sql file serves as:
@@ -21,7 +21,7 @@
 -- (every column listed in the runtime schema must appear here, and the
 -- FTS5 / index DDL fragments must be referenced).
 --
--- Per spec §1 Q17 D + invariant: the three extension-hook columns
+-- per design contract: the three extension-hook columns
 -- (audit_chain_anchor, ecosystem_join_keys, caronte_symbol_refs) ship NULL
 -- by default in HADES design HADES design fills audit_chain_anchor at audit-event
 -- materialization time (separate writer, separate boundary). HADES design
@@ -30,14 +30,14 @@
 -- HADES design INSERT statements NEVER populate any of these three columns;
 -- invariant compliance test enforces.
 --
--- Per spec §3.5 + §6.6: query path is structured-filter-first (uses indexes)
+-- per design contract§6.6: query path is structured-filter-first (uses indexes)
 -- then FTS5 MATCH on the filtered subset, then rank (BM25 + recency + project
 -- match). The composite index idx_knowledge_meta_project supports the
 -- structured-filter prefix (project_id, file_type, last_modified DESC).
 -- ==============================================================================
 
 -- FTS5 virtual table — content-only, minimal schema. All metadata external.
--- Rationale (spec §1 Q17 D): FTS5 ALTER TABLE constraints would block HADES design /
+-- Rationale (spec §1 design choice D): FTS5 ALTER TABLE constraints would block HADES design /
 -- HADES design / gitnexus column adds. Keeping FTS5 minimal + supplementary
 -- metadata table separate is the correct shape.
 CREATE VIRTUAL TABLE IF NOT EXISTS knowledge_fts USING fts5(content_text);

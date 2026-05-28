@@ -4,7 +4,7 @@
 // The cost_ledger table is the persistent source of truth for every LLM
 // request's cost. Layer 2 of orchestrator observability (Layer 1 is
 // bypass_audit). The in-memory CostCounters in
-// internal/daemon/orchestrator/cost_counters.go (Task F-4) materialise
+// internal/daemon/orchestrator/cost_counters.go (task) materialise
 // rolling 30d / 24h / session-lifetime windows on top of this table and
 // are rebuilt on daemon restart via QueryAllRecentCosts (invariant).
 //

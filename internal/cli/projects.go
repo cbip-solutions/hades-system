@@ -20,7 +20,7 @@
 // awk the output): ALIAS, SHA8, PATH, LAST-ACTIVE, STATE.
 //
 // Drift from spec §6.2 example output: the spec shows a "QUOTA" + "PRIORITY"
-// pair. Those columns belong to release quota substrate (live in
+// pair. Those columns belong to HADES design quota substrate (live in
 // `hades project priority --ls` per ) and would require a daemon-side
 // JOIN that GET /v1/projects intentionally avoids ( cap: pure project
 // registry; quota state surfaces via /v1/priority/* in ). Adding
@@ -30,13 +30,13 @@
 // priority --ls`. The STATE column captures the archived/active distinction
 // that operators need to spot dead aliases.
 //
-// Exit-code mapping (per spec §6.2 + the project.go ErrRecoverable sentinel):
+// Exit-code mapping (per design contract):
 // - 0 success (any row count, including zero)
 // - 2 unrecoverable: transport, decode, daemon 5xx, daemon 503/501 gap
 //
 // gap acknowledgment: the daemon-side `GET /v1/projects` is still
-// the release 501-stub at HEAD (`internal/daemon/handlers/projects.go
-// ProjectsList` returns notImplemented). release plan §"Step 4"
+// the HADES design 501-stub at HEAD (`internal/daemon/handlers/projects.go
+// ProjectsList` returns notImplemented). HADES design plan §"Step 4"
 // scheduled the replacement (ProjectsP7List) but that closeout has not
 // landed at HEAD f4b69c6. Until it does, operators see exit 2 with the
 // 501 body — the CLI surface is final-shape day 1 nonetheless, mirroring
@@ -68,15 +68,8 @@ func NewProjectsCmd(factory ProjectsClientFactory) *cobra.Command {
 	root := &cobra.Command{
 		Use:   "projects",
 		Short: "Inspect known projects across the daemon (ls)",
-		Long: `Cross-fleet view of the daemon's project registry.
-
-Currently only "ls" is registered; future subcommands (Plan 7+ /
-Plan 14) will extend this namespace without breaking the existing
-surface.
-
-Distinct from "hades project" (singular): plural form lists; singular
-form acts on one alias (doctor / archive / rm / priority). The split
-mirrors ` + "`git remote`" + ` (singular management) vs ` + "`git remote ls`" + `
+		Long: "Cross-fleet view of the daemon's project registry.\n\nCurrently only \"ls\" is registered; future subcommands (HADES design+ /\nHADES design) will extend this namespace without breaking the existing\nsurface.\n\nDistinct from \"hades project\" (singular): plural form lists; singular\nform acts on one alias (doctor / archive / rm / priority). The split\nmirrors " +
+			"`git remote`" + ` (singular management) vs ` + "`git remote ls`" + `
 (plural inspection) — both surfaces matter and live as siblings,
 neither subsumes the other.`,
 		Example: " # List every alias the daemon knows about (active + archived)\n  hades projects ls",
@@ -95,19 +88,8 @@ func newProjectsLsCmd(factory ProjectsClientFactory) *cobra.Command {
 	return &cobra.Command{
 		Use:   "ls",
 		Short: "List known projects (alias, sha8, path, last-active, state)",
-		Long: `List every project the daemon's project registry knows about,
-including archived rows so the operator can see the full alias set
-with archive markers.
-
-Columns (stable across releases for sed/awk pipelines per spec §6.2):
-  ALIAS         operator-facing name (hadessystem.toml [project].alias)
-  SHA8          first 8 hex chars of project_id (sha256)
-  PATH          canonical absolute path the registry agrees on
-  LAST-ACTIVE   relative time since last activation (e.g. "2h ago")
-  STATE         "active" or "archived" (autonomous_state column)
-
-Quota + priority intentionally omitted from this view — they live on
-` + "`hades project priority --ls`" + ` to keep this command a pure registry
+		Long: "List every project the daemon's project registry knows about,\nincluding archived rows so the operator can see the full alias set\nwith archive markers.\n\nColumns (stable across releases for sed/awk pipelines per design contract):\n  ALIAS         operator-facing name (hadessystem.toml [project].alias)\n  SHA8          first 8 hex chars of project_id (sha256)\n  PATH          canonical absolute path the registry agrees on\n  LAST-ACTIVE   relative time since last activation (e.g. \"2h ago\")\n  STATE         \"active\" or \"archived\" (autonomous_state column)\n\nQuota + priority intentionally omitted from this view — they live on\n" +
+			"`hades project priority --ls`" + ` to keep this command a pure registry
 listing (no N+1 round-trips, no cross-cutting JOIN).
 
 Exit codes (spec §6.2):

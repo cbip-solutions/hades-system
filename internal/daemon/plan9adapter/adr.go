@@ -69,7 +69,7 @@ func NewADRAdapter(deps ADRAdapterDeps) (*ADRAdapter, error) {
 	}
 	defaultPlan := deps.DefaultPlan
 	if defaultPlan == "" {
-		defaultPlan = "plan-9-followup"
+		defaultPlan = "HADES design"
 	}
 	a := &ADRAdapter{
 		dir:         deps.Dir,
@@ -128,7 +128,7 @@ func (a *ADRAdapter) Propose(ctx context.Context, topic, planRange string) (hand
 	if err := a.sink.Emit(adr.EvtADRProposed, adr.EventPayload{
 		ADRID:      id,
 		StatusTo:   adr.StatusProposed,
-		Reason:     "proposed via Plan 9 ADR API",
+		Reason:     "proposed via HADES design ADR API",
 		Timestamp:  now,
 		OperatorID: "",
 	}); err != nil {

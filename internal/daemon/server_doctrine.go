@@ -14,7 +14,7 @@
 //
 // (DoctrineState/DoctrineValidate(string)/DoctrineReload()) accessors that
 // previously lived in server_phase_g_defaults.go. The new method signatures
-// match the release handlers.DoctrineHandlerCtx interface and the
+// match the HADES design handlers.DoctrineHandlerCtx interface and the
 // client DTOs at internal/client/doctrine_v2.go.
 package daemon
 
@@ -415,7 +415,7 @@ func (s *Server) DoctrineMigrate(tomlContent, fromSchemaVersion string) (string,
 
 func (s *Server) DoctrineReinforce(req client.DoctrineV2ReinforceReq) (string, error) {
 	if s.reinforceEngine == nil {
-		return "", errors.New("reinforce engine not wired")
+		return "", errors.New("reinforce engine unavailable")
 	}
 	var sch *v1.Schema
 	if req.ProjectAlias != "" {

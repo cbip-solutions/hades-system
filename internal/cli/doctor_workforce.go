@@ -7,7 +7,7 @@
 // checkpoint queue depth and unconsumed fix-prompts are CLI-default
 // health-check values, intentionally NOT part of the doctrine schema.
 // Promoting them to doctrine-resolved values would require a doctrine
-// schema addition, which is out of release scope per invariant
+// schema addition, which is out of HADES design scope per invariant
 // (additive-only schema; schema bumps belong to a future Plan that
 // owns the doctrine surface). The constants below document the rationale
 // and act as the sole source of truth for the namespace; a future Plan
@@ -42,7 +42,7 @@ func doctorWorkforceCmd() *cobra.Command {
 		Use:   "workforce",
 		Short: "Workforce primitives health (queue depths, gate, specs)",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runOneSection(cmd, "Workforce (Plan 4)", runWorkforceChecks)
+			return runOneSection(cmd, "Workforce (HADES design)", runWorkforceChecks)
 		},
 	}
 }

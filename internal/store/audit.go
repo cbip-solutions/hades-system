@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package store — audit.go
 //
-// CRUD wrappers for the release audit triple:
+// CRUD wrappers for the HADES design audit triple:
 // - bypass_audit (existing v1 table, extended in v4 with conversation_id)
 // - bypass_audit_bodies (v5, encrypted bodies, invariant)
-// - bypass_audit_pins (v6, retention-exempt registry, Q7 D)
+// - bypass_audit_pins (v6, retention-exempt registry, design choice D)
 //
 // The bypass package never imports this file directly — it goes through
 // the in-package adapter at private-tier1-module/audit_integration_adapter.go

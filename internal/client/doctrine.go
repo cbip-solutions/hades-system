@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package client — doctrine.go.
 //
-// Typed wrappers for the release doctrine HTTP surface ( handlers
+// Typed wrappers for the HADES design doctrine HTTP surface ( handlers
 // in internal/daemon/handlers/doctrine.go):
 //
 // GET /v1/doctrine/state — active doctrine config snapshot

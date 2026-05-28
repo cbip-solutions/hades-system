@@ -20,13 +20,13 @@
 // - caronteOrchVerdictAdapter — satisfies orchestrator.BlastRadiusProvider
 //
 // - caronteMergeVerdictAdapter — satisfies merge.BlastRadiusScorer
-// Both map evolution.RiskScore → the local Verdict type (DECISION 3:
+// Both map evolution.RiskScore → the local Verdict type (policy:
 // one adapter type CANNOT have two BlastRadius methods returning different
 // Verdict types, so the mapping is split across two tiny wrappers over a
 // shared caronteBlastRadiusCore).
 //
 // - newCaronteSubsystem(*mcpgateway.CaronteProxy) *caronteSubsystem
-// Wraps the proxy as a gateway Subsystem named "caronte" (release
+// Wraps the proxy as a gateway Subsystem named "caronte" (HADES design
 // renamed the segment gitnexus->caronte; RBAC/REST/augment lanes all moved
 // to the "caronte" segment in the same atomic cutover).
 package main

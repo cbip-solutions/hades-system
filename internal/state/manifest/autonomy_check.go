@@ -153,9 +153,9 @@ func (v *AutonomyValidator) ValidateAll(ctx context.Context, in Plan9PrereqInput
 func FormatAutonomyReport(r AutonomyReport) string {
 	var b strings.Builder
 	if r.AllPass {
-		b.WriteString("Plan 9 prereqs: ALL PASS\n")
+		b.WriteString("HADES design prereqs: ALL PASS\n")
 	} else {
-		fmt.Fprintf(&b, "Plan 9 prereqs: %d/%d FAIL\n", len(r.Failures), len(r.Results))
+		fmt.Fprintf(&b, "HADES design prereqs: %d/%d FAIL\n", len(r.Failures), len(r.Results))
 	}
 	for _, res := range r.Results {
 		mark := "PASS"

@@ -37,23 +37,10 @@ func knowledge9QueryCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "query <q>",
-		Short: "Federated/pinned/chain-verified search against aggregator (Plan 9 H-2)",
+		Short: "Federated/pinned/chain-verified search against aggregator (HADES design H-2)",
 		Args:  cobra.ExactArgs(1),
-		Long: `Search the Plan 9 cross-project knowledge aggregator. The query is
-forwarded to GET /v1/knowledge/query; the daemon runs FTS5 + sqlite-vec RRF
-over all project vaults and the global pin index.
+		Long:  "Search the HADES design cross-project knowledge aggregator. The query is\nforwarded to GET /v1/knowledge/query; the daemon runs FTS5 + sqlite-vec RRF\nover all project vaults and the global pin index.\n\nScope flags (mutually exclusive):\n  --global       Query only the global pin index across all projects.\n  --pinned-only  Query only pinned notes in the per-project index.\n  --project <id> Restrict to one project (cannot combine with --global).\n\n  (No flag = default scope: federated across all project vaults.)\n\nChain flag:\n  --audit-chain  Filter to notes whose audit_chain_anchor is present.\n\ninvariant: NEVER queries the web — HADES design territory.",
 
-Scope flags (mutually exclusive):
-  --global       Query only the global pin index across all projects.
-  --pinned-only  Query only pinned notes in the per-project index.
-  --project <id> Restrict to one project (cannot combine with --global).
-
-  (No flag = default scope: federated across all project vaults.)
-
-Chain flag:
-  --audit-chain  Filter to notes whose audit_chain_anchor is present.
-
-inv-hades-129: NEVER queries the web — Plan 14 territory.`,
 		Example: " # Default federated query\n  hades knowledge-p9 query \"WFQ saturation\"\n\n # Global pin index only\n  hades knowledge-p9 query \"max scope\" --global\n\n # One project, chain-verified\n  hades knowledge-p9 query \"tessera\" --project internal-platform-x --audit-chain\n\n # Pinned-only across all projects, limit 5\n  hades knowledge-p9 query \"doctrine\" --pinned-only --limit 5",
 
 		RunE: func(cmd *cobra.Command, args []string) error {

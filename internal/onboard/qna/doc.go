@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-// Package qna implements the release hybrid wizard engine.
+// Package qna implements the HADES design hybrid wizard engine.
 //
-// Per spec §2.3 Q3=D: shared engine consumed by `hades config init` +
-// `hades new` + `hades init` with WizardKind discriminator. Q0 three-way
+// per design contract=D: shared engine consumed by `hades config init` +
+// `hades new` + `hades init` with WizardKind discriminator. design choice three-way
 // prompt (create-next-app 16.x precedent per SOTA-1 #1):
 //
 // ? How would you like to start?
@@ -19,8 +19,8 @@
 // ModeCustomize returns ErrNonInteractive (Path 1/2 still work
 // because they need no prompts).
 //
-// Per spec §3.3 + master plan integration notes: Wizard interface lives
+// per design contract: Wizard interface lives
 // in package onboard (parent); concrete bubbleteaWizard lives here.
-// No same-package interface-vs-struct collision (release
+// No same-package interface-vs-struct collision (HADES design
 // precedent learned).
 package qna

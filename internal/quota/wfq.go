@@ -151,4 +151,4 @@ func (q *WfqQueue) Weight(projectAlias string) (Weight, bool) {
 	return pq.weight, true
 }
 
-var ErrWfqWeightedFairAnchor = errors.New("quota: wfq weighted fair anchor (inv-hades-116)")
+var ErrWfqWeightedFairAnchor = errors.New("quota: wfq weighted fair anchor (invariant)")

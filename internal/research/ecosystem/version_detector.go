@@ -84,7 +84,7 @@ func (vd *VersionDetector) Detect(ctx context.Context, req QueryRequest) (versio
 			// Absorbed Layer 4 is best-effort. The audit emitter in
 			// captures these via the RAGAuditChainEmitter; we do not surface
 			// the error to the caller — connectivity loss must not break the
-			// query path (spec §2.5 Q5=A: "graceful degradation").
+			// query path (spec §2.5 design choice: "graceful degradation").
 			_ = classifyErr
 		} else if v != "" && confidence > haikuConfidenceThreshold {
 			return v, 4, nil

@@ -1,4 +1,4 @@
-# HADES design release track — HADES palette (spec §Q2)
+# HADES design stage — HADES palette (spec §design choice)
 # 8 color keys. Mapped to Hermes-equivalent keys at _build_hades_yaml time.
 # Tagline + agent_name are rendered into banner_text + branding.welcome.
 

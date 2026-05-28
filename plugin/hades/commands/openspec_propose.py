@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""/hades:openspec-propose handler — Begin the propose phase for a new feature (Modo C híbrido).
+"""/hades:openspec-propose handler — Begin the propose stage for a new feature (Modo C híbrido).
 
 Port from CC-format plugin/hades/commands/openspec-propose.md workflow logic.
 Per invariant: explicitly loads superpowers:brainstorming skill (discover-then-call semantics).
@@ -7,9 +7,9 @@ Per invariant: explicitly loads superpowers:brainstorming skill (discover-then-c
 
 from __future__ import annotations
 
-_PROMPT = """# HADES /openspec-propose — Propose phase for {feature_name}
+_PROMPT = """# HADES /openspec-propose — Propose stage for {feature_name}
 
-You are starting the propose phase for feature `{feature_name}` via HADES. Per spec §3.1 + invariant, follow this flow:
+You are starting the propose stage for feature `{feature_name}` via HADES. per design contract, follow this flow:
 
 ## 1. Load brainstorming skill explicitly
 
@@ -50,7 +50,7 @@ Begin now. Ask one question at a time.
 
 ## Cross-references
 
-- spec §3.1 propose phase
+- spec §3.1 propose stage
 - invariant explicit skill loading (discover-then-call)
 - ADR-0006 research-sota-always-integrated
 - feedback_research_first_brainstorm.md

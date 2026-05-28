@@ -3,7 +3,7 @@
 //
 // documentation maintenance.
 //
-// Responsibilities (per spec §2.9 Q9=A + §4.4):
+// Responsibilities (per design contract=A + §4.4):
 //
 // Every 6 hours: poll upstream registries (pkg.go.dev, PyPI, npm,
 // crates.io); on new version detected → schedule Dispatcher.IngestDelta
@@ -178,7 +178,7 @@ func (w *CronWorker) maybeRunWeeklySweep(ctx context.Context, t, lastSweepDate t
 // PollUpstream queries each upstream registry for new versions and schedules
 // delta-ingest for any newly-detected versions.
 //
-// Per spec §4.4: calls Revalidator-backed Source.FetchManifest (via
+// per design contract: calls Revalidator-backed Source.FetchManifest (via
 // VersionDetector). Errors per ecosystem are logged and do not abort
 // polling of remaining ecosystems. Returns an aggregated error
 // (errors.Join) if any ecosystem failed.
@@ -247,7 +247,7 @@ func (w *CronWorker) PollUpstream(ctx context.Context) error {
 	return nil
 }
 
-// WeeklySweep runs the full integrity sweep per spec §4.4 (Sunday 03:00 local).
+// WeeklySweep runs the full integrity sweep per design contract(Sunday 03:00 local).
 //
 // Per spec the sweep is:
 //
@@ -259,7 +259,7 @@ func (w *CronWorker) PollUpstream(ctx context.Context) error {
 // Steps 1-3 run in parallel across ecosystems (within each ecosystem they
 // run sequentially); step 4 runs after all per-ecosystem work completes.
 //
-// Inv-hades-204: sweep is idempotent — re-running produces zero schema diff.
+// invariant: sweep is idempotent — re-running produces zero schema diff.
 // All sweep operations are re-entrant; launchd restart during sweep is safe.
 //
 // Per-ecosystem errors are logged and do not abort remaining ecosystems.

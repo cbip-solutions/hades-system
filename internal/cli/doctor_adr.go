@@ -16,7 +16,7 @@
 //
 // # Naming
 //
-// doctor_adr.go is a new file — release's doctor_audit.go covers audit events;
+// doctor_adr.go is a new file — HADES design's doctor_audit.go covers audit events;
 // there is no prior Plan doctor_adr.go. No _p9 suffix needed.
 //
 // Boundary (invariant):
@@ -37,8 +37,8 @@ import (
 	ierrors "github.com/cbip-solutions/hades-system/internal/errors"
 )
 
-// RunAdrIndexProbe orchestrates the adr.index doctor check (release
-// Task J-2, spec §6.2).
+// RunAdrIndexProbe orchestrates the adr.index doctor check (HADES design
+// task, spec §6.2).
 //
 // Delegates to DoctorDeps.ADRProber.Probe(ctx) and returns the resulting
 // ProbeResult slice unchanged. Returns a non-nil error if ADRProber is nil
@@ -61,17 +61,8 @@ func RunAdrIndexProbe(ctx context.Context, deps DoctorDeps) ([]ProbeResult, erro
 func NewDoctorAdrCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "adr",
-		Short: "ADR index health (Plan 9: dual-manifest freshness + JSON schema + ID collision)",
-		Long: `ADR index health checks per Plan 9 Phase J spec §6.2.
-
-Sub-commands:
-  index — dual-manifest freshness + JSON schema validation + ID collision count
-
-Each check returns OK / WARN / FAIL severity with doctrine-tuned thresholds.
-Use --strict (inherited from parent) to promote WARN to FAIL-equivalent for CI gating.
-
-ADRProber interface declared in internal/cli/probe.go; production wiring in
-cmd/hades-ctld/main.go. Until wired, invoking a sub-command returns an error.`,
+		Short: "ADR index health (HADES design: dual-manifest freshness + JSON schema + ID collision)",
+		Long:  "ADR index health checks per HADES design stage spec §6.2.\n\nSub-commands:\n  index — dual-manifest freshness + JSON schema validation + ID collision count\n\nEach check returns OK / WARN / FAIL severity with doctrine-tuned thresholds.\nUse --strict (inherited from parent) to promote WARN to FAIL-equivalent for CI gating.\n\nADRProber interface declared in internal/cli/probe.go; production wiring in\ncmd/hades-ctld/main.go. Until wired, invoking a sub-command returns an error.",
 	}
 	cmd.AddCommand(newDoctorAdrIndexCmd())
 	return cmd

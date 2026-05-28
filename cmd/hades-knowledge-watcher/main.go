@@ -4,8 +4,8 @@
 // allows; this binary provides process-isolation when the daemon is
 // CPU-budget-constrained.
 //
-// - Spec ref: internal design record
-// §"Task G-15" lines 3908-4061.
+// - Spec ref: design records design
+// §"task" lines 3908-4061.
 // - Master plan §2.1 declares this binary OPTIONAL — the daemon's
 // in-proc watcher is the canonical wiring; this subprocess covers
 // the case where operators want explicit per-project watcher
@@ -23,7 +23,7 @@
 // idempotently. Identical to the daemon's wiring; the subprocess
 // and daemon share the same DB schema.
 // 4. NewWatcher + AddProject(per root) — fsnotify subscriptions on the
-// 5 canonical release source dirs (memory, ADRs, specs, plans, root
+// 5 canonical HADES design source dirs (memory, ADRs, specs, plans, root
 // for .hades/session.md).
 // 5. Watcher.Run(ctx) — blocks until ctx is canceled. On
 // debounced.md events, the watcher dispatches Reindex/Delete to
@@ -41,10 +41,10 @@
 // "log a typed event" contract because the FTS5 index does not depend
 // on FileType for retrieval; FileType is a structured-filter prefix).
 //
-// Inv-hades-130: composes knowledge.IncrementalUpdate which already
+// invariant: composes knowledge.IncrementalUpdate which already
 // honors the NULL-discipline for the three extension-hook columns.
 // This binary does not bind audit_chain_anchor / ecosystem_join_keys /
-// caronte_symbol_refs at all — release / release / caronte engine own
+// caronte_symbol_refs at all — HADES design / HADES design / caronte engine own
 // those writes.
 package main
 
@@ -104,17 +104,17 @@ func inferKind(path string) knowledge.FileType {
 	dir, base := filepath.Split(p)
 	dir = filepath.Clean(dir)
 
-	if base == "HANDOFF.md" {
+	if base == ".hades/session.md" {
 		return knowledge.FileTypeHandoff
 	}
 
 	dirSlash := filepath.ToSlash(dir)
 	switch {
-	case strings.HasSuffix(dirSlash, "/docs/decisions"):
+	case strings.HasSuffix(dirSlash, "/architecture records"):
 		return knowledge.FileTypeADR
-	case strings.HasSuffix(dirSlash, "/docs/superpowers/specs"):
+	case strings.HasSuffix(dirSlash, "/design records"):
 		return knowledge.FileTypeSpec
-	case strings.HasSuffix(dirSlash, "/docs/superpowers/plans"):
+	case strings.HasSuffix(dirSlash, "/design records"):
 		return knowledge.FileTypePlan
 	}
 

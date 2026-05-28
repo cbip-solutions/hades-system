@@ -29,7 +29,7 @@ type RotationResult struct {
 // the Witness (to swap keys) and the Checkpoint (to durably anchor
 // the rotation transition).
 //
-// Per spec § 7.4 the rotation cadence is doctrine-driven (max-scope
+// per design contract(max-scope
 // 90 days; default 365; capa-firewall 90 + operator-triggered).
 // wires the rotation primitive only; wires the
 // scheduler + the `hades audit witness rotate --reason` CLI command.

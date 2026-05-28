@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Voting algorithms for the Hierarchical Reviewer Assembly per
-// spec §1 Q8 B + §5.4. This file ships the Plurality classification
+// spec §1 design choice B + §5.4. This file ships the Plurality classification
 // vote (I-1); EMSDecide lands in I-3 and FMV in voting_fmv.go (I-4..I-7).
 //
 // # File map (one file per concern)
@@ -8,7 +8,7 @@
 // voting.go — Plurality (I-1) + EMSDecide (I-3): classification voting
 // voting_fmv.go — Functional Majority Voting (I-4..I-7): fix-proposal selection
 //
-// # Q8 B references
+// # design choice B references
 //
 // - Plurality (arXiv:2502.19130v4): classification voting; +13.2% on
 // reasoning benchmarks vs. single-reviewer baseline.
@@ -108,7 +108,7 @@ func Plurality(votes []ClassificationVote) (Decision, error) {
 // reviewers cannot overturn the partial winner — return converged=true.
 // If len(samples) == K and neither class reaches T → ErrPluralityTie.
 //
-// Cost benefit (Q8 B): on converged checkpoints, the orchestrator
+// Cost benefit (design choice B): on converged checkpoints, the orchestrator
 // avoids invoking the deep-thinking tactical reviewers for the
 // remaining K - len(samples) slots, bounding spend in the live-correction
 // inner loop (spec §3.2).

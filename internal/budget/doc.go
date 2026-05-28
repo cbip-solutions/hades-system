@@ -82,7 +82,7 @@
 // - race-condition double-tag (UNIQUE constraint integrity under
 // 100 goroutines x 10 retries x 6 cost_ids)
 // - low-and-slow anomaly evasion (1440 samples drift; PROVISIONAL
-// pending release F-1 merge — documents z-score gap; project-cap
+// pending HADES design F-1 merge — documents z-score gap; project-cap
 // defense Option A coordinated; assertion is t.Logf today,
 // hard t.Errorf once cost_ledger merges per the in-test TODO marker)
 // - concurrent pause flapping (50 goroutines x 100 iters; final
@@ -107,7 +107,7 @@
 // than the plan's read-after-write JOIN); the dispatcher passes
 // the upstream response's cost_usd directly.
 //
-// Tests assert the (0, nil) contract today. release + a
+// Tests assert the (0, nil) contract today. HADES design + a
 // follow-up coordination task will replace the body and update the
 // adversarial low-and-slow test from "documents gap" to "asserts cap
 // blocks at sample ~800".

@@ -80,7 +80,7 @@ type ModeConfig struct {
 }
 
 // ModeFor returns the canonical ModeConfig for the given Mode. Panics
-// on ModeUnknown or out-of-range — release cost_gating MUST always
+// on ModeUnknown or out-of-range — HADES design cost_gating MUST always
 // resolve to a valid Mode; an unmapped Mode is a contract violation
 // upstream and the engine fails fast (defense-in-depth).
 func ModeFor(m Mode) ModeConfig {
@@ -117,7 +117,7 @@ func ModeFor(m Mode) ModeConfig {
 			FlakeRerunBudget: 3,
 		}
 	default:
-		panic("merge.ModeFor: unknown Mode (Plan 5 mapping bug — Mode must be set by orchestrator before invoking Merge)")
+		panic("merge.ModeFor: unknown Mode (HADES design mapping bug — Mode must be set by orchestrator before invoking Merge)")
 	}
 }
 

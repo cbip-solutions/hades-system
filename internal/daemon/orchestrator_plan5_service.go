@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Package daemon — orchestrator_plan5_service.go.
 //
-// releaseOrchestratorService is the daemon-side composition that satisfies
-// handlers.releaseOrchestratorService. It is the wiring point between:
+// HADES component is the daemon-side composition that satisfies
+// handlers.HADES component. It is the wiring point between:
 //
 // - the SQL adapter (audit_events_raw + substrate_health) at
 // internal/daemon/orchestratoradapter
@@ -13,7 +13,7 @@
 // - filesystem-backed ADR scan (architecture records applied/,
 // rejected/) for doctrine propose-list / show
 // - persisted autonomy mode (in-memory atomic; survives requests but
-// not daemon restart — release promotes to a persisted projects table
+// not daemon restart — HADES design promotes to a persisted projects table
 // entry per invariant)
 //
 // Design ground rules:
@@ -305,7 +305,7 @@ func (s *Plan5OrchestratorService) PrunePool() (int, error) {
 }
 
 var ErrDepthOverridesUnconfigured = errors.New(
-	"depth overrides require Plan 8 persistence layer; the orchestrator " +
+	"depth overrides require HADES design persistence layer; the orchestrator " +
 		"reads --depth from the build flag in the current release")
 
 func (s *Plan5OrchestratorService) SetDepth(_ client.DepthOverride) error {

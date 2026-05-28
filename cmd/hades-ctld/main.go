@@ -94,10 +94,10 @@ func main() {
 	// daemon refuses to start (the only way to reach an error here is
 	// to ship binary built from invalid embedded TOMLs).
 	if err := bootDoctrineRegistry(); err != nil {
-		logger.Error("doctrine registry wire-up (inv-hades-134)", "err", err)
+		logger.Error("doctrine registry wire-up (invariant)", "err", err)
 		os.Exit(1)
 	}
-	logger.Info("Plan 11 doctrine registry live",
+	logger.Info("HADES design doctrine registry live",
 		"builtins", []string{"max-scope", "default", "capa-firewall"},
 		"effect", "active.Accessor singleton populated; /v1/doctrine/active + hades://audit "+
 			"sessionDoctrine resolution functional")
@@ -137,7 +137,7 @@ func main() {
 			logger.Error("tesseraClose", "err", err)
 		}
 	}()
-	logger.Info("Plan 9 tessera substrate live",
+	logger.Info("HADES design tessera substrate live",
 		"data_root", dataRoot,
 		"checkpoint_dir", filepath.Join(dataRoot, "global", "daemon_checkpoint"),
 		"witness", "auto-generated on first run; loaded on subsequent boots")
@@ -162,13 +162,13 @@ func main() {
 
 	bootAuditAdapter := auditadapter.New(st)
 	if backfillReport, err := bootBackfillChain(ctx, bootAuditAdapter); err != nil {
-		logger.Error("Plan 9 chain backfill at boot",
+		logger.Error("HADES design chain backfill at boot",
 			"err", err,
-			"effect", "daemon continues; Plan 9 doctor (audit.chain-integrity) "+
+			"effect", "daemon continues; HADES design doctor (audit.chain-integrity) "+
 				"will surface any residual gap",
 		)
 	} else {
-		logger.Info("Plan 9 chain backfill complete",
+		logger.Info("HADES design chain backfill complete",
 			"rows_backfilled", backfillReport.RowsBackfilled,
 			"batches_run", backfillReport.BatchesRun,
 		)
@@ -212,7 +212,7 @@ func main() {
 	})
 
 	if cerr := verifyCascadeCompleteness(profileResolver, providerRegistry); cerr != nil {
-		logger.Error("daemon: inv-hades-211 cascade-completeness check failed", "err", cerr)
+		logger.Error("daemon: invariant cascade-completeness check failed", "err", cerr)
 		os.Exit(1)
 	}
 
@@ -232,7 +232,7 @@ func main() {
 		"tiers", "Tier 1 (bypass) + Tier 2+ (OpenClaude)")
 
 	if err := built.CostCounters.RebuildFromLedger(time.Now().Add(-30 * 24 * time.Hour)); err != nil {
-		logger.Error("cost counters rebuild from ledger (inv-hades-065)",
+		logger.Error("cost counters rebuild from ledger (invariant)",
 			"err", err,
 			"effect", "daemon refuses to start; running with empty in-memory counters would silently let cap-checks pass that ought to fail")
 		os.Exit(1)
@@ -285,7 +285,7 @@ func main() {
 		os.Exit(1)
 	}
 	srv.SetPlan5OrchestratorService(plan5Svc)
-	logger.Info("Plan 5 orchestrator service live",
+	logger.Info("HADES design orchestrator service live",
 		"routes", "/v1/orchestrator/{state,pool,depth,capture,replay,health/*}, /v1/autonomy/*, /v1/doctrine/{propose-list,propose-show,ack,deny,revert}, /v1/safetynet/*",
 		"repo_root", repoRoot,
 		"doctrine", doctrine)
@@ -317,7 +317,7 @@ func main() {
 			logger.Error("worktree pool Close", "err", err)
 		}
 	}()
-	logger.Info("Plan 5 worktree pool live",
+	logger.Info("HADES design worktree pool live",
 		"pool", "contract-federation",
 		"repo_root", repoRoot,
 		"worktree_dir", contractPoolDir,
@@ -341,17 +341,17 @@ func main() {
 		},
 	})
 	if err != nil {
-		logger.Error("Plan 5 background supervisor", "err", err)
+		logger.Error("HADES design background supervisor", "err", err)
 		os.Exit(1)
 	}
 	defer func() {
 		stopCtx, stopCancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer stopCancel()
 		if err := plan5Supervisor.Stop(stopCtx); err != nil {
-			logger.Error("Plan 5 background supervisor Stop", "err", err)
+			logger.Error("HADES design background supervisor Stop", "err", err)
 		}
 	}()
-	logger.Info("Plan 5 background supervisor live",
+	logger.Info("HADES design background supervisor live",
 		"goroutines", plan5Supervisor.Count(),
 		"runners", plan5Supervisor.Names())
 
@@ -364,14 +364,14 @@ func main() {
 		merge.ScoringConfig{},
 	)
 	srv.SetMergeHandler(mergeHandler)
-	logger.Info("Plan 6 merge handler live",
+	logger.Info("HADES design merge handler live",
 		"routes", "/v1/merge/{inspect,replay,score-explain,baseline,cache/{status,clear},config,anomaly}",
 		"engine", "nil (F.7 amendment wires capture-driven inspect/replay)",
 		"cache", "live (in-memory; rebuild from eventlog requires F.7)")
 
 	projectStoreAdapter := projectctxadapter.New(st)
 	srv.SetProjectStore(projectStoreAdapter)
-	logger.Info("Plan 7 project store adapter live",
+	logger.Info("HADES design project store adapter live",
 		"routes", "/v1/projects/{doctor,archive,rm}",
 		"backing", "projectctxadapter (projects_alias + path_history)")
 
@@ -427,7 +427,7 @@ func main() {
 		},
 	})
 	if caronteErr != nil {
-		logger.Error("mcpgateway: caronte engine bootstrap (bootstrap-required, generalises inv-hades-206)",
+		logger.Error("mcpgateway: caronte engine bootstrap (bootstrap-required, generalises invariant)",
 			"err", caronteErr,
 			"effect", "daemon refuses to start; the in-daemon code-graph engine could not construct")
 		os.Exit(1)
@@ -444,7 +444,7 @@ func main() {
 		wireContractFederationOpts{Pool: contractPool},
 	)
 	if contractFedErr != nil {
-		logger.Error("contract-federation bootstrap (bootstrap-required, generalises inv-hades-206)",
+		logger.Error("contract-federation bootstrap (bootstrap-required, generalises invariant)",
 			"err", contractFedErr,
 			"effect", "daemon refuses to start; the workspace federation substrate could not construct")
 		os.Exit(1)
@@ -454,8 +454,8 @@ func main() {
 			logger.Error("contract-federation Close", "err", err)
 		}
 	}()
-	logger.Info("Plan 20 contract-federation live",
-		"substrate", "workspace federation DB (Phase A) + L10 Coordinator (Phase H)",
+	logger.Info("HADES design contract-federation live",
+		"substrate", "workspace federation DB (stage) + L10 Coordinator (stage)",
 		"pool_present", true,
 		"oracle", "default-policy (workspace-policy + ≤5 blast-radius → autonomy)")
 
@@ -479,7 +479,7 @@ func main() {
 
 	mcpgwSrv := mcpgateway.NewServer(mcpgwDispatcher)
 
-	// Plan v0.20.0 Task A-4: inject the projects_alias resolver
+	// Plan v0.20.0 task: inject the projects_alias resolver
 	// so handleToolsCall can translate alias → canonical id_sha256
 	// (invariant) and accept project_id from EITHER X-HADES-Project-ID
 	// header OR body arguments.project_id (invariant). The adapter
@@ -493,7 +493,7 @@ func main() {
 	srv.SetAliasResolver(newCaronteAliasResolverDaemonAdapter(mcpgwAliasResolver))
 
 	srv.SetMCPGateway(mcpgwSrv)
-	logger.Info("Plan 19 mcpgateway live (Caronte engine)",
+	logger.Info("HADES design mcpgateway live (Caronte engine)",
 		"route", "POST /v1/mcpgateway",
 		"tools_registered", len(mcpgwDispatcher.ListTools()),
 		"engine", "caronte (in-daemon, sovereign)",
@@ -511,44 +511,44 @@ func main() {
 		logger:         logger,
 	})
 	if augErr != nil {
-		logger.Error("Plan 11 augmentation wiring failed", "err", augErr)
+		logger.Error("HADES design augmentation wiring failed", "err", augErr)
 		os.Exit(1)
 	}
 	srv.SetAugmentHandler(augmentHandler)
 	if augmentHandler == nil {
-		logger.Warn("Plan 11 augmentation: NOT WIRED",
+		logger.Warn("HADES design augmentation: unavailable",
 			"route", "POST /v1/augment",
-			"effect", "503 augmentation_unavailable; Phase H' hook proceeds unaugmented",
-			"resolution", "operator runs `hades knowledge init` to materialize the Plan 9 D vault; daemon restart picks up the wired substrate")
+			"effect", "503 augmentation_unavailable; stage hook proceeds unaugmented",
+			"resolution", "operator runs `hades knowledge init` to materialize the HADES design D vault; daemon restart picks up the wired substrate")
 	} else {
-		logger.Info("Plan 11 augmentation live",
+		logger.Info("HADES design augmentation live",
 			"route", "POST /v1/augment",
 			"substrate", "aggregator + mcpgateway + audit-chain + tessera + budget")
 	}
 
 	overrideStore := quotaadapter.NewOverrideStore(st)
 	srv.SetOverrideStore(overrideStore)
-	logger.Info("Plan 7 quota override store live",
+	logger.Info("HADES design quota override store live",
 		"routes", "/v1/priority/{boost,reset}, /v1/priority/list",
 		"backing", "quotaadapter (priority_overrides table)")
 
 	inboxAdapter := inboxadapter.NewAdapter(nil, st)
 	srv.SetInboxStore(inboxAdapter)
-	logger.Info("Plan 7 inbox adapter live",
+	logger.Info("HADES design inbox adapter live",
 		"routes", "/v1/inbox/list, /v1/inbox/ack, /v1/inbox/snooze",
 		"backing", "inboxadapter (inbox_aggregator_cache + per-project inbox)")
 
 	scheduleAdapter := scheduleradapter.New(st)
 	scheduleHandlerStore := scheduleradapter.NewHandlerStore(scheduleAdapter)
 	srv.SetScheduleStore(scheduleHandlerStore)
-	logger.Info("Plan 7 schedule store live",
+	logger.Info("HADES design schedule store live",
 		"routes", "/v1/schedules, /v1/schedules/{id}/{run,delete,history}, /v1/schedules/queue",
 		"backing", "scheduleradapter (schedules + schedule_history tables)")
 
 	handoffLog := eventlog.New(plan5Adapter, clock.Real{})
 	handoffEmitter := daemon.NewHandoffEmitter(handoffLog)
 	srv.SetHandoffEmitter(handoffEmitter)
-	logger.Info("Plan 7 handoff emitter live",
+	logger.Info("HADES design handoff emitter live",
 		"route", "POST /v1/events/handoff_posted",
 		"backing", "eventlog.Log over orchestratoradapter (audit_events_raw)")
 
@@ -572,30 +572,30 @@ func main() {
 	}
 	bearerAuditEmitter := daemon.NewSlogBearerAuditEmitter(logger)
 	srv.SetDaemonBearer(auth.NewDaemonBearer(tokenHex), bearerAuditEmitter)
-	logger.Info("Plan 7 daemon bearer live",
+	logger.Info("HADES design daemon bearer live",
 		"route_audit", "POST /v1/events/handoff_posted (RequireDaemonBearer)",
 		"token_path", tokenPath,
 		"token_perm", "0600 (operator-only)")
 
-	logger.Warn("Plan 7 quiet store: NOT WIRED",
+	logger.Warn("HADES design quiet store: unavailable",
 		"routes", "/v1/quiet, /v1/quiet/urgent-pause, /v1/quiet/cancel",
-		"effect", "503 quiet_unavailable until Plan 8 ratifies the quiet-hours TOML loader")
+		"effect", "503 quiet_unavailable until HADES design ratifies the quiet-hours TOML loader")
 
-	logger.Warn("Plan 7 day generator: NOT WIRED",
+	logger.Warn("HADES design day generator: unavailable",
 		"routes", "/v1/hades-day/{morning,eod,check-pending}",
-		"effect", "503 day_unavailable until Plan 8 composes hadesday.GeneratorDeps "+
+		"effect", "503 day_unavailable until HADES design composes hadesday.GeneratorDeps "+
 			"(cost-ledger reader + autonomy-state cursor + gh-CLI wrapper)")
 
-	logger.Warn("Plan 7 knowledge index: NOT WIRED",
+	logger.Warn("HADES design knowledge index: unavailable",
 		"routes", "/v1/knowledge/{query,reindex,stats}",
-		"effect", "503 knowledge_unavailable until Plan 7 Phase J wires the knowledgeadapter")
+		"effect", "503 knowledge_unavailable until HADES design stage wires the knowledgeadapter")
 
-	logger.Warn("Plan 7 default routines (morning + EOD cron): NOT REGISTERED",
-		"effect", "operator must POST /v1/schedules manually until Phase J extends "+
+	logger.Warn("HADES design default routines (morning + EOD cron): NOT REGISTERED",
+		"effect", "operator must POST /v1/schedules manually until stage extends "+
 			"scheduleradapter to fully satisfy scheduler.Store")
 
 	//
-	// Every 5 minutes, invoke each release subsystem's prober via
+	// Every 5 minutes, invoke each HADES design subsystem's prober via
 	// Server.SubsystemProbe and emit one structured slog line per
 	// subsystem with status counts. The output timeline is the substrate
 	//
@@ -611,7 +611,7 @@ func main() {
 	// rotation without daemon restart) and emits the per-project YAML
 	// config on first start. Projects without credentials are skipped
 	// with a log warning; the daemon hot path remains operational
-	// (graceful degradation per spec §4.1 failure mode #4).
+	// (graceful degradation per design contract#4).
 	//
 	// stateDir resolves to $XDG_STATE_HOME/hades-system or
 	// ~/.local/state/hades-system. The litestream-configs/ subdirectory is
@@ -620,10 +620,10 @@ func main() {
 	//
 	// dbPathFor resolves to <dataRoot>/projects/<id>/audit/audit.db —
 	// the per-project audit SQLite path. doctrineFor returns
-	// the daemon-global doctrine name for now; release wires
+	// the daemon-global doctrine name for now; HADES design wires
 	// per-project doctrine resolution from the doctrine TOML loader.
 	//
-	// knownProjectIDs comes from the release projectctx adapter already wired
+	// knownProjectIDs comes from the HADES design projectctx adapter already wired
 	// above. Empty remains a valid fresh-install state, but it is now the
 	// database result, not a hard-coded placeholder.
 	stateDirRoot := os.Getenv("XDG_STATE_HOME")
@@ -665,7 +665,7 @@ func main() {
 		logger.Error("litestream lifecycle start", "err", err)
 		os.Exit(1)
 	}
-	logger.Info("Plan 9 litestream lifecycle live",
+	logger.Info("HADES design litestream lifecycle live",
 		"state_dir", litestreamStateDir,
 		"projects_wired", len(knownProjectIDs),
 		"effect", "per-project supervisors spawned for projects with S3 credentials; keychain-rotation env injection is bound at boot")
@@ -678,10 +678,10 @@ func main() {
 		Dir:   filepath.Join(repoRoot, "docs", "decisions"),
 		Store: st,
 	}); err != nil {
-		logger.Error("Plan 9 ADR adapter init failed", "err", err)
+		logger.Error("HADES design ADR adapter init failed", "err", err)
 	} else {
 		adrAdapter = adapter
-		adrStatus = "live — ADRCtx facade backed by docs/decisions + audit_events_raw"
+		adrStatus = "live — ADRCtx facade backed by architecture records + audit_events_raw"
 	}
 	var stateAdapter handlers.StateService
 	stateStatus := "nil — StateService facade init failed"
@@ -692,7 +692,7 @@ func main() {
 		DoctrineRegistryFn: builtin.Names,
 		Store:              st,
 	}); err != nil {
-		logger.Error("Plan 9 state adapter init failed", "err", err)
+		logger.Error("HADES design state adapter init failed", "err", err)
 	} else {
 		stateAdapter = adapter
 		stateStatus = "live — StateService facade backed by docs/system-state.toml + audit_events_raw"
@@ -700,11 +700,11 @@ func main() {
 	var researchAdapter handlers.ResearchStoreP9
 	researchStatus := "nil — ResearchStoreP9 facade init failed"
 	if researchDB, err := cache.Open(ctx, filepath.Join(dataRoot, "global", "research_cache.db")); err != nil {
-		logger.Error("Plan 9 research adapter DB init failed", "err", err)
+		logger.Error("HADES design research adapter DB init failed", "err", err)
 	} else {
 		defer func() { _ = researchDB.SQL.Close() }()
 		if adapter, err := plan9adapter.NewResearchAdapter(plan9adapter.ResearchAdapterDeps{DB: researchDB}); err != nil {
-			logger.Error("Plan 9 research adapter init failed", "err", err)
+			logger.Error("HADES design research adapter init failed", "err", err)
 		} else {
 			researchAdapter = adapter
 			researchStatus = "live — ResearchStoreP9 facade backed by global/research_cache.db"
@@ -713,17 +713,17 @@ func main() {
 	var knowledgeAdapter handlers.KnowledgeAdapterP9
 	knowledgeStatus := "nil — KnowledgeAdapterP9 facade init failed"
 	if knowledgeDB, err := aggregator.Open(ctx, filepath.Join(dataRoot, "global", "aggregator.db")); err != nil {
-		logger.Error("Plan 9 knowledge aggregator DB init failed", "err", err)
+		logger.Error("HADES design knowledge aggregator DB init failed", "err", err)
 	} else {
 		defer func() { _ = knowledgeDB.Close() }()
 		if err := aggregator.Init(ctx, knowledgeDB); err != nil {
-			logger.Error("Plan 9 knowledge aggregator schema init failed", "err", err)
+			logger.Error("HADES design knowledge aggregator schema init failed", "err", err)
 		} else if knowledgeEmbedder, err := embed.NewEmbedder(embed.Config{
 			Backend:    "auto",
 			Dimensions: 384,
 			ScriptPath: filepath.Join(repoRoot, "internal", "knowledge", "embed", "scripts", "hades_embed.py"),
 		}); err != nil {
-			logger.Error("Plan 9 knowledge embedder init failed", "err", err)
+			logger.Error("HADES design knowledge embedder init failed", "err", err)
 		} else {
 			if closer, ok := knowledgeEmbedder.(interface{ Close() error }); ok {
 				defer func() { _ = closer.Close() }()
@@ -736,9 +736,9 @@ func main() {
 				Store:    knowledgeStore,
 			})
 			if err != nil {
-				logger.Error("Plan 9 knowledge aggregator init failed", "err", err)
+				logger.Error("HADES design knowledge aggregator init failed", "err", err)
 			} else if adapter, err := plan9adapter.NewKnowledgeAdapter(plan9adapter.KnowledgeAdapterDeps{Aggregator: knowledgeAgg}); err != nil {
-				logger.Error("Plan 9 knowledge adapter init failed", "err", err)
+				logger.Error("HADES design knowledge adapter init failed", "err", err)
 			} else {
 				knowledgeAdapter = adapter
 				knowledgeStatus = "live — KnowledgeAdapterP9 facade backed by global/aggregator.db"
@@ -762,7 +762,7 @@ func main() {
 		),
 		StagingRoot: filepath.Join(dataRoot, "global", "recovery"),
 	}); err != nil {
-		logger.Error("Plan 9 audit adapter init failed", "err", err)
+		logger.Error("HADES design audit adapter init failed", "err", err)
 	} else {
 		auditAdapter = adapter
 		auditStatus = "live — AuditCtxP9 facade backed by audit_events_raw + tessera + litestream S3 credentials"
@@ -776,27 +776,27 @@ func main() {
 		State:     stateAdapter,
 	}
 	srv.SetPlan9Adapters(plan9)
-	logger.Warn("Plan 9 Phase H adapter status",
+	logger.Warn("HADES design stage adapter status",
 		"audit", auditStatus,
 		"knowledge", knowledgeStatus,
 		"adr", adrStatus,
 		"research", researchStatus,
 		"state", stateStatus,
-		"effect", "Plan 9 facades report live/nil status above")
+		"effect", "HADES design facades report live/nil status above")
 
 	citBridge := citationadapter.New(srv)
 	citReg := citation.NewRegistry()
 	citReg.Register(citation.NewMarkdownFallback(citBridge))
 	srv.SetCitationRegistry(citReg)
-	logger.Info("Plan 11 citation substrate live",
+	logger.Info("HADES design citation substrate live",
 		"renderers_registered", []string{"markdown"},
-		"audit_path", "audit_events_raw → Plan 9 chain (CitationRendered events)")
+		"audit_path", "audit_events_raw → HADES design chain (CitationRendered events)")
 
 	ecoConfigDir := filepath.Join(os.Getenv("HOME"), ".config", "hades-system", "providers")
 	ecoAdapter, ecoCleanup := ecosystemwiring.TryWire(ctx, srv, logger, dataRoot, ecoConfigDir)
 	defer func() {
 		if err := ecoCleanup(); err != nil {
-			logger.Error("Plan 14 ecosystem handler cleanup", "err", err)
+			logger.Error("HADES design ecosystem handler cleanup", "err", err)
 		}
 	}()
 

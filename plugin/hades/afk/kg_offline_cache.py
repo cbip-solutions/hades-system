@@ -13,7 +13,7 @@ def _privacy_filter_passes(
 ) -> bool:
     """Privacy filter — capa-firewall isolation per invariant.
 
-    Defense-in-depth layer 4 per spec §8.3: storage / query /
+    Defense-in-depth layer 4 per design contract: storage / query /
     serialization / **AFK cache** / audit. Even if a cross-project entry
     somehow lands in the cache (defense in depth — a bug in layers 1-3
     should not propagate to the AFK surface), this filter blocks return.

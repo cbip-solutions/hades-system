@@ -12,5 +12,5 @@
 // - cc-trailing-dot : subject ends with period
 // - cc-claude-attribution : subject contains "Co-Authored-By: prohibited assistant" or "Generated with prohibited assistant"
 //
-// Task L-4 owns the full implementation.
+// task owns the full implementation.
 package conventional_commit

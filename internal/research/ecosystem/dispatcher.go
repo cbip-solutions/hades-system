@@ -4,7 +4,7 @@
 //
 // This is the load-bearing centerpiece of : every D-task (D-1..D-8 +
 // D-10..D-12 + audit emitter + indexer + version
-// detector + release doctrine accessor) is wired here into a single
+// detector + HADES design doctrine accessor) is wired here into a single
 // goroutine-safe Query method.
 //
 // Goroutine model:
@@ -18,7 +18,7 @@
 // 14-step orchestration (verbatim spec §4.2 + plan-file §D-9):
 //
 // 1. version-context detection cascade
-// 2. doctrine resolve → DoctrineProfile (release Accessor; req.Doctrine
+// 2. doctrine resolve → DoctrineProfile (HADES design Accessor; req.Doctrine
 // override applied per-call without mutating package-level state)
 // 3. router.Classify(query) → single | top-2 | broadcast (D-1+D-2)
 // 4. audit.Emit(EvtRAGQuery, 92)
@@ -197,16 +197,16 @@ func (d *Dispatcher) Query(ctx context.Context, req QueryRequest) (*QueryResult,
 		return nil, err
 	}
 	if d.doctrineResolver == nil {
-		return nil, errors.New("dispatcher: doctrineResolver not wired (caller must set DoctrineAccessor in Options or assign d.doctrineResolver before Query)")
+		return nil, errors.New("dispatcher: doctrineResolver unavailable (caller must set DoctrineAccessor in Options or assign d.doctrineResolver before Query)")
 	}
 	if d.auditEmitter == nil {
-		return nil, errors.New("dispatcher: auditEmitter not wired (caller must set AuditChain in Options or assign d.auditEmitter before Query)")
+		return nil, errors.New("dispatcher: auditEmitter unavailable (caller must set AuditChain in Options or assign d.auditEmitter before Query)")
 	}
 	if d.versionDetector == nil {
-		return nil, errors.New("dispatcher: versionDetector not wired (Phase F daemon-init must assign d.versionDetector after NewDispatcher)")
+		return nil, errors.New("dispatcher: versionDetector unavailable (stage daemon-init must assign d.versionDetector after NewDispatcher)")
 	}
 	if len(d.aggregators) == 0 {
-		return nil, errors.New("dispatcher: per-ecosystem aggregators not wired (Phase F daemon-init must populate d.aggregators after NewDispatcher)")
+		return nil, errors.New("dispatcher: per-ecosystem aggregators unavailable (stage daemon-init must populate d.aggregators after NewDispatcher)")
 	}
 
 	queryStart := time.Now()
@@ -572,7 +572,7 @@ func (d *Dispatcher) generateAndValidateCitations(
 	profile *DoctrineProfile,
 ) (string, *ValidationResult, error) {
 	if d.answerGenerator == nil {
-		return "", nil, errors.New("dispatcher: AnswerGenerator not wired (Phase F daemon-init must assign d.answerGenerator before Query under non-CitationNone profiles)")
+		return "", nil, errors.New("dispatcher: AnswerGenerator unavailable (stage daemon-init must assign d.answerGenerator before Query under non-CitationNone profiles)")
 	}
 	validator, err := NewCitationValidator(CitationConfig{Mode: profile.CitationMode})
 	if err != nil {

@@ -74,7 +74,7 @@ For each HIGH/MEDIUM drift:
 ## 6. Periodic drift (recommended cadence)
 
 This check should run periodically:
-- Pre-merge gate (every PR in `make verify-doctrine-drift` Q16 layer C)
+- Pre-merge gate (every PR in `make verify-doctrine-drift` design choice layer C)
 - Morning brief (`hades day` includes drift summary)
 - Manual operator query (this slash) when investigating discrepancy
 

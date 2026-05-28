@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 """/hades:brainstorm handler — research-first brainstorming workflow.
 
-Per invariant + spec §1 Q9, Hermes is discover-then-call (not auto-trigger); this handler
+Per invariant + spec §1 design choice, Hermes is discover-then-call (not auto-trigger); this handler
 returns a prompt that explicitly invokes superpowers:brainstorming after the project-doctrine
 override pass (research SOTA dispatch per ADR-0006 + memoria feedback_research_first_brainstorm.md).
 """
@@ -18,7 +18,7 @@ You are starting a design brainstorm session for HADES. This command applies the
 skill_load("superpowers:brainstorming")
 ```
 
-Per invariant + spec §1 Q9, Hermes is discover-then-call (not auto-trigger). Explicit invocation required.
+Per invariant + spec §1 design choice, Hermes is discover-then-call (not auto-trigger). Explicit invocation required.
 
 ## 2. Apply HADES project-doctrine override
 
@@ -27,7 +27,7 @@ BEFORE first Q&A question, dispatch research SOTA per ADR-0006 + memoria `feedba
 - Identify 3-5 SOTA topics relevant to the brainstorm scope
 - Dispatch parallel research subagents (general-purpose) with research-cheap profile
 - Each returns compact digest (markdown) with citations
-- Aggregate findings + present to operator BEFORE Q1
+- Aggregate findings + present to operator BEFORE design choice
 - Acknowledge time-sensitivity per category (timeless / empirical-time-sensitive / verified-recent)
 
 This is the project-doctrine override. Generic superpowers:brainstorming starts Q&A immediately; HADES research-first.

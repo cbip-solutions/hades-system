@@ -2,10 +2,10 @@
 // Package handlers — research_p9.go.
 //
 // 4 NEW operator-facing research endpoints surfacing substrate
-// (research findings cache per Q8 A) over /v1/research/*. The cache
-// stats + cache list paths COLLIDE with release N's admin handlers
+// (research findings cache per design choice A) over /v1/research/*. The cache
+// stats + cache list paths COLLIDE with HADES design N's admin handlers
 // (research_cache_admin.go); replaces the mux registration
-// because the release wire shape is a strict superset (additive fields
+// because the HADES design wire shape is a strict superset (additive fields
 // only; older clients deserialise without breakage).
 //
 // invariant: handlers consume ResearchStoreP9 interface only — no direct
@@ -15,14 +15,14 @@
 // production research/cache.Store; during development the 503 makes
 // intent explicit.
 //
-// GET /v1/research/history — release eventlog research.* filter
-// GET /v1/research/cache/stats — extends release N stats (additive)
+// GET /v1/research/history — HADES design eventlog research.* filter
+// GET /v1/research/cache/stats — extends HADES design N stats (additive)
 // POST /v1/research/cache/invalidate — force-stale by query match
-// GET /v1/research/cache/list — extends release N list (additive)
+// GET /v1/research/cache/list — extends HADES design N list (additive)
 //
-// Wire-compatibility: release stats + list shapes are JSON strict supersets
-// of release N — older clients deserialize cleanly (extra fields ignored).
-// The release N handler functions become dead code post-H-10 wiring; left
+// Wire-compatibility: HADES design stats + list shapes are JSON strict supersets
+// of HADES design N — older clients deserialize cleanly (extra fields ignored).
+// The HADES design N handler functions become dead code post-H-10 wiring; left
 // in place for review-friendly diff (CHANGELOG v0.9.0 documents).
 //
 // Boundary invariants:

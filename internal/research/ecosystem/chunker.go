@@ -463,7 +463,7 @@ func approxTokens(s string) int {
 }
 
 // ContextualPrefix generates a 60-80 token Anthropic-style Contextual
-// Retrieval prefix for a chunk. Per spec §2.3 Q3=C citing Anthropic's
+// Retrieval prefix for a chunk. per design contract=C citing Anthropic's
 // Sep 2024 CR blog: prepending a chunk-in-context description before
 // embedding cuts top-K failure 49% → 67% (with rerank).
 //

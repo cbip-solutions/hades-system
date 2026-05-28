@@ -6,10 +6,10 @@
 // - internal/tui/views F3 Cost panel via the
 // AugmentCache thin alias in internal/client/codegraph_plan12.go
 //
-// Background — release substrate gap closure:
+// Background — HADES design substrate gap closure:
 //
 // (internal/client/augment.go::AugmentSummary). The daemon side was
-// scoped for follow-up but never landed; the route returned 404. release
+// scoped for follow-up but never landed; the route returned 404. HADES design
 // built the F3 augmentation cache stats display on top of that
 // wrapper, where it manifested as "augmentation stats render zero
 // forever" in production.
@@ -29,11 +29,11 @@
 // Defensive design: handler tolerates absent audit events (returns zeros
 // with date echoed) and malformed payloads (skipped + counted in a
 // warning log; never crashes). The F3 panel renders zeros as "no
-// activity today" rather than an error — same posture as release's
+// activity today" rather than an error — same posture as HADES design's
 // bypass-config 503 graceful-degrade.
 //
-// Cherry-pick narrative: this commit completes the release substrate gap
-// inherited; could be cherry-picked to a release.1
+// Cherry-pick narrative: this commit completes the HADES design substrate gap
+// inherited; could be cherry-picked to a HADES design
 // backport branch if needed.
 //
 // invariant: handler relies on AuditQueryCtx (interface), not the
@@ -207,7 +207,7 @@ func AugmentProbeHandler(s AugmentProbeCtx) http.HandlerFunc {
 		case "configured":
 			if s.AugmentHandler() == nil {
 				resp.Status = "warn"
-				resp.Detail = "augmentation handler not wired (Plan 11 C substrate pending or operator-unwired); pre-LLM hooks proceed unaugmented"
+				resp.Detail = "augmentation handler unavailable (HADES design C substrate pending or operator-unwired); pre-LLM hooks proceed unaugmented"
 			} else {
 				resp.Detail = "augmentation handler wired"
 			}

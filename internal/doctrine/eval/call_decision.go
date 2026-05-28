@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// Package eval ships the release dynamic per-call MCP-boundary
-// doctrine evaluator per Q10=D + spec §3.3 + §3.7 + §8.6 invariant.
+// Package eval ships the HADES design dynamic per-call MCP-boundary
+// doctrine evaluator per design choice + spec §3.3 + §3.7 + §8.6 invariant.
 //
-// The evaluator consumes the active doctrine bundle (release
+// The evaluator consumes the active doctrine bundle (HADES design
 // doctrine.Active accessor) + the per-MCP risk-tier classification
-// (Q10=D) + parameters of an outbound MCP call; produces (CallDecision,
-// evidence). release dispatcher consumes at the MCP-call boundary; the
+// (design choice) + parameters of an outbound MCP call; produces (CallDecision,
+// evidence). HADES design dispatcher consumes at the MCP-call boundary; the
 // single-egress invariant invariant stays intact (eval runs at the
 // existing dispatcher seam, no new egress).
 //
@@ -17,9 +17,9 @@
 // Wiring note:
 // this package ships the complete evaluator + lint extension as a
 // consumable library; daemon-wiring (cmd/hades-ctld/main.go) is
-// forward-additive release+ scope. The release spec §3.7 documents the
-// MCP-call boundary as the canonical seam; release wires it. The eval
-// API is final-shape (Q10=D doctrine satisfied) and ready for
+// forward-additive HADES design scope. The HADES design spec §3.7 documents the
+// MCP-call boundary as the canonical seam; HADES design wires it. The eval
+// API is final-shape (design choice doctrine satisfied) and ready for
 // consumption.
 package eval
 

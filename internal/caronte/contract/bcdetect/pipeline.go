@@ -65,7 +65,7 @@ func NewPipeline(d PipelineDeps) *Pipeline {
 		panic(fmt.Sprintf("bcdetect.NewPipeline: invalid params: %v", err))
 	}
 	if d.Workspace == nil {
-		panic("bcdetect.NewPipeline: PipelineDeps.Workspace is required (inv-hades-264)")
+		panic("bcdetect.NewPipeline: PipelineDeps.Workspace is required (invariant)")
 	}
 	if d.Detectors == nil {
 		d.Detectors = map[store.APIEndpointKind]Detector{}
@@ -110,7 +110,7 @@ func (p *Pipeline) Fan(ctx context.Context, kind store.APIEndpointKind, endpoint
 	// Wiring a NodeFallback into PipelineDeps MUST NOT bleed into
 	// other detection paths.
 	// 2. Wiring-gate: PipelineDeps.NodeFallback nil ⇒ skip entirely
-	// (release / early-release composition root behaviour — no
+	// (HADES design / early-HADES design composition root behaviour — no
 	// graphql-inspector binary available; surface SevInsufficient
 	// to the operator unchanged).
 	// 3. SevInsufficient-gate: no Insufficient entries in goResult ⇒

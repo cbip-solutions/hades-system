@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: MIT
 // Package handlers — knowledge.go.
 //
-// Three routes for the release knowledge aggregator operator surface:
+// Three routes for the HADES design knowledge aggregator operator surface:
 //
 // POST /v1/knowledge/query — hybrid FTS5 + structured filter
 // POST /v1/knowledge/reindex — cold rebuild dispatch
 // GET /v1/knowledge/stats — index statistics (count + by-type +
 // last-indexed timestamp)
 //
-// These dispatch to a KnowledgeIndex façade wired at daemon boot (Phase
+// These dispatch to a KnowledgeIndex façade wired at daemon boot (stage
 // I composes the *internal/knowledge index DB + scanner + parser into a
 // KnowledgeIndex satisfying interface and hands it to SetKnowledgeIndex).
 // Until lands the routes return 503 — the operator surface is
 // final-shape day 1 (`hades knowledge query` reaches a real route) but the
-// substrate ships in bootstrap (mirrors the release D-13 schedule
+// substrate ships in bootstrap (mirrors the HADES design D-13 schedule
 // + E-12 inbox + F-10 hades-day patterns).
 //
 // Status-code mapping (mirrors the inbox_p7 + hadesday patterns):
 //
-// 503 — KnowledgeIndex() not yet wired ( bootstrap will
+// 503 — KnowledgeIndex() unavailable ( bootstrap will
 // register the façade at boot; tests inject fakes via
 // SetKnowledgeIndex).
 // 400 — invalid JSON body.
@@ -40,7 +40,7 @@
 // invariant boundary: the handler does NOT process q.Remote=true /
 // q.AuditChain=true even though the underlying knowledge.Execute returns
 // distinct sentinel errors for both. The CLI layer intercepts both flags
-// BEFORE the round-trip per spec §1 Q17 + the G-12/G-13 sentinel-anchor
+// BEFORE the round-trip per design contract
 // contract; if a misbehaving caller sends Remote/AuditChain over the
 // wire the handler reports 422 (validation rejected) — defense in depth
 // on the boundary.

@@ -16,7 +16,7 @@
 // run without SQLite. The production adapter lives in
 // internal/daemon/workforceadapter/stream_adapter.go (invariant).
 //
-// Background goroutines (per spec §3.6):
+// Background goroutines (per design contract):
 // - One ticker per layer pair (L2→L3, L3→L4) for window-flush.
 // - Backpressure detector: invokes registered LagHandlers when the
 // current window's count crosses a rate-scaled threshold (see

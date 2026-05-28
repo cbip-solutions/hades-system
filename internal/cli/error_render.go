@@ -201,7 +201,7 @@ func renderCatalogMiss(code errors.Code, useColor bool) string {
 	return b.String()
 }
 
-// ExitCodeFromError maps an error to the process exit code per spec §Q6.
+// ExitCodeFromError maps an error to the process exit code per design contract
 // Used by cmd/hades/main.go and cmd/hades/main.go after catching
 // cobra's Execute return value.
 //

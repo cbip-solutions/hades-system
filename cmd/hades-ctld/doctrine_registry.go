@@ -1,6 +1,6 @@
 // Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 
-// Package main — doctrine_registry.go (release fix-cycle
+// Package main — doctrine_registry.go (HADES design fix-cycle
 // re-review pre-existing-gap fix).
 //
 // bootDoctrineRegistry wires the daemon's active.Accessor singleton with

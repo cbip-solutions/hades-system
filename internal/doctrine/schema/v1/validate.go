@@ -58,7 +58,7 @@ type TransverseMutationViolation struct {
 }
 
 func (e *TransverseMutationViolation) Error() string {
-	return fmt.Sprintf("doctrine: transverse axioms mutated; got %+v want %+v (inv-hades-135)", e.Got, TransverseExpected())
+	return fmt.Sprintf("doctrine: transverse axioms mutated; got %+v want %+v (invariant)", e.Got, TransverseExpected())
 }
 
 func (e *TransverseMutationViolation) Is(target error) bool { return target == ErrValidationFailed }

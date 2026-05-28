@@ -35,11 +35,8 @@ func newMemoryListCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List pinned notes from the global pin index",
-		Long: `Enumerate notes pinned to the Plan 9 D aggregator's global pin index.
+		Long:  "Enumerate notes pinned to the HADES design D aggregator's global pin index.\n\nOutput formats:\n  text  (default) — tabwriter table with note-id / PROJECT / TITLE / PROMOTED-BY / PROMOTED-AT\n  json            — array of AggPinNote objects (wire-faithful)",
 
-Output formats:
-  text  (default) — tabwriter table with note-id / PROJECT / TITLE / PROMOTED-BY / PROMOTED-AT
-  json            — array of AggPinNote objects (wire-faithful)`,
 		Example: `  hades memory list
   hades memory list --limit 50 --format json | jq '.[] | .note_id'`,
 		RunE: func(cmd *cobra.Command, _ []string) error {

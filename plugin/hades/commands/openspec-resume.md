@@ -1,6 +1,6 @@
 ---
 name: openspec:resume
-description: Resume a paused propose/apply/archive phase
+description: Resume a paused propose/apply/archive stage
 arguments:
   - name: feature_name
     type: string
@@ -9,11 +9,11 @@ arguments:
 
 # Resume: {{feature_name}}
 
-Query daemon for the current phase of `{{feature_name}}`:
+Query daemon for the current stage of `{{feature_name}}`:
 
-- If phase = "proposing": re-enter doc-live mode; load conversation
+- If stage = "proposing": re-enter doc-live mode; load conversation
   history from daemon and continue the wizard / live-edit loop.
-- If phase = "applying": stream SSE events; surface latest attention items.
-- If phase = "archiving": render the in-progress archive briefing.
+- If stage = "applying": stream SSE events; surface latest attention items.
+- If stage = "archiving": render the in-progress archive briefing.
 
 HADES design wires conversation state preservation across runtime restarts.

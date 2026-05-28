@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Package main — orchestrator_wiring.go (release Task 17 cutover:
+// Package main — orchestrator_wiring.go (HADES design Task 17 cutover:
 // the 2-tier hard-wire is gone; the dispatcher now resolves a profile to
 // an ordered provider-name cascade against the runtime registry).
 //
@@ -46,28 +46,28 @@
 // verify` surfaces it). Same end-shape as the bypass-disabled path.
 // - Every backend in a cascade fails → dispatcher returns
 // ErrAllTiersUnavailable; the proxy maps it to 503 (same operator-
-// visible behaviour as release's "/v1/messages returns 503" contract).
+// visible behaviour as HADES design's "/v1/messages returns 503" contract).
 //
 // invariant: this file does the cross-package wiring (orchestrator +
 // dispatcher + providers + dispatcheradapter + bypass.Client) that no
 // internal/* package is allowed to do itself.
 //
-// PHASE D-6 KILL: noopBreaker was search-and-replaced with the real
+// stage D-6 KILL: noopBreaker was search-and-replaced with the real
 // *orchestrator.CircuitBreaker.
 // The dispatcher consults the live state machine (closed → suspect →
 // open) on every Permit and updates it on every Record{Success,Failure}.
 // The breaker's recovery-probe loop is the *orchestrator.RecoveryScheduler
 // constructed alongside; its lifecycle is owned by Server.
 //
-// PLAN 16 T17 KILL: the `tier1/tier2` hard-wire + the
+// HADES design T17 KILL: the `tier1/tier2` hard-wire + the
 // HADES_OPENCLAUDE_ENDPOINT/TOKEN env-var path + the inlineTwoTier*
 // compile-keep shims + the noopCostSink placeholder — all deleted.
-// CostSink path now lands in cost_ledger via costLedgerSink (release
+// CostSink path now lands in cost_ledger via costLedgerSink (HADES design
 // Task 18).
 //
-// PHASE 8 PLACEHOLDER: CircuitBreakerConfig is constructed with zero values
+// PLACEHOLDER: CircuitBreakerConfig is constructed with zero values
 // here so NewCircuitBreaker applies its defaults (FailureThreshold=3,
-// Window=5m, Cooldown=10m). release doctrine-implementation will read the
+// Window=5m, Cooldown=10m). HADES design doctrine-implementation will read the
 // per-doctrine TOML schema and override these knobs. Until then defaults
 // are the contract.
 
@@ -141,17 +141,17 @@ type buildOrchestratorDeps struct {
 	Resolver *config.ProfileResolver
 }
 
-// buildOrchestrator assembles the full release LLM-traffic chain plus the
+// buildOrchestrator assembles the full HADES design LLM-traffic chain plus the
 // I-5 operator-facing pin overrides + PAYG safety net.
 //
-// The pre-release positional signature (bypassClient, st, notifier) is
+// The pre-HADES design positional signature (bypassClient, st, notifier) is
 // gone — at 5 inputs a struct (buildOrchestratorDeps) is materially
 // cleaner. Registry + Resolver are now load-bearing: the dispatcher
 // resolves a cascade per request against deps.Registry / deps.Resolver
 // (no more hard-coded tier1/tier2).
 //
 // Compatibility contract: a disabled "bypass" backend is registered into
-// deps.Registry HERE for operator profiles created before the release
+// deps.Registry HERE for operator profiles created before the HADES design
 // sidecar extraction. The real Tier 1 provider is "bypass-sidecar", wired by
 // dispatcheradapter.RegisterSidecars in main.go when sidecars.toml declares a
 // healthy localhost sidecar.
@@ -244,11 +244,11 @@ func verifyCascadeCompleteness(resolver *config.ProfileResolver, reg *providers.
 	for _, prof := range resolver.OperatorProfileNames() {
 		cascade, err := resolver.Resolve(prof, "")
 		if err != nil {
-			return fmt.Errorf("inv-hades-211: resolve profile %q: %w", prof, err)
+			return fmt.Errorf("invariant: resolve profile %q: %w", prof, err)
 		}
 		for _, name := range cascade {
 			if _, gerr := reg.Get(name); gerr != nil {
-				return fmt.Errorf("inv-hades-211: profile %q cascade names provider %q which is not registered", prof, name)
+				return fmt.Errorf("invariant: profile %q cascade names provider %q which is not registered", prof, name)
 			}
 		}
 	}
@@ -257,11 +257,11 @@ func verifyCascadeCompleteness(resolver *config.ProfileResolver, reg *providers.
 
 		chain, err := resolver.ProjectFallbackChain(proj)
 		if err != nil {
-			return fmt.Errorf("inv-hades-211: project %q fallback_chain: %w", proj, err)
+			return fmt.Errorf("invariant: project %q fallback_chain: %w", proj, err)
 		}
 		for _, name := range chain {
 			if _, gerr := reg.Get(name); gerr != nil {
-				return fmt.Errorf("inv-hades-211: project %q fallback_chain names provider %q which is not registered", proj, name)
+				return fmt.Errorf("invariant: project %q fallback_chain names provider %q which is not registered", proj, name)
 			}
 		}
 	}

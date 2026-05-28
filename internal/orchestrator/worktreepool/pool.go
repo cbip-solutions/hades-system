@@ -34,7 +34,7 @@ type PoolConfig struct {
 	BranchBase string
 
 	// Floor is the minimum number of warm worktrees the prewarm goroutine
-	// keeps available. Doctrine map (Q4 C):
+	// keeps available. Doctrine map (design choice C):
 	// max-scope=8, default=3, capa-firewall=5.
 	// MUST be > 0.
 	Floor int
@@ -46,7 +46,7 @@ type PoolConfig struct {
 	ElasticMax int
 
 	// GCCadence is the periodic cadence for the orphanGC goroutine.
-	// Default 5 * time.Minute when zero (Q4 C). Tests use shorter values.
+	// Default 5 * time.Minute when zero (design choice C). Tests use shorter values.
 	// MUST be >= 0 (zero = use default).
 	GCCadence time.Duration
 
@@ -58,7 +58,7 @@ type PoolConfig struct {
 	PoolID string
 
 	// Clock is the injectable wall-clock + timer abstraction (
-	// Q14 C). Production code leaves this nil so NewPool installs
+	// design choice C). Production code leaves this nil so NewPool installs
 	// clock.Real{}; tests inject *clock.Fake to drive deterministic
 	// time advancement for the saturation debounce window
 	// (exhaustEmitDebounce, B-4) and the GC ticker cadence (B-7).
@@ -374,7 +374,7 @@ func (p *concretePool) leaseSlowPath(ctx context.Context) (*Worktree, error) {
 				// + Signal). The classifier (subprocess.go) attaches
 				// ErrPoolDegraded as the `extra` sentinel on each of
 				// those four classes, so a single errors.Is check
-				// captures the full HRA Q8 cost-pressure
+				// captures the full HRA design choice cost-pressure
 				// surface uniformly. The reason field disambiguates
 				// for downstream consumers (dashboards, HRA voting
 				// strategy selection). Non-pressure classes (Branch

@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Package apply implements the Q1 D apply-phase boundary contract.
+// Package apply implements the design choice D apply-stage boundary contract.
 //
-// # Q1 D split rationale (spec §1)
+// # design choice D split rationale (spec §1)
 //
-// Apply-phase has two distinct concerns with distinct failure surfaces:
+// Apply-stage has two distinct concerns with distinct failure surfaces:
 //
 // 1. Live correction inside the HRA inner loop — sequential single-
 // branch patch application at a worker's commit boundary. No
 // concurrent writers; the failure modes are patch-rejection,
 // test-regression, and dirty-tree. Owned by ApplyEngine (this
-// package), shipped real in release
+// package), shipped real in HADES design
 //
 // 2. Cross-worker integration — N candidate branches competing for the
 // same integration target; the 3-way merge problem. Failure modes
@@ -26,18 +26,18 @@
 // └──────────────┬──────────────┘
 // ▼
 // ┌─────────────────────────────┐
-// │ ApplyEngine.ApplyFix │ release (this package, real)
+// │ ApplyEngine.ApplyFix │ HADES design (this package, real)
 // │ git apply on worker branch │
 // │ revert if tests fail │
 // └─────────────────────────────┘
 //
 // ┌─────────────────────────────┐
 // │ HRA architectural cadence │
-// │ A=30min OR phase boundary │
+// │ A=30min OR stage boundary │
 // └──────────────┬──────────────┘
 // ▼
 // ┌─────────────────────────────┐
-// │ MergeEngine.Merge │ release (interface declared here)
+// │ MergeEngine.Merge │ HADES design (interface declared here)
 // │ test-driven 3-way merge │
 // │ fast-forward winner │
 // └─────────────────────────────┘

@@ -155,7 +155,7 @@ func (a *StateAdapter) Regenerate(ctx context.Context, dryRun bool) (handlers.St
 		}
 		if err := (&auditRawStateEventAppender{store: a.store, now: a.now}).AppendEvent(ctx, manifest.EventPayload{
 			Type:           eventType,
-			Reason:         "regenerated via Plan 9 state API",
+			Reason:         "regenerated via HADES design state API",
 			Timestamp:      a.now().UTC(),
 			MissingSources: walked.MissingSources,
 		}); err != nil {

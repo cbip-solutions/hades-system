@@ -1,6 +1,6 @@
 // Copyright 2026 hades-system contributors. SPDX-License-Identifier: MIT
 //
-// RequireOperatorIdentity middleware (release Task F-5,
+// RequireOperatorIdentity middleware (HADES design task,
 // invariant).
 //
 // The daemon accepts operator overrides (confirmation ack/deny,
@@ -13,7 +13,7 @@
 // daemon process trusts the kernel, not the wire).
 // 2. Verifies the peer UID matches the daemon's ProcessUID. Mismatch
 // surfaces ErrOperatorIdentityMismatch and EMITS NOTHING via this
-// audit channel. Per spec §7.1, failed-auth events live in daemon
+// audit channel. per design contract, failed-auth events live in daemon
 // access logs — putting them here would drown real overrides in
 // impostor noise. (The threat model treats peer-cred mismatch as
 // an external authn failure, not an internal authz event.)
@@ -34,7 +34,7 @@
 // HTTP handler chain so /v1/confirmations/{ack,deny}, /v1/doctrine/revert,
 // /v1/autonomy, /v1/depth all funnel through Authenticate before
 // mutating orchestrator state. Adding a new operator-override surface
-// in a future phase therefore reduces to (a) wiring the handler through
+// in a future stage therefore reduces to (a) wiring the handler through
 // this middleware and (b) extending the OverrideKind constant set.
 
 package orchestrator
@@ -109,7 +109,7 @@ func NewOperatorIdentityMiddleware(cfg OperatorIdentityConfig) *OperatorIdentity
 //
 // Failed-auth attempts are NOT logged via this audit channel — daemon
 // access logs handle them separately to avoid masking real overrides
-// under impostor noise (per spec §7.1).
+// under impostor noise (per design contract).
 //
 // ctx is caller-controlled. Peer-cred lookup is fast (one syscall, no
 // I/O), and Append is bounded by the eventlog emitter (RawEmitter at

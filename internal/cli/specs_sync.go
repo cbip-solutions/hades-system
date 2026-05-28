@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// specs_sync.go — release Task F-5 subcommand `hades specs sync`.
+// specs_sync.go — HADES design task subcommand `hades specs sync`.
 //
 // Calls POST /v1/knowledge/ecosystem/specs-sync to re-index openspec/specs/
 // into the ecosystem.db RAG store. Renders the daemon's chunks/specs
@@ -11,7 +11,7 @@
 // register the route returns 404 — classifySpecsError maps that to
 // ErrRecoverable with an operator-facing hint.
 //
-// Exit-code mapping (per spec §6.2; ErrRecoverable contract):
+// Exit-code mapping (per design contract; ErrRecoverable contract):
 // - 0 success
 // - 1 operator-recoverable: daemon 422 (validation), 404 (route not
 // yet wired in ).
@@ -72,13 +72,8 @@ func newSpecsSyncCmd(factory SpecsDaemonClientFactory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sync",
 		Short: "Re-index openspec/specs/ into ecosystem.db RAG store",
-		Long: `Trigger the daemon to re-index openspec/specs/ markdown files
-into the ecosystem.db RAG store. Delta sweep by default (sha-based
-changed-only); --full forces a complete rebuild.
+		Long:  "Trigger the daemon to re-index openspec/specs/ markdown files\ninto the ecosystem.db RAG store. Delta sweep by default (sha-based\nchanged-only); --full forces a complete rebuild.\n\nstage ships the CLI surface; the daemon-side handler is wired in\nstage Against a daemon without the route, sync returns exit 1 with\na roadmap pointer (operator-recoverable).",
 
-Phase F ships the CLI surface; the daemon-side handler is wired in
-Phase G. Against a daemon without the route, sync returns exit 1 with
-a roadmap pointer (operator-recoverable).`,
 		Example: `  hades specs sync
   hades specs sync --full`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -101,7 +96,7 @@ func classifySpecsError(err error, op string) error {
 		return err
 	}
 	if client.IsHTTPStatus(err, http.StatusNotFound) {
-		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, fmt.Sprintf("specs: %s: daemon route not yet wired (phase g)", op)))
+		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, fmt.Sprintf("specs: %s: daemon route unavailable (stage g)", op)))
 	}
 	if client.IsHTTPStatus(err, http.StatusUnprocessableEntity) {
 		return ierrors.Wrap(ierrors.Code("cli.arg-validation-fail"), recoverableWrap(err, fmt.Sprintf("specs: %s: daemon rejected input", op)))

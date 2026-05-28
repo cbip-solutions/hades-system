@@ -53,7 +53,7 @@ func NewIdleReaper(manager *Manager, doctrineFor func(alias string) doctrine.Nam
 // 1. s != nil and s.Status == StatusActive (other statuses are not
 // reap candidates — the reaper has no work for Idle/Archived/Orphaned).
 // 2. None of HasOperatorAttach / HasAutonomousWorker / HasScheduledJob
-// (any one is a hard veto; spec §1 Q7 D activity-veto contract).
+// (any one is a hard veto; spec §1 design choice D activity-veto contract).
 // 3. doctrineFor(alias) is NOT max-scope (max-scope = never reap;
 // IdleTTLIsInfinity short-circuit; invariant carrier).
 // 4. time.Since(effective LastAttachAt) > DoctrineIdleTTL(doctrine).

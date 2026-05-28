@@ -33,7 +33,7 @@ type adrIndexEnvelope struct {
 }
 
 func (w *ADRWalker) Walk(_ context.Context) (ADRResult, error) {
-	res := ADRResult{Location: "docs/decisions/"}
+	res := ADRResult{Location: "architecture records"}
 
 	body, err := os.ReadFile(w.indexPath)
 	if err != nil {

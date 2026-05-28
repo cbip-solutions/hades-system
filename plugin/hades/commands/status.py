@@ -18,8 +18,8 @@ from hades.commands import status_core
 logger = logging.getLogger(__name__)
 
 # Module-level schema version constant (invariant anchor). Bumped per
-# ADR-0097 rules; v1 ships with release track and is frozen for the lifetime
-# of v1 consumers (release track compliance test + HADES design +N future plans).
+# ADR-0097 rules; v1 ships with stage and is frozen for the lifetime
+# of v1 consumers (stage compliance test + HADES design +N future plans).
 SCHEMA_VERSION: int = 1
 
 # ---------------------------------------------------------------------------
@@ -32,14 +32,14 @@ _DEFAULT_UDS_PATH: str = status_core.DEFAULT_UDS_PATH
 _ENDPOINT_TIMEOUT_S: float = status_core.ENDPOINT_TIMEOUT_S
 _ENDPOINTS: tuple[str, ...] = status_core.ENDPOINTS
 
-# Standard degraded-mode hint per spec §Q5. The exact phrasing is
+# Standard degraded-mode hint per design contract
 # stable for invariant golden-file comparison.
 _DEGRADED_HINT = "unavailable (daemon path down — try: hades doctor)"
 
-# Catalog code for top-level daemon-down condition. Matches release track
+# Catalog code for top-level daemon-down condition. Matches stage
 # `internal/errors/codes.go` entry `daemon.not-running` (the daemon's
 # HTTP error responses use the same code string, enforcing consistency
-# across the Go + Python sides — release track invariant ships the
+# across the Go + Python sides — stage invariant ships the
 # compliance test for this routing).
 _CODE_DAEMON_NOT_RUNNING = "daemon.not-running"
 
@@ -60,7 +60,7 @@ _LOCAL_DAEMON_NOT_RUNNING_ENVELOPE: dict[str, str] = {
     ),
 }
 
-# Spec §Q2 palette. 24-bit truecolor hex values pass to the Hermes
+# Spec §design choice palette. 24-bit truecolor hex values pass to the Hermes
 # terminal helper which handles TTY detection + NO_COLOR env
 # conventions + 8/16/256-color fallback.
 _PALETTE: dict[str, str] = {
@@ -178,10 +178,10 @@ async def _query_daemon(
 def _degraded_line(label: str) -> str:
     """Build a degraded-mode line for the given field label.
 
-    Spec §Q5 mandates the format:
+    Spec §design choice mandates the format:
         <label>: unavailable (daemon path down — try: hades doctor)
 
-    Color: warn-orange (#ffa726) per spec §Q5 + HADES design release track palette.
+    Color: warn-orange (#ffa726) per design contract
     The label is colored too so the eye lands on the degraded marker
     immediately. C-3 ships the literal text; C-4 wires the color.
     """
@@ -192,20 +192,20 @@ def _degraded_line(label: str) -> str:
 
 
 def _render_human(responses: dict[str, dict[str, Any] | None]) -> str:
-    """Render the 8-line human-readable block per spec §Q5 template.
+    """Render the 8-line human-readable block per design contract
 
     Per-field degraded mode: if a response is None (endpoint returned
     non-2xx, raised a transport error, or returned malformed JSON), the
     corresponding line surfaces the degraded hint instead of the
     happy-path text. The other fields continue to render normally.
 
-    Color application per spec §Q5 + HADES design release track palette:
+    Color application per design contract:
       - 'ok' / 'live' state markers: ok-green #10b981
       - Body text (PID, UDS, counts, percentages): muted-gray #999
       - Degraded fields (whole line): warn-orange #ffa726
       - Top-level errors (handled via _render_error): fail-crimson #c41e3a
 
-    Spec §Q5: NEVER fails whole command on single field degradation.
+    Spec §design choice: NEVER fails whole command on single field degradation.
     """
     health = responses.get("/v1/health")
     cascade = responses.get("/v1/cascade/state")
@@ -322,7 +322,7 @@ def _classify_field_state(response: dict[str, Any] | None) -> str:
 
 
 def _render_json(responses: dict[str, dict[str, Any] | None]) -> str:
-    """Render the schema-v1 JSON payload per spec §Q5 + invariant.
+    """Render the schema-v1 JSON payload per design contract
 
     Schema-v1 shape (frozen for the lifetime of v1 consumers):
         {
@@ -340,7 +340,7 @@ def _render_json(responses: dict[str, dict[str, Any] | None]) -> str:
           }
         }
 
-    Future bumps (v2, v3 ...) per ADR-0097 (release track ships).
+    Future bumps (v2, v3 ...) per ADR-0097 (stage ships).
     """
     health = responses.get("/v1/health")
     cascade = responses.get("/v1/cascade/state")
@@ -415,7 +415,7 @@ def _render_json(responses: dict[str, dict[str, Any] | None]) -> str:
 
 
 def _render_error(envelope: dict[str, str]) -> str:
-    """Render the spec §Q6 three-line HADES block.
+    """Render the spec §design choice three-line HADES block.
 
     Format:
         HADES: <title>
@@ -424,7 +424,7 @@ def _render_error(envelope: dict[str, str]) -> str:
 
     Color: HADES: prefix in fail-crimson #c41e3a; body in muted-gray
     #999; recovery arrow + hint in ok-green #10b981. Mirrors the
-    release track Go-side Render() output shape.
+    stage Go-side Render() output shape.
     """
     title = envelope.get("title", "internal error")
     body = envelope.get("body", "no body provided")
@@ -475,7 +475,7 @@ def _is_json_mode(raw_args: str) -> bool:
           a different flag in a hypothetical extension).
         - Forward-compat: unknown flags (e.g., `--bogus`) do NOT raise
           — they fall through to text mode silently. Strict
-          rejection would surface via release track Render with code
+          rejection would surface via stage Render with code
           `cli.arg-validation-fail` if the handler grew an argparse
           surface in a future plan.
 
@@ -499,16 +499,16 @@ def handle_status(raw_args: str) -> str | None:
             tokens (whitespace-separated; case-sensitive):
                 --json   Emit machine-readable JSON output per
                          schema-v1 (invariant anchor) instead of
-                         the spec §Q5 human-readable block.
+                         the spec §design choice human-readable block.
 
             Unknown flags are tolerated (forward-compat) and fall
             through to default (text) mode. A future plan may add
-            stricter argparse + reject unknown flags via release track
+            stricter argparse + reject unknown flags via stage
             catalog code `cli.arg-validation-fail`.
 
     Returns:
         Multi-line block (text mode) OR JSON payload string (--json
-        mode). Returns the spec §Q6 three-line HADES error block on
+        mode). Returns the spec §design choice three-line HADES error block on
         top-level failure (UDS missing / structured-error envelope).
     """
     uds_path = os.environ.get("HADES_SYSTEM_UDS") or _DEFAULT_UDS_PATH

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Package cli — research_history.go.
 //
-// NEW release leaf: `hades research history` — query the research dispatch event
+// NEW HADES design leaf: `hades research history` — query the research dispatch event
 // log (GET /v1/research/history) and render a table with cache outcome.
 //
 // Deviation from plan-file: plan-file sketched ResearchHistoryEntry with
@@ -39,7 +39,7 @@ func attachPlan9ResearchSubs(parent *cobra.Command) {
 		}
 	}
 
-	panic("plan-9 phase-i i-9: research 'cache' parent missing; cannot attach invalidate/ls")
+	panic("HADES design stage-i i-9: research 'cache' parent missing; cannot attach invalidate/ls")
 }
 
 func researchHistoryCmd() *cobra.Command {

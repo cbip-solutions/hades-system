@@ -7,10 +7,10 @@
 // Upstream substrates DO NOT change behavior; adapters translate
 // their existing cli.ProbeResult value type into the canonical
 // DiagnosticResult shape. The upstream subsystems remain the
-// source-of-truth for their check semantics (per spec §1.3).
+// source-of-truth for their check semantics (per design contract).
 //
 // IMPORTANT each adapter assigns a Category to the wrapped check
-// (per spec §3.3 Category enum). Future hot-fix changes MUST
+// (per design contract). Future hot-fix changes MUST
 // preserve adapter Category assignment — moving a check between
 // categories breaks operator `--spotlight` flag stability.
 //
@@ -64,7 +64,7 @@ type CLIProbeAdapterConfig struct {
 func NewCLIProbeAdapter(cfg CLIProbeAdapterConfig) *CLIProbeAdapter {
 	desc := cfg.Description
 	if desc == "" {
-		desc = "Plan 1-9 per-flag check (adapted)"
+		desc = "HADES design per-flag check (adapted)"
 	}
 	return &CLIProbeAdapter{
 		name:        cfg.Name,
@@ -92,7 +92,7 @@ func (a *CLIProbeAdapter) Run(ctx context.Context) check.DiagnosticResult {
 	if a.probeFunc == nil {
 		d.Status = check.StatusSkip
 		d.Message = "probe function nil"
-		d.Hint = "verify Plan 1-9 substrate prober wiring"
+		d.Hint = "verify HADES design substrate prober wiring"
 		d.DurationMs = time.Since(start).Milliseconds()
 		return d
 	}
@@ -101,7 +101,7 @@ func (a *CLIProbeAdapter) Run(ctx context.Context) check.DiagnosticResult {
 	if len(results) == 0 {
 		d.Status = check.StatusSkip
 		d.Message = "no probe results emitted"
-		d.Hint = "verify Plan 1-9 substrate prober is wired"
+		d.Hint = "verify HADES design substrate prober is wired"
 		return d
 	}
 	worst := check.StatusPass
@@ -129,7 +129,7 @@ func (a *CLIProbeAdapter) Run(ctx context.Context) check.DiagnosticResult {
 	return d
 }
 
-// translateCLIStatus maps release+ cli.ProbeStatus (OK/Warn/Fail) into
+// translateCLIStatus maps HADES design cli.ProbeStatus (OK/Warn/Fail) into
 //
 // FORBIDDEN cast: callers MUST NOT use `check.Status(int(cliStatus))`.
 // Today the first 3 values happen to align (ProbeOK=0/StatusPass=0,
@@ -137,7 +137,7 @@ func (a *CLIProbeAdapter) Run(ctx context.Context) check.DiagnosticResult {
 // is incidental and may drift. Always go through this translation.
 //
 // cli.ProbeStatus has no Skip; missing-precondition contexts are reported
-// as Fail in release+ — preserved here. The adapter's Run() may emit Skip
+// as Fail in HADES design — preserved here. The adapter's Run() may emit Skip
 // when probeFunc returns no rows (separate from translation).
 func translateCLIStatus(s cli.ProbeStatus) check.Status {
 	switch s {

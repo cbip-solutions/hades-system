@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Package client — adr.go.
 //
-// 9 typed wrappers for the release ADR endpoints declared in
+// 9 typed wrappers for the HADES design ADR endpoints declared in
 // internal/daemon/handlers/adr.go. Wire types mirror the handler declarations;
 // duplication is intentional (client compiles standalone without importing
-// internal/daemon — release N convention).
+// internal/daemon — HADES design N convention).
 //
 // POST /v1/adr/propose — ADRPropose
 // GET /v1/adr/show — ADRShow

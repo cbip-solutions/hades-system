@@ -19,7 +19,7 @@ const (
 	Plan5MaxADR = 29
 )
 
-var ErrADRRangeExhausted = errors.New("ADR range exhausted (Plan 5 0020-0029)")
+var ErrADRRangeExhausted = errors.New("ADR range exhausted (HADES design 0020-0029)")
 
 var adrFileRE = regexp.MustCompile(`^(\d{4})-.+\.md$`)
 

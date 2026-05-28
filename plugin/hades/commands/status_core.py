@@ -9,7 +9,7 @@ from typing import Any
 
 import httpx
 
-# Default UDS path. Borderline-stays per spec §Q3 (operator scripts
+# Default UDS path. Borderline-stays per design contract(operator scripts
 # reference this path; rename deferred to HADES design+N borderline migration).
 DEFAULT_UDS_PATH: str = "/tmp/hades-system.sock"
 
@@ -19,7 +19,7 @@ DEFAULT_UDS_PATH: str = "/tmp/hades-system.sock"
 # the operator wait indefinitely.
 ENDPOINT_TIMEOUT_S: float = 3.0
 
-# Endpoint paths per spec §Q5. Order matters: it drives the line
+# Endpoint paths per design contract: it drives the line
 # ordering in the rendered block (per invariant stable schema).
 ENDPOINTS: tuple[str, ...] = (
     "/v1/health",
@@ -65,10 +65,10 @@ async def query_daemon(
     body is returned (not None) so the top-level handler can detect and
     dispatch the three-line error block.
 
-    release track ships the happy-path semantics (every endpoint OK).
-    release track extends with degraded-mode classification: None marks
+    stage ships the happy-path semantics (every endpoint OK).
+    stage extends with degraded-mode classification: None marks
     a degraded field which downstream rendering surfaces as
-    ``<field>: unavailable (...)`` per spec §Q5.
+    ``<field>: unavailable (...)`` per design contract
     """
 
     async def _fetch_one(path: str) -> dict[str, Any] | None:
@@ -105,7 +105,7 @@ async def query_daemon(
 def classify_field_state(response: dict[str, Any] | None) -> str:
     """Return 'ok' if response is non-None, 'degraded' otherwise.
 
-    Schema-v1 state classifier per spec §Q5 + invariant.
+    Schema-v1 state classifier per design contract
     """
     return "ok" if response is not None else "degraded"
 

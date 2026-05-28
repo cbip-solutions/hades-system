@@ -4,10 +4,10 @@
 // GET /v1/hermes/probe?check=<name> — diagnostic probe surface for the
 // F9 Skills panel and `hades doctor hermes` CLI.
 //
-// Background — release substrate gap closure:
+// Background — HADES design substrate gap closure:
 //
 // (internal/client/hermes.go::HermesProbe). The daemon side was scoped
-// for follow-up but never landed; the route returned 404. release Phase
+// for follow-up but never landed; the route returned 404. HADES design stage
 // C C-7 wired the F9 Skills panel through that client wrapper, where
 // it manifested as "F9 Skills panel returns 404" in production.
 //
@@ -17,22 +17,22 @@
 // - "plugin_installed" — Hermes plugin (`hades-system`) is installable;
 // status reflects whether the plugin manifest path is reachable on
 // the operator's host. Since the daemon cannot detect Hermes's
-// plugin runtime state at HEAD (a future release 'hades migrate' wires
+// plugin runtime state at HEAD (a future HADES design 'hades migrate' wires
 // it via socket), the probe always returns "ok" with a detail
 // describing the install path. Real state is surfaced via the
 // `hades-system:install-mcps` slash command output.
 // - "session_active" — A Hermes session has registered with the
 // daemon via /v1/sessions. Status=ok when at least
 // one active session exists; warn otherwise.
-// - "transport_reachable" — The /v1/messages transport (release
+// - "transport_reachable" — The /v1/messages transport (HADES design
 // dispatcher) is wired (Orchestrator() non-nil). Status=ok when
 // wired; warn otherwise.
 //
 // Unknown probe names return ok with a hint string — same posture as
 // BypassDoctor. 405 on non-GET.
 //
-// Cherry-pick narrative: this commit completes the release substrate gap
-// inherited; could be cherry-picked to a release.1
+// Cherry-pick narrative: this commit completes the HADES design substrate gap
+// inherited; could be cherry-picked to a HADES design
 // backport branch if needed.
 
 package handlers
@@ -78,7 +78,7 @@ func HermesProbeHandler(s HermesProbeCtx) http.HandlerFunc {
 		case "transport_reachable":
 			if s.Orchestrator() == nil {
 				resp.Status = "warn"
-				resp.Detail = "/v1/messages orchestrator not wired (Plan 3 dispatcher boot pending)"
+				resp.Detail = "/v1/messages orchestrator unavailable (HADES design dispatcher boot pending)"
 			} else {
 				resp.Detail = "/v1/messages orchestrator wired"
 			}

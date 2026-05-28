@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""HADES skin subpackage — HADES design release track."""
+"""HADES skin subpackage — HADES design stage."""
 
 from .hades import (
     _build_hades_yaml,

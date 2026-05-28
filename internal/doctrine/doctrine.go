@@ -16,7 +16,7 @@
 // (additive-only Schema evolution unless a doctrine-schema ADR
 // is referenced).
 // - Doctrine + Get / MaxScope / Default / CapaFirewall: the
-// release minimal interface contract; release wires substantive
+// HADES design minimal interface contract; HADES design wires substantive
 // bodies.
 //
 // # Concurrency
@@ -37,9 +37,9 @@
 // can rely on Loaded values remaining stable across the call
 // boundary.
 //
-// # release backfill
+// # HADES design backfill
 //
-// the interface contract; release delivers the configuration
+// the interface contract; HADES design delivers the configuration
 // substrate (Schema, loader, resolver, validator, builtin defaults).
 package doctrine
 
