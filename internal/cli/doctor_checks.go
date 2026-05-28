@@ -47,7 +47,7 @@ func runBypassChecks(ctx context.Context, c *client.Client) []CheckResult {
 func checkBypassCredentialsReadable(ctx context.Context, c *client.Client) CheckResult {
 	r, err := c.BypassDoctor(ctx, "credentials.readable")
 	return resultFrom("bypass.credentials.readable", r, err,
-		"file ~/local agent config/credentials.json must exist with mode 0600")
+		"file local agent memory/credentials.json must exist with mode 0600")
 }
 
 func checkBypassCredentialsFresh(ctx context.Context, c *client.Client) CheckResult {
