@@ -21,6 +21,21 @@ The module declares `go 1.26` and `toolchain go1.26.0`. With the default
 environment disables automatic toolchain download, install Go 1.26.x manually
 before running `make build`.
 
+## Install Hermes Agent
+
+HADES uses Hermes Agent as the conversational/plugin substrate. The Homebrew
+formula installs Hermes Agent automatically as a required dependency; source and
+Linux users should install Hermes Agent first through Homebrew/Linuxbrew or
+their platform package, then verify the binary before running any HADES wizard:
+
+```bash
+hermes --version
+```
+
+If `hermes --version` fails, install Hermes Agent and rerun the check before
+`hades config init`, `hades init`, or `hades new`. Those commands refuse early
+when Hermes is missing so the wizard does not create a half-wired plugin setup.
+
 ## Build From Source
 
 Homebrew is the primary install path:
@@ -28,6 +43,7 @@ Homebrew is the primary install path:
 ```bash
 brew tap cbip-solutions/tap
 brew install hades
+hermes --version
 mkdir -p ~/.hermes/plugins
 ln -sfn "$(brew --prefix hades)/share/hades/hades" ~/.hermes/plugins/hades
 hades-ctld --version
@@ -35,6 +51,8 @@ hades --version
 brew services start cbip-solutions/tap/hades
 hades status
 hades doctor
+hades doctor hermes
+hades doctor mcps
 ```
 
 Source builds are useful for inspection, local patching, and platforms where
@@ -43,8 +61,12 @@ the tap is not available:
 ```bash
 git clone https://github.com/cbip-solutions/hades-system.git
 cd hades-system
+hermes --version
 make build
 make test
+make plugin-install
+bin/hades doctor hermes
+bin/hades doctor mcps
 ```
 
 The primary binaries are:
@@ -119,15 +141,22 @@ checkouts can copy it with the repository tooling.
 ```bash
 mkdir -p ~/.hermes/plugins
 ln -sfn "$(brew --prefix hades)/share/hades/hades" ~/.hermes/plugins/hades
+hermes --version
+hades doctor hermes
 ```
 
 For a source checkout:
 
 ```bash
+hermes --version
 make plugin-install
 bin/hades doctor hermes
 bin/hades doctor mcps
 ```
+
+If Hermes keeps an already-running plugin registry, restart Hermes or run the
+plugin refresh command supported by your Hermes build after changing the
+`~/.hermes/plugins/hades` link.
 
 Use the doctor output as the authority for missing local prerequisites.
 

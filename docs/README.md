@@ -9,7 +9,10 @@ operate it, and which command surface to use for a given workflow.
 For a first installation, read:
 
 - [Installation](../INSTALL.md)
+- [First five minutes](operations/first-five-minutes.md)
+- [Hermes and MCP integration](integrations/hermes-and-mcp.md)
 - [Configuration reference](../CONFIGURATION.md)
+- [Troubleshooting](operations/troubleshooting.md)
 - [End-to-end examples](../EXAMPLES.md)
 
 For architecture and extension work, read:

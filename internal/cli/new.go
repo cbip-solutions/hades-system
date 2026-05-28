@@ -180,17 +180,17 @@ func runNew(ctx context.Context, cmd *cobra.Command, args newArgs) error {
 	if err := preflight.CheckHermesInstalled(ctx); err != nil {
 		fmt.Fprintln(stderr, "error: Hermes >=0.13.0 not detected")
 		fmt.Fprintln(stderr, "       install from https://github.com/hermes-agent/hermes-agent")
-		return ierrors.Wrap(ierrors.Code("wizard.mcp-spawn-fail"), fmt.Errorf("%w: %v", ErrPreflightFailure, err))
+		return preflightFailure(err)
 	}
 
 	if err := preflight.CheckBashInstalled(ctx); err != nil {
 		fmt.Fprintln(stderr, "error: bash not found on PATH (required for template hooks)")
 		fmt.Fprintln(stderr, "       Debian/Ubuntu: bash ships by default; Alpine: apk add bash")
-		return ierrors.Wrap(ierrors.Code("wizard.mcp-spawn-fail"), fmt.Errorf("%w: %v", ErrPreflightFailure, err))
+		return preflightFailure(err)
 	}
 
 	if present, _, _ := preflight.CCDetect(); present {
-		fmt.Fprintln(stdout, "Detected local agent memory/ — consider running `hades migrate claude-code` first")
+		fmt.Fprintln(stdout, "Detected ~/local agent config/ — consider running `hades migrate claude-code` first")
 		fmt.Fprintln(stdout, "to import your existing config + skills + commands into Hermes plugin format.")
 		fmt.Fprintln(stdout, "(Continuing with greenfield scaffold; pass --yes to suppress this hint.)")
 	}
@@ -214,7 +214,7 @@ func runNew(ctx context.Context, cmd *cobra.Command, args newArgs) error {
 
 	if err := hooks.RunPreflight(ctx, tmpl); err != nil {
 		fmt.Fprintf(stderr, "error: template pre_prompt: %v\n", err)
-		return ierrors.Wrap(ierrors.Code("wizard.mcp-spawn-fail"), fmt.Errorf("%w: pre_prompt: %v", ErrPreflightFailure, err))
+		return preflightFailure(fmt.Errorf("template pre_prompt: %w", err))
 	}
 
 	mode := onboard.ModeCustomize

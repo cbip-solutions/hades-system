@@ -116,13 +116,13 @@ func runInit(ctx context.Context, cmd *cobra.Command, args initArgs) error {
 
 	if err := preflight.CheckHermesInstalled(ctx); err != nil {
 		fmt.Fprintln(stderr, "error: Hermes >=0.13.0 not detected")
-		return ierrors.Wrap(ierrors.Code("wizard.mcp-spawn-fail"), fmt.Errorf("%w: %v", ErrPreflightFailure, err))
+		return preflightFailure(err)
 	}
 
 	if err := preflight.CheckBashInstalled(ctx); err != nil {
 		fmt.Fprintln(stderr, "error: bash not found on PATH (required for template hooks)")
 		fmt.Fprintln(stderr, "       Debian/Ubuntu: bash ships by default; Alpine: apk add bash")
-		return ierrors.Wrap(ierrors.Code("wizard.mcp-spawn-fail"), fmt.Errorf("%w: %v", ErrPreflightFailure, err))
+		return preflightFailure(err)
 	}
 
 	if args.nonInteractive && !args.acceptInference {

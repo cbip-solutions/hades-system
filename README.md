@@ -35,11 +35,16 @@ Install with Homebrew:
 ```bash
 brew tap cbip-solutions/tap
 brew install hades
+hermes --version
+mkdir -p ~/.hermes/plugins
+ln -sfn "$(brew --prefix hades)/share/hades/hades" ~/.hermes/plugins/hades
 hades-ctld --version
 hades --version
 brew services start cbip-solutions/tap/hades
 hades status
 hades doctor
+hades doctor hermes
+hades doctor mcps
 hades providers list
 hades dashboard
 ```
@@ -49,8 +54,10 @@ Build from source:
 ```bash
 git clone https://github.com/cbip-solutions/hades-system.git
 cd hades-system
+hermes --version
 make build
 make test
+make plugin-install
 ```
 
 Start the daemon:
@@ -71,6 +78,7 @@ bin/hades doctor caronte
 
 See [INSTALL.md](INSTALL.md) for platform prerequisites and packaging notes.
 For the guided first run, see [First Five Minutes](docs/operations/first-five-minutes.md).
+For Hermes plugin wiring, see [Hermes and MCP integration](docs/integrations/hermes-and-mcp.md).
 
 ## Main Surfaces
 
@@ -115,6 +123,7 @@ users can inspect and build the source tree directly.
 - [Configuration reference](CONFIGURATION.md)
 - [End-to-end examples](EXAMPLES.md)
 - [First five minutes](docs/operations/first-five-minutes.md)
+- [Hermes and MCP integration](docs/integrations/hermes-and-mcp.md)
 - [Troubleshooting](docs/operations/troubleshooting.md)
 - [Subsystem handbook](docs/README.md)
 - [Release notes](CHANGELOG.md)

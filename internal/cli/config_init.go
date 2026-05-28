@@ -92,10 +92,10 @@ func runConfigInit(cmd *cobra.Command, flags configInitFlags) error {
 	}
 
 	if err := preflight.CheckHermesInstalled(ctx); err != nil {
-		return ierrors.Wrap(ierrors.Code("wizard.mcp-spawn-fail"), fmt.Errorf("%w: %v", ErrPreflightFailure, err))
+		return preflightFailure(err)
 	}
 	if err := preflight.CheckPluginFormatRemnants(ctx); err != nil {
-		return ierrors.Wrap(ierrors.Code("wizard.mcp-spawn-fail"), fmt.Errorf("%w: %v", ErrPreflightFailure, err))
+		return preflightFailure(err)
 	}
 
 	configPath := onboard.GlobalConfigPath()
@@ -195,7 +195,7 @@ func runConfigInit(cmd *cobra.Command, flags configInitFlags) error {
 		}
 	}
 
-	if !flags.noPlugin {
+	if !flags.noPlugin && answers.InstallHermes {
 
 		loc, locErr := plugin.ResolveLocation(flags.scope == "project")
 		if locErr != nil {

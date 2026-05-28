@@ -5,6 +5,41 @@ All notable changes to HADES system are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 The first tagged source release is `v1.0.0`.
 
+## [v1.0.3] - 2026-05-29
+
+### Fixed
+
+- First-run Linux/source onboarding now reports missing Hermes Agent as an
+  onboarding preflight failure instead of misclassifying it as an MCP spawn
+  failure.
+- Public installation, first-run, troubleshooting, and Hermes/MCP docs now
+  explicitly cover `hermes --version`, plugin linking, and `hades doctor
+  hermes`.
+- The global wizard prompt now describes the actual plugin-linking action after
+  Hermes preflight instead of promising an unreachable Hermes Agent install
+  step.
+
+### Changed
+
+- Daemon and wizard recovery hints now point at public HADES docs, socket names,
+  and commands.
+- Homebrew caveats now include a Hermes Agent verification step before plugin
+  linking.
+
+## [v1.0.2] - 2026-05-28
+
+### Fixed
+
+- Linux/source provider credentials can be supplied through `HADES_KEYCHAIN_*`
+  environment aliases before daemon start.
+
+## [v1.0.1] - 2026-05-27
+
+### Fixed
+
+- Source distribution now exposes only the documented sidecar contract and
+  omits implementation material that is not part of the supported public API.
+
 ## [v1.0.0] - 2026-05-25
 
 ### Added

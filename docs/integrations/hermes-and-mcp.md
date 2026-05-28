@@ -19,9 +19,23 @@ The Hermes plugin lives under `plugin/hades`. It provides:
 - Status and event helpers.
 - Renderers for HADES-specific UX.
 
-Install and verify:
+Install and verify a Homebrew install:
 
 ```bash
+hermes --version
+mkdir -p ~/.hermes/plugins
+ln -sfn "$(brew --prefix hades)/share/hades/hades" ~/.hermes/plugins/hades
+hades doctor hermes
+hades doctor
+```
+
+For a source checkout, install Hermes Agent first, build HADES, and install the
+plugin payload from the checkout:
+
+```bash
+hermes --version
+make build
+make plugin-install
 bin/hades doctor hermes
 bin/hades doctor
 ```
@@ -29,6 +43,9 @@ bin/hades doctor
 The plugin should use the daemon socket through `HADES_DAEMON_SOCKET` when
 possible. If Hermes is installed but the daemon is down, plugin commands should
 surface a degraded state rather than inventing daemon output.
+
+After changing `~/.hermes/plugins/hades`, restart Hermes or refresh its plugin
+registry using the command supported by your Hermes build.
 
 ## MCP Servers
 

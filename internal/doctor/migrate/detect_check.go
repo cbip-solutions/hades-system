@@ -45,7 +45,7 @@ func (c *DetectCheck) Name() string { return "claude-code.install-detected" }
 func (c *DetectCheck) Category() check.Category { return check.CategoryHints }
 
 func (c *DetectCheck) Description() string {
-	return "Local agent install detected at ~/local agent config/ (auto-surface migrate hint)"
+	return "Local agent install detected at local agent memory/ (auto-surface migrate hint)"
 }
 
 func (c *DetectCheck) IsDestructive() bool { return false }
@@ -68,7 +68,7 @@ func (c *DetectCheck) Run(_ context.Context) check.DiagnosticResult {
 	claudeDir := filepath.Join(c.homeDir, "local agent config")
 	info, err := os.Stat(claudeDir)
 	if err != nil || !info.IsDir() {
-		d.Message = "no local agent memory/ detected"
+		d.Message = "no ~/local agent config/ detected"
 		return d
 	}
 
@@ -80,7 +80,7 @@ func (c *DetectCheck) Run(_ context.Context) check.DiagnosticResult {
 		}
 	}
 	if len(found) == 0 {
-		d.Message = "~/local agent config/ exists but no migration markers detected"
+		d.Message = "local agent memory/ exists but no migration markers detected"
 		return d
 	}
 	d.Message = fmt.Sprintf("local agent memory/ detected with %d marker(s); migration available", len(found))

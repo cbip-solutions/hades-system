@@ -29,6 +29,12 @@ bin/hades daemon stop
 bin/hades daemon uninstall
 ```
 
+On Linux source installs, `bin/hades daemon install` is not a native systemd
+installer. Run `bin/hades-ctld` in the foreground for first validation, use the
+Homebrew service when installed through Linuxbrew, or provide your own user
+service that starts the same `hades-ctld` binary with the required provider
+environment variables.
+
 ## Local Transport
 
 The default socket is:

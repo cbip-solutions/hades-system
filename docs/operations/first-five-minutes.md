@@ -6,6 +6,7 @@ providers or Hermes.
 ```bash
 brew tap cbip-solutions/tap
 brew install hades
+hermes --version
 mkdir -p ~/.hermes/plugins
 ln -sfn "$(brew --prefix hades)/share/hades/hades" ~/.hermes/plugins/hades
 hades-ctld --version
@@ -22,6 +23,10 @@ hades doctor mcps
 hades dashboard
 hades caronte reindex --help
 ```
+
+Homebrew installs Hermes Agent as a required dependency. Source and Linux users
+should install Hermes Agent first, confirm `hermes --version`, then build HADES
+and run `make plugin-install` before `bin/hades doctor hermes`.
 
 Provider credentials are optional for the first boot. When you add external
 provider API keys later, export them and restart the daemon so the provider

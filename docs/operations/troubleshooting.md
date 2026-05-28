@@ -20,9 +20,21 @@ hades-ctld --version
 hades status
 ```
 
+## Hermes Agent Missing
+
+```bash
+hermes --version
+```
+
+If the command is missing, install Hermes Agent before running `hades init`,
+`hades new`, or `hades config init`. Homebrew installs it automatically with
+`brew install hades`; source and Linux users can install Hermes Agent through
+Homebrew/Linuxbrew or their platform package, then rerun `hermes --version`.
+
 ## Hermes Plugin Missing
 
 ```bash
+hermes --version
 mkdir -p ~/.hermes/plugins
 ln -sfn "$(brew --prefix hades)/share/hades/hades" ~/.hermes/plugins/hades
 hades doctor hermes
@@ -31,9 +43,13 @@ hades doctor hermes
 For source checkouts:
 
 ```bash
+hermes --version
 make plugin-install
-hades doctor hermes
+bin/hades doctor hermes
 ```
+
+If Hermes was already running, restart Hermes or refresh its plugin registry
+after changing `~/.hermes/plugins/hades`.
 
 ## MCP Cannot Reach The Daemon
 

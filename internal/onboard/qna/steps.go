@@ -17,7 +17,7 @@ func stepsForKind(k onboard.WizardKind) []step {
 		return []step{
 			{Key: "llm_provider", Prompt: "Select LLM provider", Options: []string{"anthropic-paygo", "anthropic-bypass", "gemini", "openai"}},
 			{Key: "doctrine_profile", Prompt: "Select doctrine profile", Options: []string{"max-scope", "default", "capa-firewall"}},
-			{Key: "install_hermes", Prompt: "Install Hermes Agent if missing? (Y/n)", Options: []string{"y", "n"}},
+			{Key: "install_hermes", Prompt: "Link HADES Hermes plugin after preflight? (Y/n)", Options: []string{"y", "n"}},
 			{Key: "reviewed_mcps", Prompt: "Reviewed MCP set", Options: nil},
 			{Key: "enable_audit_chain", Prompt: "Enable Tessera audit chain? (Y/n)", Options: []string{"y", "n"}},
 		}

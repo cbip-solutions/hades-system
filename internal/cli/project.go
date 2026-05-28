@@ -97,6 +97,10 @@ func IsPreflightFailure(err error) bool {
 	return err != nil && errors.Is(err, ErrPreflightFailure)
 }
 
+func preflightFailure(err error) error {
+	return ierrors.Wrap(ierrors.Code("wizard.preflight-fail"), fmt.Errorf("%w: %v", ErrPreflightFailure, err))
+}
+
 func recoverable(format string, args ...any) error {
 	return fmt.Errorf("%w: "+format, append([]any{ErrRecoverable}, args...)...)
 }
